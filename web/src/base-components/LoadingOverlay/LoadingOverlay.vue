@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { toRef, computed } from "vue";
+import { toRef } from "vue";
 
-const props = defineProps({
-    visible: {type: Boolean, default: false},
-    transparent: {type: Boolean, default: false}
+interface LoadingOverlayProps {
+    visible: boolean,
+    transparent: boolean,
+}
+
+const props = withDefaults(defineProps<LoadingOverlayProps>(), {
+    visible: false,
+    transparent: false,
 });
 
 const visible = toRef(props, 'visible');
@@ -13,6 +18,6 @@ const transparent = toRef(props, 'transparent');
 <template>
     <div :class="{ 'loading-container': visible }">
         <slot></slot>
-        <div :class="{ 'loading-overlay': true, 'loading-overlay-gray': !transparent }" v-if="visible"></div>
+        <div v-if="visible" :class="{ 'loading-overlay': true, 'loading-overlay-gray': !transparent }"></div>
     </div>
 </template>

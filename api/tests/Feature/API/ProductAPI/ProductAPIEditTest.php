@@ -25,6 +25,195 @@ class ProductAPIEditTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_product_api_call_update_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $productGroup = $company->productGroups()
+            ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+            ->inRandomOrder()->first();
+
+        $brand = $company->brands()->inRandomOrder()->first();
+
+        $product = Product::factory()
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
+
+        $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+            ->inRandomOrder()->get()->shuffle();
+
+        $productUnitCount = random_int(1, $units->count());
+        $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+        for ($j = 0; $j < $productUnitCount; $j++) {
+            $product = $product->has(
+                ProductUnit::factory()
+                    ->for($company)->for($units[$j])
+                    ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                    ->setIsPrimaryUnit($j == $primaryUnitIdx)
+            );
+        }
+
+        $product = $product->create();
+
+        $productArr = $product->toArray();
+
+        $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
+        $arr_product_unit_code = [];
+        $arr_product_unit_unit_id = [];
+        $arr_product_unit_conversion_value = [];
+        $arr_product_unit_is_base = [];
+        $arr_product_unit_is_primary_unit = [];
+        $arr_product_unit_remarks = [];
+
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
+        }
+
+        $productUnit = ProductUnit::factory()->make();
+        array_push($arr_product_unit_id, '');
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_code, $productUnit->code);
+        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
+        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
+        array_push($arr_product_unit_is_base, false);
+        array_push($arr_product_unit_is_primary_unit, false);
+        array_push($arr_product_unit_remarks, $productUnit->remarks);
+
+        $productArr = array_merge($productArr, [
+            'company_id' => Hashids::encode($company->id),
+            'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
+            'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
+            'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
+            'arr_product_unit_code' => $arr_product_unit_code,
+            'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
+            'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
+            'arr_product_unit_is_base' => $arr_product_unit_is_base,
+            'arr_product_unit_is_primary_unit' => $arr_product_unit_is_primary_unit,
+            'arr_product_unit_remarks' => $arr_product_unit_remarks,
+        ]);
+
+        $api = $this->json('POST', route('api.post.db.product.product.edit', $product->ulid), $productArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_product_api_call_update_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $productGroup = $company->productGroups()
+            ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+            ->inRandomOrder()->first();
+
+        $brand = $company->brands()->inRandomOrder()->first();
+
+        $product = Product::factory()
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
+
+        $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+            ->inRandomOrder()->get()->shuffle();
+
+        $productUnitCount = random_int(1, $units->count());
+        $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+        for ($j = 0; $j < $productUnitCount; $j++) {
+            $product = $product->has(
+                ProductUnit::factory()
+                    ->for($company)->for($units[$j])
+                    ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                    ->setIsPrimaryUnit($j == $primaryUnitIdx)
+            );
+        }
+
+        $product = $product->create();
+
+        $productArr = $product->toArray();
+
+        $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
+        $arr_product_unit_code = [];
+        $arr_product_unit_unit_id = [];
+        $arr_product_unit_conversion_value = [];
+        $arr_product_unit_is_base = [];
+        $arr_product_unit_is_primary_unit = [];
+        $arr_product_unit_remarks = [];
+
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
+        }
+
+        $productUnit = ProductUnit::factory()->make();
+        array_push($arr_product_unit_id, '');
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_code, $productUnit->code);
+        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
+        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
+        array_push($arr_product_unit_is_base, false);
+        array_push($arr_product_unit_is_primary_unit, false);
+        array_push($arr_product_unit_remarks, $productUnit->remarks);
+
+        $productArr = array_merge($productArr, [
+            'company_id' => Hashids::encode($company->id),
+            'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
+            'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
+            'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
+            'arr_product_unit_code' => $arr_product_unit_code,
+            'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
+            'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
+            'arr_product_unit_is_base' => $arr_product_unit_is_base,
+            'arr_product_unit_is_primary_unit' => $arr_product_unit_is_primary_unit,
+            'arr_product_unit_remarks' => $arr_product_unit_remarks,
+        ]);
+
+        $api = $this->json('POST', route('api.post.db.product.product.edit', $product->ulid), $productArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_product_api_call_update_product_and_insert_product_units_expect_db_updated()
     {
         $user = User::factory()
@@ -72,6 +261,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -79,30 +269,34 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
+        $productUnit = ProductUnit::factory()->make();
         array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_code, $productUnit->code);
         array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnitArr[count($productUnitArr) - 1]['conversion_value'] * 2);
+        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
         array_push($arr_product_unit_is_base, false);
         array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, ProductUnit::factory()->make()->remarks);
+        array_push($arr_product_unit_remarks, $productUnit->remarks);
 
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -131,16 +325,16 @@ class ProductAPIEditTest extends APITestCase
             'status' => $productArr['status'],
         ]);
 
-        for ($i = 0; $i < count($productUnitArr); $i++) {
+        foreach ($productUnits as $productUnit) {
             $this->assertDatabaseHas('product_units', [
                 'company_id' => $company->id,
                 'product_id' => $product->id,
-                'unit_id' => $productUnitArr[$i]['unit_id'],
-                'code' => $productUnitArr[$i]['code'],
-                'is_base' => $productUnitArr[$i]['is_base'],
-                'conversion_value' => $productUnitArr[$i]['conversion_value'],
-                'is_primary_unit' => $productUnitArr[$i]['is_primary_unit'],
-                'remarks' => $productUnitArr[$i]['remarks'],
+                'unit_id' => $productUnit->unit_id,
+                'code' => $productUnit->code,
+                'is_base' => $productUnit->is_base,
+                'conversion_value' => $productUnit->conversion_value,
+                'is_primary_unit' => $productUnit->is_primary_unit,
+                'remarks' => $productUnit->remarks,
             ]);
         }
     }
@@ -192,6 +386,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -199,30 +394,24 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
-
-        array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
-        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnitArr[count($productUnitArr) - 1]['conversion_value'] * 2);
-        array_push($arr_product_unit_is_base, false);
-        array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, ProductUnit::factory()->make()->remarks);
 
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
             'product_group_id' => Hashids::encode(ProductGroup::max('id') + 1),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -286,6 +475,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -293,30 +483,24 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
-
-        array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
-        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnitArr[count($productUnitArr) - 1]['conversion_value'] * 2);
-        array_push($arr_product_unit_is_base, false);
-        array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, ProductUnit::factory()->make()->remarks);
 
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode(Brand::max('id') + 1),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -380,6 +564,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -387,30 +572,34 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode(Unit::max('id') + 1));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
-        array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
-        array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnitArr[count($productUnitArr) - 1]['conversion_value'] * 2);
-        array_push($arr_product_unit_is_base, false);
-        array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, ProductUnit::factory()->make()->remarks);
+        $lastRow = count($arr_product_unit_id) - 1;
+        $arr_product_unit_id[$lastRow] = '';
+        $arr_product_unit_ulid[$lastRow] = '';
+        $arr_product_unit_code[$lastRow] = ProductUnit::factory()->make()->code;
+        $arr_product_unit_unit_id[$lastRow] = Hashids::encode(Unit::max('id') + 1);
+        $arr_product_unit_conversion_value[$lastRow] = $productUnits[count($productUnits) - 1]['conversion_value'] * 2;
+        $arr_product_unit_is_base[$lastRow] = false;
+        $arr_product_unit_is_primary_unit[$lastRow] = false;
+        $arr_product_unit_remarks[$lastRow] = ProductUnit::factory()->make()->remarks;
 
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -472,6 +661,7 @@ class ProductAPIEditTest extends APITestCase
         $product = $product->create();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -479,24 +669,27 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
+        $productUnit = ProductUnit::factory()->make();
         array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_code, $productUnit->code);
         array_push($arr_product_unit_unit_id, Hashids::encode(Unit::max('id') + 1));
-        array_push($arr_product_unit_conversion_value, $productUnitArr[count($productUnitArr) - 1]['conversion_value'] * 2);
+        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
         array_push($arr_product_unit_is_base, false);
         array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, ProductUnit::factory()->make()->remarks);
+        array_push($arr_product_unit_remarks, $productUnit->remarks);
 
         $productArr = $product->toArray();
 
@@ -505,6 +698,7 @@ class ProductAPIEditTest extends APITestCase
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -568,6 +762,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -575,30 +770,34 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
+        $productUnit = ProductUnit::factory()->make();
         array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_code, $productUnit->code);
         array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
         array_push($arr_product_unit_conversion_value, 'test');
         array_push($arr_product_unit_is_base, false);
         array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, ProductUnit::factory()->make()->remarks);
+        array_push($arr_product_unit_remarks, $productUnit->remarks);
 
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -662,6 +861,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -669,21 +869,24 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
         $lastRow = count($arr_product_unit_id) - 1;
+        $arr_product_unit_id[$lastRow] = '';
+        $arr_product_unit_ulid[$lastRow] = '';
         $arr_product_unit_code[$lastRow] = ProductUnit::factory()->make()->code;
         $arr_product_unit_unit_id[$lastRow] = Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id);
-        $arr_product_unit_conversion_value[$lastRow] = $productUnitArr[count($productUnitArr) - 1]['conversion_value'] * 2;
+        $arr_product_unit_conversion_value[$lastRow] = $productUnits[count($productUnits) - 1]['conversion_value'] * 2;
         $arr_product_unit_is_base[$lastRow] = false;
         $arr_product_unit_is_primary_unit[$lastRow] = false;
         $arr_product_unit_remarks[$lastRow] = ProductUnit::factory()->make()->remarks;
@@ -693,6 +896,7 @@ class ProductAPIEditTest extends APITestCase
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -732,6 +936,105 @@ class ProductAPIEditTest extends APITestCase
                 'remarks' => $arr_product_unit_remarks[$i],
             ]);
         }
+    }
+
+    public function test_product_api_call_update_product_and_edit_product_units_with_invalid_ulid_expect_failed()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $productGroup = $company->productGroups()
+            ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+            ->inRandomOrder()->first();
+
+        $brand = $company->brands()->inRandomOrder()->first();
+
+        $product = Product::factory()
+            ->for($company)
+            ->for($productGroup)
+            ->for($brand)
+            ->setProductTypeAsProduct();
+
+        $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+            ->inRandomOrder()->get()->shuffle();
+
+        $productUnitCount = random_int(1, $units->count());
+        $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+        for ($j = 0; $j < $productUnitCount; $j++) {
+            $product = $product->has(
+                ProductUnit::factory()
+                    ->for($company)->for($units[$j])
+                    ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                    ->setIsPrimaryUnit($j == $primaryUnitIdx)
+            );
+        }
+
+        $product = $product->create();
+
+        $productArr = $product->toArray();
+
+        $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
+        $arr_product_unit_code = [];
+        $arr_product_unit_unit_id = [];
+        $arr_product_unit_conversion_value = [];
+        $arr_product_unit_is_base = [];
+        $arr_product_unit_is_primary_unit = [];
+        $arr_product_unit_remarks = [];
+
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
+        }
+
+        $lastRow = count($arr_product_unit_id) - 1;
+        $arr_product_unit_id[$lastRow] = $arr_product_unit_id[$lastRow];
+        $arr_product_unit_ulid[$lastRow] = 'TEST123TEST123';
+        $arr_product_unit_code[$lastRow] = ProductUnit::factory()->make()->code;
+        $arr_product_unit_unit_id[$lastRow] = Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id);
+        $arr_product_unit_conversion_value[$lastRow] = $productUnits[count($productUnits) - 1]['conversion_value'] * 2;
+        $arr_product_unit_is_base[$lastRow] = false;
+        $arr_product_unit_is_primary_unit[$lastRow] = false;
+        $arr_product_unit_remarks[$lastRow] = ProductUnit::factory()->make()->remarks;
+
+        $productArr = array_merge($productArr, [
+            'company_id' => Hashids::encode($company->id),
+            'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
+            'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
+            'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
+            'arr_product_unit_code' => $arr_product_unit_code,
+            'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
+            'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
+            'arr_product_unit_is_base' => $arr_product_unit_is_base,
+            'arr_product_unit_is_primary_unit' => $arr_product_unit_is_primary_unit,
+            'arr_product_unit_remarks' => $arr_product_unit_remarks,
+        ]);
+
+        $api = $this->json('POST', route('api.post.db.product.product.edit', $product->ulid), $productArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
     }
 
     public function test_product_api_call_update_product_and_delete_product_units_expect_db_updated()
@@ -781,6 +1084,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -788,18 +1092,20 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitsArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitsArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitsArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitsArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitsArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitsArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitsArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitsArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitsArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
         array_pop($arr_product_unit_id);
+        array_pop($arr_product_unit_ulid);
         array_pop($arr_product_unit_code);
         array_pop($arr_product_unit_unit_id);
         array_pop($arr_product_unit_conversion_value);
@@ -812,6 +1118,7 @@ class ProductAPIEditTest extends APITestCase
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -903,6 +1210,7 @@ class ProductAPIEditTest extends APITestCase
         $productArr = $product->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -910,24 +1218,27 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
+        $productUnit = ProductUnit::factory()->make();
         array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_code, $productUnit->code);
         array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::PRODUCTS->value)->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_conversion_value, $productUnitArr[count($productUnitArr) - 1]['conversion_value'] * 2);
+        array_push($arr_product_unit_conversion_value, $productUnits[count($productUnits) - 1]['conversion_value'] * 2);
         array_push($arr_product_unit_is_base, false);
         array_push($arr_product_unit_is_primary_unit, false);
-        array_push($arr_product_unit_remarks, ProductUnit::factory()->make()->remarks);
+        array_push($arr_product_unit_remarks, $productUnit->remarks);
 
         $productArr = array_merge($productArr, [
             'company_id' => Hashids::encode($company->id),
@@ -935,6 +1246,7 @@ class ProductAPIEditTest extends APITestCase
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::PRODUCTS->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -995,6 +1307,7 @@ class ProductAPIEditTest extends APITestCase
         $serviceArr = $service->toArray();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -1003,6 +1316,7 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_remarks = [];
 
         array_push($arr_product_unit_id, '');
+        array_push($arr_product_unit_ulid, '');
         array_push($arr_product_unit_code, ProductUnit::factory()->make()->code);
         array_push($arr_product_unit_unit_id, Hashids::encode($company->units()->where('category', '=', ProductCategory::SERVICES->value)->inRandomOrder()->first()->id));
         array_push($arr_product_unit_conversion_value, 1);
@@ -1020,6 +1334,7 @@ class ProductAPIEditTest extends APITestCase
             'code' => $newCode,
             'product_group_id' => Hashids::encode($company->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -1121,6 +1436,7 @@ class ProductAPIEditTest extends APITestCase
         $product = $company_1->products()->inRandomOrder()->first();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -1128,15 +1444,16 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $product->productUnits()->get()->toArray();
-        foreach ($productUnitArr as $productUnit) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnit['id']));
-            array_push($arr_product_unit_code, $productUnit['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnit['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnit['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnit['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnit['remarks']);
+        $productUnits = $product->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
         $productArr = $product->toArray();
@@ -1146,6 +1463,7 @@ class ProductAPIEditTest extends APITestCase
             'product_group_id' => Hashids::encode($company_1->productGroups()->where('category', '!=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id),
             'brand_id' => Hashids::encode($company_1->brands()->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,
@@ -1224,6 +1542,7 @@ class ProductAPIEditTest extends APITestCase
         $service = $company_1->products()->inRandomOrder()->first();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_product_unit_code = [];
         $arr_product_unit_unit_id = [];
         $arr_product_unit_conversion_value = [];
@@ -1231,15 +1550,16 @@ class ProductAPIEditTest extends APITestCase
         $arr_product_unit_is_primary_unit = [];
         $arr_product_unit_remarks = [];
 
-        $productUnitArr = $service->productUnits->toArray();
-        for ($i = 0; $i < count($productUnitArr); $i++) {
-            array_push($arr_product_unit_id, Hashids::encode($productUnitArr[$i]['id']));
-            array_push($arr_product_unit_code, $productUnitArr[$i]['code']);
-            array_push($arr_product_unit_unit_id, Hashids::encode($productUnitArr[$i]['unit_id']));
-            array_push($arr_product_unit_conversion_value, $productUnitArr[$i]['conversion_value']);
-            array_push($arr_product_unit_is_base, $productUnitArr[$i]['is_base']);
-            array_push($arr_product_unit_is_primary_unit, $productUnitArr[$i]['is_primary_unit']);
-            array_push($arr_product_unit_remarks, $productUnitArr[$i]['remarks']);
+        $productUnits = $service->productUnits;
+        foreach ($productUnits as $productUnit) {
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_code, $productUnit->code);
+            array_push($arr_product_unit_unit_id, Hashids::encode($productUnit->unit_id));
+            array_push($arr_product_unit_conversion_value, $productUnit->conversion_value);
+            array_push($arr_product_unit_is_base, $productUnit->is_base);
+            array_push($arr_product_unit_is_primary_unit, $productUnit->is_primary_unit);
+            array_push($arr_product_unit_remarks, $productUnit->remarks);
         }
 
         $serviceArr = $service->toArray();
@@ -1248,6 +1568,7 @@ class ProductAPIEditTest extends APITestCase
             'code' => $company_2->products()->where('product_type', '=', ProductType::SERVICE->value)->inRandomOrder()->first()->code,
             'product_group_id' => Hashids::encode($company_1->productGroups()->where('category', '=', ProductGroupCategory::SERVICES->value)->inRandomOrder()->first()->id),
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
             'arr_product_unit_code' => $arr_product_unit_code,
             'arr_product_unit_unit_id' => $arr_product_unit_unit_id,
             'arr_product_unit_conversion_value' => $arr_product_unit_conversion_value,

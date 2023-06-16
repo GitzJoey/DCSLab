@@ -1,4 +1,4 @@
-import { DropdownOptionType } from "../types/DropdownOptionType";
+import { DropDownOption } from "../types/services/DropDownOption";
 
 export default class CacheService {
     protected dcslabSystems;
@@ -7,18 +7,18 @@ export default class CacheService {
         this.dcslabSystems = sessionStorage.getItem('DCSLAB_SYSTEM');
     }
 
-    public getCachedDDL(ddlname: string): DropdownOptionType[] | null {
+    public getCachedDDL(ddlname: string): Array<DropDownOption> | null {
         const ddl = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
-        
+
         const hasDDL = Object.hasOwnProperty.call(ddl, ddlname);
-        return  hasDDL ? ddl[ddlname] : null;
+        return hasDDL ? ddl[ddlname] as Array<DropDownOption> : null;
     }
-    
-    public setCachedDDL(ddlname: string, value: DropdownOptionType[]) {
+
+    public setCachedDDL(ddlname: string, value: Array<DropDownOption>): void {
         const new_dcslabSystems = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
 
         new_dcslabSystems[ddlname] = value;
-    
+
         sessionStorage.setItem('DCSLAB_SYSTEM', JSON.stringify(new_dcslabSystems));
-    }    
+    }
 }

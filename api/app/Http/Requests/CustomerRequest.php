@@ -57,6 +57,7 @@ class CustomerRequest extends FormRequest
             'tax_id' => ['nullable', 'max:255'],
             'remarks' => ['nullable', 'max:255'],
             'arr_customer_address_id.*' => ['nullable'],
+            'arr_customer_address_ulid.*' => ['nullable', 'ulid'],
             'arr_customer_address_city.*' => ['nullable', 'max:255'],
             'arr_customer_address_contact.*' => ['nullable', 'max:255'],
             'arr_customer_address_remarks.*' => ['nullable', 'max:255'],
@@ -130,6 +131,13 @@ class CustomerRequest extends FormRequest
                 ];
 
                 return array_merge($rules_update, $nullableArr);
+
+            case 'delete':
+                $rules_delete = [
+
+                ];
+
+                return $rules_delete;
             default:
                 return [
                     '' => 'required',
@@ -147,6 +155,7 @@ class CustomerRequest extends FormRequest
             'customer_group_id' => trans('validation_attributes.customer.customer_group'),
             'zone' => trans('validation_attributes.customer.zone'),
             'arr_customer_address_id' => trans('validation_attributes.customer.customer_address.id'),
+            'arr_customer_address_ulid' => trans('validation_attributes.customer.customer_address.ulid'),
             'arr_customer_address_address' => trans('validation_attributes.customer.customer_address.address'),
             'arr_customer_address_city' => trans('validation_attributes.customer.customer_address.city'),
             'arr_customer_address_contact' => trans('validation_attributes.customer.customer_address.contact'),
@@ -213,6 +222,18 @@ class CustomerRequest extends FormRequest
                     }
                 }
                 $this->merge(['arr_customer_address_id' => $arr_customer_address_id]);
+
+                $arr_customer_address_ulid = [];
+                if ($this->has('arr_customer_address_ulid')) {
+                    for ($i = 0; $i < count($this->arr_customer_address_ulid); $i++) {
+                        if ($this->arr_customer_address_ulid[$i] != '') {
+                            array_push($arr_customer_address_ulid, $this->arr_customer_address_ulid[$i]);
+                        } else {
+                            array_push($arr_customer_address_ulid, '');
+                        }
+                    }
+                }
+                $this->merge(['arr_customer_address_ulid' => $arr_customer_address_ulid]);
 
                 $arr_customer_address = [];
                 if ($this->has('arr_customer_address')) {

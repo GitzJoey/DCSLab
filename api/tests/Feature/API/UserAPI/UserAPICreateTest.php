@@ -16,6 +16,16 @@ class UserAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_user_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_user_api_call_store_without_access_right_expect_unauthorized_message()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_user_api_call_store_expect_successful()
     {
         $user = User::factory()

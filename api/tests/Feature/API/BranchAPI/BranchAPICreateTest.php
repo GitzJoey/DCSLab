@@ -17,6 +17,43 @@ class BranchAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_branch_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $branchArr = Branch::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_branch_api_call_store_without_access_right_expect_forbidden_message()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $branchArr = Branch::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_branch_api_call_store_expect_successful()
     {
         $user = User::factory()

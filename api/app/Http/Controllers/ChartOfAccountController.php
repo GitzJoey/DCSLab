@@ -223,7 +223,7 @@ class ChartOfAccountController extends Controller
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(ChartOfAccount $chartOfAccount)
+    public function delete(ChartOfAccount $chartOfAccount, ChartOfAccountRequest $chartOfAccountRequest)
     {
         $result = false;
         $errorMsg = '';

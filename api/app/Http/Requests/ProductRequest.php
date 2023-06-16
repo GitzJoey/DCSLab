@@ -58,6 +58,7 @@ class ProductRequest extends FormRequest
             'brand_id' => ['nullable'],
             'remarks' => ['nullable', 'max:255'],
             'arr_product_unit_id.*' => ['nullable'],
+            'arr_product_unit_ulid.*' => ['nullable', 'ulid'],
             'arr_product_unit_remarks.*' => ['nullable', 'max:255'],
         ];
 
@@ -130,6 +131,13 @@ class ProductRequest extends FormRequest
                 ];
 
                 return array_merge($rules_update, $nullableArr);
+
+            case 'delete':
+                $rules_delete = [
+
+                ];
+
+                return $rules_delete;
             default:
                 return [
                     '' => 'required',
@@ -155,6 +163,7 @@ class ProductRequest extends FormRequest
             'remarks' => trans('validation_attributes.product.remarks'),
             'status' => trans('validation_attributes.product.status'),
             'arr_product_unit_id.*' => trans('validation_attributes.product.product_units.product_unit'),
+            'arr_product_unit_ulid.*' => trans('validation_attributes.product.product_units.ulid'),
             'arr_product_unit_code.*' => trans('validation_attributes.product.product_units.code'),
             'arr_product_unit_unit_id.*' => trans('validation_attributes.product.product_units.unit'),
             'arr_product_unit_conversion_value.*' => trans('validation_attributes.product.product_units.conv_value'),
@@ -225,6 +234,18 @@ class ProductRequest extends FormRequest
                     }
                 }
                 $this->merge(['arr_product_unit_id' => $arr_product_unit_id]);
+
+                $arr_product_unit_ulid = [];
+                if ($this->has('arr_product_unit_ulid')) {
+                    for ($i = 0; $i < count($this->arr_product_unit_ulid); $i++) {
+                        if ($this->arr_product_unit_ulid[$i] != '') {
+                            array_push($arr_product_unit_ulid, $this->arr_product_unit_ulid[$i]);
+                        } else {
+                            array_push($arr_product_unit_ulid, '');
+                        }
+                    }
+                }
+                $this->merge(['arr_product_unit_ulid' => $arr_product_unit_ulid]);
 
                 $arr_product_unit_unit_id = [];
                 if ($this->has('arr_product_unit_unit_id')) {
