@@ -198,7 +198,7 @@ const pageSizeChanged = () => {
       <slot name="content"></slot>
     </div>
     <div class="flex flex-wrap justify-center intro-y sm:flex-row sm:flex-nowrap">
-      <div v-if="pages.length > 0" class="border-b">
+      <div v-if="pages.length > 0" class="pb-1 border-b">
         <Pagination class="w-full sm:w-auto sm:mr-auto">
           <Pagination.Link @click="paginationFirstButtonClicked">
             <Lucide icon="ChevronsLeft" class="w-4 h-4" />
@@ -207,13 +207,16 @@ const pageSizeChanged = () => {
             <Lucide icon="ChevronLeft" class="w-4 h-4" />
           </Pagination.Link>
           <template v-for="n in pages" :key="n">
-            <Pagination.Link v-if="n > 0" :active="n == pagination?.current_page"
-              @click="paginationNumberButtonClicked(n)">
-              {{ n }}
-            </Pagination.Link>
-            <Pagination.Link v-else>
-              {{ '...' }}
-            </Pagination.Link>
+            <template v-if="n > 0">
+              <Pagination.Link :active="n == pagination?.current_page" @click="paginationNumberButtonClicked(n)">
+                {{ n }}
+              </Pagination.Link>
+            </template>
+            <template v-else>
+              <Pagination.Text>
+                {{ '...' }}
+              </Pagination.Text>
+            </template>
           </template>
           <Pagination.Link @click="paginationNextButtonClicked">
             <Lucide icon="ChevronRight" class="w-4 h-4" />

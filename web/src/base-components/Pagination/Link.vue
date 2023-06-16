@@ -7,7 +7,7 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { computed, LiHTMLAttributes, useAttrs } from "vue";
+import { computed, LiHTMLAttributes, useAttrs, toRef } from "vue";
 import Button from "../Button";
 
 interface LinkProps extends /* @vue-ignore */ LiHTMLAttributes {
@@ -15,17 +15,20 @@ interface LinkProps extends /* @vue-ignore */ LiHTMLAttributes {
   active?: boolean;
 }
 
-const { as, active } = withDefaults(defineProps<LinkProps>(), {
-  as: "a",
+const props = withDefaults(defineProps<LinkProps>(), {
+  as: 'a',
   active: false,
 });
 
 const attrs = useAttrs();
 
+const as = toRef(props, 'as');
+const active = toRef(props, 'active');
+
 const computedClass = computed(() =>
   twMerge([
     "min-w-0 sm:min-w-[40px] shadow-none font-normal flex items-center justify-center border-transparent text-slate-800 sm:mr-2 dark:text-slate-300 px-1 sm:px-3",
-    active && "!box font-medium dark:bg-darkmode-400",
+    active.value && "!box font-medium dark:bg-darkmode-400 underline",
     typeof attrs.class === "string" && attrs.class,
   ])
 );
