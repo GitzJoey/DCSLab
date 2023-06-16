@@ -9,7 +9,7 @@ import {
   FormSelect,
 } from "../../base-components/Form";
 import { useUserContextStore } from "../../stores/user-context";
-import TwoLayoutColumns from "../../base-components/TwoLayoutColumns";
+import TwoLayoutColumns from "../../base-components/Form/FormLayout/TowColumnsLayout";
 //#endregion
 
 //#region Declarations
