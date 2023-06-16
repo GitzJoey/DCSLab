@@ -6,6 +6,7 @@ use App\Enums\UserRoles;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Traits\CacheHelper;
+use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 class RoleActions
 {
     use CacheHelper;
+    use LoggerHelper;
 
     public function __construct()
     {
@@ -41,7 +43,7 @@ class RoleActions
             return $role;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
@@ -105,7 +107,7 @@ class RoleActions
             return $role;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;

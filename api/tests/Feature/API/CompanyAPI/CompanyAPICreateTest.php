@@ -15,6 +15,35 @@ class CompanyAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_company_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->create();
+
+        $companyArr = Company::factory()->setStatusActive()->setIsDefault()
+            ->make()->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.company.save'), $companyArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_company_api_call_store_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->create();
+
+        $this->actingAs($user);
+
+        $companyArr = Company::factory()->setStatusActive()->setIsDefault()
+            ->make()->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.company.save'), $companyArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_company_api_call_store_expect_successful()
     {
         $user = User::factory()

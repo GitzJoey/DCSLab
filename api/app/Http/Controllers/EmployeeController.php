@@ -250,7 +250,7 @@ class EmployeeController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Employee $employee)
+    public function delete(Employee $employee, EmployeeRequest $employeeRequest)
     {
         $result = false;
         $errorMsg = '';

@@ -11,16 +11,17 @@ use App\Models\EmployeeAccess;
 use App\Models\Role;
 use App\Models\User;
 use App\Traits\CacheHelper;
+use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class EmployeeActions
 {
     use CacheHelper;
+    use LoggerHelper;
 
     public function __construct()
     {
@@ -39,7 +40,7 @@ class EmployeeActions
             $rolesArr = [];
             array_push($rolesArr, Role::where('name', '=', UserRoles::POS_EMPLOYEE->value)->first()->id);
 
-            $userActions = new UserActions();
+            $userActions = app(UserActions::class);
 
             $user = $userActions->create(
                 $userArr,
@@ -74,11 +75,11 @@ class EmployeeActions
             return $employee;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -144,11 +145,11 @@ class EmployeeActions
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)'.($useCache ? ' (C)' : ' (DB)'));
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -168,7 +169,7 @@ class EmployeeActions
         $timer_start = microtime(true);
 
         try {
-            $userActions = new UserActions();
+            $userActions = app(UserActions::class);
             $userActions->update(
                 user: $employee->user,
                 userArr: $userArr,
@@ -204,11 +205,11 @@ class EmployeeActions
             return $employee->refresh();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
@@ -233,17 +234,17 @@ class EmployeeActions
             return $retval;
         } catch (Exception $e) {
             DB::rollBack();
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
+            $this->loggerPerformance(__METHOD__, $execution_time);
         }
     }
 
     public function generateUniqueCodeForProduct(): string
     {
-        $rand = new RandomizerActions();
+        $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();
 
         return $code;

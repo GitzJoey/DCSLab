@@ -27,6 +27,159 @@ class SupplierAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_supplier_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        for ($i = 0; $i < 3; $i++) {
+            $productGroup = $company->productGroups()
+                ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+                ->inRandomOrder()->first();
+
+            $brand = $company->brands()->inRandomOrder()->first();
+
+            $product = Product::factory()
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
+
+            $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+                ->inRandomOrder()->get()->shuffle();
+
+            $productUnitCount = random_int(1, $units->count());
+            $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+            for ($j = 0; $j < $productUnitCount; $j++) {
+                $product = $product->has(
+                    ProductUnit::factory()
+                        ->for($company)->for($units[$j])
+                        ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                );
+            }
+
+            $product = $product->create();
+        }
+
+        $productCount = random_int(1, $company->products()->where('brand_id', '!=', null)->count());
+        $products = $company->products()->where('brand_id', '!=', null)
+            ->take($productCount)->get();
+
+        $arr_supplier_product_product_id = [];
+        $arr_supplier_product_main_product_id = [];
+        foreach ($products as $product) {
+            array_push($arr_supplier_product_product_id, Hashids::encode($product->id));
+            if (random_int(0, 1) == 1) {
+                array_push($arr_supplier_product_main_product_id, Hashids::encode($product->id));
+            }
+        }
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $supplierArr['pic_create_user'] = random_int(0, 1);
+        if ($supplierArr['pic_create_user'] == 1) {
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
+            $supplierArr['pic_password'] = '123456';
+        }
+
+        $supplierArr['arr_supplier_product_product_id'] = $arr_supplier_product_product_id;
+        $supplierArr['arr_supplier_product_main_product_id'] = $arr_supplier_product_main_product_id;
+
+        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_supplier_api_call_store_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                    ->has(Brand::factory()->count(5))
+                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        for ($i = 0; $i < 3; $i++) {
+            $productGroup = $company->productGroups()
+                ->where('category', '=', ProductGroupCategory::PRODUCTS->value)
+                ->inRandomOrder()->first();
+
+            $brand = $company->brands()->inRandomOrder()->first();
+
+            $product = Product::factory()
+                ->for($company)
+                ->for($productGroup)
+                ->for($brand)
+                ->setProductTypeAsProduct();
+
+            $units = $company->units()->where('category', '=', UnitCategory::PRODUCTS->value)
+                ->inRandomOrder()->get()->shuffle();
+
+            $productUnitCount = random_int(1, $units->count());
+            $primaryUnitIdx = random_int(0, $productUnitCount - 1);
+
+            for ($j = 0; $j < $productUnitCount; $j++) {
+                $product = $product->has(
+                    ProductUnit::factory()
+                        ->for($company)->for($units[$j])
+                        ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                );
+            }
+
+            $product = $product->create();
+        }
+
+        $productCount = random_int(1, $company->products()->where('brand_id', '!=', null)->count());
+        $products = $company->products()->where('brand_id', '!=', null)
+            ->take($productCount)->get();
+
+        $arr_supplier_product_product_id = [];
+        $arr_supplier_product_main_product_id = [];
+        foreach ($products as $product) {
+            array_push($arr_supplier_product_product_id, Hashids::encode($product->id));
+            if (random_int(0, 1) == 1) {
+                array_push($arr_supplier_product_main_product_id, Hashids::encode($product->id));
+            }
+        }
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $supplierArr['pic_create_user'] = random_int(0, 1);
+        if ($supplierArr['pic_create_user'] == 1) {
+            $supplierArr['pic_contact_person_name'] = $this->faker->name();
+            $supplierArr['pic_email'] = $this->faker->email();
+            $supplierArr['pic_password'] = '123456';
+        }
+
+        $supplierArr['arr_supplier_product_product_id'] = $arr_supplier_product_product_id;
+        $supplierArr['arr_supplier_product_main_product_id'] = $arr_supplier_product_main_product_id;
+
+        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_supplier_api_call_store_expect_successful()
     {
         $user = User::factory()

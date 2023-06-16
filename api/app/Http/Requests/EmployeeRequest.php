@@ -106,6 +106,13 @@ class EmployeeRequest extends FormRequest
                 ];
 
                 return array_merge($rules_update, $nullableArr);
+
+            case 'delete':
+                $rules_delete = [
+
+                ];
+
+                return $rules_delete;
             default:
                 return [
                     '' => 'required',

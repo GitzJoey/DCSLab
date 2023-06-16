@@ -21,6 +21,83 @@ class EmployeeAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_employee_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->count(2))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $accessCount = random_int(1, $company->branches()->count());
+        $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
+        $access_branch_hIds = [];
+        for ($i = 0; $i < $accessCount; $i++) {
+            array_push($access_branch_hIds, Hashids::encode($branches[$i]->id));
+        }
+
+        $userArr = User::factory()->make()->toArray();
+
+        $profileArr = Profile::factory()->make()->toArray();
+
+        $employeeArr = array_merge(
+            [
+                'company_id' => Hashids::encode($company->id),
+                'arr_access_branch_id' => $access_branch_hIds,
+            ],
+            Employee::factory()->setStatusActive()->make()->toArray(),
+            $userArr,
+            $profileArr
+        );
+
+        $api = $this->json('POST', route('api.post.db.company.employee.save'), $employeeArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_employee_api_call_store_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->count(2))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $accessCount = random_int(1, $company->branches()->count());
+        $branches = $company->branches()->inRandomOrder()->take($accessCount)->get();
+        $access_branch_hIds = [];
+        for ($i = 0; $i < $accessCount; $i++) {
+            array_push($access_branch_hIds, Hashids::encode($branches[$i]->id));
+        }
+
+        $userArr = User::factory()->make()->toArray();
+
+        $profileArr = Profile::factory()->make()->toArray();
+
+        $employeeArr = array_merge(
+            [
+                'company_id' => Hashids::encode($company->id),
+                'arr_access_branch_id' => $access_branch_hIds,
+            ],
+            Employee::factory()->setStatusActive()->make()->toArray(),
+            $userArr,
+            $profileArr
+        );
+
+        $api = $this->json('POST', route('api.post.db.company.employee.save'), $employeeArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_employee_api_call_store_expect_successful()
     {
         $user = User::factory()

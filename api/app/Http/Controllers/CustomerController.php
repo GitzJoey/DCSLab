@@ -231,7 +231,9 @@ class CustomerController extends BaseController
         $customerAddressArr = [];
         $count_address = count($request['arr_customer_address_address']);
         for ($i = 0; $i < $count_address; $i++) {
-            $customer_address_id = $request['arr_customer_address_id'][$i] != null ? $request['arr_customer_address_id'][$i] : null;
+            $customer_address_id = $request['arr_customer_address_id'][$i] != 0 ? $request['arr_customer_address_id'][$i] : 0;
+
+            $customer_address_ulid = $request['arr_customer_address_ulid'][$i];
 
             $arr_customer_address_address = $request['arr_customer_address_address'][$i];
 
@@ -246,6 +248,7 @@ class CustomerController extends BaseController
 
             array_push($customerAddressArr, [
                 'id' => $customer_address_id,
+                'ulid' => $customer_address_ulid,
                 'company_id' => $company_id,
                 'customer_id' => $customer->id,
                 'address' => $arr_customer_address_address,
@@ -294,7 +297,7 @@ class CustomerController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Customer $customer)
+    public function delete(Customer $customer, CustomerRequest $customerRequest)
     {
         $result = false;
         $errorMsg = '';

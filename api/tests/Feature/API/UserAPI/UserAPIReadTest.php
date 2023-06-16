@@ -16,6 +16,26 @@ class UserAPIReadTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_user_api_call_read_any_without_authorization_expect_unauthorized_message()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_user_api_call_read_any_without_access_right_expect_unauthorized_message()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_user_api_call_read_without_authorization_expect_unauthorized_message()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_user_api_call_read_without_access_right_expect_unauthorized_message()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_user_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
         $user = User::factory()

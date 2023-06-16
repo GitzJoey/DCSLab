@@ -19,6 +19,133 @@ class CustomerAPIEditTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_customer_api_call_update_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $customer = Customer::factory()->for($company)->for($customerGroup);
+        for ($i = 0; $i < random_int(1, 5); $i++) {
+            $customer = $customer->has(CustomerAddress::factory()->for($company));
+        }
+        $customer = $customer->create();
+
+        $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
+        $arr_customer_address_address = [];
+        $arr_customer_address_city = [];
+        $arr_customer_address_contact = [];
+        $arr_customer_address_is_main = [];
+        $arr_customer_address_remarks = [];
+
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
+        }
+
+        $customerAddress = CustomerAddress::factory()->make();
+        array_push($arr_customer_address_id, '');
+        array_push($arr_customer_address_ulid, '');
+        array_push($arr_customer_address_address, $customerAddress->address);
+        array_push($arr_customer_address_city, $customerAddress->city);
+        array_push($arr_customer_address_contact, $customerAddress->contact);
+        array_push($arr_customer_address_is_main, $customerAddress->is_main);
+        array_push($arr_customer_address_remarks, $customerAddress->remarks);
+
+        $customerArr = Customer::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'customer_group_id' => Hashids::encode($customerGroup->id),
+            'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
+            'arr_customer_address_address' => $arr_customer_address_address,
+            'arr_customer_address_city' => $arr_customer_address_city,
+            'arr_customer_address_contact' => $arr_customer_address_contact,
+            'arr_customer_address_is_main' => $arr_customer_address_is_main,
+            'arr_customer_address_remarks' => $arr_customer_address_remarks,
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.customer.customer.edit', $customer->ulid), $customerArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_customer_api_call_update_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $customer = Customer::factory()->for($company)->for($customerGroup);
+        for ($i = 0; $i < random_int(1, 5); $i++) {
+            $customer = $customer->has(CustomerAddress::factory()->for($company));
+        }
+        $customer = $customer->create();
+
+        $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
+        $arr_customer_address_address = [];
+        $arr_customer_address_city = [];
+        $arr_customer_address_contact = [];
+        $arr_customer_address_is_main = [];
+        $arr_customer_address_remarks = [];
+
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
+        }
+
+        $customerAddress = CustomerAddress::factory()->make();
+        array_push($arr_customer_address_id, '');
+        array_push($arr_customer_address_ulid, '');
+        array_push($arr_customer_address_address, $customerAddress->address);
+        array_push($arr_customer_address_city, $customerAddress->city);
+        array_push($arr_customer_address_contact, $customerAddress->contact);
+        array_push($arr_customer_address_is_main, $customerAddress->is_main);
+        array_push($arr_customer_address_remarks, $customerAddress->remarks);
+
+        $customerArr = Customer::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'customer_group_id' => Hashids::encode($customerGroup->id),
+            'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
+            'arr_customer_address_address' => $arr_customer_address_address,
+            'arr_customer_address_city' => $arr_customer_address_city,
+            'arr_customer_address_contact' => $arr_customer_address_contact,
+            'arr_customer_address_is_main' => $arr_customer_address_is_main,
+            'arr_customer_address_remarks' => $arr_customer_address_remarks,
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.customer.customer.edit', $customer->ulid), $customerArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_customer_api_call_update_and_insert_customer_address_expect_db_updated()
     {
         $user = User::factory()
@@ -34,33 +161,33 @@ class CustomerAPIEditTest extends APITestCase
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
         $customer = Customer::factory()->for($company)->for($customerGroup);
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < random_int(1, 5); $i++) {
             $customer = $customer->has(CustomerAddress::factory()->for($company));
         }
         $customer = $customer->create();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $addressCount = random_int(1, 5);
-        $mainAddressIdx = random_int(0, $addressCount - 1);
-        for ($i = 0; $i < 3; $i++) {
-            $customerAddress = CustomerAddress::factory()->make();
-
-            array_push($arr_customer_address_id, '');
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
             array_push($arr_customer_address_address, $customerAddress->address);
             array_push($arr_customer_address_city, $customerAddress->city);
             array_push($arr_customer_address_contact, $customerAddress->contact);
-            array_push($arr_customer_address_is_main, $i == $mainAddressIdx ? true : false);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
             array_push($arr_customer_address_remarks, $customerAddress->remarks);
         }
 
         $customerAddress = CustomerAddress::factory()->make();
         array_push($arr_customer_address_id, '');
+        array_push($arr_customer_address_ulid, '');
         array_push($arr_customer_address_address, $customerAddress->address);
         array_push($arr_customer_address_city, $customerAddress->city);
         array_push($arr_customer_address_contact, $customerAddress->contact);
@@ -71,6 +198,7 @@ class CustomerAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
             'customer_group_id' => Hashids::encode($customerGroup->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -133,26 +261,29 @@ class CustomerAPIEditTest extends APITestCase
         $customer = $customer->create();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $customerAddressArr = $customer->customerAddresses->toArray();
-        for ($i = 0; $i < count($customerAddressArr); $i++) {
-            array_push($arr_customer_address_id, Hashids::encode($customerAddressArr[$i]['id']));
-            array_push($arr_customer_address_address, $customerAddressArr[$i]['address']);
-            array_push($arr_customer_address_city, $customerAddressArr[$i]['city']);
-            array_push($arr_customer_address_contact, $customerAddressArr[$i]['contact']);
-            array_push($arr_customer_address_is_main, $customerAddressArr[$i]['is_main']);
-            array_push($arr_customer_address_remarks, $customerAddressArr[$i]['remarks']);
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
         }
 
         $customerArr = Customer::factory()->make([
             'company_id' => Hashids::encode($company->id),
             'customer_group_id' => Hashids::encode(CustomerGroup::max('id') + 1),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -189,24 +320,28 @@ class CustomerAPIEditTest extends APITestCase
         $customer = $customer->create();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $customerAddressArr = $customer->customerAddresses->toArray();
-        for ($i = 0; $i < count($customerAddressArr); $i++) {
-            array_push($arr_customer_address_id, Hashids::encode($customerAddressArr[$i]['id']));
-            array_push($arr_customer_address_address, $customerAddressArr[$i]['address']);
-            array_push($arr_customer_address_city, $customerAddressArr[$i]['city']);
-            array_push($arr_customer_address_contact, $customerAddressArr[$i]['contact']);
-            array_push($arr_customer_address_is_main, $customerAddressArr[$i]['is_main']);
-            array_push($arr_customer_address_remarks, $customerAddressArr[$i]['remarks']);
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
         }
 
         $customerAddress = CustomerAddress::factory()->make();
         $lastRow = count($arr_customer_address_id) - 1;
+        $arr_customer_address_id[$lastRow] = $customerAddress->id;
+        $arr_customer_address_ulid[$lastRow] = $customerAddress->ulid;
         $arr_customer_address_address[$lastRow] = $customerAddress->address;
         $arr_customer_address_city[$lastRow] = $customerAddress->city;
         $arr_customer_address_contact[$lastRow] = $customerAddress->contact;
@@ -217,6 +352,7 @@ class CustomerAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
             'customer_group_id' => Hashids::encode($customerGroup->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -257,6 +393,75 @@ class CustomerAPIEditTest extends APITestCase
         }
     }
 
+    public function test_customer_api_call_update_and_edit_customer_address_with_invalid_ulid_expect_failed()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $customer = Customer::factory()->for($company)->for($customerGroup);
+        for ($i = 0; $i < 3; $i++) {
+            $customer = $customer->has(CustomerAddress::factory()->for($company));
+        }
+        $customer = $customer->create();
+
+        $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
+        $arr_customer_address_address = [];
+        $arr_customer_address_city = [];
+        $arr_customer_address_contact = [];
+        $arr_customer_address_is_main = [];
+        $arr_customer_address_remarks = [];
+
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
+        }
+
+        $customerAddress = CustomerAddress::factory()->make();
+        $lastRow = count($arr_customer_address_id) - 1;
+        $arr_customer_address_id[$lastRow] = $customerAddress->id;
+        $arr_customer_address_ulid[$lastRow] = 'TEST123TEST123';
+        $arr_customer_address_address[$lastRow] = $customerAddress->address;
+        $arr_customer_address_city[$lastRow] = $customerAddress->city;
+        $arr_customer_address_contact[$lastRow] = $customerAddress->contact;
+        $arr_customer_address_is_main[$lastRow] = $customerAddress->is_main;
+        $arr_customer_address_remarks[$lastRow] = $customerAddress->remarks;
+
+        $customerArr = Customer::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'customer_group_id' => Hashids::encode($customerGroup->id),
+            'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
+            'arr_customer_address_address' => $arr_customer_address_address,
+            'arr_customer_address_city' => $arr_customer_address_city,
+            'arr_customer_address_contact' => $arr_customer_address_contact,
+            'arr_customer_address_is_main' => $arr_customer_address_is_main,
+            'arr_customer_address_remarks' => $arr_customer_address_remarks,
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.customer.customer.edit', $customer->ulid), $customerArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonStructure([
+            'errors',
+        ]);
+    }
+
     public function test_customer_api_call_update_and_delete_customer_address_expect_db_updated()
     {
         $user = User::factory()
@@ -279,23 +484,26 @@ class CustomerAPIEditTest extends APITestCase
         $customer = $customer->create();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $customerAddressArr = $customer->customerAddresses->toArray();
-        for ($i = 0; $i < count($customerAddressArr); $i++) {
-            array_push($arr_customer_address_id, Hashids::encode($customerAddressArr[$i]['id']));
-            array_push($arr_customer_address_address, $customerAddressArr[$i]['address']);
-            array_push($arr_customer_address_city, $customerAddressArr[$i]['city']);
-            array_push($arr_customer_address_contact, $customerAddressArr[$i]['contact']);
-            array_push($arr_customer_address_is_main, $customerAddressArr[$i]['is_main']);
-            array_push($arr_customer_address_remarks, $customerAddressArr[$i]['remarks']);
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
         }
 
         array_pop($arr_customer_address_id);
+        array_pop($arr_customer_address_ulid);
         array_pop($arr_customer_address_address);
         array_pop($arr_customer_address_city);
         array_pop($arr_customer_address_contact);
@@ -306,6 +514,7 @@ class CustomerAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
             'customer_group_id' => Hashids::encode($customerGroup->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -372,20 +581,22 @@ class CustomerAPIEditTest extends APITestCase
         $customer = $company->customers()->inRandomOrder()->first();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $customerAddressArr = $customer->customerAddresses->toArray();
-        for ($i = 0; $i < count($customerAddressArr); $i++) {
-            array_push($arr_customer_address_id, Hashids::encode($customerAddressArr[$i]['id']));
-            array_push($arr_customer_address_address, $customerAddressArr[$i]['address']);
-            array_push($arr_customer_address_city, $customerAddressArr[$i]['city']);
-            array_push($arr_customer_address_contact, $customerAddressArr[$i]['contact']);
-            array_push($arr_customer_address_is_main, $customerAddressArr[$i]['is_main']);
-            array_push($arr_customer_address_remarks, $customerAddressArr[$i]['remarks']);
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
         }
 
         $customerArr = Customer::factory()->make([
@@ -393,6 +604,7 @@ class CustomerAPIEditTest extends APITestCase
             'code' => $company->customers()->where('id', '!=', $customer->id)->inRandomOrder()->first()->code,
             'customer_group_id' => Hashids::encode($customerGroup->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
@@ -447,20 +659,22 @@ class CustomerAPIEditTest extends APITestCase
         $customer = $company_1->customers()->inRandomOrder()->first();
 
         $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
         $arr_customer_address_address = [];
         $arr_customer_address_city = [];
         $arr_customer_address_contact = [];
         $arr_customer_address_is_main = [];
         $arr_customer_address_remarks = [];
 
-        $customerAddressArr = $customer->customerAddresses->toArray();
-        for ($i = 0; $i < count($customerAddressArr); $i++) {
-            array_push($arr_customer_address_id, Hashids::encode($customerAddressArr[$i]['id']));
-            array_push($arr_customer_address_address, $customerAddressArr[$i]['address']);
-            array_push($arr_customer_address_city, $customerAddressArr[$i]['city']);
-            array_push($arr_customer_address_contact, $customerAddressArr[$i]['contact']);
-            array_push($arr_customer_address_is_main, $customerAddressArr[$i]['is_main']);
-            array_push($arr_customer_address_remarks, $customerAddressArr[$i]['remarks']);
+        $customerAddresses = $customer->customerAddresses;
+        foreach ($customerAddresses as $customerAddress) {
+            array_push($arr_customer_address_id, Hashids::encode($customerAddress->id));
+            array_push($arr_customer_address_ulid, $customerAddress->ulid);
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $customerAddress->is_main);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
         }
 
         $customerArr = Customer::factory()->make([
@@ -468,6 +682,7 @@ class CustomerAPIEditTest extends APITestCase
             'code' => $company_2->customers()->inRandomOrder()->first()->code,
             'customer_group_id' => Hashids::encode($company_1->customerGroups()->inRandomOrder()->first()->id),
             'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
             'arr_customer_address_address' => $arr_customer_address_address,
             'arr_customer_address_city' => $arr_customer_address_city,
             'arr_customer_address_contact' => $arr_customer_address_contact,
