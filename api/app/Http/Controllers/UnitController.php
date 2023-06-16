@@ -167,8 +167,10 @@ class UnitController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Unit $unit)
+    public function delete(Unit $unit, UnitRequest $unitRequest)
     {
+        $request = $unitRequest->validated();
+        
         $result = false;
         $errorMsg = '';
 

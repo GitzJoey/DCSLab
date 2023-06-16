@@ -164,8 +164,10 @@ class ProductGroupController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(ProductGroup $productgroup)
+    public function delete(ProductGroup $productgroup, ProductGroupRequest $productGroupRequest)
     {
+        $request = $productGroupRequest->validated();
+        
         $result = false;
         $errorMsg = '';
 

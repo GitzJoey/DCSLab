@@ -18,6 +18,39 @@ class BranchAPIDeleteTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_branch_api_call_delete_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setIsDefault()
+                ->has(Branch::factory()))
+            ->create();
+
+        $branch = $user->companies()->inRandomOrder()->first()
+            ->branches()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_branch_api_call_delete_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+        ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()))
+            ->create();
+
+        $this->actingAs($user);
+
+        $branch = $user->companies()->inRandomOrder()->first()
+            ->branches()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_branch_api_call_delete_expect_successful()
     {
         $user = User::factory()

@@ -297,8 +297,10 @@ class CustomerController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Customer $customer)
+    public function delete(Customer $customer, CustomerRequest $customerRequest)
     {
+        $request = $customerRequest->validated();
+        
         $result = false;
         $errorMsg = '';
 

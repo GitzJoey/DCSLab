@@ -18,6 +18,51 @@ class WarehouseAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_warehouse_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch()))
+            ->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        $warehouseArr = Warehouse::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'branch_id' => Hashids::encode($branch->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), $warehouseArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_warehouse_api_call_store_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch()))
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        $warehouseArr = Warehouse::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'branch_id' => Hashids::encode($branch->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.warehouse.save'), $warehouseArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_warehouse_api_call_store_expect_successful()
     {
         $user = User::factory()

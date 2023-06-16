@@ -308,8 +308,10 @@ class PurchaseOrderController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(PurchaseOrder $purchaseOrder)
+    public function delete(PurchaseOrder $purchaseOrder, PurchaseOrderRequest $purchaseOrderRequest)
     {
+        $request = $purchaseOrderRequest->validated();
+
         $result = false;
         $errorMsg = '';
 

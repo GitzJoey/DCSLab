@@ -155,8 +155,10 @@ class BrandController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Brand $brand)
+    public function delete(Brand $brand, BrandRequest $brandRequest)
     {
+        $request = $brandRequest->validated();
+
         $result = false;
         $errorMsg = '';
 

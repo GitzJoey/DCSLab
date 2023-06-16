@@ -18,6 +18,43 @@ class UnitAPIDeleteTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_unit_api_call_delete_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Unit::factory())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $unit = $company->units()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.product.unit.delete', $unit->ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_unit_api_call_delete_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Unit::factory())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $unit = $company->units()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.product.unit.delete', $unit->ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_unit_api_call_delete_expect_successful()
     {
         $user = User::factory()

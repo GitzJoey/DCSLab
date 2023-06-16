@@ -181,8 +181,10 @@ class WarehouseController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Warehouse $warehouse)
+    public function delete(Warehouse $warehouse, WarehouseRequest $warehouseRequest)
     {
+        $request = $warehouseRequest->validated();
+        
         $result = false;
         $errorMsg = '';
 

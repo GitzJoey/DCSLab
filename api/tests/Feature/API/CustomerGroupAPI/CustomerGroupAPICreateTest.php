@@ -17,6 +17,43 @@ class CustomerGroupAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_customer_group_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $customerGroupArr = CustomerGroup::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.customer.customer_group.save'), $customerGroupArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_customer_group_api_call_store_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $customerGroupArr = CustomerGroup::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.customer.customer_group.save'), $customerGroupArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_customer_group_api_call_store_expect_successful()
     {
         $user = User::factory()
