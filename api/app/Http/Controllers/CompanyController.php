@@ -197,7 +197,7 @@ class CompanyController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Company $company)
+    public function delete(Company $company, CompanyRequest $companyRequest)
     {
         $result = false;
         $errorMsg = '';

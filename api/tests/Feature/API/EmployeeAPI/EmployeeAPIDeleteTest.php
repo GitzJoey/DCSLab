@@ -22,6 +22,97 @@ class EmployeeAPIDeleteTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_employee_api_call_delete_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(Branch::factory()->count(2)))
+            ->create();
+
+        $company = $user->companies->first();
+
+        for ($i = 0; $i < 3; $i++) {
+            $employee = Employee::factory()
+                ->for($company)
+                ->for(
+                    User::factory()
+                        ->has(Profile::factory())
+                        ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                );
+
+            $branches = $company->branches();
+            $branchCount = $branches->count();
+
+            if ($branchCount > 0) {
+                $accessCount = random_int(1, $branchCount);
+                $employee_branchs = $branches->inRandomOrder()->take($accessCount)->get();
+
+                for ($j = 0; $j < $accessCount; $j++) {
+                    $employee = $employee->has(EmployeeAccess::factory()->for($company)->for($employee_branchs[$j]));
+                }
+            }
+
+            $employee->create();
+        }
+
+        $employee = $company->employees()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.company.employee.delete', $employee->ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_employee_api_call_delete_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(Branch::factory()->count(2)))
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+
+        for ($i = 0; $i < 3; $i++) {
+            $employee = Employee::factory()
+                ->for($company)
+                ->for(
+                    User::factory()
+                        ->has(Profile::factory())
+                        ->hasAttached(Role::where('name', '=', UserRoles::USER->value)->first())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+                        ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+                );
+
+            $branches = $company->branches();
+            $branchCount = $branches->count();
+
+            if ($branchCount > 0) {
+                $accessCount = random_int(1, $branchCount);
+                $employee_branchs = $branches->inRandomOrder()->take($accessCount)->get();
+
+                for ($j = 0; $j < $accessCount; $j++) {
+                    $employee = $employee->has(EmployeeAccess::factory()->for($company)->for($employee_branchs[$j]));
+                }
+            }
+
+            $employee->create();
+        }
+
+        $employee = $company->employees()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.company.employee.delete', $employee->ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_employee_api_call_delete_expect_successful()
     {
         $user = User::factory()

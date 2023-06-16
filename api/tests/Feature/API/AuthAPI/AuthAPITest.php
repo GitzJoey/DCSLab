@@ -52,13 +52,13 @@ class AuthAPITest extends APITestCase
     public function test_auth_api_logout()
     {
         $this->markTestSkipped('Test under construction');
-        
+
         $user = User::factory()->create();
 
         $token = $user->createToken('test-token')->plainTextToken;
 
         $response = $this->postJson('/api/logout', [], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
         ]);
 
         $response->assertStatus(200);

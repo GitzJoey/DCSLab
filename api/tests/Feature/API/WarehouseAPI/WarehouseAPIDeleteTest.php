@@ -19,6 +19,43 @@ class WarehouseAPIDeleteTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_warehouse_api_call_delete_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+        $warehouse = Warehouse::factory()->for($company)->for($branch)->create();
+
+        $api = $this->json('POST', route('api.post.db.company.warehouse.delete', $warehouse->ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_warehouse_api_call_delete_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+        $warehouse = Warehouse::factory()->for($company)->for($branch)->create();
+
+        $api = $this->json('POST', route('api.post.db.company.warehouse.delete', $warehouse->ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_warehouse_api_call_delete_expect_successful()
     {
         $user = User::factory()
