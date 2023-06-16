@@ -1,8 +1,5 @@
-<!-- TwoColumnLayout -->
 <template>
     <div class="grid grid-cols-12 gap-6 mt-5">
-      <!-- Begin Side Menu -->
-  
       <div
         v-if="isShowSideTab"
         class="col-span-12 lg:col-span-4 2xl:col-span-3 flex lg:block flex-col-reverse transition ease-in duration-100"
@@ -48,16 +45,13 @@
         <div
           :class="[
             'transition ease-in duration-100 ml-auto mr-5 hidden xl:block cursor-pointer',
-            // { 'transform rotate-180': link.active },
           ]"
           @click="isShowSideTab = true"
         >
           <Lucide class="w-4 h-4" icon="ChevronsRight" />
         </div>
       </div>
-      <!-- End Side Menu -->
   
-      <!-- Begin Card Menu -->
       <div :class="['col-span-12' ,'lg:col-span-8',,  `${isShowSideTab?  '2xl:col-span-9' : '2xl:col-span-12'}`]">
         <Transition>
           <div class="grid grid-cols-12 gap-6">
@@ -88,13 +82,11 @@
           </div>
         </Transition>
       </div>
-      <!-- End Card Menu -->
     </div>
   </template>
   
   <script setup lang="ts">
   import { PropType, ref } from "vue";
-  // import Lucide from "../../base-components/Lucide";
   import Lucide from '../../../Lucide'
   
   type Cards = {

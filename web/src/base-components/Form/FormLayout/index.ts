@@ -1,3 +1,4 @@
-import TitleLayout from "./TitleLayout.vue";
+import TwoLayoutColumns from "./TwoColumnsLayout";
+import { TitleLayout } from "./TitleLayout";
 
-export { TitleLayout };
+export { TwoLayoutColumns, TitleLayout}
