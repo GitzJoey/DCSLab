@@ -65,7 +65,7 @@ function handleExpandCard(index: number) {
   <div class="flex items-center mt-8 intro-y">
     <h2 class="mr-auto text-xl font-medium">{{ t("views.profile.title") }}</h2>
   </div>
-  <TwoLayoutColumns :cards="tabs" @handleExpandCard="handleExpandCard">
+  <TwoColumnsLayout :cards="tabs" @handleExpandCard="handleExpandCard">
     <template #side-menu-title >
       {{ userContext.name }}
     </template>
@@ -270,5 +270,5 @@ function handleExpandCard(index: number) {
           </div>
     </template>
 
-  </TwoLayoutColumns>
+  </TwoColumnsLayout>
 </template>

@@ -87,7 +87,7 @@
   
   <script setup lang="ts">
   import { PropType, ref } from "vue";
-  import Lucide from '../../../Lucide'
+  import Lucide from '../../Lucide'
   
   type Cards = {
     title: string;
