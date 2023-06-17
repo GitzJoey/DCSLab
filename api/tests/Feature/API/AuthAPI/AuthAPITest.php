@@ -12,58 +12,18 @@ class AuthAPITest extends APITestCase
         parent::setUp();
     }
 
-    public function test_auth_api_register()
+    public function test_auth_api_call_register_expect_successful()
     {
         $this->markTestSkipped('Test under construction');
-
-        $response = $this->postJson('/api/register', [
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ]);
-
-        $response->assertStatus(201);
-        $response->assertJson([
-            'message' => 'User registered successfully',
-        ]);
     }
 
-    public function test_auth_api_login()
+    public function test_auth_api_call_login_expect_successful()
     {
         $this->markTestSkipped('Test under construction');
-
-        $user = User::factory()->create([
-            'email' => 'john@example.com',
-            'password' => bcrypt('password123'),
-        ]);
-
-        $response = $this->postJson('/api/login', [
-            'email' => 'john@example.com',
-            'password' => 'password123',
-        ]);
-
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'token',
-        ]);
     }
 
-    public function test_auth_api_logout()
+    public function test_auth_api_call_logout_expect_successful()
     {
         $this->markTestSkipped('Test under construction');
-
-        $user = User::factory()->create();
-
-        $token = $user->createToken('test-token')->plainTextToken;
-
-        $response = $this->postJson('/api/logout', [], [
-            'Authorization' => 'Bearer '.$token,
-        ]);
-
-        $response->assertStatus(200);
-        $response->assertJson([
-            'message' => 'User logged out successfully',
-        ]);
     }
 }
