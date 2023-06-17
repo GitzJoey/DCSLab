@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { toRef, computed } from "vue";
 import Alert from "../Alert";
 import Lucide from "../Lucide";
 
@@ -19,12 +19,16 @@ const props = withDefaults(defineProps<AlertPlaceholderProps>(), {
     title: 'An unexpected error occurred.'
 });
 
+const alertType = toRef(props, 'alertType');
+const messages = toRef(props, 'messages');
+const title = toRef(props, 'title');
+
 const computedVariant = computed(() => {
-    if (props.alertType == 'danger') return 'soft-danger';
-    if (props.alertType == 'success') return 'soft-success';
-    if (props.alertType == 'warning') return 'soft-warning';
-    if (props.alertType == 'pending') return 'soft-pending';
-    if (props.alertType == 'dark') return 'soft-dark';
+    if (alertType.value == 'danger') return 'soft-danger';
+    if (alertType.value == 'success') return 'soft-success';
+    if (alertType.value == 'warning') return 'soft-warning';
+    if (alertType.value == 'pending') return 'soft-pending';
+    if (alertType.value == 'dark') return 'soft-dark';
 });
 </script>
 

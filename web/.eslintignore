@@ -23,7 +23,7 @@
 
 /src/base-components/Notification/**
 
-/src/base-components/Pagination/**
+/src/base-components/Pagination/Pagination.vue
 
 /src/base-components/Table/**
 
