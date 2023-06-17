@@ -39,6 +39,8 @@ class CompanyRequest extends FormRequest
             case 'update':
                 return $user->can('update', Company::class, $company) ? true : false;
             case 'delete':
+                //Authorization Error
+                //return false;
                 return $user->can('delete', Company::class, $company) ? true : false;
             default:
                 return false;
