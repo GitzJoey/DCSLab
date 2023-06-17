@@ -64,7 +64,7 @@ const toggleSideTab = (show: boolean | undefined) => {
         <div class="p-5 border-t border-slate-200/60 dark:border-darkmode-400">
           <template v-for="(link, index) in cards" :key="index">
             <a class="flex items-center mt-5" :href="`#${index}`">
-              <Lucide icon="Activity" class="w-4 h-4 mr-2" />
+              <Lucide icon="CircleDot" class="w-4 h-4 mr-2" />
               <slot name="side-menu-link" :link="link"></slot>
               <div
                 :class="{ 'transition ease-in duration-100 ml-auto mr-5 hidden xl:block': true, 'transform rotate-180': link.active }"

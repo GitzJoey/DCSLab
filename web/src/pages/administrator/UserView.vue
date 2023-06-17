@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import {
-  TitleLayout
+  TitleLayout, TwoColumnsLayout
 } from "../../base-components/Form/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
@@ -20,6 +20,7 @@ import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
+import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 //#endregion
 
 //#region Declarations
@@ -33,7 +34,7 @@ const userServices = new UserService()
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const alertErrors = ref([]);
+const cards: Array<TwoColumnsLayoutCards> = [];
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -248,7 +249,11 @@ const deleteSelected = (itemUlid: string) => {
           </template>
         </DataList>
       </div>
-      <div v-else></div>
+      <div v-else>
+        <TwoColumnsLayout :cards="cards">
+
+        </TwoColumnsLayout>
+      </div>
     </LoadingOverlay>
   </div>
 </template>
