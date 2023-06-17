@@ -18,22 +18,60 @@ class UserAPIReadTest extends APITestCase
 
     public function test_user_api_call_read_any_without_authorization_expect_unauthorized_message()
     {
-        $this->markTestSkipped('Test under construction');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->create();
+
+        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(401);
     }
 
     public function test_user_api_call_read_any_without_access_right_expect_unauthorized_message()
     {
-        $this->markTestSkipped('Test under construction');
+        $user = User::factory()
+            ->create();
+
+        $this->actingAs($user);
+
+        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(403);
     }
 
     public function test_user_api_call_read_without_authorization_expect_unauthorized_message()
     {
-        $this->markTestSkipped('Test under construction');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->create();
+
+        $api = $this->getJson(route('api.get.db.admin.users.read', $user->ulid));
+
+        $api->assertStatus(401);
     }
 
     public function test_user_api_call_read_without_access_right_expect_unauthorized_message()
     {
-        $this->markTestSkipped('Test under construction');
+        $user = User::factory()
+            ->create();
+
+        $this->actingAs($user);
+
+        $api = $this->getJson(route('api.get.db.admin.users.read', $user->ulid));
+
+        $api->assertStatus(403);
     }
 
     public function test_user_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
