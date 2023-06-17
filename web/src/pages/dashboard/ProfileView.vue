@@ -75,7 +75,7 @@ const onSubmit = async () => {
           {{ userContext.name }}
         </template>
         <template #side-menu-link="linkProps">
-          {{ linkProps.link.title }}
+          {{ t(linkProps.link.title) }}
         </template>
 
         <template #card-items-0>

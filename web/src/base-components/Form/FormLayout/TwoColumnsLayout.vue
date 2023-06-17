@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, toRef } from "vue";
 import Lucide from "../../Lucide";
+import { useI18n } from "vue-i18n";
 
 export interface TwoColumnsLayoutCards {
   title: string;
@@ -11,6 +12,8 @@ export interface TwoColumnsLayoutProps {
   cards: Array<TwoColumnsLayoutCards>,
   showSideTab?: boolean,
 }
+
+const { t } = useI18n();
 
 const props = withDefaults(defineProps<TwoColumnsLayoutProps>(), {
   cards: (): Array<TwoColumnsLayoutCards> => [],
@@ -90,7 +93,7 @@ const toggleSideTab = (show: boolean | undefined) => {
           <div v-for="(card, index) in cards" :key="index" class="intro-y box col-span-12 2xl:col-span-12">
             <div :id="`${index}`"
               class="flex items-center px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400">
-              <h2 class="font-medium text-base mr-auto">{{ card.title }}</h2>
+              <h2 class="font-medium text-base mr-auto">{{ t(card.title) }}</h2>
               <div
                 :class="{ 'transition ease-in duration-100 ml-auto mr-5 hidden xl:block cursor-pointer': true, 'transform rotate-180': card.active }"
                 @click="onCardTitleClicked(index)">
