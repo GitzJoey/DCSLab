@@ -12,6 +12,7 @@ import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 
 interface FormTextareaProps extends /* @vue-ignore */ InputHTMLAttributes {
+  value?: InputHTMLAttributes["value"];
   modelValue?: InputHTMLAttributes["value"];
   formTextareaSize?: "sm" | "lg";
   rounded?: boolean;
@@ -22,9 +23,7 @@ interface FormTextareaEmit {
 }
 
 const props = defineProps<FormTextareaProps>();
-
 const attrs = useAttrs();
-
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
 
@@ -39,7 +38,6 @@ const computedClass = computed(() =>
     formInline && "flex-1",
     inputGroup &&
       "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
-
     typeof attrs.class === "string" && attrs.class,
   ])
 );
@@ -48,7 +46,7 @@ const emit = defineEmits<FormTextareaEmit>();
 
 const localValue = computed({
   get() {
-    return props.modelValue;
+    return props.modelValue === undefined ? props.value : props.modelValue;
   },
   set(newValue) {
     emit("update:modelValue", newValue);
