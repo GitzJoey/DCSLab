@@ -37,7 +37,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
 
             if (serializedSelectedUserLocation) {
-                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(serializedSelectedUserLocation);
+                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(atob(serializedSelectedUserLocation));
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
             }
@@ -48,7 +48,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
 
             if (serializedSelectedUserLocation) {
-                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(serializedSelectedUserLocation);
+                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(atob(serializedSelectedUserLocation));
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
             }
@@ -59,7 +59,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
 
             if (serializedSelectedUserLocation) {
-                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(serializedSelectedUserLocation);
+                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(atob(serializedSelectedUserLocation));
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
             }
@@ -83,7 +83,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             this.selectedUserLocation.branch.ulid = branchUlid;
             this.selectedUserLocation.branch.name = branchName;
 
-            sessionStorage.setItem('selectedUserLocation', JSON.stringify(this.selectedUserLocation));
+            sessionStorage.setItem('selectedUserLocation', btoa(JSON.stringify(this.selectedUserLocation)));
         }
     },
 });
