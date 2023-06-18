@@ -66,51 +66,43 @@ const perPage = computed(() => {
 
 const pages = computed(() => {
   if (pagination.value == null) return [];
-  return generatePaginationArray(pagination.value.current_page, pagination.value.total);
+  return generatePaginationArray(pagination.value.current_page, pagination.value.total, pagination.value.per_page);
 });
 
-const generatePaginationArray = (currentPage: number, totalPages: number): number[] => {
+const generatePaginationArray = (currentPage: number, totalRecords: number, perPage: number): number[] => {
+  const totalPages = Math.ceil(totalRecords / perPage);
   const paginationArray: number[] = [];
 
-  if (totalPages <= 10) {
+  if (totalPages <= 7) {
     for (let i = 1; i <= totalPages; i++) {
       paginationArray.push(i);
     }
   } else {
-    let startPage = currentPage - 1;
-    let endPage = currentPage + 1;
-
-    if (startPage < 1) {
-      endPage += Math.abs(startPage) + 1;
-      startPage = 1;
-    }
-
-    if (endPage > totalPages) {
-      startPage -= endPage - totalPages;
-      endPage = totalPages;
-    }
-
-    if (startPage > 1) {
-      paginationArray.push(1);
-      if (startPage > 2) {
-        paginationArray.push(-1);
+    if (currentPage <= 4) {
+      for (let i = 1; i <= 5; i++) {
+        paginationArray.push(i);
       }
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      paginationArray.push(i);
-    }
-
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        paginationArray.push(-1);
+      paginationArray.push(-1);
+      paginationArray.push(totalPages - 1, totalPages);
+    } else if (currentPage >= totalPages - 3) {
+      paginationArray.push(1, 2);
+      paginationArray.push(-1);
+      for (let i = totalPages - 4; i <= totalPages; i++) {
+        paginationArray.push(i);
       }
-      paginationArray.push(totalPages);
+    } else {
+      paginationArray.push(1, 2);
+      paginationArray.push(-1);
+      for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+        paginationArray.push(i);
+      }
+      paginationArray.push(-1);
+      paginationArray.push(totalPages - 1, totalPages);
     }
   }
 
   return paginationArray;
-};
+}
 
 const createDataEmittedPayload = (search: string, page: number, per_page: number): DataListEmittedData => {
   let result: DataListEmittedData = {
@@ -128,7 +120,7 @@ const createDataEmittedPayload = (search: string, page: number, per_page: number
 
 const searchTextboxChanged = () => {
   if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
+    emits('dataListChanged', createDataEmittedPayload(search.value, 1, pagination.value.per_page));
 }
 
 const refreshButtonClicked = () => {
