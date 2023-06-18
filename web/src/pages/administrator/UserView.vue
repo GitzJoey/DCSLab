@@ -144,18 +144,18 @@ const deleteSelected = (itemUlid: string) => {
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
                 <Table.Tr>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.name")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.email")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.roles")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.status")
-                  }}</Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.name") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.email") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.roles") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.status") }}
+                  </Table.Th>
                   <Table.Th class="whitespace-nowrap"></Table.Th>
                 </Table.Tr>
               </Table.Thead>
@@ -213,10 +213,12 @@ const deleteSelected = (itemUlid: string) => {
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
                         <div class="flex-1">
-                          <span v-if="item.profile.status === 'ACTIVE'">{{
-                            t('components.dropdown.values.statusDDL.active') }}</span>
-                          <span v-if="item.profile.status === 'INACTIVE'">{{
-                            t('components.dropdown.values.statusDDL.inactive') }}</span>
+                          <span v-if="item.profile.status === 'ACTIVE'">
+                            {{ t('components.dropdown.values.statusDDL.active') }}
+                          </span>
+                          <span v-if="item.profile.status === 'INACTIVE'">
+                            {{ t('components.dropdown.values.statusDDL.inactive') }}
+                          </span>
                         </div>
                       </div>
                     </Table.Td>
