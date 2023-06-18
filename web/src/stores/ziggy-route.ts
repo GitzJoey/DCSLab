@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { Config } from "ziggy-js";
 
 export interface ZiggyState {
-  ziggyValue: Config
+  ziggyRoute: Config
 }
 
 const getDomain = () => {
@@ -23,7 +23,7 @@ const getDomainPort = () => {
 
 export const useZiggyRouteStore = defineStore("ziggyRoute", {
   state: (): ZiggyState => ({
-    ziggyValue: {
+    ziggyRoute: {
       url: getDomain(),
       port: getDomainPort(),
       defaults: {},
@@ -48,15 +48,15 @@ export const useZiggyRouteStore = defineStore("ziggyRoute", {
       const serializedZiggy = sessionStorage.getItem('ziggyRoute');
       if (serializedZiggy) {
         const deserializedZiggy: Config = JSON.parse(serializedZiggy);
-        this.ziggyValue = deserializedZiggy;
+        this.ziggyRoute = deserializedZiggy;
       }
-      return state.ziggyValue;
+      return state.ziggyRoute;
     },
   },
   actions: {
     setZiggy(ziggy: Config) {
       sessionStorage.setItem('ziggyRoute', JSON.stringify(ziggy));
-      this.ziggyValue = ziggy;
+      this.ziggyRoute = ziggy;
     },
   },
 });
