@@ -1,3 +1,3 @@
 export interface ZiggyError {
-    message: string,
+    ziggy: string,
 }

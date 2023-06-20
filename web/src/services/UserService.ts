@@ -42,9 +42,13 @@ export default class UserService {
                 data: response.data
             }
         } catch (e: unknown) {
-            return {
-                success: false,
-                error: e as AxiosError
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else {
+                return {
+                    success: false,
+                    error: e as AxiosError
+                }
             }
         }
     }
@@ -64,9 +68,13 @@ export default class UserService {
                 data: response.data.data
             }
         } catch (e: unknown) {
-            return {
-                success: false,
-                error: e as AxiosError
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else {
+                return {
+                    success: false,
+                    error: e as AxiosError
+                }
             }
         }
     }

@@ -2,7 +2,6 @@ import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { Company } from "../types/models/Company";
-import { authAxiosInstance } from "../axios";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
@@ -43,9 +42,13 @@ export default class CompanyService {
                 data: response.data
             }
         } catch (e: unknown) {
-            return {
-                success: false,
-                error: e as AxiosError
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else {
+                return {
+                    success: false,
+                    error: e as AxiosError
+                }
             }
         }
     }
@@ -65,9 +68,13 @@ export default class CompanyService {
                 data: response.data.data
             }
         } catch (e: unknown) {
-            return {
-                success: false,
-                error: e as AxiosError
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else {
+                return {
+                    success: false,
+                    error: e as AxiosError
+                }
             }
         }
     }

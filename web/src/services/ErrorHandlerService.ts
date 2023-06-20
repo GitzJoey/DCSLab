@@ -5,7 +5,7 @@ export default class ErrorHandlerService {
         return {
             success: false,
             error: {
-                message: message ? message : 'Ziggy Error',
+                ziggy: message ? message : 'Ziggy error: unknown',
             }
         };
     }
