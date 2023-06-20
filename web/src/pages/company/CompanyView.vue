@@ -20,6 +20,7 @@ import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
+import { ZiggyError, isZiggyErrorType } from "../../types/services/ZiggyError";
 //#endregion
 
 //#region Declarations
@@ -33,7 +34,6 @@ const companyServices = new CompanyService()
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const alertErrors = ref([]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -103,12 +103,16 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   if (result.success && result.data) {
     companyLists.value = result.data as Collection<Company[]>;
   } else {
-    console.log(result);
+    generateErrors(result.error);
   }
 }
 
 const generateErrors = (e: unknown) => {
-  console.log('generateErrors');
+  if (isZiggyErrorType(e)) {
+    console.log('isZiggyErrorType');
+  } else {
+    console.log('generateErrors');
+  }
 }
 
 const onDataListChanged = (data: DataListEmittedData) => {
