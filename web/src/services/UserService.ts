@@ -5,7 +5,7 @@ import { User } from "../types/models/User";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
 export default class UserService {
@@ -29,6 +29,7 @@ export default class UserService {
             if (page) queryParams['page'] = page;
             if (per_page) queryParams['per_page'] = per_page;
 
+            //ZiggyRouteNotFoundException
             //const url = route('invalid.route', undefined, false, this.ziggyRoute);
             const url = route('api.get.db.admin.users.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
@@ -43,11 +44,10 @@ export default class UserService {
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return {
-                    success: false,
-                    error: e as AxiosError
-                }
+                return { success: false }
             }
         }
     }
@@ -67,11 +67,10 @@ export default class UserService {
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return {
-                    success: false,
-                    error: e as AxiosError
-                }
+                return { success: false }
             }
         }
     }

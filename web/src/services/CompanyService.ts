@@ -5,7 +5,7 @@ import { Company } from "../types/models/Company";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
 export default class CompanyService {
@@ -44,11 +44,10 @@ export default class CompanyService {
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return {
-                    success: false,
-                    error: e as AxiosError
-                }
+                return { success: false }
             }
         }
     }
@@ -68,11 +67,10 @@ export default class CompanyService {
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return {
-                    success: false,
-                    error: e as AxiosError
-                }
+                return { success: false }
             }
         }
     }
