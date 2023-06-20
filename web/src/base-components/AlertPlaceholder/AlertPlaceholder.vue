@@ -2,14 +2,11 @@
 import { toRef, computed } from "vue";
 import Alert from "../Alert";
 import Lucide from "../Lucide";
-
-export interface AlertPlaceholderType {
-    [key: string]: string[]
-}
+import { ZiggyError, isZiggyError } from "../../types/services/ZiggyError";
 
 export interface AlertPlaceholderProps {
     alertType: string,
-    messages: Record<string, string> | null,
+    messages: ZiggyError | null,
     title: string,
 }
 
@@ -45,8 +42,13 @@ const computedVariant = computed(() => {
                 </div>
                 <div class="mt-3 ml-12">
                     <ul class="list-disc">
-                        <template v-for="e in messages">
-                            <li v-for="(ee, eeIdx) in e" :key="eeIdx" class="ml-5">{{ ee }}</li>
+                        <template v-if="isZiggyError(messages)">
+                            <li class="ml-5">{{ messages.ziggy }}</li>
+                        </template>
+                        <template v-else>
+                            <template v-for="e in messages">
+                                <li v-for="(ee, eeIdx) in e" :key="eeIdx" class="ml-5">{{ ee }}</li>
+                            </template>
                         </template>
                     </ul>
                 </div>

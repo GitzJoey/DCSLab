@@ -59,8 +59,6 @@ export default class CompanyService {
                 user: ulid
             }, false, this.ziggyRoute);
 
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
             const response: AxiosResponse<Resource<Company>> = await axios.get(url);
 
             return {

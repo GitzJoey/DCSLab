@@ -20,7 +20,7 @@ import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
-import { ZiggyError, isZiggyErrorType } from "../../types/services/ZiggyError";
+import { ZiggyError, isZiggyError } from "../../types/services/ZiggyError";
 //#endregion
 
 //#region Declarations
@@ -34,6 +34,7 @@ const companyServices = new CompanyService()
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
+const datalistErrors = ref<ZiggyError | null>(null);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -107,9 +108,9 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   }
 }
 
-const generateErrors = (e: unknown) => {
-  if (isZiggyErrorType(e)) {
-    console.log('isZiggyErrorType');
+const generateErrors = (errors: unknown) => {
+  if (isZiggyError(errors)) {
+    datalistErrors.value = errors as ZiggyError;
   } else {
     console.log('generateErrors');
   }
@@ -150,7 +151,7 @@ const deleteSelected = (itemUlid: string) => {
       </TitleLayout>
 
       <div v-if="mode == ViewMode.LIST">
-        <AlertPlaceholder />
+        <AlertPlaceholder :messages="datalistErrors" />
         <DataList :title="t('views.company.table.title')" :enable-search="true" :can-print="true" :can-export="true"
           :pagination="companyLists ? companyLists.meta : null" @dataListChanged="onDataListChanged">
           <template #content>
