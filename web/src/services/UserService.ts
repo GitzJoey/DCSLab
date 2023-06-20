@@ -29,12 +29,8 @@ export default class UserService {
             if (page) queryParams['page'] = page;
             if (per_page) queryParams['per_page'] = per_page;
 
-            const url = route('invalid.route', undefined, false, this.ziggyRoute);
-            /*
-            const url = route('api.get.db.admin.users.read_any', {
-                _query: queryParams
-            }, false, this.ziggyRoute);
-            */
+            //const url = route('invalid.route', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.admin.users.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
