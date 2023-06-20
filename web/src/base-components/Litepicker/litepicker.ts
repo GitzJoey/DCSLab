@@ -51,7 +51,7 @@ const init = (
         picker.on("selected", (startDate, endDate) => {
           let date = dayjs(startDate.dateInstance).format(format);
           date +=
-            endDate !== undefined
+            endDate !== undefined && endDate !== null
               ? " - " + dayjs(endDate.dateInstance).format(format)
               : "";
           emit("update:modelValue", date);

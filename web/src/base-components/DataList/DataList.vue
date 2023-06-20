@@ -66,51 +66,50 @@ const perPage = computed(() => {
 
 const pages = computed(() => {
   if (pagination.value == null) return [];
-  return generatePaginationArray(pagination.value.current_page, pagination.value.total);
+  return generatePaginationArray(pagination.value.current_page, pagination.value.total, pagination.value.per_page);
 });
 
-const generatePaginationArray = (currentPage: number, totalPages: number): number[] => {
+const generatePaginationArray = (
+  currentPage: number,
+  totalRecords: number,
+  perPage: number,
+  maxVisiblePages = 7
+): number[] => {
+  const totalPages = Math.ceil(totalRecords / perPage);
   const paginationArray: number[] = [];
 
-  if (totalPages <= 10) {
+  if (totalPages <= maxVisiblePages) {
     for (let i = 1; i <= totalPages; i++) {
       paginationArray.push(i);
     }
   } else {
-    let startPage = currentPage - 1;
-    let endPage = currentPage + 1;
-
-    if (startPage < 1) {
-      endPage += Math.abs(startPage) + 1;
-      startPage = 1;
-    }
-
-    if (endPage > totalPages) {
-      startPage -= endPage - totalPages;
-      endPage = totalPages;
-    }
-
-    if (startPage > 1) {
+    if (currentPage <= Math.floor(maxVisiblePages / 2) + 1) {
+      for (let i = 1; i <= maxVisiblePages - 2; i++) {
+        paginationArray.push(i);
+      }
+      paginationArray.push(-1);
+      paginationArray.push(totalPages);
+    } else if (currentPage >= totalPages - Math.floor(maxVisiblePages / 2)) {
       paginationArray.push(1);
-      if (startPage > 2) {
-        paginationArray.push(-1);
+      paginationArray.push(-1);
+      for (let i = totalPages - (maxVisiblePages - 2); i <= totalPages; i++) {
+        paginationArray.push(i);
       }
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      paginationArray.push(i);
-    }
-
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        paginationArray.push(-1);
+    } else {
+      paginationArray.push(1);
+      paginationArray.push(-1);
+      const start = currentPage - Math.floor(maxVisiblePages / 2) + 1;
+      const end = currentPage + Math.floor(maxVisiblePages / 2) - 1;
+      for (let i = start; i <= end; i++) {
+        paginationArray.push(i);
       }
+      paginationArray.push(-1);
       paginationArray.push(totalPages);
     }
   }
 
   return paginationArray;
-};
+}
 
 const createDataEmittedPayload = (search: string, page: number, per_page: number): DataListEmittedData => {
   let result: DataListEmittedData = {
@@ -128,7 +127,7 @@ const createDataEmittedPayload = (search: string, page: number, per_page: number
 
 const searchTextboxChanged = () => {
   if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
+    emits('dataListChanged', createDataEmittedPayload(search.value, 1, pagination.value.per_page));
 }
 
 const refreshButtonClicked = () => {

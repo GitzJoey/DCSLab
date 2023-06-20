@@ -7,10 +7,11 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { computed, SelectHTMLAttributes, useAttrs, inject } from "vue";
+import { computed, SelectHTMLAttributes, useAttrs, inject, ref } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 
 interface FormSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
+  value?: SelectHTMLAttributes["value"];
   modelValue?: SelectHTMLAttributes["value"];
   formSelectSize?: "sm" | "lg";
 }
@@ -19,10 +20,9 @@ interface FormSelectEmit {
   (e: "update:modelValue", value: string): void;
 }
 
+const selectRef = ref<HTMLSelectElement>();
 const props = defineProps<FormSelectProps>();
-
 const attrs = useAttrs();
-
 const formInline = inject<ProvideFormInline>("formInline", false);
 
 const computedClass = computed(() =>
@@ -41,7 +41,17 @@ const emit = defineEmits<FormSelectEmit>();
 
 const localValue = computed({
   get() {
-    return props.modelValue;
+    if (props.modelValue === undefined && props.value === undefined) {
+      const firstOption = selectRef.value?.querySelectorAll("option")[0];
+      return (
+        firstOption !== undefined &&
+        (firstOption.getAttribute("value") !== null
+          ? firstOption.getAttribute("value")
+          : firstOption.text)
+      );
+    }
+
+    return props.modelValue === undefined ? props.value : props.modelValue;
   },
   set(newValue) {
     emit("update:modelValue", newValue);
@@ -51,6 +61,7 @@ const localValue = computed({
 
 <template>
   <select
+    ref="selectRef"
     :class="computedClass"
     v-bind="_.omit(attrs, 'class')"
     v-model="localValue"

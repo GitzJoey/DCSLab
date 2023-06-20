@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { onMounted, computed } from "vue";
 import Breadcrumb from "../../base-components/Breadcrumb";
 import Lucide from "../../base-components/Lucide";
 import { Menu } from "../../base-components/Headless";
 import { useUserContextStore } from "../../stores/user-context";
+import { useSelectedUserLocationStore } from "../../stores/user-location";
 import { useI18n } from "vue-i18n";
 import _ from "lodash";
 
 const { t } = useI18n();
 
 const userContextStore = useUserContextStore();
+const selectedUserStore = useSelectedUserLocationStore();
 
-const userContext = computed(() => userContextStore.userContextValue);
-const userLocation = computed(() => userContextStore.selectedUserLocationValue);
+const userContext = computed(() => userContextStore.userContext);
+const userLocation = computed(() => selectedUserStore.selectedUserLocation);
 
 const userLocationText = computed(() => {
   let result = '';
@@ -40,6 +42,10 @@ const userLocationLength = computed((): number => {
   return result;
 });
 
+onMounted(() => {
+  selectedUserStore.getSelectedUserLocation;
+});
+
 const setNewUserLocation = (companyId: string, branchId: string) => {
   let company = _.find(userContext.value.companies, { id: companyId });
 
@@ -48,7 +54,7 @@ const setNewUserLocation = (companyId: string, branchId: string) => {
   let branch = branchId == '' ? _.find(company.branches, { is_main: true }) : _.find(company.branches, { id: branchId });
 
   if (branch) {
-    userContextStore.setSelectedUserLocation(company.id, company.ulid, company.name, branch.id, branch.ulid, branch.name);
+    selectedUserStore.setSelectedUserLocation(company.id, company.ulid, company.name, branch.id, branch.ulid, branch.name);
   }
 }
 </script>

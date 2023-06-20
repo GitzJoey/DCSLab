@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import {
-  TitleLayout
+  TitleLayout, TwoColumnsLayout
 } from "../../base-components/Form/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
@@ -20,6 +20,7 @@ import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
+import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 //#endregion
 
 //#region Declarations
@@ -33,7 +34,7 @@ const userServices = new UserService()
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const alertErrors = ref([]);
+const cards: Array<TwoColumnsLayoutCards> = [];
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -143,18 +144,18 @@ const deleteSelected = (itemUlid: string) => {
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
                 <Table.Tr>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.name")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.email")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.roles")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.user.table.cols.status")
-                  }}</Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.name") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.email") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.roles") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.user.table.cols.status") }}
+                  </Table.Th>
                   <Table.Th class="whitespace-nowrap"></Table.Th>
                 </Table.Tr>
               </Table.Thead>
@@ -212,10 +213,12 @@ const deleteSelected = (itemUlid: string) => {
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
                         <div class="flex-1">
-                          <span v-if="item.profile.status === 'ACTIVE'">{{
-                            t('components.dropdown.values.statusDDL.active') }}</span>
-                          <span v-if="item.profile.status === 'INACTIVE'">{{
-                            t('components.dropdown.values.statusDDL.inactive') }}</span>
+                          <span v-if="item.profile.status === 'ACTIVE'">
+                            {{ t('components.dropdown.values.statusDDL.active') }}
+                          </span>
+                          <span v-if="item.profile.status === 'INACTIVE'">
+                            {{ t('components.dropdown.values.statusDDL.inactive') }}
+                          </span>
                         </div>
                       </div>
                     </Table.Td>
@@ -248,7 +251,11 @@ const deleteSelected = (itemUlid: string) => {
           </template>
         </DataList>
       </div>
-      <div v-else></div>
+      <div v-else>
+        <TwoColumnsLayout :cards="cards">
+
+        </TwoColumnsLayout>
+      </div>
     </LoadingOverlay>
   </div>
 </template>

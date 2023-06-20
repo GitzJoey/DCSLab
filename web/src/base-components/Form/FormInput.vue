@@ -12,6 +12,7 @@ import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 
 interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
+  value?: InputHTMLAttributes["value"];
   modelValue?: InputHTMLAttributes["value"];
   formInputSize?: "sm" | "lg";
   rounded?: boolean;
@@ -19,13 +20,10 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
 
 interface FormInputEmit {
   (e: "update:modelValue", value: string): void;
-  (e: "change", value: string): void;
 }
 
 const props = defineProps<FormInputProps>();
-
 const attrs = useAttrs();
-
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
 
@@ -39,7 +37,7 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
   ])
 );
@@ -48,19 +46,19 @@ const emit = defineEmits<FormInputEmit>();
 
 const localValue = computed({
   get() {
-    return props.modelValue;
+    return props.modelValue === undefined ? props.value : props.modelValue;
   },
   set(newValue) {
     emit("update:modelValue", newValue);
   },
 });
-
-const triggerEmitChange = () => {
-  emit('change', localValue.value);
-}
 </script>
 
 <template>
-  <input v-model="localValue" :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')"
-    @change="triggerEmitChange" />
+  <input
+    :class="computedClass"
+    :type="props.type"
+    v-bind="_.omit(attrs, 'class')"
+    v-model="localValue"
+  />
 </template>
