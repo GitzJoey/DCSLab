@@ -74,7 +74,7 @@ const current_page = ref(1)
 
 //#region onMounted
 onMounted(async () => {
-  await getCompanys('', true, true, 1, 10);
+  await getCompanies('', true, true, 1, 10);
 });
 
 //#endregion
@@ -91,7 +91,7 @@ const toggleDetail = (idx: number) => {
   }
 };
 
-const getCompanys = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+const getCompanies = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   let result: ServiceResponse<Collection<Company[]> | Resource<Company[]> | null> = await companyServices.readAny(
     search,
     refresh,
@@ -102,11 +102,17 @@ const getCompanys = async (search: string, refresh: boolean, paginate: boolean, 
 
   if (result.success && result.data) {
     companyLists.value = result.data as Collection<Company[]>;
+  } else {
+    console.log(result);
   }
 }
 
+const generateErrors = (e: unknown) => {
+  console.log('generateErrors');
+}
+
 const onDataListChanged = (data: DataListEmittedData) => {
-  getCompanys(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+  getCompanies(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
 }
 
 const editSelected = (itemIdx: number) => {
