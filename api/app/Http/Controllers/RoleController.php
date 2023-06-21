@@ -54,16 +54,17 @@ class RoleController extends BaseController
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
-        if (is_null($result)) {
+        if (is_null($roles)) {
             return response()->error($errorMsg);
-        } else {            
-            $roles->map(function ($item) {
-                array_push($result, [
-                    'code' => $item->ulid, 
-                    'name' => $item->display_name]);
+        } else {
+            $result = $roles->map(function ($item) {
+                return [
+                    'code' => $item->display_name,
+                    'name' => $item->display_name,
+                ];
             });
 
             return $result;
-        }        
+        }
     }
 }
