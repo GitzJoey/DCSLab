@@ -55,8 +55,10 @@ export const useZiggyRouteStore = defineStore("ziggyRoute", {
   },
   actions: {
     setZiggy(ziggy: Config) {
-      sessionStorage.setItem('ziggyRoute', btoa(JSON.stringify(ziggy)));
-      this.ziggyRoute = ziggy;
+      if (ziggy != undefined) {
+        sessionStorage.setItem('ziggyRoute', btoa(JSON.stringify(ziggy)));
+        this.ziggyRoute = ziggy;
+      }
     },
   },
 });
