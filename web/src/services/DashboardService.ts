@@ -26,7 +26,6 @@ export default class DashboardService {
     public async readProfile(): Promise<ServiceResponse<UserProfile | null>> {
         try {
             const url = route('api.get.db.module.profile.read', undefined, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Resource<UserProfile>> = await axios.get(url);
 
@@ -35,9 +34,13 @@ export default class DashboardService {
                 data: response.data.data
             }
         } catch (e: unknown) {
-            return {
-                success: false,
-                error: e as AxiosError
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else {
+                return {
+                    success: false,
+                    error: e as AxiosError
+                }
             }
         }
     }
@@ -45,7 +48,6 @@ export default class DashboardService {
     public async readUserMenu(): Promise<ServiceResponse<Array<sMenu> | null>> {
         try {
             const url = route('api.get.db.core.user.menu', undefined, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Array<sMenu>> = await axios.get(url);
 
@@ -54,9 +56,13 @@ export default class DashboardService {
                 data: response.data
             }
         } catch (e: unknown) {
-            return {
-                success: false,
-                error: e as AxiosError
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else {
+                return {
+                    success: false,
+                    error: e as AxiosError
+                }
             }
         }
     }
@@ -64,7 +70,6 @@ export default class DashboardService {
     public async readUserApi(): Promise<ServiceResponse<Config | null>> {
         try {
             const url = route('api.get.db.core.user.api', undefined, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Config> = await axios.get(url);
 
@@ -73,9 +78,13 @@ export default class DashboardService {
                 data: response.data
             }
         } catch (e: unknown) {
-            return {
-                success: false,
-                error: e as AxiosError
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else {
+                return {
+                    success: false,
+                    error: e as AxiosError
+                }
             }
         }
     }
@@ -85,7 +94,6 @@ export default class DashboardService {
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.statuses', undefined, false, this.ziggyRoute);
-                if (!url) return null;
 
                 const response: AxiosResponse<Record<string, string>[]> = await axios.get(url);
 
@@ -103,7 +111,6 @@ export default class DashboardService {
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
-                if (!url) return null;
 
                 const response: AxiosResponse<Record<string, string>[]> = await axios.get(url);
 

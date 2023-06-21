@@ -22,6 +22,123 @@ class CustomerAPICreateTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_customer_api_call_store_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
+        $arr_customer_address_address = [];
+        $arr_customer_address_city = [];
+        $arr_customer_address_contact = [];
+        $arr_customer_address_is_main = [];
+        $arr_customer_address_remarks = [];
+
+        $addressCount = random_int(1, 5);
+        $mainAddressIdx = random_int(0, $addressCount - 1);
+        for ($i = 0; $i < 3; $i++) {
+            $customerAddress = CustomerAddress::factory()->make();
+
+            array_push($arr_customer_address_id, '');
+            array_push($arr_customer_address_ulid, '');
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $i == $mainAddressIdx ? true : false);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
+        }
+
+        $customerArr = Customer::factory()->setStatusActive()->make([
+            'company_id' => Hashids::encode($company->id),
+            'customer_group_id' => Hashids::encode($customerGroup->id),
+            'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
+            'arr_customer_address_address' => $arr_customer_address_address,
+            'arr_customer_address_city' => $arr_customer_address_city,
+            'arr_customer_address_contact' => $arr_customer_address_contact,
+            'arr_customer_address_is_main' => $arr_customer_address_is_main,
+            'arr_customer_address_remarks' => $arr_customer_address_remarks,
+        ])->toArray();
+
+        $customerArr['pic_create_user'] = random_int(0, 1);
+        if ($customerArr['pic_create_user'] == 1) {
+            $customerArr['pic_contact_person_name'] = $this->faker->name();
+            $customerArr['pic_email'] = $this->faker->email();
+            $customerArr['pic_password'] = '123456';
+        }
+
+        $api = $this->json('POST', route('api.post.db.customer.customer.save'), $customerArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_customer_api_call_store_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $arr_customer_address_id = [];
+        $arr_customer_address_ulid = [];
+        $arr_customer_address_address = [];
+        $arr_customer_address_city = [];
+        $arr_customer_address_contact = [];
+        $arr_customer_address_is_main = [];
+        $arr_customer_address_remarks = [];
+
+        $addressCount = random_int(1, 5);
+        $mainAddressIdx = random_int(0, $addressCount - 1);
+        for ($i = 0; $i < 3; $i++) {
+            $customerAddress = CustomerAddress::factory()->make();
+
+            array_push($arr_customer_address_id, '');
+            array_push($arr_customer_address_ulid, '');
+            array_push($arr_customer_address_address, $customerAddress->address);
+            array_push($arr_customer_address_city, $customerAddress->city);
+            array_push($arr_customer_address_contact, $customerAddress->contact);
+            array_push($arr_customer_address_is_main, $i == $mainAddressIdx ? true : false);
+            array_push($arr_customer_address_remarks, $customerAddress->remarks);
+        }
+
+        $customerArr = Customer::factory()->setStatusActive()->make([
+            'company_id' => Hashids::encode($company->id),
+            'customer_group_id' => Hashids::encode($customerGroup->id),
+            'arr_customer_address_id' => $arr_customer_address_id,
+            'arr_customer_address_ulid' => $arr_customer_address_ulid,
+            'arr_customer_address_address' => $arr_customer_address_address,
+            'arr_customer_address_city' => $arr_customer_address_city,
+            'arr_customer_address_contact' => $arr_customer_address_contact,
+            'arr_customer_address_is_main' => $arr_customer_address_is_main,
+            'arr_customer_address_remarks' => $arr_customer_address_remarks,
+        ])->toArray();
+
+        $customerArr['pic_create_user'] = random_int(0, 1);
+        if ($customerArr['pic_create_user'] == 1) {
+            $customerArr['pic_contact_person_name'] = $this->faker->name();
+            $customerArr['pic_email'] = $this->faker->email();
+            $customerArr['pic_password'] = '123456';
+        }
+
+        $api = $this->json('POST', route('api.post.db.customer.customer.save'), $customerArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_customer_api_call_store_expect_successful()
     {
         $user = User::factory()

@@ -21,6 +21,7 @@ import { watch, reactive, computed, onMounted, provide } from "vue";
 import { useDashboardStore } from "../../stores/dashboard";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
+import NotificationManager from "../../base-components/NotificationManager";
 
 const route: Route = useRoute();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
@@ -181,6 +182,7 @@ onMounted(() => {
             <ScrollToTop />
           </div>
         </div>
+        <NotificationManager />
       </div>
     </LoadingOverlay>
   </div>

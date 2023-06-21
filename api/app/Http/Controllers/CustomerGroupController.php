@@ -184,7 +184,7 @@ class CustomerGroupController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(CustomerGroup $customergroup)
+    public function delete(CustomerGroup $customergroup, CustomerGroupRequest $customerGroupRequest)
     {
         $result = false;
         $errorMsg = '';

@@ -19,6 +19,92 @@ class BranchAPIReadTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_branch_api_call_read_any_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_branch_api_call_read_any_without_access_right_expect_forbidden_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                    ->has(Branch::factory()->setStatusActive())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(403);
+    }
+
+    public function test_branch_api_call_read_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setIsDefault()
+                    ->has(Branch::factory()->count(3))
+            )->create();
+
+        $company = $user->companies->first();
+
+        $ulid = $company->branches()->inRandomOrder()->first()->ulid;
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_branch_api_call_read_without_access_right_expect_forbidden_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setIsDefault()
+                    ->has(Branch::factory()->count(3))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+
+        $ulid = $company->branches()->inRandomOrder()->first()->ulid;
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_branch_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
         $user = User::factory()

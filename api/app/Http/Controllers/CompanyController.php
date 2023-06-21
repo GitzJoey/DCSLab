@@ -197,8 +197,20 @@ class CompanyController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Company $company)
+    public function delete(Company $company, CompanyRequest $companyRequest)
     {
+        //Throw Error
+        //throw New \Exception('Test Exception From Controller');
+
+        //Throw Empty Response Error (HttpStatus 500)
+        //return response()->error();
+
+        //Custom Validation Error 1 Message (HttpStatus 422)
+        //return response()->error('Custom Validation Error 1 Message', 422);
+
+        //Custom Validation With Multiple Error (HttpStatus 422)
+        //return response()->error(['name' => ['Custom Validation With Multiple Error'], 'email' => ['Custom Validation With Multiple Error']], 422);
+
         $result = false;
         $errorMsg = '';
 

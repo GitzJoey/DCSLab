@@ -39,6 +39,8 @@ class CompanyRequest extends FormRequest
             case 'update':
                 return $user->can('update', Company::class, $company) ? true : false;
             case 'delete':
+                //Authorization Error
+                //return false;
                 return $user->can('delete', Company::class, $company) ? true : false;
             default:
                 return false;
@@ -92,6 +94,13 @@ class CompanyRequest extends FormRequest
                 ];
 
                 return array_merge($rules_update, $nullableArr);
+
+            case 'delete':
+                $rules_delete = [
+
+                ];
+
+                return $rules_delete;
             default:
                 return [
                     '' => 'required',
