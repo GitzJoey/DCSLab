@@ -21,11 +21,14 @@ import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
+import RoleService from "../../services/RoleService";
+import { DropDownOption } from "../../types/services/DropDownOption";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
-const userServices = new UserService()
+const userServices = new UserService();
+const roleServices = new RoleService();
 //#endregion
 
 //#region Data - Pinia
@@ -64,7 +67,7 @@ const userLists = ref<Collection<User[]> | null>({
     next: null,
   }
 });
-const rolesDDL = ref([]);
+const rolesDDL = ref<Array<DropDownOption> | null>(null);
 const statusDDL = ref([]);
 const countriesDDL = ref([]);
 const current_page = ref(1)
@@ -73,6 +76,7 @@ const current_page = ref(1)
 //#region onMounted
 onMounted(async () => {
   await getUsers('', true, true, 1, 10);
+  await getDDL();
 });
 
 //#endregion
@@ -103,6 +107,10 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   } else {
     datalistErrors.value = result.errors as Record<string, string[]>;
   }
+}
+
+const getDDL = () => {
+  rolesDDL.value = roleServices.getRolesDDL();
 }
 
 const onDataListChanged = (data: DataListEmittedData) => {

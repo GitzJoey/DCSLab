@@ -31,7 +31,7 @@ export default class UserService {
 
             //ZiggyRouteNotFoundException
             //const url = route('invalid.route', undefined, false, this.ziggyRoute);
-            const url = route('api.get.db.admin.users.read_any', { _query: queryParams }, false, this.ziggyRoute);
+            const url = route('api.get.db.admin.user.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -54,7 +54,7 @@ export default class UserService {
 
     public async read(ulid: string): Promise<ServiceResponse<User | null>> {
         try {
-            const url = route('api.get.db.admin.users.read', {
+            const url = route('api.get.db.admin.user.read', {
                 user: ulid
             }, false, this.ziggyRoute);
 

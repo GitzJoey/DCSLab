@@ -21,8 +21,7 @@ export default class RoleService {
 
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.admin.users.roles.read', undefined, false, this.ziggyRoute);
-                if (!url) return null;
+                const url = route('api.get.db.admin.role.read.ddl', undefined, false, this.ziggyRoute);
 
                 const response: AxiosResponse<Array<DropDownOption>> = await axios.get(url);
 
