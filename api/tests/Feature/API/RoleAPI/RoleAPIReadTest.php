@@ -14,7 +14,7 @@ class RoleAPIReadTest extends APITestCase
         parent::setUp();
     }
 
-    public function test_role_api_call_read_ddl_expect_collection()
+    public function test_role_api_call_read_ddl_expect_arrays()
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
