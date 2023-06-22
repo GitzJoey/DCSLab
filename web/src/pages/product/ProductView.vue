@@ -10,7 +10,7 @@ import Table from "../../base-components/Table";
 import Lucide from "../../base-components/Lucide";
 import ProductService from "../../services/ProductService";
 import { useSelectedUserLocationStore } from '../../stores/user-location'
-import ProductSearch from "../../base-components/ProductSearch";
+import ProductSearch from "../../base-components/ProductSearch/ProductSearch.vue";
 import { Collection } from "lodash";
 //#endregion
 
