@@ -21,6 +21,10 @@ export default class CompanyService {
     }
 
     public async readAny(search: string, refresh: boolean, paginate: boolean, page?: number, per_page?: number): Promise<ServiceResponse<Collection<Company[]> | Resource<Company[]> | null>> {
+        const result: ServiceResponse<Collection<Company[]> | Resource<Company[]> | null> = {
+            success: false
+        }
+
         try {
             const queryParams: Record<string, string | number | boolean> = {};
             queryParams['search'] = search;
@@ -37,22 +41,26 @@ export default class CompanyService {
 
             const response: AxiosResponse<Collection<Company[]>> = await axios.get(url);
 
-            return {
-                success: true,
-                data: response.data
-            }
+            result.success = true;
+            result.data = response.data;
+
+            return result;
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
             } else if (isAxiosError(e)) {
                 return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return { success: false }
+                return result;
             }
         }
     }
 
     public async read(ulid: string): Promise<ServiceResponse<Company | null>> {
+        const result: ServiceResponse<Company | null> = {
+            success: false
+        }
+
         try {
             const url = route('api.get.db.admin.company.read', {
                 user: ulid
@@ -60,17 +68,17 @@ export default class CompanyService {
 
             const response: AxiosResponse<Resource<Company>> = await axios.get(url);
 
-            return {
-                success: true,
-                data: response.data.data
-            }
+            result.success = true;
+            result.data = response.data.data;
+
+            return result;
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
             } else if (isAxiosError(e)) {
                 return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return { success: false }
+                return result;
             }
         }
     }

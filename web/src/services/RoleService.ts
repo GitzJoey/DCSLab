@@ -16,8 +16,9 @@ export default class RoleService {
         this.cacheService = new CacheService();
     }
 
-    public async getRolesDDL(): Promise<Array<DropDownOption> | null> {
+    public async getRolesDDL(): Promise<Array<DropDownOption>> {
         const ddlName = 'rolesDDL';
+        let result: Array<DropDownOption> = [];
 
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
@@ -28,9 +29,13 @@ export default class RoleService {
                 this.cacheService.setCachedDDL(ddlName, response.data);
             }
 
-            return this.cacheService.getCachedDDL(ddlName);
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+            return result;
         } catch (e: unknown) {
-            return null;
+            return result;
         }
     }
 }

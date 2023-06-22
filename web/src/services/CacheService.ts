@@ -8,7 +8,7 @@ export default class CacheService {
     }
 
     public getCachedDDL(ddlname: string): Array<DropDownOption> | null {
-        const ddl = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
+        const ddl = this.dcslabSystems == null ? new Object() : JSON.parse(atob(this.dcslabSystems));
 
         const hasDDL = Object.hasOwnProperty.call(ddl, ddlname);
         return hasDDL ? ddl[ddlname] as Array<DropDownOption> : null;
@@ -19,6 +19,6 @@ export default class CacheService {
 
         new_dcslabSystems[ddlname] = value;
 
-        sessionStorage.setItem('DCSLAB_SYSTEM', JSON.stringify(new_dcslabSystems));
+        sessionStorage.setItem('DCSLAB_SYSTEM', btoa(JSON.stringify(new_dcslabSystems)));
     }
 }

@@ -109,8 +109,8 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
-const getDDL = () => {
-  rolesDDL.value = roleServices.getRolesDDL();
+const getDDL = async () => {
+  rolesDDL.value = await roleServices.getRolesDDL();
 }
 
 const onDataListChanged = (data: DataListEmittedData) => {
