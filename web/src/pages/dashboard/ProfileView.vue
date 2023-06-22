@@ -127,7 +127,8 @@ const onSubmit = async () => {
               <div class="flex gap-2">
                 <div class="pb-4 w-full">
                   <FormLabel html-for="city">
-                    {{ t("views.profile.fields.city") }}</FormLabel>
+                    {{ t("views.profile.fields.city") }}
+                  </FormLabel>
                   <FormInput id="address" v-model="userContext.profile.city" name="city" type="text" class="w-full"
                     :placeholder="t('views.profile.fields.city')" />
                 </div>
