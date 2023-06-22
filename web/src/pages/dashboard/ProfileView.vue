@@ -70,7 +70,7 @@ const onSubmit = async () => {
       </TitleLayout>
 
       <VeeForm id="profileForm" v-slot="{ errors }" @submit="onSubmit">
-        <AlertPlaceholder :messages="errors" />
+        <AlertPlaceholder :errors="errors" />
         <TwoColumnsLayout :cards="cards" :show-side-tab="false" @handleExpandCard="handleExpandCard">
           <template #side-menu-title>
             {{ userContext.name }}
