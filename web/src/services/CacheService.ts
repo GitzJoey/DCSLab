@@ -14,7 +14,9 @@ export default class CacheService {
         return hasDDL ? ddl[ddlname] as Array<DropDownOption> : null;
     }
 
-    public setCachedDDL(ddlname: string, value: Array<DropDownOption>): void {
+    public setCachedDDL(ddlname: string, value: Array<DropDownOption> | null): void {
+        if (value == null) return;
+
         const new_dcslabSystems = this.dcslabSystems == null ? new Object() : JSON.parse(this.dcslabSystems);
 
         new_dcslabSystems[ddlname] = value;

@@ -33,6 +33,7 @@ export default class RoleService {
             if (cachedData != null) {
                 result = cachedData as Array<DropDownOption>;
             }
+
             return result;
         } catch (e: unknown) {
             return result;

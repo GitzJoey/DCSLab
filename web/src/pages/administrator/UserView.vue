@@ -14,7 +14,6 @@ import {
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
-import { UserRequest } from "../../types/requests/UserRequests";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -23,12 +22,15 @@ import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import RoleService from "../../services/RoleService";
 import { DropDownOption } from "../../types/services/DropDownOption";
+import { FormRequest } from "../../types/requests/FormRequest";
+import DashboardService from "../../services/DashboardService";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
 const userServices = new UserService();
 const roleServices = new RoleService();
+const dashboardServices = new DashboardService();
 //#endregion
 
 //#region Data - Pinia
@@ -45,9 +47,29 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const user = ref<UserRequest>({
-  id: '',
-  ulid: '',
+const userForm = ref<FormRequest<User>>({
+  data: {
+    id: '',
+    ulid: '',
+    name: '',
+    email: '',
+    email_verified: false,
+    profile: {
+      first_name: '',
+      last_name: '',
+      address: '',
+      city: '',
+      postal_code: '',
+      country: '',
+      status: '',
+      tax_id: 0,
+      ic_num: 0,
+      img_path: '',
+      remarks: '',
+    },
+    roles: [],
+    companies: [],
+  }
 });
 const userLists = ref<Collection<User[]> | null>({
   data: [],
@@ -68,9 +90,8 @@ const userLists = ref<Collection<User[]> | null>({
   }
 });
 const rolesDDL = ref<Array<DropDownOption> | null>(null);
-const statusDDL = ref([]);
-const countriesDDL = ref([]);
-const current_page = ref(1)
+const statusDDL = ref<Array<DropDownOption> | null>(null);
+const countriesDDL = ref<Array<DropDownOption> | null>(null);
 //#endregion
 
 //#region onMounted
@@ -111,6 +132,8 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
 
 const getDDL = async () => {
   rolesDDL.value = await roleServices.getRolesDDL();
+  countriesDDL.value = await dashboardServices.getCountriesDDL();
+  statusDDL.value = await dashboardServices.getStatusDDL();
 }
 
 const onDataListChanged = (data: DataListEmittedData) => {
@@ -125,6 +148,12 @@ const deleteSelected = (itemUlid: string) => {
   deleteId.value = itemUlid;
   deleteModalShow.value = true;
 }
+
+const onSubmit = async () => {
+  loading.value = true;
+
+  loading.value = false;
+};
 //#endregion
 
 //#region Watcher
@@ -263,9 +292,12 @@ const deleteSelected = (itemUlid: string) => {
         </DataList>
       </div>
       <div v-else>
-        <TwoColumnsLayout :cards="cards">
+        <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
+          <AlertPlaceholder :errors="errors" />
+          <TwoColumnsLayout :cards="cards">
 
-        </TwoColumnsLayout>
+          </TwoColumnsLayout>
+        </VeeForm>
       </div>
     </LoadingOverlay>
   </div>
