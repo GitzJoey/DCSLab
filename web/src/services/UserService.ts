@@ -5,7 +5,7 @@ import { User } from "../types/models/User";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 
 export default class UserService {
@@ -21,6 +21,10 @@ export default class UserService {
     }
 
     public async readAny(search: string, refresh: boolean, paginate: boolean, page?: number, per_page?: number): Promise<ServiceResponse<Collection<User[]> | Resource<User[]> | null>> {
+        const result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = {
+            success: false
+        }
+
         try {
             const queryParams: Record<string, string | number | boolean> = {};
             queryParams['search'] = search;
@@ -29,52 +33,52 @@ export default class UserService {
             if (page) queryParams['page'] = page;
             if (per_page) queryParams['per_page'] = per_page;
 
-            const url = route('api.get.db.admin.users.read_any', {
-                _query: queryParams
-            }, false, this.ziggyRoute);
+            //ZiggyRouteNotFoundException
+            //const url = route('invalid.route', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.admin.user.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Collection<User[]>> = await axios.get(url);
 
-            return {
-                success: true,
-                data: response.data
-            }
+            result.success = true;
+            result.data = response.data;
+
+            return result;
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return {
-                    success: false,
-                    error: e as AxiosError
-                }
+                return result;
             }
         }
     }
 
     public async read(ulid: string): Promise<ServiceResponse<User | null>> {
+        const result: ServiceResponse<User | null> = {
+            success: false
+        }
+
         try {
-            const url = route('api.get.db.admin.users.read', {
+            const url = route('api.get.db.admin.user.read', {
                 user: ulid
             }, false, this.ziggyRoute);
 
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
             const response: AxiosResponse<Resource<User>> = await axios.get(url);
 
-            return {
-                success: true,
-                data: response.data.data
-            }
+            result.success = true;
+            result.data = response.data.data;
+
+            return result;
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return {
-                    success: false,
-                    error: e as AxiosError
-                }
+                return result;
             }
         }
     }

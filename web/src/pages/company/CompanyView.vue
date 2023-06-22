@@ -33,7 +33,7 @@ const companyServices = new CompanyService()
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const alertErrors = ref([]);
+const datalistErrors = ref<Record<string, string[]> | null>(null);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -74,7 +74,7 @@ const current_page = ref(1)
 
 //#region onMounted
 onMounted(async () => {
-  await getCompanys('', true, true, 1, 10);
+  await getCompanies('', true, true, 1, 10);
 });
 
 //#endregion
@@ -91,7 +91,7 @@ const toggleDetail = (idx: number) => {
   }
 };
 
-const getCompanys = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+const getCompanies = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   let result: ServiceResponse<Collection<Company[]> | Resource<Company[]> | null> = await companyServices.readAny(
     search,
     refresh,
@@ -102,11 +102,13 @@ const getCompanys = async (search: string, refresh: boolean, paginate: boolean, 
 
   if (result.success && result.data) {
     companyLists.value = result.data as Collection<Company[]>;
+  } else {
+    datalistErrors.value = result.errors as Record<string, string[]>;
   }
 }
 
 const onDataListChanged = (data: DataListEmittedData) => {
-  getCompanys(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+  getCompanies(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
 }
 
 const editSelected = (itemIdx: number) => {
@@ -140,25 +142,25 @@ const deleteSelected = (itemUlid: string) => {
       </TitleLayout>
 
       <div v-if="mode == ViewMode.LIST">
-        <AlertPlaceholder />
+        <AlertPlaceholder :errors="datalistErrors" />
         <DataList :title="t('views.company.table.title')" :enable-search="true" :can-print="true" :can-export="true"
           :pagination="companyLists ? companyLists.meta : null" @dataListChanged="onDataListChanged">
           <template #content>
             <Table class="mt-5" :hover="true">
               <Table.Thead variant="light">
                 <Table.Tr>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.company.table.cols.code")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.company.table.cols.name")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.company.table.cols.default")
-                  }}</Table.Th>
-                  <Table.Th class="whitespace-nowrap">{{
-                    t("views.company.table.cols.status")
-                  }}</Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.company.table.cols.code") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.company.table.cols.name") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.company.table.cols.default") }}
+                  </Table.Th>
+                  <Table.Th class="whitespace-nowrap">
+                    {{ t("views.company.table.cols.status") }}
+                  </Table.Th>
                   <Table.Th class="whitespace-nowrap"></Table.Th>
                 </Table.Tr>
               </Table.Thead>

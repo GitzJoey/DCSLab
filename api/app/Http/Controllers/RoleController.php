@@ -25,7 +25,9 @@ class RoleController extends BaseController
         $errorMsg = '';
 
         try {
+            $excludeRole = [];
 
+            $result = $this->roleActions->readAny(exclude: $excludeRole);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -36,6 +38,33 @@ class RoleController extends BaseController
             $response = RoleResource::collection($result);
 
             return $response;
+        }
+    }
+
+    public function getRolesDDL()
+    {
+        $result = [];
+        $errorMsg = '';
+
+        try {
+            $excludeRole = [];
+
+            $roles = $this->roleActions->readAny(exclude: $excludeRole);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($roles)) {
+            return response()->error($errorMsg);
+        } else {
+            $result = $roles->map(function ($item) {
+                return [
+                    'code' => $item->display_name,
+                    'name' => $item->display_name,
+                ];
+            });
+
+            return $result;
         }
     }
 }

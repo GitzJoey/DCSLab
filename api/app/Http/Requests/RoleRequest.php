@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class RoleRequest extends FormRequest
 {
@@ -11,7 +12,18 @@ class RoleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        if (! Auth::check()) {
+            return false;
+        }
+
+        /** @var \App\User */
+        $authUser = Auth::user();
+
+        if ($authUser) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -22,7 +34,7 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+
         ];
     }
 }

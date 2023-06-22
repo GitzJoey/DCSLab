@@ -16,22 +16,26 @@ export default class RoleService {
         this.cacheService = new CacheService();
     }
 
-    public async getRolesDDL(): Promise<Array<DropDownOption> | null> {
+    public async getRolesDDL(): Promise<Array<DropDownOption>> {
         const ddlName = 'rolesDDL';
+        let result: Array<DropDownOption> = [];
 
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.admin.users.roles.read', undefined, false, this.ziggyRoute);
-                if (!url) return null;
+                const url = route('api.get.db.admin.role.read.ddl', undefined, false, this.ziggyRoute);
 
                 const response: AxiosResponse<Array<DropDownOption>> = await axios.get(url);
 
                 this.cacheService.setCachedDDL(ddlName, response.data);
             }
 
-            return this.cacheService.getCachedDDL(ddlName);
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+            return result;
         } catch (e: unknown) {
-            return null;
+            return result;
         }
     }
 }
