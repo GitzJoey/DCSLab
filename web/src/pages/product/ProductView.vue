@@ -9,17 +9,17 @@ import DataList from "../../base-components/DataList/DataList.vue";
 import Table from "../../base-components/Table";
 import Lucide from "../../base-components/Lucide";
 import ProductService from "../../services/ProductService";
-import { useUserContextStore } from '../../stores/user-context'
+import { useSelectedUserLocationStore } from '../../stores/user-location'
 import ProductSearch from "../../base-components/ProductSearch";
 import { Collection } from "lodash";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
-const userContextStore = useUserContextStore();
-const userLocation = computed(() => userContextStore.selectedUserLocationValue);
+const selectedUserStore = useSelectedUserLocationStore();
 const productService = new ProductService();
 
+const userLocation = computed(() => selectedUserStore.selectedUserLocation);
 
 //#endregion
 
@@ -37,9 +37,14 @@ async function getProductList() {
     const companyId = userLocation.value.company.id;
     const data = await productService.readAny(companyId, "");
     productList.value = data?.data?.data;
+    console.log(data, "<< ini data")
   } catch (error) {
     throw error;
   }
+}
+
+function handleClickProductUnit(data:any) {
+  console.log(data)
 }
 
 //#region onMounted
@@ -57,7 +62,7 @@ onMounted(() => {
         <template #title>{{ t("views.product.page_title") }}</template>
       </TitleLayout>
 
-      <ProductSearch :productList="productList" />
+      <ProductSearch :productList="productList" v-on:handleClickProductUnit="handleClickProductUnit" />
     </LoadingOverlay>
     
   </div>

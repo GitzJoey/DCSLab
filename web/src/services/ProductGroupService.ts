@@ -61,7 +61,6 @@ export default class ProductGroupService {
             const url = route('api.get.db.product.product_group.read_any', {
                 _query : queryParams
             }, false, this.ziggyRoute);
-            // Product category -1  api/get/dashboard/product/common/read/productgroup/category 
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
