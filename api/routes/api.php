@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
@@ -117,11 +118,14 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         //#endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
-            Route::group(['prefix' => 'users', 'as' => '.users'], function () {
+            Route::group(['prefix' => 'user', 'as' => '.user'], function () {
                 Route::get('read', [UserController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{user:ulid}', [UserController::class, 'read'])->name('.read');
+            });
 
-                Route::get('roles/read', [UserController::class, 'getAllRoles'])->name('.roles.read');
+            Route::group(['prefix' => 'role', 'as' => '.role'], function () {
+                Route::get('read', [RoleController::class, 'readAny'])->name('.read_any');
+                Route::get('read/ddl', [RoleController::class, 'getRolesDDL'])->name('.read.ddl');
             });
         });
 
@@ -228,7 +232,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
         //endregion
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
-            Route::group(['prefix' => 'users', 'as' => '.users'], function () {
+            Route::group(['prefix' => 'user', 'as' => '.user'], function () {
                 Route::post('save', [UserController::class, 'store'])->name('.save');
                 Route::post('edit/{user:ulid}', [UserController::class, 'update'])->name('.edit');
             });

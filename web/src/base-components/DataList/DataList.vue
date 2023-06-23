@@ -36,12 +36,12 @@ const props = defineProps({
   enableSearch: { type: Boolean, default: false },
   pagination: {
     type: Object as () => PaginationData | null, default: () => ({
-      current_page: 1,
-      from: 1,
+      current_page: 0,
+      from: null,
       last_page: 0,
       path: '',
-      per_page: 10,
-      to: 0,
+      per_page: 0,
+      to: null,
       total: 0,
     })
   },
@@ -75,6 +75,10 @@ const generatePaginationArray = (
   perPage: number,
   maxVisiblePages = 7
 ): number[] => {
+  if (currentPage === 0 || totalRecords === 0 || perPage === 0) {
+    return [];
+  }
+
   const totalPages = Math.ceil(totalRecords / perPage);
   const paginationArray: number[] = [];
 
