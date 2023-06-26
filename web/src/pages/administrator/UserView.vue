@@ -40,7 +40,12 @@ const dashboardServices = new DashboardService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
-const cards: Array<TwoColumnsLayoutCards> = [];
+const cards: Array<TwoColumnsLayoutCards> = [
+  { title: 'User Information', expanded: true },
+  { title: 'User Profile', expanded: true },
+  { title: 'Roles', expanded: true },
+  { title: 'Settings', expanded: true },
+];
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -61,7 +66,7 @@ const userForm = ref<FormRequest<User>>({
       city: '',
       postal_code: '',
       country: '',
-      status: '',
+      status: 'ACTIVE',
       tax_id: 0,
       ic_num: 0,
       img_path: '',
@@ -69,6 +74,11 @@ const userForm = ref<FormRequest<User>>({
     },
     roles: [],
     companies: [],
+    settings: {
+      theme: 'side-menu-light-full',
+      date_format: 'yyyy_MM_dd',
+      time_format: 'hh_mm_ss',
+    }
   }
 });
 const userLists = ref<Collection<User[]> | null>({
@@ -130,14 +140,57 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
-const getDDL = async () => {
+const getDDL = async (): Promise<void> => {
   rolesDDL.value = await roleServices.getRolesDDL();
   countriesDDL.value = await dashboardServices.getCountriesDDL();
   statusDDL.value = await dashboardServices.getStatusDDL();
 }
 
+const emptyUser = () => {
+  return {
+    data: {
+      id: '',
+      ulid: '',
+      name: '',
+      email: '',
+      email_verified: false,
+      profile: {
+        first_name: '',
+        last_name: '',
+        address: '',
+        city: '',
+        postal_code: '',
+        country: '',
+        status: 'ACTIVE',
+        tax_id: 0,
+        ic_num: 0,
+        img_path: '',
+        remarks: '',
+      },
+      roles: [],
+      companies: [],
+      settings: {
+        theme: 'side-menu-light-full',
+        date_format: 'yyyy_MM_dd',
+        time_format: 'hh_mm_ss',
+      }
+    }
+  }
+}
+
 const onDataListChanged = (data: DataListEmittedData) => {
   getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+}
+
+const createNew = () => {
+  mode.value = ViewMode.FORM;
+
+  if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+    //userForm.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+    //sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+  } else {
+    userForm.value = emptyUser();
+  }
 }
 
 const editSelected = (itemIdx: number) => {
@@ -167,7 +220,7 @@ const onSubmit = async () => {
         <template #title>{{ t("views.user.page_title") }}</template>
         <template #optional>
           <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-            <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md">
+            <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
               <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
                 t("components.buttons.create_new")
               }}

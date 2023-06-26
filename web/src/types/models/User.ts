@@ -1,6 +1,7 @@
 import { Company } from "./Company";
 import { Profile } from "./Profile";
 import { Role } from "./Role";
+import { Setting } from "./Setting";
 
 export interface User {
     id: string,
@@ -9,6 +10,7 @@ export interface User {
     email: string,
     email_verified: boolean,
     profile: Profile,
-    roles: Role[],
-    companies: Company[],
+    roles: Array<Role>,
+    companies: Array<Company>,
+    settings: Setting
 }

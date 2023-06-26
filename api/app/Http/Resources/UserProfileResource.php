@@ -37,34 +37,14 @@ class UserProfileResource extends JsonResource
             ]),
             $this->mergeWhen($this->relationLoaded('roles'), [
                 'roles' => RoleResource::collection($this->roles),
-                'role_descriptions' => $this->flattenRoles($this->roles ? $this->roles : null),
-                'selected_roles' => $this->selectedRolesInArray($this->roles ? $this->roles : null),
             ]),
             $this->mergeWhen($this->relationLoaded('companies'), [
                 'companies' => CompanyResource::collection($this->companies),
             ]),
             $this->mergeWhen($this->relationLoaded('settings'), [
-                'selected_settings' => $this->selectedSettingsInArray($this->settings ? $this->settings : null),
+                'settings' => (new SettingResource($this->settings)),
             ]),
         ];
-    }
-
-    private function flattenRoles($roles)
-    {
-        if (is_null($roles)) {
-            return '';
-        }
-
-        return $roles->pluck('display_name')->implode(',');
-    }
-
-    private function selectedRolesInArray($roles)
-    {
-        if (is_null($roles)) {
-            return [];
-        }
-
-        return $roles->pluck('display_name');
     }
 
     private function getPasswordExpiryDay($password_changed_at)
@@ -76,33 +56,5 @@ class UserProfileResource extends JsonResource
         $diff = Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(config('dcslab.PASSWORD_EXPIRY_DAYS')), false);
 
         return $diff <= 0 ? 0 : $diff;
-    }
-
-    private function selectedSettingsInArray($settings)
-    {
-        if (is_null($settings)) {
-            return [];
-        }
-
-        $result = [];
-        foreach ($settings as $s) {
-            $skey = '';
-            switch ($s->key) {
-                case 'PREFS.THEME':
-                    $skey = 'theme';
-                    break;
-                case 'PREFS.DATE_FORMAT':
-                    $skey = 'dateFormat';
-                    break;
-                case 'PREFS.TIME_FORMAT':
-                    $skey = 'timeFormat';
-                    break;
-                default:
-                    break;
-            }
-            $result[$skey] = $s->value;
-        }
-
-        return $result;
     }
 }
