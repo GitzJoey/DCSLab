@@ -30,6 +30,11 @@ export const useUserContextStore = defineStore("userContext", {
       },
       roles: [],
       companies: [],
+      settings: {
+        theme: '',
+        date_format: '',
+        time_format: '',
+      }
     },
   }),
   getters: {
