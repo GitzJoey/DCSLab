@@ -11,7 +11,6 @@ import Lucide from "../../base-components/Lucide";
 import ProductService from "../../services/ProductService";
 import { useSelectedUserLocationStore } from '../../stores/user-location'
 import ProductSearch from "../../base-components/ProductSearch/ProductSearch.vue";
-import { Collection } from "lodash";
 //#endregion
 
 //#region Declarations
@@ -37,7 +36,6 @@ async function getProductList() {
     const companyId = userLocation.value.company.id;
     const data = await productService.readAny(companyId, "");
     productList.value = data?.data?.data;
-    console.log(data, "<< ini data")
   } catch (error) {
     throw error;
   }
