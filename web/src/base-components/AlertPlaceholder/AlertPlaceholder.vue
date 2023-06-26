@@ -29,7 +29,7 @@ const computedVariant = computed(() => {
 </script>
 
 <template>
-    <div v-if="errors != null" class="mt-4">
+    <div v-if="errors != null && Object.keys(errors).length > 0" class="mt-4">
         <Alert v-slot="{ dismiss }" :variant="computedVariant" class="flex items-center mb-2">
             <div class="flex flex-col">
                 <div class="flex items-center">
