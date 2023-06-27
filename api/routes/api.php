@@ -34,7 +34,7 @@ Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest',
 
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
-        //region Extensions
+        /* #region Extensions */
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::get('read', [CompanyController::class, 'readAny'])->name('.read_any');
@@ -115,7 +115,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/{purchase_order:ulid}', [PurchaseOrderController::class, 'read'])->name('.read');
             });
         });
-        //#endregion
+        /* #endregion */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
             Route::group(['prefix' => 'user', 'as' => '.user'], function () {
@@ -144,7 +144,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
 Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
-        //region Extensions
+        /* #region Extensions */
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::post('save', [CompanyController::class, 'store'])->name('.save');
@@ -229,7 +229,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('delete/{purchase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('.delete');
             });
         });
-        //endregion
+        /* #endregion */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
             Route::group(['prefix' => 'user', 'as' => '.user'], function () {

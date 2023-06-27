@@ -131,9 +131,10 @@ export default class DashboardService {
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
-
+                console.log('1');
                 const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
-
+                console.log('2');
+                console.log(response.data);
                 this.cacheService.setCachedDDL(ddlName, response.data);
             }
 

@@ -353,7 +353,6 @@ const onSubmit = async () => {
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          {{ errors }}
           <TwoColumnsLayout :cards="cards" :show-side-tab="true">
             <template #card-items-0>
               <div class="p-5">
@@ -381,7 +380,52 @@ const onSubmit = async () => {
                 </div>
               </div>
             </template>
+            <template #card-items-1>
+              <div class="p-5">
+                <div class="pb-4">
+                  <FormLabel html-for="first_name">{{ t('views.user.fields.first_name') }}</FormLabel>
+                  <FormInput id="first_name" v-model="userForm.data.profile.first_name" name="first_name" type="text"
+                    :placeholder="t('views.user.fields.first_name')" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="last_name">{{ t('views.user.fields.last_name') }}</FormLabel>
+                  <FormInput id="last_name" v-model="userForm.data.profile.last_name" name="last_name" type="text"
+                    :placeholder="t('views.user.fields.last_name')" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="address" class="form-label">{{ t('views.user.fields.address') }}</FormLabel>
+                  <FormInput id="address" v-model="userForm.data.profile.address" name="address" type="text"
+                    :placeholder="t('views.user.fields.address')" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="city">{{ t('views.user.fields.city') }}</FormLabel>
+                  <FormInput id="city" v-model="userForm.data.profile.city" name="city" type="text" class="form-control"
+                    :placeholder="t('views.user.fields.city')" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="postal_code">{{ t('views.user.fields.postal_code') }}</FormLabel>
+                  <FormInput id="postal_code" v-model="userForm.data.profile.postal_code" name="postal_code" type="text"
+                    :placeholder="t('views.user.fields.postal_code')" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="country">{{ t('views.user.fields.country') }}</FormLabel>
+                  <FormSelect id="country" v-model="userForm.data.profile.country" name="country"
+                    :class="{ 'border-danger': errors['country'] }" :placeholder="t('views.user.fields.country')">
+                    <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                    <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
+                  </FormSelect>
+
+                  <ErrorMessage name="country" class="text-danger" />
+                </div>
+                <div class="pb-4">
+
+                </div>
+              </div>
+            </template>
           </TwoColumnsLayout>
+          <Button as="submit" href="#" variant="primary" class="shadow-md">
+            <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
+          </Button>
         </VeeForm>
       </div>
     </LoadingOverlay>
