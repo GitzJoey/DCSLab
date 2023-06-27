@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerGroupController;
@@ -34,7 +35,7 @@ Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest',
 
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
-        //region Extensions
+        /* #region Extensions */
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::get('read', [CompanyController::class, 'readAny'])->name('.read_any');
@@ -115,7 +116,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/{purchase_order:ulid}', [PurchaseOrderController::class, 'read'])->name('.read');
             });
         });
-        //#endregion
+        /* #endregion */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
             Route::group(['prefix' => 'user', 'as' => '.user'], function () {
@@ -134,6 +135,13 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::get('user/api', [DashboardController::class, 'userApi'])->name('.user.api');
         });
 
+        Route::group(['prefix' => 'common', 'as' => '.common'], function () {
+            Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function () {
+                Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
+                Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
+            });
+        });
+
         Route::group(['prefix' => 'module', 'as' => '.module'], function () {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function () {
                 Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');
@@ -144,7 +152,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
 Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
-        //region Extensions
+        /* #region Extensions */
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::post('save', [CompanyController::class, 'store'])->name('.save');
@@ -229,7 +237,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('delete/{purchase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('.delete');
             });
         });
-        //endregion
+        /* #endregion */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
             Route::group(['prefix' => 'user', 'as' => '.user'], function () {

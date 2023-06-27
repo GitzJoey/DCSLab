@@ -20,6 +20,7 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
 
 interface FormInputEmit {
   (e: "update:modelValue", value: string): void;
+  (e: "change"): void;
 }
 
 const props = defineProps<FormInputProps>();
@@ -37,7 +38,7 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
   ])
 );
@@ -52,13 +53,13 @@ const localValue = computed({
     emit("update:modelValue", newValue);
   },
 });
+
+const emitOnChange = (): void => {
+  emit('change');
+}
 </script>
 
 <template>
-  <input
-    :class="computedClass"
-    :type="props.type"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  />
+  <input v-model="localValue" :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')"
+    @change="emitOnChange" />
 </template>
