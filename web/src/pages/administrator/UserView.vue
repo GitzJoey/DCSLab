@@ -11,6 +11,12 @@ import Table from "../../base-components/Table";
 import {
   TitleLayout, TwoColumnsLayout
 } from "../../base-components/Form/FormLayout";
+import {
+  FormInput,
+  FormLabel,
+  FormTextarea,
+  FormSelect,
+} from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
@@ -41,10 +47,10 @@ const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
 const cards: Array<TwoColumnsLayoutCards> = [
-  { title: 'User Information', expanded: true },
-  { title: 'User Profile', expanded: true },
-  { title: 'Roles', expanded: true },
-  { title: 'Settings', expanded: true },
+  { title: 'User Information', active: true },
+  { title: 'User Profile', active: true },
+  { title: 'Roles', active: true },
+  { title: 'Settings', active: true },
 ];
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
@@ -183,7 +189,7 @@ const onDataListChanged = (data: DataListEmittedData) => {
 }
 
 const createNew = () => {
-  mode.value = ViewMode.FORM;
+  mode.value = ViewMode.FORM_CREATE;
 
   if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
     //userForm.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
@@ -347,8 +353,34 @@ const onSubmit = async () => {
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          <TwoColumnsLayout :cards="cards">
-
+          {{ errors }}
+          <TwoColumnsLayout :cards="cards" :show-side-tab="true">
+            <template #card-items-0>
+              <div class="p-5">
+                <div class="pb-4">
+                  <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
+                    {{ t('views.user.fields.name') }}
+                  </FormLabel>
+                  <VeeField v-slot="{ field }" name="name" rules="required|alpha_num"
+                    :label="t('views.user.fields.name')">
+                    <FormInput id="name" v-model="userForm.data.name" v-bind="field" name="name" type="text"
+                      :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.user.fields.name')" />
+                  </VeeField>
+                  <VeeErrorMessage name="name" class="mt-2 text-danger" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="email" :class="{ 'text-danger': errors['email'] }">
+                    {{ t('views.user.fields.email') }}
+                  </FormLabel>
+                  <VeeField v-slot="{ field }" name="email" rules="required|email" :label="t('views.user.fields.email')">
+                    <FormInput id="email" v-model="userForm.data.email" v-bind="field" name="email" type="text"
+                      :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.user.fields.email')"
+                      :readonly="mode === ViewMode.FORM_EDIT" />
+                  </VeeField>
+                  <VeeErrorMessage name="email" class="mt-2 text-danger" />
+                </div>
+              </div>
+            </template>
           </TwoColumnsLayout>
         </VeeForm>
       </div>
