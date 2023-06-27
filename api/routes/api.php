@@ -134,6 +134,13 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::get('user/api', [DashboardController::class, 'userApi'])->name('.user.api');
         });
 
+        Route::group(['prefix' => 'common', 'as' => '.common'], function () {
+            Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function () {
+                Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
+                Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
+            });
+        });
+
         Route::group(['prefix' => 'module', 'as' => '.module'], function () {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function () {
                 Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');

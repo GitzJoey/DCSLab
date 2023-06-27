@@ -415,7 +415,7 @@ const onSubmit = async () => {
                     <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
                   </FormSelect>
 
-                  <ErrorMessage name="country" class="text-danger" />
+                  <ErrorMessage name="country" class="mt-2 text-danger" />
                 </div>
                 <div class="pb-4">
 
