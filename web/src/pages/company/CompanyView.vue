@@ -82,7 +82,6 @@
     }
   });
   const statusDDL = ref<Array<DropDownOption> | null>(null);
-  const countriesDDL = ref<Array<DropDownOption> | null>(null);
   //#endregion
   
   //#region onMounted
@@ -122,7 +121,6 @@
   }
   
   const getDDL = async (): Promise<void> => {
-    countriesDDL.value = await dashboardServices.getCountriesDDL();
     statusDDL.value = await dashboardServices.getStatusDDL();
   }
   
