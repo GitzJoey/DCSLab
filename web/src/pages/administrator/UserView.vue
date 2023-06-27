@@ -30,6 +30,7 @@ import RoleService from "../../services/RoleService";
 import { DropDownOption } from "../../types/services/DropDownOption";
 import { FormRequest } from "../../types/requests/FormRequest";
 import DashboardService from "../../services/DashboardService";
+import { Role } from "../../types/models/Role";
 //#endregion
 
 //#region Declarations
@@ -105,7 +106,7 @@ const userLists = ref<Collection<User[]> | null>({
     next: null,
   }
 });
-const rolesDDL = ref<Array<DropDownOption> | null>(null);
+const rolesDDL = ref<Array<Role> | null>(null);
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 const countriesDDL = ref<Array<DropDownOption> | null>(null);
 //#endregion
@@ -146,8 +147,16 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
+const getRoles = async () => {
+  let result: ServiceResponse<Resource<Array<Role>> | null> = await roleServices.readAny();
+
+  if (result.success && result.data) {
+    rolesDDL.value = result.data.data as Array<Role>;
+  }
+}
+
 const getDDL = async (): Promise<void> => {
-  rolesDDL.value = await roleServices.getRolesDDL();
+  await getRoles();
   countriesDDL.value = await dashboardServices.getCountriesDDL();
   statusDDL.value = await dashboardServices.getStatusDDL();
 }
@@ -432,18 +441,88 @@ const onSubmit = async () => {
                   <VeeErrorMessage name="tax_id" class="mt-2 text-danger" />
                 </div>
                 <div class="pb-4">
-                  <FormLabel for="ic_num" :class="{ 'text-danger': errors['ic_num'] }">
+                  <FormLabel html-for="ic_num" :class="{ 'text-danger': errors['ic_num'] }">
                     {{ t('views.user.fields.ic_num') }}
                   </FormLabel>
-                  <VeeField rules="required" :label="t('views.user.fields.ic_num')">
+                  <VeeField rules="required" name="ic_num" :label="t('views.user.fields.ic_num')">
                     <FormInput id="ic_num" v-model="userForm.data.profile.ic_num" name="ic_num" type="text"
                       :class="{ 'border-danger': errors['ic_num'] }" :placeholder="t('views.user.fields.ic_num')" />
                   </VeeField>
                   <VeeErrorMessage name="ic_num" class="mt-2 text-danger" />
                 </div>
                 <div class="pb-4">
+                  <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
+                    {{ t('views.user.fields.status') }}
+                  </FormLabel>
+                  <VeeField v-slot="{ field }" name="status" rules="required" :label="t('views.user.fields.status')">
+                    <FormSelect id="status" v-model="userForm.data.profile.status" v-bind="field" name="status"
+                      :class="{ 'border-danger': errors['status'] }">
+                      <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                      <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                    </FormSelect>
+                  </VeeField>
+                  <VeeErrorMessage name="status" class="mt-2 text-danger" />
                 </div>
                 <div class="pb-4">
+                  <FormLabel html-for="remarks" :class="{ 'text-danger': errors['remarks'] }">
+                    {{ t('views.user.fields.remarks') }}
+                  </FormLabel>
+                  <FormTextarea id="remarks" v-model="userForm.data.profile.remarks" name="remarks" type="text"
+                    :placeholder="t('views.user.fields.remarks')" rows="3" />
+                </div>
+              </div>
+            </template>
+            <template #card-items-2>
+              <div class="p-5">
+                <div class="pb-4">
+                  <FormLabel html-for="roles" :class="{ 'text-danger': errors['roles[]'] }">
+                    {{ t('views.user.fields.roles') }}
+                  </FormLabel>
+                  <VeeField v-slot="{ field }" name="roles[]" rules="required" :label="t('views.user.fields.roles')">
+                    <FormSelect id="roles" v-model="userForm.data.roles" multiple size="6" v-bind="field"
+                      :class="{ 'border-danger': errors['roles[]'] }">
+                      <option v-for="r in rolesDDL" :key="r.id">
+                        {{ r.display_name }}
+                      </option>
+                    </FormSelect>
+                  </VeeField>
+                  <VeeErrorMessage name="roles[]" class="mt-2 text-danger" />
+                </div>
+              </div>
+            </template>
+            <template #card-items-3>
+              <div class="p-5">
+                <div class="pb-4">
+                  <FormLabel html-for="theme">
+                    {{ t('views.user.fields.settings.theme') }}
+                  </FormLabel>
+                  <FormSelect v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="theme"
+                    v-model="userForm.data.settings.theme" name="theme">
+                    <option value="side-menu-light-full">Menu Light</option>
+                    <option value="side-menu-light-mini">Mini Menu Light</option>
+                    <option value="side-menu-dark-full">Menu Dark</option>
+                    <option value="side-menu-dark-mini">Mini Menu Dark</option>
+                  </FormSelect>
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="format_date">
+                    {{ t('views.user.fields.settings.date_format') }}
+                  </FormLabel>
+                  <FormSelect v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="format_date"
+                    v-model="userForm.data.settings.date_format" name="date_format">
+                    <option value="yyyy_MM_dd">{{ 'YYYY-MM-DD' }}</option>
+                    <option value="dd_MMM_yyyy">{{ 'DD-MMM-YYYY' }}</option>
+                  </FormSelect>
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="format_time">
+                    {{ t('views.user.fields.settings.time_format') }}
+                  </FormLabel>
+                  <FormSelect v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="format_time"
+                    v-model="userForm.data.settings.time_format" name="format_time">
+                    <option value="hh_mm_ss">{{ 'HH:mm:ss' }}</option>
+                    <option value="h_m_A">{{ 'H:m A' }}</option>
+                  </FormSelect>
                 </div>
               </div>
             </template>

@@ -126,7 +126,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
 
             Route::group(['prefix' => 'role', 'as' => '.role'], function () {
                 Route::get('read', [RoleController::class, 'readAny'])->name('.read_any');
-                Route::get('read/ddl', [RoleController::class, 'getRolesDDL'])->name('.read.ddl');
             });
         });
 
