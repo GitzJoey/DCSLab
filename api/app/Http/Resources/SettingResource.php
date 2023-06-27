@@ -24,8 +24,20 @@ class SettingResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'key' => $this->key,
-            'value' => $this->value,
+            'theme' => $this->getSettings('PREFS.THEME', $this),
+            'date_format' => $this->getSettings('PREFS.DATE_FORMAT', $this),
+            'time_format' => $this->getSettings('PREFS.TIME_FORMAT', $this),
         ];
+    }
+
+    private function getSettings($searchKey, $settings)
+    {
+        if (is_null($settings)) {
+            return '';
+        }
+
+        $result = $settings->firstWhere('key', $searchKey);
+
+        return $result ? $result->value : '';
     }
 }

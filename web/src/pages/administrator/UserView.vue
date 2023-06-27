@@ -11,6 +11,12 @@ import Table from "../../base-components/Table";
 import {
   TitleLayout, TwoColumnsLayout
 } from "../../base-components/Form/FormLayout";
+import {
+  FormInput,
+  FormLabel,
+  FormTextarea,
+  FormSelect,
+} from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
@@ -40,7 +46,12 @@ const dashboardServices = new DashboardService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
-const cards: Array<TwoColumnsLayoutCards> = [];
+const cards: Array<TwoColumnsLayoutCards> = [
+  { title: 'User Information', active: true },
+  { title: 'User Profile', active: true },
+  { title: 'Roles', active: true },
+  { title: 'Settings', active: true },
+];
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -61,7 +72,7 @@ const userForm = ref<FormRequest<User>>({
       city: '',
       postal_code: '',
       country: '',
-      status: '',
+      status: 'ACTIVE',
       tax_id: 0,
       ic_num: 0,
       img_path: '',
@@ -69,6 +80,11 @@ const userForm = ref<FormRequest<User>>({
     },
     roles: [],
     companies: [],
+    settings: {
+      theme: 'side-menu-light-full',
+      date_format: 'yyyy_MM_dd',
+      time_format: 'hh_mm_ss',
+    }
   }
 });
 const userLists = ref<Collection<User[]> | null>({
@@ -130,14 +146,57 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
-const getDDL = async () => {
+const getDDL = async (): Promise<void> => {
   rolesDDL.value = await roleServices.getRolesDDL();
   countriesDDL.value = await dashboardServices.getCountriesDDL();
   statusDDL.value = await dashboardServices.getStatusDDL();
 }
 
+const emptyUser = () => {
+  return {
+    data: {
+      id: '',
+      ulid: '',
+      name: '',
+      email: '',
+      email_verified: false,
+      profile: {
+        first_name: '',
+        last_name: '',
+        address: '',
+        city: '',
+        postal_code: '',
+        country: '',
+        status: 'ACTIVE',
+        tax_id: 0,
+        ic_num: 0,
+        img_path: '',
+        remarks: '',
+      },
+      roles: [],
+      companies: [],
+      settings: {
+        theme: 'side-menu-light-full',
+        date_format: 'yyyy_MM_dd',
+        time_format: 'hh_mm_ss',
+      }
+    }
+  }
+}
+
 const onDataListChanged = (data: DataListEmittedData) => {
   getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+}
+
+const createNew = () => {
+  mode.value = ViewMode.FORM_CREATE;
+
+  if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
+    //userForm.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
+    //sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
+  } else {
+    userForm.value = emptyUser();
+  }
 }
 
 const editSelected = (itemIdx: number) => {
@@ -167,7 +226,7 @@ const onSubmit = async () => {
         <template #title>{{ t("views.user.page_title") }}</template>
         <template #optional>
           <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-            <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md">
+            <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
               <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
                 t("components.buttons.create_new")
               }}
@@ -294,8 +353,34 @@ const onSubmit = async () => {
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          <TwoColumnsLayout :cards="cards">
-
+          {{ errors }}
+          <TwoColumnsLayout :cards="cards" :show-side-tab="true">
+            <template #card-items-0>
+              <div class="p-5">
+                <div class="pb-4">
+                  <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
+                    {{ t('views.user.fields.name') }}
+                  </FormLabel>
+                  <VeeField v-slot="{ field }" name="name" rules="required|alpha_num"
+                    :label="t('views.user.fields.name')">
+                    <FormInput id="name" v-model="userForm.data.name" v-bind="field" name="name" type="text"
+                      :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.user.fields.name')" />
+                  </VeeField>
+                  <VeeErrorMessage name="name" class="mt-2 text-danger" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="email" :class="{ 'text-danger': errors['email'] }">
+                    {{ t('views.user.fields.email') }}
+                  </FormLabel>
+                  <VeeField v-slot="{ field }" name="email" rules="required|email" :label="t('views.user.fields.email')">
+                    <FormInput id="email" v-model="userForm.data.email" v-bind="field" name="email" type="text"
+                      :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.user.fields.email')"
+                      :readonly="mode === ViewMode.FORM_EDIT" />
+                  </VeeField>
+                  <VeeErrorMessage name="email" class="mt-2 text-danger" />
+                </div>
+              </div>
+            </template>
           </TwoColumnsLayout>
         </VeeForm>
       </div>

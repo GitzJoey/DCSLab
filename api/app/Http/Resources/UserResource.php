@@ -43,7 +43,7 @@ class UserResource extends JsonResource
                 'companies' => CompanyResource::collection($this->companies),
             ]),
             $this->mergeWhen($this->relationLoaded('settings'), [
-                'settings' => SettingResource::collection($this->settings),
+                'settings' => (new SettingResource($this->settings)),
             ]),
         ];
     }
