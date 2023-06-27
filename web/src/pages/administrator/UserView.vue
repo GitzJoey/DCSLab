@@ -481,7 +481,7 @@ const onSubmit = async () => {
                   <VeeField v-slot="{ field }" name="roles[]" rules="required" :label="t('views.user.fields.roles')">
                     <FormSelect id="roles" v-model="userForm.data.roles" multiple size="6" v-bind="field"
                       :class="{ 'border-danger': errors['roles[]'] }">
-                      <option v-for="r in rolesDDL" :key="r.id">
+                      <option v-for="r in rolesDDL" :key="r.id" :value="r">
                         {{ r.display_name }}
                       </option>
                     </FormSelect>
