@@ -1,4 +1,5 @@
 import { DropDownOption } from "../types/services/DropDownOption";
+import { omit } from "lodash";
 
 export default class CacheService {
     protected dcslabSystems;
@@ -34,9 +35,7 @@ export default class CacheService {
         const hasEntity = Object.hasOwnProperty.call(entity, key);
         if (!hasEntity) return null;
 
-        const result = entity[key];
-        sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
-        return result;
+        return entity[key];
     }
 
     public setLastEntity(key: string, value: unknown | null) {
@@ -46,6 +45,20 @@ export default class CacheService {
 
         const newObj: Record<string, unknown> = {};
         newObj[key] = value;
+
+        sessionStorage.setItem('DCSLAB_LAST_ENTITY', btoa(JSON.stringify(newObj)));
+    }
+
+    public removeLastEntity(key: string) {
+        const entity = this.dcslabLastEntity == null ? null : JSON.parse(atob(this.dcslabLastEntity));
+        if (entity == null) return null;
+
+        key = key.toUpperCase();
+        const hasEntity = Object.hasOwnProperty.call(entity, key);
+        if (!hasEntity) return null;
+
+        let newObj: Record<string, unknown> = {};
+        newObj = omit(entity, [key]);
 
         sessionStorage.setItem('DCSLAB_LAST_ENTITY', btoa(JSON.stringify(newObj)));
     }
