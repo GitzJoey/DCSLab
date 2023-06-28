@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -31,6 +31,8 @@ import { DropDownOption } from "../../types/services/DropDownOption";
 import { FormRequest } from "../../types/requests/FormRequest";
 import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
+import CacheService from "../../services/CacheService";
+import { debounce } from "lodash";
 //#endregion
 
 //#region Declarations
@@ -38,6 +40,7 @@ const { t } = useI18n();
 const userServices = new UserService();
 const roleServices = new RoleService();
 const dashboardServices = new DashboardService();
+const cacheServices = new CacheService();
 //#endregion
 
 //#region Data - Pinia
@@ -52,6 +55,8 @@ const cards: Array<TwoColumnsLayoutCards> = [
   { title: 'User Profile', active: true },
   { title: 'Roles', active: true },
   { title: 'Settings', active: true },
+  { title: 'Token Managements', active: true },
+  { title: 'Password Managements', active: true },
 ];
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
@@ -200,16 +205,14 @@ const onDataListChanged = (data: DataListEmittedData) => {
 const createNew = () => {
   mode.value = ViewMode.FORM_CREATE;
 
-  if (sessionStorage.getItem('DCSLAB_LAST_ENTITY') !== null) {
-    //userForm.value = JSON.parse(sessionStorage.getItem('DCSLAB_LAST_ENTITY'));
-    //sessionStorage.removeItem('DCSLAB_LAST_ENTITY');
-  } else {
-    userForm.value = emptyUser();
-  }
+  let cachedData: unknown | null = cacheServices.getLastEntity('User');
+
+  userForm.value = cachedData == null ? emptyUser() : cachedData as FormRequest<User>;
 }
 
 const editSelected = (itemIdx: number) => {
-  console.log(itemIdx);
+  mode.value = ViewMode.FORM_EDIT;
+  userForm.value.data = userLists.value?.data[itemIdx] as User;
 }
 
 const deleteSelected = (itemUlid: string) => {
@@ -225,6 +228,14 @@ const onSubmit = async () => {
 //#endregion
 
 //#region Watcher
+watch(
+  userForm,
+  debounce((newValue): void => {
+    if (mode.value != ViewMode.FORM_CREATE) return;
+    cacheServices.setLastEntity('User', newValue)
+  }, 500),
+  { deep: true }
+);
 //#endregion
 </script>
 
@@ -523,6 +534,20 @@ const onSubmit = async () => {
                     <option value="hh_mm_ss">{{ 'HH:mm:ss' }}</option>
                     <option value="h_m_A">{{ 'H:m A' }}</option>
                   </FormSelect>
+                </div>
+              </div>
+            </template>
+            <template #card-items-4>
+              <div class="p-5">
+                <div class="pb-4">
+
+                </div>
+              </div>
+            </template>
+            <template #card-items-5>
+              <div class="p-5">
+                <div class="pb-4">
+
                 </div>
               </div>
             </template>
