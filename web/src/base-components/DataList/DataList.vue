@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, toRef } from "vue";
+import { computed, ref, toRef, watch } from "vue";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { Menu } from "../../base-components/Headless";
 import Lucide from "../../base-components/Lucide";
 import Pagination from "../../base-components/Pagination";
 import { useI18n } from "vue-i18n";
+import { debounce } from "lodash";
 
 export interface PaginationData {
   current_page: number,
@@ -180,6 +181,13 @@ const pageSizeChanged = () => {
   if (pagination.value != null)
     emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
 }
+
+watch(
+  search,
+  debounce((): void => {
+    searchTextboxChanged();
+  }, 500)
+);
 </script>
 
 <template>
@@ -187,8 +195,7 @@ const pageSizeChanged = () => {
     <div class="grid justify-items-end">
       <div class="flex flex-row gap-2">
         <div v-if="enableSearch" class="relative w-56 text-slate-500">
-          <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..."
-            @change="searchTextboxChanged" />
+          <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..." />
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
 
