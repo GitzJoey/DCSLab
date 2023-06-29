@@ -32,9 +32,9 @@
         "settings": {
             "settings": "Settings",
             "theme": "Themes",
-            "dateFormat": "Date Format",
-            "timeFormat": "Time Format",
-            "apiToken": "API Token"
+            "date_format": "Date Format",
+            "time_format": "Time Format",
+            "api_token": "API Token"
         },
         "reset_password": "Reset Password",
         "email_reset_password": "Send Email"

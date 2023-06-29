@@ -1,9 +1,11 @@
 import { App } from "vue";
 import {
-    Form as VeeForm,
-    Field as VeeField,
+    Form,
+    Field,
+    FieldArray,
+    ErrorMessage,
     defineRule,
-    ErrorMessage, configure,
+    configure,
 } from "vee-validate";
 import allRules from "@vee-validate/rules";
 
@@ -22,9 +24,10 @@ setLocale(getLang());
 
 export default {
     install: (app: App): void => {
-        app.component("VeeForm", VeeForm);
-        app.component("VeeField", VeeField);
+        app.component("VeeForm", Form);
+        app.component("VeeField", Field);
         app.component("VeeErrorMessage", ErrorMessage);
+        app.component("VeeFieldArray", FieldArray)
 
         Object.keys(allRules).forEach(rule => {
             defineRule(rule, allRules[rule]);

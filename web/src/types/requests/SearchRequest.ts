@@ -1,7 +1,7 @@
 export interface SearchRequest {
-    paginate: boolean,
     search: string | null,
+    refresh: boolean,
+    paginate: boolean,
     page?: number,
     per_page?: number,
-    refresh: boolean,
 }

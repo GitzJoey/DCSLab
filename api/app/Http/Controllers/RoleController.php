@@ -40,31 +40,4 @@ class RoleController extends BaseController
             return $response;
         }
     }
-
-    public function getRolesDDL()
-    {
-        $result = [];
-        $errorMsg = '';
-
-        try {
-            $excludeRole = [];
-
-            $roles = $this->roleActions->readAny(exclude: $excludeRole);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($roles)) {
-            return response()->error($errorMsg);
-        } else {
-            $result = $roles->map(function ($item) {
-                return [
-                    'code' => $item->display_name,
-                    'name' => $item->display_name,
-                ];
-            });
-
-            return $result;
-        }
-    }
 }

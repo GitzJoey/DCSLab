@@ -1,9 +1,0 @@
-.zoom-overlay {
-  background-color: theme("colors.black" / 75%);
-}
-
-.dark {
-  .zoom-overlay {
-    background-color: theme("colors.black" / 40%);
-  }
-}
