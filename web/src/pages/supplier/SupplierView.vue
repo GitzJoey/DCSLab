@@ -5,28 +5,23 @@ import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { TitleLayout } from "../../base-components/Form/FormLayout";
 import { ViewMode } from "../../types/enums/ViewMode";
-
-import FormSupplier from '../../base-components/Form/FormSupplier'
+import DataList from "../../base-components/DataList/DataList.vue";
+import Table from "../../base-components/Table";
+import Lucide from "../../base-components/Lucide";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
 //#endregion
 
-// Define Type
-// End Define Type
-
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-
 //#endregion
-
-// Start Method
-// End Method
 
 //#region onMounted
 onMounted(() => {
+
 });
 //#endregion
 </script>
@@ -38,9 +33,7 @@ onMounted(() => {
       <TitleLayout>
         <template #title>{{ t("views.supplier.page_title") }}</template>
       </TitleLayout>
-
-      <FormSupplier />
-
     </LoadingOverlay>
+    
   </div>
 </template>
