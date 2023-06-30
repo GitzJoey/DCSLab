@@ -9,6 +9,7 @@ import delete_modal from "./en/components/delete-modal.json";
 
 import login from "./en/views/login.json";
 import register from "./en/views/register.json";
+import forgot_password from "./en/views/forgot_password.json";
 import reset_password from "./en/views/reset_password.json";
 import profile from "./en/views/profile.json";
 import user from "./en/views/user.json";
@@ -39,6 +40,7 @@ export default {
     "views": {
         "login": login,
         "register": register,
+        "forgot_password": forgot_password,
         "reset_password": reset_password,
         "profile": profile,
         "user": user,

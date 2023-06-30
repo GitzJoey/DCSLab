@@ -65,7 +65,7 @@ const submitForm = async (values: ResetPasswordRequest) => {
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto">
             <LoadingOverlay :visible="loading" :transparent="true">
               <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
-                {{ t("views.reset_password.email.title") }}
+                {{ t("views.reset_password.title") }}
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
                 &nbsp;
@@ -73,11 +73,11 @@ const submitForm = async (values: ResetPasswordRequest) => {
               <VeeForm v-slot="{ errors }" @submit="submitForm">
                 <div class="mt-8 intro-x">
                   <VeeField v-slot="{ field }" name="email" rules="required|email"
-                    :label="t('views.reset_password.email.fields.email')">
+                    :label="t('views.reset_password.fields.email')">
                     <FormInput v-model="resetPasswordForm.email" type="text" name="email"
                       class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
-                      :class="{ 'border-danger': errors['email'] }"
-                      :placeholder="t('views.reset_password.email.fields.email')" v-bind="field" />
+                      :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.reset_password.fields.email')"
+                      v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
                   <VeeField v-slot="{ field }" name="password" rules="required" :label="t('views.login.fields.password')">
