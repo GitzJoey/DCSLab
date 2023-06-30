@@ -71,22 +71,32 @@ const submitForm = async (values: ResetPasswordRequest) => {
                 &nbsp;
               </div>
               <VeeForm v-slot="{ errors }" @submit="submitForm">
+                <input v-model="resetPasswordForm.token" type="hidden" name="token" />
                 <div class="mt-8 intro-x">
                   <VeeField v-slot="{ field }" name="email" rules="required|email"
                     :label="t('views.reset_password.fields.email')">
                     <FormInput v-model="resetPasswordForm.email" type="text" name="email"
-                      class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
+                      class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.reset_password.fields.email')"
                       v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
-                  <VeeField v-slot="{ field }" name="password" rules="required" :label="t('views.login.fields.password')">
+                  <VeeField v-slot="{ field }" name="password" rules="required"
+                    :label="t('views.reset_password.fields.password')">
                     <FormInput v-model="resetPasswordForm.token" type="password" name="password"
-                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                      :class="{ 'border-danger': errors['password'] }" :placeholder="t('views.login.fields.password')"
-                      v-bind="field" />
+                      class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
+                      :class="{ 'border-danger': errors['password'] }"
+                      :placeholder="t('views.reset_password.fields.password')" v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="password" class="mt-2 text-danger" />
+                  <VeeField v-slot="{ field }" name="password_confirmation" rules="confirmed:@password"
+                    :label="t('views.reset_password.fields.password_confirmation')">
+                    <FormInput name="password_confirmation" type="password"
+                      :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['password'] }"
+                      :placeholder="t('views.reset_password.fields.password_confirmation')
+                        " v-bind="field" />
+                  </VeeField>
+                  <VeeErrorMessage name="password_confirmation" class="mt-2 text-danger" />
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button type="submit" variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">

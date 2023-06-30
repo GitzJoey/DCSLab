@@ -90,14 +90,15 @@ const submitForm = async (values: ForgotPasswordRequest, actions: FormActions<Fo
                   <VeeField v-slot="{ field }" name="email" rules="required|email"
                     :label="t('views.forgot_password.fields.email')">
                     <FormInput v-model="forgotPasswordForm.email" type="text" name="email"
-                      class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
+                      class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.forgot_password.fields.email')"
                       v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button type="submit" variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
+                  <Button type="submit" variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
+                    :disabled="link_sent">
                     {{ t("components.buttons.submit") }}
                   </Button>
                   <Button type="button" variant="outline-secondary"
