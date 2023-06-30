@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
@@ -24,6 +24,17 @@ const loading = ref<boolean>(false);
 const resetPasswordForm = ref<ResetPasswordRequest>({
   email: '',
   token: '',
+  password: '',
+  password_confirmation: '',
+});
+
+onMounted(async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  let email: string | null = urlParams.get('email');
+  let token: string | null = urlParams.get('token');
+
+  if (email != null) resetPasswordForm.value.email = email;
+  if (token != null) resetPasswordForm.value.token = token;
 });
 
 const submitForm = async (values: ResetPasswordRequest) => {
@@ -31,7 +42,6 @@ const submitForm = async (values: ResetPasswordRequest) => {
 
   console.log(result);
 }
-
 </script>
 
 <template>
@@ -73,17 +83,13 @@ const submitForm = async (values: ResetPasswordRequest) => {
               <VeeForm v-slot="{ errors }" @submit="submitForm">
                 <input v-model="resetPasswordForm.token" type="hidden" name="token" />
                 <div class="mt-8 intro-x">
-                  <VeeField v-slot="{ field }" name="email" rules="required|email"
-                    :label="t('views.reset_password.fields.email')">
-                    <FormInput v-model="resetPasswordForm.email" type="text" name="email"
-                      class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
-                      :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.reset_password.fields.email')"
-                      v-bind="field" />
-                  </VeeField>
+                  <FormInput v-model="resetPasswordForm.email" type="text" name="email"
+                    class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
+                    :placeholder="t('views.reset_password.fields.email')" disabled />
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
                   <VeeField v-slot="{ field }" name="password" rules="required"
                     :label="t('views.reset_password.fields.password')">
-                    <FormInput v-model="resetPasswordForm.token" type="password" name="password"
+                    <FormInput v-model="resetPasswordForm.password" type="password" name="password"
                       class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['password'] }"
                       :placeholder="t('views.reset_password.fields.password')" v-bind="field" />
@@ -91,7 +97,8 @@ const submitForm = async (values: ResetPasswordRequest) => {
                   <VeeErrorMessage name="password" class="mt-2 text-danger" />
                   <VeeField v-slot="{ field }" name="password_confirmation" rules="confirmed:@password"
                     :label="t('views.reset_password.fields.password_confirmation')">
-                    <FormInput name="password_confirmation" type="password"
+                    <FormInput v-model="resetPasswordForm.password_confirmation" name="password_confirmation"
+                      type="password"
                       :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['password'] }"
                       :placeholder="t('views.reset_password.fields.password_confirmation')
                         " v-bind="field" />
