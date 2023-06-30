@@ -22,7 +22,8 @@ const router = useRouter();
 const authService = new AuthService();
 
 const appName = import.meta.env.VITE_APP_NAME;
-const loading = ref(false);
+const loading = ref<boolean>(false);
+const link_sent = ref<boolean>(false);
 
 const forgotPasswordForm = ref<ForgotPasswordRequest>({
   email: ''
@@ -34,7 +35,7 @@ const submitForm = async (values: ForgotPasswordRequest, actions: FormActions<Fo
   let result: ServiceResponse<ForgotPassword | null> = await authService.requestResetPassword(values);
 
   if (result.success) {
-    console.log(result);
+    link_sent.value = true;
   } else {
     actions.setErrors(result.errors as Partial<Record<string, string[]>>);
   }
@@ -73,7 +74,7 @@ const submitForm = async (values: ForgotPasswordRequest, actions: FormActions<Fo
         <div class="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
           <div
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto">
-            <Alert variant="soft-success" class="flex items-center mb-2">
+            <Alert v-if="link_sent" variant="soft-success" class="flex items-center mb-2">
               <Lucide icon="AlertTriangle" class="w-6 h-6 mr-2" />
               {{ t('views.forgot_password.alert.successfully_send_link') }}
             </Alert>

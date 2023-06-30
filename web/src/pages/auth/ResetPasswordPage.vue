@@ -19,7 +19,7 @@ const router = useRouter();
 const authService = new AuthService();
 
 const appName = import.meta.env.VITE_APP_NAME;
-const loading = ref(false);
+const loading = ref<boolean>(false);
 
 const resetPasswordForm = ref<ResetPasswordRequest>({
   email: '',
