@@ -106,7 +106,7 @@ const onSubmit = async (values: LoginRequest, actions: FormActions<LoginRequest>
                       </FormCheck.Label>
                     </FormCheck>
                   </div>
-                  <RouterLink to="/auth/reset-password">{{
+                  <RouterLink to="/auth/forgot-password">{{
                     t("views.login.fields.forgot_pass")
                   }}</RouterLink>
                 </div>

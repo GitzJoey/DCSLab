@@ -10,3 +10,12 @@ export interface RegisterRequest {
     password: string,
     terms: boolean,
 }
+
+export interface ForgotPasswordRequest {
+    email: string,
+}
+
+export interface ResetPasswordRequest {
+    token: string,
+    email: string,
+}

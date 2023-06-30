@@ -11,8 +11,8 @@ import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
 import AuthService from "../../services/AuthServices";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { ResetPasswordRequest } from "../../types/requests/AuthRequests";
-import { ResetPassword } from "../../types/models/ResetPassword";
+import { ForgotPasswordRequest } from "../../types/requests/AuthRequests";
+import { ForgotPassword } from "../../types/models/ForgotPassword";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -21,13 +21,12 @@ const authService = new AuthService();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref(false);
 
-const resetPasswordForm = ref<ResetPasswordRequest>({
-  email: '',
-  token: '',
+const forgotPasswordForm = ref<ForgotPasswordRequest>({
+  email: ''
 });
 
-const submitForm = async (values: ResetPasswordRequest) => {
-  let result: ServiceResponse<ResetPassword | null> = await authService.resetPassword(values);
+const submitForm = async (values: ForgotPasswordRequest) => {
+  let result: ServiceResponse<ForgotPassword | null> = await authService.requestResetPassword(values);
 
   console.log(result);
 }
@@ -74,19 +73,12 @@ const submitForm = async (values: ResetPasswordRequest) => {
                 <div class="mt-8 intro-x">
                   <VeeField v-slot="{ field }" name="email" rules="required|email"
                     :label="t('views.reset_password.email.fields.email')">
-                    <FormInput v-model="resetPasswordForm.email" type="text" name="email"
+                    <FormInput v-model="forgotPasswordForm.email" type="text" name="email"
                       class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['email'] }"
                       :placeholder="t('views.reset_password.email.fields.email')" v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
-                  <VeeField v-slot="{ field }" name="password" rules="required" :label="t('views.login.fields.password')">
-                    <FormInput v-model="resetPasswordForm.token" type="password" name="password"
-                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
-                      :class="{ 'border-danger': errors['password'] }" :placeholder="t('views.login.fields.password')"
-                      v-bind="field" />
-                  </VeeField>
-                  <VeeErrorMessage name="password" class="mt-2 text-danger" />
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button type="submit" variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
