@@ -18,6 +18,6 @@ Route::get('/', function () {
 });
 
 Route::get('/do-reset-password', function() {
-    $resetUrl = config('FRONTEND_URL') . '/auth/reset-password' . '?' . http_build_query(request()->query());
+    $resetUrl = env('FRONTEND_URL') . '/auth/reset-password' . '?' . http_build_query(request()->query());
     return redirect()->away($resetUrl);
 })->name('password.reset');
