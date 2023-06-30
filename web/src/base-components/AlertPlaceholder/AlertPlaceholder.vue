@@ -2,6 +2,7 @@
 import { toRef, computed } from "vue";
 import Alert from "../Alert";
 import Lucide from "../Lucide";
+import { useI18n } from "vue-i18n";
 
 export interface AlertPlaceholderProps {
     alertType: string,
@@ -9,10 +10,12 @@ export interface AlertPlaceholderProps {
     title: string,
 }
 
+const { t } = useI18n();
+
 const props = withDefaults(defineProps<AlertPlaceholderProps>(), {
     alertType: 'danger',
     errors: null,
-    title: 'An unexpected error occurred.'
+    title: ''
 });
 
 const alertType = toRef(props, 'alertType');
@@ -34,7 +37,7 @@ const computedVariant = computed(() => {
             <div class="flex flex-col">
                 <div class="flex items-center">
                     <Lucide icon="AlertCircle" class="w-6 h-6 mr-2" />
-                    {{ title }}
+                    {{ title != '' ? title : t('components.alert-placeholder.default.title') }}
                     <Alert.DismissButton type="button" class="text-white" aria-label="Close" @click="dismiss">
                         <Lucide icon="X" class="w-4 h-4" />
                     </Alert.DismissButton>

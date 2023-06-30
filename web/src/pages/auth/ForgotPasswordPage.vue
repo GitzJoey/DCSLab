@@ -75,7 +75,7 @@ const submitForm = async (values: ForgotPasswordRequest, actions: FormActions<Fo
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto">
             <Alert variant="soft-success" class="flex items-center mb-2">
               <Lucide icon="AlertTriangle" class="w-6 h-6 mr-2" />
-              Awesome alert with icon
+              {{ t('views.forgot_password.alert.successfully_send_link') }}
             </Alert>
             <LoadingOverlay :visible="loading" :transparent="true">
               <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
