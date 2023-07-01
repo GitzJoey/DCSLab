@@ -82,47 +82,49 @@ const onSubmit = async (values: RegisterRequest, actions: FormActions<RegisterRe
                 &nbsp;
               </div>
               <VeeForm id="loginForm" v-slot="{ errors }" @submit="onSubmit">
-                {{ errors }}
                 <div class="mt-8 intro-x">
                   <VeeField v-slot="{ field }" name="name" rules="required" :label="t('views.register.fields.name')">
                     <FormInput v-model="registerForm.name" name="name" type="text"
-                      class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
+                      :class="{ 'block px-4 py-3 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['name'] }"
                       :placeholder="t('views.register.fields.name')" v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="name" as="span" class="text-danger" />
+                  <VeeErrorMessage name="name" class="mt-2 text-danger" />
                   <VeeField v-slot="{ field }" name="email" rules="required|email"
                     :label="t('views.register.fields.email')">
                     <FormInput v-model="registerForm.email" name="email" type="text"
-                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
+                      :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['email'] }"
                       :placeholder="t('views.register.fields.email')" v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="email" as="span" class="text-danger" />
+                  <VeeErrorMessage name="email" class="mt-2 text-danger" />
                   <VeeField v-slot="{ field }" name="password" rules="required|alpha_num|min:6"
                     :label="t('views.register.fields.password')">
                     <FormInput v-model="registerForm.password" name="password" type="password"
-                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
+                      :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['password'] }"
                       :placeholder="t('views.register.fields.password')" v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="password" as="span" class="text-danger" />
+                  <VeeErrorMessage name="password" class="mt-2 text-danger" />
                   <VeeField v-slot="{ field }" name="password_confirmation" rules="confirmed:@password"
                     :label="t('views.register.fields.password_confirmation')">
                     <FormInput name="password_confirmation" type="password"
-                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]" :placeholder="t('views.register.fields.password_confirmation')
+                      :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['password'] }"
+                      :placeholder="t('views.register.fields.password_confirmation')
                         " v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="password_confirmation" as="span" class="text-danger" />
+                  <VeeErrorMessage name="password_confirmation" class="mt-2 text-danger" />
                 </div>
                 <div class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <VeeField v-slot="{ field }" name="terms" rules="required" :label="t('views.register.fields.terms')">
-                    <FormCheck.Input id="terms" v-model="registerForm.terms" name="terms" type="checkbox"
-                      class="mr-2 border" v-bind="field" />
-                    <label class="cursor-pointer select-none" htmlFor="terms">
-                      I agree to the
-                      {{ t("views.register.fields.terms_and_cond") }}
-                    </label>
+                    <FormCheck>
+                      <FormCheck.Input id="terms" v-model="registerForm.terms" name="terms" type="checkbox"
+                        :class="{ 'border-danger': errors['terms'] }" v-bind="field" />
+                      <FormCheck.Label class="cursor-pointer select-none" html-for="terms">
+                        I agree to the
+                        {{ t("views.register.fields.terms_and_cond") }}
+                      </FormCheck.Label>
+                    </FormCheck>
                   </VeeField>
                 </div>
-                <VeeErrorMessage name="terms" as="span" class="text-danger" />
+                <VeeErrorMessage name="terms" class="mt-2 text-danger" />
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
                     {{ t("components.buttons.register") }}

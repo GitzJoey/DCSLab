@@ -1,8 +1,3 @@
 {
-    "success_alert": {
-        "password_changed_successfully": "Password Berhasil Dirubah!",
-        "profile_changed_successfully": "Profil Berhasil Dirubah!",
-        "settings_changed_successfully": "Pengaturan Berhasil Dirubah!",
-        "verification_link_sent_successfully": "Email Verifikasi Terkirim!"
-    }
+    "default_title": "Terjadi kesalahan."
 }
