@@ -33,6 +33,7 @@ import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
+import { ViewState } from '../../types/enums/ViewMode'
 //#endregion
 
 //#region Declarations
@@ -50,14 +51,15 @@ const cacheServices = new CacheService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
-const cards: Array<TwoColumnsLayoutCards> = [
-  { title: 'User Information', active: true },
-  { title: 'User Profile', active: true },
-  { title: 'Roles', active: true },
-  { title: 'Settings', active: true },
-  { title: 'Token Managements', active: true },
-  { title: 'Password Managements', active: true },
-];
+const cards = ref<Array<TwoColumnsLayoutCards>>([
+  { title: 'User Information', state: ViewState.collapse, },
+  { title: 'User Profile', state: ViewState.collapse },
+  { title: 'Roles', state: ViewState.collapse },
+  { title: 'Settings', state: ViewState.collapse },
+  { title: 'Token Managements', state: ViewState.collapse },
+  { title: 'Password Managements', state: ViewState.collapse },
+  { title : '',  state : ViewState.hide, id:'button'}
+]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -219,6 +221,14 @@ const deleteSelected = (itemUlid: string) => {
   deleteModalShow.value = true;
 }
 
+const handleExpandCard = (index: number) => {
+  if(cards.value[index].state === ViewState.collapse) {
+    cards.value[index].state = ViewState.expand
+  }else if(cards.value[index].state === ViewState.expand) {
+    cards.value[index].state = ViewState.collapse
+  }
+}
+
 const onSubmit = async () => {
   loading.value = true;
 
@@ -372,7 +382,7 @@ watch(
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          <TwoColumnsLayout :cards="cards" :show-side-tab="true">
+          <TwoColumnsLayout :cards="cards" :usingSideTab="false" @handle-expand-card="handleExpandCard" >
             <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
@@ -550,10 +560,12 @@ watch(
                 </div>
               </div>
             </template>
+            <template #card-items-button>
+              <Button as="submit" href="#" variant="primary" class="shadow-md">
+                <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
+              </Button>
+            </template>
           </TwoColumnsLayout>
-          <Button as="submit" href="#" variant="primary" class="shadow-md">
-            <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
-          </Button>
         </VeeForm>
       </div>
     </LoadingOverlay>
