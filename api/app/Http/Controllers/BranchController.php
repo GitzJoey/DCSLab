@@ -214,7 +214,7 @@ class BranchController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Branch $branch)
+    public function delete(Branch $branch, BranchRequest $branchRequest)
     {
         if ($branch->is_main) {
             return response()->error(trans('rules.branch.delete_main_branch'));

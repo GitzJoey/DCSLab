@@ -18,6 +18,49 @@ class BranchAPIEditTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_branch_api_call_update_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count(3)))
+            ->create();
+
+        $company = $user->companies->first();
+
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        $branchArr = Branch::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch->ulid), $branchArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_branch_api_call_update_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count(3)))
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        $branchArr = Branch::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch->ulid), $branchArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_branch_api_call_update_expect_successful()
     {
         $user = User::factory()

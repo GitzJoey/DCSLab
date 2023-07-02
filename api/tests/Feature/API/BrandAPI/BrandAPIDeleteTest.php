@@ -18,6 +18,43 @@ class BrandAPIDeleteTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_brand_api_call_delete_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Brand::factory()->count(2))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $brand = $company->brands()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.product.brand.delete', $brand->ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_brand_api_call_delete_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Brand::factory()->count(2))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $brand = $company->brands()->inRandomOrder()->first();
+
+        $api = $this->json('POST', route('api.post.db.product.brand.delete', $brand->ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_brand_api_call_delete_expect_successful()
     {
         $user = User::factory()

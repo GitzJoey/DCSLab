@@ -20,6 +20,102 @@ class WarehouseAPIReadTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_warehouse_api_call_read_any_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        Warehouse::factory()->for($company)->for($branch)->create();
+
+        $api = $this->getJson(route('api.get.db.company.warehouse.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_warehouse_api_call_read_any_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        Warehouse::factory()->for($company)->for($branch)->create();
+
+        $api = $this->getJson(route('api.get.db.company.warehouse.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(403);
+    }
+
+    public function test_warehouse_api_call_read_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        $warehouse = Warehouse::factory()->for($company)->for($branch)->create();
+
+        $ulid = $warehouse->ulid;
+
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', $ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_warehouse_api_call_read_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        $warehouse = Warehouse::factory()->for($company)->for($branch)->create();
+
+        $ulid = $warehouse->ulid;
+
+        $api = $this->getJson(route('api.get.db.company.warehouse.read', $ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_warehouse_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
         $user = User::factory()

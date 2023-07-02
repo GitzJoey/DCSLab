@@ -84,30 +84,29 @@ const onSubmit = async (values: LoginRequest, actions: FormActions<LoginRequest>
                 <div class="mt-8 intro-x">
                   <VeeField v-slot="{ field }" name="email" rules="required|email" :label="t('views.login.fields.email')">
                     <FormInput v-model="loginForm.email" type="text" name="email"
-                      class="block px-4 py-3 intro-x login__input min-w-full xl:min-w-[350px]"
+                      class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.login.fields.email')"
                       v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="email" as="span" class="text-danger" />
+                  <VeeErrorMessage name="email" class="mt-2 text-danger" />
                   <VeeField v-slot="{ field }" name="password" rules="required" :label="t('views.login.fields.password')">
                     <FormInput v-model="loginForm.password" type="password" name="password"
-                      class="block px-4 py-3 mt-4 intro-x login__input min-w-full xl:min-w-[350px]"
+                      class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['password'] }" :placeholder="t('views.login.fields.password')"
                       v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="password" as="span" class="text-danger" />
+                  <VeeErrorMessage name="password" class="mt-2 text-danger" />
                 </div>
                 <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
-                    <VeeField v-slot="{ field }" name="remember">
-                      <FormCheck.Input id="remember-me" v-model="loginForm.remember" name="remember-me" type="checkbox"
-                        class="mr-2 border" v-bind="field" />
-                      <label class="cursor-pointer select-none" htmlFor="remember-me">
+                    <FormCheck>
+                      <FormCheck.Input id="remember-me" v-model="loginForm.remember" name="remember-me" type="checkbox" />
+                      <FormCheck.Label html-for="remember-me">
                         {{ t("views.login.fields.remember_me") }}
-                      </label>
-                    </VeeField>
+                      </FormCheck.Label>
+                    </FormCheck>
                   </div>
-                  <RouterLink to="/auth/reset-password">{{
+                  <RouterLink to="/auth/forgot-password">{{
                     t("views.login.fields.forgot_pass")
                   }}</RouterLink>
                 </div>

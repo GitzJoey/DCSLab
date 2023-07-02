@@ -19,12 +19,59 @@ class UserAPIEditTest extends APITestCase
 
     public function test_user_api_call_update_without_authorization_expect_unauthorized_message()
     {
-        $this->markTestSkipped('Test under construction');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->create();
+
+        $user = User::factory()
+            ->setCreatedAt()->setUpdatedAt()
+            ->has(Profile::factory()->setCreatedAt()->setUpdatedAt())
+            ->hasAttached(Role::where('name', '=', UserRoles::ADMINISTRATOR->value)->first())
+            ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+            ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+            ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+            ->create();
+
+        $userArr = User::factory()->make()->toArray();
+        $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
+
+        $userArr['roles'][0] = HashIds::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        $userArr['theme'] = Setting::factory()->createDefaultSetting_PREF_THEME()->make();
+        $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
+        $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
+
+        $api = $this->json('POST', route('api.post.db.admin.users.edit', $user->ulid), $userArr);
+
+        $api->assertStatus(401);
     }
 
     public function test_user_api_call_update_without_access_right_expect_unauthorized_message()
     {
-        $this->markTestSkipped('Test under construction');
+        $user = User::factory()
+            ->create();
+
+        $this->actingAs($user);
+
+        $user = User::factory()
+            ->setCreatedAt()->setUpdatedAt()
+            ->has(Profile::factory()->setCreatedAt()->setUpdatedAt())
+            ->hasAttached(Role::where('name', '=', UserRoles::ADMINISTRATOR->value)->first())
+            ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
+            ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
+            ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
+            ->create();
+
+        $userArr = User::factory()->make()->toArray();
+        $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
+
+        $userArr['roles'][0] = HashIds::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        $userArr['theme'] = Setting::factory()->createDefaultSetting_PREF_THEME()->make();
+        $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
+        $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
+
+        $api = $this->json('POST', route('api.post.db.admin.users.edit', $user->ulid), $userArr);
+
+        $api->assertStatus(403);
     }
 
     public function test_user_api_call_update_expect_successful()

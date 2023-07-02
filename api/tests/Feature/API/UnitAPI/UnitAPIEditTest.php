@@ -17,6 +17,51 @@ class UnitAPIEditTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_unit_api_call_update_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Unit::factory())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $unit = $company->units()->inRandomOrder()->first();
+
+        $unitArr = Unit::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.product.unit.edit', $unit->ulid), $unitArr);
+
+        $api->assertStatus(401);
+    }
+
+    public function test_unit_api_call_update_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Unit::factory())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $unit = $company->units()->inRandomOrder()->first();
+
+        $unitArr = Unit::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.db.product.unit.edit', $unit->ulid), $unitArr);
+
+        $api->assertStatus(403);
+    }
+
     public function test_unit_api_call_update_expect_successful()
     {
         $user = User::factory()

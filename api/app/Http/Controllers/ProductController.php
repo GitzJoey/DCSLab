@@ -376,7 +376,7 @@ class ProductController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Product $product)
+    public function delete(Product $product, ProductRequest $productRequest)
     {
         $result = false;
         $errorMsg = '';

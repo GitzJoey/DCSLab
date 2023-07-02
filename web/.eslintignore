@@ -8,6 +8,7 @@
 /src/base-components/Form/InputGroup/**
 /src/base-components/Form/FormHelp.vue
 /src/base-components/Form/FormInline.vue
+/src/base-components/Form/FormInput.vue
 /src/base-components/Form/FormLabel.vue
 /src/base-components/Form/FormSelect.vue
 /src/base-components/Form/FormTextarea.vue
@@ -23,7 +24,7 @@
 
 /src/base-components/Notification/**
 
-/src/base-components/Pagination/**
+/src/base-components/Pagination/Pagination.vue
 
 /src/base-components/Table/**
 

@@ -17,6 +17,37 @@ class CompanyAPIDeleteTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_company_api_call_delete_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive())
+            ->create();
+
+        $company = $user->companies()->where('default', '=', false)->first();
+
+        $api = $this->json('POST', route('api.post.db.company.company.delete', $company->ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_company_api_call_delete_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->where('default', '=', false)->first();
+
+        $api = $this->json('POST', route('api.post.db.company.company.delete', $company->ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_company_api_call_delete_expect_successful()
     {
         $user = User::factory()

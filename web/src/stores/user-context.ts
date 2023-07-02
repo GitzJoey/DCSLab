@@ -2,26 +2,14 @@ import { defineStore } from "pinia";
 import { UserProfile } from "../types/models/UserProfile";
 
 export interface UserContextState {
-  isAuthenticatedValue: boolean,
-  userContextValue: UserProfile,
-  selectedUserLocationValue: {
-    company: {
-      id: string,
-      ulid: string,
-      name: string
-    },
-    branch: {
-      id: string,
-      ulid: string,
-      name: string
-    }
-  }
+  isAuthenticated: boolean,
+  userContext: UserProfile,
 }
 
 export const useUserContextStore = defineStore("userContext", {
   state: (): UserContextState => ({
-    isAuthenticatedValue: false,
-    userContextValue: {
+    isAuthenticated: false,
+    userContext: {
       id: '',
       ulid: '',
       name: '',
@@ -42,47 +30,22 @@ export const useUserContextStore = defineStore("userContext", {
       },
       roles: [],
       companies: [],
-    },
-    selectedUserLocationValue: {
-      company: {
-        id: '',
-        ulid: '',
-        name: ''
-      },
-      branch: {
-        id: '',
-        ulid: '',
-        name: ''
+      settings: {
+        theme: '',
+        date_format: '',
+        time_format: '',
       }
-    }
+    },
   }),
   getters: {
-    getIsAuthenticated: state => state.isAuthenticatedValue,
-    getUserContext: state => state.userContextValue,
-    getSelectedUserLocation: state => state.selectedUserLocationValue,
-    getSelectedUserCompany: state => state.selectedUserLocationValue.company,
-    getSelectedUserBranch: state => state.selectedUserLocationValue.branch,
+    getIsAuthenticated: state => state.isAuthenticated,
+    getUserContext: state => state.userContext,
   },
   actions: {
     setUserContext(userContext: UserProfile) {
-      this.userContextValue = userContext;
+      this.userContext = userContext;
 
-      this.isAuthenticatedValue = true;
+      this.isAuthenticated = true;
     },
-    clearSelectedUserLocation() {
-      this.selectedUserLocationValue.company = { id: '', ulid: '', name: '' };
-      this.selectedUserLocationValue.branch = { id: '', ulid: '', name: '' };
-    },
-    setSelectedUserLocation(companyId: string, companyUlid: string, companyName: string, branchId: string, branchUlid: string, branchName: string) {
-      this.clearSelectedUserLocation();
-
-      this.selectedUserLocationValue.company.id = companyId;
-      this.selectedUserLocationValue.company.ulid = companyUlid;
-      this.selectedUserLocationValue.company.name = companyName;
-
-      this.selectedUserLocationValue.branch.id = branchId;
-      this.selectedUserLocationValue.branch.ulid = branchUlid;
-      this.selectedUserLocationValue.branch.name = branchName;
-    }
   },
 });

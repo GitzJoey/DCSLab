@@ -1,36 +1,48 @@
 import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
-import CacheService from "./CacheService";
-import { AxiosResponse } from "axios";
-import { DropdownOptionType } from "../types/DropdownOptionType";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
+import { Role } from "../types/models/Role";
+import { Resource } from "../types/resources/Resource";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import ErrorHandlerService from "./ErrorHandlerService";
 
 export default class RoleService {
     private ziggyRoute: Config;
     private ziggyRouteStore = useZiggyRouteStore();
 
-    private cacheService;
+    private errorHandlerService;
 
     constructor() {
         this.ziggyRoute = this.ziggyRouteStore.getZiggy;
-        this.cacheService = new CacheService(); 
+
+        this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async getRolesDDL(): Promise<DropdownOptionType[] | null> {
-        const ddlName = 'rolesDDL';
+    public async readAny(): Promise<ServiceResponse<Resource<Array<Role>> | null>> {
+        const result: ServiceResponse<Resource<Array<Role>> | null> = {
+            success: false,
+        };
+
         try {
-            if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.admin.users.roles.read', undefined, false, this.ziggyRoute);
-                if (!url) return null;
-                    
-                const response: AxiosResponse<DropdownOptionType[]> = await axios.get(url);
+            const url = route('api.get.db.admin.role.read_any', undefined, false, this.ziggyRoute);
 
-                this.cacheService.setCachedDDL(ddlName, response.data);
-            } 
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            return this.cacheService.getCachedDDL(ddlName);
+            const response: AxiosResponse<Resource<Array<Role>>> = await axios.get(url);
+
+            result.success = true;
+            result.data = response.data;
+
+            return result;
         } catch (e: unknown) {
-            return null;
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 }

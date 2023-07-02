@@ -21,6 +21,106 @@ class CustomerAPIReadTest extends APITestCase
         parent::setUp();
     }
 
+    public function test_customer_api_call_read_any_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        Customer::factory()->for($company)->for($customerGroup);
+
+        $api = $this->getJson(route('api.get.db.customer.customer.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_customer_api_call_read_any_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        Customer::factory()->for($company)->for($customerGroup);
+
+        $api = $this->getJson(route('api.get.db.customer.customer.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => '',
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertStatus(403);
+    }
+
+    public function test_customer_api_call_reads_without_authorization_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $customer = Customer::factory()->for($company)->for($customerGroup);
+        for ($i = 0; $i < 3; $i++) {
+            $customer = $customer->has(CustomerAddress::factory()->for($company));
+        }
+        $customer = $customer->create();
+
+        $api = $this->getJson(route('api.get.db.customer.customer.read', $customer->ulid));
+
+        $api->assertStatus(401);
+    }
+
+    public function test_customer_api_call_reads_without_access_right_expect_unauthorized_message()
+    {
+        $user = User::factory()
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(CustomerGroup::factory()->count(3))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $customerGroup = $company->customerGroups()->inRandomOrder()->first();
+
+        $customer = Customer::factory()->for($company)->for($customerGroup);
+        for ($i = 0; $i < 3; $i++) {
+            $customer = $customer->has(CustomerAddress::factory()->for($company));
+        }
+        $customer = $customer->create();
+
+        $api = $this->getJson(route('api.get.db.customer.customer.read', $customer->ulid));
+
+        $api->assertStatus(403);
+    }
+
     public function test_customer_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
         $user = User::factory()
