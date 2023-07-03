@@ -28,7 +28,7 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#region Data - UI
 const loading = ref<boolean>(false);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: "User Profile", state: ViewState.collapse , },
+  { title: "User Profile", state: ViewState.collapse, },
   { title: "Account Settings", state: ViewState.collapse, },
   { title: "Change Password", state: ViewState.collapse, },
   { title: "User Setting", state: ViewState.collapse, },
@@ -47,9 +47,9 @@ const userProfileForm = ref();
 
 // Region Method
 const handleExpandCard = (index: number) => {
-  if(cards.value[index].state === ViewState.collapse) {
+  if (cards.value[index].state === ViewState.collapse) {
     cards.value[index].state = ViewState.expand
-  }else if(cards.value[index].state === ViewState.expand) {
+  } else if (cards.value[index].state === ViewState.expand) {
     cards.value[index].state = ViewState.collapse
   }
 }
@@ -76,7 +76,8 @@ const onSubmit = async () => {
 
       <VeeForm id="profileForm" v-slot="{ errors }" @submit="onSubmit">
         <AlertPlaceholder :errors="errors" />
-        <TwoColumnsLayout :cards="cards" :show-side-tab="true" @handleExpandCard="handleExpandCard" :usingSideTab="true" >
+        <TwoColumnsLayout :cards="cards" :show-side-tab="true" :using-side-tab="true"
+          @handleExpandCard="handleExpandCard">
           <template #side-menu-title>
             {{ userContext.name }}
           </template>

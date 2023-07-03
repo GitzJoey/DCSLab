@@ -58,7 +58,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Settings', state: ViewState.collapse },
   { title: 'Token Managements', state: ViewState.collapse },
   { title: 'Password Managements', state: ViewState.collapse },
-  { title : '',  state : ViewState.hide, id:'button'}
+  { title: '', state: ViewState.hide, id: 'button' }
 ]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
@@ -222,9 +222,9 @@ const deleteSelected = (itemUlid: string) => {
 }
 
 const handleExpandCard = (index: number) => {
-  if(cards.value[index].state === ViewState.collapse) {
+  if (cards.value[index].state === ViewState.collapse) {
     cards.value[index].state = ViewState.expand
-  }else if(cards.value[index].state === ViewState.expand) {
+  } else if (cards.value[index].state === ViewState.expand) {
     cards.value[index].state = ViewState.collapse
   }
 }
@@ -382,7 +382,7 @@ watch(
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          <TwoColumnsLayout :cards="cards" :usingSideTab="false" @handle-expand-card="handleExpandCard" >
+          <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
