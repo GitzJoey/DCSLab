@@ -33,6 +33,7 @@ import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
+import { CardState } from "../../types/enums/CardState";
 //#endregion
 
 //#region Declarations
@@ -50,14 +51,15 @@ const cacheServices = new CacheService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
-const cards: Array<TwoColumnsLayoutCards> = [
-  { title: 'User Information', active: true },
-  { title: 'User Profile', active: true },
-  { title: 'Roles', active: true },
-  { title: 'Settings', active: true },
-  { title: 'Token Managements', active: true },
-  { title: 'Password Managements', active: true },
-];
+const cards = ref<Array<TwoColumnsLayoutCards>>([
+  { title: 'User Information', state: CardState.collapsed, },
+  { title: 'User Profile', state: CardState.collapsed },
+  { title: 'Roles', state: CardState.collapsed },
+  { title: 'Settings', state: CardState.collapsed },
+  { title: 'Token Managements', state: CardState.collapsed },
+  { title: 'Password Managements', state: CardState.collapsed },
+  { title: '', state: CardState.hidden, id: 'button' }
+]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -121,7 +123,6 @@ onMounted(async () => {
   await getUsers('', true, true, 1, 10);
   await getDDL();
 });
-
 //#endregion
 
 //#region Computed
@@ -218,6 +219,14 @@ const editSelected = (itemIdx: number) => {
 const deleteSelected = (itemUlid: string) => {
   deleteId.value = itemUlid;
   deleteModalShow.value = true;
+}
+
+const handleExpandCard = (index: number) => {
+  if (cards.value[index].state === CardState.collapsed) {
+    cards.value[index].state = CardState.expanded
+  } else if (cards.value[index].state === CardState.expanded) {
+    cards.value[index].state = CardState.collapsed
+  }
 }
 
 const onSubmit = async () => {
@@ -373,7 +382,7 @@ watch(
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          <TwoColumnsLayout :cards="cards" :show-side-tab="true">
+          <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
@@ -551,10 +560,12 @@ watch(
                 </div>
               </div>
             </template>
+            <template #card-items-button>
+              <Button as="submit" href="#" variant="primary" class="shadow-md">
+                <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
+              </Button>
+            </template>
           </TwoColumnsLayout>
-          <Button as="submit" href="#" variant="primary" class="shadow-md">
-            <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
-          </Button>
         </VeeForm>
       </div>
     </LoadingOverlay>

@@ -10,7 +10,7 @@
 //#endregion
 
 //#region Data - UI
-//const loading = ref(false);
+//const loading = ref<boolean>(false);
 //#endregion
 
 //#region Data - Views

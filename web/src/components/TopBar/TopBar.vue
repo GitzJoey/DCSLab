@@ -53,7 +53,7 @@ const toggleMenu = () => {
   dashboardStore.toggleLayoutValue();
 }
 
-const loading = ref(false);
+const loading = ref<boolean>(false);
 
 const showSlideover = ref(false);
 const toggleSlideover = (value: boolean) => {
