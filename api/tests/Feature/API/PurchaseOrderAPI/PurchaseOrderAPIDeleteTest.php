@@ -66,7 +66,8 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
                     ProductUnit::factory()
                         ->for($company)->for($units[$j])
                         ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
-                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx),
+                    'productUnits'
                 );
             }
 
@@ -86,7 +87,8 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -138,7 +140,8 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
                     ProductUnit::factory()
                         ->for($company)->for($units[$j])
                         ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
-                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx),
+                    'productUnits'
                 );
             }
 
@@ -158,7 +161,8 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -173,13 +177,12 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $this->actingAs($user);
@@ -211,7 +214,8 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
                     ProductUnit::factory()
                         ->for($company)->for($units[$j])
                         ->setConversionValue($j == 0 ? 1 : random_int(2, 10))
-                        ->setIsPrimaryUnit($j == $primaryUnitIdx)
+                        ->setIsPrimaryUnit($j == $primaryUnitIdx),
+                    'productUnits'
                 );
             }
 
@@ -231,7 +235,8 @@ class PurchaseOrderAPIDeleteTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 

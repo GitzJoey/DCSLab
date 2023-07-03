@@ -67,7 +67,7 @@ class PurchaseOrderProductUnit extends Model
         return $this->belongsTo(ProductUnit::class);
     }
 
-    public function productUnitPerUnitDiscounts()
+    public function perUnitDiscounts()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
             ->where(function ($query) {
@@ -78,7 +78,7 @@ class PurchaseOrderProductUnit extends Model
         return $result;
     }
 
-    public function productUnitPerUnitSubTotalDiscounts()
+    public function perUnitSubTotalDiscounts()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
             ->where(function ($query) {

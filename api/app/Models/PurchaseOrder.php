@@ -48,7 +48,7 @@ class PurchaseOrder extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-    public function purchaseOrderDiscounts()
+    public function globalDiscounts()
     {
         $result = $this->hasMany(PurchaseOrderDiscount::class)
             ->where(function ($query) {
@@ -59,7 +59,7 @@ class PurchaseOrder extends Model
         return $result;
     }
 
-    public function purchaseOrderProductUnits()
+    public function productUnits()
     {
         return $this->hasMany(PurchaseOrderProductUnit::class);
     }
