@@ -35,6 +35,8 @@ import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
+import { LaravelError } from "../../types/errors/LaravelError";
+import { VeeValidateError } from "../../types/errors/VeeValidateError";
 //#endregion
 
 //#region Declarations
@@ -51,7 +53,7 @@ const cacheServices = new CacheService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<Record<string, string[]> | null>(null);
+const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'User Information', state: CardState.Expanded, },
   { title: 'User Profile', state: CardState.Expanded },
@@ -152,7 +154,7 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   if (result.success && result.data) {
     userLists.value = result.data as Collection<User[]>;
   } else {
-    datalistErrors.value = result.errors as Record<string, string[]>;
+    datalistErrors.value = result.errors as LaravelError;
   }
 }
 
