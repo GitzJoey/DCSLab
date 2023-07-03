@@ -12,7 +12,7 @@ export interface Customer {
     is_member: boolean,
     customer_group: CustomerGroup,
     zone: string,
-    customer_addresses: CustomerAddress[],
+    customer_addresses: Array<CustomerAddress>,
     max_open_invoice: number,
     max_outstanding_invoice: number,
     max_invoice_age: number,

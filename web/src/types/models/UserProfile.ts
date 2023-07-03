@@ -10,7 +10,7 @@ export interface UserProfile {
     email: string,
     email_verified: boolean,
     profile: Profile,
-    roles: Role[],
-    companies: Company[],
+    roles: Array<Role>,
+    companies: Array<Company>,
     settings: Setting
 }
