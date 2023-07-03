@@ -13,7 +13,7 @@ import { TitleLayout, TwoColumnsLayout, } from "../../base-components/Form/FormL
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
-import { ViewState } from '../../types/enums/ViewMode'
+import { CardState } from "../../types/enums/CardState";
 //#endregion
 
 //#region Declarations
@@ -28,10 +28,10 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#region Data - UI
 const loading = ref<boolean>(false);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: "User Profile", state: ViewState.collapse, },
-  { title: "Account Settings", state: ViewState.collapse, },
-  { title: "Change Password", state: ViewState.collapse, },
-  { title: "User Setting", state: ViewState.collapse, },
+  { title: "User Profile", state: CardState.expanded, },
+  { title: "Account Settings", state: CardState.expanded, },
+  { title: "Change Password", state: CardState.expanded, },
+  { title: "User Setting", state: CardState.expanded, },
 ]);
 //#endregion
 
@@ -47,10 +47,10 @@ const userProfileForm = ref();
 
 // Region Method
 const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === ViewState.collapse) {
-    cards.value[index].state = ViewState.expand
-  } else if (cards.value[index].state === ViewState.expand) {
-    cards.value[index].state = ViewState.collapse
+  if (cards.value[index].state === CardState.collapsed) {
+    cards.value[index].state = CardState.expanded
+  } else if (cards.value[index].state === CardState.expanded) {
+    cards.value[index].state = CardState.collapsed
   }
 }
 

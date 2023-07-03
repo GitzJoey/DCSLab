@@ -33,7 +33,7 @@ import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
-import { ViewState } from '../../types/enums/ViewMode'
+import { CardState } from "../../types/enums/CardState";
 //#endregion
 
 //#region Declarations
@@ -52,13 +52,13 @@ const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: 'User Information', state: ViewState.collapse, },
-  { title: 'User Profile', state: ViewState.collapse },
-  { title: 'Roles', state: ViewState.collapse },
-  { title: 'Settings', state: ViewState.collapse },
-  { title: 'Token Managements', state: ViewState.collapse },
-  { title: 'Password Managements', state: ViewState.collapse },
-  { title: '', state: ViewState.hide, id: 'button' }
+  { title: 'User Information', state: CardState.collapsed, },
+  { title: 'User Profile', state: CardState.collapsed },
+  { title: 'Roles', state: CardState.collapsed },
+  { title: 'Settings', state: CardState.collapsed },
+  { title: 'Token Managements', state: CardState.collapsed },
+  { title: 'Password Managements', state: CardState.collapsed },
+  { title: '', state: CardState.hidden, id: 'button' }
 ]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
@@ -222,10 +222,10 @@ const deleteSelected = (itemUlid: string) => {
 }
 
 const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === ViewState.collapse) {
-    cards.value[index].state = ViewState.expand
-  } else if (cards.value[index].state === ViewState.expand) {
-    cards.value[index].state = ViewState.collapse
+  if (cards.value[index].state === CardState.collapsed) {
+    cards.value[index].state = CardState.expanded
+  } else if (cards.value[index].state === CardState.expanded) {
+    cards.value[index].state = CardState.collapsed
   }
 }
 
