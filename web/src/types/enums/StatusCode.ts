@@ -1,4 +1,4 @@
-export enum StatusCodes {
+export enum StatusCode {
     OK = 200,
     BadRequest = 400,
     UnprocessableEntity = 422,

@@ -81,9 +81,17 @@ export default class ProductService {
         }
     }
 
-    public async readAny(): Promise<ServiceResponseType<ProductType[] | null>> {
+    public async readAny(companyId : string, search : string): Promise<ServiceResponseType<ProductType[] | null>> {
         try {
-            const url = route('api.get.db.product.product.read_any', undefined, false, this.ziggyRoute);
+            const queryParams : Record<string, string | number | boolean> = {}
+
+            queryParams['company_id'] = companyId
+            queryParams['category'] = -1
+            queryParams['search'] = search
+            queryParams['paginate'] = false
+            queryParams['refresh'] = true
+            
+            const url = route('api.get.db.product.product.read_any', {_query : queryParams}, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<ProductType[]> = await axios.get(url);

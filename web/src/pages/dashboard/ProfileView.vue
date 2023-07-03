@@ -13,6 +13,7 @@ import { TitleLayout, TwoColumnsLayout, } from "../../base-components/Form/FormL
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
+import { CardState } from "../../types/enums/CardState";
 //#endregion
 
 //#region Declarations
@@ -27,10 +28,10 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#region Data - UI
 const loading = ref<boolean>(false);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: "User Profile", active: true, },
-  { title: "Account Settings", active: false, },
-  { title: "Change Password", active: false, },
-  { title: "User Setting", active: false, },
+  { title: "User Profile", state: CardState.Expanded, },
+  { title: "Account Settings", state: CardState.Expanded, },
+  { title: "Change Password", state: CardState.Expanded, },
+  { title: "User Setting", state: CardState.Expanded, },
 ]);
 //#endregion
 
@@ -46,7 +47,11 @@ const userProfileForm = ref();
 
 // Region Method
 const handleExpandCard = (index: number) => {
-  cards.value[index].active = !cards.value[index].active;
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed
+  }
 }
 
 const onSubmit = async () => {
@@ -71,14 +76,11 @@ const onSubmit = async () => {
 
       <VeeForm id="profileForm" v-slot="{ errors }" @submit="onSubmit">
         <AlertPlaceholder :errors="errors" />
-        <TwoColumnsLayout :cards="cards" :show-side-tab="true" @handleExpandCard="handleExpandCard">
+        <TwoColumnsLayout :cards="cards" :show-side-tab="true" :using-side-tab="true"
+          @handleExpandCard="handleExpandCard">
           <template #side-menu-title>
             {{ userContext.name }}
           </template>
-          <template #side-menu-link="linkProps">
-            {{ t(linkProps.link.title) }}
-          </template>
-
           <template #card-items-0>
             <div class="p-5">
               <div class="pb-4">

@@ -89,9 +89,19 @@ export default class CustomerService {
         }
     }
 
-    public async readAny(): Promise<ServiceResponseType<CustomerType[] | null>> {
+    public async readAny({company_id, search, paginate, page , per_page, refresh} : { company_id : string, search:string, paginate : boolean , page? : number, per_page? : number, refresh? : boolean }): Promise<ServiceResponseType<CustomerType[] | null>> {
         try {
-            const url = route('api.get.db.customer.customer.read_any', undefined, false, this.ziggyRoute);
+            const queryParams: Record<string, string |number |boolean> = {}
+            queryParams['company_id'] = company_id 
+            queryParams['search'] = search ? search : ''
+            queryParams['paginate'] = paginate ? paginate : false
+            queryParams['page'] = page ? page : 1
+            queryParams['per_page'] = per_page ? per_page : 10
+            queryParams['refresh'] = refresh ? refresh : false
+
+            const url = route('api.get.db.customer.customer.read_any',{
+                _query : queryParams
+            } , false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<CustomerType[]> = await axios.get(url);
@@ -107,9 +117,9 @@ export default class CustomerService {
         }
     }
 
-    public async read(): Promise<ServiceResponseType<CustomerType | null>> {
+    public async read(customerId:string): Promise<ServiceResponseType<CustomerType | null>> {
         try {
-            const url = route('api.get.db.customer.customer.read', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.customer.customer.read', customerId, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<CustomerType> = await axios.get(url);

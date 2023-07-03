@@ -33,6 +33,8 @@ import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
+import { CardState } from "../../types/enums/CardState";
+import { SearchRequest } from "../../types/requests/SearchRequest";
 //#endregion
 
 //#region Declarations
@@ -50,14 +52,15 @@ const cacheServices = new CacheService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
-const cards: Array<TwoColumnsLayoutCards> = [
-  { title: 'User Information', active: true },
-  { title: 'User Profile', active: true },
-  { title: 'Roles', active: true },
-  { title: 'Settings', active: true },
-  { title: 'Token Managements', active: true },
-  { title: 'Password Managements', active: true },
-];
+const cards = ref<Array<TwoColumnsLayoutCards>>([
+  { title: 'User Information', state: CardState.Expanded, },
+  { title: 'User Profile', state: CardState.Expanded },
+  { title: 'Roles', state: CardState.Expanded },
+  { title: 'Settings', state: CardState.Expanded },
+  { title: 'Token Managements', state: CardState.Expanded },
+  { title: 'Password Managements', state: CardState.Expanded },
+  { title: '', state: CardState.Hidden, id: 'button' }
+]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -136,13 +139,15 @@ const toggleDetail = (idx: number) => {
 };
 
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(
-    search,
-    refresh,
-    paginate,
-    page,
-    per_page
-  );
+  const searchReq: SearchRequest = {
+    search: search,
+    refresh: refresh,
+    paginate: paginate,
+    page: page,
+    per_page: per_page
+  };
+
+  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(searchReq);
 
   if (result.success && result.data) {
     userLists.value = result.data as Collection<User[]>;
@@ -151,18 +156,20 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
-const getRoles = async () => {
-  let result: ServiceResponse<Resource<Array<Role>> | null> = await roleServices.readAny();
+const getDDL = (): void => {
+  roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
+    if (result.success && result.data) {
+      rolesDDL.value = result.data.data as Array<Role>;
+    }
+  });
 
-  if (result.success && result.data) {
-    rolesDDL.value = result.data.data as Array<Role>;
-  }
-}
+  dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
+    countriesDDL.value = result;
+  });
 
-const getDDL = async (): Promise<void> => {
-  await getRoles();
-  countriesDDL.value = await dashboardServices.getCountriesDDL();
-  statusDDL.value = await dashboardServices.getStatusDDL();
+  dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
+    statusDDL.value = result;
+  });
 }
 
 const emptyUser = () => {
@@ -217,6 +224,14 @@ const editSelected = (itemIdx: number) => {
 const deleteSelected = (itemUlid: string) => {
   deleteId.value = itemUlid;
   deleteModalShow.value = true;
+}
+
+const handleExpandCard = (index: number) => {
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed
+  }
 }
 
 const onSubmit = async () => {
@@ -372,7 +387,7 @@ watch(
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          <TwoColumnsLayout :cards="cards" :show-side-tab="true">
+          <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
@@ -550,10 +565,12 @@ watch(
                 </div>
               </div>
             </template>
+            <template #card-items-button>
+              <Button as="submit" href="#" variant="primary" class="shadow-md">
+                <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
+              </Button>
+            </template>
           </TwoColumnsLayout>
-          <Button as="submit" href="#" variant="primary" class="shadow-md">
-            <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
-          </Button>
         </VeeForm>
       </div>
     </LoadingOverlay>
