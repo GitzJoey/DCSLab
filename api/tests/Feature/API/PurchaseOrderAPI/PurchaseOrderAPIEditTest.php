@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API\PurchaseOrderAPI;
 
+use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Enums\ProductGroupCategory;
 use App\Enums\UnitCategory;
 use App\Enums\UserRoles;
@@ -83,7 +84,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderDiscount::factory()
                     ->for($company)
                     ->for($branch)
-                    ->setGlobalDiscountRandom()
+                    ->setGlobalDiscountRandom(),
+                'globalDiscounts'
             );
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
@@ -94,81 +96,222 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
         $purchaseOrder = $purchaseOrder->create();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_global_discount_id = [];
+        $arr_global_discount_ulid = [];
+        $arr_global_discount_order = [];
         $arr_global_discount_discount_type = [];
         $arr_global_discount_amount = [];
+        $arr_product_unit_product_id = [];
         $arr_product_unit_product_unit_id = [];
         $arr_product_unit_qty = [];
         $arr_product_unit_amount_per_unit = [];
         $arr_product_unit_initial_price = [];
         $arr_product_unit_per_unit_discount_id = [];
+        $arr_product_unit_per_unit_discount_ulid = [];
+        $arr_product_unit_per_unit_discount_order = [];
         $arr_product_unit_per_unit_discount_discount_type = [];
         $arr_product_unit_per_unit_discount_amount = [];
         $arr_product_unit_per_unit_sub_total_discount_id = [];
+        $arr_product_unit_per_unit_sub_total_discount_ulid = [];
+        $arr_product_unit_per_unit_sub_total_discount_order = [];
         $arr_product_unit_per_unit_sub_total_discount_discount_type = [];
         $arr_product_unit_per_unit_sub_total_discount_amount = [];
         $arr_product_unit_vat_status = [];
         $arr_product_unit_vat_rate = [];
         $arr_product_unit_remarks = [];
 
-        for ($i = 0; $i < 1; $i++) {
-            $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
-            array_push($arr_global_discount_id, '');
-            array_push($arr_global_discount_discount_type, $purchaseOrderDiscount->discount_type);
-            array_push($arr_global_discount_amount, $purchaseOrderDiscount->amount);
-        }
-
-        $productUnits = $purchaseOrder->purchaseOrderProductUnits()->get();
+        $productUnits = $purchaseOrder->productUnits()->get();
 
         foreach ($productUnits as $productUnit) {
             $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
-            array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_product_id, Hashids::encode($productUnit->product_id));
             array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->product_unit_id));
             array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
             array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
             array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
+            array_push($arr_product_unit_per_unit_discount_id, []);
+            array_push($arr_product_unit_per_unit_discount_ulid, []);
+            array_push($arr_product_unit_per_unit_discount_order, []);
+            array_push($arr_product_unit_per_unit_discount_discount_type, []);
+            array_push($arr_product_unit_per_unit_discount_amount, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_id, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_ulid, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_order, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_amount, []);
             array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
             array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
             array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
         }
 
+        $productUnit = $company->productUnits()->inRandomOrder()->first();
         $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
         array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_product_unit_id, Hashids::encode($company->productUnits()->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_product_id, Hashids::encode($productUnit->product_id));
+        array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->id));
+        array_push($arr_product_unit_qty, $purchaseOrderProductUnit->qty);
         array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
         array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
+        array_push($arr_product_unit_per_unit_discount_id, []);
+        array_push($arr_product_unit_per_unit_discount_ulid, []);
+        array_push($arr_product_unit_per_unit_discount_order, []);
+        array_push($arr_product_unit_per_unit_discount_discount_type, []);
+        array_push($arr_product_unit_per_unit_discount_amount, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_id, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_ulid, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_order, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_amount, []);
         array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
         array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
         array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
 
+        $purchaseOrderActions = new PurchaseOrderActions();
         for ($i = 0; $i < count($arr_product_unit_product_unit_id); $i++) {
             for ($j = 0; $j < 3; $j++) {
-                if (random_int(0, 1) == 1) {
-                    $purchasePerUnitDiscount = PurchaseOrderDiscount::factory()->setPerUnitDiscountRandom()->make();
+                if (random_int(0, 1)) {
+                    $maxValue = $arr_product_unit_initial_price[$i];
 
-                    $arr_product_unit_per_unit_discount_id[$i][$j] = '';
-                    $arr_product_unit_per_unit_discount_discount_type[$i][$j] = $purchasePerUnitDiscount->discount_type;
-                    $arr_product_unit_per_unit_discount_amount[$i][$j] = $purchasePerUnitDiscount->amount;
+                    if (count($arr_product_unit_per_unit_discount_order[$i])) {
+                        $maxValue = $maxValue - $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                            $arr_product_unit_initial_price[$i],
+                            $arr_product_unit_per_unit_discount_order[$i],
+                            $arr_product_unit_per_unit_discount_discount_type[$i],
+                            $arr_product_unit_per_unit_discount_amount[$i],
+                        );
+                    }
+
+                    $purchasePerUnitDiscount = PurchaseOrderDiscount::factory()->setPerUnitDiscountRandom($maxValue)->make();
+                    array_push($arr_product_unit_per_unit_discount_id[$i], '');
+                    array_push($arr_product_unit_per_unit_discount_ulid[$i], '');
+                    array_push($arr_product_unit_per_unit_discount_order[$i], count($arr_product_unit_per_unit_discount_order[$i]));
+                    array_push($arr_product_unit_per_unit_discount_discount_type[$i], $purchasePerUnitDiscount->discount_type);
+                    array_push($arr_product_unit_per_unit_discount_amount[$i], $purchasePerUnitDiscount->amount);
                 }
             }
 
             for ($j = 0; $j < 3; $j++) {
-                if (random_int(0, 1) == 1) {
-                    $purchasePerUnitSubTotalDiscount = PurchaseOrderDiscount::factory()->setPerUnitSubTotalDiscountRandom()->make();
+                if (random_int(0, 1)) {
+                    $qty = $arr_product_unit_qty[$i];
 
-                    $arr_product_unit_per_unit_sub_total_discount_id[$i][$j] = '';
-                    $arr_product_unit_per_unit_sub_total_discount_discount_type[$i][$j] = $purchasePerUnitSubTotalDiscount->discount_type;
-                    $arr_product_unit_per_unit_sub_total_discount_amount[$i][$j] = $purchasePerUnitSubTotalDiscount->amount;
+                    $initialPrice = $arr_product_unit_initial_price[$i];
+
+                    $perUnitDiscount = $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                        $arr_product_unit_initial_price[$i],
+                        $arr_product_unit_per_unit_discount_order[$i],
+                        $arr_product_unit_per_unit_discount_discount_type[$i],
+                        $arr_product_unit_per_unit_discount_amount[$i],
+                    );
+
+                    $priceAfterDisc = $initialPrice - $perUnitDiscount;
+
+                    $subTotal = $qty * $priceAfterDisc;
+
+                    $maxValue = $subTotal;
+                    if (count($arr_product_unit_per_unit_sub_total_discount_order[$i])) {
+                        $maxValue = $maxValue - $purchaseOrderActions->calculatePerUnitSubTotalDiscountFromFreeArray(
+                            $subTotal,
+                            $arr_product_unit_per_unit_sub_total_discount_order[$i],
+                            $arr_product_unit_per_unit_sub_total_discount_discount_type[$i],
+                            $arr_product_unit_per_unit_sub_total_discount_amount[$i]
+                        );
+                    }
+
+                    $purchasePerUnitSubTotalDiscount = PurchaseOrderDiscount::factory()->setPerUnitSubTotalDiscountRandom($maxValue)->make();
+                    array_push($arr_product_unit_per_unit_sub_total_discount_id[$i], '');
+                    array_push($arr_product_unit_per_unit_sub_total_discount_ulid[$i], '');
+                    array_push($arr_product_unit_per_unit_sub_total_discount_order[$i], count($arr_product_unit_per_unit_sub_total_discount_order[$i]));
+                    array_push($arr_product_unit_per_unit_sub_total_discount_discount_type[$i], $purchasePerUnitSubTotalDiscount->discount_type);
+                    array_push($arr_product_unit_per_unit_sub_total_discount_amount[$i], $purchasePerUnitSubTotalDiscount->amount);
                 }
             }
+        }
+
+        $arrProductUnit = [];
+        for ($i = 0; $i < count($arr_product_unit_product_unit_id); $i++) {
+            $qty = $arr_product_unit_qty[$i];
+
+            $initialPrice = $arr_product_unit_initial_price[$i];
+
+            $perUnitDiscount = $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                $arr_product_unit_initial_price[$i],
+                $arr_product_unit_per_unit_discount_order[$i],
+                $arr_product_unit_per_unit_discount_discount_type[$i],
+                $arr_product_unit_per_unit_discount_amount[$i]
+            );
+
+            $priceAfterDisc = $initialPrice - $perUnitDiscount;
+
+            $subTotal = $qty * $priceAfterDisc;
+
+            $perUnitSubTotalDiscount = $purchaseOrderActions->calculatePerUnitSubTotalDiscountFromFreeArray(
+                $subTotal,
+                $arr_product_unit_per_unit_sub_total_discount_order[$i],
+                $arr_product_unit_per_unit_sub_total_discount_discount_type[$i],
+                $arr_product_unit_per_unit_sub_total_discount_amount[$i]
+            );
+
+            $total = $subTotal - $perUnitSubTotalDiscount;
+
+            array_push($arrProductUnit, [
+                'qty' => $qty,
+                'initial_price' => $initialPrice,
+                'per_unit_disc' => $perUnitDiscount,
+                'price_after_disc' => $priceAfterDisc,
+                'sub_total' => $subTotal,
+                'per_unit_sub_total_discount' => $perUnitSubTotalDiscount,
+                'total' => $total,
+                'global_disc' => 0,
+                'grand_total' => 0,
+                'final_price' => 0,
+            ]);
+        }
+
+        $grandTotal = 0;
+        foreach ($arrProductUnit as $productUnit) {
+            $grandTotal = $grandTotal + $productUnit['total'];
+        }
+
+        $maxValue = $grandTotal;
+        for ($i = 0; $i < 3; $i++) {
+            $maxValue = $grandTotal - $purchaseOrderActions->calculateGlobalDiscountFromFreeArray(
+                $grandTotal,
+                $arr_global_discount_order,
+                $arr_global_discount_discount_type,
+                $arr_global_discount_amount
+            );
+
+            $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom($maxValue)->make();
+            array_push($arr_global_discount_id, '');
+            array_push($arr_global_discount_ulid, '');
+            array_push($arr_global_discount_order, count($arr_global_discount_order));
+            array_push($arr_global_discount_discount_type, $purchaseOrderDiscount->discount_type);
+            array_push($arr_global_discount_amount, $purchaseOrderDiscount->amount);
+        }
+
+        $globalDiscount = $purchaseOrderActions->calculateGlobalDiscountFromFreeArray(
+            $grandTotal,
+            $arr_global_discount_order,
+            $arr_global_discount_discount_type,
+            $arr_global_discount_amount,
+        );
+
+        foreach ($arrProductUnit as $idx => $productUnit) {
+            $arrProductUnit[$idx]['global_disc'] = $productUnit['total'] / $grandTotal * $globalDiscount;
+            $arrProductUnit[$idx]['grand_total'] = $productUnit['total'] - $arrProductUnit[$idx]['global_disc'];
+            $arrProductUnit[$idx]['final_price'] = $arrProductUnit[$idx]['grand_total'] / $productUnit['qty'];
         }
 
         $purchaseOrderArr = PurchaseOrder::factory()->make([
@@ -176,17 +319,25 @@ class PurchaseOrderAPIEditTest extends APITestCase
             'branch_id' => Hashids::encode($branch->id),
             'supplier_id' => Hashids::encode($supplier->id),
             'arr_global_discount_id' => $arr_global_discount_id,
+            'arr_global_discount_ulid' => $arr_global_discount_ulid,
+            'arr_global_discount_order' => $arr_global_discount_order,
             'arr_global_discount_discount_type' => $arr_global_discount_discount_type,
             'arr_global_discount_amount' => $arr_global_discount_amount,
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
+            'arr_product_unit_product_id' => $arr_product_unit_product_id,
             'arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id,
             'arr_product_unit_qty' => $arr_product_unit_qty,
             'arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit,
             'arr_product_unit_initial_price' => $arr_product_unit_initial_price,
             'arr_product_unit_per_unit_discount_id' => $arr_product_unit_per_unit_discount_id,
+            'arr_product_unit_per_unit_discount_ulid' => $arr_product_unit_per_unit_discount_ulid,
+            'arr_product_unit_per_unit_discount_order' => $arr_product_unit_per_unit_discount_order,
             'arr_product_unit_per_unit_discount_discount_type' => $arr_product_unit_per_unit_discount_discount_type,
             'arr_product_unit_per_unit_discount_amount' => $arr_product_unit_per_unit_discount_amount,
             'arr_product_unit_per_unit_sub_total_discount_id' => $arr_product_unit_per_unit_sub_total_discount_id,
+            'arr_product_unit_per_unit_sub_total_discount_ulid' => $arr_product_unit_per_unit_sub_total_discount_ulid,
+            'arr_product_unit_per_unit_sub_total_discount_order' => $arr_product_unit_per_unit_sub_total_discount_order,
             'arr_product_unit_per_unit_sub_total_discount_discount_type' => $arr_product_unit_per_unit_sub_total_discount_discount_type,
             'arr_product_unit_per_unit_sub_total_discount_amount' => $arr_product_unit_per_unit_sub_total_discount_amount,
             'arr_product_unit_vat_status' => $arr_product_unit_vat_status,
@@ -255,7 +406,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderDiscount::factory()
                     ->for($company)
                     ->for($branch)
-                    ->setGlobalDiscountRandom()
+                    ->setGlobalDiscountRandom(),
+                'globalDiscounts'
             );
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
@@ -266,81 +418,222 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
         $purchaseOrder = $purchaseOrder->create();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_global_discount_id = [];
+        $arr_global_discount_ulid = [];
+        $arr_global_discount_order = [];
         $arr_global_discount_discount_type = [];
         $arr_global_discount_amount = [];
+        $arr_product_unit_product_id = [];
         $arr_product_unit_product_unit_id = [];
         $arr_product_unit_qty = [];
         $arr_product_unit_amount_per_unit = [];
         $arr_product_unit_initial_price = [];
         $arr_product_unit_per_unit_discount_id = [];
+        $arr_product_unit_per_unit_discount_ulid = [];
+        $arr_product_unit_per_unit_discount_order = [];
         $arr_product_unit_per_unit_discount_discount_type = [];
         $arr_product_unit_per_unit_discount_amount = [];
         $arr_product_unit_per_unit_sub_total_discount_id = [];
+        $arr_product_unit_per_unit_sub_total_discount_ulid = [];
+        $arr_product_unit_per_unit_sub_total_discount_order = [];
         $arr_product_unit_per_unit_sub_total_discount_discount_type = [];
         $arr_product_unit_per_unit_sub_total_discount_amount = [];
         $arr_product_unit_vat_status = [];
         $arr_product_unit_vat_rate = [];
         $arr_product_unit_remarks = [];
 
-        for ($i = 0; $i < 1; $i++) {
-            $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
-            array_push($arr_global_discount_id, '');
-            array_push($arr_global_discount_discount_type, $purchaseOrderDiscount->discount_type);
-            array_push($arr_global_discount_amount, $purchaseOrderDiscount->amount);
-        }
-
-        $productUnits = $purchaseOrder->purchaseOrderProductUnits()->get();
+        $productUnits = $purchaseOrder->productUnits()->get();
 
         foreach ($productUnits as $productUnit) {
             $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
-            array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_product_id, Hashids::encode($productUnit->product_id));
             array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->product_unit_id));
             array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
             array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
             array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
+            array_push($arr_product_unit_per_unit_discount_id, []);
+            array_push($arr_product_unit_per_unit_discount_ulid, []);
+            array_push($arr_product_unit_per_unit_discount_order, []);
+            array_push($arr_product_unit_per_unit_discount_discount_type, []);
+            array_push($arr_product_unit_per_unit_discount_amount, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_id, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_ulid, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_order, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_amount, []);
             array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
             array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
             array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
         }
 
+        $productUnit = $company->productUnits()->inRandomOrder()->first();
         $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
         array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_product_unit_id, Hashids::encode($company->productUnits()->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_product_id, Hashids::encode($productUnit->product_id));
+        array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->id));
+        array_push($arr_product_unit_qty, $purchaseOrderProductUnit->qty);
         array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
         array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
+        array_push($arr_product_unit_per_unit_discount_id, []);
+        array_push($arr_product_unit_per_unit_discount_ulid, []);
+        array_push($arr_product_unit_per_unit_discount_order, []);
+        array_push($arr_product_unit_per_unit_discount_discount_type, []);
+        array_push($arr_product_unit_per_unit_discount_amount, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_id, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_ulid, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_order, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_amount, []);
         array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
         array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
         array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
 
+        $purchaseOrderActions = new PurchaseOrderActions();
         for ($i = 0; $i < count($arr_product_unit_product_unit_id); $i++) {
             for ($j = 0; $j < 3; $j++) {
-                if (random_int(0, 1) == 1) {
-                    $purchasePerUnitDiscount = PurchaseOrderDiscount::factory()->setPerUnitDiscountRandom()->make();
+                if (random_int(0, 1)) {
+                    $maxValue = $arr_product_unit_initial_price[$i];
 
-                    $arr_product_unit_per_unit_discount_id[$i][$j] = '';
-                    $arr_product_unit_per_unit_discount_discount_type[$i][$j] = $purchasePerUnitDiscount->discount_type;
-                    $arr_product_unit_per_unit_discount_amount[$i][$j] = $purchasePerUnitDiscount->amount;
+                    if (count($arr_product_unit_per_unit_discount_order[$i])) {
+                        $maxValue = $maxValue - $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                            $arr_product_unit_initial_price[$i],
+                            $arr_product_unit_per_unit_discount_order[$i],
+                            $arr_product_unit_per_unit_discount_discount_type[$i],
+                            $arr_product_unit_per_unit_discount_amount[$i],
+                        );
+                    }
+
+                    $purchasePerUnitDiscount = PurchaseOrderDiscount::factory()->setPerUnitDiscountRandom($maxValue)->make();
+                    array_push($arr_product_unit_per_unit_discount_id[$i], '');
+                    array_push($arr_product_unit_per_unit_discount_ulid[$i], '');
+                    array_push($arr_product_unit_per_unit_discount_order[$i], count($arr_product_unit_per_unit_discount_order[$i]));
+                    array_push($arr_product_unit_per_unit_discount_discount_type[$i], $purchasePerUnitDiscount->discount_type);
+                    array_push($arr_product_unit_per_unit_discount_amount[$i], $purchasePerUnitDiscount->amount);
                 }
             }
 
             for ($j = 0; $j < 3; $j++) {
-                if (random_int(0, 1) == 1) {
-                    $purchasePerUnitSubTotalDiscount = PurchaseOrderDiscount::factory()->setPerUnitSubTotalDiscountRandom()->make();
+                if (random_int(0, 1)) {
+                    $qty = $arr_product_unit_qty[$i];
 
-                    $arr_product_unit_per_unit_sub_total_discount_id[$i][$j] = '';
-                    $arr_product_unit_per_unit_sub_total_discount_discount_type[$i][$j] = $purchasePerUnitSubTotalDiscount->discount_type;
-                    $arr_product_unit_per_unit_sub_total_discount_amount[$i][$j] = $purchasePerUnitSubTotalDiscount->amount;
+                    $initialPrice = $arr_product_unit_initial_price[$i];
+
+                    $perUnitDiscount = $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                        $arr_product_unit_initial_price[$i],
+                        $arr_product_unit_per_unit_discount_order[$i],
+                        $arr_product_unit_per_unit_discount_discount_type[$i],
+                        $arr_product_unit_per_unit_discount_amount[$i],
+                    );
+
+                    $priceAfterDisc = $initialPrice - $perUnitDiscount;
+
+                    $subTotal = $qty * $priceAfterDisc;
+
+                    $maxValue = $subTotal;
+                    if (count($arr_product_unit_per_unit_sub_total_discount_order[$i])) {
+                        $maxValue = $maxValue - $purchaseOrderActions->calculatePerUnitSubTotalDiscountFromFreeArray(
+                            $subTotal,
+                            $arr_product_unit_per_unit_sub_total_discount_order[$i],
+                            $arr_product_unit_per_unit_sub_total_discount_discount_type[$i],
+                            $arr_product_unit_per_unit_sub_total_discount_amount[$i]
+                        );
+                    }
+
+                    $purchasePerUnitSubTotalDiscount = PurchaseOrderDiscount::factory()->setPerUnitSubTotalDiscountRandom($maxValue)->make();
+                    array_push($arr_product_unit_per_unit_sub_total_discount_id[$i], '');
+                    array_push($arr_product_unit_per_unit_sub_total_discount_ulid[$i], '');
+                    array_push($arr_product_unit_per_unit_sub_total_discount_order[$i], count($arr_product_unit_per_unit_sub_total_discount_order[$i]));
+                    array_push($arr_product_unit_per_unit_sub_total_discount_discount_type[$i], $purchasePerUnitSubTotalDiscount->discount_type);
+                    array_push($arr_product_unit_per_unit_sub_total_discount_amount[$i], $purchasePerUnitSubTotalDiscount->amount);
                 }
             }
+        }
+
+        $arrProductUnit = [];
+        for ($i = 0; $i < count($arr_product_unit_product_unit_id); $i++) {
+            $qty = $arr_product_unit_qty[$i];
+
+            $initialPrice = $arr_product_unit_initial_price[$i];
+
+            $perUnitDiscount = $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                $arr_product_unit_initial_price[$i],
+                $arr_product_unit_per_unit_discount_order[$i],
+                $arr_product_unit_per_unit_discount_discount_type[$i],
+                $arr_product_unit_per_unit_discount_amount[$i]
+            );
+
+            $priceAfterDisc = $initialPrice - $perUnitDiscount;
+
+            $subTotal = $qty * $priceAfterDisc;
+
+            $perUnitSubTotalDiscount = $purchaseOrderActions->calculatePerUnitSubTotalDiscountFromFreeArray(
+                $subTotal,
+                $arr_product_unit_per_unit_sub_total_discount_order[$i],
+                $arr_product_unit_per_unit_sub_total_discount_discount_type[$i],
+                $arr_product_unit_per_unit_sub_total_discount_amount[$i]
+            );
+
+            $total = $subTotal - $perUnitSubTotalDiscount;
+
+            array_push($arrProductUnit, [
+                'qty' => $qty,
+                'initial_price' => $initialPrice,
+                'per_unit_disc' => $perUnitDiscount,
+                'price_after_disc' => $priceAfterDisc,
+                'sub_total' => $subTotal,
+                'per_unit_sub_total_discount' => $perUnitSubTotalDiscount,
+                'total' => $total,
+                'global_disc' => 0,
+                'grand_total' => 0,
+                'final_price' => 0,
+            ]);
+        }
+
+        $grandTotal = 0;
+        foreach ($arrProductUnit as $productUnit) {
+            $grandTotal = $grandTotal + $productUnit['total'];
+        }
+
+        $maxValue = $grandTotal;
+        for ($i = 0; $i < 3; $i++) {
+            $maxValue = $grandTotal - $purchaseOrderActions->calculateGlobalDiscountFromFreeArray(
+                $grandTotal,
+                $arr_global_discount_order,
+                $arr_global_discount_discount_type,
+                $arr_global_discount_amount
+            );
+
+            $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom($maxValue)->make();
+            array_push($arr_global_discount_id, '');
+            array_push($arr_global_discount_ulid, '');
+            array_push($arr_global_discount_order, count($arr_global_discount_order));
+            array_push($arr_global_discount_discount_type, $purchaseOrderDiscount->discount_type);
+            array_push($arr_global_discount_amount, $purchaseOrderDiscount->amount);
+        }
+
+        $globalDiscount = $purchaseOrderActions->calculateGlobalDiscountFromFreeArray(
+            $grandTotal,
+            $arr_global_discount_order,
+            $arr_global_discount_discount_type,
+            $arr_global_discount_amount,
+        );
+
+        foreach ($arrProductUnit as $idx => $productUnit) {
+            $arrProductUnit[$idx]['global_disc'] = $productUnit['total'] / $grandTotal * $globalDiscount;
+            $arrProductUnit[$idx]['grand_total'] = $productUnit['total'] - $arrProductUnit[$idx]['global_disc'];
+            $arrProductUnit[$idx]['final_price'] = $arrProductUnit[$idx]['grand_total'] / $productUnit['qty'];
         }
 
         $purchaseOrderArr = PurchaseOrder::factory()->make([
@@ -348,17 +641,25 @@ class PurchaseOrderAPIEditTest extends APITestCase
             'branch_id' => Hashids::encode($branch->id),
             'supplier_id' => Hashids::encode($supplier->id),
             'arr_global_discount_id' => $arr_global_discount_id,
+            'arr_global_discount_ulid' => $arr_global_discount_ulid,
+            'arr_global_discount_order' => $arr_global_discount_order,
             'arr_global_discount_discount_type' => $arr_global_discount_discount_type,
             'arr_global_discount_amount' => $arr_global_discount_amount,
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
+            'arr_product_unit_product_id' => $arr_product_unit_product_id,
             'arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id,
             'arr_product_unit_qty' => $arr_product_unit_qty,
             'arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit,
             'arr_product_unit_initial_price' => $arr_product_unit_initial_price,
             'arr_product_unit_per_unit_discount_id' => $arr_product_unit_per_unit_discount_id,
+            'arr_product_unit_per_unit_discount_ulid' => $arr_product_unit_per_unit_discount_ulid,
+            'arr_product_unit_per_unit_discount_order' => $arr_product_unit_per_unit_discount_order,
             'arr_product_unit_per_unit_discount_discount_type' => $arr_product_unit_per_unit_discount_discount_type,
             'arr_product_unit_per_unit_discount_amount' => $arr_product_unit_per_unit_discount_amount,
             'arr_product_unit_per_unit_sub_total_discount_id' => $arr_product_unit_per_unit_sub_total_discount_id,
+            'arr_product_unit_per_unit_sub_total_discount_ulid' => $arr_product_unit_per_unit_sub_total_discount_ulid,
+            'arr_product_unit_per_unit_sub_total_discount_order' => $arr_product_unit_per_unit_sub_total_discount_order,
             'arr_product_unit_per_unit_sub_total_discount_discount_type' => $arr_product_unit_per_unit_sub_total_discount_discount_type,
             'arr_product_unit_per_unit_sub_total_discount_amount' => $arr_product_unit_per_unit_sub_total_discount_amount,
             'arr_product_unit_vat_status' => $arr_product_unit_vat_status,
@@ -428,7 +729,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderDiscount::factory()
                     ->for($company)
                     ->for($branch)
-                    ->setGlobalDiscountRandom()
+                    ->setGlobalDiscountRandom(),
+                'globalDiscounts'
             );
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
@@ -439,81 +741,222 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
         $purchaseOrder = $purchaseOrder->create();
 
         $arr_product_unit_id = [];
+        $arr_product_unit_ulid = [];
         $arr_global_discount_id = [];
+        $arr_global_discount_ulid = [];
+        $arr_global_discount_order = [];
         $arr_global_discount_discount_type = [];
         $arr_global_discount_amount = [];
+        $arr_product_unit_product_id = [];
         $arr_product_unit_product_unit_id = [];
         $arr_product_unit_qty = [];
         $arr_product_unit_amount_per_unit = [];
         $arr_product_unit_initial_price = [];
         $arr_product_unit_per_unit_discount_id = [];
+        $arr_product_unit_per_unit_discount_ulid = [];
+        $arr_product_unit_per_unit_discount_order = [];
         $arr_product_unit_per_unit_discount_discount_type = [];
         $arr_product_unit_per_unit_discount_amount = [];
         $arr_product_unit_per_unit_sub_total_discount_id = [];
+        $arr_product_unit_per_unit_sub_total_discount_ulid = [];
+        $arr_product_unit_per_unit_sub_total_discount_order = [];
         $arr_product_unit_per_unit_sub_total_discount_discount_type = [];
         $arr_product_unit_per_unit_sub_total_discount_amount = [];
         $arr_product_unit_vat_status = [];
         $arr_product_unit_vat_rate = [];
         $arr_product_unit_remarks = [];
 
-        for ($i = 0; $i < 1; $i++) {
-            $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom()->make();
-            array_push($arr_global_discount_id, '');
-            array_push($arr_global_discount_discount_type, $purchaseOrderDiscount->discount_type);
-            array_push($arr_global_discount_amount, $purchaseOrderDiscount->amount);
-        }
-
-        $productUnits = $purchaseOrder->purchaseOrderProductUnits()->get();
+        $productUnits = $purchaseOrder->productUnits()->get();
 
         foreach ($productUnits as $productUnit) {
             $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
-            array_push($arr_product_unit_id, '');
+            array_push($arr_product_unit_id, Hashids::encode($productUnit->id));
+            array_push($arr_product_unit_ulid, $productUnit->ulid);
+            array_push($arr_product_unit_product_id, Hashids::encode($productUnit->product_id));
             array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->product_unit_id));
             array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
             array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
             array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
+            array_push($arr_product_unit_per_unit_discount_id, []);
+            array_push($arr_product_unit_per_unit_discount_ulid, []);
+            array_push($arr_product_unit_per_unit_discount_order, []);
+            array_push($arr_product_unit_per_unit_discount_discount_type, []);
+            array_push($arr_product_unit_per_unit_discount_amount, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_id, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_ulid, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_order, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, []);
+            array_push($arr_product_unit_per_unit_sub_total_discount_amount, []);
             array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
             array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
             array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
         }
 
+        $productUnit = $company->productUnits()->inRandomOrder()->first();
         $purchaseOrderProductUnit = PurchaseOrderProductUnit::factory()->make();
         array_push($arr_product_unit_id, '');
-        array_push($arr_product_unit_product_unit_id, Hashids::encode($company->productUnits()->inRandomOrder()->first()->id));
-        array_push($arr_product_unit_qty, $purchaseOrderProductUnit['qty']);
+        array_push($arr_product_unit_ulid, '');
+        array_push($arr_product_unit_product_id, Hashids::encode($productUnit->product_id));
+        array_push($arr_product_unit_product_unit_id, Hashids::encode($productUnit->id));
+        array_push($arr_product_unit_qty, $purchaseOrderProductUnit->qty);
         array_push($arr_product_unit_amount_per_unit, $purchaseOrderProductUnit->product_unit_amount_per_unit);
         array_push($arr_product_unit_initial_price, $purchaseOrderProductUnit->product_unit_initial_price);
+        array_push($arr_product_unit_per_unit_discount_id, []);
+        array_push($arr_product_unit_per_unit_discount_ulid, []);
+        array_push($arr_product_unit_per_unit_discount_order, []);
+        array_push($arr_product_unit_per_unit_discount_discount_type, []);
+        array_push($arr_product_unit_per_unit_discount_amount, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_id, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_ulid, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_order, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_discount_type, []);
+        array_push($arr_product_unit_per_unit_sub_total_discount_amount, []);
         array_push($arr_product_unit_vat_status, $purchaseOrderProductUnit->vat_status);
         array_push($arr_product_unit_vat_rate, $purchaseOrderProductUnit->vat_rate);
         array_push($arr_product_unit_remarks, $purchaseOrderProductUnit->remarks);
 
+        $purchaseOrderActions = new PurchaseOrderActions();
         for ($i = 0; $i < count($arr_product_unit_product_unit_id); $i++) {
             for ($j = 0; $j < 3; $j++) {
-                if (random_int(0, 1) == 1) {
-                    $purchasePerUnitDiscount = PurchaseOrderDiscount::factory()->setPerUnitDiscountRandom()->make();
+                if (random_int(0, 1)) {
+                    $maxValue = $arr_product_unit_initial_price[$i];
 
-                    $arr_product_unit_per_unit_discount_id[$i][$j] = '';
-                    $arr_product_unit_per_unit_discount_discount_type[$i][$j] = $purchasePerUnitDiscount->discount_type;
-                    $arr_product_unit_per_unit_discount_amount[$i][$j] = $purchasePerUnitDiscount->amount;
+                    if (count($arr_product_unit_per_unit_discount_order[$i])) {
+                        $maxValue = $maxValue - $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                            $arr_product_unit_initial_price[$i],
+                            $arr_product_unit_per_unit_discount_order[$i],
+                            $arr_product_unit_per_unit_discount_discount_type[$i],
+                            $arr_product_unit_per_unit_discount_amount[$i],
+                        );
+                    }
+
+                    $purchasePerUnitDiscount = PurchaseOrderDiscount::factory()->setPerUnitDiscountRandom($maxValue)->make();
+                    array_push($arr_product_unit_per_unit_discount_id[$i], '');
+                    array_push($arr_product_unit_per_unit_discount_ulid[$i], '');
+                    array_push($arr_product_unit_per_unit_discount_order[$i], count($arr_product_unit_per_unit_discount_order[$i]));
+                    array_push($arr_product_unit_per_unit_discount_discount_type[$i], $purchasePerUnitDiscount->discount_type);
+                    array_push($arr_product_unit_per_unit_discount_amount[$i], $purchasePerUnitDiscount->amount);
                 }
             }
 
             for ($j = 0; $j < 3; $j++) {
-                if (random_int(0, 1) == 1) {
-                    $purchasePerUnitSubTotalDiscount = PurchaseOrderDiscount::factory()->setPerUnitSubTotalDiscountRandom()->make();
+                if (random_int(0, 1)) {
+                    $qty = $arr_product_unit_qty[$i];
 
-                    $arr_product_unit_per_unit_sub_total_discount_id[$i][$j] = '';
-                    $arr_product_unit_per_unit_sub_total_discount_discount_type[$i][$j] = $purchasePerUnitSubTotalDiscount->discount_type;
-                    $arr_product_unit_per_unit_sub_total_discount_amount[$i][$j] = $purchasePerUnitSubTotalDiscount->amount;
+                    $initialPrice = $arr_product_unit_initial_price[$i];
+
+                    $perUnitDiscount = $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                        $arr_product_unit_initial_price[$i],
+                        $arr_product_unit_per_unit_discount_order[$i],
+                        $arr_product_unit_per_unit_discount_discount_type[$i],
+                        $arr_product_unit_per_unit_discount_amount[$i],
+                    );
+
+                    $priceAfterDisc = $initialPrice - $perUnitDiscount;
+
+                    $subTotal = $qty * $priceAfterDisc;
+
+                    $maxValue = $subTotal;
+                    if (count($arr_product_unit_per_unit_sub_total_discount_order[$i])) {
+                        $maxValue = $maxValue - $purchaseOrderActions->calculatePerUnitSubTotalDiscountFromFreeArray(
+                            $subTotal,
+                            $arr_product_unit_per_unit_sub_total_discount_order[$i],
+                            $arr_product_unit_per_unit_sub_total_discount_discount_type[$i],
+                            $arr_product_unit_per_unit_sub_total_discount_amount[$i]
+                        );
+                    }
+
+                    $purchasePerUnitSubTotalDiscount = PurchaseOrderDiscount::factory()->setPerUnitSubTotalDiscountRandom($maxValue)->make();
+                    array_push($arr_product_unit_per_unit_sub_total_discount_id[$i], '');
+                    array_push($arr_product_unit_per_unit_sub_total_discount_ulid[$i], '');
+                    array_push($arr_product_unit_per_unit_sub_total_discount_order[$i], count($arr_product_unit_per_unit_sub_total_discount_order[$i]));
+                    array_push($arr_product_unit_per_unit_sub_total_discount_discount_type[$i], $purchasePerUnitSubTotalDiscount->discount_type);
+                    array_push($arr_product_unit_per_unit_sub_total_discount_amount[$i], $purchasePerUnitSubTotalDiscount->amount);
                 }
             }
+        }
+
+        $arrProductUnit = [];
+        for ($i = 0; $i < count($arr_product_unit_product_unit_id); $i++) {
+            $qty = $arr_product_unit_qty[$i];
+
+            $initialPrice = $arr_product_unit_initial_price[$i];
+
+            $perUnitDiscount = $purchaseOrderActions->calculatePerUnitDiscountFromFreeArray(
+                $arr_product_unit_initial_price[$i],
+                $arr_product_unit_per_unit_discount_order[$i],
+                $arr_product_unit_per_unit_discount_discount_type[$i],
+                $arr_product_unit_per_unit_discount_amount[$i]
+            );
+
+            $priceAfterDisc = $initialPrice - $perUnitDiscount;
+
+            $subTotal = $qty * $priceAfterDisc;
+
+            $perUnitSubTotalDiscount = $purchaseOrderActions->calculatePerUnitSubTotalDiscountFromFreeArray(
+                $subTotal,
+                $arr_product_unit_per_unit_sub_total_discount_order[$i],
+                $arr_product_unit_per_unit_sub_total_discount_discount_type[$i],
+                $arr_product_unit_per_unit_sub_total_discount_amount[$i]
+            );
+
+            $total = $subTotal - $perUnitSubTotalDiscount;
+
+            array_push($arrProductUnit, [
+                'qty' => $qty,
+                'initial_price' => $initialPrice,
+                'per_unit_disc' => $perUnitDiscount,
+                'price_after_disc' => $priceAfterDisc,
+                'sub_total' => $subTotal,
+                'per_unit_sub_total_discount' => $perUnitSubTotalDiscount,
+                'total' => $total,
+                'global_disc' => 0,
+                'grand_total' => 0,
+                'final_price' => 0,
+            ]);
+        }
+
+        $grandTotal = 0;
+        foreach ($arrProductUnit as $productUnit) {
+            $grandTotal = $grandTotal + $productUnit['total'];
+        }
+
+        $maxValue = $grandTotal;
+        for ($i = 0; $i < 3; $i++) {
+            $maxValue = $grandTotal - $purchaseOrderActions->calculateGlobalDiscountFromFreeArray(
+                $grandTotal,
+                $arr_global_discount_order,
+                $arr_global_discount_discount_type,
+                $arr_global_discount_amount
+            );
+
+            $purchaseOrderDiscount = PurchaseOrderDiscount::factory()->setGlobalDiscountRandom($maxValue)->make();
+            array_push($arr_global_discount_id, '');
+            array_push($arr_global_discount_ulid, '');
+            array_push($arr_global_discount_order, count($arr_global_discount_order));
+            array_push($arr_global_discount_discount_type, $purchaseOrderDiscount->discount_type);
+            array_push($arr_global_discount_amount, $purchaseOrderDiscount->amount);
+        }
+
+        $globalDiscount = $purchaseOrderActions->calculateGlobalDiscountFromFreeArray(
+            $grandTotal,
+            $arr_global_discount_order,
+            $arr_global_discount_discount_type,
+            $arr_global_discount_amount,
+        );
+
+        foreach ($arrProductUnit as $idx => $productUnit) {
+            $arrProductUnit[$idx]['global_disc'] = $productUnit['total'] / $grandTotal * $globalDiscount;
+            $arrProductUnit[$idx]['grand_total'] = $productUnit['total'] - $arrProductUnit[$idx]['global_disc'];
+            $arrProductUnit[$idx]['final_price'] = $arrProductUnit[$idx]['grand_total'] / $productUnit['qty'];
         }
 
         $purchaseOrderArr = PurchaseOrder::factory()->make([
@@ -521,17 +964,25 @@ class PurchaseOrderAPIEditTest extends APITestCase
             'branch_id' => Hashids::encode($branch->id),
             'supplier_id' => Hashids::encode($supplier->id),
             'arr_global_discount_id' => $arr_global_discount_id,
+            'arr_global_discount_ulid' => $arr_global_discount_ulid,
+            'arr_global_discount_order' => $arr_global_discount_order,
             'arr_global_discount_discount_type' => $arr_global_discount_discount_type,
             'arr_global_discount_amount' => $arr_global_discount_amount,
             'arr_product_unit_id' => $arr_product_unit_id,
+            'arr_product_unit_ulid' => $arr_product_unit_ulid,
+            'arr_product_unit_product_id' => $arr_product_unit_product_id,
             'arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id,
             'arr_product_unit_qty' => $arr_product_unit_qty,
             'arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit,
             'arr_product_unit_initial_price' => $arr_product_unit_initial_price,
             'arr_product_unit_per_unit_discount_id' => $arr_product_unit_per_unit_discount_id,
+            'arr_product_unit_per_unit_discount_ulid' => $arr_product_unit_per_unit_discount_ulid,
+            'arr_product_unit_per_unit_discount_order' => $arr_product_unit_per_unit_discount_order,
             'arr_product_unit_per_unit_discount_discount_type' => $arr_product_unit_per_unit_discount_discount_type,
             'arr_product_unit_per_unit_discount_amount' => $arr_product_unit_per_unit_discount_amount,
             'arr_product_unit_per_unit_sub_total_discount_id' => $arr_product_unit_per_unit_sub_total_discount_id,
+            'arr_product_unit_per_unit_sub_total_discount_ulid' => $arr_product_unit_per_unit_sub_total_discount_ulid,
+            'arr_product_unit_per_unit_sub_total_discount_order' => $arr_product_unit_per_unit_sub_total_discount_order,
             'arr_product_unit_per_unit_sub_total_discount_discount_type' => $arr_product_unit_per_unit_sub_total_discount_discount_type,
             'arr_product_unit_per_unit_sub_total_discount_amount' => $arr_product_unit_per_unit_sub_total_discount_amount,
             'arr_product_unit_vat_status' => $arr_product_unit_vat_status,
@@ -647,7 +1098,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderDiscount::factory()
                     ->for($company)
                     ->for($branch)
-                    ->setGlobalDiscountRandom()
+                    ->setGlobalDiscountRandom(),
+                'globalDiscounts'
             );
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
@@ -658,7 +1110,8 @@ class PurchaseOrderAPIEditTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 

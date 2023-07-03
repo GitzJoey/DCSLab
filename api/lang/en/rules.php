@@ -13,6 +13,11 @@ return [
     'valid_product' => 'Invalid product value',
     'valid_product_unit' => 'Invalid product unit value',
     'valid_supplier' => 'Invalid supplier value',
+    'purchase_order' => [
+        'per_unit_discounts' => 'Invalid per unit discount value',
+        'per_unit_subtotal_discounts' => 'Invalid per unit subtotal discount value',
+        'global_discounts' => 'Invalid global discount value',
+    ],
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
     'inactive_user' => 'Your profile status is inactive',
