@@ -101,8 +101,8 @@ const toggleSideTab = (show: boolean | undefined) => {
       <Transition>
         <div class="grid grid-cols-12 gap-6">
           <div v-for="(card, index) in cards" :key="index" :class="['intro-y', {'box' : card.state !== ViewState.hide} , 'col-span-12' , '2xl:col-span-12']">
-            <div v-if="card.title" :id="`${index}`" class="cursor-pointer flex px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400" @click="onCardTitleClicked(index)">
-              <div class="w-1/2 flex justify-start">
+            <div v-if="card.title" :id="`${index}`" class="cursor-pointer flex px-5 py-5 sm:py-3 border-b border-slate-200/60 dark:border-darkmode-400" >
+              <div @click="onCardTitleClicked(index)" class="w-1/2 flex justify-start">
                 <h2 class="font-medium text-base mr-auto">{{ t(card.title) }}</h2>
               </div>
               <div v-if="card.state !== ViewState.hide" class="w-1/2 flex justify-end">
