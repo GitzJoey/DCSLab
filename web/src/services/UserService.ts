@@ -21,8 +21,8 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async readAny(args: SearchRequest): Promise<ServiceResponse<Collection<User[]> | Resource<User[]> | null>> {
-        const result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = {
+    public async readAny(args: SearchRequest): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
+        const result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = {
             success: false
         }
 
@@ -40,7 +40,7 @@ export default class UserService {
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Collection<User[]>> = await axios.get(url);
+            const response: AxiosResponse<Collection<Array<User>>> = await axios.get(url);
 
             result.success = true;
             result.data = response.data;
