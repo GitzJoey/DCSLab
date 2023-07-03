@@ -324,6 +324,16 @@ class UserActions
         $user->save();
     }
 
+    public function getTokensCount(User $user): int
+    {
+        $result = 0;
+
+        $result = $user->tokens()->count();
+
+        return $result;
+    }
+
+
     public function resetTokens(User $user): void
     {
         $user->tokens()->delete();

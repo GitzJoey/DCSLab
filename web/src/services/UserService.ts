@@ -82,4 +82,31 @@ export default class UserService {
             }
         }
     }
+
+    public async getTokensCount(ulid: string): Promise<ServiceResponse<number | null>> {
+        const result: ServiceResponse<number | null> = {
+            success: false,
+        }
+
+        try {
+            const url = route('api.get.db.admin.user.read.tokens.count', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<number>> = await axios.get(url);
+
+            result.success = true;
+            result.data = response.data.data;
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
 }

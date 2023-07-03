@@ -189,7 +189,7 @@ class UserController extends BaseController
                 $settingsArr
             );
 
-            if (array_key_exists('apiToken', $request)) {
+            if (array_key_exists('api_token', $request)) {
                 $this->userActions->resetTokens($user);
             }
         } catch (Exception $e) {
@@ -197,6 +197,11 @@ class UserController extends BaseController
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function getTokensCount(User $user) 
+    {
+        return $this->userActions->getTokensCount($user);
     }
 
     public function resetPassword($id)
