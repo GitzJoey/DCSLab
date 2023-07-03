@@ -34,6 +34,7 @@ import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
+import { SearchRequest } from "../../types/requests/SearchRequest";
 //#endregion
 
 //#region Declarations
@@ -138,13 +139,15 @@ const toggleDetail = (idx: number) => {
 };
 
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(
-    search,
-    refresh,
-    paginate,
-    page,
-    per_page
-  );
+  const searchReq: SearchRequest = {
+    search: search,
+    refresh: refresh,
+    paginate: paginate,
+    page: page,
+    per_page: per_page
+  };
+
+  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(searchReq);
 
   if (result.success && result.data) {
     userLists.value = result.data as Collection<User[]>;
@@ -153,18 +156,20 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   }
 }
 
-const getRoles = async () => {
-  let result: ServiceResponse<Resource<Array<Role>> | null> = await roleServices.readAny();
+const getDDL = (): void => {
+  roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
+    if (result.success && result.data) {
+      rolesDDL.value = result.data.data as Array<Role>;
+    }
+  });
 
-  if (result.success && result.data) {
-    rolesDDL.value = result.data.data as Array<Role>;
-  }
-}
+  dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
+    countriesDDL.value = result;
+  });
 
-const getDDL = async (): Promise<void> => {
-  await getRoles();
-  countriesDDL.value = await dashboardServices.getCountriesDDL();
-  statusDDL.value = await dashboardServices.getStatusDDL();
+  dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
+    statusDDL.value = result;
+  });
 }
 
 const emptyUser = () => {

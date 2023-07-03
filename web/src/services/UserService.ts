@@ -7,6 +7,7 @@ import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
+import { SearchRequest } from "../types/requests/SearchRequest";
 
 export default class UserService {
     private ziggyRoute: Config;
@@ -20,18 +21,18 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async readAny(search: string, refresh: boolean, paginate: boolean, page?: number, per_page?: number): Promise<ServiceResponse<Collection<User[]> | Resource<User[]> | null>> {
+    public async readAny(args: SearchRequest): Promise<ServiceResponse<Collection<User[]> | Resource<User[]> | null>> {
         const result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = {
             success: false
         }
 
         try {
             const queryParams: Record<string, string | number | boolean> = {};
-            queryParams['search'] = search;
-            queryParams['refresh'] = refresh;
-            queryParams['paginate'] = paginate;
-            if (page) queryParams['page'] = page;
-            if (per_page) queryParams['per_page'] = per_page;
+            queryParams['search'] = args.search ? args.search : '';
+            queryParams['refresh'] = args.refresh;
+            queryParams['paginate'] = args.paginate;
+            if (args.page) queryParams['page'] = args.page;
+            if (args.per_page) queryParams['per_page'] = args.per_page;
 
             //ZiggyRouteNotFoundException
             //const url = route('invalid.route', undefined, false, this.ziggyRoute);
