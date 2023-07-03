@@ -40,7 +40,7 @@ class UserAPIEditTest extends APITestCase
         $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
         $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
 
-        $api = $this->json('POST', route('api.post.db.admin.users.edit', $user->ulid), $userArr);
+        $api = $this->json('POST', route('api.post.db.admin.user.edit', $user->ulid), $userArr);
 
         $api->assertStatus(401);
     }
@@ -69,7 +69,7 @@ class UserAPIEditTest extends APITestCase
         $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
         $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
 
-        $api = $this->json('POST', route('api.post.db.admin.users.edit', $user->ulid), $userArr);
+        $api = $this->json('POST', route('api.post.db.admin.user.edit', $user->ulid), $userArr);
 
         $api->assertStatus(403);
     }
@@ -99,7 +99,7 @@ class UserAPIEditTest extends APITestCase
         $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
         $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
 
-        $api = $this->json('POST', route('api.post.db.admin.users.edit', $user->ulid), $userArr);
+        $api = $this->json('POST', route('api.post.db.admin.user.edit', $user->ulid), $userArr);
 
         $api->assertSuccessful();
 
