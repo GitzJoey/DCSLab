@@ -1,5 +1,5 @@
 export enum CardState {
-    collapsed = "COLLAPSED",
-    hidden = "HIDDEN",
-    expanded = "EXPANDED"
+    Collapsed = "COLLAPSED",
+    Hidden = "HIDDEN",
+    Expanded = "EXPANDED"
 }

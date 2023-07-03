@@ -52,13 +52,13 @@ const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string[]> | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: 'User Information', state: CardState.collapsed, },
-  { title: 'User Profile', state: CardState.collapsed },
-  { title: 'Roles', state: CardState.collapsed },
-  { title: 'Settings', state: CardState.collapsed },
-  { title: 'Token Managements', state: CardState.collapsed },
-  { title: 'Password Managements', state: CardState.collapsed },
-  { title: '', state: CardState.hidden, id: 'button' }
+  { title: 'User Information', state: CardState.Expanded, },
+  { title: 'User Profile', state: CardState.Expanded },
+  { title: 'Roles', state: CardState.Expanded },
+  { title: 'Settings', state: CardState.Expanded },
+  { title: 'Token Managements', state: CardState.Expanded },
+  { title: 'Password Managements', state: CardState.Expanded },
+  { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
@@ -222,10 +222,10 @@ const deleteSelected = (itemUlid: string) => {
 }
 
 const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.collapsed) {
-    cards.value[index].state = CardState.expanded
-  } else if (cards.value[index].state === CardState.expanded) {
-    cards.value[index].state = CardState.collapsed
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed
   }
 }
 
