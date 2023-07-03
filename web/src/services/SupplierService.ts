@@ -75,9 +75,19 @@ export default class SupplierService {
         }
     }
 
-    public async readAny(): Promise<ServiceResponseType<SupplierType[] | null>> {
+    public async readAny({company_id, search, paginate, page, per_page, refresh}  : {company_id : string, search? : string, paginate? : boolean , page? : number , per_page ? : number, refresh? : boolean }): Promise<ServiceResponseType<SupplierType[] | null>> {
         try {
-            const url = route('api.get.db.supplier.supplier.read_any', undefined, false, this.ziggyRoute);
+            const queryParams : Record<string, string | number | boolean> = {}
+
+            queryParams['company_id'] = company_id 
+            queryParams['search'] = search ? search : ''
+            queryParams['paginate'] = paginate ? paginate : false
+            queryParams['page'] = page ? page : 1
+            queryParams['per_page'] = per_page ? per_page : 10
+            queryParams['refresh'] = refresh ? refresh : false
+
+
+            const url = route('api.get.db.supplier.supplier.read_any', {_query : queryParams }, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<SupplierType[]> = await axios.get(url);
@@ -93,9 +103,9 @@ export default class SupplierService {
         }
     }
 
-    public async read(): Promise<ServiceResponseType<SupplierType | null>> {
+    public async read(supplierId : string): Promise<ServiceResponseType<SupplierType | null>> {
         try {
-            const url = route('api.get.db.supplier.supplier.read', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.supplier.supplier.read', supplierId, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<SupplierType> = await axios.get(url);
