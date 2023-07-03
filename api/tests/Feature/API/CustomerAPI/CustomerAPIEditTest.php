@@ -9,6 +9,7 @@ use App\Models\CustomerAddress;
 use App\Models\CustomerGroup;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -160,10 +161,14 @@ class CustomerAPIEditTest extends APITestCase
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
-        $customer = Customer::factory()->for($company)->for($customerGroup);
-        for ($i = 0; $i < random_int(1, 5); $i++) {
-            $customer = $customer->has(CustomerAddress::factory()->for($company));
-        }
+        $isMain = random_int(0, 3);
+        $customer = Customer::factory()->for($company)->for($customerGroup)
+            ->has(CustomerAddress::factory()->count(4)->for($company)
+                ->state(new Sequence(
+                    fn (Sequence $sequence) => ['is_main' => $isMain == $sequence->index ? true : false],
+                ))
+            );
+
         $customer = $customer->create();
 
         $arr_customer_address_id = [];

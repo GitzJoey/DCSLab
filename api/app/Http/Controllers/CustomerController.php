@@ -231,7 +231,7 @@ class CustomerController extends BaseController
         $customerAddressArr = [];
         $count_address = count($request['arr_customer_address_address']);
         for ($i = 0; $i < $count_address; $i++) {
-            $customer_address_id = $request['arr_customer_address_id'][$i] != 0 ? $request['arr_customer_address_id'][$i] : 0;
+            $customer_address_id = $request['arr_customer_address_id'][$i] ? $request['arr_customer_address_id'][$i] : null;
 
             $customer_address_ulid = $request['arr_customer_address_ulid'][$i];
 
