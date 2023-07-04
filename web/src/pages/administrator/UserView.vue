@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -34,6 +34,9 @@ import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
+import { SearchRequest } from "../../types/requests/SearchRequest";
+import { LaravelError } from "../../types/errors/LaravelError";
+import { VeeValidateError } from "../../types/errors/VeeValidateError";
 //#endregion
 
 //#region Declarations
@@ -50,15 +53,15 @@ const cacheServices = new CacheService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<Record<string, string[]> | null>(null);
+const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: 'User Information', state: CardState.collapsed, },
-  { title: 'User Profile', state: CardState.collapsed },
-  { title: 'Roles', state: CardState.collapsed },
-  { title: 'Settings', state: CardState.collapsed },
-  { title: 'Token Managements', state: CardState.collapsed },
-  { title: 'Password Managements', state: CardState.collapsed },
-  { title: '', state: CardState.hidden, id: 'button' }
+  { title: 'User Information', state: CardState.Expanded, },
+  { title: 'User Profile', state: CardState.Expanded },
+  { title: 'Roles', state: CardState.Expanded },
+  { title: 'Settings', state: CardState.Expanded },
+  { title: 'Token Managements', state: CardState.Expanded },
+  { title: 'Password Managements', state: CardState.Expanded },
+  { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
@@ -120,12 +123,13 @@ const countriesDDL = ref<Array<DropDownOption> | null>(null);
 
 //#region onMounted
 onMounted(async () => {
-  await getUsers('', true, true, 1, 10);
-  await getDDL();
-});
-//#endregion
+  loading.value = true;
 
-//#region Computed
+  await getUsers('', true, true, 1, 10);
+  getDDL();
+
+  loading.value = false;
+});
 //#endregion
 
 //#region Methods
@@ -138,33 +142,37 @@ const toggleDetail = (idx: number) => {
 };
 
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(
-    search,
-    refresh,
-    paginate,
-    page,
-    per_page
-  );
+  const searchReq: SearchRequest = {
+    search: search,
+    refresh: refresh,
+    paginate: paginate,
+    page: page,
+    per_page: per_page
+  };
+
+  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(searchReq);
 
   if (result.success && result.data) {
     userLists.value = result.data as Collection<User[]>;
   } else {
-    datalistErrors.value = result.errors as Record<string, string[]>;
+    datalistErrors.value = result.errors as LaravelError;
   }
 }
 
-const getRoles = async () => {
-  let result: ServiceResponse<Resource<Array<Role>> | null> = await roleServices.readAny();
+const getDDL = (): void => {
+  roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
+    if (result.success && result.data) {
+      rolesDDL.value = result.data.data as Array<Role>;
+    }
+  });
 
-  if (result.success && result.data) {
-    rolesDDL.value = result.data.data as Array<Role>;
-  }
-}
+  dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
+    countriesDDL.value = result;
+  });
 
-const getDDL = async (): Promise<void> => {
-  await getRoles();
-  countriesDDL.value = await dashboardServices.getCountriesDDL();
-  statusDDL.value = await dashboardServices.getStatusDDL();
+  dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
+    statusDDL.value = result;
+  });
 }
 
 const emptyUser = () => {
@@ -222,10 +230,10 @@ const deleteSelected = (itemUlid: string) => {
 }
 
 const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.collapsed) {
-    cards.value[index].state = CardState.expanded
-  } else if (cards.value[index].state === CardState.expanded) {
-    cards.value[index].state = CardState.collapsed
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed
   }
 }
 
@@ -234,6 +242,36 @@ const onSubmit = async () => {
 
   loading.value = false;
 };
+
+const backToList = async () => {
+  loading.value = true;
+
+  cacheServices.removeLastEntity('User');
+
+  mode.value = ViewMode.LIST;
+  await getUsers('', true, true, 1, 10);
+
+  loading.value = false;
+}
+
+const flattenedRoles = (roles: Array<Role>): string => {
+  if (roles.length == 0) return '';
+  return roles.map((x: Role) => x.display_name).join(', ');
+}
+//#endregion
+
+//#region Computed
+const titleView = computed(() => {
+  switch (mode.value) {
+    case ViewMode.FORM_CREATE:
+      return t('views.user.actions.create');
+    case ViewMode.FORM_EDIT:
+      return t('views.user.actions.edit');
+    case ViewMode.LIST:
+    default:
+      return t('views.user.page_title');
+  }
+});
 //#endregion
 
 //#region Watcher
@@ -252,7 +290,9 @@ watch(
   <div class="mt-8">
     <LoadingOverlay :visible="loading">
       <TitleLayout>
-        <template #title>{{ t("views.user.page_title") }}</template>
+        <template #title>
+          {{ titleView }}
+        </template>
         <template #optional>
           <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
             <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
@@ -336,7 +376,7 @@ watch(
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}</div>
-                        <div class="flex-1">{{ '' }}</div>
+                        <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
@@ -549,6 +589,9 @@ watch(
             <template #card-items-4>
               <div class="p-5">
                 <div class="pb-4">
+                  <FormLabel html-for="tokens_reset">
+                    {{ t('views.user.fields.tokens.reset') }}
+                  </FormLabel>
 
                 </div>
               </div>
@@ -561,12 +604,20 @@ watch(
               </div>
             </template>
             <template #card-items-button>
-              <Button as="submit" href="#" variant="primary" class="shadow-md">
-                <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
-              </Button>
+              <div class="flex gap-4">
+                <Button as="submit" href="#" variant="primary" class="w-28 shadow-md">
+                  {{ t("components.buttons.submit") }}
+                </Button>
+                <Button as="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
+                  {{ t("components.buttons.reset") }}
+                </Button>
+              </div>
             </template>
           </TwoColumnsLayout>
         </VeeForm>
+        <Button as="button" variant="secondary" class="mt-2 w-24" @click="backToList">
+          {{ t('components.buttons.back') }}
+        </Button>
       </div>
     </LoadingOverlay>
   </div>

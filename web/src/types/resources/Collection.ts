@@ -1,4 +1,4 @@
-export interface Collection<T extends Array<unknown> | readonly unknown[]> {
+export interface Collection<T> {
     data: T,
     meta: {
         current_page: number,

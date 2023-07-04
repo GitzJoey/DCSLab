@@ -122,6 +122,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'user', 'as' => '.user'], function () {
                 Route::get('read', [UserController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{user:ulid}', [UserController::class, 'read'])->name('.read');
+
+                Route::get('read/{user:ulid}/tokens/count', [UserController::class, 'getTokensCount'])->name('.read.tokens.count');
             });
 
             Route::group(['prefix' => 'role', 'as' => '.role'], function () {

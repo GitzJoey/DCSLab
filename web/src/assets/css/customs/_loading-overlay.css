@@ -6,19 +6,14 @@
 }
 
 .loading-overlay {
-  @apply absolute;
-  @apply inset-0;
-  @apply top-0;
-  @apply right-0;
-  @apply bottom-0;
-  @apply left-0;
-  @apply w-full;
-  @apply h-full;
-  background-image:url('spinner-big.gif');
-  @apply bg-no-repeat;
-  @apply bg-center;
-  @apply z-[150];
-  @apply opacity-50;
+  @apply absolute inset-0;
+  @apply flex items-center justify-center;
+  @apply bg-no-repeat bg-center z-[150] opacity-50;
+}
+
+.spinner {
+  @apply absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  @apply z-[151];
 }
 
 .loading-overlay-gray {

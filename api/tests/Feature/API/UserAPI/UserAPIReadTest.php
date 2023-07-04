@@ -22,7 +22,7 @@ class UserAPIReadTest extends APITestCase
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->create();
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -40,7 +40,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -57,7 +57,7 @@ class UserAPIReadTest extends APITestCase
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->create();
 
-        $api = $this->getJson(route('api.get.db.admin.users.read', $user->ulid));
+        $api = $this->getJson(route('api.get.db.admin.user.read', $user->ulid));
 
         $api->assertStatus(401);
     }
@@ -69,7 +69,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read', $user->ulid));
+        $api = $this->getJson(route('api.get.db.admin.user.read', $user->ulid));
 
         $api->assertStatus(403);
     }
@@ -82,7 +82,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -101,7 +101,7 @@ class UserAPIReadTest extends APITestCase
             ],
         ]);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => '',
             'paginate' => false,
             'page' => 1,
@@ -120,7 +120,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -156,7 +156,7 @@ class UserAPIReadTest extends APITestCase
         User::factory()->setName('testing1')->create();
         User::factory()->setName('testing2')->create();
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => 'testing',
             'paginate' => true,
             'page' => 1,
@@ -184,7 +184,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', []));
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', []));
 
         $api->assertStatus(422);
     }
@@ -197,7 +197,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => "!#$%&'()*+,-./:;<=>?@[\]^_`{|}~",
             'paginate' => true,
             'page' => 1,
@@ -225,7 +225,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read_any', [
+        $api = $this->getJson(route('api.get.db.admin.user.read_any', [
             'search' => '',
             'paginate' => true,
             'page' => -1,
@@ -253,7 +253,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.users.read', $user->ulid));
+        $api = $this->getJson(route('api.get.db.admin.user.read', $user->ulid));
 
         $api->assertSuccessful();
     }
@@ -267,7 +267,7 @@ class UserAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $this->getJson(route('api.get.db.admin.users.read', null));
+        $this->getJson(route('api.get.db.admin.user.read', null));
     }
 
     public function test_user_api_call_read_with_nonexistance_ulid_expect_not_found()
@@ -280,7 +280,7 @@ class UserAPIReadTest extends APITestCase
 
         $ulid = Str::ulid()->generate();
 
-        $api = $this->getJson(route('api.get.db.admin.users.read', $ulid));
+        $api = $this->getJson(route('api.get.db.admin.user.read', $ulid));
 
         $api->assertStatus(404);
     }

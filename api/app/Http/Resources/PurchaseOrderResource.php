@@ -40,11 +40,11 @@ class PurchaseOrderResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('supplier'), [
                 'supplier' => new SupplierResource($this->supplier),
             ]),
-            $this->mergeWhen($this->relationLoaded('purchaseOrderDiscounts'), [
-                'global_discounts' => PurchaseOrderDiscountResource::collection($this->purchaseOrderDiscounts),
+            $this->mergeWhen($this->relationLoaded('globalDiscounts'), [
+                'global_discounts' => PurchaseOrderDiscountResource::collection($this->globalDiscounts),
             ]),
-            $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnits'), [
-                'product_units' => PurchaseOrderProductUnitResource::collection($this->purchaseOrderProductUnits),
+            $this->mergeWhen($this->relationLoaded('productUnits'), [
+                'product_units' => PurchaseOrderProductUnitResource::collection($this->productUnits),
             ]),
             'remarks' => $this->remarks,
             'status' => $this->status,

@@ -18,6 +18,7 @@ use App\Models\Supplier;
 use App\Models\Unit;
 use App\Models\User;
 use Exception;
+use Illuminate\Support\Str;
 use Tests\ActionsTestCase;
 
 class PurchaseOrderActionsEditTest extends ActionsTestCase
@@ -82,44 +83,92 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
 
         foreach ($productUnits as $productUnit) {
-            $purchaseOrder = $purchaseOrder->has(
-                PurchaseOrderProductUnit::factory()
-                    ->for($company)->for($branch)
-                    ->for($productUnit->product)
-                    ->for($productUnit)
-            );
+            $productUnitFactory = PurchaseOrderProductUnit::factory()
+                ->for($company)
+                ->for($branch)
+                ->for($productUnit->product)
+                ->for($productUnit);
+
+            if (random_int(0, 1)) {
+                $productUnitFactory = $productUnitFactory
+                    ->has(PurchaseOrderDiscount::factory()
+                        ->for($company)
+                        ->for($branch)
+                        ->for($purchaseOrder)
+                        ->setPerUnitDiscountPercent(),
+                        'perUnitDiscounts'
+                    );
+            }
+
+            if (random_int(0, 1)) {
+                $productUnitFactory = $productUnitFactory
+                    ->has(PurchaseOrderDiscount::factory()
+                        ->for($company)
+                        ->for($branch)
+                        ->for($purchaseOrder)
+                        ->setPerUnitSubtotalDiscountPercent(),
+                        'perUnitSubTotalDiscounts'
+                    );
+            }
+
+            $purchaseOrder = $purchaseOrder->has($productUnitFactory, 'productUnits');
         }
 
         $purchaseOrder = $purchaseOrder->create();
 
         $purchaseOrderArr = $purchaseOrder->toArray();
-        $purchaseOrderArr['global_discount'] = [];
-        array_push(
-            $purchaseOrderArr['global_discount'],
-            PurchaseOrderDiscount::factory()
-                ->for($company)->for($branch)
-                ->setGlobalDiscountRandom()->make(['id' => null])->toArray()
-        );
 
-        $purchaseOrderProductUnitArr = $purchaseOrder->purchaseOrderProductUnits->toArray();
-        array_push(
-            $purchaseOrderProductUnitArr,
-            PurchaseOrderProductUnit::factory()
+        for ($i = 0; $i < 3; $i++) {
+            $productUnitArr = $purchaseOrder->productUnits()
+                ->with('perUnitDiscounts', 'perUnitSubTotalDiscounts')
+                ->get()->toArray();
+
+            $newproductUnit = PurchaseOrderProductUnit::factory()
                 ->for($company)->for($branch)->for($purchaseOrder)
                 ->for($productUnit->product)
-                ->for($productUnit)->make(['id' => null])->toArray()
-        );
+                ->for($productUnit)
+                ->make(['id' => null, 'ulid' => Str::ulid()->generate()])
+                ->toArray();
+
+            $newproductUnit['per_unit_discounts'] = [];
+            if (random_int(0, 1)) {
+                $perUnitDiscount = PurchaseOrderDiscount::factory()
+                    ->for($company)
+                    ->for($branch)
+                    ->for($purchaseOrder)
+                    ->setPerUnitDiscountPercent()
+                    ->make(['id' => null, 'ulid' => Str::ulid()->generate()])
+                    ->toArray();
+                array_push($newproductUnit['per_unit_discounts'], $perUnitDiscount);
+            }
+
+            $newproductUnit['per_unit_sub_total_discounts'] = [];
+            if (random_int(0, 1)) {
+                $perUnitSubTotalDiscount = PurchaseOrderDiscount::factory()
+                    ->for($company)
+                    ->for($branch)
+                    ->for($purchaseOrder)
+                    ->make(['id' => null, 'ulid' => Str::ulid()->generate()])
+                    ->toArray();
+
+                array_push($newproductUnit['per_unit_sub_total_discounts'], $perUnitSubTotalDiscount);
+            }
+
+            array_push($productUnitArr, $newproductUnit);
+        }
+
+        $purchaseOrderArr['global_discount'] = [];
 
         $result = $this->purchaseOrderActions->update(
             $purchaseOrder,
             $purchaseOrderArr,
-            $purchaseOrderProductUnitArr,
+            $productUnitArr,
         );
 
         $this->assertInstanceOf(PurchaseOrder::class, $result);
@@ -137,19 +186,43 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
             'status' => $purchaseOrderArr['status'],
         ]);
 
-        $this->assertDatabaseHas('purchase_order_product_units', [
-            'company_id' => $company->id,
-            'branch_id' => $branch->id,
-            'purchase_order_id' => $result->id,
-            'product_id' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_id'],
-            'product_unit_id' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_unit_id'],
-            'qty' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['qty'],
-            'product_unit_amount_per_unit' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_unit_amount_per_unit'],
-            'product_unit_initial_price' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['product_unit_initial_price'],
-            'vat_status' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['vat_status'],
-            'vat_rate' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['vat_rate'],
-            'remarks' => $purchaseOrderProductUnitArr[count($purchaseOrderProductUnitArr) - 1]['remarks'],
-        ]);
+        for ($i = 0; $i < count($productUnitArr); $i++) {
+            $this->assertDatabaseHas('purchase_order_product_units', [
+                'company_id' => $company->id,
+                'branch_id' => $branch->id,
+                'purchase_order_id' => $result->id,
+                'product_id' => $productUnitArr[$i]['product_id'],
+                'product_unit_id' => $productUnitArr[$i]['product_unit_id'],
+                'qty' => $productUnitArr[$i]['qty'],
+                'product_unit_amount_per_unit' => $productUnitArr[$i]['product_unit_amount_per_unit'],
+                'product_unit_initial_price' => $productUnitArr[$i]['product_unit_initial_price'],
+                'vat_status' => $productUnitArr[$i]['vat_status'],
+                'vat_rate' => $productUnitArr[$i]['vat_rate'],
+                'remarks' => $productUnitArr[$i]['remarks'],
+            ]);
+
+            foreach ($productUnitArr[$i]['per_unit_discounts'] as $perUnitDiscount) {
+                $this->assertDatabaseHas('purchase_order_discounts', [
+                    'company_id' => $company->id,
+                    'branch_id' => $branch->id,
+                    'purchase_order_id' => $result->id,
+                    'order' => $perUnitDiscount['order'],
+                    'discount_type' => $perUnitDiscount['discount_type'],
+                    'amount' => $perUnitDiscount['amount'],
+                ]);
+            }
+
+            foreach ($productUnitArr[$i]['per_unit_sub_total_discounts'] as $perUnitSubTotalDiscount) {
+                $this->assertDatabaseHas('purchase_order_discounts', [
+                    'company_id' => $company->id,
+                    'branch_id' => $branch->id,
+                    'purchase_order_id' => $result->id,
+                    'order' => $perUnitSubTotalDiscount['order'],
+                    'discount_type' => $perUnitSubTotalDiscount['discount_type'],
+                    'amount' => $perUnitSubTotalDiscount['amount'],
+                ]);
+            }
+        }
     }
 
     public function test_purchase_order_actions_call_update_with_empty_array_parameters_expect_exception()
@@ -212,7 +285,7 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
 
         foreach ($productUnits as $productUnit) {
             $purchaseOrder = $purchaseOrder->has(
-                PurchaseOrderProductUnit::factory()
+                productUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
                     ->for($productUnit)

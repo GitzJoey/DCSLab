@@ -7,7 +7,7 @@ export interface Employee {
     ulid: string,
     company: Company,
     user: User,
-    employee_accesses: Branch[],
+    employee_accesses: Array<Branch>,
     selected_companies: string,
     selected_accesses: string,
     code: string,

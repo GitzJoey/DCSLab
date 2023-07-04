@@ -28,10 +28,10 @@ const userContext = computed(() => userContextStore.getUserContext);
 //#region Data - UI
 const loading = ref<boolean>(false);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: "User Profile", state: CardState.expanded, },
-  { title: "Account Settings", state: CardState.expanded, },
-  { title: "Change Password", state: CardState.expanded, },
-  { title: "User Setting", state: CardState.expanded, },
+  { title: "User Profile", state: CardState.Expanded, },
+  { title: "Account Settings", state: CardState.Expanded, },
+  { title: "Change Password", state: CardState.Expanded, },
+  { title: "User Setting", state: CardState.Expanded, },
 ]);
 //#endregion
 
@@ -47,10 +47,10 @@ const userProfileForm = ref();
 
 // Region Method
 const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.collapsed) {
-    cards.value[index].state = CardState.expanded
-  } else if (cards.value[index].state === CardState.expanded) {
-    cards.value[index].state = CardState.collapsed
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed
   }
 }
 
