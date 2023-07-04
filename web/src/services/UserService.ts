@@ -42,6 +42,14 @@ export default class UserService {
 
             const response: AxiosResponse<Collection<Array<User>>> = await axios.get(url);
 
+            //Slow API Call (10 seconds Delay)
+            /*
+            await new Promise((resolve) => {
+                setTimeout(resolve, 10000);
+            });
+            console.log('Slow API Call (10 Seconds Delay)');
+            */
+
             result.success = true;
             result.data = response.data;
 
