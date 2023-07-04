@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -132,9 +132,6 @@ onMounted(async () => {
 });
 //#endregion
 
-//#region Computed
-//#endregion
-
 //#region Methods
 const toggleDetail = (idx: number) => {
   if (expandDetail.value === idx) {
@@ -258,6 +255,20 @@ const backToList = async () => {
 }
 //#endregion
 
+//#region Computed
+const titleView = computed(() => {
+  switch (mode.value) {
+    case ViewMode.FORM_CREATE:
+      return t('views.user.actions.create');
+    case ViewMode.FORM_EDIT:
+      return t('views.user.actions.edit');
+    case ViewMode.LIST:
+    default:
+      return t('views.user.page_title');
+  }
+});
+//#endregion
+
 //#region Watcher
 watch(
   userForm,
@@ -274,7 +285,9 @@ watch(
   <div class="mt-8">
     <LoadingOverlay :visible="loading">
       <TitleLayout>
-        <template #title>{{ t("views.user.page_title") }}</template>
+        <template #title>
+          {{ titleView }}
+        </template>
         <template #optional>
           <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
             <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
@@ -571,6 +584,9 @@ watch(
             <template #card-items-4>
               <div class="p-5">
                 <div class="pb-4">
+                  <FormLabel html-for="tokens_reset">
+                    {{ t('views.user.fields.tokens.reset') }}
+                  </FormLabel>
 
                 </div>
               </div>

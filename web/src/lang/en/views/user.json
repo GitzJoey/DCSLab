@@ -36,6 +36,11 @@
             "time_format": "Time Format",
             "api_token": "API Token"
         },
+        "tokens": {
+            "tokens": "Tokens",
+            "count": "Count",
+            "reset": "Reset"
+        },
         "reset_password": "Reset Password",
         "email_reset_password": "Send Email"
     }
