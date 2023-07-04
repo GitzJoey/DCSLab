@@ -199,7 +199,7 @@ class UserController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function getTokensCount(User $user) 
+    public function getTokensCount(User $user)
     {
         return $this->userActions->getTokensCount($user);
     }

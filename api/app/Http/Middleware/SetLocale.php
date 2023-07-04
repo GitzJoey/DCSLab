@@ -17,12 +17,12 @@ class SetLocale
     {
         $currentLocale = app()->getLocale();
 
-        $incomingLocale = ($request->hasHeader('X-localization')) ? $request->header('X-localization') : 'en';
+        $incomingLocale = ($request->hasHeader('X-Localization')) ? $request->header('X-Localization') : 'en';
 
         if ($currentLocale != $incomingLocale) {
             app()->setLocale($incomingLocale);
         }
-        
+
         return $next($request);
     }
 }
