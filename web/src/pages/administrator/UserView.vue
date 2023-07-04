@@ -241,6 +241,17 @@ const onSubmit = async () => {
 
   loading.value = false;
 };
+
+const backToList = async () => {
+  loading.value = true;
+
+  cacheServices.removeLastEntity('User');
+
+  mode.value = ViewMode.LIST;
+  await getUsers('', true, true, 1, 10);
+
+  loading.value = false;
+}
 //#endregion
 
 //#region Watcher
@@ -568,12 +579,20 @@ watch(
               </div>
             </template>
             <template #card-items-button>
-              <Button as="submit" href="#" variant="primary" class="shadow-md">
-                <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.submit") }}
-              </Button>
+              <div class="flex gap-4">
+                <Button as="submit" href="#" variant="primary" class="w-28 shadow-md">
+                  {{ t("components.buttons.submit") }}
+                </Button>
+                <Button as="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
+                  {{ t("components.buttons.reset") }}
+                </Button>
+              </div>
             </template>
           </TwoColumnsLayout>
         </VeeForm>
+        <Button as="button" variant="secondary" class="mt-2 w-24" @click="backToList">
+          {{ t('components.buttons.back') }}
+        </Button>
       </div>
     </LoadingOverlay>
   </div>
