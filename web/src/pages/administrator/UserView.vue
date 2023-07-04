@@ -123,8 +123,12 @@ const countriesDDL = ref<Array<DropDownOption> | null>(null);
 
 //#region onMounted
 onMounted(async () => {
+  loading.value = true;
+
   await getUsers('', true, true, 1, 10);
-  await getDDL();
+  getDDL();
+
+  loading.value = false;
 });
 //#endregion
 
