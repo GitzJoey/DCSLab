@@ -37,7 +37,7 @@
         },
         "tokens": {
             "tokens": "Tokens",
-            "count": "Jumlah",
+            "count": "Jumlah Tokens",
             "reset": "Reset"
         },
         "reset_password": "Reset Password",
