@@ -99,7 +99,7 @@ const userForm = ref<FormRequest<User>>({
     }
   }
 });
-const userLists = ref<Collection<User[]> | null>({
+const userLists = ref<Collection<Array<User>> | null>({
   data: [],
   meta: {
     current_page: 0,
@@ -151,10 +151,10 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
     per_page: per_page
   };
 
-  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(searchReq);
+  let result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = await userServices.readAny(searchReq);
 
   if (result.success && result.data) {
-    userLists.value = result.data as Collection<User[]>;
+    userLists.value = result.data as Collection<Array<User>>;
   } else {
     datalistErrors.value = result.errors as LaravelError;
   }

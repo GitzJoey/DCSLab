@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Dashboard\DashboardActions;
+use App\Http\Requests\FileUploadRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Tightenco\Ziggy\Ziggy;
 
 class DashboardController extends BaseController
@@ -33,5 +35,17 @@ class DashboardController extends BaseController
     public function userApi()
     {
         return response()->json(new Ziggy());
+    }
+
+    public function userUpload(FileUploadRequest $fileUploadRequest)
+    {
+        $request = $fileUploadRequest->validated();
+
+        $file = $request->file('file');
+        $path = $file->store('uploads');
+
+        $url = Storage::url($path);
+
+        return response()->json(['url' => $url], 200);
     }
 }
