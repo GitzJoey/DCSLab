@@ -253,6 +253,11 @@ const backToList = async () => {
 
   loading.value = false;
 }
+
+const flattenedRoles = (roles: Array<Role>): string => {
+  if (roles.length == 0) return '';
+  return roles.map((x: Role) => x.display_name).join(', ');
+}
 //#endregion
 
 //#region Computed
@@ -371,7 +376,7 @@ watch(
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}</div>
-                        <div class="flex-1">{{ '' }}</div>
+                        <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
