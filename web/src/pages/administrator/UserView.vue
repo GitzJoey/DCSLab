@@ -272,6 +272,16 @@ const titleView = computed(() => {
       return t('views.user.page_title');
   }
 });
+
+const tokensCount = computed(() => {
+  if (userForm.value.data.ulid == '') return 0;
+
+  userServices.getTokensCount(userForm.value.data.ulid).then((result: ServiceResponse<number | null>) => {
+    if (!result.success) return 0;
+
+    return result.data as number;
+  });
+});
 //#endregion
 
 //#region Watcher
@@ -388,6 +398,10 @@ watch(
                             {{ t('components.dropdown.values.statusDDL.inactive') }}
                           </span>
                         </div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.tokens.count') }}</div>
+                        <div class="flex-1">{{ tokensCount }}</div>
                       </div>
                     </Table.Td>
                   </Table.Tr>

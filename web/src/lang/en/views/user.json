@@ -38,7 +38,7 @@
         },
         "tokens": {
             "tokens": "Tokens",
-            "count": "Count",
+            "count": "Total Tokens",
             "reset": "Reset"
         },
         "reset_password": "Reset Password",
