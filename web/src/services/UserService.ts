@@ -8,6 +8,7 @@ import { Collection } from "../types/resources/Collection";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
+import { FormRequest } from "../types/requests/FormRequest";
 
 export default class UserService {
     private ziggyRoute: Config;
@@ -21,9 +22,55 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
+    public async create(payload: FormRequest<User>): Promise<ServiceResponse<User | null>> {
+        const result: ServiceResponse<User | null> = {
+            success: false,
+        }
+
+        try {
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async read(ulid: string): Promise<ServiceResponse<User | null>> {
+        const result: ServiceResponse<User | null> = {
+            success: false,
+        }
+
+        try {
+            const url = route('api.get.db.admin.user.read', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<User>> = await axios.get(url);
+
+            result.success = true;
+            result.data = response.data.data;
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
     public async readAny(args: SearchRequest): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
         const result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = {
-            success: false
+            success: false,
         }
 
         try {
@@ -65,20 +112,12 @@ export default class UserService {
         }
     }
 
-    public async read(ulid: string): Promise<ServiceResponse<User | null>> {
+    public async edit(payload: FormRequest<User>): Promise<ServiceResponse<User | null>> {
         const result: ServiceResponse<User | null> = {
-            success: false
+            success: false,
         }
 
         try {
-            const url = route('api.get.db.admin.user.read', {
-                user: ulid
-            }, false, this.ziggyRoute);
-
-            const response: AxiosResponse<Resource<User>> = await axios.get(url);
-
-            result.success = true;
-            result.data = response.data.data;
 
             return result;
         } catch (e: unknown) {

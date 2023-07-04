@@ -37,6 +37,7 @@ import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
 import { LaravelError } from "../../types/errors/LaravelError";
 import { VeeValidateError } from "../../types/errors/VeeValidateError";
+import { FormActions } from "vee-validate";
 //#endregion
 
 //#region Declarations
@@ -237,9 +238,26 @@ const handleExpandCard = (index: number) => {
   }
 }
 
-const onSubmit = async () => {
+const onSubmit = async (values: FormRequest<User>, actions: FormActions<FormRequest<User>>) => {
   loading.value = true;
 
+  let result: ServiceResponse<User | null> = {
+    success: false,
+  }
+
+  if (mode.value == ViewMode.FORM_CREATE) {
+    result = await userServices.create(values);
+  } else if (mode.value == ViewMode.FORM_EDIT) {
+    result = await userServices.edit(values);
+  } else {
+    result.success = false;
+  }
+
+  if (!result.success) {
+    actions.setErrors({ data: 'error' });
+  }
+
+  backToList();
   loading.value = false;
 };
 
