@@ -50,7 +50,7 @@ const cacheServices = new CacheService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-  const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
+const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Company Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
