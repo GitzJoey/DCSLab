@@ -5,8 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
 
 class XssSanitizer
 {
@@ -18,33 +16,33 @@ class XssSanitizer
     public function handle(Request $request, Closure $next): Response
     {
         $input = $request->all();
-        $this->sanitize($input);
-        $request->replace($input);
+
+        $sanitizedInput = $this->sanitizeInput($input);
+
+        $request->replace($sanitizedInput);
 
         return $next($request);
     }
 
-    private function sanitize(array &$input)
+    private function sanitizeInput(array &$input)
     {
-        foreach ($input as &$value) {
-            if (is_array($value)) {
-                $this->sanitize($value);
-            } else {
-                $value = $this->cleanInput($value);
+        return collect($input)->map(function ($value, $key) {
+            if ($this->hasHtmlTags($value)) {
+                return $this->sanitizeHtml($value);
             }
-        }
+
+            return $value;
+        })->all();
     }
 
-    private function cleanInput($value)
+    private function hasHtmlTags($value)
     {
-        if (is_string($value)) {
-            $value = Str::ascii($value);
-            $value = strip_tags($value);
-            $value = htmlentities($value, ENT_QUOTES, 'UTF-8', false);
+        return preg_match('/<[^>]+>/', $value) === 1;
+    }
 
-            return new HtmlString($value);
-        }
-
-        return $value;
+    private function sanitizeHtml($value)
+    {
+        return strip_tags($value);
+        //return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5);
     }
 }

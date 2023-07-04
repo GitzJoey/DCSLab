@@ -22,7 +22,7 @@ class SetLocale
         if ($currentLocale != $incomingLocale) {
             app()->setLocale($incomingLocale);
         }
-        
+
         return $next($request);
     }
 }

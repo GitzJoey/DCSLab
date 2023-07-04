@@ -333,7 +333,6 @@ class UserActions
         return $result;
     }
 
-
     public function resetTokens(User $user): void
     {
         $user->tokens()->delete();
