@@ -15,20 +15,22 @@ class XssSanitizer
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $sanitizerStyle = $request->hasHeader('X-Sanitizer-Mode') ? $request->header('X-Sanitizer-Mode') : 'strip';
+
         $input = $request->all();
 
-        $sanitizedInput = $this->sanitizeInput($input);
+        $sanitizedInput = $this->sanitizeInput($sanitizerStyle, $input);
 
         $request->replace($sanitizedInput);
 
         return $next($request);
     }
 
-    private function sanitizeInput(array &$input)
+    private function sanitizeInput(string $style, array &$input)
     {
-        return collect($input)->map(function ($value, $key) {
+        return collect($input)->map(function ($value, $key) use ($style) {
             if ($this->hasHtmlTags($value)) {
-                return $this->sanitizeHtml($value);
+                return $this->sanitizeHtml($style, $value);
             }
 
             return $value;
@@ -40,9 +42,8 @@ class XssSanitizer
         return preg_match('/<[^>]+>/', $value) === 1;
     }
 
-    private function sanitizeHtml($value)
+    private function sanitizeHtml($style, $value)
     {
-        return strip_tags($value);
-        //return htmlspecialchars($value, ENT_QUOTES | ENT_HTML5);
+        return $style == 'encode' ? htmlspecialchars($value, ENT_QUOTES | ENT_HTML5) : strip_tags($value);
     }
 }
