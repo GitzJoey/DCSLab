@@ -107,16 +107,16 @@ const toggleSideTab = (show: boolean | undefined) => {
               <div @click="onCardTitleClicked(index)" class="w-1/2 flex justify-start">
                 <h2 class="font-medium text-base mr-auto">{{ t(card.title) }}</h2>
               </div>
-              <div v-if="card.state !== CardState.hidden" class="w-1/2 flex justify-end">
+              <div v-if="card.state !== CardState.Hidden" class="w-1/2 flex justify-end">
                 <div
-                  :class="{ 'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true, 'transform rotate-180': card.state === CardState.expanded }"
+                  :class="{ 'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true, 'transform rotate-180': card.state === CardState.Expanded }"
                   @click="onCardTitleClicked(index)">
                   <Lucide class="w-6 h-6" icon="ChevronDown" />
                 </div>
               </div>
             </div>
             <div
-              :class="[{ 'block': card.state === CardState.expanded }, { 'hidden': card.state === CardState.collapsed }]">
+              :class="[{ 'block': card.state === CardState.Expanded }, { 'hidden': card.state === CardState.Collapsed }]">
               <slot :name="`card-items-${card.id ? card.id : index}`" :card="card" :index="index"></slot>
             </div>
           </div>
