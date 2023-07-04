@@ -28,7 +28,7 @@ class UserAPICreateTest extends APITestCase
         $role = Hashids::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
         $userArr['roles'][0] = $role;
 
-        $api = $this->json('POST', route('api.post.db.admin.users.save'), $userArr);
+        $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
         $api->assertStatus(401);
     }
@@ -46,7 +46,7 @@ class UserAPICreateTest extends APITestCase
         $role = Hashids::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
         $userArr['roles'][0] = $role;
 
-        $api = $this->json('POST', route('api.post.db.admin.users.save'), $userArr);
+        $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
         $api->assertStatus(403);
     }
@@ -65,7 +65,7 @@ class UserAPICreateTest extends APITestCase
         $role = Hashids::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
         $userArr['roles'][0] = $role;
 
-        $api = $this->json('POST', route('api.post.db.admin.users.save'), $userArr);
+        $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
         $api->assertSuccessful();
     }
@@ -80,7 +80,7 @@ class UserAPICreateTest extends APITestCase
 
         $userArr = [];
 
-        $api = $this->json('POST', route('api.post.db.admin.users.save'), $userArr);
+        $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
         $api->assertJsonValidationErrors([
             'name',

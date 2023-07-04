@@ -20,5 +20,5 @@ export interface Product {
     has_expiry_date: boolean,
     status: string,
     remarks: string,
-    product_units: ProductUnit[],
+    product_units: Array<ProductUnit>,
 }

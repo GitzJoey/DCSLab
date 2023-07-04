@@ -89,7 +89,8 @@ class PurchaseOrderActionsDeleteTest extends ActionsTestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits',
             );
         }
 

@@ -104,8 +104,9 @@ class PurchaseOrderActionsCreateTest extends ActionsTestCase
             array_push(
                 $purchaseOrderProductUnitArr,
                 PurchaseOrderProductUnit::factory()->for($productUnit)->make([
-                    'per_unit_discount' => $perUnitDiscount,
-                    'per_unit_sub_total_discount' => $perUnitSubTotalDiscount,
+                    'product_id' => $productUnit->product_id,
+                    'per_unit_discounts' => $perUnitDiscount,
+                    'per_unit_sub_total_discounts' => $perUnitSubTotalDiscount,
                 ])->toArray()
             );
         }
@@ -143,7 +144,7 @@ class PurchaseOrderActionsCreateTest extends ActionsTestCase
                 'remarks' => $purchaseOrderProductUnitArr[$i]['remarks'],
             ]);
 
-            $perUnitDiscountArr = $purchaseOrderProductUnitArr[$i]['per_unit_discount'];
+            $perUnitDiscountArr = $purchaseOrderProductUnitArr[$i]['per_unit_discounts'];
             foreach ($perUnitDiscountArr as $perUnitDiscount) {
                 $this->assertDatabaseHas('purchase_order_discounts', [
                     'company_id' => $company->id,
@@ -154,7 +155,7 @@ class PurchaseOrderActionsCreateTest extends ActionsTestCase
                 ]);
             }
 
-            $perUnitSubTotalDiscountArr = $purchaseOrderProductUnitArr[$i]['per_unit_sub_total_discount'];
+            $perUnitSubTotalDiscountArr = $purchaseOrderProductUnitArr[$i]['per_unit_sub_total_discounts'];
             foreach ($perUnitSubTotalDiscountArr as $perUnitSubTotalDiscount) {
                 $this->assertDatabaseHas('purchase_order_discounts', [
                     'company_id' => $company->id,

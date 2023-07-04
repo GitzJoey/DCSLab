@@ -311,7 +311,7 @@ class ProductController extends BaseController
         $productUnitArr = [];
         $count_unit = count($request['arr_product_unit_unit_id']);
         for ($i = 0; $i < $count_unit; $i++) {
-            $arr_product_unit_id = $request['arr_product_unit_id'][$i] != 0 ? $request['arr_product_unit_id'][$i] : 0;
+            $arr_product_unit_id = $request['arr_product_unit_id'][$i] ? $request['arr_product_unit_id'][$i] : null;
 
             $arr_product_unit_ulid = $request['arr_product_unit_ulid'][$i];
 

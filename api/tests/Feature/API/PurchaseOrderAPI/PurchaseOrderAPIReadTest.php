@@ -111,7 +111,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -121,7 +121,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -221,7 +222,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -231,7 +232,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -330,7 +332,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -340,7 +342,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -432,7 +435,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -442,7 +445,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -535,7 +539,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -545,7 +549,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -655,7 +660,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -665,7 +670,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -780,7 +786,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -790,7 +796,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -885,7 +892,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -895,7 +902,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -1005,7 +1013,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -1015,7 +1023,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -1125,7 +1134,7 @@ class PurchaseOrderAPIReadTest extends APITestCase
             ->for($company)
             ->for($branch)
             ->for($supplier)
-            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom());
+            ->has(PurchaseOrderDiscount::factory()->for($company)->for($branch)->setGlobalDiscountRandom(), 'globalDiscounts');
 
         $productUnitCount = random_int(1, $company->productUnits()->count());
         $productUnits = $company->productUnits()->inRandomOrder()->take($productUnitCount)->get();
@@ -1135,7 +1144,8 @@ class PurchaseOrderAPIReadTest extends APITestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 

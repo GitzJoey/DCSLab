@@ -91,7 +91,8 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -169,7 +170,8 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -256,7 +258,8 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 
@@ -335,7 +338,8 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
                     PurchaseOrderProductUnit::factory()
                         ->for($company)->for($branch)
                         ->for($productUnit->product)
-                        ->for($productUnit)
+                        ->for($productUnit),
+                    'productUnits'
                 );
             }
 
@@ -415,7 +419,8 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
                 PurchaseOrderProductUnit::factory()
                     ->for($company)->for($branch)
                     ->for($productUnit->product)
-                    ->for($productUnit)
+                    ->for($productUnit),
+                'productUnits'
             );
         }
 

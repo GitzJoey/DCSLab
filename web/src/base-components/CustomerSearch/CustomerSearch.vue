@@ -1,11 +1,11 @@
 <script setup lang="ts">
 // #region import
 import { ref, computed, onMounted } from "vue";
-import { useSelectedUserLocationStore } from "../../../stores/user-location";
-import CustomerService from "../../../services/CustomerService";
-import { FormInput, FormLabel, FormTextarea, FormSelect } from "../../Form";
+import { useSelectedUserLocationStore } from "../../stores/user-location";
+import CustomerService from "../../services/CustomerService";
+import { FormInput, FormLabel } from "../Form";
 import { useI18n } from "vue-i18n";
-import Lucide from "../../Lucide";
+import Lucide from "../Lucide";
 
 // #endregion
 
@@ -77,46 +77,40 @@ const detailCustomer = ref<Customer>({
   picContactPersonName: [""],
   picEmail: [""],
   picPassword: [""],
-  customerAddressAddress : [""],
-  customerAddressCity : [""],
-  customerAddressContact : [''],
-  customerAddressId : [''],
-  customerAddressIsMain : [false],
-  customerAddressRemark : [''],
+  customerAddressAddress: [""],
+  customerAddressCity: [""],
+  customerAddressContact: [''],
+  customerAddressId: [''],
+  customerAddressIsMain: [false],
+  customerAddressRemark: [''],
   customer_group: {
     name: "",
   },
-  customerGroupId : ''
+  customerGroupId: ''
 });
 // End region data
 
 // Method region
 async function getCustomerList() {
-  try {
-    const companyId: string = userLocation.value.company.id;
-    const data = await customerService.readAny({
-      company_id: companyId,
-      search: "",
-      paginate: false,
-    });
-    console.log(data.data.data, "Customer list");
-    customerList.value = data?.data?.data;
-  } catch (error) {
-    throw error;
-  }
+  const companyId: string = userLocation.value.company.id;
+  const data = await customerService.readAny({
+    company_id: companyId,
+    search: "",
+    paginate: false,
+  });
+  console.log(data.data.data, "Customer list");
+  customerList.value = data?.data?.data;
 }
 
 async function handleChangeOptions(e: any) {
-  try {
-    const id = e?.target?.value;
-    if (id) {
-      selectedCustomer.value = id;
-      const detailCustomerPayload = await customerService.read(id);
-      console.log(detailCustomerPayload.data.data);
-      const payload: Customer = detailCustomerPayload?.data?.data;
-      detailCustomer.value = payload;
-    }
-  } catch (error) {}
+  const id = e?.target?.value;
+  if (id) {
+    selectedCustomer.value = id;
+    const detailCustomerPayload = await customerService.read(id);
+    console.log(detailCustomerPayload.data.data);
+    const payload: Customer = detailCustomerPayload?.data?.data;
+    detailCustomer.value = payload;
+  }
 }
 
 async function handleSubmit() {
@@ -162,32 +156,32 @@ function handleOpenAddForm() {
   selectedCustomer.value = false;
   detailCustomer.value = {
     code: "",
-  isMember: false,
-  name: "",
-  zone: "",
-  maxOpenInvoice: 0,
-  maxOutStandingInvoice: 0,
-  maxInvoiceAge: 0,
-  paymentTermType: "",
-  paymentTerm: 0,
-  taxable_enterprise: false,
-  taxId: "",
-  remarks: "",
-  status: false,
-  picCreateUser: [""],
-  picContactPersonName: [""],
-  picEmail: [""],
-  picPassword: [""],
-  customerAddressAddress : [""],
-  customerAddressCity : [""],
-  customerAddressContact : [''],
-  customerAddressId : [''],
-  customerAddressIsMain : [false],
-  customerAddressRemark : [''],
-  customer_group: {
+    isMember: false,
     name: "",
-  },
-  customerGroupId : ''
+    zone: "",
+    maxOpenInvoice: 0,
+    maxOutStandingInvoice: 0,
+    maxInvoiceAge: 0,
+    paymentTermType: "",
+    paymentTerm: 0,
+    taxable_enterprise: false,
+    taxId: "",
+    remarks: "",
+    status: false,
+    picCreateUser: [""],
+    picContactPersonName: [""],
+    picEmail: [""],
+    picPassword: [""],
+    customerAddressAddress: [""],
+    customerAddressCity: [""],
+    customerAddressContact: [''],
+    customerAddressId: [''],
+    customerAddressIsMain: [false],
+    customerAddressRemark: [''],
+    customer_group: {
+      name: "",
+    },
+    customerGroupId: ''
   };
 }
 // End method region
@@ -201,70 +195,40 @@ onMounted(() => {
 
 <template>
   <div class="grid grid-cols-12">
-    <select
-      class="form-select col-span-11 py-3 px-4 w-full mt-3 lg:mt-0 ml-auto border-none focus:border-none rounded"
-      @change="handleChangeOptions($event)"
-    >
+    <select class="form-select col-span-11 py-3 px-4 w-full mt-3 lg:mt-0 ml-auto border-none focus:border-none rounded"
+      @change="handleChangeOptions($event)">
       <option :value="false" selected>Select Customer</option>
-      <option
-        v-for="(customer, index) in customerList"
-        :key="index"
-        :selected="customer?.ulid === selectedCustomer"
-
-        :value="customer?.ulid"
-      >
+      <option v-for="(customer, index) in customerList" :key="index" :selected="customer?.ulid === selectedCustomer"
+        :value="customer?.ulid">
         {{ customer.name }}
       </option>
     </select>
-    <div
-      class="box flex col-span-1 ml-5 items-center justify-center bg-[#164e63] text-white cursor-pointer"
-      @click="handleOpenAddForm"
-    >
+    <div class="box flex col-span-1 ml-5 items-center justify-center bg-[#164e63] text-white cursor-pointer"
+      @click="handleOpenAddForm">
       <Lucide icon="Plus" />
     </div>
   </div>
 
-  <div
-    class="box mt-3"
-    v-if="(selectedCustomer ? true : false) || isAddNewValue"
-  >
+  <div class="box mt-3" v-if="(selectedCustomer ? true : false) || isAddNewValue">
     <div class="p-4">
       <FormLabel html-for="name"> Code </FormLabel>
-      <FormInput
-        name="code"
-        type="text"
-        class="w-full"
-        v-model="detailCustomer.code"
-        :disabled="selectedCustomer ? true : false"
-      />
+      <FormInput name="code" type="text" class="w-full" v-model="detailCustomer.code"
+        :disabled="selectedCustomer ? true : false" />
     </div>
     <div class="p-4">
       <FormLabel html-for="name"> Name </FormLabel>
-      <FormInput
-        name="name"
-        type="text"
-        class="w-full"
-        v-model="detailCustomer.name"
-        :disabled="selectedCustomer ? true : false"
-      />
+      <FormInput name="name" type="text" class="w-full" v-model="detailCustomer.name"
+        :disabled="selectedCustomer ? true : false" />
     </div>
 
     <div class="p-4">
       <FormLabel html-for="name"> Customer Group Name </FormLabel>
-      <FormInput
-        name="customerGroupId"
-        type="text"
-        class="w-full"
-        v-model="detailCustomer.customer_group.name"
-        :disabled="selectedCustomer ? true : false"
-      />
+      <FormInput name="customerGroupId" type="text" class="w-full" v-model="detailCustomer.customer_group.name"
+        :disabled="selectedCustomer ? true : false" />
     </div>
 
     <div class="p-4" v-if="selectedCustomer ? false : true">
-      <button
-        @click="handleSubmit"
-        class="w-full bg-[#164e63] h-[50px] rounded text-white"
-      >
+      <button @click="handleSubmit" class="w-full bg-[#164e63] h-[50px] rounded text-white">
         {{ t("components.buttons.submit") }}
       </button>
     </div>

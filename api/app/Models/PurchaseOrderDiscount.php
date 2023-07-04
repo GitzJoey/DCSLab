@@ -19,6 +19,7 @@ class PurchaseOrderDiscount extends Model
         'branch_id',
         'purchase_order_id',
         'purchase_order_product_unit_id',
+        'order',
         'discount_type',
         'amount',
     ];

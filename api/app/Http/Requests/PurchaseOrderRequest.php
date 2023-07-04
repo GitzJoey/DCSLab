@@ -56,25 +56,37 @@ class PurchaseOrderRequest extends FormRequest
             'shipping_date' => ['nullable', 'date'],
             'shipping_address' => ['nullable', 'max:255'],
             'remarks' => ['nullable', 'max:255'],
+
             'arr_global_discount_id.*' => ['nullable'],
+            'arr_global_discount_ulid.*' => ['nullable', 'ulid'],
+            'arr_global_discount_order.*' => ['nullable', 'numeric', 'min:0'],
             'arr_global_discount_discount_type.*' => ['nullable', new Enum(DiscountType::class)],
-            'arr_global_discount_amount.*' => ['nullable', 'numeric', 'min:0'],
+            'arr_global_discount_amount.*' => ['nullable', 'numeric', 'min:0', 'bail'],
 
             'arr_product_unit_id.*' => ['nullable'],
+            'arr_product_unit_ulid.*' => ['nullable', 'ulid'],
 
             'arr_product_unit_per_unit_discount_id' => ['nullable', 'array'],
             'arr_product_unit_per_unit_discount_id.*.*' => ['nullable'],
+            'arr_product_unit_per_unit_discount_ulid' => ['nullable', 'array'],
+            'arr_product_unit_per_unit_discount_ulid.*.*' => ['nullable', 'ulid'],
+            'arr_product_unit_per_unit_discount_order' => ['nullable', 'array'],
+            'arr_product_unit_per_unit_discount_order.*.*' => ['nullable', 'numeric', 'min:0'],
             'arr_product_unit_per_unit_discount_discount_type' => ['nullable', 'array'],
             'arr_product_unit_per_unit_discount_discount_type.*.*' => ['nullable', new Enum(DiscountType::class)],
             'arr_product_unit_per_unit_discount_amount' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_discount_amount.*.*' => ['nullable', 'numeric', 'min:0'],
+            'arr_product_unit_per_unit_discount_amount.*.*' => ['nullable', 'numeric', 'min:0', 'bail'],
 
             'arr_product_unit_per_unit_sub_total_discount_id' => ['nullable', 'array'],
             'arr_product_unit_per_unit_sub_total_discount_id.*.*' => ['nullable'],
+            'arr_product_unit_per_unit_sub_total_discount_ulid' => ['nullable', 'array'],
+            'arr_product_unit_per_unit_sub_total_discount_ulid.*.*' => ['nullable', 'ulid'],
+            'arr_product_unit_per_unit_sub_total_discount_order' => ['nullable', 'array'],
+            'arr_product_unit_per_unit_sub_total_discount_order.*.*' => ['nullable', 'numeric', 'min:0'],
             'arr_product_unit_per_unit_sub_total_discount_discount_type' => ['nullable', 'array'],
             'arr_product_unit_per_unit_sub_total_discount_discount_type.*.*' => ['nullable', new Enum(DiscountType::class)],
             'arr_product_unit_per_unit_sub_total_discount_amount' => ['nullable', 'array'],
-            'arr_product_unit_per_unit_sub_total_discount_amount.*.*' => ['nullable', 'numeric', 'min:0'],
+            'arr_product_unit_per_unit_sub_total_discount_amount.*.*' => ['nullable', 'numeric', 'min:0', 'bail'],
 
             'arr_product_unit_remarks.*' => ['nullable', 'max:255'],
         ];
@@ -106,6 +118,7 @@ class PurchaseOrderRequest extends FormRequest
                     'invoice_date' => ['required', 'date'],
                     'supplier_id' => ['required'],
                     'status' => [new Enum(RecordStatus::class)],
+                    'arr_product_unit_product_id.*' => ['required'],
                     'arr_product_unit_product_unit_id.*' => ['required'],
                     'arr_product_unit_qty.*' => ['numeric', 'min:0.01'],
                     'arr_product_unit_amount_per_unit.*' => ['numeric', 'min:1'],
@@ -123,6 +136,7 @@ class PurchaseOrderRequest extends FormRequest
                     'invoice_date' => ['required'],
                     'supplier_id' => ['required'],
                     'status' => [new Enum(RecordStatus::class)],
+                    'arr_product_unit_product_id.*' => ['required'],
                     'arr_product_unit_product_unit_id.*' => ['required'],
                     'arr_product_unit_qty.*' => ['numeric', 'min:0.01'],
                     'arr_product_unit_amount_per_unit.*' => ['numeric', 'min:1'],
@@ -132,7 +146,6 @@ class PurchaseOrderRequest extends FormRequest
                 ];
 
                 return array_merge($rules_update, $nullableArr);
-
             case 'delete':
                 $rules_delete = [
 
@@ -159,17 +172,25 @@ class PurchaseOrderRequest extends FormRequest
             'remarks' => trans('validation_attributes.purchase_order.remarks'),
             'status' => trans('validation_attributes.purchase_order.status'),
             'arr_global_discount_id.*' => trans('validation_attributes.purchase_order.global_discount.id'),
+            'arr_global_discount_ulid.*' => trans('validation_attributes.purchase_order.global_discount.ulid'),
+            'arr_global_discount_order.*' => trans('validation_attributes.purchase_order.global_discount.order'),
             'arr_global_discount_discount_type.*' => trans('validation_attributes.purchase_order.global_discount.discount_type'),
             'arr_global_discount_amount.*' => trans('validation_attributes.purchase_order.global_discount.amount'),
             'arr_product_unit_id.*' => trans('validation_attributes.purchase_order.product_units.id'),
+            'arr_product_unit_ulid.*' => trans('validation_attributes.purchase_order.product_units.ulid'),
+            'arr_product_unit_product_id.*' => trans('validation_attributes.purchase_order.product_units.product'),
             'arr_product_unit_product_unit_id.*' => trans('validation_attributes.purchase_order.product_units.product_unit'),
             'arr_product_unit_qty.*' => trans('validation_attributes.purchase_order.product_units.qty'),
             'arr_product_unit_amount_per_unit.*' => trans('validation_attributes.purchase_order.product_units.amount_per_unit'),
             'arr_product_unit_initial_price.*' => trans('validation_attributes.purchase_order.product_units.initial_price'),
             'arr_product_unit_per_unit_discount_id.*' => trans('validation_attributes.purchase_order.product_units.per_unit_discount.id'),
+            'arr_product_unit_per_unit_discount_ulid.*' => trans('validation_attributes.purchase_order.product_units.per_unit_discount.ulid'),
+            'arr_product_unit_per_unit_discount_order.*' => trans('validation_attributes.purchase_order.product_units.per_unit_discount.order'),
             'arr_product_unit_per_unit_discount_discount_type.*' => trans('validation_attributes.purchase_order.product_units.per_unit_discount.discount_type'),
             'arr_product_unit_per_unit_discount_amount.*' => trans('validation_attributes.purchase_order.product_units.per_unit_discount.amount'),
             'arr_product_unit_per_unit_sub_total_discount_id.*' => trans('validation_attributes.purchase_order.product_units.per_unit_sub_total_discount.id'),
+            'arr_product_unit_per_unit_sub_total_discount_ulid.*' => trans('validation_attributes.purchase_order.product_units.per_unit_sub_total_discount.ulid'),
+            'arr_product_unit_per_unit_sub_total_discount_order.*' => trans('validation_attributes.purchase_order.product_units.per_unit_sub_total_discount.order'),
             'arr_product_unit_per_unit_sub_total_discount_discount_type.*' => trans('validation_attributes.purchase_order.product_units.per_unit_sub_total_discount.discount_type'),
             'arr_product_unit_per_unit_sub_total_discount_amount.*' => trans('validation_attributes.purchase_order.product_units.per_unit_sub_total_discount.amount'),
             'arr_product_unit_vat_status.*' => trans('validation_attributes.purchase_order.product_units.vat_status'),
@@ -210,227 +231,385 @@ class PurchaseOrderRequest extends FormRequest
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
 
-                $arr_global_discount_id = [];
-                if ($this->has('arr_global_discount_id')) {
-                    for ($i = 0; $i < count($this->arr_global_discount_id); $i++) {
-                        if ($this->arr_global_discount_id[$i] != '') {
-                            array_push($arr_global_discount_id, Hashids::decode($this->arr_global_discount_id[$i])[0]);
-                        } else {
-                            array_push($arr_global_discount_id, null);
-                        }
-                    }
-                }
-                $this->merge(['arr_global_discount_id' => $arr_global_discount_id]);
+                $this->prepareForValidationGlobalDiscount();
 
-                $arr_global_discount_discount_type = [];
-                if ($this->has('arr_global_discount_discount_type')) {
-                    for ($i = 0; $i < count($this->arr_global_discount_discount_type); $i++) {
-                        if ($this->arr_global_discount_discount_type[$i] != '') {
-                            $result = DiscountType::isValid($this->arr_global_discount_discount_type[$i]) ? DiscountType::resolveToEnum($this->arr_global_discount_discount_type[$i]) : -1;
-                            array_push($arr_global_discount_discount_type, $result);
-                        } else {
-                            array_push($arr_global_discount_discount_type, -1);
-                        }
-                    }
-                }
-                $this->merge(['arr_global_discount_discount_type' => $arr_global_discount_discount_type]);
+                $this->prepareForValidationProductUnit();
 
-                $arr_global_discount_amount = [];
-                if ($this->has('arr_global_discount_amount')) {
-                    for ($i = 0; $i < count($this->arr_global_discount_amount); $i++) {
-                        if ($this->arr_global_discount_amount[$i] != '') {
-                            array_push($arr_global_discount_amount, $this->arr_global_discount_amount[$i]);
-                        } else {
-                            array_push($arr_global_discount_amount, 0);
-                        }
-                    }
-                }
-                $this->merge(['arr_global_discount_amount' => $arr_global_discount_amount]);
+                $this->prepareForValidationPerUnitDiscount();
 
-                $arr_product_unit_id = [];
-                if ($this->has('arr_product_unit_id')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_id); $i++) {
-                        if ($this->arr_product_unit_id[$i] != '') {
-                            array_push($arr_product_unit_id, Hashids::decode($this->arr_product_unit_id[$i])[0]);
-                        } else {
-                            array_push($arr_product_unit_id, null);
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_id' => $arr_product_unit_id]);
-
-                $arr_product_unit_product_unit_id = [];
-                if ($this->has('arr_product_unit_product_unit_id')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_product_unit_id); $i++) {
-                        if ($this->arr_product_unit_product_unit_id[$i] != '') {
-                            array_push($arr_product_unit_product_unit_id, Hashids::decode($this->arr_product_unit_product_unit_id[$i])[0]);
-                        } else {
-                            array_push($arr_product_unit_product_unit_id, null);
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id]);
-
-                $arr_product_unit_qty = [];
-                if ($this->has('arr_product_unit_qty')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_qty); $i++) {
-                        if ($this->arr_product_unit_qty[$i] != '') {
-                            array_push($arr_product_unit_qty, $this->arr_product_unit_qty[$i]);
-                        } else {
-                            array_push($arr_product_unit_qty, 0);
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_qty' => $arr_product_unit_qty]);
-
-                $arr_product_unit_amount_per_unit = [];
-                if ($this->has('arr_product_unit_amount_per_unit')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_amount_per_unit); $i++) {
-                        if ($this->arr_product_unit_amount_per_unit[$i] != '') {
-                            array_push($arr_product_unit_amount_per_unit, $this->arr_product_unit_amount_per_unit[$i]);
-                        } else {
-                            array_push($arr_product_unit_amount_per_unit, 0);
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit]);
-
-                $arr_product_unit_initial_price = [];
-                if ($this->has('arr_product_unit_initial_price')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_initial_price); $i++) {
-                        if ($this->arr_product_unit_initial_price[$i] != '') {
-                            array_push($arr_product_unit_initial_price, $this->arr_product_unit_initial_price[$i]);
-                        } else {
-                            array_push($arr_product_unit_initial_price, 0);
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_initial_price' => $arr_product_unit_initial_price]);
-
-                $arr_product_unit_per_unit_discount_id = [];
-                if ($this->has('arr_product_unit_per_unit_discount_id')) {
-                    foreach ($this->arr_product_unit_per_unit_discount_id as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_discount_id[$parentIdx][$idx] = Hashids::decode($result)[0];
-                            } else {
-                                $arr_product_unit_per_unit_discount_id[$parentIdx][$idx] = null;
-                            }
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_per_unit_discount_id' => $arr_product_unit_per_unit_discount_id]);
-
-                $arr_product_unit_per_unit_discount_discount_type = [];
-                if ($this->has('arr_product_unit_per_unit_discount_discount_type')) {
-                    foreach ($this->arr_product_unit_per_unit_discount_discount_type as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_discount_discount_type[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_discount_discount_type[$parentIdx][$idx] = -1;
-                            }
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_per_unit_discount_discount_type' => $arr_product_unit_per_unit_discount_discount_type]);
-
-                $arr_product_unit_per_unit_discount_amount = [];
-                if ($this->has('arr_product_unit_per_unit_discount_amount')) {
-                    foreach ($this->arr_product_unit_per_unit_discount_amount as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_discount_amount[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_discount_amount[$parentIdx][$idx] = 0;
-                            }
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_per_unit_discount_amount' => $arr_product_unit_per_unit_discount_amount]);
-
-                $arr_product_unit_per_unit_sub_total_discount_id = [];
-                if ($this->has('arr_product_unit_per_unit_sub_total_discount_id')) {
-                    foreach ($this->arr_product_unit_per_unit_sub_total_discount_id as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_sub_total_discount_id[$parentIdx][$idx] = Hashids::decode($result)[0];
-                            } else {
-                                $arr_product_unit_per_unit_sub_total_discount_id[$parentIdx][$idx] = null;
-                            }
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_per_unit_sub_total_discount_id' => $arr_product_unit_per_unit_sub_total_discount_id]);
-
-                $arr_product_unit_per_unit_sub_total_discount_discount_type = [];
-                if ($this->has('arr_product_unit_per_unit_sub_total_discount_discount_type')) {
-                    foreach ($this->arr_product_unit_per_unit_sub_total_discount_discount_type as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_sub_total_discount_discount_type[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_sub_total_discount_discount_type[$parentIdx][$idx] = -1;
-                            }
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_per_unit_sub_total_discount_discount_type' => $arr_product_unit_per_unit_sub_total_discount_discount_type]);
-
-                $arr_product_unit_per_unit_sub_total_discount_amount = [];
-                if ($this->has('arr_product_unit_per_unit_sub_total_discount_amount')) {
-                    foreach ($this->arr_product_unit_per_unit_sub_total_discount_amount as $parentIdx => $parentResult) {
-                        foreach ($parentResult as $idx => $result) {
-                            if ($result != '') {
-                                $arr_product_unit_per_unit_sub_total_discount_amount[$parentIdx][$idx] = $result;
-                            } else {
-                                $arr_product_unit_per_unit_sub_total_discount_amount[$parentIdx][$idx] = 0;
-                            }
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_per_unit_sub_total_discount_amount' => $arr_product_unit_per_unit_sub_total_discount_amount]);
-
-                $arr_product_unit_vat_status = [];
-                if ($this->has('arr_product_unit_vat_status')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_vat_status); $i++) {
-                        if ($this->arr_product_unit_vat_status[$i] != '') {
-                            array_push($arr_product_unit_vat_status, $this->arr_product_unit_vat_status[$i]);
-                        } else {
-                            array_push($arr_product_unit_vat_status, null);
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_vat_status' => $arr_product_unit_vat_status]);
-
-                $arr_product_unit_vat_rate = [];
-                if ($this->has('arr_product_unit_vat_rate')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_vat_rate); $i++) {
-                        if ($this->arr_product_unit_vat_rate[$i] != '') {
-                            array_push($arr_product_unit_vat_rate, $this->arr_product_unit_vat_rate[$i]);
-                        } else {
-                            array_push($arr_product_unit_vat_rate, 0);
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_vat_rate' => $arr_product_unit_vat_rate]);
-
-                $arr_product_unit_vat_remarks = [];
-                if ($this->has('arr_product_unit_vat_remarks')) {
-                    for ($i = 0; $i < count($this->arr_product_unit_vat_remarks); $i++) {
-                        if ($this->arr_product_unit_vat_remarks[$i] != '') {
-                            array_push($arr_product_unit_vat_remarks, $this->arr_product_unit_vat_remarks[$i]);
-                        } else {
-                            array_push($arr_product_unit_vat_remarks, '');
-                        }
-                    }
-                }
-                $this->merge(['arr_product_unit_vat_remarks' => $arr_product_unit_vat_remarks]);
+                $this->prepareForValidationPerUnitSubTotalDiscount();
 
                 break;
             default:
                 $this->merge([]);
                 break;
         }
+    }
+
+    public function prepareForValidationGlobalDiscount()
+    {
+        $arr_global_discount_id = [];
+        if ($this->has('arr_global_discount_id')) {
+            for ($i = 0; $i < count($this->arr_global_discount_id); $i++) {
+                if ($this->arr_global_discount_id[$i] != '') {
+                    array_push($arr_global_discount_id, Hashids::decode($this->arr_global_discount_id[$i])[0]);
+                } else {
+                    array_push($arr_global_discount_id, null);
+                }
+            }
+        }
+        $this->merge(['arr_global_discount_id' => $arr_global_discount_id]);
+
+        $arr_global_discount_ulid = [];
+        if ($this->has('arr_global_discount_ulid')) {
+            for ($i = 0; $i < count($this->arr_global_discount_ulid); $i++) {
+                if ($this->arr_global_discount_ulid[$i] != '') {
+                    array_push($arr_global_discount_ulid, $this->arr_global_discount_ulid[$i]);
+                } else {
+                    array_push($arr_global_discount_ulid, '');
+                }
+            }
+        }
+        $this->merge(['arr_global_discount_ulid' => $arr_global_discount_ulid]);
+
+        $arr_global_discount_order = [];
+        if ($this->has('arr_global_discount_order')) {
+            for ($i = 0; $i < count($this->arr_global_discount_order); $i++) {
+                if ($this->arr_global_discount_order[$i] != '') {
+                    array_push($arr_global_discount_order, $this->arr_global_discount_order[$i]);
+                } else {
+                    array_push($arr_global_discount_order, '');
+                }
+            }
+        }
+        $this->merge(['arr_global_discount_order' => $arr_global_discount_order]);
+
+        $arr_global_discount_discount_type = [];
+        if ($this->has('arr_global_discount_discount_type')) {
+            for ($i = 0; $i < count($this->arr_global_discount_discount_type); $i++) {
+                if ($this->arr_global_discount_discount_type[$i] != '') {
+                    $result = DiscountType::isValid($this->arr_global_discount_discount_type[$i]) ? DiscountType::resolveToEnum($this->arr_global_discount_discount_type[$i]) : -1;
+                    array_push($arr_global_discount_discount_type, $result);
+                } else {
+                    array_push($arr_global_discount_discount_type, -1);
+                }
+            }
+        }
+        $this->merge(['arr_global_discount_discount_type' => $arr_global_discount_discount_type]);
+
+        $arr_global_discount_amount = [];
+        if ($this->has('arr_global_discount_amount')) {
+            for ($i = 0; $i < count($this->arr_global_discount_amount); $i++) {
+                if ($this->arr_global_discount_amount[$i] != '') {
+                    array_push($arr_global_discount_amount, $this->arr_global_discount_amount[$i]);
+                } else {
+                    array_push($arr_global_discount_amount, 0);
+                }
+            }
+        }
+        $this->merge(['arr_global_discount_amount' => $arr_global_discount_amount]);
+    }
+
+    public function prepareForValidationProductUnit()
+    {
+        $arr_product_unit_id = [];
+        if ($this->has('arr_product_unit_id')) {
+            for ($i = 0; $i < count($this->arr_product_unit_id); $i++) {
+                if ($this->arr_product_unit_id[$i] != '') {
+                    array_push($arr_product_unit_id, Hashids::decode($this->arr_product_unit_id[$i])[0]);
+                } else {
+                    array_push($arr_product_unit_id, null);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_id' => $arr_product_unit_id]);
+
+        $arr_product_unit_ulid = [];
+        if ($this->has('arr_product_unit_ulid')) {
+            for ($i = 0; $i < count($this->arr_product_unit_ulid); $i++) {
+                if ($this->arr_product_unit_ulid[$i] != '') {
+                    array_push($arr_product_unit_ulid, $this->arr_product_unit_ulid[$i]);
+                } else {
+                    array_push($arr_product_unit_ulid, '');
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_ulid' => $arr_product_unit_ulid]);
+
+        $arr_product_unit_product_id = [];
+        if ($this->has('arr_product_unit_product_id')) {
+            for ($i = 0; $i < count($this->arr_product_unit_product_id); $i++) {
+                if ($this->arr_product_unit_product_id[$i] != '') {
+                    array_push($arr_product_unit_product_id, Hashids::decode($this->arr_product_unit_product_id[$i])[0]);
+                } else {
+                    array_push($arr_product_unit_product_id, null);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_product_id' => $arr_product_unit_product_id]);
+
+        $arr_product_unit_product_unit_id = [];
+        if ($this->has('arr_product_unit_product_unit_id')) {
+            for ($i = 0; $i < count($this->arr_product_unit_product_unit_id); $i++) {
+                if ($this->arr_product_unit_product_unit_id[$i] != '') {
+                    array_push($arr_product_unit_product_unit_id, Hashids::decode($this->arr_product_unit_product_unit_id[$i])[0]);
+                } else {
+                    array_push($arr_product_unit_product_unit_id, null);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_product_unit_id' => $arr_product_unit_product_unit_id]);
+
+        $arr_product_unit_qty = [];
+        if ($this->has('arr_product_unit_qty')) {
+            for ($i = 0; $i < count($this->arr_product_unit_qty); $i++) {
+                if ($this->arr_product_unit_qty[$i] != '') {
+                    array_push($arr_product_unit_qty, $this->arr_product_unit_qty[$i]);
+                } else {
+                    array_push($arr_product_unit_qty, 0);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_qty' => $arr_product_unit_qty]);
+
+        $arr_product_unit_amount_per_unit = [];
+        if ($this->has('arr_product_unit_amount_per_unit')) {
+            for ($i = 0; $i < count($this->arr_product_unit_amount_per_unit); $i++) {
+                if ($this->arr_product_unit_amount_per_unit[$i] != '') {
+                    array_push($arr_product_unit_amount_per_unit, $this->arr_product_unit_amount_per_unit[$i]);
+                } else {
+                    array_push($arr_product_unit_amount_per_unit, 0);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_amount_per_unit' => $arr_product_unit_amount_per_unit]);
+
+        $arr_product_unit_initial_price = [];
+        if ($this->has('arr_product_unit_initial_price')) {
+            for ($i = 0; $i < count($this->arr_product_unit_initial_price); $i++) {
+                if ($this->arr_product_unit_initial_price[$i] != '') {
+                    array_push($arr_product_unit_initial_price, $this->arr_product_unit_initial_price[$i]);
+                } else {
+                    array_push($arr_product_unit_initial_price, 0);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_initial_price' => $arr_product_unit_initial_price]);
+
+        $arr_product_unit_vat_status = [];
+        if ($this->has('arr_product_unit_vat_status')) {
+            for ($i = 0; $i < count($this->arr_product_unit_vat_status); $i++) {
+                if ($this->arr_product_unit_vat_status[$i] != '') {
+                    array_push($arr_product_unit_vat_status, $this->arr_product_unit_vat_status[$i]);
+                } else {
+                    array_push($arr_product_unit_vat_status, null);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_vat_status' => $arr_product_unit_vat_status]);
+
+        $arr_product_unit_vat_rate = [];
+        if ($this->has('arr_product_unit_vat_rate')) {
+            for ($i = 0; $i < count($this->arr_product_unit_vat_rate); $i++) {
+                if ($this->arr_product_unit_vat_rate[$i] != '') {
+                    array_push($arr_product_unit_vat_rate, $this->arr_product_unit_vat_rate[$i]);
+                } else {
+                    array_push($arr_product_unit_vat_rate, 0);
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_vat_rate' => $arr_product_unit_vat_rate]);
+
+        $arr_product_unit_vat_remarks = [];
+        if ($this->has('arr_product_unit_vat_remarks')) {
+            for ($i = 0; $i < count($this->arr_product_unit_vat_remarks); $i++) {
+                if ($this->arr_product_unit_vat_remarks[$i] != '') {
+                    array_push($arr_product_unit_vat_remarks, $this->arr_product_unit_vat_remarks[$i]);
+                } else {
+                    array_push($arr_product_unit_vat_remarks, '');
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_vat_remarks' => $arr_product_unit_vat_remarks]);
+    }
+
+    public function prepareForValidationPerUnitDiscount()
+    {
+        $arr_product_unit_per_unit_discount_id = [];
+        if ($this->has('arr_product_unit_per_unit_discount_id')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_id); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_discount_id)) {
+                    $arr_product_unit_per_unit_discount_id[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_discount_id[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_discount_id[$i][$j] != '') {
+                        array_push($arr_product_unit_per_unit_discount_id[$i], Hashids::decode($this->arr_product_unit_per_unit_discount_id[$i][$j])[0]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_discount_id[$i], null);
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_discount_id' => $arr_product_unit_per_unit_discount_id]);
+
+        $arr_product_unit_per_unit_discount_ulid = [];
+        if ($this->has('arr_product_unit_per_unit_discount_ulid')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_ulid); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_discount_ulid)) {
+                    $arr_product_unit_per_unit_discount_ulid[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_discount_ulid[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_discount_ulid[$i][$j] != '') {
+                        array_push($arr_product_unit_per_unit_discount_ulid[$i], $this->arr_product_unit_per_unit_discount_ulid[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_discount_ulid[$i], '');
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_discount_ulid' => $arr_product_unit_per_unit_discount_ulid]);
+
+        $arr_product_unit_per_unit_discount_order = [];
+        if ($this->has('arr_product_unit_per_unit_discount_order')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_order); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_discount_order)) {
+                    $arr_product_unit_per_unit_discount_order[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_discount_order[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_discount_order[$i][$j] != '') {
+                        array_push($arr_product_unit_per_unit_discount_order[$i], $this->arr_product_unit_per_unit_discount_order[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_discount_order[$i], -1);
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_discount_order' => $arr_product_unit_per_unit_discount_order]);
+
+        $arr_product_unit_per_unit_discount_discount_type = [];
+        if ($this->has('arr_product_unit_per_unit_discount_discount_type')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_discount_type); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_discount_discount_type)) {
+                    $arr_product_unit_per_unit_discount_discount_type[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_discount_discount_type[$i]); $j++) {
+                    $result = $this->arr_product_unit_per_unit_discount_discount_type[$i][$j];
+                    if ($result != '') {
+                        $result = DiscountType::isValid($result) ? DiscountType::resolveToEnum($result) : -1;
+                        array_push($arr_product_unit_per_unit_discount_discount_type[$i], $this->arr_product_unit_per_unit_discount_discount_type[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_discount_discount_type[$i], -1);
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_discount_discount_type' => $arr_product_unit_per_unit_discount_discount_type]);
+
+        $arr_product_unit_per_unit_discount_amount = [];
+        if ($this->has('arr_product_unit_per_unit_discount_amount')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_discount_amount); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_discount_amount)) {
+                    $arr_product_unit_per_unit_discount_amount[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_discount_amount[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_discount_amount[$i][$j] != '') {
+                        array_push($arr_product_unit_per_unit_discount_amount[$i], $this->arr_product_unit_per_unit_discount_amount[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_discount_amount[$i], -1);
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_discount_amount' => $arr_product_unit_per_unit_discount_amount]);
+    }
+
+    public function prepareForValidationPerUnitSubTotalDiscount()
+    {
+        $arr_product_unit_per_unit_sub_total_discount_id = [];
+        if ($this->has('arr_product_unit_per_unit_sub_total_discount_id')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_id); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_sub_total_discount_id)) {
+                    $arr_product_unit_per_unit_sub_total_discount_id[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_sub_total_discount_id[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_sub_total_discount_id[$i][$j] != '') {
+                        $arr_product_unit_per_unit_sub_total_discount_id[$i][$j] = Hashids::decode($this->arr_product_unit_per_unit_sub_total_discount_id[$i][$j])[0];
+                    } else {
+                        $arr_product_unit_per_unit_sub_total_discount_id[$i][$j] = null;
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_sub_total_discount_id' => $arr_product_unit_per_unit_sub_total_discount_id]);
+
+        $arr_product_unit_per_unit_sub_total_discount_ulid = [];
+        if ($this->has('arr_product_unit_per_unit_sub_total_discount_ulid')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_ulid); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_sub_total_discount_ulid)) {
+                    $arr_product_unit_per_unit_sub_total_discount_ulid[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_sub_total_discount_ulid[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_sub_total_discount_ulid[$i][$j] != '') {
+                        array_push($arr_product_unit_per_unit_sub_total_discount_ulid[$i], $this->arr_product_unit_per_unit_sub_total_discount_ulid[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_sub_total_discount_ulid[$i], '');
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_sub_total_discount_ulid' => $arr_product_unit_per_unit_sub_total_discount_ulid]);
+
+        $arr_product_unit_per_unit_sub_total_discount_order = [];
+        if ($this->has('arr_product_unit_per_unit_sub_total_discount_order')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_order); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_sub_total_discount_order)) {
+                    $arr_product_unit_per_unit_sub_total_discount_order[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_sub_total_discount_order[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_sub_total_discount_order[$i][$j] != '') {
+                        array_push($arr_product_unit_per_unit_sub_total_discount_order[$i], $this->arr_product_unit_per_unit_sub_total_discount_order[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_sub_total_discount_order[$i], -1);
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_sub_total_discount_order' => $arr_product_unit_per_unit_sub_total_discount_order]);
+
+        $arr_product_unit_per_unit_sub_total_discount_discount_type = [];
+        if ($this->has('arr_product_unit_per_unit_sub_total_discount_discount_type')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_discount_type); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_sub_total_discount_discount_type)) {
+                    $arr_product_unit_per_unit_sub_total_discount_discount_type[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_sub_total_discount_discount_type[$i]); $j++) {
+                    $result = $this->arr_product_unit_per_unit_sub_total_discount_discount_type[$i][$j];
+                    if ($result != '') {
+                        $result = DiscountType::isValid($result) ? DiscountType::resolveToEnum($result) : -1;
+                        array_push($arr_product_unit_per_unit_sub_total_discount_discount_type[$i], $this->arr_product_unit_per_unit_sub_total_discount_discount_type[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_sub_total_discount_discount_type[$i], -1);
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_sub_total_discount_discount_type' => $arr_product_unit_per_unit_sub_total_discount_discount_type]);
+
+        $arr_product_unit_per_unit_sub_total_discount_amount = [];
+        if ($this->has('arr_product_unit_per_unit_sub_total_discount_amount')) {
+            for ($i = 0; $i < count($this->arr_product_unit_per_unit_sub_total_discount_amount); $i++) {
+                if (! array_key_exists($i, $arr_product_unit_per_unit_sub_total_discount_amount)) {
+                    $arr_product_unit_per_unit_sub_total_discount_amount[$i] = [];
+                }
+                for ($j = 0; $j < count($this->arr_product_unit_per_unit_sub_total_discount_amount[$i]); $j++) {
+                    if ($this->arr_product_unit_per_unit_sub_total_discount_amount[$i][$j] != '') {
+                        array_push($arr_product_unit_per_unit_sub_total_discount_amount[$i], $this->arr_product_unit_per_unit_sub_total_discount_amount[$i][$j]);
+                    } else {
+                        array_push($arr_product_unit_per_unit_sub_total_discount_amount[$i], -1);
+                    }
+                }
+            }
+        }
+        $this->merge(['arr_product_unit_per_unit_sub_total_discount_amount' => $arr_product_unit_per_unit_sub_total_discount_amount]);
     }
 }

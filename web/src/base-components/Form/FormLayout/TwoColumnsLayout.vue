@@ -1,20 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref, toRef, computed } from "vue";
+import { onMounted, ref, toRef } from "vue";
 import Lucide from "../../Lucide";
 import { useI18n } from "vue-i18n";
-import { ViewState } from '../../../types/enums/ViewMode'
+import { CardState } from "../../../types/enums/CardState";
 
 export interface TwoColumnsLayoutCards {
-  id ?: string | number,
+  id?: string | number,
   title: string;
-  state: ViewState ;
+  state: CardState;
 };
 
 
 export interface TwoColumnsLayoutProps {
   cards: Array<TwoColumnsLayoutCards>,
   showSideTab?: boolean,
-  usingSideTab?  : boolean
+  usingSideTab?: boolean
 }
 
 const { t } = useI18n();
@@ -22,7 +22,7 @@ const { t } = useI18n();
 const props = withDefaults(defineProps<TwoColumnsLayoutProps>(), {
   cards: (): Array<TwoColumnsLayoutCards> => [],
   showSideTab: false,
-  usingSideTab : false
+  usingSideTab: false
 });
 
 const showSideTab = toRef(props, 'showSideTab');
@@ -55,7 +55,7 @@ const toggleSideTab = (show: boolean | undefined) => {
 </script>
 
 <template>
-<div class="grid grid-cols-12 gap-6 mt-5">
+  <div class="grid grid-cols-12 gap-6 mt-5">
     <div v-if="isShowSideTab && usingSideTab"
       class="col-span-12 lg:col-span-4 2xl:col-span-4 flex lg:block flex-col-reverse transition ease-in duration-100">
       <div class="intro-y box mt-5 lg:mt-0">
@@ -107,15 +107,16 @@ const toggleSideTab = (show: boolean | undefined) => {
               <div @click="onCardTitleClicked(index)" class="w-1/2 flex justify-start">
                 <h2 class="font-medium text-base mr-auto">{{ t(card.title) }}</h2>
               </div>
-              <div v-if="card.state !== ViewState.hide" class="w-1/2 flex justify-end">
+              <div v-if="card.state !== CardState.hidden" class="w-1/2 flex justify-end">
                 <div
-                  :class="{ 'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true, 'transform rotate-180': card.state === ViewState.expand }"
+                  :class="{ 'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true, 'transform rotate-180': card.state === CardState.expanded }"
                   @click="onCardTitleClicked(index)">
                   <Lucide class="w-6 h-6" icon="ChevronDown" />
                 </div>
               </div>
             </div>
-            <div :class="[{ 'block': card.state === ViewState.expand }, { 'hidden': card.state === ViewState.collapse }]">
+            <div
+              :class="[{ 'block': card.state === CardState.expanded }, { 'hidden': card.state === CardState.collapsed }]">
               <slot :name="`card-items-${card.id ? card.id : index}`" :card="card" :index="index"></slot>
             </div>
           </div>

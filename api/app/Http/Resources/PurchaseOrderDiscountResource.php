@@ -37,6 +37,7 @@ class PurchaseOrderDiscountResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('purchaseOrderProductUnit' && $this->purchaseOrderProductUnit), [
                 'purchase_order_product_unit' => new PurchaseOrderProductUnitResource($this->purchaseOrderProductUnit),
             ]),
+            'order' => $this->order,
             'discount_type' => $this->discount_type,
             'amount' => $this->amount,
         ];

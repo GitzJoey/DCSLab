@@ -3,10 +3,12 @@ import { toRef, computed } from "vue";
 import Alert from "../Alert";
 import Lucide from "../Lucide";
 import { useI18n } from "vue-i18n";
+import { LaravelError } from "../../types/errors/LaravelError";
+import { VeeValidateError } from "../../types/errors/VeeValidateError";
 
 export interface AlertPlaceholderProps {
     alertType: string,
-    errors: Record<string, string[]> | null,
+    errors: LaravelError | VeeValidateError | null,
     title: string,
 }
 

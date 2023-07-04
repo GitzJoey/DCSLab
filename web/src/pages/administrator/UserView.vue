@@ -33,7 +33,10 @@ import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
-import { ViewState } from '../../types/enums/ViewMode'
+import { CardState } from "../../types/enums/CardState";
+import { SearchRequest } from "../../types/requests/SearchRequest";
+import { LaravelError } from "../../types/errors/LaravelError";
+import { VeeValidateError } from "../../types/errors/VeeValidateError";
 //#endregion
 
 //#region Declarations
@@ -50,15 +53,15 @@ const cacheServices = new CacheService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<Record<string, string[]> | null>(null);
+const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: 'User Information', state: ViewState.collapse, },
-  { title: 'User Profile', state: ViewState.collapse },
-  { title: 'Roles', state: ViewState.collapse },
-  { title: 'Settings', state: ViewState.collapse },
-  { title: 'Token Managements', state: ViewState.collapse },
-  { title: 'Password Managements', state: ViewState.collapse },
-  { title : '',  state : ViewState.hide, id:'button'}
+  { title: 'User Information', state: CardState.Expanded, },
+  { title: 'User Profile', state: CardState.Expanded },
+  { title: 'Roles', state: CardState.Expanded },
+  { title: 'Settings', state: CardState.Expanded },
+  { title: 'Token Managements', state: CardState.Expanded },
+  { title: 'Password Managements', state: CardState.Expanded },
+  { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
@@ -138,33 +141,37 @@ const toggleDetail = (idx: number) => {
 };
 
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(
-    search,
-    refresh,
-    paginate,
-    page,
-    per_page
-  );
+  const searchReq: SearchRequest = {
+    search: search,
+    refresh: refresh,
+    paginate: paginate,
+    page: page,
+    per_page: per_page
+  };
+
+  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(searchReq);
 
   if (result.success && result.data) {
     userLists.value = result.data as Collection<User[]>;
   } else {
-    datalistErrors.value = result.errors as Record<string, string[]>;
+    datalistErrors.value = result.errors as LaravelError;
   }
 }
 
-const getRoles = async () => {
-  let result: ServiceResponse<Resource<Array<Role>> | null> = await roleServices.readAny();
+const getDDL = (): void => {
+  roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
+    if (result.success && result.data) {
+      rolesDDL.value = result.data.data as Array<Role>;
+    }
+  });
 
-  if (result.success && result.data) {
-    rolesDDL.value = result.data.data as Array<Role>;
-  }
-}
+  dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
+    countriesDDL.value = result;
+  });
 
-const getDDL = async (): Promise<void> => {
-  await getRoles();
-  countriesDDL.value = await dashboardServices.getCountriesDDL();
-  statusDDL.value = await dashboardServices.getStatusDDL();
+  dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
+    statusDDL.value = result;
+  });
 }
 
 const emptyUser = () => {
@@ -222,10 +229,10 @@ const deleteSelected = (itemUlid: string) => {
 }
 
 const handleExpandCard = (index: number) => {
-  if(cards.value[index].state === ViewState.collapse) {
-    cards.value[index].state = ViewState.expand
-  }else if(cards.value[index].state === ViewState.expand) {
-    cards.value[index].state = ViewState.collapse
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed
   }
 }
 
@@ -382,7 +389,7 @@ watch(
       <div v-else>
         <VeeForm id="userForm" v-slot="{ errors }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
-          <TwoColumnsLayout :cards="cards" :usingSideTab="false" @handle-expand-card="handleExpandCard" >
+          <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
