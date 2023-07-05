@@ -22,9 +22,8 @@ class UnitAPIDeleteTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -39,9 +38,8 @@ class UnitAPIDeleteTest extends APITestCase
     public function test_unit_api_call_delete_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $this->actingAs($user);
@@ -59,9 +57,8 @@ class UnitAPIDeleteTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $this->actingAs($user);

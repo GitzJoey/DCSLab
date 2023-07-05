@@ -7,6 +7,7 @@ use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -110,10 +111,18 @@ class BranchAPICreateTest extends APITestCase
 
     public function test_branch_api_call_store_with_existing_code_in_different_company_expect_successful()
     {
+        $companyCount = 2;
+        $idxDefaultCompany = random_int(0, $companyCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
-            ->has(Company::factory()->setStatusActive())
+            ->has(Company::factory()->setStatusActive()->count($companyCount)
+                ->state(new Sequence(
+                    fn (Sequence $sequence) => [
+                        'default' => $sequence->index == $idxDefaultCompany ? true : false,
+                    ]
+                ))
+            )
             ->create();
 
         $this->actingAs($user);

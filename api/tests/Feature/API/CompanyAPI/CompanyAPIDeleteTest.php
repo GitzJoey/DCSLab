@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 
@@ -19,10 +20,18 @@ class CompanyAPIDeleteTest extends APITestCase
 
     public function test_company_api_call_delete_without_authorization_expect_unauthorized_message()
     {
+        $companyCount = 2;
+        $idxDefaultCompany = random_int(0, $companyCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
-            ->has(Company::factory()->setStatusActive())
+            ->has(Company::factory()->setStatusActive()->count($companyCount)
+                ->state(new Sequence(
+                    fn (Sequence $sequence) => [
+                        'default' => $sequence->index == $idxDefaultCompany ? true : false,
+                    ]
+                ))
+            )
             ->create();
 
         $company = $user->companies()->where('default', '=', false)->first();
@@ -34,9 +43,17 @@ class CompanyAPIDeleteTest extends APITestCase
 
     public function test_company_api_call_delete_without_access_right_expect_unauthorized_message()
     {
+        $companyCount = 2;
+        $idxDefaultCompany = random_int(0, $companyCount - 1);
+
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
-            ->has(Company::factory()->setStatusActive())
+            ->has(Company::factory()->setStatusActive()->count($companyCount)
+                ->state(new Sequence(
+                    fn (Sequence $sequence) => [
+                        'default' => $sequence->index == $idxDefaultCompany ? true : false,
+                    ]
+                ))
+            )
             ->create();
 
         $this->actingAs($user);
@@ -50,10 +67,18 @@ class CompanyAPIDeleteTest extends APITestCase
 
     public function test_company_api_call_delete_expect_successful()
     {
+        $companyCount = 2;
+        $idxDefaultCompany = random_int(0, $companyCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
-            ->has(Company::factory()->setStatusActive())
+            ->has(Company::factory()->setStatusActive()->count($companyCount)
+                ->state(new Sequence(
+                    fn (Sequence $sequence) => [
+                        'default' => $sequence->index == $idxDefaultCompany ? true : false,
+                    ]
+                ))
+            )
             ->create();
 
         $this->actingAs($user);

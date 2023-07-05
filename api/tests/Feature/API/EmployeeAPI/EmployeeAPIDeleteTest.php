@@ -12,6 +12,7 @@ use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 
@@ -24,11 +25,19 @@ class EmployeeAPIDeleteTest extends APITestCase
 
     public function test_employee_api_call_delete_without_authorization_expect_unauthorized_message()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->count(2)))
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $company = $user->companies->first();
@@ -69,10 +78,18 @@ class EmployeeAPIDeleteTest extends APITestCase
 
     public function test_employee_api_call_delete_without_access_right_expect_unauthorized_message()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->count(2)))
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
@@ -115,11 +132,19 @@ class EmployeeAPIDeleteTest extends APITestCase
 
     public function test_employee_api_call_delete_expect_successful()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->count(2)))
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
