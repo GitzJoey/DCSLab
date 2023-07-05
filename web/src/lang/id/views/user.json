@@ -33,8 +33,12 @@
             "settings": "Pengaturan",
             "theme": "Tema",
             "date_format": "Format Tanggal",
-            "time_format": "Format Waktu",
-            "api_token": "API Token"
+            "time_format": "Format Waktu"
+        },
+        "tokens": {
+            "tokens": "Tokens",
+            "count": "Jumlah Tokens",
+            "reset": "Reset"
         },
         "reset_password": "Reset Password",
         "email_reset_password": "Kirim Email"

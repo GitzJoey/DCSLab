@@ -246,5 +246,10 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('edit/{user:ulid}', [UserController::class, 'update'])->name('.edit');
             });
         });
+
+        Route::group(['prefix' => 'core', 'as' => '.core'], function () {
+            Route::post('user/upload', [DashboardController::class, 'userUpload'])->name('.user.upload');
+        });
+
     });
 });
