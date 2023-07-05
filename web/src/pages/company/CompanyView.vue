@@ -416,6 +416,9 @@ watch(
                     <VeeErrorMessage name="name" class="mt-2 text-danger" />
                   </div>
                   <div class="pb-4">
+                    <FormLabel html-for="address" :class="{ 'text-danger': errors['address'] }">
+                      {{ t('views.company.fields.address') }}
+                    </FormLabel>
                     <VeeField v-slot="{ field }" name="address"
                       :label="t('views.company.fields.address')">
                       <FormTextarea id="address" v-model="companyForm.data.address" name="address" type="text"
