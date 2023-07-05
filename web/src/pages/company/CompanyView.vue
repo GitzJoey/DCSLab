@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormTextarea,
   FormSelect,
+  FormCheck,
 } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
@@ -35,6 +36,7 @@ import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
 import { LaravelError } from "../../types/errors/LaravelError";
 import { VeeValidateError } from "../../types/errors/VeeValidateError";
+import { FormActions } from "vee-validate";
 //#endregion
 
 //#region Declarations
@@ -73,7 +75,7 @@ const companyForm = ref<FormRequest<Company>>({
     branches: [],
   }
 });
-const companyLists = ref<Collection<Company[]> | null>({
+const companyLists = ref<Collection<Array<Company>> | null>({
   data: [],
   meta: {
     current_page: 0,
@@ -126,10 +128,10 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
     per_page: per_page
   };
 
-  let result: ServiceResponse<Collection<Company[]> | Resource<Company[]> | null> = await companyServices.readAny(searchReq);
+  let result: ServiceResponse<Collection<Array<Company>> | Resource<Array<Company>> | null> = await companyServices.readAny(searchReq);
 
   if (result.success && result.data) {
-    companyLists.value = result.data as Collection<Company[]>;
+    companyLists.value = result.data as Collection<Array<Company>>;
   } else {
     datalistErrors.value = result.errors as LaravelError;    
   }
@@ -186,10 +188,28 @@ const handleExpandCard = (index: number) => {
   }
 }
 
-const onSubmit = async () => {
-  loading.value = true;
+const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormRequest<Company>>) => {
+  // loading.value = true;  
 
-  loading.value = false;
+  let result: ServiceResponse<Company | null> = {
+    success: false,
+  }
+
+  if (mode.value == ViewMode.FORM_CREATE) {
+    console.log('masuk bang');
+    result = await companyServices.create(values);
+  } else if (mode.value == ViewMode.FORM_EDIT) {
+    // result = await companyServices.edit(values);
+  } else {
+    result.success = false;
+  }
+
+  if (!result.success) {
+    actions.setErrors({ data: 'error' });
+  }
+
+  // backToList();
+  // loading.value = false;
 };
 
 const backToList = async () => {
@@ -249,7 +269,7 @@ watch(
       </TitleLayout>
 
       <div v-if="mode == ViewMode.LIST">
-        <AlertPlaceholder :errors="datalistErrors" />
+        <AlertPlaceholder :errors="datalistErrors" :title="t('views.company.table.title')" />
         <DataList :title="t('views.company.table.title')" :enable-search="true" :can-print="true" :can-export="true"
           :pagination="companyLists ? companyLists.meta : null" @dataListChanged="onDataListChanged">
           <template #content>
@@ -284,6 +304,10 @@ watch(
                     <Table.Td>{{ item.code }}</Table.Td>
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td>{{ item.default }}</Table.Td>
+                    <!-- <Table.Td>
+                        <CheckCircleIcon v-if="item.default" />
+                        <XIcon v-else />
+                    </Table.Td> -->
                     <Table.Td>
                       <Lucide v-if="item.status === 'ACTIVE'" icon="CheckCircle" />
                       <Lucide v-if="item.status === 'INACTIVE'" icon="X" />
@@ -311,6 +335,10 @@ watch(
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.name') }}</div>
                         <div class="flex-1">{{ item.name }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.address') }}</div>
+                        <div class="flex-1">{{ item.address }}</div>
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.default') }}</div>
@@ -359,7 +387,9 @@ watch(
       </div>
       <div v-else>
         <VeeForm id="companyForm" v-slot="{ errors }" @submit="onSubmit">
+          <!-- <AlertPlaceholder :errors="errors" /> -->
           <AlertPlaceholder :errors="errors" />
+          {{ JSON.stringify(errors) }}
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
@@ -386,11 +416,32 @@ watch(
                     <VeeErrorMessage name="name" class="mt-2 text-danger" />
                   </div>
                   <div class="pb-4">
-                    <FormLabel html-for="address" :class="{ 'text-danger': errors['address'] }">
-                      {{ t('views.company.fields.address') }}
+                    <VeeField v-slot="{ field }" name="address"
+                      :label="t('views.company.fields.address')">
+                      <FormTextarea id="address" v-model="companyForm.data.address" name="address" type="text"
+                        :placeholder="t('views.company.fields.address')" />
+                    </VeeField>
+                  </div>
+                  <!-- <div class="pb-4">
+                    <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }">
+                      {{ t('views.company.fields.default') }}
                     </FormLabel>
-                    <FormTextarea id="address" v-model="companyForm.data.address" name="address" type="text"
-                      :placeholder="t('views.company.fields.address')" />
+                    <VeeField v-slot="{ field }" name="default" rules="required|boolean"
+                      :label="t('views.company.fields.default')">
+                      <FormCheck id="default" v-model="companyForm.data.default" v-bind="field" name="default"
+                        :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')" />
+                    </VeeField>
+                  </div> -->
+                  <div class="pb-4">
+                    <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }">
+                      {{ t('views.company.fields.default') }}
+                    </FormLabel>
+                    <VeeField v-slot="{ field }" name="default"
+                      :label="t('views.company.fields.default')">
+                      <FormCheck.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default" type="checkbox"
+                        :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')" />
+                    </VeeField>
+                    <VeeErrorMessage name="default" class="mt-2 text-danger" />
                   </div>
                   <div class="pb-4">
                     <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
@@ -409,10 +460,10 @@ watch(
             </template>
             <template #card-items-button>
               <div class="flex gap-4">
-                <Button as="submit" href="#" variant="primary" class="w-28 shadow-md">
+                <Button type="submit" href="#" variant="primary" class="w-28 shadow-md">
                   {{ t("components.buttons.submit") }}
                 </Button>
-                <Button as="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
+                <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
                   {{ t("components.buttons.reset") }}
                 </Button>
               </div>
