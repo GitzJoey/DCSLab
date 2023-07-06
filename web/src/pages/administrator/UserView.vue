@@ -124,25 +124,15 @@ const countriesDDL = ref<Array<DropDownOption> | null>(null);
 
 //#region onMounted
 onMounted(async () => {
-  loading.value = true;
-
   await getUsers('', true, true, 1, 10);
   getDDL();
-
-  loading.value = false;
 });
 //#endregion
 
 //#region Methods
-const toggleDetail = (idx: number) => {
-  if (expandDetail.value === idx) {
-    expandDetail.value = null;
-  } else {
-    expandDetail.value = idx;
-  }
-};
-
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+  loading.value = true;
+
   const searchReq: SearchRequest = {
     search: search,
     refresh: refresh,
@@ -158,6 +148,8 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   } else {
     datalistErrors.value = result.errors as LaravelError;
   }
+
+  loading.value = false;
 }
 
 const getDDL = (): void => {
@@ -208,8 +200,8 @@ const emptyUser = () => {
   }
 }
 
-const onDataListChanged = (data: DataListEmittedData) => {
-  getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+const onDataListChanged = async (data: DataListEmittedData) => {
+  await getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
 }
 
 const createNew = () => {
@@ -219,6 +211,14 @@ const createNew = () => {
 
   userForm.value = cachedData == null ? emptyUser() : cachedData as FormRequest<User>;
 }
+
+const viewSelected = (idx: number) => {
+  if (expandDetail.value === idx) {
+    expandDetail.value = null;
+  } else {
+    expandDetail.value = idx;
+  }
+};
 
 const editSelected = (itemIdx: number) => {
   mode.value = ViewMode.FORM_EDIT;
@@ -262,14 +262,10 @@ const onSubmit = async (values: FormRequest<User>, actions: FormActions<FormRequ
 };
 
 const backToList = async () => {
-  loading.value = true;
-
   cacheServices.removeLastEntity('User');
 
   mode.value = ViewMode.LIST;
   await getUsers('', true, true, 1, 10);
-
-  loading.value = false;
 }
 
 const flattenedRoles = (roles: Array<Role>): string => {
@@ -289,16 +285,6 @@ const titleView = computed(() => {
     default:
       return t('views.user.page_title');
   }
-});
-
-const tokensCount = computed(() => {
-  if (userForm.value.data.ulid == '') return 0;
-
-  userServices.getTokensCount(userForm.value.data.ulid).then((result: ServiceResponse<number | null>) => {
-    if (!result.success) return 0;
-
-    return result.data as number;
-  });
 });
 //#endregion
 
@@ -367,7 +353,7 @@ watch(
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td>
-                      <a href="" class="hover:animate-pulse" @click.prevent="toggleDetail(itemIdx)">
+                      <a href="" class="hover:animate-pulse" @click.prevent="viewSelected(itemIdx)">
                         {{ item.email }}
                       </a>
                     </Table.Td>
@@ -380,7 +366,7 @@ watch(
                     </Table.Td>
                     <Table.Td>
                       <div class="flex justify-end gap-1">
-                        <Button variant="outline-secondary" @click="toggleDetail(itemIdx)">
+                        <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                           <Lucide icon="Info" class="w-4 h-4" />
                         </Button>
                         <Button variant="outline-secondary" @click="editSelected(itemIdx)">
@@ -416,10 +402,6 @@ watch(
                             {{ t('components.dropdown.values.statusDDL.inactive') }}
                           </span>
                         </div>
-                      </div>
-                      <div class="flex flex-row">
-                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.tokens.count') }}</div>
-                        <div class="flex-1">{{ tokensCount }}</div>
                       </div>
                     </Table.Td>
                   </Table.Tr>
