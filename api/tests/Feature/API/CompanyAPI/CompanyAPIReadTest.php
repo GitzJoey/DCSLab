@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 
@@ -162,11 +163,22 @@ class CompanyAPIReadTest extends APITestCase
 
     public function test_company_api_call_read_any_with_search_expect_filtered_results()
     {
+        $companyCount = random_int(1, 4);
+        $idxDefaultCompany = random_int(0, $companyCount - 1);
+        $idxTest = random_int(0, $companyCount - 1);
+        $defaultName = Company::factory()->make()->name;
+        $testName = Company::factory()->insertStringInName('testing')->make()->name;
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
-            ->has(Company::factory()->setStatusActive()->count(3))
-            ->has(Company::factory()->setStatusActive()->insertStringInName('testing')->count(2))
+            ->has(Company::factory()->setStatusActive()->count($companyCount)
+                ->state(new Sequence(
+                    fn (Sequence $sequence) => [
+                        'default' => $sequence->index == $idxDefaultCompany ? true : false,
+                        'name' => $sequence->index == $idxTest ? $testName : $defaultName,
+                    ]
+                ))
+            )
             ->create();
 
         $this->actingAs($user);
@@ -192,7 +204,7 @@ class CompanyAPIReadTest extends APITestCase
         ]);
 
         $api->assertJsonFragment([
-            'total' => 2,
+            'total' => 1,
         ]);
     }
 

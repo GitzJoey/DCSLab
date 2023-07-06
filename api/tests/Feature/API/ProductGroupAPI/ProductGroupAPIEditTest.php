@@ -21,9 +21,8 @@ class ProductGroupAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -42,9 +41,8 @@ class ProductGroupAPIEditTest extends APITestCase
     public function test_product_group_api_call_update_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory())
             )->create();
 
         $this->actingAs($user);
@@ -66,9 +64,8 @@ class ProductGroupAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory())
             )->create();
 
         $this->actingAs($user);
@@ -97,9 +94,8 @@ class ProductGroupAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->count(2))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(2))
             )->create();
 
         $this->actingAs($user);
@@ -129,9 +125,8 @@ class ProductGroupAPIEditTest extends APITestCase
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault()
                 ->has(ProductGroup::factory()))
-            ->has(
-                Company::factory()->setStatusActive()
-                    ->has(ProductGroup::factory())
+            ->has(Company::factory()->setStatusActive()
+                ->has(ProductGroup::factory())
             )->create();
 
         $this->actingAs($user);

@@ -124,10 +124,13 @@ class BranchAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->count(2)
-                    ->state(new Sequence(['default' => true], ['default' => false]))
-            )->create();
+            ->has(Company::factory()->count(2)
+                ->state(new Sequence(
+                    ['default' => true],
+                    ['default' => false]
+                ))
+            )
+            ->create();
 
         $this->actingAs($user);
 

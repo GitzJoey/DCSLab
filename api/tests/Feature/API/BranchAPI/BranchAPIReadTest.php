@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
@@ -21,13 +22,20 @@ class BranchAPIReadTest extends APITestCase
 
     public function test_branch_api_call_read_any_without_authorization_expect_unauthorized_message()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive())
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
