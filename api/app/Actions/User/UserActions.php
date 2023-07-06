@@ -2,6 +2,9 @@
 
 namespace App\Actions\User;
 
+use App\Actions\Role\RoleActions;
+use App\Enums\RecordStatus;
+use App\Enums\UserRoles;
 use App\Models\Profile;
 use App\Models\Setting;
 use App\Models\User;
@@ -23,6 +26,39 @@ class UserActions
 
     public function __construct()
     {
+    }
+
+    public function registration(array $input): User
+    {
+        $name = $input['name'];
+
+        if ($name == trim($name) && strpos($name, ' ') !== false) {
+            $pieces = explode(' ', $name);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+
+            $name = str_replace(' ', '', $name);
+        } else {
+            $first_name = $name;
+            $last_name = '';
+        }
+
+        $profile = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'status' => RecordStatus::ACTIVE,
+        ];
+
+        $roleActions = app(RoleActions::class);
+        $roles = [$roleActions->readBy('name', UserRoles::USER->value)->id];
+
+        $usr = $this->create(
+            $input,
+            $roles,
+            $profile
+        );
+
+        return $usr;
     }
 
     public function create(array $userArr, array $rolesArr, array $profileArr): User
