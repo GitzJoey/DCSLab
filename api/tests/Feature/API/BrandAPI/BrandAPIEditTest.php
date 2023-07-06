@@ -21,9 +21,8 @@ class BrandAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -42,9 +41,8 @@ class BrandAPIEditTest extends APITestCase
     public function test_brand_api_call_update_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -66,9 +64,8 @@ class BrandAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -96,9 +93,8 @@ class BrandAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory()->count(2))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory()->count(2))
             )->create();
 
         $this->actingAs($user);
@@ -128,9 +124,8 @@ class BrandAPIEditTest extends APITestCase
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault()
                 ->has(Brand::factory()))
-            ->has(
-                Company::factory()->setStatusActive()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);

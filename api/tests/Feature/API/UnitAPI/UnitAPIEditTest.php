@@ -21,9 +21,8 @@ class UnitAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -42,9 +41,8 @@ class UnitAPIEditTest extends APITestCase
     public function test_unit_api_call_update_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $this->actingAs($user);
@@ -66,9 +64,8 @@ class UnitAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $this->actingAs($user);
@@ -98,9 +95,8 @@ class UnitAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory()->count(2))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory()->count(2))
             )->create();
 
         $this->actingAs($user);
@@ -130,9 +126,8 @@ class UnitAPIEditTest extends APITestCase
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault()
                 ->has(Unit::factory()))
-            ->has(
-                Company::factory()->setStatusActive()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Unit::factory())
             )->create();
 
         $this->actingAs($user);

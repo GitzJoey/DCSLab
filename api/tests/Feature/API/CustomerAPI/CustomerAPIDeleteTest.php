@@ -24,9 +24,8 @@ class CustomerAPIDeleteTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -46,9 +45,8 @@ class CustomerAPIDeleteTest extends APITestCase
     public function test_customer_api_call_delete_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $this->actingAs($user);
@@ -71,9 +69,8 @@ class CustomerAPIDeleteTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $this->actingAs($user);

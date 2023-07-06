@@ -28,24 +28,30 @@ export interface DataListEmittedData {
   }
 }
 
+export interface DataListProps {
+  visible: boolean,
+  canPrint: boolean,
+  canExport: boolean,
+  enableSearch: boolean,
+  pagination: PaginationData | null,
+}
+
 const { t } = useI18n();
 
-const props = defineProps({
-  visible: { type: Boolean, default: true },
-  canPrint: { type: Boolean, default: false },
-  canExport: { type: Boolean, default: false },
-  enableSearch: { type: Boolean, default: false },
-  pagination: {
-    type: Object as () => PaginationData | null, default: () => ({
-      current_page: 0,
-      from: null,
-      last_page: 0,
-      path: '',
-      per_page: 0,
-      to: null,
-      total: 0,
-    })
-  },
+const props = withDefaults(defineProps<DataListProps>(), {
+  visible: true,
+  canPrint: false,
+  canExport: false,
+  enableSearch: false,
+  pagination: () => ({
+    current_page: 0,
+    from: null,
+    last_page: 0,
+    path: '',
+    per_page: 10,
+    to: null,
+    total: 0,
+  }),
 });
 
 const emits = defineEmits<{
@@ -58,16 +64,13 @@ const visible = toRef(props, "visible");
 const canPrint = toRef(props, "canPrint");
 const canExport = toRef(props, "canExport");
 const enableSearch = toRef(props, "enableSearch");
-const pagination = toRef(props, "pagination");
 
 const search = ref<string>('');
-const perPage = computed(() => {
-  return pagination.value != null ? pagination.value.per_page : 10;
-});
+const perPage = ref<number>(10);
 
 const pages = computed(() => {
-  if (pagination.value == null) return [];
-  return generatePaginationArray(pagination.value.current_page, pagination.value.total, pagination.value.per_page);
+  if (props.pagination == null) return [];
+  return generatePaginationArray(props.pagination.current_page, props.pagination.total, props.pagination.per_page);
 });
 
 const generatePaginationArray = (
@@ -131,13 +134,13 @@ const createDataEmittedPayload = (search: string, page: number, per_page: number
 }
 
 const searchTextboxChanged = () => {
-  if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, 1, pagination.value.per_page));
+  if (props.pagination != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, 1, props.pagination.per_page));
 }
 
 const refreshButtonClicked = () => {
-  if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
+  if (props.pagination != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, props.pagination.current_page, props.pagination.per_page));
 }
 
 const printButtonClicked = () => {
@@ -149,37 +152,37 @@ const exportButtonClicked = (type: string) => {
 }
 
 const paginationFirstButtonClicked = () => {
-  if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, 1, pagination.value.per_page));
+  if (props.pagination != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, 1, props.pagination.per_page));
 }
 
 const paginationPreviousButtonClicked = () => {
-  if (pagination.value != null) {
-    if (pagination.value.current_page > 1)
-      emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page - 1, pagination.value.per_page));
+  if (props.pagination != null) {
+    if (props.pagination.current_page > 1)
+      emits('dataListChanged', createDataEmittedPayload(search.value, props.pagination.current_page - 1, props.pagination.per_page));
   }
 }
 
 const paginationNumberButtonClicked = (n: number) => {
-  if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, n, pagination.value.per_page));
+  if (props.pagination != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, n, props.pagination.per_page));
 }
 
 const paginationNextButtonClicked = () => {
-  if (pagination.value != null) {
-    if (pagination.value.current_page != pagination.value.last_page)
-      emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page + 1, pagination.value.per_page));
+  if (props.pagination != null) {
+    if (props.pagination.current_page != props.pagination.last_page)
+      emits('dataListChanged', createDataEmittedPayload(search.value, props.pagination.current_page + 1, props.pagination.per_page));
   }
 }
 
 const paginationLastButtonClicked = () => {
-  if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.last_page, pagination.value.per_page));
+  if (props.pagination != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, props.pagination.last_page, props.pagination.per_page));
 }
 
 const pageSizeChanged = () => {
-  if (pagination.value != null)
-    emits('dataListChanged', createDataEmittedPayload(search.value, pagination.value.current_page, pagination.value.per_page));
+  if (props.pagination != null)
+    emits('dataListChanged', createDataEmittedPayload(search.value, 1, perPage.value));
 }
 
 watch(
@@ -187,6 +190,12 @@ watch(
   debounce((): void => {
     searchTextboxChanged();
   }, 500)
+);
+
+watch(perPage,
+  (val, oldVal) => {
+    if (val != oldVal) pageSizeChanged();
+  }
 );
 </script>
 
@@ -264,7 +273,7 @@ watch(
         </div>
       </div>
       <div class="w-1/2 flex justify-end">
-        <FormSelect v-model="perPage" class="w-20 mt-3 sm:mt-0" @change="pageSizeChanged">
+        <FormSelect v-model="perPage" class="w-20 mt-3 sm:mt-0">
           <option value="10">10</option>
           <option value="25">25</option>
           <option value="50">50</option>

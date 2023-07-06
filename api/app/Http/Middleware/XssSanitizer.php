@@ -19,31 +19,18 @@ class XssSanitizer
 
         $input = $request->all();
 
-        $sanitizedInput = $this->sanitizeInput($sanitizerStyle, $input);
+        array_walk_recursive($input, function(&$input) use ($sanitizerStyle) {
+            if ($this->isContainScriptTag(($input)))
+                $input = $sanitizerStyle == 'encode' ? htmlspecialchars($input, ENT_QUOTES | ENT_HTML5) : strip_tags($input);
+        });
 
-        $request->replace($sanitizedInput);
+        $request->merge($input);
 
         return $next($request);
     }
 
-    private function sanitizeInput(string $style, array &$input)
+    private function isContainScriptTag($input): bool 
     {
-        return collect($input)->map(function ($value, $key) use ($style) {
-            if ($this->hasHtmlTags($value)) {
-                return $this->sanitizeHtml($style, $value);
-            }
-
-            return $value;
-        })->all();
-    }
-
-    private function hasHtmlTags($value)
-    {
-        return preg_match('/<[^>]+>/', $value) === 1;
-    }
-
-    private function sanitizeHtml($style, $value)
-    {
-        return $style == 'encode' ? htmlspecialchars($value, ENT_QUOTES | ENT_HTML5) : strip_tags($value);
+        return preg_match("/<script[\s\S]*?>/", $input);
     }
 }

@@ -22,9 +22,8 @@ class WarehouseAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -44,9 +43,8 @@ class WarehouseAPIEditTest extends APITestCase
     public function test_warehouse_api_call_update_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $this->actingAs($user);
@@ -69,9 +67,8 @@ class WarehouseAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $this->actingAs($user);
@@ -107,9 +104,8 @@ class WarehouseAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $this->actingAs($user);
@@ -136,9 +132,8 @@ class WarehouseAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $this->actingAs($user);

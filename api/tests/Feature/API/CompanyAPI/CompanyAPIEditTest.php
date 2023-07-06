@@ -84,13 +84,19 @@ class CompanyAPIEditTest extends APITestCase
 
     public function test_company_api_call_update_and_use_existing_code_in_same_user_expect_failed()
     {
+        $companyCount = 2;
+        $idxDefaultCompany = random_int(0, $companyCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()
-                    ->count(2)
-                    ->state(new Sequence(['default' => true], ['default' => false]))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->count($companyCount)
+                ->state(new Sequence(
+                    fn (Sequence $sequence) => [
+                        'default' => $sequence->index == $idxDefaultCompany ? true : false,
+                    ]
+                ))
+            )
+            ->create();
 
         $this->actingAs($user);
 
