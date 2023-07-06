@@ -126,10 +126,12 @@ class UserActions
     public function readAny(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection
     {
         $timer_start = microtime(true);
+        $recordsCount = 0;
+
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'readAny_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -159,6 +161,8 @@ class UserActions
                 $result = $usr->get();
             }
 
+            $recordsCount = $result->count();
+
             if ($useCache) {
                 $this->saveToCache($cacheKey, $result);
             }
@@ -169,7 +173,7 @@ class UserActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
