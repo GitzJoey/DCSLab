@@ -26,6 +26,7 @@ const registerForm = ref<RegisterRequest>({
   name: '',
   email: '',
   password: '',
+  password_confirmation: '',
   terms: false
 });
 
@@ -81,7 +82,7 @@ const onSubmit = async (values: RegisterRequest, actions: FormActions<RegisterRe
               <div class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden">
                 &nbsp;
               </div>
-              <VeeForm id="loginForm" v-slot="{ errors }" @submit="onSubmit">
+              <VeeForm id="registerForm" v-slot="{ errors }" @submit="onSubmit">
                 <div class="mt-8 intro-x">
                   <VeeField v-slot="{ field }" name="name" rules="required" :label="t('views.register.fields.name')">
                     <FormInput v-model="registerForm.name" name="name" type="text"
