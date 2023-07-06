@@ -52,6 +52,12 @@ return [
     */
 
     'channels' => [
+        'traffic' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/traffic.log'),
+            'level' => 'info',
+        ],
+
         'cachehits' => [
             'driver' => 'single',
             'path' => storage_path('logs/cachehits.log'),
