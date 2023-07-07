@@ -260,6 +260,11 @@ class ProductGroupAPIReadTest extends APITestCase
         $api->assertStatus(422);
     }
 
+    public function test_product_group_api_call_read_with_sql_injection_expect_injection_ignored()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_product_group_api_call_read_any_with_special_char_in_search_expect_results()
     {
         $user = User::factory()

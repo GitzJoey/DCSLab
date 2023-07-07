@@ -117,6 +117,11 @@ class CustomerAPIReadTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_customer_api_call_read_with_sql_injection_expect_injection_ignored()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_customer_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
         $user = User::factory()

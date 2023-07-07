@@ -83,6 +83,11 @@ class BranchAPIReadTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_branch_api_call_read_with_sql_injection_expect_injection_ignored()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_branch_api_call_read_without_authorization_expect_unauthorized_message()
     {
         $branchCount = 2;
