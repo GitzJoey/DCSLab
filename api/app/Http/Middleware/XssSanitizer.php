@@ -15,7 +15,11 @@ class XssSanitizer
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $sanitizerStyle = $request->hasHeader('X-Sanitizer-Mode') ? $request->header('X-Sanitizer-Mode') : 'strip';
+        $sanitizerStyle = 'strip';
+
+        if ($request->hasHeader('X-Sanitizer-Mode') && $request->header('X-Sanitizer-Mode') == 'encode') {
+            $sanitizerStyle = 'encode';
+        }
 
         $input = $request->all();
 
