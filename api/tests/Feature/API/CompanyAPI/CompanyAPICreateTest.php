@@ -43,6 +43,7 @@ class CompanyAPICreateTest extends APITestCase
 
         $api->assertStatus(403);
     }
+
     public function test_company_api_call_store_with_script_tags_in_payload_expect_stripped()
     {
         $this->markTestSkipped('Test under construction');

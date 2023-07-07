@@ -64,7 +64,6 @@ class BrandAPIReadTest extends APITestCase
 
         $api->assertStatus(403);
     }
-    
 
     public function test_brand_api_call_read_without_authorization_expect_unauthorized_message()
     {
