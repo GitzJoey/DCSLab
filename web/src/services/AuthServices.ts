@@ -48,6 +48,7 @@ export default class AuthService {
                 name: request.name,
                 email: request.email,
                 password: request.password,
+                password_confirmation: request.password_confirmation,
                 terms: request.terms
             });
 

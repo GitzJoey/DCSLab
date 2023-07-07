@@ -2,6 +2,9 @@
 
 namespace App\Actions\User;
 
+use App\Actions\Role\RoleActions;
+use App\Enums\RecordStatus;
+use App\Enums\UserRoles;
 use App\Models\Profile;
 use App\Models\Setting;
 use App\Models\User;
@@ -23,6 +26,39 @@ class UserActions
 
     public function __construct()
     {
+    }
+
+    public function registration(array $input): User
+    {
+        $name = $input['name'];
+
+        if ($name == trim($name) && strpos($name, ' ') !== false) {
+            $pieces = explode(' ', $name);
+            $first_name = $pieces[0];
+            $last_name = $pieces[1];
+
+            $name = str_replace(' ', '', $name);
+        } else {
+            $first_name = $name;
+            $last_name = '';
+        }
+
+        $profile = [
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'status' => RecordStatus::ACTIVE,
+        ];
+
+        $roleActions = app(RoleActions::class);
+        $roles = [$roleActions->readBy('name', UserRoles::USER->value)->id];
+
+        $usr = $this->create(
+            $input,
+            $roles,
+            $profile
+        );
+
+        return $usr;
     }
 
     public function create(array $userArr, array $rolesArr, array $profileArr): User
@@ -90,10 +126,12 @@ class UserActions
     public function readAny(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection
     {
         $timer_start = microtime(true);
+        $recordsCount = 0;
+
         try {
             $cacheKey = '';
             if ($useCache) {
-                $cacheKey = 'read_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+                $cacheKey = 'readAny_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -123,6 +161,8 @@ class UserActions
                 $result = $usr->get();
             }
 
+            $recordsCount = $result->count();
+
             if ($useCache) {
                 $this->saveToCache($cacheKey, $result);
             }
@@ -133,7 +173,7 @@ class UserActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
