@@ -54,6 +54,16 @@ class CompanyAPIEditTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_company_api_call_update_with_script_tags_in_payload_expect_stripped()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_company_api_call_update_with_script_tags_in_payload_expect_encoded()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_company_api_call_update_expect_successful()
     {
         $user = User::factory()

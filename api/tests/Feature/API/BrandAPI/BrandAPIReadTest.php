@@ -64,6 +64,7 @@ class BrandAPIReadTest extends APITestCase
 
         $api->assertStatus(403);
     }
+    
 
     public function test_brand_api_call_read_without_authorization_expect_unauthorized_message()
     {
@@ -98,6 +99,11 @@ class BrandAPIReadTest extends APITestCase
         $api = $this->getJson(route('api.get.db.product.brand.read', $ulid));
 
         $api->assertStatus(403);
+    }
+
+    public function test_brand_api_call_read_with_sql_injection_expect_injection_ignored()
+    {
+        $this->markTestSkipped('Test under construction');
     }
 
     public function test_brand_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()

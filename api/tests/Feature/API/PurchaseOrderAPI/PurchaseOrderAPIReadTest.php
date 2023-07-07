@@ -457,6 +457,11 @@ class PurchaseOrderAPIReadTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_purchase_order_api_call_read_with_sql_injection_expect_injection_ignored()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_purchase_order_api_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()

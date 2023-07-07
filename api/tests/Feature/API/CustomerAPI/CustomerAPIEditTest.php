@@ -145,6 +145,16 @@ class CustomerAPIEditTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_customer_api_call_update_with_script_tags_in_payload_expect_stripped()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_customer_api_call_update_with_script_tags_in_payload_expect_encoded()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_customer_api_call_update_and_insert_customer_address_expect_db_updated()
     {
         $user = User::factory()
