@@ -30,11 +30,10 @@ class ProductActionsEditTest extends ActionsTestCase
     public function test_product_actions_call_update_product_and_insert_product_units_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -126,11 +125,10 @@ class ProductActionsEditTest extends ActionsTestCase
     public function test_product_actions_call_update_product_and_edit_product_units_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -220,11 +218,10 @@ class ProductActionsEditTest extends ActionsTestCase
     public function test_product_actions_call_update_product_and_delete_product_units_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -308,11 +305,10 @@ class ProductActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

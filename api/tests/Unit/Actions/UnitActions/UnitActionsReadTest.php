@@ -8,6 +8,7 @@ use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\ActionsTestCase;
 
 class UnitActionsReadTest extends ActionsTestCase
@@ -24,9 +25,8 @@ class UnitActionsReadTest extends ActionsTestCase
     public function test_unit_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -46,9 +46,8 @@ class UnitActionsReadTest extends ActionsTestCase
     public function test_unit_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -80,12 +79,21 @@ class UnitActionsReadTest extends ActionsTestCase
 
     public function test_unit_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
+        $unitCount = 5;
+        $idxTest = random_int(0, $unitCount - 1);
+        $defaultName = Unit::factory()->make()->name;
+        $testName = Unit::factory()->insertStringInName('testing')->make()->name;
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory()->count(5))
-                    ->has(Unit::factory()->insertStringInName('testing')->count(5))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory()->count($unitCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'name' => $sequence->index == $idxTest ? $testName : $defaultName,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -99,15 +107,14 @@ class UnitActionsReadTest extends ActionsTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 5);
+        $this->assertTrue($result->total() == 1);
     }
 
     public function test_unit_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -128,9 +135,8 @@ class UnitActionsReadTest extends ActionsTestCase
     public function test_unit_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -151,9 +157,8 @@ class UnitActionsReadTest extends ActionsTestCase
     public function test_unit_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory()->count(5))
             )->create();
 
         $unit = $user->companies()->inRandomOrder()->first()

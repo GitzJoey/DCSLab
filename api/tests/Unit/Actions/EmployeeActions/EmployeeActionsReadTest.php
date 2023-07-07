@@ -14,6 +14,7 @@ use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\ActionsTestCase;
 
 class EmployeeActionsReadTest extends ActionsTestCase
@@ -29,12 +30,19 @@ class EmployeeActionsReadTest extends ActionsTestCase
 
     public function test_employee_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -76,12 +84,19 @@ class EmployeeActionsReadTest extends ActionsTestCase
 
     public function test_employee_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -134,12 +149,19 @@ class EmployeeActionsReadTest extends ActionsTestCase
 
     public function test_employee_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -211,12 +233,19 @@ class EmployeeActionsReadTest extends ActionsTestCase
 
     public function test_employee_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -262,9 +291,8 @@ class EmployeeActionsReadTest extends ActionsTestCase
     public function test_employee_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -310,12 +338,19 @@ class EmployeeActionsReadTest extends ActionsTestCase
 
     public function test_employee_actions_call_read_expect_object()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 

@@ -27,9 +27,8 @@ class CustomerActionsCreateTest extends ActionsTestCase
     public function test_customer_actions_call_create_customer_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

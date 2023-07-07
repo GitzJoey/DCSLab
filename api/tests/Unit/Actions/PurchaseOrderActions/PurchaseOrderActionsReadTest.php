@@ -34,13 +34,12 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
     public function test_purchase_order_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -113,13 +112,12 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
     public function test_purchase_order_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -201,13 +199,12 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
     public function test_purchase_order_actions_call_read_any_with_nonexistance_branch_id_expect_failed()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -280,13 +277,12 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
     public function test_purchase_order_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -362,13 +358,12 @@ class PurchaseOrderActionsReadTest extends ActionsTestCase
     public function test_purchase_order_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

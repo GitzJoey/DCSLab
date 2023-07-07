@@ -24,9 +24,8 @@ class WarehouseActionsCreateTest extends ActionsTestCase
     public function test_warehouse_actions_call_create_expect_db_has_record_d()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

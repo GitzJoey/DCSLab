@@ -24,9 +24,8 @@ class CustomerActionsDeleteTest extends ActionsTestCase
     public function test_customer_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

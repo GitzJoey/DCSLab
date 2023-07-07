@@ -25,9 +25,8 @@ class WarehouseActionsEditTest extends ActionsTestCase
     {
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(
-                    Branch::factory()->setStatusActive()->setIsMainBranch()
-                ))->create();
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
@@ -57,9 +56,8 @@ class WarehouseActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(
-                    Branch::factory()->setStatusActive()->setIsMainBranch()
-                ))->create();
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
