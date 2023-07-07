@@ -251,4 +251,3 @@ const deleteSelected = (itemUlid: string) => {
       <div v-else></div>
     </LoadingOverlay>
   </div>
-</template>
