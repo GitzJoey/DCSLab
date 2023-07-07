@@ -3,11 +3,14 @@
 namespace Tests\Unit\Actions\BranchActions;
 
 use App\Actions\Branch\BranchActions;
+use App\Enums\UserRoles;
 use App\Models\Branch;
 use App\Models\Company;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\ActionsTestCase;
 
 class BranchActionsReadTest extends ActionsTestCase
@@ -24,9 +27,8 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -45,9 +47,8 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -76,13 +77,24 @@ class BranchActionsReadTest extends ActionsTestCase
 
     public function test_branch_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
+        $branchCount = 4;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+        $idxTest = random_int(0, $branchCount - 1);
+        $defaultName = Branch::factory()->make()->name;
+        $testName = Branch::factory()->insertStringInName('testing')->make()->name;
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(2))
-                    ->has(Branch::factory()->setStatusActive()->insertStringInName('testing')->count(3))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                            'name' => $sequence->index == $idxTest ? $testName : $defaultName,
+                        ]
+                    ))
+                )
+            )
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -95,17 +107,25 @@ class BranchActionsReadTest extends ActionsTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 3);
+        $this->assertTrue($result->total() == 1);
     }
 
     public function test_branch_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(2))
-            )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -123,12 +143,20 @@ class BranchActionsReadTest extends ActionsTestCase
 
     public function test_branch_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(2))
-            )->create();
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -147,9 +175,8 @@ class BranchActionsReadTest extends ActionsTestCase
     public function test_branch_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $branch = $user->companies()->inRandomOrder()->first()

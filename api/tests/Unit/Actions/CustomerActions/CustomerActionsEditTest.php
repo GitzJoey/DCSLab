@@ -27,9 +27,8 @@ class CustomerActionsEditTest extends ActionsTestCase
     public function test_customer_actions_call_update_customer_and_insert_customer_address_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -110,9 +109,8 @@ class CustomerActionsEditTest extends ActionsTestCase
     public function test_customer_actions_call_update_customer_and_edit_customer_address_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -196,9 +194,8 @@ class CustomerActionsEditTest extends ActionsTestCase
     public function test_customer_actions_call_update_customer_and_delete_customer_address_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -276,9 +273,8 @@ class CustomerActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

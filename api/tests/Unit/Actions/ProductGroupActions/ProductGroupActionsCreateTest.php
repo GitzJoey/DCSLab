@@ -23,9 +23,8 @@ class ProductGroupActionsCreateTest extends ActionsTestCase
     public function test_product_group_actions_call_create_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 

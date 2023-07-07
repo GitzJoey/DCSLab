@@ -9,6 +9,7 @@ use App\Models\Employee;
 use App\Models\EmployeeAccess;
 use App\Models\Profile;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\ActionsTestCase;
 
 class EmployeeActionsDeleteTest extends ActionsTestCase
@@ -24,13 +25,20 @@ class EmployeeActionsDeleteTest extends ActionsTestCase
 
     public function test_employee_actions_call_delete_expect_bool()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->has(Profile::factory()->setStatusActive())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 

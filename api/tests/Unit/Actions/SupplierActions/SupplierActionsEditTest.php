@@ -30,12 +30,11 @@ class SupplierActionsEditTest extends ActionsTestCase
     public function test_supplier_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -130,12 +129,11 @@ class SupplierActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(
-                Company::factory()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
