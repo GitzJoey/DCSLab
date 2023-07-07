@@ -1,6 +1,7 @@
 {
     "name": "api",
     "scripts": {
-        "serve": "php artisan serve"
+        "serve": "php artisan serve",
+        "host": "php artisan serve --host=0.0.0.0"
     }
 }
