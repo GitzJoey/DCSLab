@@ -29,11 +29,10 @@ class ProductActionsCreateTest extends ActionsTestCase
     public function test_product_actions_call_create_product_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -109,10 +108,9 @@ class ProductActionsCreateTest extends ActionsTestCase
     public function test_product_actions_call_create_service_expect_db_has_record()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToService()->count(5))
-                    ->has(Unit::factory()->setCategoryToService()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToService()->count(5))
+                ->has(Unit::factory()->setCategoryToService()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

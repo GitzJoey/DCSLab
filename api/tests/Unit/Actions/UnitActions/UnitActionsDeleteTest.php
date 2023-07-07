@@ -22,9 +22,8 @@ class UnitActionsDeleteTest extends ActionsTestCase
     public function test_unit_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $unit = $user->companies()->inRandomOrder()->first()

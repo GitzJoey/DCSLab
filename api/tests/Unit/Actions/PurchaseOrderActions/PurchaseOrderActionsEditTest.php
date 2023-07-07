@@ -35,13 +35,12 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
     public function test_purchase_order_actions_call_update_and_insert_product_units_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -230,13 +229,12 @@ class PurchaseOrderActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
-                    ->has(Supplier::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
+                ->has(Supplier::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

@@ -28,11 +28,10 @@ class ProductActionsDeleteTest extends ActionsTestCase
     public function test_product_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
-                    ->has(Brand::factory()->count(5))
-                    ->has(Unit::factory()->setCategoryToProduct()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->setCategoryToProduct()->count(5))
+                ->has(Brand::factory()->count(5))
+                ->has(Unit::factory()->setCategoryToProduct()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
