@@ -19,9 +19,10 @@ class XssSanitizer
 
         $input = $request->all();
 
-        array_walk_recursive($input, function(&$input) use ($sanitizerStyle) {
-            if ($this->isContainScriptTag(($input)))
+        array_walk_recursive($input, function (&$input) use ($sanitizerStyle) {
+            if ($this->isContainScriptTag(($input))) {
                 $input = $sanitizerStyle == 'encode' ? htmlspecialchars($input, ENT_QUOTES | ENT_HTML5) : strip_tags($input);
+            }
         });
 
         $request->merge($input);
@@ -29,7 +30,7 @@ class XssSanitizer
         return $next($request);
     }
 
-    private function isContainScriptTag($input): bool 
+    private function isContainScriptTag($input): bool
     {
         return preg_match("/<script[\s\S]*?>/", $input);
     }

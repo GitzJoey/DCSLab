@@ -16,23 +16,32 @@ class LogRequestResponse
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $enableLog = $request->hasHeader('X-Enable-LogRequestResponse') ? true : false;
-        $enableRequestLogOnly = $request->hasHeader('X-LogRequestResponse-Request-Only') ? true : false;
-        $enableResponseLogOnly = $request->hasHeader('X-LogRequestResponse-Response-Only') ? true : false;
 
-        if (! $enableLog) return $next($request);
+        $enableLog = false;
+        $enableRequestLogOnly = false;
+        $enableResponseLogOnly = false;
+
+        if ($request->hasHeader('X-LogRequestResponse')) {
+            $enableLog = true;
+            $enableRequestLogOnly = strtolower($request->header('X-LogRequestResponse')) == 'request' ? true : false;
+            $enableResponseLogOnly = strtolower($request->header('X-LogRequestResponse')) == 'response' ? true : false;
+        }
+
+        if (! $enableLog) {
+            return $next($request);
+        }
 
         $response = $next($request);
 
         if ($enableRequestLogOnly) {
             $this->logRequest($request);
-        } else if ($enableResponseLogOnly) {
-            $this->logResponse($response);    
+        } elseif ($enableResponseLogOnly) {
+            $this->logResponse($response);
         } else {
             $this->logRequest($request);
             $this->logResponse($response);
         }
-        
+
         return $response;
     }
 
