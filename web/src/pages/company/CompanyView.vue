@@ -49,7 +49,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Company Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
 ]);
-const deleteUlid = ref<string>("");
+const deleteUlid = ref<string>('');
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
 //#endregion
@@ -125,7 +125,7 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   if (result.success && result.data) {
     companyLists.value = result.data as Collection<Array<Company>>;
   } else {
-    datalistErrors.value = result.errors as LaravelError;    
+    datalistErrors.value = result.errors as LaravelError;
   }
 }
 
@@ -172,15 +172,19 @@ const deleteSelected = (itemUlid: string) => {
   deleteModalShow.value = true;
 }
 
-const confirmDelete = () => {
-    deleteModalShow.value = false;
-    companyServices.delete(deleteUlid.value).then(response => {
-        backToList();
-    }).catch(e => {
-      datalistErrors.value = e.response.errors;
-    }).finally(() => {
+const confirmDelete = async () => {
+  deleteModalShow.value = false;
+  loading.value = true;
 
-    });
+  let result: ServiceResponse<boolean | null> = await companyServices.delete(deleteUlid.value);
+
+  if (result.success) {
+    backToList();
+  } else {
+    console.log(result);
+  }
+
+  loading.value = true;
 }
 
 const handleExpandCard = (index: number) => {
@@ -192,11 +196,11 @@ const handleExpandCard = (index: number) => {
 }
 
 const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormRequest<Company>>) => {
-  loading.value = true;  
+  loading.value = true;
 
   let result: ServiceResponse<Company | null> = {
     success: false,
-  }  
+  }
 
   if (mode.value == ViewMode.FORM_CREATE) {
     result = await companyServices.create(values);
@@ -214,7 +218,7 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
   } else {
     backToList();
   }
-  
+
   loading.value = false;
 };
 
@@ -377,7 +381,8 @@ watch(
                   </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
-                  <Button type="button" variant="outline-secondary" class="w-24 mr-1" @click="() => { deleteModalShow = false; }">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
+                    @click="() => { deleteModalShow = false; }">
                     {{ t('components.buttons.cancel') }}
                   </Button>
                   <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
@@ -393,16 +398,15 @@ watch(
         <VeeForm id="companyForm" v-slot="{ errors }" :initialValues="companyForm.data" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" :title="t('views.company.page_title')" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
-            <template #card-items-0>            
+            <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.company.fields.code') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="code" rules="required" :label="t('views.company.fields.code')">
-                    <FormInput id="code" v-model="companyForm.data.code" v-bind="field" name="code" type="text" 
-                      :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.company.fields.code')"
-                    />
+                    <FormInput id="code" v-model="companyForm.data.code" v-bind="field" name="code" type="text"
+                      :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.company.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
                 </div>
@@ -410,10 +414,10 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.company.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required|alpha_num" :label="t('views.company.fields.name')">
+                  <VeeField v-slot="{ field }" name="name" rules="required|alpha_num"
+                    :label="t('views.company.fields.name')">
                     <FormInput id="name" v-model="companyForm.data.name" v-bind="field" name="name" type="text"
-                      :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.company.fields.name')"
-                    />
+                      :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.company.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />
                 </div>
@@ -422,19 +426,18 @@ watch(
                     {{ t('views.company.fields.address') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="address" :label="t('views.company.fields.address')">
-                    <FormTextarea id="address" v-model="companyForm.data.address" v-bind="field" name="address" type="text"
-                      :placeholder="t('views.company.fields.address')" 
-                    />
+                    <FormTextarea id="address" v-model="companyForm.data.address" v-bind="field" name="address"
+                      type="text" :placeholder="t('views.company.fields.address')" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default']}" class="pr-5">
+                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }" class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
-                    <FormCheck.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default" type="checkbox"
-                      :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')"
-                    />
+                    <FormCheck.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default"
+                      type="checkbox" :class="{ 'border-danger': errors['default'] }"
+                      :placeholder="t('views.company.fields.default')" />
                   </VeeField>
                   <VeeErrorMessage name="default" class="mt-2 text-danger" />
                 </div>

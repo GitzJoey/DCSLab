@@ -28,10 +28,10 @@ export default class CompanyService {
             success: false,
         }
 
-        try {                    
-            const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);        
+        try {
+            const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-            
+
             if (payload.default == undefined) payload.default = false;
 
             const response: AxiosResponse<Company> = await authAxiosInstance.post(
@@ -41,7 +41,7 @@ export default class CompanyService {
                 address: payload.address,
                 default: payload.default,
                 status: payload.status
-            });            
+            });
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -128,9 +128,9 @@ export default class CompanyService {
             success: false,
         }
 
-        try {                    
-            const url = route('api.post.db.company.company.edit', payload.ulid, false, this.ziggyRoute);        
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
+        try {
+            const url = route('api.post.db.company.company.edit', payload.ulid, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Company> = await authAxiosInstance.post(
                 url, {
@@ -140,8 +140,8 @@ export default class CompanyService {
                 address: payload.address,
                 default: payload.default,
                 status: payload.status
-            }); 
-            
+            });
+
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             result.success = true;
@@ -159,8 +159,8 @@ export default class CompanyService {
         }
     }
 
-    public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {        
-        const result: ServiceResponse<Company | null> = {
+    public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
+        const result: ServiceResponse<boolean | null> = {
             success: false,
         }
 
@@ -168,24 +168,19 @@ export default class CompanyService {
             const url = route('api.post.db.company.company.delete', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<boolean> = await authAxiosInstance.post(url);
-
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+            const response: AxiosResponse<boolean | null> = await axios.post(url);
 
             result.success = true;
+            result.data = true;
 
-            return {
-                success: result.success,
-            }
+            return result;
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
             } else if (isAxiosError(e)) {
                 return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                return {
-                    success: false
-                }
+                return result;
             }
         }
     }
