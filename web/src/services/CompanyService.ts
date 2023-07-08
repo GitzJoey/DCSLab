@@ -134,7 +134,6 @@ export default class CompanyService {
 
             const response: AxiosResponse<Company> = await authAxiosInstance.post(
                 url, {
-                company_id: payload.company_id,
                 code: payload.code,
                 name: payload.name,
                 address: payload.address,
