@@ -103,7 +103,7 @@ onMounted(async () => {
 //#endregion
 
 //#region Methods
-const toggleDetail = (idx: number) => {
+const viewSelected = (idx: number) => {
   if (expandDetail.value === idx) {
     expandDetail.value = null;
   } else {
@@ -200,6 +200,7 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
 
   if (mode.value == ViewMode.FORM_CREATE) {
     result = await companyServices.create(values);
+    console.log(result);
   } else if (mode.value == ViewMode.FORM_EDIT) {
     values.ulid = companyForm.value.data.ulid;
     values.company_id = companyForm.value.data.id;
@@ -318,7 +319,7 @@ watch(
                     </Table.Td>
                     <Table.Td>
                       <div class="flex justify-end gap-1">
-                        <Button variant="outline-secondary" @click="toggleDetail(itemIdx)">
+                        <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                           <Lucide icon="Info" class="w-4 h-4" />
                         </Button>
                         <Button variant="outline-secondary" @click="editSelected(itemIdx)">
