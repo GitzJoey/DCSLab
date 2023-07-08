@@ -47,7 +47,7 @@ const computedVariant = computed(() => {
                 <div class="mt-3 ml-12">
                     <ul class="list-disc">
                         <template v-for="e in errors">
-                            <li v-for="(ee, eeIdx) in e" :key="eeIdx" class="ml-5">{{ ee }}</li>
+                            <li class="ml-5">{{ e }}</li>
                         </template>
                     </ul>
                 </div>
