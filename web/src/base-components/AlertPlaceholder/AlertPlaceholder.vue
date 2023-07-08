@@ -55,4 +55,3 @@ const computedVariant = computed(() => {
         </Alert>
     </div>
 </template>
-
