@@ -32,15 +32,13 @@ export default class CompanyService {
             const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            if (payload.default == undefined) payload.default = false;
-
             const response: AxiosResponse<Company> = await authAxiosInstance.post(
                 url, {
-                code: payload.code,
-                name: payload.name,
-                address: payload.address,
-                default: payload.default,
-                status: payload.status
+                code: payload.data.code,
+                name: payload.data.name,
+                address: payload.data.address,
+                default: payload.data.default,
+                status: payload.data.status
             });
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
@@ -129,20 +127,17 @@ export default class CompanyService {
         }
 
         try {
-            const url = route('api.post.db.company.company.edit', payload.ulid, false, this.ziggyRoute);
+            const url = route('api.post.db.company.company.edit', payload.data.ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Company> = await authAxiosInstance.post(
                 url, {
-                company_id: payload.company_id,
-                code: payload.code,
-                name: payload.name,
-                address: payload.address,
-                default: payload.default,
-                status: payload.status
+                code: payload.data.code,
+                name: payload.data.name,
+                address: payload.data.address,
+                default: payload.data.default,
+                status: payload.data.status
             });
-
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             result.success = true;
             result.data = response.data;

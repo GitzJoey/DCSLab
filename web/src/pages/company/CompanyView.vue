@@ -206,8 +206,6 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
     result = await companyServices.create(values);
     console.log(result);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    values.ulid = companyForm.value.data.ulid;
-    values.company_id = companyForm.value.data.id;
     result = await companyServices.update(values);
   } else {
     result.success = false;
@@ -395,8 +393,8 @@ watch(
         </DataList>
       </div>
       <div v-else>
-        <VeeForm id="companyForm" v-slot="{ errors }" :initialValues="companyForm.data" @submit="onSubmit">
-          <AlertPlaceholder :errors="errors" :title="t('views.company.page_title')" />
+        <VeeForm id="companyForm" v-slot="{ errors }" @submit="onSubmit">
+          <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
