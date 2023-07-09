@@ -67,6 +67,7 @@ const companyForm = ref<FormRequest<Company>>({
     branches: [],
   }
 });
+
 const companyLists = ref<Collection<Array<Company>> | null>({
   data: [],
   meta: {
