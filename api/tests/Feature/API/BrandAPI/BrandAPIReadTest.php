@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
@@ -23,9 +24,8 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -45,9 +45,8 @@ class BrandAPIReadTest extends APITestCase
     public function test_brand_api_call_read_any_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -70,9 +69,8 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -87,9 +85,8 @@ class BrandAPIReadTest extends APITestCase
     public function test_brand_api_call_read_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -103,13 +100,17 @@ class BrandAPIReadTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_brand_api_call_read_with_sql_injection_expect_injection_ignored()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_brand_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -152,9 +153,8 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -189,13 +189,22 @@ class BrandAPIReadTest extends APITestCase
 
     public function test_brand_api_call_read_any_with_search_expect_filtered_results()
     {
+        $brandCount = 5;
+        $idxTest = random_int(0, $brandCount - 1);
+        $defaultName = Brand::factory()->make()->name;
+        $testName = Brand::factory()->insertStringInName('testing')->make()->name;
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory()->count(5))
-                    ->has(Brand::factory()->insertStringInName('testing')->count(5))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory()->count($brandCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'name' => $sequence->index == $idxTest ? $testName : $defaultName,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $this->actingAs($user);
 
@@ -222,7 +231,7 @@ class BrandAPIReadTest extends APITestCase
         ]);
 
         $api->assertJsonFragment([
-            'total' => 5,
+            'total' => 1,
         ]);
     }
 
@@ -230,9 +239,8 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -250,9 +258,8 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -284,9 +291,8 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -318,9 +324,8 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $this->actingAs($user);
@@ -351,11 +356,9 @@ class BrandAPIReadTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
-            )
-            ->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
+            )->create();
 
         $this->actingAs($user);
 

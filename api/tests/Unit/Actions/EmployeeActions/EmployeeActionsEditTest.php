@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
 use Exception;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\ActionsTestCase;
 
 class EmployeeActionsEditTest extends ActionsTestCase
@@ -28,13 +29,20 @@ class EmployeeActionsEditTest extends ActionsTestCase
 
     public function test_employee_actions_call_update_expect_db_updated()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->has(Profile::factory()->setStatusActive())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -121,13 +129,20 @@ class EmployeeActionsEditTest extends ActionsTestCase
     {
         $this->expectException(Exception::class);
 
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->has(Profile::factory()->setStatusActive())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->setStatusActive()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 

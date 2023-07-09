@@ -11,6 +11,7 @@ use App\Models\Profile;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -23,13 +24,20 @@ class EmployeeAPICreateTest extends APITestCase
 
     public function test_employee_api_call_store_without_authorization_expect_unauthorized_message()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->count(2))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -61,12 +69,19 @@ class EmployeeAPICreateTest extends APITestCase
 
     public function test_employee_api_call_store_without_access_right_expect_unauthorized_message()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->count(2))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $this->actingAs($user);
 
@@ -98,15 +113,32 @@ class EmployeeAPICreateTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_employee_api_call_store_with_script_tags_in_payload_expect_stripped()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_employee_api_call_store_with_script_tags_in_payload_expect_encoded()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_employee_api_call_store_expect_successful()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->count(2))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $this->actingAs($user);
 
@@ -171,13 +203,20 @@ class EmployeeAPICreateTest extends APITestCase
 
     public function test_employee_api_call_store_with_nonexistance_branch_id_expect_failed()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->count(2))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $this->actingAs($user);
 
@@ -220,13 +259,20 @@ class EmployeeAPICreateTest extends APITestCase
 
     public function test_employee_api_call_store_with_existing_code_in_same_company_expect_failed()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                    ->has(Branch::factory()->count(4))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $this->actingAs($user);
 
@@ -292,14 +338,28 @@ class EmployeeAPICreateTest extends APITestCase
 
     public function test_employee_api_call_store_with_existing_code_in_different_company_expect_successful()
     {
+        $branchCount = 3;
+        $idxMainBranchCompany1 = random_int(0, $branchCount - 1);
+        $idxMainBranchCompany2 = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->count(2)))
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranchCompany1 ? true : false,
+                        ]
+                    ))
+                ))
             ->has(Company::factory()->setStatusActive()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->count(2)))
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranchCompany2 ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
@@ -394,11 +454,19 @@ class EmployeeAPICreateTest extends APITestCase
 
     public function test_employee_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
-                ->has(Branch::factory()->count(2)))
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);

@@ -61,6 +61,16 @@ class BranchAPIEditTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_branch_api_call_update_with_script_tags_in_payload_expect_stripped()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_branch_api_call_update_with_script_tags_in_payload_expect_encoded()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_branch_api_call_update_expect_successful()
     {
         $user = User::factory()
@@ -124,10 +134,13 @@ class BranchAPIEditTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->count(2)
-                    ->state(new Sequence(['default' => true], ['default' => false]))
-            )->create();
+            ->has(Company::factory()->count(2)
+                ->state(new Sequence(
+                    ['default' => true],
+                    ['default' => false]
+                ))
+            )
+            ->create();
 
         $this->actingAs($user);
 

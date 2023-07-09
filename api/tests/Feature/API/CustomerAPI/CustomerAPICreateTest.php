@@ -26,9 +26,8 @@ class CustomerAPICreateTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -83,9 +82,8 @@ class CustomerAPICreateTest extends APITestCase
     public function test_customer_api_call_store_without_access_right_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $this->actingAs($user);
@@ -139,13 +137,22 @@ class CustomerAPICreateTest extends APITestCase
         $api->assertStatus(403);
     }
 
+    public function test_customer_api_call_store_with_script_tags_in_payload_expect_stripped()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
+    public function test_customer_api_call_store_with_script_tags_in_payload_expect_encoded()
+    {
+        $this->markTestSkipped('Test under construction');
+    }
+
     public function test_customer_api_call_store_expect_successful()
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $this->actingAs($user);
@@ -231,9 +238,8 @@ class CustomerAPICreateTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $this->actingAs($user);
@@ -290,9 +296,8 @@ class CustomerAPICreateTest extends APITestCase
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory()->count(3))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory()->count(3))
             )->create();
 
         $this->actingAs($user);

@@ -23,9 +23,8 @@ class UnitActionsEditTest extends ActionsTestCase
     public function test_unit_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -50,9 +49,8 @@ class UnitActionsEditTest extends ActionsTestCase
         $this->expectException(Exception::class);
 
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Unit::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Unit::factory())
             )->create();
 
         $unit = $user->companies()->inRandomOrder()->first()

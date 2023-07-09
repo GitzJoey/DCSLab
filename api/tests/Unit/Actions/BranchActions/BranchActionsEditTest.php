@@ -23,9 +23,8 @@ class BranchActionsEditTest extends ActionsTestCase
     public function test_branch_actions_call_update_expect_db_updated()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -50,9 +49,8 @@ class BranchActionsEditTest extends ActionsTestCase
 
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(
-                    Branch::factory()->setStatusActive()->setIsMainBranch()
-                ))->create();
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
 
         $branch = $user->companies()->inRandomOrder()->first()
             ->branches()->inRandomOrder()->first();

@@ -17,7 +17,8 @@
     },
     "fields": {
         "code": "Kode",
-        "name": "Name",
+        "name": "Nama",
+        "address": "Alamat",
         "default": "Default",
         "status": "Status"
     }

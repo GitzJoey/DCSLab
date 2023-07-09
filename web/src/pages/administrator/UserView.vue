@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, computed } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -37,6 +37,7 @@ import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
 import { LaravelError } from "../../types/errors/LaravelError";
 import { VeeValidateError } from "../../types/errors/VeeValidateError";
+import { FormActions } from "vee-validate";
 //#endregion
 
 //#region Declarations
@@ -98,7 +99,7 @@ const userForm = ref<FormRequest<User>>({
     }
   }
 });
-const userLists = ref<Collection<User[]> | null>({
+const userLists = ref<Collection<Array<User>> | null>({
   data: [],
   meta: {
     current_page: 0,
@@ -124,23 +125,14 @@ const countriesDDL = ref<Array<DropDownOption> | null>(null);
 //#region onMounted
 onMounted(async () => {
   await getUsers('', true, true, 1, 10);
-  await getDDL();
+  getDDL();
 });
 //#endregion
 
-//#region Computed
-//#endregion
-
 //#region Methods
-const toggleDetail = (idx: number) => {
-  if (expandDetail.value === idx) {
-    expandDetail.value = null;
-  } else {
-    expandDetail.value = idx;
-  }
-};
-
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+  loading.value = true;
+
   const searchReq: SearchRequest = {
     search: search,
     refresh: refresh,
@@ -149,13 +141,15 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
     per_page: per_page
   };
 
-  let result: ServiceResponse<Collection<User[]> | Resource<User[]> | null> = await userServices.readAny(searchReq);
+  let result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = await userServices.readAny(searchReq);
 
   if (result.success && result.data) {
-    userLists.value = result.data as Collection<User[]>;
+    userLists.value = result.data as Collection<Array<User>>;
   } else {
     datalistErrors.value = result.errors as LaravelError;
   }
+
+  loading.value = false;
 }
 
 const getDDL = (): void => {
@@ -206,8 +200,8 @@ const emptyUser = () => {
   }
 }
 
-const onDataListChanged = (data: DataListEmittedData) => {
-  getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+const onDataListChanged = async (data: DataListEmittedData) => {
+  await getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
 }
 
 const createNew = () => {
@@ -217,6 +211,14 @@ const createNew = () => {
 
   userForm.value = cachedData == null ? emptyUser() : cachedData as FormRequest<User>;
 }
+
+const viewSelected = (idx: number) => {
+  if (expandDetail.value === idx) {
+    expandDetail.value = null;
+  } else {
+    expandDetail.value = idx;
+  }
+};
 
 const editSelected = (itemIdx: number) => {
   mode.value = ViewMode.FORM_EDIT;
@@ -236,22 +238,54 @@ const handleExpandCard = (index: number) => {
   }
 }
 
-const onSubmit = async () => {
+const onSubmit = async (values: FormRequest<User>, actions: FormActions<FormRequest<User>>) => {
   loading.value = true;
 
+  let result: ServiceResponse<User | null> = {
+    success: false,
+  }
+
+  if (mode.value == ViewMode.FORM_CREATE) {
+    result = await userServices.create(values);
+  } else if (mode.value == ViewMode.FORM_EDIT) {
+    result = await userServices.edit(values);
+  } else {
+    result.success = false;
+  }
+
+  if (!result.success) {
+    actions.setErrors({ data: 'error' });
+  }
+
+  backToList();
   loading.value = false;
 };
 
 const backToList = async () => {
-  loading.value = true;
-
   cacheServices.removeLastEntity('User');
 
   mode.value = ViewMode.LIST;
   await getUsers('', true, true, 1, 10);
-
-  loading.value = false;
 }
+
+const flattenedRoles = (roles: Array<Role>): string => {
+  if (roles.length == 0) return '';
+  return roles.map((x: Role) => x.display_name).join(', ');
+}
+//#endregion
+
+//#region Computed
+const titleView = computed(() => {
+  switch (mode.value) {
+    case ViewMode.FORM_CREATE:
+      return t('views.user.actions.create');
+    case ViewMode.FORM_EDIT:
+      return t('views.user.actions.edit');
+    case ViewMode.LIST:
+    default:
+      return t('views.user.page_title');
+  }
+});
 //#endregion
 
 //#region Watcher
@@ -270,7 +304,9 @@ watch(
   <div class="mt-8">
     <LoadingOverlay :visible="loading">
       <TitleLayout>
-        <template #title>{{ t("views.user.page_title") }}</template>
+        <template #title>
+          {{ titleView }}
+        </template>
         <template #optional>
           <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
             <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
@@ -317,7 +353,7 @@ watch(
                   <Table.Tr class="intro-x">
                     <Table.Td>{{ item.name }}</Table.Td>
                     <Table.Td>
-                      <a href="" class="hover:animate-pulse" @click.prevent="toggleDetail(itemIdx)">
+                      <a href="" class="hover:animate-pulse" @click.prevent="viewSelected(itemIdx)">
                         {{ item.email }}
                       </a>
                     </Table.Td>
@@ -330,7 +366,7 @@ watch(
                     </Table.Td>
                     <Table.Td>
                       <div class="flex justify-end gap-1">
-                        <Button variant="outline-secondary" @click="toggleDetail(itemIdx)">
+                        <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                           <Lucide icon="Info" class="w-4 h-4" />
                         </Button>
                         <Button variant="outline-secondary" @click="editSelected(itemIdx)">
@@ -354,7 +390,7 @@ watch(
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}</div>
-                        <div class="flex-1">{{ '' }}</div>
+                        <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
@@ -567,6 +603,9 @@ watch(
             <template #card-items-4>
               <div class="p-5">
                 <div class="pb-4">
+                  <FormLabel html-for="tokens_reset">
+                    {{ t('views.user.fields.tokens.reset') }}
+                  </FormLabel>
 
                 </div>
               </div>

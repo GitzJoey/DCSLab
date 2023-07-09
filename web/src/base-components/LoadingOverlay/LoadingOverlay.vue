@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { toRef } from "vue";
+import Spinner from "../../assets/images/spinner-big.gif";
 
 interface LoadingOverlayProps {
     visible: boolean,
@@ -18,6 +19,8 @@ const transparent = toRef(props, 'transparent');
 <template>
     <div :class="{ 'loading-container': visible }">
         <slot></slot>
-        <div v-if="visible" :class="{ 'loading-overlay': true, 'loading-overlay-gray': !transparent }"></div>
+        <div v-if="visible" :class="{ 'loading-overlay': true, 'loading-overlay-gray': !transparent }">
+            <img :src="Spinner" class="spinner" alt="DCSLab" />
+        </div>
     </div>
 </template>

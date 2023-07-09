@@ -46,6 +46,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\XssSanitizer::class,
             \App\Http\Middleware\ForceHeader::class,
+            \App\Http\Middleware\LogRequestResponse::class,
         ],
     ];
 

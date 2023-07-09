@@ -22,9 +22,8 @@ class BranchActionsDeleteTest extends ActionsTestCase
     public function test_branch_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )->create();
 
         $branch = $user->companies()->inRandomOrder()->first()

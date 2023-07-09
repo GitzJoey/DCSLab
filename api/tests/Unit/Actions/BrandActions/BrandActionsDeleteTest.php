@@ -22,9 +22,8 @@ class BrandActionsDeleteTest extends ActionsTestCase
     public function test_brand_actions_call_delete_expect_bool()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(Brand::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Brand::factory())
             )->create();
 
         $brand = $user->companies()->inRandomOrder()->first()

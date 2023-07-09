@@ -26,9 +26,8 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -44,9 +43,8 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -74,9 +72,8 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -117,9 +114,8 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -157,9 +153,8 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -188,9 +183,8 @@ class CustomerActionsReadTest extends ActionsTestCase
     public function test_customer_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(CustomerGroup::factory())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(CustomerGroup::factory())
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();

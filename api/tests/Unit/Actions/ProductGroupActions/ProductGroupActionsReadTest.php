@@ -8,6 +8,7 @@ use App\Models\ProductGroup;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\ActionsTestCase;
 
 class ProductGroupActionsReadTest extends ActionsTestCase
@@ -24,9 +25,8 @@ class ProductGroupActionsReadTest extends ActionsTestCase
     public function test_product_group_actions_call_read_any_with_paginate_false_expect_collection_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -58,12 +58,21 @@ class ProductGroupActionsReadTest extends ActionsTestCase
 
     public function test_product_group_actions_call_read_any_with_search_parameter_expect_filtered_results()
     {
+        $productGroupCount = 5;
+        $idxTest = random_int(0, $productGroupCount - 1);
+        $defaultName = ProductGroup::factory()->make()->name;
+        $testName = ProductGroup::factory()->insertStringInName('testing')->make()->name;
+
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->count(5))
-                    ->has(ProductGroup::factory()->insertStringInName('testing')->count(5))
-            )->create();
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count($productGroupCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'name' => $sequence->index == $idxTest ? $testName : $defaultName,
+                        ]
+                    ))
+                ))
+            ->create();
 
         $company = $user->companies()->inRandomOrder()->first();
 
@@ -77,15 +86,14 @@ class ProductGroupActionsReadTest extends ActionsTestCase
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 5);
+        $this->assertTrue($result->total() == 1);
     }
 
     public function test_product_group_actions_call_read_any_with_page_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -106,9 +114,8 @@ class ProductGroupActionsReadTest extends ActionsTestCase
     public function test_product_group_actions_call_read_any_with_perpage_parameter_negative_expect_results()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -129,9 +136,8 @@ class ProductGroupActionsReadTest extends ActionsTestCase
     public function test_product_group_actions_call_read_any_with_paginate_true_expect_paginator_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(5))
             )->create();
 
         $company = $user->companies()->inRandomOrder()->first();
@@ -151,9 +157,8 @@ class ProductGroupActionsReadTest extends ActionsTestCase
     public function test_product_group_actions_call_read_expect_object()
     {
         $user = User::factory()
-            ->has(
-                Company::factory()->setStatusActive()->setIsDefault()
-                    ->has(ProductGroup::factory()->count(5))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count(5))
             )->create();
 
         $productGroup = $user->companies()->inRandomOrder()->first()
