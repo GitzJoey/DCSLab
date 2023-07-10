@@ -208,6 +208,31 @@ watch(perPage,
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
 
+        <div v-if="canPrint" class="">
+          <Menu>
+            <Menu.Button v-if="canPrint" :as="Button" class="px-2">
+              <span class="flex items-center justify-center w-5 h-5">
+                <Lucide icon="Printer" class="w-4 h-4" />
+              </span>
+            </Menu.Button>
+            <Menu.Items v-if="canPrint || canExport" class="w-40" placement="left-end">
+              <Menu.Item v-if="canPrint">
+                <Lucide icon="Printer" class="w-4 h-4 mr-2" @click="printButtonClicked" />
+                {{ t("components.data-list.print") }}
+              </Menu.Item>
+              <Menu.Item v-if="canExport">
+                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('XLS')" />
+                {{ t("components.data-list.export_to_excel") }}
+              </Menu.Item>
+              <Menu.Item v-if="canExport">
+                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('PDF')" />
+                {{ t("components.data-list.export_to_pdf") }}
+              </Menu.Item>
+            </Menu.Items>
+          </Menu>
+        </div>
+
+
         <Button @click="refreshButtonClicked">
           <Lucide icon="RefreshCw" class="w-4 h-4" />
         </Button>
@@ -248,29 +273,6 @@ watch(perPage,
     </div>
     <div v-if="pages.length > 0" class="flex">
       <div class="w-1/2 flex justify-start">
-        <div>
-          <Menu>
-            <Menu.Button v-if="canPrint" :as="Button" class="px-2">
-              <span class="flex items-center justify-center w-5 h-5">
-                <Lucide icon="Printer" class="w-4 h-4" />
-              </span>
-            </Menu.Button>
-            <Menu.Items v-if="canPrint || canExport" class="w-40" placement="right-start">
-              <Menu.Item v-if="canPrint">
-                <Lucide icon="Printer" class="w-4 h-4 mr-2" @click="printButtonClicked" />
-                {{ t("components.data-list.print") }}
-              </Menu.Item>
-              <Menu.Item v-if="canExport">
-                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('XLS')" />
-                {{ t("components.data-list.export_to_excel") }}
-              </Menu.Item>
-              <Menu.Item v-if="canExport">
-                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('PDF')" />
-                {{ t("components.data-list.export_to_pdf") }}
-              </Menu.Item>
-            </Menu.Items>
-          </Menu>
-        </div>
       </div>
       <div class="w-1/2 flex justify-end">
         <FormSelect v-model="perPage" class="w-20 mt-3 sm:mt-0">
