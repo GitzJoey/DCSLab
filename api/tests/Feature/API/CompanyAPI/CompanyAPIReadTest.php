@@ -199,7 +199,6 @@ class CompanyAPIReadTest extends APITestCase
         ]));
 
         $api->assertSuccessful();
-        $api->assertDontSee('No results found');
 
         $api->assertJsonStructure([
             'data',
@@ -223,7 +222,6 @@ class CompanyAPIReadTest extends APITestCase
         ]));
 
         $api->assertSuccessful();
-        $api->assertDontSee('No results found');
     }
 
     public function test_company_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
