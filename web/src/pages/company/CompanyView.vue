@@ -63,10 +63,11 @@ const companyForm = ref<FormRequest<Company>>({
     name: '',
     address: '',
     default: false,
-    status: '',
+    status: 'ACTIVE',
     branches: [],
   }
 });
+
 const companyLists = ref<Collection<Array<Company>> | null>({
   data: [],
   meta: {
@@ -85,33 +86,22 @@ const companyLists = ref<Collection<Array<Company>> | null>({
     next: null,
   }
 });
+
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 //#endregion
 
 //#region onMounted
 onMounted(async () => {
-  loading.value = true;
-
   await getCompanies('', true, true, 1, 10);
-  getDDL();
 
-  loading.value = false;
+  getDDL();
 });
 //#endregion
 
-//#region Computed
-//#endregion
-
 //#region Methods
-const viewSelected = (idx: number) => {
-  if (expandDetail.value === idx) {
-    expandDetail.value = null;
-  } else {
-    expandDetail.value = idx;
-  }
-};
-
 const getCompanies = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+  loading.value = true;
+
   const searchReq: SearchRequest = {
     search: search,
     refresh: refresh,
@@ -127,6 +117,8 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   } else {
     datalistErrors.value = result.errors as LaravelError;
   }
+
+  loading.value = false;
 }
 
 const getDDL = async (): Promise<void> => {
@@ -162,6 +154,14 @@ const createNew = () => {
   companyForm.value = cachedData == null ? emptyCompany() : cachedData as FormRequest<Company>;
 }
 
+const viewSelected = (idx: number) => {
+  if (expandDetail.value === idx) {
+    expandDetail.value = null;
+  } else {
+    expandDetail.value = idx;
+  }
+};
+
 const editSelected = (itemIdx: number) => {
   mode.value = ViewMode.FORM_EDIT;
   companyForm.value.data = companyLists.value?.data[itemIdx] as Company;
@@ -171,6 +171,74 @@ const deleteSelected = (itemUlid: string) => {
   deleteUlid.value = itemUlid;
   deleteModalShow.value = true;
 }
+
+const confirmDelete = async () => {
+  deleteModalShow.value = false;
+  loading.value = true;
+
+  let result: ServiceResponse<boolean | null> = await companyServices.delete(deleteUlid.value);
+
+  if (result.success) {
+    backToList();
+  } else {
+    console.log(result);
+  }
+
+  loading.value = true;
+}
+
+const handleExpandCard = (index: number) => {
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed
+  }
+}
+
+const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormRequest<Company>>) => {
+  loading.value = true;
+
+  let result: ServiceResponse<Company | null> = {
+    success: false,
+  }
+
+  if (mode.value == ViewMode.FORM_CREATE) {
+    result = await companyServices.create({data:values});
+  } else if (mode.value == ViewMode.FORM_EDIT) {
+    result = await companyServices.update(values);
+  } else {
+    result.success = false;
+  }
+
+  if (!result.success) {
+    actions.setErrors({ data: 'error' });
+  } else {
+    backToList();
+  }
+
+  loading.value = false;
+};
+
+const backToList = async () => {
+  cacheServices.removeLastEntity('Company');
+
+  mode.value = ViewMode.LIST;
+  await getCompanies('', true, true, 1, 10);
+}
+//#endregion
+
+//#region Computed
+const titleView = computed(() => {
+  switch (mode.value) {
+    case ViewMode.FORM_CREATE:
+      return t('views.company.actions.create');
+    case ViewMode.FORM_EDIT:
+      return t('views.company.actions.edit');
+    case ViewMode.LIST:
+    default:
+      return t('views.company.page_title');
+  }
+});
 //#endregion
 
 //#region Watcher

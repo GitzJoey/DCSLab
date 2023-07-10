@@ -8,5 +8,5 @@ export interface Company {
     address: string,
     default: boolean,
     status: string,
-    branches: Array<Branch>,
+    branches?: Array<Branch | null>,
 }
