@@ -63,10 +63,11 @@ const companyForm = ref<FormRequest<Company>>({
     name: '',
     address: '',
     default: false,
-    status: '',
+    status: 'ACTIVE',
     branches: [],
   }
 });
+
 const companyLists = ref<Collection<Array<Company>> | null>({
   data: [],
   meta: {
@@ -85,33 +86,22 @@ const companyLists = ref<Collection<Array<Company>> | null>({
     next: null,
   }
 });
+
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 //#endregion
 
 //#region onMounted
 onMounted(async () => {
-  loading.value = true;
-
   await getCompanies('', true, true, 1, 10);
-  getDDL();
 
-  loading.value = false;
+  getDDL();
 });
 //#endregion
 
-//#region Computed
-//#endregion
-
 //#region Methods
-const viewSelected = (idx: number) => {
-  if (expandDetail.value === idx) {
-    expandDetail.value = null;
-  } else {
-    expandDetail.value = idx;
-  }
-};
-
 const getCompanies = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+  loading.value = true;
+
   const searchReq: SearchRequest = {
     search: search,
     refresh: refresh,
@@ -127,6 +117,8 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   } else {
     datalistErrors.value = result.errors as LaravelError;
   }
+
+  loading.value = false;
 }
 
 const getDDL = async (): Promise<void> => {
@@ -161,6 +153,14 @@ const createNew = () => {
 
   companyForm.value = cachedData == null ? emptyCompany() : cachedData as FormRequest<Company>;
 }
+
+const viewSelected = (idx: number) => {
+  if (expandDetail.value === idx) {
+    expandDetail.value = null;
+  } else {
+    expandDetail.value = idx;
+  }
+};
 
 const editSelected = (itemIdx: number) => {
   mode.value = ViewMode.FORM_EDIT;
@@ -203,8 +203,7 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await companyServices.create(values);
-    console.log(result);
+    result = await companyServices.create({data:values});
   } else if (mode.value == ViewMode.FORM_EDIT) {
     result = await companyServices.update(values);
   } else {
@@ -221,14 +220,10 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
 };
 
 const backToList = async () => {
-  loading.value = true;
-
   cacheServices.removeLastEntity('Company');
 
   mode.value = ViewMode.LIST;
   await getCompanies('', true, true, 1, 10);
-
-  loading.value = false;
 }
 //#endregion
 
