@@ -120,9 +120,7 @@ const toggleSideTab = (show: boolean | undefined) => {
             </div>
             <div
               :class="[{ 'block': card.state === CardState.Expanded }, { 'hidden': card.state === CardState.Collapsed }]">
-              <div class="p-5">
-                <slot :name="`card-items-${card.id ? card.id : index}`" :card="card" :index="index"></slot>
-              </div>
+              <slot :name="`card-items-${card.id ? card.id : index}`" :card="card" :index="index"></slot>
             </div>
           </div>
         </div>
