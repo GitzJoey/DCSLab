@@ -374,7 +374,8 @@ watch(
                   </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
-                  <Button type="button" variant="outline-secondary" class="w-24 mr-1" @click="() => { deleteModalShow = false; }">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
+                    @click="() => { deleteModalShow = false; }">
                     {{ t('components.buttons.cancel') }}
                   </Button>
                   <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
