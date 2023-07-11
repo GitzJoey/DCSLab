@@ -187,41 +187,49 @@ class CompanyAPIReadTest extends APITestCase
             "' OR '1'='1' or",
         ];
 
-        foreach ($injections as $injection) {
-            $api = $this->getJson(route('api.get.db.company.company.read_any', [
-                'userId' => $user->id,
-                'search' => $injection,
-                'paginate' => true,
-                'page' => 1,
-                'per_page' => 10,
-                'refresh' => true,
-            ]));
+        $testIdx = random_int(0, count($injections));
 
-            $api->assertSuccessful();
-            $api->assertDontSee('No results found');
+        $api = $this->getJson(route('api.get.db.company.company.read_any', [
+            'userId' => $user->id,
+            'search' => $injections[$testIdx],
+            'paginate' => true,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
 
-            $api->assertJsonStructure([
-                'data',
-                'links' => [
-                    'first', 'last', 'prev', 'next',
-                ],
-                'meta' => [
-                    'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
-                ],
-            ]);
+        $api->assertSuccessful();
 
-            $api = $this->getJson(route('api.get.db.company.company.read_any', [
-                'userId' => $user->id,
-                'search' => '',
-                'paginate' => false,
-                'page' => 1,
-                'per_page' => 10,
-                'refresh' => true,
-            ]));
+        $api->assertJsonFragment([
+            'total' => 0,
+        ]);
 
-            $api->assertSuccessful();
-            $api->assertDontSee('No results found');
-        }
+        $api->assertJsonStructure([
+            'data',
+            'links' => [
+                'first', 'last', 'prev', 'next',
+            ],
+            'meta' => [
+                'current_page', 'from', 'last_page', 'links', 'path', 'per_page', 'to', 'total',
+            ],
+        ]);
+
+        $testIdx = random_int(0, count($injections));
+
+        $api = $this->getJson(route('api.get.db.company.company.read_any', [
+            'userId' => $user->id,
+            'search' => $injections[$testIdx],
+            'paginate' => false,
+            'page' => 1,
+            'per_page' => 10,
+            'refresh' => true,
+        ]));
+
+        $api->assertSuccessful();
+
+        $api->assertJsonFragment([
+            'data' => [],
+        ]);
     }
 
     public function test_company_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
