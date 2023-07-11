@@ -200,6 +200,10 @@ class CompanyAPIReadTest extends APITestCase
 
         $api->assertSuccessful();
 
+        $api->assertJsonFragment([
+            'total' => 0,
+        ]);
+
         $api->assertJsonStructure([
             'data',
             'links' => [
@@ -222,6 +226,10 @@ class CompanyAPIReadTest extends APITestCase
         ]));
 
         $api->assertSuccessful();
+
+        $api->assertJsonFragment([
+            'data' => [],
+        ]);
     }
 
     public function test_company_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
