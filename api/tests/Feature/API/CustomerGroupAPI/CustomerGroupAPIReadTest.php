@@ -250,11 +250,7 @@ class CustomerGroupAPIReadTest extends APITestCase
         $api->assertJsonFragment([
             'data' => [],
         ]);
-<<<<<<< HEAD
     }
-=======
-}
->>>>>>> 1fa52a005af9daaece503db4f57a619034de619c
 
     public function test_customer_group_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
     {
