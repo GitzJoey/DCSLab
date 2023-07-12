@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import { TitleLayout, TwoColumnsLayout } from "../../base-components/Form/FormLayout";
-import { FormInput, FormLabel, FormTextarea, FormSelect, FormCheck } from "../../base-components/Form";
+import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
 import { Company } from "../../types/models/Company";
@@ -33,9 +33,9 @@ import { FormActions } from "vee-validate";
 
 //#region Declarations
 const { t } = useI18n();
-const companyServices = new CompanyService();
-const dashboardServices = new DashboardService();
 const cacheServices = new CacheService();
+const dashboardServices = new DashboardService();
+const companyServices = new CompanyService();
 //#endregion
 
 //#region Data - Pinia
@@ -136,7 +136,7 @@ const emptyCompany = () => {
       name: '',
       address: '',
       default: true,
-      status: '',
+      status: 'ACTIVE',
       branches: [],
     }
   }
@@ -203,9 +203,9 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await companyServices.create({data:values});
+    result = await companyServices.create({data: values});
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    result = await companyServices.update(values);
+    result = await companyServices.update(companyForm.value.data.ulid, {data: values});
   } else {
     result.success = false;
   }
@@ -220,10 +220,14 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
 };
 
 const backToList = async () => {
+  loading.value = true;
+
   cacheServices.removeLastEntity('Company');
 
   mode.value = ViewMode.LIST;
   await getCompanies('', true, true, 1, 10);
+
+  loading.value = false;
 }
 //#endregion
 
@@ -344,7 +348,10 @@ watch(
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.default') }}</div>
-                        <div class="flex-1">{{ item.default }}</div>
+                        <div class="flex-1">
+                            <span v-if="item.default">{{ t('components.dropdown.values.switch.on') }}</span>
+                            <span v-else>{{ t('components.dropdown.values.switch.off') }}</span>
+                        </div>
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.status') }}</div>
@@ -374,8 +381,7 @@ watch(
                   </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
-                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
-                    @click="() => { deleteModalShow = false; }">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1" @click="() => { deleteModalShow = false; }">
                     {{ t('components.buttons.cancel') }}
                   </Button>
                   <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
@@ -389,7 +395,7 @@ watch(
       </div>
       <div v-else>
         <VeeForm id="companyForm" v-slot="{ errors }" @submit="onSubmit">
-          <AlertPlaceholder :errors="errors" />
+          <AlertPlaceholder :errors="errors"/>
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
@@ -424,15 +430,14 @@ watch(
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }" class="pr-5">
+                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default']}" class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
-                    <FormCheck.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default"
-                      type="checkbox" :class="{ 'border-danger': errors['default'] }"
-                      :placeholder="t('views.company.fields.default')" />
-                  </VeeField>
-                  <VeeErrorMessage name="default" class="mt-2 text-danger" />
+                    <FormSwitch.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default" type="checkbox"
+                      :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')"
+                    />
+                  </VeeField>                 
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
