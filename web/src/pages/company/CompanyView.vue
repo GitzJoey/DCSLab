@@ -20,15 +20,25 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { DropDownOption } from "../../types/services/DropDownOption";
-import { FormRequest } from "../../types/requests/FormRequest";
+import { CompanyFormRequest } from "../../types/requests/CompanyFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
-import { debounce, values } from "lodash";
+import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
 import { LaravelError } from "../../types/errors/LaravelError";
 import { VeeValidateError } from "../../types/errors/VeeValidateError";
 import { FormActions } from "vee-validate";
+//#endregion
+
+//#region Interfaces
+interface CompanyFormFieldValues {
+  code: string,
+  name: string,
+  address: string,
+  default: boolean,
+  status: string,
+}
 //#endregion
 
 //#region Declarations
@@ -55,7 +65,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const companyForm = ref<FormRequest<Company>>({
+const companyForm = ref<CompanyFormRequest>({
   data: {
     id: '',
     ulid: '',
@@ -151,7 +161,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('Company');
 
-  companyForm.value = cachedData == null ? emptyCompany() : cachedData as FormRequest<Company>;
+  companyForm.value = cachedData == null ? emptyCompany() : cachedData as CompanyFormRequest;
 }
 
 const viewSelected = (idx: number) => {
@@ -195,7 +205,7 @@ const handleExpandCard = (index: number) => {
   }
 }
 
-const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormRequest<Company>>) => {
+const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<CompanyFormFieldValues>) => {
   loading.value = true;
 
   let result: ServiceResponse<Company | null> = {
@@ -203,15 +213,15 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await companyServices.create({data: values});
+    result = await companyServices.create({ data: values });
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    result = await companyServices.update(companyForm.value.data.ulid, {data: values});
+    result = await companyServices.update(companyForm.value.data.ulid, { data: values });
   } else {
     result.success = false;
   }
 
   if (!result.success) {
-    actions.setErrors({ data: 'error' });
+    actions.setErrors({ code: 'error' });
   } else {
     backToList();
   }
@@ -232,7 +242,7 @@ const backToList = async () => {
 //#endregion
 
 //#region Computed
-const titleView = computed(() => {
+const titleView = computed((): string => {
   switch (mode.value) {
     case ViewMode.FORM_CREATE:
       return t('views.company.actions.create');
@@ -349,8 +359,8 @@ watch(
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.default') }}</div>
                         <div class="flex-1">
-                            <span v-if="item.default">{{ t('components.dropdown.values.switch.on') }}</span>
-                            <span v-else>{{ t('components.dropdown.values.switch.off') }}</span>
+                          <span v-if="item.default">{{ t('components.dropdown.values.switch.on') }}</span>
+                          <span v-else>{{ t('components.dropdown.values.switch.off') }}</span>
                         </div>
                       </div>
                       <div class="flex flex-row">
@@ -381,7 +391,8 @@ watch(
                   </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
-                  <Button type="button" variant="outline-secondary" class="w-24 mr-1" @click="() => { deleteModalShow = false; }">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
+                    @click="() => { deleteModalShow = false; }">
                     {{ t('components.buttons.cancel') }}
                   </Button>
                   <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
@@ -395,7 +406,7 @@ watch(
       </div>
       <div v-else>
         <VeeForm id="companyForm" v-slot="{ errors }" @submit="onSubmit">
-          <AlertPlaceholder :errors="errors"/>
+          <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
@@ -430,14 +441,14 @@ watch(
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default']}" class="pr-5">
+                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }" class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
-                    <FormSwitch.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default" type="checkbox"
-                      :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')"
-                    />
-                  </VeeField>                 
+                    <FormSwitch.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default"
+                      type="checkbox" :class="{ 'border-danger': errors['default'] }"
+                      :placeholder="t('views.company.fields.default')" />
+                  </VeeField>
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
