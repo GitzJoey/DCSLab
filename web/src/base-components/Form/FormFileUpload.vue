@@ -28,7 +28,6 @@ const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
 const imageUrl = ref<string|undefined >('')
 
-const isAuto = ref<boolean>(true);
 
 const computedClass = computed(() =>
   twMerge([
