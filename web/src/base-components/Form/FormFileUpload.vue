@@ -26,7 +26,7 @@ const props = defineProps<FormInputProps>();
 const attrs = useAttrs();
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
-const imageUrl = ref<string>('')
+const imageUrl = ref<string|undefined >('')
 
 const isAuto = ref<boolean>(true);
 
@@ -59,21 +59,25 @@ const localValue = computed({
   },
 });
 
-function handleUpload(files : FileList | null) {
+const handleUpload = async (event:any) => {
+  try {
+    const files = event.target.files;
+    let filename = files[0].name;
+    const fileReader = new FileReader()
+    fileReader.readAsDataURL(files[0]);
+    
+    fileReader.addEventListener('load', (e) => {
+      const data = e.target?.result as string
+      imageUrl.value = data
+      localValue.value = filename
+    });
+  } catch (error) {
+    
+  }
 
 }
 
-function handleChangeInput(e: any) {
-  let url = ''
 
-  //  Fungsi Upload
-  handleUpload(e.target.files)
-
-  url = url ? url : 'https://dummyimage.com/600x400/000/fff&text=Preview'
-  imageUrl.value = url
-  localValue.value = url
-
-}
 </script>
 
 <template>
@@ -99,7 +103,7 @@ function handleChangeInput(e: any) {
         id="upload"
         type="file"
         hidden
-        @change="(e) => handleChangeInput(e)"
+        @change="(e) => handleUpload(e)"
     />
     <label class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center" for="upload" >Choose File</label>
   </div>
