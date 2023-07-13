@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import { TitleLayout, TwoColumnsLayout } from "../../base-components/Form/FormLayout";
-import { FormInput, FormLabel, FormTextarea, FormSelect, FormCheck } from "../../base-components/Form";
+import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
 import { Company } from "../../types/models/Company";
@@ -20,10 +20,10 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { DropDownOption } from "../../types/services/DropDownOption";
-import { FormRequest } from "../../types/requests/FormRequest";
+import { CompanyFormRequest } from "../../types/requests/CompanyFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
-import { debounce, values } from "lodash";
+import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
 import { LaravelError } from "../../types/errors/LaravelError";
@@ -31,11 +31,21 @@ import { VeeValidateError } from "../../types/errors/VeeValidateError";
 import { FormActions } from "vee-validate";
 //#endregion
 
+//#region Interfaces
+interface CompanyFormFieldValues {
+  code: string,
+  name: string,
+  address: string,
+  default: boolean,
+  status: string,
+}
+//#endregion
+
 //#region Declarations
 const { t } = useI18n();
-const companyServices = new CompanyService();
-const dashboardServices = new DashboardService();
 const cacheServices = new CacheService();
+const dashboardServices = new DashboardService();
+const companyServices = new CompanyService();
 //#endregion
 
 //#region Data - Pinia
@@ -55,7 +65,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const companyForm = ref<FormRequest<Company>>({
+const companyForm = ref<CompanyFormRequest>({
   data: {
     id: '',
     ulid: '',
@@ -136,7 +146,7 @@ const emptyCompany = () => {
       name: '',
       address: '',
       default: true,
-      status: '',
+      status: 'ACTIVE',
       branches: [],
     }
   }
@@ -151,7 +161,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('Company');
 
-  companyForm.value = cachedData == null ? emptyCompany() : cachedData as FormRequest<Company>;
+  companyForm.value = cachedData == null ? emptyCompany() : cachedData as CompanyFormRequest;
 }
 
 const viewSelected = (idx: number) => {
@@ -195,7 +205,7 @@ const handleExpandCard = (index: number) => {
   }
 }
 
-const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormRequest<Company>>) => {
+const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<CompanyFormFieldValues>) => {
   loading.value = true;
 
   let result: ServiceResponse<Company | null> = {
@@ -203,15 +213,15 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await companyServices.create({data:values});
+    result = await companyServices.create({ data: values });
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    result = await companyServices.update(values);
+    result = await companyServices.update(companyForm.value.data.ulid, { data: values });
   } else {
     result.success = false;
   }
 
   if (!result.success) {
-    actions.setErrors({ data: 'error' });
+    actions.setErrors({ code: 'error' });
   } else {
     backToList();
   }
@@ -220,15 +230,19 @@ const onSubmit = async (values: FormRequest<Company>, actions: FormActions<FormR
 };
 
 const backToList = async () => {
+  loading.value = true;
+
   cacheServices.removeLastEntity('Company');
 
   mode.value = ViewMode.LIST;
   await getCompanies('', true, true, 1, 10);
+
+  loading.value = false;
 }
 //#endregion
 
 //#region Computed
-const titleView = computed(() => {
+const titleView = computed((): string => {
   switch (mode.value) {
     case ViewMode.FORM_CREATE:
       return t('views.company.actions.create');
@@ -344,7 +358,10 @@ watch(
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.default') }}</div>
-                        <div class="flex-1">{{ item.default }}</div>
+                        <div class="flex-1">
+                          <span v-if="item.default">{{ t('components.dropdown.values.switch.on') }}</span>
+                          <span v-else>{{ t('components.dropdown.values.switch.off') }}</span>
+                        </div>
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.company.fields.status') }}</div>
@@ -428,11 +445,10 @@ watch(
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
-                    <FormCheck.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default"
+                    <FormSwitch.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default"
                       type="checkbox" :class="{ 'border-danger': errors['default'] }"
                       :placeholder="t('views.company.fields.default')" />
                   </VeeField>
-                  <VeeErrorMessage name="default" class="mt-2 text-danger" />
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">

@@ -27,6 +27,10 @@
             "wip": "Barang Setengah Jadi",
             "fg": "Barang Jadi",
             "svc": "Jasa"
+        },
+        "switch": {
+            "on": "Ya",
+            "off": "Tidak"
         }
     }
 }
