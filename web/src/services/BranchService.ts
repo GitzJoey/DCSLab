@@ -66,8 +66,6 @@ export default class BranchService {
             success: false
         }
 
-        console.log(company_id);
-
         try {
             const queryParams: Record<string, string | number | boolean> = {};
             queryParams['company_id'] = company_id;
