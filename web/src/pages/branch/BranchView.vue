@@ -280,8 +280,6 @@ const backToList = async () => {
 
   loading.value = false;
 }
-
-
 //#endregion
 
 //#region Computed
