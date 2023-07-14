@@ -255,7 +255,7 @@ const onSubmit = async (values: BranchFormFieldValues, actions: FormActions<Bran
     result = await branchServices.update(
       branch_ulid, 
       company_id, 
-      {data:values}
+      { data:values }
     );
   } else {
     result.success = false;
@@ -479,7 +479,7 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.branch.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required|alpha_num"
+                  <VeeField v-slot="{ field }" name="name" rules="required"
                     :label="t('views.branch.fields.name')">
                     <FormInput id="name" v-model="branchForm.data.name" v-bind="field" name="name" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.branch.fields.name')" />
