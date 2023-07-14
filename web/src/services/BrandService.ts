@@ -1,11 +1,14 @@
-import axios from "../axios";
+import axios, { authAxiosInstance } from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
-import { BrandType } from "../types/resources/BrandType";
-import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/systems/ServiceResponseType";
-import { AxiosError, AxiosResponse } from "axios";
+import { Brand } from "../types/models/Brand";
+import { Resource } from "../types/resources/Resource";
+import { Collection } from "../types/resources/Collection";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
+import { SearchRequest } from "../types/requests/SearchRequest";
+import { FormRequest } from "../types/requests/FormRequest";
 
 export default class BrandService {
     private ziggyRoute: Config;
@@ -19,65 +22,159 @@ export default class BrandService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(
-        companyIdText: string,
-        codeText: string,
-        nameText: string,
-    ): Promise<ServiceResponseType<BrandType | null>> {
-        try {
-            await authAxiosInstance.get('/sanctum/csrf-cookie');
-            const response: AxiosResponse<BrandType> = await authAxiosInstance.post(
-                'store', {
-                company_id: companyIdText,
-                code: codeText,
-                name: nameText
-            }
-            );
+    public async create(company_id: string, payload: FormRequest<Brand>): Promise<ServiceResponse<Brand | null>> {
+        const result: ServiceResponse<Brand | null> = {
+            success: false,
+        }
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
-            }
+        try {
+            const url = route('api.post.db.product.brand.save', undefined, false, this.ziggyRoute);        
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<Brand> = await authAxiosInstance.post(
+                url, {
+                company_id: company_id,
+                code: payload.data.code,
+                name: payload.data.name
+            });            
+
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            result.success = true;
+            result.data = response.data;
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async readAny(): Promise<ServiceResponseType<BrandType[] | null>> {
+    public async readAny(company_id: string, args: SearchRequest): Promise<ServiceResponse<Collection<Array<Brand>> | Resource<Array<Brand>> | null>> {
+        const result: ServiceResponse<Collection<Brand[]> | Resource<Brand[]> | null> = {
+            success: false
+        }
+
         try {
-            const url = route('api.get.db.product.brand.read_any', undefined, false, this.ziggyRoute);
+            const queryParams: Record<string, string | number | boolean> = {};
+            queryParams['company_id'] = company_id;
+            queryParams['search'] = args.search ? args.search : '';
+            queryParams['refresh'] = args.refresh;
+            queryParams['paginate'] = args.paginate;
+            if (args.page) queryParams['page'] = args.page;
+            if (args.per_page) queryParams['per_page'] = args.per_page;
+
+            const url = route('api.get.db.product.brand.read_any', {
+                _query: queryParams
+            }, false, this.ziggyRoute);
+
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<BrandType[]> = await axios.get(url);
+            const response: AxiosResponse<Collection<Brand[]>> = await axios.get(url);
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
-            }
+            result.success = true;
+            result.data = response.data;
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async read(): Promise<ServiceResponseType<BrandType | null>> {
+    public async read(ulid: string): Promise<ServiceResponse<Brand | null>> {
+        const result: ServiceResponse<Brand | null> = {
+            success: false
+        }
+
         try {
-            const url = route('api.get.db.product.brand.read', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.product.brand.read', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<Brand>> = await axios.get(url);
+
+            result.success = true;
+            result.data = response.data.data;
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async update(ulid: string, company_id: string, payload: FormRequest<Brand>): Promise<ServiceResponse<Brand | null>> {
+        const result: ServiceResponse<Brand | null> = {
+            success: false,
+        }
+
+        try {                    
+            const url = route('api.post.db.product.brand.edit', ulid, false, this.ziggyRoute);        
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
+
+            const response: AxiosResponse<Brand> = await authAxiosInstance.post(
+                url, {
+                    company_id: company_id,
+                    code: payload.data.code,
+                    name: payload.data.name
+            }); 
+            
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<BrandType> = await axios.get(url);
+            result.success = true;
+            result.data = response.data;
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
-            }
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
+        const result: ServiceResponse<boolean | null> = {
+            success: false,
+        }
+
+        try {
+            const url = route('api.post.db.product.brand.delete', ulid, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<boolean | null> = await axios.post(url);
+
+            result.success = true;
+            result.data = true;
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 }

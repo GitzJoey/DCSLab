@@ -515,7 +515,7 @@ watch(
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="is_main" :class="{ 'text-danger': errors['is_main']}" class="pr-5">
+                  <FormLabel html-for="is_main" :class="{ 'text-danger': errors['is_main']} " class="pr-5">
                     {{ t('views.branch.fields.is_main') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="is_main" :label="t('views.branch.fields.is_main')">

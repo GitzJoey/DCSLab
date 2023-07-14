@@ -130,8 +130,6 @@ export default class BranchService {
             success: false,
         }
 
-        console.log(company_id);
-
         try {
             const url = route('api.post.db.company.branch.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        

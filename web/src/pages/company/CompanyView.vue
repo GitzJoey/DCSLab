@@ -405,7 +405,7 @@ watch(
       </div>
       <div v-else>
         <VeeForm id="companyForm" v-slot="{ errors }" @submit="onSubmit">
-          <AlertPlaceholder :errors="errors"/>
+          <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
@@ -440,7 +440,7 @@ watch(
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default']}" class="pr-5">
+                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default']} " class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
