@@ -423,7 +423,7 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.company.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required|alpha_num"
+                  <VeeField v-slot="{ field }" name="name" rules="required"
                     :label="t('views.company.fields.name')">
                     <FormInput id="name" v-model="companyForm.data.name" v-bind="field" name="name" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.company.fields.name')" />
