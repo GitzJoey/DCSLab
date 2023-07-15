@@ -5,11 +5,9 @@ namespace App\Http\Requests;
 use App\Enums\RecordStatus;
 use App\Models\Company;
 use App\Rules\deactivateDefaultCompany;
-use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
-use Vinkla\Hashids\Facades\Hashids;
 
 class CompanyRequest extends FormRequest
 {
@@ -39,8 +37,6 @@ class CompanyRequest extends FormRequest
             case 'update':
                 return $user->can('update', Company::class, $company) ? true : false;
             case 'delete':
-                //Authorization Error
-                //return false;
                 return $user->can('delete', Company::class, $company) ? true : false;
             default:
                 return false;
@@ -86,7 +82,6 @@ class CompanyRequest extends FormRequest
                 return array_merge($rules_store, $nullableArr);
             case 'update':
                 $rules_update = [
-                    'company_id' => ['required', new IsValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => ['required', 'max:255'],
                     'default' => ['required', 'boolean'],
@@ -149,7 +144,6 @@ class CompanyRequest extends FormRequest
                 break;
             case 'update':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'address' => $this->has('address') ? $this['address'] : null,
                     'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,

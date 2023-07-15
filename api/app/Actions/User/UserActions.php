@@ -253,7 +253,7 @@ class UserActions
                 'name' => $userArr['name'],
             ]);
 
-            //$queryLog = DB::getQueryLog();
+            //$queryLog = DB::getRawQueryLog();
 
             ! $useTransactions ?: DB::commit();
 
