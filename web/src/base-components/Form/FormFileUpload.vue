@@ -10,6 +10,7 @@ import { twMerge } from "tailwind-merge";
 import { computed, InputHTMLAttributes, useAttrs, inject, ref } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
+import DashboardService from '../../services/DashboardService'
 
 interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   value?: InputHTMLAttributes["value"];
@@ -27,6 +28,7 @@ const attrs = useAttrs();
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
 const imageUrl = ref<string|undefined >('')
+const dashboardService = new DashboardService()
 
 
 const computedClass = computed(() =>
@@ -65,11 +67,15 @@ const handleUpload = async (event:any) => {
     const fileReader = new FileReader()
     fileReader.readAsDataURL(files[0]);
     
-    fileReader.addEventListener('load', (e) => {
+    fileReader.addEventListener('load', async (e) => {
       const data = e.target?.result as string
       imageUrl.value = data
       localValue.value = filename
+      const upload = await dashboardService.uploadFile(files)
+      console.log(upload)
+
     });
+
   } catch (error) {
     
   }
