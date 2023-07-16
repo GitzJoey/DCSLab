@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { FormRequest } from "../types/requests/FormRequest";
+import { CompanyFormRequest } from "../types/requests/CompanyFormRequest";
 import { authAxiosInstance } from '../axios'
 
 export default class CompanyService {
@@ -23,7 +23,7 @@ export default class CompanyService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: FormRequest<Company>): Promise<ServiceResponse<Company | null>> {
+    public async create(payload: CompanyFormRequest): Promise<ServiceResponse<Company | null>> {
         const result: ServiceResponse<Company | null> = {
             success: false,
         }
@@ -122,7 +122,7 @@ export default class CompanyService {
         }
     }
 
-    public async update(ulid: string, payload: FormRequest<Company>): Promise<ServiceResponse<Company | null>> {
+    public async update(ulid: string, payload: CompanyFormRequest): Promise<ServiceResponse<Company | null>> {
         const result: ServiceResponse<Company | null> = {
             success: false,
         }
