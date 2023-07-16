@@ -37,6 +37,7 @@ class LogRequestResponse
                     $enableRequestLogOnly = true;
                     $enableResponseLogOnly = true;
                     break;
+                case '':
                 case 'false':
                 default:
                     $enableLog = false;
