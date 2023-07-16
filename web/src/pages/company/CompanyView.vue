@@ -213,9 +213,9 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await companyServices.create({ data: values });
+    result = await companyServices.create(companyForm.value);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    result = await companyServices.update(companyForm.value.data.ulid, { data: values });
+    result = await companyServices.update(companyForm.value.data.ulid, companyForm.value);
   } else {
     result.success = false;
   }
