@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { FormRequest } from "../types/requests/FormRequest";
+import { CompanyFormRequest } from "../types/requests/CompanyFormRequest";
 import { authAxiosInstance } from '../axios'
 
 export default class CompanyService {
@@ -23,7 +23,7 @@ export default class CompanyService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: FormRequest<Company>): Promise<ServiceResponse<Company | null>> {
+    public async create(payload: CompanyFormRequest): Promise<ServiceResponse<Company | null>> {
         const result: ServiceResponse<Company | null> = {
             success: false,
         }
@@ -89,6 +89,7 @@ export default class CompanyService {
             } else if (isAxiosError(e)) {
                 return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
+                console.log('test');
                 return result;
             }
         }
@@ -121,13 +122,13 @@ export default class CompanyService {
         }
     }
 
-    public async update(payload: FormRequest<Company>): Promise<ServiceResponse<Company | null>> {
+    public async update(ulid: string, payload: CompanyFormRequest): Promise<ServiceResponse<Company | null>> {
         const result: ServiceResponse<Company | null> = {
             success: false,
         }
 
         try {
-            const url = route('api.post.db.company.company.edit', payload.data.ulid, false, this.ziggyRoute);
+            const url = route('api.post.db.company.company.edit', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Company> = await authAxiosInstance.post(

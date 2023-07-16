@@ -28,7 +28,7 @@ import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import RoleService from "../../services/RoleService";
 import { DropDownOption } from "../../types/services/DropDownOption";
-import { FormRequest } from "../../types/requests/FormRequest";
+import { UserFormRequest } from "../../types/requests/UserFormRequest";
 import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
@@ -38,6 +38,17 @@ import { SearchRequest } from "../../types/requests/SearchRequest";
 import { LaravelError } from "../../types/errors/LaravelError";
 import { VeeValidateError } from "../../types/errors/VeeValidateError";
 import { FormActions } from "vee-validate";
+//#endregion
+
+//#region Interfaces
+interface UserFormFieldValues {
+  name: string,
+  email: string,
+  country: string,
+  tax_id: number,
+  ic_num: number,
+  status: string,
+}
 //#endregion
 
 //#region Declarations
@@ -70,7 +81,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const userForm = ref<FormRequest<User>>({
+const userForm = ref<UserFormRequest>({
   data: {
     id: '',
     ulid: '',
@@ -97,6 +108,9 @@ const userForm = ref<FormRequest<User>>({
       date_format: 'yyyy_MM_dd',
       time_format: 'hh_mm_ss',
     }
+  },
+  additional: {
+    tokens_reset: false,
   }
 });
 const userLists = ref<Collection<Array<User>> | null>({
@@ -196,6 +210,9 @@ const emptyUser = () => {
         date_format: 'yyyy_MM_dd',
         time_format: 'hh_mm_ss',
       }
+    },
+    additional: {
+      tokens_reset: false
     }
   }
 }
@@ -209,7 +226,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('User');
 
-  userForm.value = cachedData == null ? emptyUser() : cachedData as FormRequest<User>;
+  userForm.value = cachedData == null ? emptyUser() : cachedData as UserFormRequest;
 }
 
 const viewSelected = (idx: number) => {
@@ -238,7 +255,7 @@ const handleExpandCard = (index: number) => {
   }
 }
 
-const onSubmit = async (values: FormRequest<User>, actions: FormActions<FormRequest<User>>) => {
+const onSubmit = async (values: UserFormFieldValues, actions: FormActions<UserFormFieldValues>) => {
   loading.value = true;
 
   let result: ServiceResponse<User | null> = {
@@ -254,7 +271,7 @@ const onSubmit = async (values: FormRequest<User>, actions: FormActions<FormRequ
   }
 
   if (!result.success) {
-    actions.setErrors({ data: 'error' });
+    actions.setErrors({ name: 'error' });
   }
 
   backToList();
@@ -275,7 +292,7 @@ const flattenedRoles = (roles: Array<Role>): string => {
 //#endregion
 
 //#region Computed
-const titleView = computed(() => {
+const titleView = computed((): string => {
   switch (mode.value) {
     case ViewMode.FORM_CREATE:
       return t('views.user.actions.create');

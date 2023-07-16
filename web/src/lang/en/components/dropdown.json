@@ -27,6 +27,10 @@
             "wip": "Work In Progress",
             "fg": "Finished Good",
             "svc": "Service"
+        },
+        "switch": {
+            "on": "Yes",
+            "off": "No"
         }
     }
 }

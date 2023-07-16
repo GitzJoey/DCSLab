@@ -10,6 +10,8 @@ import { twMerge } from "tailwind-merge";
 import { computed, InputHTMLAttributes, useAttrs, inject, ref } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
+import DashboardService from '../../services/DashboardService'
+import { authAxiosInstanceFormData } from "../../axios";
 
 interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   value?: InputHTMLAttributes["value"];
@@ -26,9 +28,10 @@ const props = defineProps<FormInputProps>();
 const attrs = useAttrs();
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
-const imageUrl = ref<string>('')
+const imageUrl = ref<string|undefined >('')
+const dashboardService = new DashboardService()
 
-const isAuto = ref<boolean>(true);
+
 
 const computedClass = computed(() =>
   twMerge([
@@ -59,21 +62,34 @@ const localValue = computed({
   },
 });
 
-function handleUpload(files : FileList | null) {
+const handleUpload = async (event:any) => {
+  try {
+    let formData = new FormData()
+    const files = event.target.files;
+    const fileReader = new FileReader()
+
+
+    let filename = files[0].name;
+
+    fileReader.readAsDataURL(files[0]);
+    const url = 'http://localhost:8000/api/post/dashboard/core/user/upload'
+    fileReader.addEventListener('load', async (e) => {
+      const data = e.target?.result as string
+      imageUrl.value = data
+      localValue.value = filename
+      formData.append('file', files[0])
+
+    });
+
+    // dashboardService.uploadFile(formData)
+
+  } catch (error) {
+    
+  }
 
 }
 
-function handleChangeInput(e: any) {
-  let url = ''
 
-  //  Fungsi Upload
-  handleUpload(e.target.files)
-
-  url = url ? url : 'https://dummyimage.com/600x400/000/fff&text=Preview'
-  imageUrl.value = url
-  localValue.value = url
-
-}
 </script>
 
 <template>
@@ -99,7 +115,7 @@ function handleChangeInput(e: any) {
         id="upload"
         type="file"
         hidden
-        @change="(e) => handleChangeInput(e)"
+        @change="(e) => handleUpload(e)"
     />
     <label class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center" for="upload" >Choose File</label>
   </div>

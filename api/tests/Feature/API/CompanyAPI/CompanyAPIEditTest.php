@@ -8,7 +8,6 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\APITestCase;
-use Vinkla\Hashids\Facades\Hashids;
 
 class CompanyAPIEditTest extends APITestCase
 {
@@ -26,9 +25,7 @@ class CompanyAPIEditTest extends APITestCase
 
         $company = $user->companies->first();
 
-        $companyArr = Company::factory()->setStatusActive()->make([
-            'company_id' => Hashids::encode($company->id),
-        ])->toArray();
+        $companyArr = Company::factory()->setStatusActive()->make()->toArray();
 
         $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
 
@@ -45,9 +42,7 @@ class CompanyAPIEditTest extends APITestCase
 
         $company = $user->companies->first();
 
-        $companyArr = Company::factory()->setStatusActive()->make([
-            'company_id' => Hashids::encode($company->id),
-        ])->toArray();
+        $companyArr = Company::factory()->setStatusActive()->make()->toArray();
 
         $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
 
@@ -75,9 +70,7 @@ class CompanyAPIEditTest extends APITestCase
 
         $company = $user->companies->first();
 
-        $companyArr = Company::factory()->setStatusActive()->make([
-            'company_id' => Hashids::encode($company->id),
-        ])->toArray();
+        $companyArr = Company::factory()->setStatusActive()->make()->toArray();
 
         $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
 

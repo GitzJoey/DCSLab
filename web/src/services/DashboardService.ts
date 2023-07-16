@@ -1,4 +1,4 @@
-import axios from "../axios";
+import axios, { authAxiosInstance, axiosInstance, authAxiosInstanceFormData } from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
@@ -147,5 +147,28 @@ export default class DashboardService {
         } catch (e: unknown) {
             return result;
         }
+    }
+
+    public async uploadFile(file : any) : Promise<any> {
+        const result: ServiceResponse<Config> | null = {
+            success : false
+        }
+
+        try {
+            const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute)
+            const data = await authAxiosInstanceFormData.post(url, {
+                ...file
+            })
+            console.log(data)
+            return {
+                success : true,
+                statusCode : data.status,
+                data : data.data
+            }
+        } catch (error) {
+            
+        }
+
+        return 
     }
 }
