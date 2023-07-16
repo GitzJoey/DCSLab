@@ -11,6 +11,7 @@ import { computed, InputHTMLAttributes, useAttrs, inject, ref } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 import DashboardService from '../../services/DashboardService'
+import { authAxiosInstanceFormData } from "../../axios";
 
 interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   value?: InputHTMLAttributes["value"];
@@ -29,6 +30,7 @@ const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
 const imageUrl = ref<string|undefined >('')
 const dashboardService = new DashboardService()
+
 
 
 const computedClass = computed(() =>
@@ -62,19 +64,24 @@ const localValue = computed({
 
 const handleUpload = async (event:any) => {
   try {
+    let formData = new FormData()
     const files = event.target.files;
-    let filename = files[0].name;
     const fileReader = new FileReader()
+
+
+    let filename = files[0].name;
+
     fileReader.readAsDataURL(files[0]);
-    
+    const url = 'http://localhost:8000/api/post/dashboard/core/user/upload'
     fileReader.addEventListener('load', async (e) => {
       const data = e.target?.result as string
       imageUrl.value = data
       localValue.value = filename
-      const upload = await dashboardService.uploadFile(files)
-      console.log(upload)
+      formData.append('file', files[0])
 
     });
+
+    // dashboardService.uploadFile(formData)
 
   } catch (error) {
     
