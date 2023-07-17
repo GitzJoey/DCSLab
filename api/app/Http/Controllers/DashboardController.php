@@ -44,7 +44,7 @@ class DashboardController extends BaseController
         $file = $request->file('file');
         $path = $file->store('uploads');
 
-        $url = Storage::url($path);
+        $url = url(Storage::url($path));
 
         return response()->json(['url' => $url], 200);
     }

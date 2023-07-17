@@ -65,6 +65,7 @@ const localValue = computed({
 
 const handleUpload = async (event:any) => {
   try {
+    let formData = new FormData()
     const files = event.target.files;
     const fileReader = new FileReader()
 
@@ -78,6 +79,8 @@ const handleUpload = async (event:any) => {
     if(url) {
       imageUrl.value = url
     }
+
+    // dashboardService.uploadFile(formData)
 
   } catch (error) {
     
