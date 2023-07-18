@@ -7,10 +7,12 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { computed, InputHTMLAttributes, useAttrs, inject, ref } from "vue";
+import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 import DashboardService from '../../services/DashboardService'
+import { authAxiosInstance } from "../../axios";
+import noImage from '../../assets/images/no_image.png'
 
 interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   value?: InputHTMLAttributes["value"];
@@ -29,6 +31,7 @@ const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
 const imageUrl = ref<string|undefined >('')
 const dashboardService = new DashboardService()
+
 
 
 const computedClass = computed(() =>
@@ -62,25 +65,34 @@ const localValue = computed({
 
 const handleUpload = async (event:any) => {
   try {
+    let formData = new FormData()
     const files = event.target.files;
-    let filename = files[0].name;
     const fileReader = new FileReader()
-    fileReader.readAsDataURL(files[0]);
-    
-    fileReader.addEventListener('load', async (e) => {
-      const data = e.target?.result as string
-      imageUrl.value = data
-      localValue.value = filename
-      const upload = await dashboardService.uploadFile(files)
-      console.log(upload)
 
-    });
+
+    let filename = files[0].name;
+
+    fileReader.readAsDataURL(files[0]);
+
+    localValue.value = filename
+    let url = await dashboardService.uploadFile(filename)
+    if(url) {
+      imageUrl.value = url
+    }
+
+    // dashboardService.uploadFile(formData)
 
   } catch (error) {
     
   }
 
 }
+
+onMounted(() => {
+  if(!imageUrl.value) {
+    imageUrl.value = noImage
+  }
+})
 
 
 </script>

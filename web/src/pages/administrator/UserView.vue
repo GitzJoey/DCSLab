@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormTextarea,
   FormSelect,
+  FormFileUpload,
 } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
@@ -519,6 +520,13 @@ watch(
                     </FormSelect>
                   </VeeField>
                   <VeeErrorMessage name="country" class="mt-2 text-danger" />
+                </div>
+                <div class="pb-4">
+                  <FormLabel html-for="tax_id" :class="{ 'text-danger': errors['img_path'] }">
+                    {{ t('views.user.fields.picture') }}
+                  </FormLabel>
+                  <FormFileUpload id="name" v-model="userForm.data.profile.img_path"  name="name" type="text"
+                      :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.user.fields.name')"  />
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="tax_id" :class="{ 'text-danger': errors['tax_id'] }">

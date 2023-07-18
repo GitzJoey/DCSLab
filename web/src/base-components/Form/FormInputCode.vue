@@ -7,7 +7,7 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { computed, InputHTMLAttributes, useAttrs, inject, ref } from "vue";
+import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 
@@ -70,6 +70,12 @@ const localValue = computed({
     emit("update:modelValue", newValue);
   },
 });
+
+onMounted(() => {
+  if(props.modelValue) {
+    isAuto.value = false
+  }
+})
 </script>
 
 <template>

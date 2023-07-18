@@ -155,11 +155,11 @@ export default class DashboardService {
         }
 
         try {
+            let formData = new FormData()
+            formData.append('file', file)
             const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute)
-            const data = await authAxiosInstance.post(url, {
-                file : file
-            })
-            console.log(data)
+            authAxiosInstance.defaults.headers.common['Content-Type'] = "multipart/form-data"
+            const data = await authAxiosInstance.post(url,formData)
             return {
                 success : true,
                 statusCode : data.status,
