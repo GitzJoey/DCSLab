@@ -440,7 +440,7 @@ watch(
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] } " class="pr-5">
+                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }" class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
