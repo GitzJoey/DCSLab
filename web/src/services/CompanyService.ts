@@ -71,9 +71,7 @@ export default class CompanyService {
             if (args.page) queryParams['page'] = args.page;
             if (args.per_page) queryParams['per_page'] = args.per_page;
 
-            const url = route('api.get.db.company.company.read_any', {
-                _query: queryParams
-            }, false, this.ziggyRoute);
+            const url = route('api.get.db.company.company.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -89,7 +87,6 @@ export default class CompanyService {
             } else if (isAxiosError(e)) {
                 return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                console.log('test');
                 return result;
             }
         }

@@ -264,18 +264,19 @@ const onSubmit = async (values: UserFormFieldValues, actions: FormActions<UserFo
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await userServices.create(values);
+    result = await userServices.create(userForm.value);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    result = await userServices.edit(values);
+    result = await userServices.edit(userForm.value.data.ulid, userForm.value);
   } else {
     result.success = false;
   }
 
   if (!result.success) {
     actions.setErrors({ name: 'error' });
+  } else {
+    backToList();
   }
 
-  backToList();
   loading.value = false;
 };
 
@@ -562,17 +563,17 @@ watch(
                   <VeeErrorMessage name="country" class="mt-2 text-danger" />
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="tax_id" :class="{ 'text-danger': errors['img_path'] }">
+                  <FormLabel html-for="img_path" :class="{ 'text-danger': errors['img_path'] }">
                     {{ t('views.user.fields.picture') }}
                   </FormLabel>
-                  <FormFileUpload id="name" v-model="userForm.data.profile.img_path"  name="name" type="text"
-                      :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.user.fields.name')"  />
+                  <FormFileUpload id="img_path" v-model="userForm.data.profile.img_path"  name="img_path" type="text"
+                      :class="{ 'border-danger': errors['img_path'] }" :placeholder="t('views.user.fields.picture')"  />
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="tax_id" :class="{ 'text-danger': errors['tax_id'] }">
                     {{ t('views.user.fields.tax_id') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="tax_id" rules="required" :placeholder="t('views.user.fields.tax_id')"
+                  <VeeField v-slot="{ field }" name="tax_id" rules="required" :placeholder="t('views.user.fields.tax_id')" 
                     :label="t('views.user.fields.tax_id')">
                     <FormInput id="tax_id" v-model="userForm.data.profile.tax_id" v-bind="field" name="tax_id" type="text"
                       :class="{ 'border-danger': errors['tax_id'] }" />
@@ -583,9 +584,10 @@ watch(
                   <FormLabel html-for="ic_num" :class="{ 'text-danger': errors['ic_num'] }">
                     {{ t('views.user.fields.ic_num') }}
                   </FormLabel>
-                  <VeeField rules="required" name="ic_num" :label="t('views.user.fields.ic_num')">
-                    <FormInput id="ic_num" v-model="userForm.data.profile.ic_num" name="ic_num" type="text"
-                      :class="{ 'border-danger': errors['ic_num'] }" :placeholder="t('views.user.fields.ic_num')" />
+                  <VeeField v-slot="{ field }" name="ic_num" rules="required" :placeholder="t('views.user.fields.ic_num')" 
+                    :label="t('views.user.fields.ic_num')">
+                    <FormInput id="ic_num" v-model="userForm.data.profile.ic_num" v-bind="field" name="ic_num" type="text"
+                      :class="{ 'border-danger': errors['ic_num'] }" />
                   </VeeField>
                   <VeeErrorMessage name="ic_num" class="mt-2 text-danger" />
                 </div>
@@ -684,10 +686,10 @@ watch(
             </template>
             <template #card-items-button>
               <div class="flex gap-4">
-                <Button as="submit" href="#" variant="primary" class="w-28 shadow-md">
+                <Button type="submit" href="#" variant="primary" class="w-28 shadow-md">
                   {{ t("components.buttons.submit") }}
                 </Button>
-                <Button as="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
+                <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
                   {{ t("components.buttons.reset") }}
                 </Button>
               </div>
