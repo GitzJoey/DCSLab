@@ -41,7 +41,7 @@ class DashboardController extends BaseController
     {
         $request = $fileUploadRequest->validated();
 
-        $file = $request->file('file');
+        $file = $request['file'];
         $path = $file->store('uploads');
 
         $url = url(Storage::url($path));

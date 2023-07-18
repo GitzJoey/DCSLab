@@ -22,14 +22,14 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
 }
 
 interface HTMLInputEvent extends Event {
-    target: HTMLInputElement & EventTarget;
+  target: HTMLInputElement & EventTarget;
 }
 
 const props = defineProps<FormInputProps>();
 const attrs = useAttrs();
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
-const imageUrl = ref<string|undefined >('')
+const imageUrl = ref<string | undefined>('')
 const dashboardService = new DashboardService()
 
 
@@ -44,7 +44,7 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
   ])
 );
@@ -63,7 +63,7 @@ const localValue = computed({
   },
 });
 
-const handleUpload = async (event:any) => {
+const handleUpload = async (event: any) => {
   try {
     let formData = new FormData()
     const files = event.target.files;
@@ -75,21 +75,21 @@ const handleUpload = async (event:any) => {
     fileReader.readAsDataURL(files[0]);
 
     localValue.value = filename
-    let url = await dashboardService.uploadFile(filename)
-    if(url) {
+    let url = await dashboardService.uploadFile(files[0])
+    if (url) {
       imageUrl.value = url
     }
 
     // dashboardService.uploadFile(formData)
 
   } catch (error) {
-    
+
   }
 
 }
 
 onMounted(() => {
-  if(!imageUrl.value) {
+  if (!imageUrl.value) {
     imageUrl.value = noImage
   }
 })
@@ -98,30 +98,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div 
-    v-if="imageUrl"
-    :class="['flex', 'justify-center' , 'mt-2',  'w-full',  'align-center', {'bg-slate-100' : imageUrl}, 'rounded',  'p-4']"
-  >
-    <img 
-      class="rounded aspect-auto" 
-      :src=" imageUrl ? imageUrl : '' " 
-      alt="Image Preview"
-      >
+  <div v-if="imageUrl"
+    :class="['flex', 'justify-center', 'mt-2', 'w-full', 'align-center', { 'bg-slate-100': imageUrl }, 'rounded', 'p-4']">
+    <img class="rounded aspect-auto" :src="imageUrl ? imageUrl : ''" alt="Image Preview">
   </div>
   <div class="flex gap-2 mt-4">
-    <input 
-    disabled
-    :class="computedClass"
-    :type="props.type"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-    />
-    <input
-        id="upload"
-        type="file"
-        hidden
-        @change="(e) => handleUpload(e)"
-    />
-    <label class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center" for="upload" >Choose File</label>
+    <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" v-model="localValue" />
+    <input id="upload" type="file" hidden @change="(e) => handleUpload(e)" />
+    <label class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
+      for="upload">Choose File</label>
   </div>
 </template>
