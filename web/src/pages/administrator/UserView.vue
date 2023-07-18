@@ -407,8 +407,44 @@ watch(
                         <div class="flex-1">{{ item.email }}</div>
                       </div>
                       <div class="flex flex-row">
-                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}</div>
-                        <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.first_name') }}</div>
+                        <div class="flex-1">{{ item.profile.first_name }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.last_name') }}</div>
+                        <div class="flex-1">{{ item.profile.last_name }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.address') }}</div>
+                        <div class="flex-1">{{ item.profile.address }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.city') }}</div>
+                        <div class="flex-1">{{ item.profile.city }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.postal_code') }}</div>
+                        <div class="flex-1">{{ item.profile.postal_code }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.country') }}</div>
+                        <div class="flex-1">{{ item.profile.country }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.picture') }}</div>
+                        <div class="flex-1">{{ item.profile.img_path }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.tax_id') }}</div>
+                        <div class="flex-1">{{ item.profile.tax_id }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.ic_num') }}</div>
+                        <div class="flex-1">{{ item.profile.ic_num }}</div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.remarks') }}</div>
+                        <div class="flex-1">{{ item.profile.remarks }}</div>
                       </div>
                       <div class="flex flex-row">
                         <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}</div>
@@ -420,6 +456,10 @@ watch(
                             {{ t('components.dropdown.values.statusDDL.inactive') }}
                           </span>
                         </div>
+                      </div>
+                      <div class="flex flex-row">
+                        <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}</div>
+                        <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
                       </div>
                     </Table.Td>
                   </Table.Tr>

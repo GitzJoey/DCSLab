@@ -391,8 +391,7 @@ watch(
                   </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
-                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
-                    @click="() => { deleteModalShow = false; }">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1" @click="() => { deleteModalShow = false; }">
                     {{ t('components.buttons.cancel') }}
                   </Button>
                   <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
@@ -424,7 +423,7 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.company.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required|alpha_num"
+                  <VeeField v-slot="{ field }" name="name" rules="required"
                     :label="t('views.company.fields.name')">
                     <FormInput id="name" v-model="companyForm.data.name" v-bind="field" name="name" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.company.fields.name')" />
@@ -441,7 +440,7 @@ watch(
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }" class="pr-5">
+                  <FormLabel html-for="default" :class="{ 'text-danger': errors['default']} " class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
