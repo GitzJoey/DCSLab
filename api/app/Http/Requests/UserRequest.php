@@ -148,6 +148,14 @@ class UserRequest extends FormRequest
                 break;
             case 'store':
             case 'update':
+                $arr_roles = [];
+                if ($this->has('roles')) {
+                    for ($i = 0; $i < count($this->roles); $i++) {
+                        array_push($arr_roles, $this->roles[$i]['id']);
+                    }
+                }
+                $this->merge(['roles' => $arr_roles]);
+
                 $this->merge([
                     'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
