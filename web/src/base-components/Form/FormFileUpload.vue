@@ -8,7 +8,6 @@ export default {
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
 import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from "vue";
-import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 import DashboardService from '../../services/DashboardService'
@@ -22,6 +21,11 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   rounded?: boolean;
 }
 
+interface FormUploadResponse {
+  data : { url : string },
+  statusCode : number,
+  success : boolean
+}
 interface HTMLInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
 }
@@ -64,25 +68,21 @@ const localValue = computed({
   },
 });
 
-const handleUpload = async (event: any) => {
+const handleUpload = async (event: Event) => {
   try {
-    let formData = new FormData()
-    const files = event.target.files;
+    const _event = event as HTMLInputEvent
+    const files = _event.target.files 
     const fileReader = new FileReader()
-
-
-    let filename = files[0].name;
-
-    fileReader.readAsDataURL(files[0]);
-
-    localValue.value = filename
-    let url = await dashboardService.uploadFile(filename)
-    if(url) {
-      imageUrl.value = url
+    if(files) {
+      let filename : string = files[0].name;
+      fileReader.readAsDataURL(files[0]);
+      localValue.value = filename
+      let uploadResponse : FormUploadResponse = await dashboardService.uploadFile(files[0])
+      if (uploadResponse) {
+        imageUrl.value = uploadResponse.data.url
+      }
     }
-
-    // dashboardService.uploadFile(formData)
-
+    
   } catch (error) {
 
   }

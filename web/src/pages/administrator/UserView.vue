@@ -17,7 +17,6 @@ import {
   FormTextarea,
   FormSelect,
   FormFileUpload,
-  FormFileUpload,
 } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
