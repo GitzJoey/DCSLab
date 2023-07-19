@@ -9,7 +9,6 @@ import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
 import { UserFormRequest } from "../types/requests/UserFormRequest";
-import { authAxiosInstance } from '../axios'
 
 export default class UserService {
     private ziggyRoute: Config;
@@ -32,7 +31,7 @@ export default class UserService {
             const url = route('api.post.db.admin.user.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<User> = await authAxiosInstance.post(
+            const response: AxiosResponse<User> = await axios.post(
                 url, {
                 name: payload.data.name,
                 email: payload.data.email,
@@ -150,7 +149,7 @@ export default class UserService {
             const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<User> = await authAxiosInstance.post(
+            const response: AxiosResponse<User> = await axios.post(
                 url, {
                 name: payload.data.name,
                 email: payload.data.email,
