@@ -9,7 +9,6 @@ import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
 import { CompanyFormRequest } from "../types/requests/CompanyFormRequest";
-import { authAxiosInstance } from '../axios'
 
 export default class CompanyService {
     private ziggyRoute: Config;
@@ -32,7 +31,7 @@ export default class CompanyService {
             const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Company> = await authAxiosInstance.post(
+            const response: AxiosResponse<Company> = await axios.post(
                 url, {
                 code: payload.data.code,
                 name: payload.data.name,
@@ -71,9 +70,7 @@ export default class CompanyService {
             if (args.page) queryParams['page'] = args.page;
             if (args.per_page) queryParams['per_page'] = args.per_page;
 
-            const url = route('api.get.db.company.company.read_any', {
-                _query: queryParams
-            }, false, this.ziggyRoute);
+            const url = route('api.get.db.company.company.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -89,7 +86,6 @@ export default class CompanyService {
             } else if (isAxiosError(e)) {
                 return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
             } else {
-                console.log('test');
                 return result;
             }
         }
@@ -131,7 +127,7 @@ export default class CompanyService {
             const url = route('api.post.db.company.company.edit', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Company> = await authAxiosInstance.post(
+            const response: AxiosResponse<Company> = await axios.post(
                 url, {
                 code: payload.data.code,
                 name: payload.data.name,

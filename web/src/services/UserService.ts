@@ -2,13 +2,13 @@ import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { User } from "../types/models/User";
-import { ServiceResponse } from "../types/services/ServiceResponse";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
+import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { FormRequest } from "../types/requests/FormRequest";
+import { UserFormRequest } from "../types/requests/UserFormRequest";
 
 export default class UserService {
     private ziggyRoute: Config;
@@ -22,39 +22,40 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: FormRequest<User>): Promise<ServiceResponse<User | null>> {
+    public async create(payload: UserFormRequest): Promise<ServiceResponse<User | null>> {
         const result: ServiceResponse<User | null> = {
             success: false,
         }
 
         try {
+            const url = route('api.post.db.admin.user.save', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
+            const response: AxiosResponse<User> = await axios.post(
+                url, {
+                name: payload.data.name,
+                email: payload.data.email,
+                first_name: payload.data.profile.first_name,
+                last_name: payload.data.profile.last_name,
+                address: payload.data.profile.address,
+                city: payload.data.profile.city,
+                postal_code: payload.data.profile.postal_code,
+                country: payload.data.profile.country,
+                img_path: payload.data.profile.img_path,
+                tax_id: payload.data.profile.tax_id,
+                ic_num: payload.data.profile.ic_num,
+                status: payload.data.profile.status,
+                remarks: payload.data.profile.remarks,
+                roles: payload.data.roles,
+                theme : payload.data.settings.theme,
+                date_format: payload.data.settings.date_format,
+                time_format: payload.data.settings.time_format,
+            });
 
-    public async read(ulid: string): Promise<ServiceResponse<User | null>> {
-        const result: ServiceResponse<User | null> = {
-            success: false,
-        }
-
-        try {
-            const url = route('api.get.db.admin.user.read', {
-                user: ulid
-            }, false, this.ziggyRoute);
-
-            const response: AxiosResponse<Resource<User>> = await axios.get(url);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             result.success = true;
-            result.data = response.data.data;
+            result.data = response.data;
 
             return result;
         } catch (e: unknown) {
@@ -112,12 +113,65 @@ export default class UserService {
         }
     }
 
-    public async edit(payload: FormRequest<User>): Promise<ServiceResponse<User | null>> {
+    public async read(ulid: string): Promise<ServiceResponse<User | null>> {
         const result: ServiceResponse<User | null> = {
             success: false,
         }
 
         try {
+            const url = route('api.get.db.admin.user.read', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<User>> = await axios.get(url);
+
+            result.success = true;
+            result.data = response.data.data;
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async edit(ulid: string, payload: UserFormRequest): Promise<ServiceResponse<User | null>> {
+        const result: ServiceResponse<User | null> = {
+            success: false,
+        }
+
+        try {            
+            const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<User> = await axios.post(
+                url, {
+                name: payload.data.name,
+                email: payload.data.email,
+                first_name: payload.data.profile.first_name,
+                last_name: payload.data.profile.last_name,
+                address: payload.data.profile.address,
+                city: payload.data.profile.city,
+                postal_code: payload.data.profile.postal_code,
+                country: payload.data.profile.country,
+                img_path: payload.data.profile.img_path,
+                tax_id: payload.data.profile.tax_id,
+                ic_num: payload.data.profile.ic_num,
+                status: payload.data.profile.status,
+                remarks: payload.data.profile.remarks,
+                roles: payload.data.roles,
+                theme : payload.data.settings.theme,
+                date_format: payload.data.settings.date_format,
+                time_format: payload.data.settings.time_format,
+            });
+
+            result.success = true;
+            result.data = response.data;
 
             return result;
         } catch (e: unknown) {
