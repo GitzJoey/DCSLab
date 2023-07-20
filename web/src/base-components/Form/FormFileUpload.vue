@@ -69,7 +69,6 @@ const localValue = computed({
 });
 
 const handleUpload = async (event: Event) => {
-  try {
     const _event = event as HTMLInputEvent
     const files = _event.target.files 
     const fileReader = new FileReader()
@@ -82,11 +81,6 @@ const handleUpload = async (event: Event) => {
         imageUrl.value = uploadResponse.data.url
       }
     }
-    
-  } catch (error) {
-
-  }
-
 }
 
 onMounted(() => {

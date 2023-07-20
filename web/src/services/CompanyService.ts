@@ -30,15 +30,15 @@ export default class CompanyService {
         try {
             const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-            const payloadData = {
+
+            const response: AxiosResponse<Company> = await axios.post(
+                url, {
                 code: payload.data.code,
                 name: payload.data.name,
                 address: payload.data.address,
                 default: payload.data.default,
                 status: payload.data.status
-            }
-            const response: AxiosResponse<Company> = await axios.post(
-                url, payloadData);
+            });
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
