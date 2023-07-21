@@ -31,14 +31,7 @@ export default class CompanyService {
             const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Company> = await axios.post(
-                url, {
-                code: payload.data.code,
-                name: payload.data.name,
-                address: payload.data.address,
-                default: payload.data.default,
-                status: payload.data.status
-            });
+            const response: AxiosResponse<Company> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -127,14 +120,7 @@ export default class CompanyService {
             const url = route('api.post.db.company.company.edit', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Company> = await axios.post(
-                url, {
-                code: payload.data.code,
-                name: payload.data.name,
-                address: payload.data.address,
-                default: payload.data.default,
-                status: payload.data.status
-            });
+            const response: AxiosResponse<Company> = await axios.post(url, payload);
 
             result.success = true;
             result.data = response.data;
