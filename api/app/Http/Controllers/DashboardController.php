@@ -7,6 +7,7 @@ use App\Http\Requests\FileUploadRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Tightenco\Ziggy\Ziggy;
+use Illuminate\Support\Str;
 
 class DashboardController extends BaseController
 {
@@ -42,9 +43,10 @@ class DashboardController extends BaseController
         $request = $fileUploadRequest->validated();
 
         $file = $request['file'];
-        $path = $file->store('uploads');
+        $filename = Str::random(32) . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('uploads', $filename, 'public');
 
-        $url = url(Storage::url($path));
+        $url = asset('storage/' . $path);
 
         return response()->json(['url' => $url], 200);
     }
