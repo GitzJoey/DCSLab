@@ -38,7 +38,7 @@ const search = ref<string>('');
 
 
 const emits = defineEmits<{
-  (e : 'handleClickProductUnit', data:any) : void,
+  (e : 'handleClickProductUnit', data:ProductList) : void,
   (e : 'handleSearchProduct', value:string) :void
 }>()
 </script>
