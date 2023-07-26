@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { CompanyFormRequest } from "../types/requests/CompanyFormRequest";
+import { CompanyFormFieldValues } from "../types/requests/CompanyFormFieldValues";
 
 export default class CompanyService {
     private ziggyRoute: Config;
@@ -22,7 +22,7 @@ export default class CompanyService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: CompanyFormRequest): Promise<ServiceResponse<Company | null>> {
+    public async create(payload: CompanyFormFieldValues): Promise<ServiceResponse<Company | null>> {
         const result: ServiceResponse<Company | null> = {
             success: false,
         }
@@ -111,7 +111,7 @@ export default class CompanyService {
         }
     }
 
-    public async update(ulid: string, payload: CompanyFormRequest): Promise<ServiceResponse<Company | null>> {
+    public async update(ulid: string, payload: CompanyFormFieldValues): Promise<ServiceResponse<Company | null>> {
         const result: ServiceResponse<Company | null> = {
             success: false,
         }

@@ -137,20 +137,16 @@ class CompanyRequest extends FormRequest
                 break;
             case 'store':
                 $this->merge([
-                    'code' => isset($this->data['code']) ? $this->data['code'] : null,
-                    'name' => isset($this->data['name']) ? $this->data['name'] : null,
-                    'address' => isset($this->data['address']) ? $this->data['address'] : null,
-                    'default' => isset($this->data['default']) ? filter_var($this->data['default'], FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => isset($this->data['status']) && RecordStatus::isValid($this->data['status']) ? RecordStatus::resolveToEnum($this->data['status'])->value : -1,
+                    'address' => $this->has('address') ? $this['address'] : null,
+                    'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             case 'update':
                 $this->merge([
-                    'code' => isset($this->data['code']) ? $this->data['code'] : null,
-                    'name' => isset($this->data['name']) ? $this->data['name'] : null,
-                    'address' =>  isset($this->data['address']) ? $this->data['address']: null,
-                    'default' => isset($this->data['default']) ? filter_var($this->data['default'], FILTER_VALIDATE_BOOLEAN) : false,
-                    'status' => isset($this->data['status']) && RecordStatus::isValid($this->data['status']) ? RecordStatus::resolveToEnum($this->data['status'])->value : -1,
+                    'address' => $this->has('address') ? $this['address'] : null,
+                    'default' => $this->has('default') ? filter_var($this->default, FILTER_VALIDATE_BOOLEAN) : false,
+                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             default:
