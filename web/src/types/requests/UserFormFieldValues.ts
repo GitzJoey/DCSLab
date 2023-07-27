@@ -12,7 +12,7 @@ export interface UserFormFieldValues {
   tax_id: number,
   ic_num: number,
   status: string,
-  remarkstest: string,
+  remarks: string,
 
   roles: [],
 
