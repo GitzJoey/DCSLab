@@ -200,7 +200,7 @@ const handleExpandCard = (index: number) => {
   }
 }
 
-const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<CompanyFormRequest>) => {
+const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<CompanyFormFieldValues>) => {
   loading.value = true;
 
   let result: ServiceResponse<Company | null> = {
