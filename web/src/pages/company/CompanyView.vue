@@ -13,6 +13,7 @@ import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../.
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
 import { Company } from "../../types/models/Company";
+import { CompanyFormFieldValues } from "../../types/requests/CompanyFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -32,13 +33,7 @@ import { FormActions } from "vee-validate";
 //#endregion
 
 //#region Interfaces
-interface CompanyFormFieldValues {
-  code: string,
-  name: string,
-  address: string,
-  default: boolean,
-  status: string,
-}
+
 //#endregion
 
 //#region Declarations
@@ -213,9 +208,9 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await companyServices.create(companyForm.value);
+    result = await companyServices.create(values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    result = await companyServices.update(companyForm.value.data.ulid, companyForm.value);
+    result = await companyServices.update(companyForm.value.data.ulid, values);
   } else {
     result.success = false;
   }
