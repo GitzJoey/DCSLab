@@ -112,6 +112,8 @@ class UserActions
 
             DB::commit();
 
+            $this->flushCache();
+
             return $usr;
         } catch (Exception $e) {
             DB::rollBack();
@@ -123,8 +125,13 @@ class UserActions
         }
     }
 
-    public function readAny(string $search = '', bool $paginate = true, int $page = 1, int $perPage = 10, bool $useCache = true): Paginator|Collection
-    {
+    public function readAny(
+        string $search = '',
+        bool $paginate = true,
+        int $page = 1,
+        int $perPage = 10,
+        bool $useCache = true,
+    ): Paginator|Collection {
         $timer_start = microtime(true);
         $recordsCount = 0;
 

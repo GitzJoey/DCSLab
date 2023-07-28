@@ -30,12 +30,19 @@ class UserController extends BaseController
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
         $perPage = array_key_exists('per_page', $request) ? abs($request['per_page']) : 10;
+        $useCache = array_key_exists('refresh', $request) ? boolval($request['refresh']) : true;
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->userActions->readAny($search, $paginate, $page, $perPage);
+            $result = $this->userActions->readAny(
+                $search,
+                $paginate,
+                $page,
+                $perPage,
+                useCache: $useCache
+            );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
