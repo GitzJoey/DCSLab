@@ -495,7 +495,7 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.user.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.name" name="name" rules="required|alpha_num"
+                  <VeeField v-slot="{ field }" name="name" v-model="userForm.data.name" rules="required|alpha_num"
                     :label="t('views.user.fields.name')">
                     <FormInput id="name" v-bind="field" name="name" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.user.fields.name')" />
@@ -576,7 +576,7 @@ watch(
                   <FormLabel html-for="tax_id" :class="{ 'text-danger': errors['tax_id'] }">
                     {{ t('views.user.fields.tax_id') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.profile.tax_id" name="tax_id" rules="required" :placeholder="t('views.user.fields.tax_id')" 
+                  <VeeField v-slot="{ field }" name="tax_id" v-model="userForm.data.profile.tax_id" rules="required" :placeholder="t('views.user.fields.tax_id')" 
                     :label="t('views.user.fields.tax_id')">
                     <FormInput id="tax_id" v-bind="field" name="tax_id" type="text"
                       :class="{ 'border-danger': errors['tax_id'] }" />
@@ -587,7 +587,7 @@ watch(
                   <FormLabel html-for="ic_num" :class="{ 'text-danger': errors['ic_num'] }">
                     {{ t('views.user.fields.ic_num') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.profile.ic_num" name="ic_num" rules="required" :placeholder="t('views.user.fields.ic_num')" 
+                  <VeeField v-slot="{ field }" name="ic_num" v-model="userForm.data.profile.ic_num" rules="required" :placeholder="t('views.user.fields.ic_num')" 
                     :label="t('views.user.fields.ic_num')">
                     <FormInput id="ic_num" v-bind="field" name="ic_num" type="text"
                       :class="{ 'border-danger': errors['ic_num'] }" />
