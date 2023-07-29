@@ -3,8 +3,13 @@
     "table": {
         "title": "Warehouse Lists",
         "cols": {
+            "company": "Company",
+            "branch": "Branch",
             "code": "Code",
             "name": "Name",
+            "address": "Address",
+            "city": "City",
+            "contact": "Contact",
             "remarks": "Remarks",
             "status": "Status"
         }

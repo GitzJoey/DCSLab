@@ -287,7 +287,8 @@ const onSubmit = async (values: WarehouseFormFieldValues, actions: FormActions<W
     result = await warehouseServices.create(
       company_id,
       branch_id,
-      { data:values });
+      warehouseForm.value
+    );
   } else if (mode.value == ViewMode.FORM_EDIT) {
       let warehouse_ulid = warehouseForm.value.data.ulid;
       let company_id = userLocation.value.company.id;
@@ -296,7 +297,7 @@ const onSubmit = async (values: WarehouseFormFieldValues, actions: FormActions<W
       warehouse_ulid,
       company_id,
       branch_id,
-      { data:values }
+      warehouseForm.value
     );
   } else {
     result.success = false;

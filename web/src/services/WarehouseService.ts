@@ -1,4 +1,4 @@
-import axios, { authAxiosInstance } from "../axios";
+import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import { Warehouse } from "../types/models/Warehouse";
@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { FormRequest } from "../types/requests/FormRequest";
+import { WarehouseFormRequest } from "../types/requests/WarehouseFormRequest";
 
 export default class WarehouseService {
     private ziggyRoute: Config;
@@ -22,7 +22,7 @@ export default class WarehouseService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, branch_id: string, payload: FormRequest<Warehouse>): Promise<ServiceResponse<Warehouse | null>> {
+    public async create(company_id: string, branch_id: string, payload: WarehouseFormRequest): Promise<ServiceResponse<Warehouse | null>> {
         const result: ServiceResponse<Warehouse | null> = {
             success: false,
         }
@@ -31,18 +31,8 @@ export default class WarehouseService {
             const url = route('api.post.db.company.warehouse.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Warehouse> = await authAxiosInstance.post(
-                url, {
-                company_id: company_id,
-                branch_id: branch_id,
-                code: payload.data.code,
-                name: payload.data.name,
-                address: payload.data.address,
-                city: payload.data.city,
-                contact: payload.data.contact,
-                remarks: payload.data.remarks,
-                status: payload.data.status
-            });
+            const response: AxiosResponse<Warehouse> = await axios.post(
+                url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -130,7 +120,7 @@ export default class WarehouseService {
         }
     }
 
-    public async update(ulid: string, company_id: string, branch_id: string, payload: FormRequest<Warehouse>): Promise<ServiceResponse<Warehouse | null>> {
+    public async update(ulid: string, company_id: string, branch_id: string, payload: WarehouseFormRequest): Promise<ServiceResponse<Warehouse | null>> {
         const result: ServiceResponse<Warehouse | null> = {
             success: false,
         }
@@ -139,18 +129,8 @@ export default class WarehouseService {
             const url = route('api.post.db.company.warehouse.edit', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Warehouse> = await authAxiosInstance.post(
-                url, {
-                    company_id: company_id,
-                    branch_id: branch_id,
-                    code: payload.data.code,
-                    name: payload.data.name,
-                    address: payload.data.address,
-                    city: payload.data.city,
-                    contact: payload.data.contact,
-                    remarks: payload.data.remarks,
-                    status: payload.data.status
-            }); 
+            const response: AxiosResponse<Warehouse> = await axios.post(
+                url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

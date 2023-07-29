@@ -3,8 +3,13 @@
     "table": {
         "title": "Daftar Gudang",
         "cols": {
+            "company": "Nama Perusahaan",
+            "branch": "Cabang",
             "code": "Kode",
             "name": "Nama",
+            "address": "Alamat",
+            "city": "Kota",
+            "contact": "Kontak",
             "remarks": "Keterangan",
             "status": "Status"
         }
