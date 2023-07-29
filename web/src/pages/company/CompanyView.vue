@@ -408,8 +408,8 @@ watch(
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.company.fields.code') }}
                   </FormLabel>
-                  <VeeField name="code" v-slot="{ field }" v-model="companyForm.data.code" rules="required" :label="t('views.company.fields.code')">
-                    <FormInput name="code" id="code" v-bind="field" type="text"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.code" name="code" rules="required" :label="t('views.company.fields.code')">
+                    <FormInput id="code" name="code" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.company.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
@@ -418,9 +418,9 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.company.fields.name') }}
                   </FormLabel>
-                  <VeeField name="name" v-slot="{ field }" v-model="companyForm.data.name" rules="required"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.name" name="name" rules="required"
                     :label="t('views.company.fields.name')">
-                    <FormInput name="name" id="name" v-bind="field" type="text"
+                    <FormInput id="name" name="name" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.company.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />
@@ -429,8 +429,8 @@ watch(
                   <FormLabel html-for="address" :class="{ 'text-danger': errors['address'] }">
                     {{ t('views.company.fields.address') }}
                   </FormLabel>
-                  <VeeField name="address" v-slot="{ field }" v-model="companyForm.data.address" :label="t('views.company.fields.address')">
-                    <FormTextarea name="address" id="address" v-bind="field"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.address" name="address" :label="t('views.company.fields.address')">
+                    <FormTextarea id="address" name="address" v-bind="field"
                       type="text" :placeholder="t('views.company.fields.address')" />
                   </VeeField>
                 </div>
@@ -438,8 +438,8 @@ watch(
                   <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }" class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
-                  <VeeField name="default" v-slot="{ field }" v-model="companyForm.data.default" :label="t('views.company.fields.default')">
-                    <FormSwitch.Input name="default" id="default" v-bind="field"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.default" name="default" :label="t('views.company.fields.default')">
+                    <FormSwitch.Input id="default" name="default" v-bind="field"
                       type="checkbox" :class="{ 'border-danger': errors['default'] }"
                       :placeholder="t('views.company.fields.default')" />
                   </VeeField>
@@ -448,8 +448,8 @@ watch(
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
                     {{ t('views.company.fields.status') }}
                   </FormLabel>
-                  <VeeField name="status" v-slot="{ field }" v-model="companyForm.data.status" rules="required" :label="t('views.company.fields.status')">
-                    <FormSelect name="status" id="status" v-bind="field"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.status" name="status" rules="required" :label="t('views.company.fields.status')">
+                    <FormSelect id="status" name="status" v-bind="field"
                       :class="{ 'border-danger': errors['status'] }">
                       <option value="">{{ t('components.dropdown.placeholder') }}</option>
                       <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
