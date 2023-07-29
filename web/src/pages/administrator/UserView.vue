@@ -495,9 +495,9 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.user.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" v-model="userForm.data.name" rules="required|alpha_num"
+                  <VeeField name="name" v-slot="{ field }" v-model="userForm.data.name" rules="required|alpha_num"
                     :label="t('views.user.fields.name')">
-                    <FormInput id="name" v-bind="field" name="name" type="text"
+                    <FormInput name="name" id="name" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.user.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />
@@ -506,8 +506,8 @@ watch(
                   <FormLabel html-for="email" :class="{ 'text-danger': errors['email'] }">
                     {{ t('views.user.fields.email') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.email" name="email" rules="required|email" :label="t('views.user.fields.email')">
-                    <FormInput id="email" v-bind="field" name="email" type="text"
+                  <VeeField name="email" v-slot="{ field }" v-model="userForm.data.email" rules="required|email" :label="t('views.user.fields.email')">
+                    <FormInput name="email" id="email" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.user.fields.email')"
                       :readonly="mode === ViewMode.FORM_EDIT" />
                   </VeeField>
@@ -518,37 +518,37 @@ watch(
             <template #card-items-1>
               <div class="p-5">
                 <div class="pb-4">
-                  <VeeField v-model="userForm.data.profile.first_name" name="first_name" v-slot="{ field }">
+                  <VeeField name="first_name" v-model="userForm.data.profile.first_name" v-slot="{ field }">
                     <FormLabel html-for="first_name">{{ t('views.user.fields.first_name') }}</FormLabel>
-                    <FormInput id="first_name" name="first_name" v-bind="field" type="text"
+                    <FormInput name="first_name" id="first_name" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['first_name'] }" :placeholder="t('views.user.fields.name')" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <VeeField v-model="userForm.data.profile.last_name" name="last_name" v-slot="{ field }">
+                  <VeeField name="last_name" v-model="userForm.data.profile.last_name" v-slot="{ field }">
                     <FormLabel html-for="last_name">{{ t('views.user.fields.last_name') }}</FormLabel>
-                    <FormInput id="last_name" name="last_name" v-bind="field" type="text"
+                    <FormInput name="last_name" id="last_name" v-bind="field" type="text"
                       :placeholder="t('views.user.fields.last_name')" />                  
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <VeeField v-model="userForm.data.profile.address" name="address" v-slot="{ field }">
+                  <VeeField name="address" v-model="userForm.data.profile.address" v-slot="{ field }">
                     <FormLabel html-for="address" class="form-label">{{ t('views.user.fields.address') }}</FormLabel>
-                    <FormInput id="address" name="address" v-bind="field" type="text"
+                    <FormInput name="address" id="address" v-bind="field" type="text"
                       :placeholder="t('views.user.fields.address')" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <VeeField v-model="userForm.data.profile.city" name="city" v-slot="{ field }">
+                  <VeeField name="city" v-model="userForm.data.profile.city" v-slot="{ field }">
                     <FormLabel html-for="city">{{ t('views.user.fields.city') }}</FormLabel>
-                    <FormInput id="city" name="city" v-bind="field" type="text" class="form-control"
+                    <FormInput name="city" id="city" v-bind="field" type="text" class="form-control"
                       :placeholder="t('views.user.fields.city')" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <VeeField v-model="userForm.data.profile.postal_code" name="postal_code" v-slot="{ field }">
+                  <VeeField name="postal_code" v-model="userForm.data.profile.postal_code" v-slot="{ field }">
                     <FormLabel html-for="postal_code">{{ t('views.user.fields.postal_code') }}</FormLabel>
-                    <FormInput id="postal_code" name="postal_code" v-bind="field" type="text"
+                    <FormInput name="postal_code" id="postal_code" v-bind="field" type="text"
                       :placeholder="t('views.user.fields.postal_code')" />
                   </VeeField>
                 </div>
@@ -556,8 +556,8 @@ watch(
                   <FormLabel html-for="country" :class="{ 'text-danger': errors['country'] }">
                     {{ t('views.user.fields.country') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.profile.country" name="country" rules="required" :label="t('views.user.fields.country')">
-                    <FormSelect id="country" v-bind="field" name="country"
+                  <VeeField name="country" v-slot="{ field }" v-model="userForm.data.profile.country" rules="required" :label="t('views.user.fields.country')">
+                    <FormSelect name="country" id="country" v-bind="field"
                       :class="{ 'border-danger': errors['country'] }" :placeholder="t('views.user.fields.country')">
                       <option value="">{{ t('components.dropdown.placeholder') }}</option>
                       <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
@@ -569,16 +569,16 @@ watch(
                   <FormLabel html-for="img_path" :class="{ 'text-danger': errors['img_path'] }">
                     {{ t('views.user.fields.picture') }}
                   </FormLabel>
-                  <FormFileUpload id="img_path" v-model="userForm.data.profile.img_path" name="img_path" type="text"
+                  <FormFileUpload name="img_path" id="img_path" v-model="userForm.data.profile.img_path" type="text"
                       :class="{ 'border-danger': errors['img_path'] }" :placeholder="t('views.user.fields.picture')"  />
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="tax_id" :class="{ 'text-danger': errors['tax_id'] }">
                     {{ t('views.user.fields.tax_id') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="tax_id" v-model="userForm.data.profile.tax_id" rules="required" :placeholder="t('views.user.fields.tax_id')" 
+                  <VeeField name="tax_id" v-slot="{ field }" v-model="userForm.data.profile.tax_id" rules="required" :placeholder="t('views.user.fields.tax_id')" 
                     :label="t('views.user.fields.tax_id')">
-                    <FormInput id="tax_id" v-bind="field" name="tax_id" type="text"
+                    <FormInput name="tax_id" id="tax_id" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['tax_id'] }" />
                   </VeeField>
                   <VeeErrorMessage name="tax_id" class="mt-2 text-danger" />
@@ -587,7 +587,7 @@ watch(
                   <FormLabel html-for="ic_num" :class="{ 'text-danger': errors['ic_num'] }">
                     {{ t('views.user.fields.ic_num') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="ic_num" v-model="userForm.data.profile.ic_num" rules="required" :placeholder="t('views.user.fields.ic_num')" 
+                  <VeeField name="ic_num" v-slot="{ field }" v-model="userForm.data.profile.ic_num" rules="required" :placeholder="t('views.user.fields.ic_num')" 
                     :label="t('views.user.fields.ic_num')">
                     <FormInput id="ic_num" v-bind="field" name="ic_num" type="text"
                       :class="{ 'border-danger': errors['ic_num'] }" />
@@ -598,8 +598,8 @@ watch(
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
                     {{ t('views.user.fields.status') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.profile.status" name="status" rules="required" :label="t('views.user.fields.status')">
-                    <FormSelect id="status" v-bind="field" name="status"
+                  <VeeField name="status" v-slot="{ field }" v-model="userForm.data.profile.status" rules="required" :label="t('views.user.fields.status')">
+                    <FormSelect name="status" id="status" v-bind="field"
                       :class="{ 'border-danger': errors['status'] }">
                       <option value="">{{ t('components.dropdown.placeholder') }}</option>
                       <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
@@ -608,11 +608,11 @@ watch(
                   <VeeErrorMessage name="status" class="mt-2 text-danger" />
                 </div>
                 <div class="pb-4">
-                  <VeeField v-model="userForm.data.profile.remarks" name="remarks" v-slot="{ field }">
+                  <VeeField name="remarks" v-model="userForm.data.profile.remarks" v-slot="{ field }">
                     <FormLabel html-for="remarks" :class="{ 'text-danger': errors['remarks'] }">
                       {{ t('views.user.fields.remarks') }}
                     </FormLabel>
-                    <FormTextarea id="remarks" name="remarks" v-bind="field" type="text" 
+                    <FormTextarea name="remarks" id="remarks" v-bind="field" type="text" 
                       :placeholder="t('views.user.fields.remarks')" rows="3" />                  
                   </VeeField>
                 </div>
@@ -624,7 +624,7 @@ watch(
                   <FormLabel html-for="roles" :class="{ 'text-danger': errors['roles[]'] }">
                     {{ t('views.user.fields.roles') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.roles" name="roles" rules="required" :label="t('views.user.fields.roles')">
+                  <VeeField name="roles" v-slot="{ field }" v-model="userForm.data.roles" rules="required" :label="t('views.user.fields.roles')">
                     <FormSelect id="roles" multiple size="6" v-bind="field"
                       :class="{ 'border-danger': errors['roles[]'] }">
                       <option v-for="r in rolesDDL" :key="r.id" :value="r">
@@ -642,9 +642,9 @@ watch(
                   <FormLabel html-for="theme">
                     {{ t('views.user.fields.settings.theme') }}
                   </FormLabel>
-                  <VeeField v-model="userForm.data.settings.theme" name="theme" v-slot="{ field }">
-                    <FormSelect v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="theme"
-                      v-bind="field" name="theme">
+                  <VeeField name="theme" v-model="userForm.data.settings.theme" v-slot="{ field }">
+                    <FormSelect name="theme" v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="theme"
+                      v-bind="field">
                       <option value="side-menu-light-full">Menu Light</option>
                       <option value="side-menu-light-mini">Mini Menu Light</option>
                       <option value="side-menu-dark-full">Menu Dark</option>
@@ -656,9 +656,9 @@ watch(
                   <FormLabel html-for="date_format">
                     {{ t('views.user.fields.settings.date_format') }}
                   </FormLabel>
-                  <VeeField v-model="userForm.data.settings.date_format" name="date_format" v-slot="{ field }">
-                    <FormSelect v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="date_format"
-                      v-bind="field" name="date_format">
+                  <VeeField name="date_format" v-model="userForm.data.settings.date_format" v-slot="{ field }">
+                    <FormSelect name="date_format" v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="date_format"
+                      v-bind="field">
                       <option value="yyyy_MM_dd">{{ 'YYYY-MM-DD' }}</option>
                       <option value="dd_MMM_yyyy">{{ 'DD-MMM-YYYY' }}</option>
                     </FormSelect>                    
@@ -668,9 +668,9 @@ watch(
                   <FormLabel html-for="time_format">
                     {{ t('views.user.fields.settings.time_format') }}
                   </FormLabel>
-                  <VeeField v-model="userForm.data.settings.time_format" name="time_format" v-slot="{ field }">
-                    <FormSelect v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="time_format"
-                      v-bind="field" name="time_format">
+                  <VeeField name="time_format" v-model="userForm.data.settings.time_format" v-slot="{ field }">
+                    <FormSelect name="time_format" v-show="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" id="time_format"
+                      v-bind="field">
                       <option value="hh_mm_ss">{{ 'HH:mm:ss' }}</option>
                       <option value="h_m_A">{{ 'H:m A' }}</option>
                     </FormSelect>                    
