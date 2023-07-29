@@ -3,7 +3,7 @@
     "table": {
         "title": "Daftar Cabang",
         "cols": {
-            "company": "Nama Perusahaan",
+            "company": "Perusahaan",
             "code": "Kode",
             "name": "Nama",
             "address": "Alamat",
@@ -21,7 +21,7 @@
         "delete": "Hapus Cabang"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "name": "Nama",
         "address": "Alamat",
