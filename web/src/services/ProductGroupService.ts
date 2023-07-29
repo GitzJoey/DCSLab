@@ -1,6 +1,7 @@
-import axios, { authAxiosInstance } from "../axios";
+import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
+import CacheService from "./CacheService";
 import { ProductGroup } from "../types/models/ProductGroup";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
@@ -8,21 +9,25 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { FormRequest } from "../types/requests/FormRequest";
+import { ProductGroupFormRequest } from "../types/requests/ProductGroupFormRequest";
+import { DropDownOption } from "../types/services/DropDownOption";
+import { Pause } from "lucide";
 
 export default class ProductGroupService {
     private ziggyRoute: Config;
     private ziggyRouteStore = useZiggyRouteStore();
-
+    
+    private cacheService;
     private errorHandlerService;
 
     constructor() {
         this.ziggyRoute = this.ziggyRouteStore.getZiggy;
 
+        this.cacheService = new CacheService();
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: FormRequest<ProductGroup>): Promise<ServiceResponse<ProductGroup | null>> {
+    public async create(company_id: string, payload: ProductGroupFormRequest): Promise<ServiceResponse<ProductGroup | null>> {
         const result: ServiceResponse<ProductGroup | null> = {
             success: false,
         }
@@ -31,13 +36,8 @@ export default class ProductGroupService {
             const url = route('api.post.db.product.product_group.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<ProductGroup> = await authAxiosInstance.post(
-                url, {
-                company_id: company_id,
-                code: payload.data.code,
-                name: payload.data.name,
-                category: payload.data.category
-            });            
+            const response: AxiosResponse<ProductGroup> = await axios.post(
+                url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -70,9 +70,7 @@ export default class ProductGroupService {
             if (args.page) queryParams['page'] = args.page;
             if (args.per_page) queryParams['per_page'] = args.per_page;
 
-            const url = route('api.get.db.product.product_group.read_any', {
-                _query: queryParams
-            }, false, this.ziggyRoute);
+            const url = route('api.get.db.product.product_group.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -120,7 +118,7 @@ export default class ProductGroupService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: FormRequest<ProductGroup>): Promise<ServiceResponse<ProductGroup | null>> {
+    public async update(ulid: string, company_id: string, payload: ProductGroupFormRequest): Promise<ServiceResponse<ProductGroup | null>> {
         const result: ServiceResponse<ProductGroup | null> = {
             success: false,
         }
@@ -129,13 +127,8 @@ export default class ProductGroupService {
             const url = route('api.post.db.product.product_group.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<ProductGroup> = await authAxiosInstance.post(
-                url, {
-                    company_id: company_id,
-                    code: payload.data.code,
-                    name: payload.data.name,
-                    category: payload.data.category
-            }); 
+            const response: AxiosResponse<ProductGroup> = await axios.post(
+                url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -177,6 +170,60 @@ export default class ProductGroupService {
             } else {
                 return result;
             }
+        }
+    }
+
+    public async getProductGroupDDL(company_id: string): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'productGroupDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const queryParams: Record<string, string | number | boolean> = {};
+                queryParams['company_id'] = company_id;
+                queryParams['category'] = 'PRODUCTS';
+
+                const url = route('api.get.db.product.product_group.ddl.list.productgroups', { _query: queryParams }, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
+        }
+    }
+    
+    public async getProductGroupCategoryDDL(): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'categoryDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.product.product_group.read.productgroup.categories', undefined, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
         }
     }
 }

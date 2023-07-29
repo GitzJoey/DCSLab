@@ -40,7 +40,7 @@ class ProductGroupController extends BaseController
             }
         }
 
-        $productgroupArr = [
+        $productGroupArr = [
             'company_id' => $request['company_id'],
             'code' => $code,
             'name' => $request['name'],
@@ -51,7 +51,7 @@ class ProductGroupController extends BaseController
         $errorMsg = '';
 
         try {
-            $result = $this->productGroupActions->create($productgroupArr);
+            $result = $this->productGroupActions->create($productGroupArr);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -102,15 +102,15 @@ class ProductGroupController extends BaseController
         }
     }
 
-    public function read(ProductGroup $productgroup, ProductGroupRequest $productgroupRequest)
+    public function read(ProductGroup $productGroup, ProductGroupRequest $productGroupRequest)
     {
-        $request = $productgroupRequest->validated();
+        $request = $productGroupRequest->validated();
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->productGroupActions->read($productgroup);
+            $result = $this->productGroupActions->read($productGroup);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -124,7 +124,7 @@ class ProductGroupController extends BaseController
         }
     }
 
-    public function update(ProductGroup $productgroup, ProductGroupRequest $productGroupRequest)
+    public function update(ProductGroup $productGroup, ProductGroupRequest $productGroupRequest)
     {
         $request = $productGroupRequest->validated();
 
@@ -134,16 +134,16 @@ class ProductGroupController extends BaseController
         if ($code == config('dcslab.KEYWORDS.AUTO')) {
             do {
                 $code = $this->productGroupActions->generateUniqueCode();
-            } while (! $this->productGroupActions->isUniqueCode($code, $company_id, $productgroup->id));
+            } while (! $this->productGroupActions->isUniqueCode($code, $company_id, $productGroup->id));
         } else {
-            if (! $this->productGroupActions->isUniqueCode($code, $company_id, $productgroup->id)) {
+            if (! $this->productGroupActions->isUniqueCode($code, $company_id, $productGroup->id)) {
                 return response()->error([
                     'code' => [trans('rules.unique_code')],
                 ], 422);
             }
         }
 
-        $productgroupArr = [
+        $productGroupArr = [
             'code' => $code,
             'name' => $request['name'],
             'category' => $request['category'],
@@ -154,8 +154,8 @@ class ProductGroupController extends BaseController
 
         try {
             $result = $this->productGroupActions->update(
-                $productgroup,
-                $productgroupArr
+                $productGroup,
+                $productGroupArr
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -164,13 +164,13 @@ class ProductGroupController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(ProductGroup $productgroup, ProductGroupRequest $productGroupRequest)
+    public function delete(ProductGroup $productGroup, ProductGroupRequest $productGroupRequest)
     {
         $result = false;
         $errorMsg = '';
 
         try {
-            $result = $this->productGroupActions->delete($productgroup);
+            $result = $this->productGroupActions->delete($productGroup);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -184,5 +184,33 @@ class ProductGroupController extends BaseController
             ['name' => 'components.dropdown.values.productGroupCategoryDDL.product', 'code' => ProductGroupCategory::PRODUCTS->name],
             ['name' => 'components.dropdown.values.productGroupCategoryDDL.service', 'code' => ProductGroupCategory::SERVICES->name],
         ];
+    }
+
+    public function getProductGroupDDL(ProductGroupRequest $productGroupRequest)
+    {
+        $request = $productGroupRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        $category = null;
+        if (array_key_exists('category', $request)) {
+            $category = $request['category'];
+        }
+
+        try {
+            $result = $this->productGroupActions->getProductGroupDDL(
+                $request['company_id'],
+                $category
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
     }
 }

@@ -30,6 +30,7 @@ class UnitRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
             case 'readAny':
+            case 'getUnitDDL':
                 return $user->can('viewAny', Unit::class) ? true : false;
             case 'read':
                 return $user->can('view', Unit::class, $unit) ? true : false;
@@ -74,6 +75,13 @@ class UnitRequest extends FormRequest
                 ];
 
                 return $rules_read;
+            case 'getUnitDDL':
+                $rules_get_unit_ddl = [
+                    'company_id' => ['required', new IsValidCompany(), 'bail'],
+                    'category' => ['exclude_if:category,-1', new Enum(UnitCategory::class)],
+                ];
+
+                return $rules_get_unit_ddl;
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
@@ -138,6 +146,17 @@ class UnitRequest extends FormRequest
                 break;
             case 'read':
                 $this->merge([]);
+                break;
+            case 'getUnitDDL':
+                $category = -1;
+                if (isset($this->category)) {
+                    $category = UnitCategory::isValid($this->category) ? UnitCategory::resolveToEnum($this->category)->value : 0;
+                };
+
+                $this->merge([
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',                    
+                    'category' => $category,
+                ]);
                 break;
             case 'store':
             case 'update':

@@ -3,6 +3,7 @@
 namespace Tests\Unit\Actions\ProductGroupActions;
 
 use App\Actions\ProductGroup\ProductGroupActions;
+use App\Enums\ProductGroupCategory;
 use App\Models\Company;
 use App\Models\ProductGroup;
 use App\Models\User;
@@ -167,5 +168,50 @@ class ProductGroupActionsReadTest extends ActionsTestCase
         $result = $this->productGroupActions->read($productGroup);
 
         $this->assertInstanceOf(ProductGroup::class, $result);
+    }
+
+    public function test_product_group_actions_call_get_product_group_ddl_expect_collection()
+    {
+        $productCount = random_int(1, 5);
+        $serviceCount = random_int(1, 5);
+        
+        $productGroupCategory = ProductGroupCategory::toArrayValue();
+        $category = fake()->randomElement($productGroupCategory);
+
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(ProductGroup::factory()->count($productCount)->setCategoryToProduct())
+                ->has(ProductGroup::factory()->count($serviceCount)->setCategoryToService())
+            )->create();
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $result = $this->productGroupActions->getProductGroupDDL(
+            companyId: $company->id,
+            category: $category
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);   
+        
+        foreach ($result as $productGroup) {
+            $this->assertTrue($productGroup->category->value == $category);
+        }
+
+        if ($category == ProductGroupCategory::PRODUCTS->value) {
+            $this->assertTrue($result->count() == $productCount);
+        }
+
+        if ($category == ProductGroupCategory::SERVICES->value) {
+            $this->assertTrue($result->count() == $serviceCount);
+        }
+
+        $result = $this->productGroupActions->getProductGroupDDL(
+            companyId: $company->id,
+            category: null
+        );
+
+        $this->assertInstanceOf(Collection::class, $result);
+
+        $this->assertTrue($result->count() == $productCount + $serviceCount);
     }
 }

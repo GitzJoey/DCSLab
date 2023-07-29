@@ -188,4 +188,32 @@ class UnitController extends BaseController
             ['name' => 'components.dropdown.values.unitCategoryDDL.service', 'code' => UnitCategory::SERVICES->name],
         ];
     }
+
+    public function getUnitDDL(UnitRequest $unitRequest)
+    {
+        $request = $unitRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        $category = null;
+        if (array_key_exists('category', $request)) {
+            $category = $request['category'];
+        }
+
+        try {
+            $result = $this->unitActions->getUnitDDL(
+                $request['company_id'],
+                $category
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
 }

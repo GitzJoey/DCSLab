@@ -3,7 +3,7 @@ import { Company } from "./Company"
 export interface Unit {
     id: string,
     ulid: string,
-    company: Company,
+    company?: Company | null,
     code: string,
     name: string,
     description: string,

@@ -232,4 +232,22 @@ class UnitActions
 
         return $result->count() == 0 ? true : false;
     }
+
+    public function getUnitDDL(int $companyId, ?int $category): Collection 
+    {
+        $unit = Unit::whereCompanyId($companyId);
+
+        if ($category) {
+            switch ($category) {
+                case UnitCategory::PRODUCTS->value:
+                    $unit = $unit->where('category', '=', UnitCategory::PRODUCTS->value);
+                    break;
+                case UnitCategory::SERVICES->value:
+                    $unit = $unit->where('category', '=', UnitCategory::SERVICES->value);
+                    break;
+            }
+        }
+
+        return $unit->latest()->get();
+    }
 }

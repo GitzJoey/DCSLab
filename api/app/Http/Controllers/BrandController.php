@@ -168,4 +168,24 @@ class BrandController extends BaseController
 
         return ! $result ? response()->error($errorMsg) : response()->success();
     }
+
+    public function getBrandDDL(BrandRequest $brandRequest)
+    {
+        $request = $brandRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->brandActions->getBrandDDL($request['company_id']);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return $result;
+        }
+    }
 }

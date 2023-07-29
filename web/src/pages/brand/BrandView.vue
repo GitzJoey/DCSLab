@@ -19,8 +19,7 @@ import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
-import { DropDownOption } from "../../types/services/DropDownOption";
-import { BrandFormRequest } from "../../types/requests/BrandFormRequest";
+ import { BrandFormRequest } from "../../types/requests/BrandFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
@@ -225,7 +224,7 @@ const onSubmit = async (values: BrandFormFieldValues, actions: FormActions<Brand
     
     result = await brandServices.create(
       company_id, 
-      { data:values }
+      brandForm.value
     );
   } else if (mode.value == ViewMode.FORM_EDIT) {
     let brand_ulid = brandForm.value.data.ulid;
@@ -234,7 +233,7 @@ const onSubmit = async (values: BrandFormFieldValues, actions: FormActions<Brand
     result = await brandServices.update(
       brand_ulid, 
       company_id, 
-      { data:values }
+      brandForm.value
     );
   } else {
     result.success = false;

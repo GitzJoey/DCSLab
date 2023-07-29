@@ -140,7 +140,7 @@ const getProductGroups = async (search: string, refresh: boolean, paginate: bool
 }
 
 const getDDL = (): void => {
-  dashboardServices.getCategoryDDL().then((result: Array<DropDownOption> | null) => {
+  dashboardServices.getProductGroupCategoryDDL().then((result: Array<DropDownOption> | null) => {
     productGroupCategoryDDL.value = result;
   });
 }
@@ -231,7 +231,7 @@ const onSubmit = async (values: ProductGroupFormFieldValues, actions: FormAction
     
     result = await productGroupServices.create(
       company_id, 
-      { data:values }
+      productGroupForm.value
     );
   } else if (mode.value == ViewMode.FORM_EDIT) {
     let product_group_ulid = productGroupForm.value.data.ulid;
@@ -240,7 +240,7 @@ const onSubmit = async (values: ProductGroupFormFieldValues, actions: FormAction
     result = await productGroupServices.update(
       product_group_ulid, 
       company_id, 
-      { data:values }
+      productGroupForm.value
     );
   } else {
     result.success = false;

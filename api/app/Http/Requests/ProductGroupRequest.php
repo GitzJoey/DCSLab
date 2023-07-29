@@ -30,6 +30,7 @@ class ProductGroupRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
             case 'readAny':
+            case 'getProductGroupDDL':
                 return $user->can('viewAny', ProductGroup::class) ? true : false;
             case 'read':
                 return $user->can('view', ProductGroup::class, $productgroup) ? true : false;
@@ -71,7 +72,14 @@ class ProductGroupRequest extends FormRequest
                 $rules_read = [
                 ];
 
-                return $rules_read;
+                return $rules_read;            
+            case 'getProductGroupDDL':
+                $rules_get_product_group_ddl = [
+                    'company_id' => ['required', new IsValidCompany(), 'bail'],
+                    'category' => ['exclude_if:category,-1', new Enum(ProductGroupCategory::class)],
+                ];
+
+                return $rules_get_product_group_ddl;
             case 'store':
                 $rules_store = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
@@ -135,6 +143,17 @@ class ProductGroupRequest extends FormRequest
                 break;
             case 'read':
                 $this->merge([]);
+                break;
+            case 'getProductGroupDDL':
+                $category = -1;
+                if (isset($this->category)) {
+                    $category = ProductGroupCategory::isValid($this->category) ? ProductGroupCategory::resolveToEnum($this->category)->value : 0;
+                };
+
+                $this->merge([
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',                    
+                    'category' => $category,
+                ]);
                 break;
             case 'store':
             case 'update':

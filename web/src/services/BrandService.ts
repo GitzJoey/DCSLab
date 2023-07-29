@@ -1,6 +1,7 @@
-import axios, { authAxiosInstance } from "../axios";
+import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
+import CacheService from "./CacheService";
 import { Brand } from "../types/models/Brand";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
@@ -8,21 +9,24 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { FormRequest } from "../types/requests/FormRequest";
+import { BrandFormRequest } from "../types/requests/BrandFormRequest";
+import { DropDownOption } from "../types/services/DropDownOption";
 
 export default class BrandService {
     private ziggyRoute: Config;
     private ziggyRouteStore = useZiggyRouteStore();
 
+    private cacheService;
     private errorHandlerService;
 
     constructor() {
         this.ziggyRoute = this.ziggyRouteStore.getZiggy;
 
+        this.cacheService = new CacheService();
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: FormRequest<Brand>): Promise<ServiceResponse<Brand | null>> {
+    public async create(company_id: string, payload: BrandFormRequest): Promise<ServiceResponse<Brand | null>> {
         const result: ServiceResponse<Brand | null> = {
             success: false,
         }
@@ -31,12 +35,8 @@ export default class BrandService {
             const url = route('api.post.db.product.brand.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Brand> = await authAxiosInstance.post(
-                url, {
-                company_id: company_id,
-                code: payload.data.code,
-                name: payload.data.name
-            });            
+            const response: AxiosResponse<Brand> = await axios.post(
+                url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -119,7 +119,7 @@ export default class BrandService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: FormRequest<Brand>): Promise<ServiceResponse<Brand | null>> {
+    public async update(ulid: string, company_id: string, payload: BrandFormRequest): Promise<ServiceResponse<Brand | null>> {
         const result: ServiceResponse<Brand | null> = {
             success: false,
         }
@@ -128,12 +128,8 @@ export default class BrandService {
             const url = route('api.post.db.product.brand.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<Brand> = await authAxiosInstance.post(
-                url, {
-                    company_id: company_id,
-                    code: payload.data.code,
-                    name: payload.data.name
-            }); 
+            const response: AxiosResponse<Brand> = await axios.post(
+                url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -175,6 +171,34 @@ export default class BrandService {
             } else {
                 return result;
             }
+        }
+    }
+
+    public async getBrandDDL(company_id: string): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'brandDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const queryParams: Record<string, string | number | boolean> = {};
+                queryParams['company_id'] = company_id;
+
+                const url = route('api.get.db.product.brand.ddl.list.brands', { _query: queryParams }, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
         }
     }
 }
