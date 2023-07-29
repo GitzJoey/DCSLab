@@ -152,7 +152,7 @@ const emptyBranch = () => {
       id: '',
       ulid: '',
       company: {
-        id: '',
+        id: userLocation.value.company.id,
         ulid: '',
         code: '',
         name: '',
@@ -233,18 +233,17 @@ const onSubmit = async (values: BranchFormFieldValues, actions: FormActions<Bran
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await branchServices.create(values);
+    console.log(values);
+    let company_id = userLocation.value.company.id;
     
-    console.log(values);
+    result = await branchServices.create(company_id, values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    // let branch_ulid = branchForm.value.data.ulid;
+    let branch_ulid = branchForm.value.data.ulid;
 
-    // result = await branchServices.update(
-    //   branch_ulid, 
-    //   values
-    // );
-
-    console.log(values);
+    result = await branchServices.update(
+      branch_ulid, 
+      values
+    );
   } else {
     result.success = false;
   }
@@ -450,9 +449,9 @@ watch(
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
-                <VeeField v-slot="{ field }" name="company_id">            
-                  <FormInput id="company_id" name="company_id" type="hidden" :value="userLocation.company.id" v-bind="field" />
-                </VeeField>
+                <VeeField v-slot="{ field }" name="company_id">                  
+                  <FormInput id="company_id" name="company_id" type="hidden" v-model="branchForm.data.company.id" v-bind="field" />
+                </VeeField>                
                 <div class="pb-4">
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.branch.fields.code') }}
