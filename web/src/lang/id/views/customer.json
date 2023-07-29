@@ -17,7 +17,7 @@
         "delete": "Hapus Pelanggan"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "is_member": "Member",
         "name": "Nama",
