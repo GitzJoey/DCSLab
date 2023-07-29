@@ -89,7 +89,7 @@ export default class CacheService {
         }
     }
 
-    public hasLastEntity(key: string): boolean {
+    public isLastEntity(key: string): boolean {
         const dcslabLastEntity = sessionStorage.getItem(this.DCSLAB_LAST_ENTITY_KEY);
         if (dcslabLastEntity == null) return false;
 
