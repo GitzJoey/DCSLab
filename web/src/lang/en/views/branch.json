@@ -6,7 +6,10 @@
             "company": "Company",
             "code": "Code",
             "name": "Name",
-            "is_main": "Main Branch",
+            "address": "Address",
+            "city": "City",
+            "contact": "Contact",
+            "is_main" : "Main Branch",
             "remarks": "Remarks",
             "status": "Status"
         }

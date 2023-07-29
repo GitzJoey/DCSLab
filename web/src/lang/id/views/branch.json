@@ -3,10 +3,13 @@
     "table": {
         "title": "Daftar Cabang",
         "cols": {
-            "company": "Perusahaan",
+            "company": "Nama Perusahaan",
             "code": "Kode",
             "name": "Nama",
-            "is_main": "Cabang Utama",
+            "address": "Alamat",
+            "city": "Kota",
+            "contact": "Kontak",
+            "is_main" : "Cabang Utama",
             "remarks": "Keterangan",
             "status": "Status"
         }

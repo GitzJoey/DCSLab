@@ -5,6 +5,7 @@
         "cols": {
             "code": "Code",
             "name": "Name",
+            "address": "Address",
             "default": "Default",
             "status": "Status"
         }
