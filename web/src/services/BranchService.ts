@@ -22,7 +22,7 @@ export default class BranchService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: BranchFormFieldValues): Promise<ServiceResponse<Branch | null>> {
+    public async create(payload: BranchFormFieldValues): Promise<ServiceResponse<Branch | null>> {
         const result: ServiceResponse<Branch | null> = {
             success: false,
         }
