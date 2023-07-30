@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { FormRequest } from "../types/requests/FormRequest";
+import { BranchFormFieldValues } from "../types/requests/BranchFormFieldValues";
 
 export default class BranchService {
     private ziggyRoute: Config;
@@ -22,7 +22,7 @@ export default class BranchService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: FormRequest<Branch>): Promise<ServiceResponse<Branch | null>> {
+    public async create(payload: BranchFormFieldValues): Promise<ServiceResponse<Branch | null>> {
         const result: ServiceResponse<Branch | null> = {
             success: false,
         }
@@ -31,18 +31,7 @@ export default class BranchService {
             const url = route('api.post.db.company.branch.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Branch> = await authAxiosInstance.post(
-                url, {
-                company_id: company_id,
-                code: payload.data.code,
-                name: payload.data.name,
-                address: payload.data.address,
-                city: payload.data.city,
-                contact: payload.data.contact,
-                is_main: payload.data.is_main,
-                remarks: payload.data.remarks,
-                status: payload.data.status
-            });            
+            const response: AxiosResponse<Branch> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -125,7 +114,7 @@ export default class BranchService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: FormRequest<Branch>): Promise<ServiceResponse<Branch | null>> {
+    public async update(ulid: string, payload: BranchFormFieldValues): Promise<ServiceResponse<Branch | null>> {
         const result: ServiceResponse<Branch | null> = {
             success: false,
         }
@@ -134,18 +123,8 @@ export default class BranchService {
             const url = route('api.post.db.company.branch.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<Branch> = await authAxiosInstance.post(
-                url, {
-                    company_id: company_id,
-                    code: payload.data.code,
-                    name: payload.data.name,
-                    address: payload.data.address,
-                    city: payload.data.city,
-                    contact: payload.data.contact,
-                    is_main: payload.data.is_main,
-                    remarks: payload.data.remarks,
-                    status: payload.data.status
-            }); 
+            const response: AxiosResponse<Branch> = await axios.post(
+                url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
