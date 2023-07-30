@@ -15,7 +15,7 @@
         "delete": "Hapus Kelompok Produk"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "name": "Name",
         "category": "Kategori"

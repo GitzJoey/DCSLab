@@ -16,7 +16,7 @@
         "delete": "Hapus Gudang"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "branch": "Cabang",
         "code": "Kode",
         "name": "Nama",

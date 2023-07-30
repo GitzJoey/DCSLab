@@ -15,7 +15,7 @@
         "delete": "Hapus Kelompok Pelanggan"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "name": "Name",
         "max_open_invoice": "Batas Nota",
