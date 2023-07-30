@@ -137,7 +137,7 @@ const emptyCompany = () => {
     data: {
       id: '',
       ulid: '',
-      code: '',
+      code: '[AUTO]',
       name: '',
       address: '',
       default: true,
@@ -186,10 +186,10 @@ const confirmDelete = async () => {
   if (result.success) {
     backToList();
   } else {
-    console.log(result);
+    backToList();
   }
 
-  loading.value = true;
+  loading.value = false;
 }
 
 const handleExpandCard = (index: number) => {
