@@ -5,7 +5,7 @@
         "cols": {
             "company": "Perusahaan",
             "code": "Kode",
-            "name": "Name",
+            "name": "Nama",
             "max_open_invoice": "Batas Nota",
             "max_outstanding_invoice": "Batas Nominal",
             "max_invoice_age": "Batas Umur Nota",
@@ -32,7 +32,7 @@
     "fields": {
         "company": "Perusahaan",
         "code": "Kode",
-        "name": "Name",
+        "name": "Nama",
         "max_open_invoice": "Batas Nota",
         "max_outstanding_invoice": "Batas Nominal",
         "max_invoice_age": "Batas Umur Nota",
