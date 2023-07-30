@@ -5,6 +5,7 @@
         "cols": {
             "code": "Kode",
             "name": "Nama",
+            "product_group": "Kelompok Produk",
             "brand": "Merk",
             "status": "Status"
         }

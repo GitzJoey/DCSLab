@@ -3,8 +3,16 @@
     "table": {
         "title": "Supplier Lists",
         "cols": {
+            "company": "Company",
             "code": "Code",
             "name": "Name",
+            "address": "Address",
+            "city": "City",
+            "contact": "Contact",
+            "taxable_enterprise": "Taxable Enterprise",
+            "tax_id": "Tax ID",
+            "payment_term_type": "Term of Payment",
+            "payment_term": "Payment Term",
             "remarks": "Remarks",
             "status": "Status"
         }

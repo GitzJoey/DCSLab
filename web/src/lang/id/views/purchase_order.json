@@ -3,9 +3,14 @@
     "table": {
         "title": "Daftar Pembelian",
         "cols": {
-            "code": "Kode",
+            "company": "Perusahaan",
+            "branch": "Cabang",
+            "invoice_code": "Nomor Faktur",
+            "invoice_date": "Tanggal Faktur",
             "supplier": "Pemasok",
             "shipping_date": "Tanggal Pengiriman",
+            "shipping_address": "Alamat Pengiriman",
+            "remarks": "Keterangan",
             "status": "Status"
         }
     },

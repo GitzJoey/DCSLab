@@ -3,8 +3,16 @@
     "table": {
         "title": "Daftar Pemasok",
         "cols": {
+            "company": "Perusahaan",
             "code": "Kode",
             "name": "Nama",
+            "address": "Alamat",
+            "city": "Kota",
+            "contact": "Kontak",
+            "taxable_enterprise": "Perusahaan Kena Pajak",
+            "tax_id": "No. NPWP",
+            "payment_term_type": "Ketentuan Pembayaran",
+            "payment_term": "Tempo",
             "remarks": "Keterangan",
             "status": "Status"
         }

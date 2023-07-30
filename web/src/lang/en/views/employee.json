@@ -3,11 +3,19 @@
     "table": {
         "title": "Employee List",
         "cols": {
-            "company": "Company",
+            "company": "Company Name",
             "code": "Code",
             "name": "Name",
             "email": "Email",
+            "address": "Address",
+            "city": "City",
+            "postal_code": "Postal Code",
+            "img_path": "Image Path",
+            "country": "Country",
+            "tax_id": "Tax ID",
+            "ic_num": "Ic Num",
             "join_date": "Join Date",
+            "remarks": "Remarks",
             "status": "Status"
         }
     },

@@ -5,6 +5,7 @@
         "cols": {
             "code": "Code",
             "name": "Name",
+            "product_group": "Product Group",
             "brand": "Brand",
             "status": "Status"
         }
@@ -40,6 +41,10 @@
                     "is_base": "Base Unit",
                     "is_primary": "Primary Unit",
                     "remarks": "Remarks"
+                },
+                "fields": {
+                    "code": "Code",
+                    "unit": "Units"
                 }
             }
         }

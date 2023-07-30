@@ -3,9 +3,14 @@
     "table": {
         "title": "Purchase Order List",
         "cols": {
-            "code": "Code",
+            "company": "Company",
+            "branch": "Branch",
+            "invoice_code": "Invoice Code",
+            "invoice_date": "Invoice Date",
             "supplier": "Supplier",
             "shipping_date": "Shipping Date",
+            "shipping_address": "Shipping Address",
+            "remarks": "Remarks",
             "status": "Status"
         }
     },

@@ -3,9 +3,19 @@
     "table": {
         "title": "Customer List",
         "cols": {
+            "company": "Company",
             "code": "Code",
-            "name": "Name",
             "is_member": "Member",
+            "name": "Name",
+            "customer_group": "Customer Group",
+            "zone": "Zone",
+            "max_open_invoice": "Max Open Invoice",
+            "max_outstanding_invoice": "Max Outstanding Invoice",
+            "max_invoice_age": "Max Invoice Age",
+            "payment_term_type":  "Payment Term Type",
+            "payment_term": "Payment Term",
+            "taxable_enterprise": "Taxable Enterprise",
+            "tax_id": "Tax ID",
             "remarks": "Remarks",
             "status": "Status"
         }
