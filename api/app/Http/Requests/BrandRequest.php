@@ -28,8 +28,8 @@ class BrandRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
             case 'readAny':
-                case 'getBrandDDL':
-                    return $user->can('viewAny', Brand::class) ? true : false;
+            case 'getBrandDDL':
+                return $user->can('viewAny', Brand::class) ? true : false;
             case 'read':
                 return $user->can('view', Brand::class, $brand) ? true : false;
             case 'store':
@@ -139,7 +139,7 @@ class BrandRequest extends FormRequest
                 break;
             case 'getBrandDDL':
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',                    
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                 ]);
                 break;
             case 'store':

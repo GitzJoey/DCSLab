@@ -31,14 +31,17 @@ class ProductResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('company'), [
                 'company' => new CompanyResource($this->company),
             ]),
+            'code' => $this->code,
             $this->mergeWhen($this->relationLoaded('productGroup'), [
                 'product_group' => new ProductGroupResource($this->productGroup),
             ]),
             $this->mergeWhen($this->relationLoaded('brand'), [
                 'brand' => new BrandResource($this->brand),
             ]),
-            'code' => $this->code,
             'name' => $this->name,
+            $this->mergeWhen($this->relationLoaded('productUnits'), [
+                'product_units' => ProductUnitResource::collection($this->productUnits),
+            ]),
             'product_type' => $this->product_type->name,
             'taxable_supply' => $this->taxable_supply,
             'standard_rated_supply' => $this->standard_rated_supply,
@@ -48,9 +51,6 @@ class ProductResource extends JsonResource
             'has_expiry_date' => $this->has_expiry_date,
             'status' => $this->setStatus($this->status, $this->deleted_at),
             'remarks' => $this->remarks,
-            $this->mergeWhen($this->relationLoaded('productUnits'), [
-                'product_units' => ProductUnitResource::collection($this->productUnits),
-            ]),
         ];
     }
 

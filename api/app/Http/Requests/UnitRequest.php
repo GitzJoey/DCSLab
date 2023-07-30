@@ -151,10 +151,10 @@ class UnitRequest extends FormRequest
                 $category = -1;
                 if (isset($this->category)) {
                     $category = UnitCategory::isValid($this->category) ? UnitCategory::resolveToEnum($this->category)->value : 0;
-                };
+                }
 
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',                    
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'category' => $category,
                 ]);
                 break;

@@ -72,7 +72,7 @@ class ProductGroupRequest extends FormRequest
                 $rules_read = [
                 ];
 
-                return $rules_read;            
+                return $rules_read;
             case 'getProductGroupDDL':
                 $rules_get_product_group_ddl = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
@@ -148,10 +148,10 @@ class ProductGroupRequest extends FormRequest
                 $category = -1;
                 if (isset($this->category)) {
                     $category = ProductGroupCategory::isValid($this->category) ? ProductGroupCategory::resolveToEnum($this->category)->value : 0;
-                };
+                }
 
                 $this->merge([
-                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',                    
+                    'company_id' => $this->has('company_id') ? Hashids::decode($this['company_id'])[0] : '',
                     'category' => $category,
                 ]);
                 break;

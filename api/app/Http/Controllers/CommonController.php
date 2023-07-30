@@ -38,6 +38,7 @@ class CommonController extends BaseController
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.eom', 'code' => PaymentTermType::END_OF_MONTH->name],
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.cod', 'code' => PaymentTermType::CASH_ON_DELIVERY->name],
             ['name' => 'components.dropdown.values.paymentTermTypeDDL.cnd', 'code' => PaymentTermType::CASH_ON_NEXT_DELIVERY->name],
+            ['name' => 'components.dropdown.values.paymentTermTypeDDL.cbs', 'code' => PaymentTermType::CASH_BEFORE_SHIPMENT->name],
         ];
     }
 }

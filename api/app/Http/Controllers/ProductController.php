@@ -149,7 +149,7 @@ class ProductController extends BaseController
     {
         $request = $productRequest->validated();
 
-        $productCategory = array_key_exists('productCategory', $request) ? $request['productCategory'] : null;
+        $productCategory = array_key_exists('product_category', $request) ? $request['product_category'] : null;
         $search = $request['search'];
         $paginate = $request['paginate'];
         $page = array_key_exists('page', $request) ? abs($request['page']) : 1;

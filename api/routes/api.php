@@ -64,15 +64,31 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function () {
                 Route::get('read', [ProductGroupController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{productgroup:ulid}', [ProductGroupController::class, 'read'])->name('.read');
+
+                Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function () {
+                    Route::get('list/category', [ProductGroupController::class, 'getProductGroupCategory'])->name('.list.categories');
+                    Route::get('list/product_group', [ProductGroupController::class, 'getProductGroupDDL'])->name('.list.productgroups');
+                });
             });
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
                 Route::get('read', [BrandController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{brand:ulid}', [BrandController::class, 'read'])->name('.read');
+
+                Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function () {
+                    Route::get('list/brand', [BrandController::class, 'getBrandDDL'])->name('.list.brands');
+                });
             });
+
             Route::group(['prefix' => 'unit', 'as' => '.unit'], function () {
                 Route::get('read', [UnitController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{unit:ulid}', [UnitController::class, 'read'])->name('.read');
+
+                Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function () {
+                    Route::get('list/category', [UnitController::class, 'getUnitCategory'])->name('.list.categories');
+                    Route::get('list/unit', [UnitController::class, 'getUnitDDL'])->name('.list.units');
+                });
             });
+
             Route::group(['prefix' => 'product', 'as' => '.product'], function () {
                 Route::get('read', [ProductController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{product:ulid}', [ProductController::class, 'read'])->name('.read');
@@ -84,8 +100,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
 
             Route::group(['prefix' => 'common', 'as' => '.common'], function () {
-                Route::get('read/productgroup/category', [ProductGroupController::class, 'getProductGroupCategory'])->name('.read.productgroup.categories');
-                Route::get('read/unit/category', [UnitController::class, 'getUnitCategory'])->name('.read.unit.categories');
                 Route::get('read/product/type', [ProductController::class, 'getProductType'])->name('.read.product.type');
                 Route::get('read/product/all/active', [ProductController::class, 'getAllActiveProduct'])->name('.read.product.all.active');
             });
@@ -140,6 +154,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'ddl', 'as' => '.ddl'], function () {
                 Route::get('list/countries', [CommonController::class, 'getCountries'])->name('.list.countries');
                 Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('.list.statuses');
+                Route::get('list/paymenttermtype', [CommonController::class, 'getPaymentTermType'])->name('.list.payment_term_type');
             });
         });
 

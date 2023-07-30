@@ -233,7 +233,7 @@ class UnitActions
         return $result->count() == 0 ? true : false;
     }
 
-    public function getUnitDDL(int $companyId, ?int $category): Collection 
+    public function getUnitDDL(int $companyId, ?int $category): Collection
     {
         $unit = Unit::whereCompanyId($companyId);
 

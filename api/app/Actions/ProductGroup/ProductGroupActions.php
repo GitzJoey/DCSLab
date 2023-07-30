@@ -9,7 +9,6 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -232,7 +231,7 @@ class ProductGroupActions
         return $result->count() == 0 ? true : false;
     }
 
-    public function getProductGroupDDL(int $companyId, ?int $category): Collection 
+    public function getProductGroupDDL(int $companyId, ?int $category): Collection
     {
         $productGroup = ProductGroup::whereCompanyId($companyId);
 

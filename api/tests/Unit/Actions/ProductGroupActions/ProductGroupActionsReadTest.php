@@ -174,7 +174,7 @@ class ProductGroupActionsReadTest extends ActionsTestCase
     {
         $productCount = random_int(1, 5);
         $serviceCount = random_int(1, 5);
-        
+
         $productGroupCategory = ProductGroupCategory::toArrayValue();
         $category = fake()->randomElement($productGroupCategory);
 
@@ -191,8 +191,8 @@ class ProductGroupActionsReadTest extends ActionsTestCase
             category: $category
         );
 
-        $this->assertInstanceOf(Collection::class, $result);   
-        
+        $this->assertInstanceOf(Collection::class, $result);
+
         foreach ($result as $productGroup) {
             $this->assertTrue($productGroup->category->value == $category);
         }
