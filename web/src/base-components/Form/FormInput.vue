@@ -56,9 +56,9 @@ const localValue = computed({
 
 <template>
   <input
-    v-model="localValue"
     :class="computedClass"
     :type="props.type"
     v-bind="_.omit(attrs, 'class')"
+    v-model="localValue"
   />
 </template>
