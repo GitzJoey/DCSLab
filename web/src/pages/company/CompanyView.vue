@@ -421,7 +421,7 @@ watch(
                   </FormLabel>
                   <VeeField v-slot="{ field }" v-model="companyForm.data.name" name="name" rules="required"
                     :label="t('views.company.fields.name')">
-                    <FormInput id="name" name="name" v-bind="field" type="text"
+                    <FormInputCode id="name" name="name" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.company.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />
