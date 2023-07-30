@@ -16,7 +16,7 @@
         "delete": "Hapus Satuan"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "name": "Nama",
         "description": "Deskripsi",

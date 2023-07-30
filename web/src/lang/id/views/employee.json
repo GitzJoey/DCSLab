@@ -3,7 +3,7 @@
     "table": {
         "title": "Daftar Karyawan",
         "cols": {
-            "company": "Nama Perusahaan",
+            "company": "Perusahaan",
             "code": "Kode",
             "name": "Nama",
             "email": "Email",
@@ -18,7 +18,7 @@
         "delete": "Hapus Karyawan"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "name": "Nama",
         "email": "Email",

@@ -39,16 +39,17 @@ const computedVariant = computed(() => {
             <div class="flex flex-col">
                 <div class="flex items-center">
                     <Lucide icon="AlertCircle" class="w-6 h-6 mr-2" />
-                    {{ title != '' ? title : t('components.alert-placeholder.default.title') }}
+                    {{ title != '' ? title : t('components.alert-placeholder.default_title') }}
                     <Alert.DismissButton type="button" class="text-white" aria-label="Close" @click="dismiss">
                         <Lucide icon="X" class="w-4 h-4" />
                     </Alert.DismissButton>
                 </div>
                 <div class="mt-3 ml-12">
                     <ul class="list-disc">
-                        <template v-for="e in errors">
-                            <li v-if="(typeof e === 'string')" >{{ e }}</li>
-                            <li v-else-if="(typeof e === 'object' && Array.isArray(e))" v-for="(ee, eeIdx) in e" :key="eeIdx" class="ml-5">{{ ee }}</li>
+                        <template v-for="(e, eIdx) in errors" :key="eIdx">
+                            <li v-if="(typeof e === 'string')">{{ e }}</li>
+                            <li v-for="(ee, eeIdx) in e" v-else-if="(typeof e === 'object' && Array.isArray(e))"
+                                :key="eeIdx" class="ml-5">{{ ee }}</li>
                         </template>
                     </ul>
                 </div>

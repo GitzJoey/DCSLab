@@ -17,7 +17,7 @@ import {
   enter,
   leave,
 } from "./side-menu";
-import { watch, reactive, computed, onMounted, provide } from "vue";
+import { ref, watch, reactive, computed, onMounted, provide } from "vue";
 import { useDashboardStore } from "../../stores/dashboard";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import ScrollToTop from "../../base-components/ScrollToTop";
@@ -35,6 +35,18 @@ const sideMenu = computed(() => nestedMenu(sideMenuStore.menu, route));
 
 const dashboardStore = useDashboardStore();
 const screenMask = computed(() => dashboardStore.screenMaskValue);
+
+const showBackToTop = ref<boolean>(false);
+
+const handlescroll = () => {
+  if (window.scrollY > 100) {
+    showBackToTop.value = true;
+  } else {
+    showBackToTop.value = false;
+  }
+}
+
+window.addEventListener('scroll', handlescroll);
 
 provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
   forceActiveMenu(route, pageName);
@@ -179,7 +191,7 @@ onMounted(() => {
           ]">
             <RouterView />
             <br v-for="i in 3" :key="i" />
-            <ScrollToTop />
+            <ScrollToTop :visible="showBackToTop" />
           </div>
         </div>
         <NotificationManager />

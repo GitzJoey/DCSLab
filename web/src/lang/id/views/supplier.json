@@ -16,7 +16,7 @@
         "delete": "Hapus Pemasok"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "name": "Nama",
         "address": "Alamat",
