@@ -11,6 +11,7 @@ import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
 import { BrandFormRequest } from "../types/requests/BrandFormRequest";
 import { DropDownOption } from "../types/services/DropDownOption";
+import { StatusCode } from "../types/enums/StatusCode";
 
 export default class BrandService {
     private ziggyRoute: Config;
@@ -40,8 +41,10 @@ export default class BrandService {
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -77,8 +80,10 @@ export default class BrandService {
 
             const response: AxiosResponse<Collection<Brand[]>> = await axios.get(url);
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -104,8 +109,10 @@ export default class BrandService {
 
             const response: AxiosResponse<Resource<Brand>> = await axios.get(url);
 
-            result.success = true;
-            result.data = response.data.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -133,8 +140,10 @@ export default class BrandService {
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -159,8 +168,9 @@ export default class BrandService {
 
             const response: AxiosResponse<boolean | null> = await axios.post(url);
 
-            result.success = true;
-            result.data = true;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+            }
 
             return result;
         } catch (e: unknown) {

@@ -1,11 +1,15 @@
 import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
-import { PurchaseOrderType } from "../types/resources/PurchaseOrderType";
-import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/systems/ServiceResponseType";
-import { AxiosError, AxiosResponse } from "axios";
+import { PurchaseOrder } from "../types/models/PurchaseOrder";
+import { Resource } from "../types/resources/Resource";
+import { Collection } from "../types/resources/Collection";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
+import { SearchRequest } from "../types/requests/SearchRequest";
+import { PurchaseOrderFormRequest } from "../types/requests/PurchaseOrderFormRequest";
+import { StatusCode } from "../types/enums/StatusCode";
 
 export default class PurchaseOrderService {
     private ziggyRoute: Config;
@@ -19,111 +23,160 @@ export default class PurchaseOrderService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(
-        companyIdText: string,
-        branchIdText: string,
-        invoiceCodeText: string,
-        invoiceDateText: string,
-        supplierIdText: string,
-        shippingDateText: string,
-        shippingAddressText: string,
-        remarksText: string,
-        statusCheck: boolean,
-        globalDiscountIdText: string[],
-        globalDiscountDiscountTypeText: string[],
-        globalDiscountAmountText: number[],
-        productUnitIdText: string[],
-        productUnitProductUnitIdText: string[],
-        productUnitQtyText: number[],
-        productUnitAmountPerUnitText: number[],
-        productUnitInitialPriceText: number[],
-        productUnitPerUnitDiscountIdText: string[],
-        productUnitPerUnitDiscountDiscountTypeText: string[],
-        productUnitPerUnitDiscountAmountText: number[],
-        productUnitPerUnitSubTotalDiscountIdText: string[],
-        productUnitPerUnitSubTotalDiscountDiscountTypeText: string[],
-        productUnitPerUnitSubTotalDiscountAmountText: number[],
-        productUnitVatStatusDropDown: string[],
-        productUnitVatRateText: number[],
-        productUnitRemarksText: string[],
-    ): Promise<ServiceResponseType<PurchaseOrderType | null>> {
-        try {
-            await authAxiosInstance.get('/sanctum/csrf-cookie');
-            const response: AxiosResponse<PurchaseOrderType> = await authAxiosInstance.post(
-                'store', {
-                company_id: companyIdText,
-                branch_id: branchIdText,
-                invoice_code: invoiceCodeText,
-                invoice_date: invoiceDateText,
-                supplier_id: supplierIdText,
-                shipping_date: shippingDateText,
-                shipping_address: shippingAddressText,
-                remarks: remarksText,
-                status: statusCheck,
-                global_discount_id: globalDiscountIdText,
-                global_discount_discount_type: globalDiscountDiscountTypeText,
-                global_discount_amount: globalDiscountAmountText,
-                product_unit_id: productUnitIdText,
-                product_unit_product_unit_id: productUnitProductUnitIdText,
-                product_unit_qty: productUnitQtyText,
-                product_unit_amount_per_unit: productUnitAmountPerUnitText,
-                product_unit_initial_price: productUnitInitialPriceText,
-                product_unit_per_unit_discount_id: productUnitPerUnitDiscountIdText,
-                product_unit_per_unit_discount_discount_type: productUnitPerUnitDiscountDiscountTypeText,
-                product_unit_per_unit_discount_amount: productUnitPerUnitDiscountAmountText,
-                product_unit_per_unit_sub_total_discount_id: productUnitPerUnitSubTotalDiscountIdText,
-                product_unit_per_unit_sub_total_discount_discount_type: productUnitPerUnitSubTotalDiscountDiscountTypeText,
-                product_unit_per_unit_sub_total_discount_amount: productUnitPerUnitSubTotalDiscountAmountText,
-                product_unit_vat_status: productUnitVatStatusDropDown,
-                product_unit_vat_rate: productUnitVatRateText,
-                product_unit_remarks: productUnitRemarksText,
-            }
-            );
+    public async create(company_id: string, payload: PurchaseOrderFormRequest): Promise<ServiceResponse<PurchaseOrder | null>> {
+        const result: ServiceResponse<PurchaseOrder | null> = {
+            success: false,
+        }
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+        try {
+            const url = route('api.post.db.purchase_order.purchase_order.save', undefined, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<PurchaseOrder> = await axios.post(
+                url, payload);
+
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async readAny(): Promise<ServiceResponseType<PurchaseOrderType[] | null>> {
+    public async readAny(company_id: string, args: SearchRequest): Promise<ServiceResponse<Collection<Array<PurchaseOrder>> | Resource<Array<PurchaseOrder>> | null>> {
+        const result: ServiceResponse<Collection<PurchaseOrder[]> | Resource<PurchaseOrder[]> | null> = {
+            success: false
+        }
+
         try {
-            const url = route('api.get.db.purchase_order.purchase_order.read_any', undefined, false, this.ziggyRoute);
+            const queryParams: Record<string, string | number | boolean> = {};
+            queryParams['company_id'] = company_id;
+            queryParams['search'] = args.search ? args.search : '';
+            queryParams['refresh'] = args.refresh;
+            queryParams['paginate'] = args.paginate;
+            if (args.page) queryParams['page'] = args.page;
+            if (args.per_page) queryParams['per_page'] = args.per_page;
+
+            const url = route('api.get.db.purchase_order.purchase_order.read_any', {
+                _query: queryParams
+            }, false, this.ziggyRoute);
+
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<PurchaseOrderType[]> = await axios.get(url);
+            const response: AxiosResponse<Collection<PurchaseOrder[]>> = await axios.get(url);
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async read(): Promise<ServiceResponseType<PurchaseOrderType | null>> {
+    public async read(ulid: string): Promise<ServiceResponse<PurchaseOrder | null>> {
+        const result: ServiceResponse<PurchaseOrder | null> = {
+            success: false
+        }
+
         try {
-            const url = route('api.get.db.purchase_order.purchase_order.read', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.purchase_order.purchase_order.read', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<PurchaseOrder>> = await axios.get(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data.data;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async update(ulid: string, company_id: string, payload: PurchaseOrderFormRequest): Promise<ServiceResponse<PurchaseOrder | null>> {
+        const result: ServiceResponse<PurchaseOrder | null> = {
+            success: false,
+        }
+
+        try {                    
+            const url = route('api.post.db.purchase_order.purchase_order.edit', ulid, false, this.ziggyRoute);        
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
+
+            const response: AxiosResponse<PurchaseOrder> = await axios.post(
+                url, payload);
+            
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<PurchaseOrderType> = await axios.get(url);
-
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
+        const result: ServiceResponse<boolean | null> = {
+            success: false,
+        }
+
+        try {
+            const url = route('api.post.db.purchase_order.purchase_order.delete', ulid, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<boolean | null> = await axios.post(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 }

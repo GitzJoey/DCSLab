@@ -155,11 +155,11 @@ export default class DashboardService {
         }
 
         try {
-            let formData = new FormData()
-            formData.append('file', file)
             const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute)
-            authAxiosInstance.defaults.headers.common['Content-Type'] = "multipart/form-data"
-            const data = await authAxiosInstance.post(url,formData)
+            const data = await authAxiosInstance.post(url, {
+                file : file
+            })
+            console.log(data)
             return {
                 success : true,
                 statusCode : data.status,
@@ -170,5 +170,30 @@ export default class DashboardService {
         }
 
         return 
+    }
+
+    public async getProductTypeDDL(): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'productTypeDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.product.common.read.product.type', undefined, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
+        }
     }
 }

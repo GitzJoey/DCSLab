@@ -9,6 +9,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
 import { WarehouseFormRequest } from "../types/requests/WarehouseFormRequest";
+import { StatusCode } from "../types/enums/StatusCode";
 
 export default class WarehouseService {
     private ziggyRoute: Config;
@@ -36,8 +37,10 @@ export default class WarehouseService {
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -78,8 +81,10 @@ export default class WarehouseService {
 
             const response: AxiosResponse<Collection<Warehouse[]>> = await axios.get(url);
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -105,8 +110,10 @@ export default class WarehouseService {
 
             const response: AxiosResponse<Resource<Warehouse>> = await axios.get(url);
 
-            result.success = true;
-            result.data = response.data.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -134,8 +141,10 @@ export default class WarehouseService {
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -160,8 +169,9 @@ export default class WarehouseService {
 
             const response: AxiosResponse<boolean | null> = await axios.post(url);
 
-            result.success = true;
-            result.data = true;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+            }
 
             return result;
         } catch (e: unknown) {

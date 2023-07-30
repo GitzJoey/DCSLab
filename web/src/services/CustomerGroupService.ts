@@ -1,11 +1,15 @@
 import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
-import { CustomerGroupType } from "../types/resources/CustomerGroupType";
-import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/systems/ServiceResponseType";
-import { AxiosError, AxiosResponse } from "axios";
+import { CustomerGroup } from "../types/models/CustomerGroup";
+import { Resource } from "../types/resources/Resource";
+import { Collection } from "../types/resources/Collection";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
+import { SearchRequest } from "../types/requests/SearchRequest";
+import { CustomerGroupFormRequest } from "../types/requests/CustomerGroupFormRequest";
+import { StatusCode } from "../types/enums/StatusCode";
 
 export default class CustomerGroupService {
     private ziggyRoute: Config;
@@ -19,95 +23,160 @@ export default class CustomerGroupService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(
-        companyIdText: string,
-        codeText: string,
-        nameText: string,
-        maxOpenInvoiceText: number,
-        maxOutstandingInvoiceText: number,
-        maxInvoiceAgeText: number,
-        paymentTermTypeText: string,
-        paymentTermText: number,
-        sellingPointText: number,
-        sellingPointMultipleText: number,
-        sellAtCost: boolean,
-        priceMarkupPercentText: number,
-        priceMarkupNominalText: number,
-        priceMarkdownPercentText: number,
-        priceMarkdownNominalText: number,
-        rounOnDropDown: string,
-        roundDigitText: number,
-        remarksText: string,
-    ): Promise<ServiceResponseType<CustomerGroupType | null>> {
-        try {
-            await authAxiosInstance.get('/sanctum/csrf-cookie');
-            const response: AxiosResponse<CustomerGroupType> = await authAxiosInstance.post(
-                'store', {
-                company_id: companyIdText,
-                code: codeText,
-                name: nameText,
-                max_open_invoice: maxOpenInvoiceText,
-                max_outstanding_invoice: maxOutstandingInvoiceText,
-                max_invoice_age: maxInvoiceAgeText,
-                payment_term_type: paymentTermTypeText,
-                payment_term: paymentTermText,
-                selling_point: sellingPointText,
-                selling_point_multiple: sellingPointMultipleText,
-                sell_at_cost: sellAtCost,
-                price_markup_percent: priceMarkupPercentText,
-                price_markup_nominal: priceMarkupNominalText,
-                price_markdown_percent: priceMarkdownPercentText,
-                price_markdown_nominal: priceMarkdownNominalText,
-                round_on: rounOnDropDown,
-                round_digit: roundDigitText,
-                remarks: remarksText,
-            }
-            );
+    public async create(company_id: string, payload: CustomerGroupFormRequest): Promise<ServiceResponse<CustomerGroup | null>> {
+        const result: ServiceResponse<CustomerGroup | null> = {
+            success: false,
+        }
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+        try {
+            const url = route('api.post.db.customer.customer_group.save', undefined, false, this.ziggyRoute);        
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<CustomerGroup> = await axios.post(
+                url, payload);
+
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async readAny(): Promise<ServiceResponseType<CustomerGroupType[] | null>> {
+    public async readAny(company_id: string, args: SearchRequest): Promise<ServiceResponse<Collection<Array<CustomerGroup>> | Resource<Array<CustomerGroup>> | null>> {
+        const result: ServiceResponse<Collection<CustomerGroup[]> | Resource<CustomerGroup[]> | null> = {
+            success: false
+        }
+
         try {
-            const url = route('api.get.db.customer.customer_group.read_any', undefined, false, this.ziggyRoute);
+            const queryParams: Record<string, string | number | boolean> = {};
+            queryParams['company_id'] = company_id;
+            queryParams['search'] = args.search ? args.search : '';
+            queryParams['refresh'] = args.refresh;
+            queryParams['paginate'] = args.paginate;
+            if (args.page) queryParams['page'] = args.page;
+            if (args.per_page) queryParams['per_page'] = args.per_page;
+
+            const url = route('api.get.db.customer.customer_group.read_any', {
+                _query: queryParams
+            }, false, this.ziggyRoute);
+
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<CustomerGroupType[]> = await axios.get(url);
+            const response: AxiosResponse<Collection<CustomerGroup[]>> = await axios.get(url);
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async read(): Promise<ServiceResponseType<CustomerGroupType | null>> {
+    public async read(ulid: string): Promise<ServiceResponse<CustomerGroup | null>> {
+        const result: ServiceResponse<CustomerGroup | null> = {
+            success: false
+        }
+
         try {
-            const url = route('api.get.db.customer.customer_group.read', undefined, false, this.ziggyRoute);
+            const url = route('api.get.db.customer.customer_group.read', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<CustomerGroup>> = await axios.get(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data.data;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async update(ulid: string, company_id: string, payload: CustomerGroupFormRequest): Promise<ServiceResponse<CustomerGroup | null>> {
+        const result: ServiceResponse<CustomerGroup | null> = {
+            success: false,
+        }
+
+        try {                    
+            const url = route('api.post.db.customer.customer_group.edit', ulid, false, this.ziggyRoute);        
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
+
+            const response: AxiosResponse<CustomerGroup> = await axios.post(
+                url, payload);
+            
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<CustomerGroupType> = await axios.get(url);
-
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
+        const result: ServiceResponse<boolean | null> = {
+            success: false,
+        }
+
+        try {
+            const url = route('api.post.db.customer.customer_group.delete', ulid, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<boolean | null> = await axios.post(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 }

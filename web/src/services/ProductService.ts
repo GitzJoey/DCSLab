@@ -1,11 +1,15 @@
 import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
-import { ProductType } from "../types/resources/ProductType";
-import { authAxiosInstance } from "../axios";
-import { ServiceResponseType } from "../types/systems/ServiceResponseType";
-import { AxiosError, AxiosResponse } from "axios";
+import { Product } from "../types/models/Product";
+import { Resource } from "../types/resources/Resource";
+import { Collection } from "../types/resources/Collection";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
+import { SearchRequest } from "../types/requests/SearchRequest";
+import { ProductFormRequest } from "../types/requests/ProductFormRequest";
+import { StatusCode } from "../types/enums/StatusCode";
 
 export default class ProductService {
     private ziggyRoute: Config;
@@ -20,108 +24,211 @@ export default class ProductService {
     }
 
     public async create(
-        companyIdText: string,
-        codeText: string,
-        nameText: string,
-        productGroupIdText: string,
-        brandIdText: string,
-        productTypeText: string,
-        taxableSupplyCheck: boolean,
-        priceIncludeVatCheck: boolean,
-        standardRatedSupplyText: number,
-        pointText: number,
-        useSerialNumberCheck: boolean,
-        hasExpiryDateCheck: boolean,
-        remarksText: string,
-        statusCheck: boolean,
-        productUnitIdText: string[],
-        productUnitCodeText: string[],
-        productUnitUnitIdText: string[],
-        productUnitConversionValueText: number[],
-        productUnitIsBaseCheck: boolean[],
-        productUnitIsPrimaryUnitCheck: boolean[],
-        productUnitRemarksText: string[],
-    ): Promise<ServiceResponseType<ProductType | null>> {
-        try {
-            await authAxiosInstance.get('/sanctum/csrf-cookie');
-            const response: AxiosResponse<ProductType> = await authAxiosInstance.post(
-                'store', {
-                company_id: companyIdText,
-                code: codeText,
-                name: nameText,
-                product_group_id: productGroupIdText,
-                brand_id: brandIdText,
-                product_type: productTypeText,
-                taxable_supply: taxableSupplyCheck,
-                price_include_vat: priceIncludeVatCheck,
-                standard_rated_supply: standardRatedSupplyText,
-                point: pointText,
-                use_serial_number: useSerialNumberCheck,
-                has_expiry_date: hasExpiryDateCheck,
-                remarks: remarksText,
-                status: statusCheck,
-                arr_product_unit_id: productUnitIdText,
-                arr_product_unit_code: productUnitCodeText,
-                arr_product_unit_unit_id: productUnitUnitIdText,
-                arr_product_unit_conversion_value: productUnitConversionValueText,
-                arr_product_unit_is_base: productUnitIsBaseCheck,
-                arr_product_unit_is_primary_unit: productUnitIsPrimaryUnitCheck,
-                arr_product_unit_remarks: productUnitRemarksText,
-            }
-            );
+        company_id: string,
+        product_group_id: string,
+        brand_id: string,
+        product_unit_id: string,
+        payload: ProductFormRequest
+    ): Promise<ServiceResponse<Product | null>> {
+        const result: ServiceResponse<Product | null> = {
+            success: false,
+        }
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+        try {
+            const url = route('api.post.db.product.product.save', undefined, false, this.ziggyRoute);        
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<Product> = await axios.post(
+                url, payload);
+
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async readAny(companyId : string, search : string): Promise<ServiceResponseType<ProductType[] | null>> {
-        try {
-            const queryParams : Record<string, string | number | boolean> = {}
+    public async readAnyProducts(company_id: string, args: SearchRequest): Promise<ServiceResponse<Collection<Array<Product>> | Resource<Array<Product>> | null>> {
+        const result: ServiceResponse<Collection<Product[]> | Resource<Product[]> | null> = {
+            success: false
+        }
 
-            queryParams['company_id'] = companyId
-            queryParams['category'] = -1
-            queryParams['search'] = search
-            queryParams['paginate'] = false
-            queryParams['refresh'] = true
+        try {
+            const queryParams: Record<string, string | number | boolean> = {};
+            queryParams['company_id'] = company_id;
+            queryParams['search'] = args.search ? args.search : '';
+            queryParams['refresh'] = args.refresh;
+            queryParams['paginate'] = args.paginate;
+            queryParams['product_category'] = 'PRODUCTS';
+            if (args.page) queryParams['page'] = args.page;
+            if (args.per_page) queryParams['per_page'] = args.per_page;
+
+            const url = route('api.get.db.product.product.read_any', { _query: queryParams }, false, this.ziggyRoute);
+
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<Collection<Product[]>> = await axios.get(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async readAnyServices(company_id: string, args: SearchRequest): Promise<ServiceResponse<Collection<Array<Product>> | Resource<Array<Product>> | null>> {
+        const result: ServiceResponse<Collection<Product[]> | Resource<Product[]> | null> = {
+            success: false
+        }
+
+        try {
+            const queryParams: Record<string, string | number | boolean> = {};
+            queryParams['company_id'] = company_id;
+            queryParams['product_category'] = 'SERVICES';
+            queryParams['search'] = args.search ? args.search : '';
+            queryParams['refresh'] = args.refresh;
+            queryParams['paginate'] = args.paginate;
+            if (args.page) queryParams['page'] = args.page;
+            if (args.per_page) queryParams['per_page'] = args.per_page;
+
+            const url = route('api.get.db.product.product.read_any', {
+                _query: queryParams
+            }, false, this.ziggyRoute);
+
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+            const response: AxiosResponse<Collection<Product[]>> = await axios.get(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async read(ulid: string): Promise<ServiceResponse<Product | null>> {
+        const result: ServiceResponse<Product | null> = {
+            success: false
+        }
+
+        try {
+            const url = route('api.get.db.product.product.read', {
+                user: ulid
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<Product>> = await axios.get(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data.data;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async update(
+        ulid: string,
+        company_id: string,
+        product_group_id: string,
+        brand_id: string,
+        product_unit_id: string,
+        payload: ProductFormRequest
+    ): Promise<ServiceResponse<Product | null>> {
+        const result: ServiceResponse<Product | null> = {
+            success: false,
+        }
+
+        try {                    
+            const url = route('api.post.db.product.product.edit', ulid, false, this.ziggyRoute);        
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
+
+            const response: AxiosResponse<Product> = await axios.post(
+                url, payload);
             
-            const url = route('api.get.db.product.product.read_any', {_query : queryParams}, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<ProductType[]> = await axios.get(url);
-
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 
-    public async read(): Promise<ServiceResponseType<ProductType | null>> {
+    public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
+        const result: ServiceResponse<boolean | null> = {
+            success: false,
+        }
+
         try {
-            const url = route('api.get.db.product.product.read', undefined, false, this.ziggyRoute);
+            const url = route('api.post.db.product.product.delete', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<ProductType> = await axios.get(url);
+            const response: AxiosResponse<boolean | null> = await axios.post(url);
 
-            return {
-                success: true,
-                statusCode: response.status,
-                statusDescription: response.statusText,
-                data: response.data
+            if (response.status == StatusCode.OK) {
+                result.success = true;
             }
+
+            return result;
         } catch (e: unknown) {
-            return this.errorHandlerService.generateErrorServiceResponse(e as AxiosError<unknown, unknown>);
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 }
