@@ -454,7 +454,7 @@ watch(
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.branch.fields.code') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="branchForm.data.code" name="code" rules="required"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.code" name="code" rules="required|alpha_num"
                     :label="t('views.branch.fields.code')">
                     <FormInput id="code" v-bind="field" name="code" type="text"
                       :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.branch.fields.code')" />
