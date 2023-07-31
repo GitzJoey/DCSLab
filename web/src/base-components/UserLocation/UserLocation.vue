@@ -78,8 +78,9 @@ const setNewUserLocation = (companyId: string, branchId: string) => {
               <Menu.Item @click="setNewUserLocation(c.id, '')">
                 <span :class="{ 'text-primary font-bold': true, 'underline': c.default }">{{ c.name }}</span>
               </Menu.Item>
-              <Menu.Item v-for="(b, bIdx) in c.branches" :key="bIdx" @click="setNewUserLocation(c.id, b.id)">
-                <span :class="{ 'text-primary': true, 'underline': b.is_main }">{{ b.name }}</span>
+              <Menu.Item v-for="(b, bIdx) in c.branches" :key="bIdx"
+                @click="setNewUserLocation(c.id, b == null ? '' : b.id)">
+                <span v-if="b != null" :class="{ 'text-primary': true, 'underline': b.is_main }">{{ b.name }}</span>
               </Menu.Item>
               <Menu.Divider v-if="userContext.companies.length - 1 != cIdx" />
             </template>

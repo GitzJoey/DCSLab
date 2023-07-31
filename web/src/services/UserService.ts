@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { UserFormRequest } from "../types/requests/UserFormRequest";
+import { UserFormFieldValues } from "../types/requests/UserFormFieldValues";
 
 export default class UserService {
     private ziggyRoute: Config;
@@ -22,7 +22,7 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: UserFormRequest): Promise<ServiceResponse<User | null>> {
+    public async create(payload: UserFormFieldValues): Promise<ServiceResponse<User | null>> {
         const result: ServiceResponse<User | null> = {
             success: false,
         }
@@ -31,26 +31,7 @@ export default class UserService {
             const url = route('api.post.db.admin.user.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<User> = await axios.post(
-                url, {
-                name: payload.data.name,
-                email: payload.data.email,
-                first_name: payload.data.profile.first_name,
-                last_name: payload.data.profile.last_name,
-                address: payload.data.profile.address,
-                city: payload.data.profile.city,
-                postal_code: payload.data.profile.postal_code,
-                country: payload.data.profile.country,
-                img_path: payload.data.profile.img_path,
-                tax_id: payload.data.profile.tax_id,
-                ic_num: payload.data.profile.ic_num,
-                status: payload.data.profile.status,
-                remarks: payload.data.profile.remarks,
-                roles: payload.data.roles,
-                theme : payload.data.settings.theme,
-                date_format: payload.data.settings.date_format,
-                time_format: payload.data.settings.time_format,
-            });
+            const response: AxiosResponse<User> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -140,7 +121,7 @@ export default class UserService {
         }
     }
 
-    public async edit(ulid: string, payload: UserFormRequest): Promise<ServiceResponse<User | null>> {
+    public async edit(ulid: string, payload: UserFormFieldValues): Promise<ServiceResponse<User | null>> {
         const result: ServiceResponse<User | null> = {
             success: false,
         }
@@ -149,26 +130,7 @@ export default class UserService {
             const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<User> = await axios.post(
-                url, {
-                name: payload.data.name,
-                email: payload.data.email,
-                first_name: payload.data.profile.first_name,
-                last_name: payload.data.profile.last_name,
-                address: payload.data.profile.address,
-                city: payload.data.profile.city,
-                postal_code: payload.data.profile.postal_code,
-                country: payload.data.profile.country,
-                img_path: payload.data.profile.img_path,
-                tax_id: payload.data.profile.tax_id,
-                ic_num: payload.data.profile.ic_num,
-                status: payload.data.profile.status,
-                remarks: payload.data.profile.remarks,
-                roles: payload.data.roles,
-                theme : payload.data.settings.theme,
-                date_format: payload.data.settings.date_format,
-                time_format: payload.data.settings.time_format,
-            });
+            const response: AxiosResponse<User> = await axios.post(url, payload);
 
             result.success = true;
             result.data = response.data;

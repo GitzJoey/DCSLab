@@ -14,7 +14,7 @@
         "delete": "Hapus Merk"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "code": "Kode",
         "name": "Name"
     }

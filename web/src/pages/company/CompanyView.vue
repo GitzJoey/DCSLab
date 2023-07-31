@@ -13,6 +13,7 @@ import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../.
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
 import { Company } from "../../types/models/Company";
+import { CompanyFormFieldValues } from "../../types/requests/CompanyFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -32,13 +33,7 @@ import { FormActions } from "vee-validate";
 //#endregion
 
 //#region Interfaces
-interface CompanyFormFieldValues {
-  code: string,
-  name: string,
-  address: string,
-  default: boolean,
-  status: string,
-}
+
 //#endregion
 
 //#region Declarations
@@ -213,9 +208,9 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    result = await companyServices.create(companyForm.value);
+    result = await companyServices.create(values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    result = await companyServices.update(companyForm.value.data.ulid, companyForm.value);
+    result = await companyServices.update(companyForm.value.data.ulid, values);
   } else {
     result.success = false;
   }
@@ -259,7 +254,6 @@ const titleView = computed((): string => {
 watch(
   companyForm,
   debounce((newValue): void => {
-    if (mode.value != ViewMode.FORM_CREATE) return;
     cacheServices.setLastEntity('Company', newValue)
   }, 500),
   { deep: true }
@@ -391,7 +385,8 @@ watch(
                   </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
-                  <Button type="button" variant="outline-secondary" class="w-24 mr-1" @click="() => { deleteModalShow = false; }">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
+                    @click="() => { deleteModalShow = false; }">
                     {{ t('components.buttons.cancel') }}
                   </Button>
                   <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
@@ -413,8 +408,9 @@ watch(
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.company.fields.code') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="code" rules="required" :label="t('views.company.fields.code')">
-                    <FormInput id="code" v-model="companyForm.data.code" v-bind="field" name="code" type="text"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.code" name="code" rules="required"
+                    :label="t('views.company.fields.code')">
+                    <FormInput id="code" name="code" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.company.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
@@ -423,9 +419,9 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.company.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.name" name="name" rules="required"
                     :label="t('views.company.fields.name')">
-                    <FormInput id="name" v-model="companyForm.data.name" v-bind="field" name="name" type="text"
+                    <FormInput id="name" name="name" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.company.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />
@@ -434,28 +430,29 @@ watch(
                   <FormLabel html-for="address" :class="{ 'text-danger': errors['address'] }">
                     {{ t('views.company.fields.address') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="address" :label="t('views.company.fields.address')">
-                    <FormTextarea id="address" v-model="companyForm.data.address" v-bind="field" name="address"
-                      type="text" :placeholder="t('views.company.fields.address')" />
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.address" name="address"
+                    :label="t('views.company.fields.address')">
+                    <FormTextarea id="address" name="address" v-bind="field" type="text"
+                      :placeholder="t('views.company.fields.address')" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="default" :class="{ 'text-danger': errors['default'] }" class="pr-5">
                     {{ t('views.company.fields.default') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="default" :label="t('views.company.fields.default')">
-                    <FormSwitch.Input id="default" v-model="companyForm.data.default" v-bind="field" name="default"
-                      type="checkbox" :class="{ 'border-danger': errors['default'] }"
-                      :placeholder="t('views.company.fields.default')" />
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.default" name="default"
+                    :label="t('views.company.fields.default')">
+                    <FormSwitch.Input id="default" name="default" v-bind="field" type="checkbox"
+                      :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
                     {{ t('views.company.fields.status') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="status" rules="required" :label="t('views.company.fields.status')">
-                    <FormSelect id="status" v-model="companyForm.data.status" v-bind="field" name="status"
-                      :class="{ 'border-danger': errors['status'] }">
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.status" name="status" rules="required"
+                    :label="t('views.company.fields.status')">
+                    <FormSelect id="status" name="status" v-bind="field" :class="{ 'border-danger': errors['status'] }">
                       <option value="">{{ t('components.dropdown.placeholder') }}</option>
                       <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                     </FormSelect>

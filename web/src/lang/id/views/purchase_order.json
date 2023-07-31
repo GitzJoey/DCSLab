@@ -16,7 +16,7 @@
         "delete": "Hapus Pembelian"
     },
     "fields": {
-        "company": "Nama Perusahaan",
+        "company": "Perusahaan",
         "branch": "Cabang",
         "invoice_code": "Nomor Faktur",
         "invoice_date": "Tanggal Faktur",

@@ -5,6 +5,7 @@
         "cols": {
             "code": "Kode",
             "name": "Nama",
+            "address": "Alamat",
             "default": "Default",
             "status": "Status"
         }

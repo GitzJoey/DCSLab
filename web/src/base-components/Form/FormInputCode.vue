@@ -81,11 +81,11 @@ onMounted(() => {
 <template>
   <div class="flex gap-2">
     <input
-    :disabled="isAuto"
+      v-model="localValue"
+      :disabled="isAuto"
       :class="computedClass"
       :type="props.type"
       v-bind="_.omit(attrs, 'class')"
-      v-model="localValue"
 
     />
     <div 
