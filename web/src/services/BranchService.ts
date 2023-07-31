@@ -9,6 +9,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
 import { BranchFormFieldValues } from "../types/requests/BranchFormFieldValues";
+import { StatusCode } from "../types/enums/StatusCode";
 
 export default class BranchService {
     private ziggyRoute: Config;
@@ -35,8 +36,10 @@ export default class BranchService {
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -72,8 +75,10 @@ export default class BranchService {
 
             const response: AxiosResponse<Collection<Branch[]>> = await axios.get(url);
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -99,8 +104,10 @@ export default class BranchService {
 
             const response: AxiosResponse<Resource<Branch>> = await axios.get(url);
 
-            result.success = true;
-            result.data = response.data.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -128,8 +135,10 @@ export default class BranchService {
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            result.success = true;
-            result.data = response.data;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
@@ -154,8 +163,9 @@ export default class BranchService {
 
             const response: AxiosResponse<boolean | null> = await axios.post(url);
 
-            result.success = true;
-            result.data = true;
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+            }
 
             return result;
         } catch (e: unknown) {
