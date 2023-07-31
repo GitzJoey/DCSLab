@@ -22,6 +22,10 @@ configure({
 
 setLocale(getLang());
 
+const excludedRules = [
+    'regex', 'size', 'url', 'one_of', 'not_one_of', 'mimes', 'image'
+];
+
 export default {
     install: (app: App): void => {
         app.component("VeeForm", Form);
@@ -30,7 +34,9 @@ export default {
         app.component("VeeFieldArray", FieldArray)
 
         Object.keys(allRules).forEach(rule => {
-            defineRule(rule, allRules[rule]);
+            if (!excludedRules.includes(rule)) {
+                defineRule(rule, allRules[rule]);
+            }
         });
     },
 };
