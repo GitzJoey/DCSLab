@@ -72,7 +72,7 @@ const localValue = computed({
 });
 
 onMounted(() => {
-  if(props.modelValue) {
+  if(props.value) {
     isAuto.value = false
   }
 })
@@ -84,9 +84,8 @@ onMounted(() => {
       v-model="localValue"
       :disabled="isAuto"
       :class="computedClass"
-      :type="props.type"
+      :type="props.type? props.type : 'text' "
       v-bind="_.omit(attrs, 'class')"
-
     />
     <div 
         class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
