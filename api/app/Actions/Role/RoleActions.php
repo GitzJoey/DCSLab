@@ -119,4 +119,9 @@ class RoleActions
     {
         return Permission::get();
     }
+
+    public function getAllRoles(): Collection
+    {
+        return Role::get();
+    }
 }
