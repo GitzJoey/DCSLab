@@ -146,13 +146,17 @@ const getDDL = (): void => {
   });
 }
 
+const selectedCompanyId = () => {
+  return userLocation.value.company.id;
+}
+
 const emptyBranch = () => {
   return {
     data: {
       id: '',
       ulid: '',
       company: {
-        id: userLocation.value.company.id,
+        id: '',
         ulid: '',
         code: '',
         name: '',
@@ -160,7 +164,7 @@ const emptyBranch = () => {
         default: false,
         status: ''
       },
-      code: '',
+      code: '[AUTO]',
       name: '',
       address: '',
       city: '',
@@ -233,17 +237,11 @@ const onSubmit = async (values: BranchFormFieldValues, actions: FormActions<Bran
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    console.log(values);
-    let company_id = userLocation.value.company.id;
-    
-    result = await branchServices.create(company_id, values);
+    result = await branchServices.create(values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
     let branch_ulid = branchForm.value.data.ulid;
 
-    result = await branchServices.update(
-      branch_ulid, 
-      values
-    );
+    result = await branchServices.update( branch_ulid, values);
   } else {
     result.success = false;
   }
@@ -449,16 +447,16 @@ watch(
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
-                <VeeField v-slot="{ field }" name="company_id">                  
-                  <FormInput id="company_id" name="company_id" type="hidden" v-model="branchForm.data.company.id" v-bind="field" />
+                <VeeField v-slot="{ field }" :value=selectedCompanyId() name="company_id">                  
+                  <FormInput id="company_id" name="company_id" type="hidden" v-bind="field" />
                 </VeeField>                
                 <div class="pb-4">
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.branch.fields.code') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="code" rules="required|alpha_num"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.code" name="code" rules="required|alpha_dash"
                     :label="t('views.branch.fields.code')">
-                    <FormInput id="code" v-model="branchForm.data.code" v-bind="field" name="code" type="text"
+                    <FormInput id="code" v-bind="field" name="code" type="text"
                       :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.branch.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
@@ -467,9 +465,9 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.branch.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.name" name="name" rules="required"
                     :label="t('views.branch.fields.name')">
-                    <FormInput id="name" v-model="branchForm.data.name" v-bind="field" name="name" type="text"
+                    <FormInput id="name" v-bind="field" name="name" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.branch.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />
@@ -478,9 +476,9 @@ watch(
                   <FormLabel html-for="address" :class="{ 'text-danger': errors['address'] }">
                     {{ t('views.branch.fields.address') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="address"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.address" name="address"
                     :label="t('views.branch.fields.address')">
-                    <FormTextarea id="address" v-model="branchForm.data.address" v-bind="field" name="address" type="text"
+                    <FormTextarea id="address" v-bind="field" name="address" type="text"
                       :class="{ 'border-danger': errors['address'] }" :placeholder="t('views.branch.fields.address')" />
                   </VeeField>
                 </div>
@@ -488,9 +486,9 @@ watch(
                   <FormLabel html-for="city" :class="{ 'text-danger': errors['city'] }">
                     {{ t('views.branch.fields.city') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="city"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.city" name="city"
                     :label="t('views.branch.fields.city')">
-                    <FormInput id="city" v-model="branchForm.data.city" v-bind="field" name="city" type="text"
+                    <FormInput id="city" v-bind="field" name="city" type="text"
                       :class="{ 'border-danger': errors['city'] }" :placeholder="t('views.branch.fields.city')" />
                   </VeeField>
                 </div>
@@ -498,9 +496,9 @@ watch(
                   <FormLabel html-for="contact" :class="{ 'text-danger': errors['contact'] }">
                     {{ t('views.branch.fields.contact') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="contact"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.contact" name="contact"
                     :label="t('views.branch.fields.contact')">
-                    <FormInput id="contact" v-model="branchForm.data.contact" v-bind="field" name="contact" type="text"
+                    <FormInput id="contact" v-bind="field" name="contact" type="text"
                       :class="{ 'border-danger': errors['contact'] }" :placeholder="t('views.branch.fields.contact')" />
                   </VeeField>
                 </div>
@@ -508,8 +506,8 @@ watch(
                   <FormLabel html-for="is_main" :class="{ 'text-danger': errors['is_main']} " class="pr-5">
                     {{ t('views.branch.fields.is_main') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="is_main" :label="t('views.branch.fields.is_main')">
-                    <FormSwitch.Input id="is_main" v-model="branchForm.data.is_main" v-bind="field" name="is_main" type="checkbox"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.is_main" name="is_main" :label="t('views.branch.fields.is_main')">
+                    <FormSwitch.Input id="is_main" v-bind="field" name="is_main" type="checkbox"
                       :class="{ 'border-danger': errors['is_main'] }" :placeholder="t('views.branch.fields.is_main')"
                     />
                   </VeeField>
@@ -519,9 +517,8 @@ watch(
                   <FormLabel html-for="remarks" :class="{ 'text-danger': errors['remarks'] }">
                     {{ t('views.branch.fields.remarks') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="remarks"
-                    :label="t('views.branch.fields.remarks')">
-                    <FormTextarea id="remarks" v-model="branchForm.data.remarks" v-bind="field" name="remarks" type="text"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.remarks" name="remarks" :label="t('views.branch.fields.remarks')">
+                    <FormTextarea id="remarks" v-bind="field" name="remarks" type="text"
                       :class="{ 'border-danger': errors['remarks'] }" :placeholder="t('views.branch.fields.remarks')" rows="3" />
                   </VeeField>
                 </div>
@@ -529,8 +526,8 @@ watch(
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
                     {{ t('views.branch.fields.status') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="status" rules="required" :label="t('views.branch.fields.status')">
-                    <FormSelect id="status" v-model="branchForm.data.status" v-bind="field" name="status"
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.status" name="status" rules="required" :label="t('views.branch.fields.status')">
+                    <FormSelect id="status" v-bind="field" name="status"
                       :class="{ 'border-danger': errors['status'] }">
                       <option value="">{{ t('components.dropdown.placeholder') }}</option>
                       <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>

@@ -137,7 +137,7 @@ const emptyCompany = () => {
     data: {
       id: '',
       ulid: '',
-      code: '',
+      code: '[AUTO]',
       name: '',
       address: '',
       default: true,
@@ -186,10 +186,10 @@ const confirmDelete = async () => {
   if (result.success) {
     backToList();
   } else {
-    console.log(result);
+    backToList();
   }
 
-  loading.value = true;
+  loading.value = false;
 }
 
 const handleExpandCard = (index: number) => {
@@ -408,7 +408,7 @@ watch(
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.company.fields.code') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="companyForm.data.code" name="code" rules="required"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.code" name="code" rules="required|alpha_dash"
                     :label="t('views.company.fields.code')">
                     <FormInput id="code" name="code" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.company.fields.code')" />

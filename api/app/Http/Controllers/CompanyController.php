@@ -216,7 +216,7 @@ class CompanyController extends BaseController
 
         try {
             if ($this->companyActions->isDefaultCompany($company)) {
-                return response()->error(trans('rules.company.delete_default_company'));
+                return response()->error(trans('rules.company.delete_default_company'), 422);
             }
 
             $result = $this->companyActions->delete($company);
