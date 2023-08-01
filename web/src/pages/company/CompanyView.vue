@@ -216,8 +216,7 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
   }
 
   if (!result.success) {
-
-    actions.setErrors(result.errors.axios[3]);
+    actions.setErrors(result?.errors?.axios[3]);
   } else {
     backToList();
   }
