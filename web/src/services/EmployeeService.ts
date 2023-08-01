@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { EmployeeFormRequest } from "../types/requests/EmployeeFormRequest";
+import { EmployeeFormFieldValues } from "../types/requests/EmployeeFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class EmployeeService {
@@ -23,7 +23,7 @@ export default class EmployeeService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: EmployeeFormRequest): Promise<ServiceResponse<Employee | null>> {
+    public async create(payload: EmployeeFormFieldValues): Promise<ServiceResponse<Employee | null>> {
         const result: ServiceResponse<Employee | null> = {
             success: false,
         }
@@ -32,8 +32,7 @@ export default class EmployeeService {
             const url = route('api.post.db.company.employee.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Employee> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Employee> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -122,7 +121,7 @@ export default class EmployeeService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: EmployeeFormRequest): Promise<ServiceResponse<Employee | null>> {
+    public async update(ulid: string, payload: EmployeeFormFieldValues): Promise<ServiceResponse<Employee | null>> {
         const result: ServiceResponse<Employee | null> = {
             success: false,
         }
@@ -131,8 +130,7 @@ export default class EmployeeService {
             const url = route('api.post.db.company.employee.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<Employee> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Employee> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

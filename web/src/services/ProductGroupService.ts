@@ -9,9 +9,8 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { ProductGroupFormRequest } from "../types/requests/ProductGroupFormRequest";
+import { ProductGroupFormFieldValues } from "../types/requests/ProductGroupFormFieldValues";
 import { DropDownOption } from "../types/services/DropDownOption";
-import { Pause } from "lucide";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class ProductGroupService {
@@ -28,7 +27,7 @@ export default class ProductGroupService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: ProductGroupFormRequest): Promise<ServiceResponse<ProductGroup | null>> {
+    public async create(payload: ProductGroupFormFieldValues): Promise<ServiceResponse<ProductGroup | null>> {
         const result: ServiceResponse<ProductGroup | null> = {
             success: false,
         }
@@ -37,8 +36,7 @@ export default class ProductGroupService {
             const url = route('api.post.db.product.product_group.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<ProductGroup> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<ProductGroup> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -125,7 +123,7 @@ export default class ProductGroupService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: ProductGroupFormRequest): Promise<ServiceResponse<ProductGroup | null>> {
+    public async update(ulid: string, payload: ProductGroupFormFieldValues): Promise<ServiceResponse<ProductGroup | null>> {
         const result: ServiceResponse<ProductGroup | null> = {
             success: false,
         }
@@ -134,8 +132,7 @@ export default class ProductGroupService {
             const url = route('api.post.db.product.product_group.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<ProductGroup> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<ProductGroup> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

@@ -1,0 +1,21 @@
+export interface CustomerFormFieldValues {
+    id: string,
+    ulid: string,
+    company: string,
+    code: string,
+    name: string,
+    is_member: boolean,
+    customer_group: string,
+    zone: string,
+    customer_addresses: string,
+    max_open_invoice: number,
+    max_outstanding_invoice: number,
+    max_invoice_age: number,
+    payment_term_type: string,
+    payment_term: number,
+    tax_id: string,
+    taxable_enterprise: boolean,
+    remarks: string,
+    status: string,
+    customer_pic: string
+}

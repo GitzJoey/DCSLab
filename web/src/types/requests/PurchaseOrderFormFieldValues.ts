@@ -1,0 +1,15 @@
+export interface PurchaseOrderFormFieldValues {
+    id: string,
+    ulid: string,
+    company: string,
+    branch: string,
+    invoice_code: string,
+    invoice_date: string,
+    shipping_date: string,
+    shipping_address: string,
+    supplier: string,
+    global_discounts: string,
+    product_units: string,
+    remarks: string,
+    status: string,
+}

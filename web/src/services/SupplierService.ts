@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { SupplierFormRequest } from "../types/requests/SupplierFormRequest";
+import { SupplierFormFieldValues } from "../types/requests/SupplierFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class SupplierService {
@@ -23,7 +23,7 @@ export default class SupplierService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: SupplierFormRequest): Promise<ServiceResponse<Supplier | null>> {
+    public async create(payload: SupplierFormFieldValues): Promise<ServiceResponse<Supplier | null>> {
         const result: ServiceResponse<Supplier | null> = {
             success: false,
         }
@@ -32,8 +32,7 @@ export default class SupplierService {
             const url = route('api.post.db.supplier.supplier.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Supplier> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Supplier> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -122,7 +121,7 @@ export default class SupplierService {
         }
     }
 
-    public async update(ulid: string, payload: SupplierFormRequest): Promise<ServiceResponse<Supplier | null>> {
+    public async update(ulid: string, payload: SupplierFormFieldValues): Promise<ServiceResponse<Supplier | null>> {
         const result: ServiceResponse<Supplier | null> = {
             success: false,
         }
@@ -131,8 +130,7 @@ export default class SupplierService {
             const url = route('api.post.db.supplier.supplier.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<Supplier> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Supplier> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

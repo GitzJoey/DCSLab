@@ -9,7 +9,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { BrandFormRequest } from "../types/requests/BrandFormRequest";
+import { BrandFormFieldValues } from "../types/requests/BrandFormFieldValues";
 import { DropDownOption } from "../types/services/DropDownOption";
 import { StatusCode } from "../types/enums/StatusCode";
 
@@ -27,7 +27,7 @@ export default class BrandService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: BrandFormRequest): Promise<ServiceResponse<Brand | null>> {
+    public async create(payload: BrandFormFieldValues): Promise<ServiceResponse<Brand | null>> {
         const result: ServiceResponse<Brand | null> = {
             success: false,
         }
@@ -126,7 +126,7 @@ export default class BrandService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: BrandFormRequest): Promise<ServiceResponse<Brand | null>> {
+    public async update(ulid: string, payload: BrandFormFieldValues): Promise<ServiceResponse<Brand | null>> {
         const result: ServiceResponse<Brand | null> = {
             success: false,
         }

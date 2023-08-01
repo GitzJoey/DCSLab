@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { ProductFormRequest } from "../types/requests/ProductFormRequest";
+import { ProductFormFieldValues } from "../types/requests/ProductFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class ProductService {
@@ -23,13 +23,7 @@ export default class ProductService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(
-        company_id: string,
-        product_group_id: string,
-        brand_id: string,
-        product_unit_id: string,
-        payload: ProductFormRequest
-    ): Promise<ServiceResponse<Product | null>> {
+    public async create(payload: ProductFormFieldValues): Promise<ServiceResponse<Product | null>> {
         const result: ServiceResponse<Product | null> = {
             success: false,
         }
@@ -38,8 +32,7 @@ export default class ProductService {
             const url = route('api.post.db.product.product.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Product> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Product> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -167,14 +160,7 @@ export default class ProductService {
         }
     }
 
-    public async update(
-        ulid: string,
-        company_id: string,
-        product_group_id: string,
-        brand_id: string,
-        product_unit_id: string,
-        payload: ProductFormRequest
-    ): Promise<ServiceResponse<Product | null>> {
+    public async update(ulid: string, payload: ProductFormFieldValues): Promise<ServiceResponse<Product | null>> {
         const result: ServiceResponse<Product | null> = {
             success: false,
         }
@@ -183,8 +169,7 @@ export default class ProductService {
             const url = route('api.post.db.product.product.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<Product> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Product> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

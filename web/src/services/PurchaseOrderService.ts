@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { PurchaseOrderFormRequest } from "../types/requests/PurchaseOrderFormRequest";
+import { PurchaseOrderFormFieldValues } from "../types/requests/PurchaseOrderFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class PurchaseOrderService {
@@ -23,7 +23,7 @@ export default class PurchaseOrderService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: PurchaseOrderFormRequest): Promise<ServiceResponse<PurchaseOrder | null>> {
+    public async create(payload: PurchaseOrderFormFieldValues): Promise<ServiceResponse<PurchaseOrder | null>> {
         const result: ServiceResponse<PurchaseOrder | null> = {
             success: false,
         }
@@ -32,8 +32,7 @@ export default class PurchaseOrderService {
             const url = route('api.post.db.purchase_order.purchase_order.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<PurchaseOrder> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<PurchaseOrder> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -122,7 +121,7 @@ export default class PurchaseOrderService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: PurchaseOrderFormRequest): Promise<ServiceResponse<PurchaseOrder | null>> {
+    public async update(ulid: string,payload: PurchaseOrderFormFieldValues): Promise<ServiceResponse<PurchaseOrder | null>> {
         const result: ServiceResponse<PurchaseOrder | null> = {
             success: false,
         }
@@ -131,8 +130,7 @@ export default class PurchaseOrderService {
             const url = route('api.post.db.purchase_order.purchase_order.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<PurchaseOrder> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<PurchaseOrder> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

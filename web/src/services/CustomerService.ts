@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { CustomerFormRequest } from "../types/requests/CustomerFormRequest";
+import { CustomerFormFieldValues } from "../types/requests/CustomerFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class CustomerService {
@@ -23,7 +23,7 @@ export default class CustomerService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, customer_group_id: string, customer_address_id: string, payload: CustomerFormRequest): Promise<ServiceResponse<Customer | null>> {
+    public async create(payload: CustomerFormFieldValues): Promise<ServiceResponse<Customer | null>> {
         const result: ServiceResponse<Customer | null> = {
             success: false,
         }
@@ -32,8 +32,7 @@ export default class CustomerService {
             const url = route('api.post.db.company.branch.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Customer> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Customer> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -121,7 +120,7 @@ export default class CustomerService {
         }
     }
 
-    public async update(ulid: string, company_id: string, customer_group_id: string, customer_address_id: string, payload: CustomerFormRequest): Promise<ServiceResponse<Customer | null>> {
+    public async update(ulid: string, payload: CustomerFormFieldValues): Promise<ServiceResponse<Customer | null>> {
         const result: ServiceResponse<Customer | null> = {
             success: false,
         }
@@ -130,8 +129,7 @@ export default class CustomerService {
             const url = route('api.post.db.customer.customer.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<Customer> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Customer> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

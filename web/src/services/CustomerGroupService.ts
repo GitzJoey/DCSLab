@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { CustomerGroupFormRequest } from "../types/requests/CustomerGroupFormRequest";
+import { CustomerGroupFormFieldValues } from "../types/requests/CustomerGroupFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class CustomerGroupService {
@@ -23,7 +23,7 @@ export default class CustomerGroupService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, payload: CustomerGroupFormRequest): Promise<ServiceResponse<CustomerGroup | null>> {
+    public async create(payload: CustomerGroupFormFieldValues): Promise<ServiceResponse<CustomerGroup | null>> {
         const result: ServiceResponse<CustomerGroup | null> = {
             success: false,
         }
@@ -32,8 +32,7 @@ export default class CustomerGroupService {
             const url = route('api.post.db.customer.customer_group.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<CustomerGroup> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<CustomerGroup> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -122,7 +121,7 @@ export default class CustomerGroupService {
         }
     }
 
-    public async update(ulid: string, company_id: string, payload: CustomerGroupFormRequest): Promise<ServiceResponse<CustomerGroup | null>> {
+    public async update(ulid: string, payload: CustomerGroupFormFieldValues): Promise<ServiceResponse<CustomerGroup | null>> {
         const result: ServiceResponse<CustomerGroup | null> = {
             success: false,
         }
@@ -131,8 +130,7 @@ export default class CustomerGroupService {
             const url = route('api.post.db.customer.customer_group.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<CustomerGroup> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<CustomerGroup> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
