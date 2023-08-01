@@ -8,7 +8,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
-import { WarehouseFormRequest } from "../types/requests/WarehouseFormRequest";
+import { WarehouseFormFieldValues } from "../types/requests/WarehouseFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class WarehouseService {
@@ -23,7 +23,7 @@ export default class WarehouseService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(company_id: string, branch_id: string, payload: WarehouseFormRequest): Promise<ServiceResponse<Warehouse | null>> {
+    public async create(payload: WarehouseFormFieldValues): Promise<ServiceResponse<Warehouse | null>> {
         const result: ServiceResponse<Warehouse | null> = {
             success: false,
         }
@@ -32,8 +32,7 @@ export default class WarehouseService {
             const url = route('api.post.db.company.warehouse.save', undefined, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Warehouse> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Warehouse> = await axios.post(url, payload);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -127,7 +126,7 @@ export default class WarehouseService {
         }
     }
 
-    public async update(ulid: string, company_id: string, branch_id: string, payload: WarehouseFormRequest): Promise<ServiceResponse<Warehouse | null>> {
+    public async update(ulid: string, payload: WarehouseFormFieldValues): Promise<ServiceResponse<Warehouse | null>> {
         const result: ServiceResponse<Warehouse | null> = {
             success: false,
         }

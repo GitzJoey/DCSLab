@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import { TitleLayout, TwoColumnsLayout } from "../../base-components/Form/FormLayout";
-import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../../base-components/Form";
+import { FormInput, FormLabel, FormTextarea, FormSelect } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import WarehouseService from "../../services/WarehouseService";
 import { Warehouse } from "../../types/models/Warehouse";
@@ -21,6 +21,7 @@ import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { DropDownOption } from "../../types/services/DropDownOption";
 import { WarehouseFormRequest } from "../../types/requests/WarehouseFormRequest";
+import { WarehouseFormFieldValues } from "../../types/requests/WarehouseFormFieldValues";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
@@ -33,15 +34,6 @@ import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
 
 //#region Interfaces
-interface WarehouseFormFieldValues {
-  code: string,
-  name: string,
-  address: string,
-  city: string,
-  contact: string,
-  status: string,
-  remarks: string,
-}
 //#endregion
 
 //#region Declarations
@@ -113,6 +105,7 @@ const warehouseForm = ref<WarehouseFormRequest>({
     status: 'ACTIVE',
   }
 });
+
 const warehouseLists = ref<Collection<Warehouse[]> | null>({
   data: [],
   meta: {
@@ -172,6 +165,10 @@ const getDDL = (): void => {
   dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
     statusDDL.value = result;
   });
+}
+
+const selectedCompanyId = () => {
+  return userLocation.value.company.id;
 }
 
 const emptyWarehouse = () => {
@@ -281,24 +278,11 @@ const onSubmit = async (values: WarehouseFormFieldValues, actions: FormActions<W
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    let company_id = userLocation.value.company.id;
-    let branch_id = userLocation.value.branch.id;
-
-    result = await warehouseServices.create(
-      company_id,
-      branch_id,
-      warehouseForm.value
-    );
+    result = await warehouseServices.create(values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-      let warehouse_ulid = warehouseForm.value.data.ulid;
-      let company_id = userLocation.value.company.id;
-      let branch_id = userLocation.value.branch.id;
-    result = await warehouseServices.update(
-      warehouse_ulid,
-      company_id,
-      branch_id,
-      warehouseForm.value
-    );
+    let warehouse_ulid = warehouseForm.value.data.ulid;
+
+    result = await warehouseServices.update( warehouse_ulid, values);
   } else {
     result.success = false;
   }
@@ -496,6 +480,9 @@ watch(
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
+                <VeeField v-slot="{ field }" :value=selectedCompanyId() name="company_id">                  
+                  <FormInput id="company_id" name="company_id" type="hidden" v-bind="field" />
+                </VeeField>
                 <div class="pb-4">
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.warehouse.fields.code') }}
