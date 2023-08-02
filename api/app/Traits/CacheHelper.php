@@ -73,13 +73,15 @@ trait CacheHelper
     public function removeCacheByKey(string $key): void
     {
         try {
-            if (empty($key)) return; 
+            if (empty($key)) {
+                return;
+            }
 
             $result = Cache::forget($key);
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' Removed': ' Fail To Remove'));
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' Removed' : ' Fail To Remove'));
         }
     }
 
@@ -87,17 +89,19 @@ trait CacheHelper
     {
         $result = false;
         try {
-            if (empty($key)) return false; 
+            if (empty($key)) {
+                return false;
+            }
 
             $result = Cache::has($key);
 
             return $result;
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
-        
+
             return false;
         } finally {
-            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' T': ' F'));
+            Log::channel('cachehits')->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' T' : ' F'));
         }
     }
 }
