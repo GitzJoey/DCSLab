@@ -15,6 +15,6 @@ return [
     'ERROR_RETURN_VALUE' => null,
 
     'KEYWORDS' => [
-        'AUTO' => '[AUTO]',
+        'AUTO' => '_AUTO_',
     ],
 ];
