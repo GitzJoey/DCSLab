@@ -21,7 +21,7 @@ class RoleFactory extends Factory
      */
     public function definition()
     {
-        $text = str_replace(' ', '-', fake()->jobTitle()).'-'.fake()->randomLetter().fake()->randomDigit();
+        $text = str_replace(' ', '-', fake()->jobTitle());
 
         return [
             'name' => strtolower($text),
