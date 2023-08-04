@@ -21,45 +21,19 @@ class RoleActions
     {
     }
 
-    public function create(array $roleArr, array $inputtedPermissionsArr): Role
-    {
-        DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $role = new Role();
-            $role->name = $roleArr['name'];
-            $role->display_name = $roleArr['display_name'];
-            $role->description = $roleArr['description'];
-
-            $role->save();
-
-            foreach ($inputtedPermissionsArr as $pl) {
-                $role->permissions()->attach($pl);
-            }
-
-            DB::commit();
-
-            return $role;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
-    }
-
-    public function readAny(array $relationship = [], array $exclude = []): Collection
+    public function readAny(array $relationship = [], array $onlyName = [], bool $excludeDevAdminRole = false): Collection
     {
         $role = Role::with($relationship)->latest();
 
-        if (empty($exclude)) {
-            return $role->get();
-        } else {
-            return $role->whereNotIn('name', [UserRoles::DEVELOPER->value, UserRoles::ADMINISTRATOR->value])->get();
+        if (count($onlyName) > 0) {
+            $role = $role->whereIn('name', $onlyName);
         }
+
+        if ($excludeDevAdminRole) {
+            $role = $role->whereNotIn('name', [UserRoles::DEVELOPER->value, UserRoles::ADMINISTRATOR->value]);
+        }
+
+        return $role->get();
     }
 
     public function read(Role $role): Role
@@ -83,40 +57,14 @@ class RoleActions
         }
     }
 
-    public function update(
-        Role $role,
-        array $roleArr,
-        array $inputtedPermissions
-    ): Role {
-        DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $pl = Permission::whereIn('id', $inputtedPermissions)->get();
-
-            $role->syncPermissions($pl);
-
-            $role->update([
-                'name' => $roleArr['name'],
-                'display_name' => $roleArr['display_name'],
-                'description' => $roleArr['description'],
-            ]);
-
-            DB::commit();
-
-            return $role;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            Log::channel('perfs')->info('['.session()->getId().'-'.' '.'] '.__METHOD__.' ('.number_format($execution_time, 1).'s)');
-        }
-    }
-
-    public function getAllPermissions(): Collection
+    public function getAllPermissions(string $roleName = ''): Collection
     {
-        return Permission::get();
+        if (empty($role))
+            return Permission::get();
+
+        $role = Role::where('name', $roleName)->first();
+
+        if ($role)
+            return $role->permissions()->get();
     }
 }
