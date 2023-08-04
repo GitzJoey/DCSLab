@@ -7,10 +7,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
-use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RoleActions
 {
@@ -59,12 +56,14 @@ class RoleActions
 
     public function getAllPermissions(string $roleName = ''): Collection
     {
-        if (empty($role))
+        if (empty($role)) {
             return Permission::get();
+        }
 
         $role = Role::where('name', $roleName)->first();
 
-        if ($role)
+        if ($role) {
             return $role->permissions()->get();
+        }
     }
 }
