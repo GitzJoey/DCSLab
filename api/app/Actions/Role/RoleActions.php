@@ -66,14 +66,4 @@ class RoleActions
             return $role->permissions()->get();
         }
     }
-
-    public function getAllPermissions(): Collection
-    {
-        return Permission::get();
-    }
-
-    public function getAllRoles(): Collection
-    {
-        return Role::get();
-    }
 }
