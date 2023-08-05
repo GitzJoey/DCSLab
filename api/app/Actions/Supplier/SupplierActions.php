@@ -111,21 +111,24 @@ class SupplierActions
         bool $withTrashed = false,
         bool $useCache = true
     ): Paginator|Collection {
-        $cacheKey = '';
-        if ($useCache) {
-            $cacheKey = 'readAny_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-            $cacheResult = $this->readFromCache($cacheKey);
-
-            if (! is_null($cacheResult)) {
-                return $cacheResult;
-            }
-        }
-
-        $result = null;
-
         $timer_start = microtime(true);
 
         try {
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            if ($useCache) {
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (! is_null($cacheResult)) {
+                    return $cacheResult;
+                }
+            } else {
+                if ($this->isCacheKeyExists($cacheKey)) {
+                    $this->removeCacheByKey($cacheKey);
+                }
+            }
+            
+            $result = null;
+
             if (! $companyId) {
                 return null;
             }

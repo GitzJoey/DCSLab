@@ -69,18 +69,20 @@ class PurchaseOrderActions
         $timer_start = microtime(true);
 
         try {
-            $cacheKey = '';
+            if (! $branchId) {
+                $cacheKey = 'readAny_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            } else {
+                $cacheKey = 'readAny_'.$companyId.'-'.$branchId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            }
             if ($useCache) {
-                if (! $branchId) {
-                    $cacheKey = 'readAny_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-                } else {
-                    $cacheKey = 'readAny_'.$companyId.'-'.$branchId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-                }
-
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
                     return $cacheResult;
+                }
+            } else {
+                if ($this->isCacheKeyExists($cacheKey)) {
+                    $this->removeCacheByKey($cacheKey);
                 }
             }
 
