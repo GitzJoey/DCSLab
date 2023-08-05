@@ -61,11 +61,11 @@ class BrandActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -75,37 +75,37 @@ class BrandActions
 
             $result = null;
 
-            if (count($with) != 0) {
-                $brand = Brand::with($with)->whereCompanyId($companyId);
+            if (! $companyId) {
+                return null;
+            }
+
+            $brand = count($with) != 0 ? Brand::with($with) : Brand::with(['company']);
+
+            $brand = $brand->whereCompanyId($companyId);
+
+            if (empty($search)) {
+                $brand = $brand->latest();
             } else {
-                $brand = Brand::whereCompanyId($companyId);
+                $brand = $brand->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%');
+                }
+                )->latest();
             }
 
             if ($withTrashed) {
                 $brand = $brand->withTrashed();
             }
 
-            if (empty($search)) {
-                $brand = $brand->latest();
-            } else {
-                $brand = $brand->where('name', 'like', '%'.$search.'%')->latest();
-            }
-
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $brand->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $brand->paginate(abs($perPage));
             } else {
                 $result = $brand->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -113,7 +113,7 @@ class BrandActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
