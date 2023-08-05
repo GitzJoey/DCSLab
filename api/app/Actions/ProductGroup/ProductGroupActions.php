@@ -86,6 +86,7 @@ class ProductGroupActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
             $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
@@ -99,11 +100,9 @@ class ProductGroupActions
 
             $result = null;
 
-            if (count($with) != 0) {
-                $productGroup = ProductGroup::with($with)->whereCompanyId($companyId);
-            } else {
-                $productGroup = ProductGroup::whereCompanyId($companyId);
-            }
+            $productGroup = count($with) != 0 ? ProductGroup::with($with) : ProductGroup::with(['company']);
+
+            $productGroup = $productGroup->whereCompanyId($companyId);
 
             if ($category) {
                 switch ($category) {
@@ -116,31 +115,30 @@ class ProductGroupActions
                 }
             }
 
+            if (empty($search)) {
+                $productGroup = $productGroup->latest();
+            } else {
+                $productGroup = $productGroup->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('category', 'like', '%'.$search.'%');
+                }
+                )->latest();
+            }
+
             if ($withTrashed) {
                 $productGroup = $productGroup->withTrashed();
             }
 
-            if (empty($search)) {
-                $productGroup = $productGroup->latest();
-            } else {
-                $productGroup = $productGroup->where('name', 'like', '%'.$search.'%')->latest();
-            }
-
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $productGroup->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $productGroup->paginate(abs($perPage));
             } else {
                 $result = $productGroup->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -148,7 +146,7 @@ class ProductGroupActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
