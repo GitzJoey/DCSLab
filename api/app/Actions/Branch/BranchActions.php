@@ -94,6 +94,7 @@ class BranchActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
             $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
@@ -111,23 +112,24 @@ class BranchActions
                 return null;
             }
 
-            $branch = count($with) != 0 ? Branch::with($with) : Branch::with('company');
+            $relationship = ['company'];
+            $branch = count($with) != 0 ? Branch::with($with) : Branch::with($relationship);
+            
             $branch = $branch->whereCompanyId($companyId);
+
+            if (empty($search)) {
+                $branch = $branch->latest();
+            } else {
+                $branch = $branch->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('address', 'like', '%'.$search.'%')
+                        ->orWhere('city', 'like', '%'.$search.'%');
+                    }
+                )->latest();
+            }
 
             if ($withTrashed) {
                 $branch = $branch->withTrashed();
-            }
-
-            if (empty($search)) {
-                $branch = Branch::with('company')->latest();
-            } else {
-                $branch = Branch::with('company')
-                    ->where(function ($query) use ($search) {
-                        $query->where('name', 'like', '%'.$search.'%')
-                              ->orWhere('address', 'like', '%'.$search.'%')
-                              ->orWhere('city', 'like', '%'.$search.'%');
-                    })
-                    ->latest();
             }
 
             if ($paginate) {
@@ -137,9 +139,9 @@ class BranchActions
                 $result = $branch->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -147,7 +149,7 @@ class BranchActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
