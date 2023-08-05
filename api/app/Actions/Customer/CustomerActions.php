@@ -127,10 +127,6 @@ class CustomerActions
                 if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
-            } else {
-                if ($this->isCacheKeyExists($cacheKey)) {
-                    $this->removeCacheByKey($cacheKey);
-                }
             }
 
             $result = null;

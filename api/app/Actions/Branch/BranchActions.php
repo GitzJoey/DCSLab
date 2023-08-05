@@ -103,10 +103,6 @@ class BranchActions
                 if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
-            } else {
-                if ($this->isCacheKeyExists($cacheKey)) {
-                    $this->removeCacheByKey($cacheKey);
-                }
             }
 
             $result = null;
@@ -123,19 +119,20 @@ class BranchActions
             }
 
             if (empty($search)) {
-                $branch = $branch->latest();
+                $branch = Branch::with('company')->latest();
             } else {
-                $branch = $branch->where('name', 'like', '%'.$search.'%')->latest();
+                $branch = Branch::with('company')
+                    ->where(function ($query) use ($search) {
+                        $query->where('name', 'like', '%'.$search.'%')
+                              ->orWhere('address', 'like', '%'.$search.'%')
+                              ->orWhere('city', 'like', '%'.$search.'%');
+                    })
+                    ->latest();
             }
 
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $branch->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $branch->paginate(abs($perPage));
             } else {
                 $result = $branch->get();
             }
