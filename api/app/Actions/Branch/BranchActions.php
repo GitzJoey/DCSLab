@@ -112,9 +112,8 @@ class BranchActions
                 return null;
             }
 
-            $relationship = ['company'];
-            $branch = count($with) != 0 ? Branch::with($with) : Branch::with($relationship);
-            
+            $branch = count($with) != 0 ? Branch::with($with) : Branch::with(['company']);
+
             $branch = $branch->whereCompanyId($companyId);
 
             if (empty($search)) {
@@ -124,7 +123,7 @@ class BranchActions
                     $query->where('name', 'like', '%'.$search.'%')
                         ->orWhere('address', 'like', '%'.$search.'%')
                         ->orWhere('city', 'like', '%'.$search.'%');
-                    }
+                }
                 )->latest();
             }
 
