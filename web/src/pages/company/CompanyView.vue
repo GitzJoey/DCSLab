@@ -441,8 +441,11 @@ watch(
                   </FormLabel>
                   <VeeField v-slot="{ field }" v-model="companyForm.data.default" name="default"
                     :label="t('views.company.fields.default')">
-                    <FormSwitch.Input id="default" name="default" v-bind="field" type="checkbox"
-                      :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')" />
+                    <FormSwitch class="mt-2">
+                      <FormSwitch.Input id="default" name="default" v-bind="field" type="checkbox"
+                        :class="{ 'border-danger': errors['default'] }"
+                        :placeholder="t('views.company.fields.default')" />
+                    </FormSwitch>
                   </VeeField>
                 </div>
                 <div class="pb-4">

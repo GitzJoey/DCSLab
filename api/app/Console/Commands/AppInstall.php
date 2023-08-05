@@ -2,11 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\Role\RoleActions;
 use App\Actions\System\SystemActions;
-use App\Actions\User\UserActions;
-use App\Enums\RecordStatus;
-use App\Enums\UserRoles;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -42,10 +38,6 @@ class AppInstall extends Command
         sleep(3);
 
         switch (strtolower($this->argument('args'))) {
-            case 'dev':
-            case 'admin':
-                $this->createAdminOrDevAccount(strtolower($this->argument('args')));
-                break;
             default:
                 $this->defaultInstallation();
                 break;
@@ -138,75 +130,6 @@ class AppInstall extends Command
         }
 
         $this->info(Artisan::output());
-    }
-
-    private function createAdminOrDevAccount(string $accountType): void
-    {
-        $this->info('Creating '.($accountType == 'dev' ? 'Dev' : 'Admin').' Account ...');
-
-        $userName = 'GitzJoey';
-        $userEmail = 'gitzjoey@yahoo.com';
-        $userPassword = 'thepassword';
-
-        $invalid = true;
-
-        $userActions = new UserActions();
-        $roleActions = new RoleActions();
-
-        do {
-            $userName = $this->ask('Name', $userName);
-            $userEmail = $this->ask('Email', $userEmail);
-            $userPassword = $this->secret('Password', $userPassword);
-
-            $is_dev = $accountType == 'dev' ? true : false;
-
-            $rolesId = [];
-            if ($is_dev) {
-                array_push($rolesId, $roleActions->readBy('NAME', UserRoles::DEVELOPER->value)->id);
-            } else {
-                array_push($rolesId, $roleActions->readBy('NAME', UserRoles::ADMINISTRATOR->value)->id);
-            }
-
-            $profile = [
-                'first_name' => $userName,
-                'country' => 'Singapore',
-                'status' => RecordStatus::ACTIVE,
-            ];
-
-            $user = [
-                'name' => $userName,
-                'email' => $userEmail,
-                'password' => $userPassword,
-            ];
-
-            $confirmed = $this->confirm("Everything's OK? Do you wish to continue?");
-
-            try {
-                if (! $confirmed) {
-                    $this->error('Aborted');
-
-                    $invalid = false;
-                } else {
-                    $userActions->create(
-                        $user,
-                        $rolesId,
-                        $profile
-                    );
-
-                    $this->info('Creating Account...');
-                    $this->info('Name: '.$userName);
-                    $this->info('Email: '.$userEmail);
-                    $this->info('Password: '.'***********');
-                    $this->info('Account Type: '.($is_dev ? 'Developers' : 'Administrator'));
-
-                    $invalid = false;
-                }
-            } catch (Exception $e) {
-                $this->error($e->getMessage());
-                $this->info('');
-                $this->error('Retrying...');
-            }
-        } while ($invalid);
     }
 
     private function passPreInstallCheck()
