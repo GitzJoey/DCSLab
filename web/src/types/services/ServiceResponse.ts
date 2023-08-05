@@ -4,5 +4,5 @@ export interface ServiceResponse<T> {
     success: boolean;
     data?: T;
     message?: string,
-    errors?: LaravelError;
+    errors?: LaravelError | { axios : any[]} | { ziggy : any[]};
 }
