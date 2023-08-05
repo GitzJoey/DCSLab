@@ -27,6 +27,10 @@ import { formatDate } from '../../utils/helper'
 //#region Declarations
 const { t } = useI18n();
 const userContextStore = useUserContextStore();
+type Roles = {
+  active : boolean,
+  images : string
+}
 //#endregion
 
 //#region Data - Pinia
@@ -42,6 +46,21 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: "User Setting", state: CardState.Expanded },
   { title: "Roles", state: CardState.Expanded, id: "roles" },
 ]);
+
+const roles = ref<Array<Roles>>([
+  {
+    images : posSystemImage,
+    active : false,
+  },
+  {
+    images : wareHouseImage,
+    active : false
+  },
+  {
+    images : accountingImage,
+    active : false
+  }
+] )
 //#endregion
 
 //#region Data - Views
@@ -62,6 +81,16 @@ const handleExpandCard = (index: number) => {
     cards.value[index].state = CardState.Collapsed;
   }
 };
+
+function handleChangeRole(index:number) {
+  roles.value[index].active = !roles.value[index].active
+  for(let i = 0 ; i < roles.value.length ; i++) {
+    if(roles.value[index].active && i !== index) {
+      roles.value[i].active = false
+
+    }
+  }
+}
 
 const onSubmit = async () => {
   loading.value = true;
@@ -275,7 +304,7 @@ const onSubmit = async () => {
                 <FormInput
                   id="currentPassword"
                   name="currentPassword"
-                  type="text"
+                  type="password"
                   class="w-full"
                   :placeholder="
                     t('views.profile.fields.change_password.current_password')
@@ -290,7 +319,7 @@ const onSubmit = async () => {
                 <FormInput
                   id="new_password"
                   name="new_password"
-                  type="text"
+                  type="password"
                   class="w-full"
                   :placeholder="
                     t('views.profile.fields.change_password.new_password')
@@ -307,7 +336,7 @@ const onSubmit = async () => {
                 <FormInput
                   id="confirm_password"
                   name="confirm_password"
-                  type="text"
+                  type="password"
                   class="w-full"
                   :placeholder="
                     t('views.profile.fields.change_password.confirm_password')
@@ -365,49 +394,24 @@ const onSubmit = async () => {
             <div class="p-5">
               <div class="pb-4">
                 <div class="grid grid-cols-3 gap-2 place-items center">
-                  <div class="flex flex-col items-center">
-                    <img
-                      alt=""
-                      :src="posSystemImage"
-                      width="100"
-                      height="100"
-                    />
-                    <div class="grid grid-cols-1 place-items-center">
-                      <CheckIcon class="text-success" />
+                  <div v-for="(item, index) in roles" :key="index" class="flex flex-col items-center">
+                    <div 
+                    @click="handleChangeRole(index)"
+                    class="cursor-pointer flex flex-col items-center justify-center">
+                      <img
+                        alt=""
+                        :src="item.images"
+                        width="100"
+                        height="100"
+  
+                      />
+                      <div v-if="item.active" class="grid grid-cols-1 place-items-center">
+                        <Check class="text-success" />
+                      </div>
+                      <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
+                        {{ t("components.buttons.activate") }}
+                      </button>
                     </div>
-                    <button class="btn btn-sm btn-secondary hover:btn-primary">
-                      {{ t("components.buttons.activate") }}
-                    </button>
-                  </div>
-
-                  <div class="flex flex-col items-center">
-                    <img
-                      alt=""
-                      :src="wareHouseImage"
-                      width="100"
-                      height="100"
-                    />
-                    <div class="grid grid-cols-1 place-items-center">
-                      <Check class="text-success" />
-                    </div>
-                    <button class="btn btn-sm btn-secondary hover:btn-primary">
-                      {{ t("components.buttons.activate") }}
-                    </button>
-                  </div>
-
-                  <div class="flex flex-col items-center">
-                    <img
-                      alt=""
-                      :src="accountingImage"
-                      width="100"
-                      height="100"
-                    />
-                    <div class="grid grid-cols-1 place-items-center">
-                      <CheckIcon class="text-success" />
-                    </div>
-                    <button class="btn btn-sm btn-secondary hover:btn-primary">
-                      {{ t("components.buttons.activate") }}
-                    </button>
                   </div>
                 </div>
               </div>

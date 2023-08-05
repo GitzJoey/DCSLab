@@ -46,12 +46,11 @@ const computedClass = computed(() =>
 
 const emit = defineEmits<FormInputEmit>();
 
-// let localValue = ref<string>('[AUTO]')
 
 function handleClickAutoButton() {
     isAuto.value = !isAuto.value;
     if(isAuto.value) {
-        localValue.value = '[AUTO]'
+        localValue.value = '_AUTO_'
     }else {
         localValue.value = ''
     }   
@@ -60,7 +59,7 @@ function handleClickAutoButton() {
 const localValue = computed({
   get() {
         if(isAuto.value) {
-            return '[AUTO]'
+            return '_AUTO_'
         }else {
             return props.modelValue === undefined ? props.value : props.modelValue;
         }
