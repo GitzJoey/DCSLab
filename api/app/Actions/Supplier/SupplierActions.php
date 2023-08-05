@@ -126,7 +126,7 @@ class SupplierActions
                     $this->removeCacheByKey($cacheKey);
                 }
             }
-            
+
             $result = null;
 
             if (! $companyId) {
