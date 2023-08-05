@@ -2,5 +2,9 @@
     "print": "Print",
     "export_to_excel": "Export To Excel",
     "export_to_pdf": "Export To PDF",
-    "data_not_found": "Data Not Found"
+    "data_not_found": "Data Not Found",
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "entries": "entries"
 }

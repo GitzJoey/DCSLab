@@ -25,9 +25,7 @@ class RoleController extends BaseController
         $errorMsg = '';
 
         try {
-            $excludeRole = [];
-
-            $result = $this->roleActions->readAny(exclude: $excludeRole);
+            $result = $this->roleActions->readAny();
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

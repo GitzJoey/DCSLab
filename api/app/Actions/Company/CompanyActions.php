@@ -94,10 +94,6 @@ class CompanyActions
                 if (! is_null($cacheResult)) {
                     return $cacheResult;
                 }
-            } else {
-                if ($this->isCacheKeyExists($cacheKey)) {
-                    $this->removeCacheByKey($cacheKey);
-                }
             }
 
             $result = null;
@@ -137,9 +133,7 @@ class CompanyActions
                 $result = $companies->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
