@@ -149,11 +149,11 @@ class CustomerActions
                         ->orWhereHas('customerAddresses', function ($query) use ($search) {
                             $query->where('address', 'like', '%'.$search.'%')
                                 ->orWhere('city', 'like', '%'.$search.'%');
-                    });
+                        });
                 }
                 )->latest();
             }
-            
+
             if ($withTrashed) {
                 $customer = $customer->withTrashed();
             }

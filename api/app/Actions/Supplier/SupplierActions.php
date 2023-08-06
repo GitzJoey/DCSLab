@@ -138,10 +138,9 @@ class SupplierActions
             } else {
                 $supplier = $supplier->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%'.$search.'%')
-                            ->orWhere('address', 'like', '%'.$search.'%')
-                            ->orWhere('city', 'like', '%'.$search.'%');
-                }
-                )->latest();
+                        ->orWhere('address', 'like', '%'.$search.'%')
+                        ->orWhere('city', 'like', '%'.$search.'%');
+                })->latest();
             }
 
             if ($withTrashed) {

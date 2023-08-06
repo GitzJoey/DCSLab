@@ -119,13 +119,18 @@ class EmployeeActions
             if (empty($search)) {
                 $employee = $employee->latest();
             } else {
-                $employee = $employee->where(function ($query) use ($search) {
-                    $query->where('code', 'like', '%'.$search.'%')
-                        ->orWhere('join_date', 'like', '%'.$search.'%');
-                }
-                )->latest();
+                $employee = $employee
+                    ->where(function ($query) use ($search) {
+                        $query->where('code', 'like', '%'.$search.'%')
+                            ->orWhere('join_date', 'like', '%'.$search.'%')
+                            ->orWhereHas('user', function ($query) use ($search) {
+                                $query->where('name', 'like', '%'.$search.'%');
+                            });
+                    }
+                    )
+                    ->latest();
             }
-            
+
             if ($withTrashed) {
                 $employee = $employee->withTrashed();
             }
