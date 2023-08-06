@@ -17,9 +17,9 @@ class RoleActionsReadTest extends ActionsTestCase
         $this->roleActions = new RoleActions();
     }
 
-    public function test_role_actions_call_get_all_roles_expect_collections()
+    public function test_role_actions_call_read_any_with_default_parameter_expect_collection_object()
     {
-        $result = $this->roleActions->getAllRoles();
+        $result = $this->roleActions->readAny();
 
         $this->assertInstanceOf(Collection::class, $result);
     }
