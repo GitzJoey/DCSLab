@@ -69,11 +69,9 @@ class PurchaseOrderActions
         $timer_start = microtime(true);
 
         try {
-            if (! $branchId) {
-                $cacheKey = 'readAny_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-            } else {
-                $cacheKey = 'readAny_'.$companyId.'-'.$branchId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-            }
+            $cacheBranchId = ! $branchId ? '[empty]' : $branchId;
+            $cacheSearch = empty($search) ? '[empty]' : $search;
+            $cacheKey = 'readAny_'.$companyId.'-'.$cacheBranchId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
                 $cacheResult = $this->readFromCache($cacheKey);
 
@@ -84,7 +82,9 @@ class PurchaseOrderActions
 
             $result = null;
 
-            $query = count($with) != 0 ? PurchaseOrder::with($with) : PurchaseOrder::with('company', 'branch', 'supplier', 'globalDiscounts', 'productUnits.perUnitDiscounts', 'productUnits.perUnitSubTotalDiscounts');
+            $relationship = ['company', 'branch', 'supplier', 'globalDiscounts', 'productUnits.perUnitDiscounts', 'productUnits.perUnitSubTotalDiscounts'];
+            $relationship = count($with) > 0 ? $with : $relationship;
+            $query = PurchaseOrder::with($relationship);
 
             if (! $companyId) {
                 return null;
@@ -95,31 +95,34 @@ class PurchaseOrderActions
                 $query = $query->whereBranchId($branchId);
             }
 
+            if (! empty($search)) {
+                $query->where('invoice_code', 'like', '%'.$search.'%')
+                    ->orWhere('shipping_address', 'like', '%'.$search.'%')
+                    ->orWhere('remarks', 'like', '%'.$search.'%')
+                    ->orWhereHas('supplier', function ($query) use ($search) {
+                        $query->where('name', 'like', '%'.$search.'%');
+                    }
+                    );
+            }
+
             if ($withTrashed) {
                 $query = $query->withTrashed();
             }
 
-            if (empty($search)) {
-                $query = $query->latest();
-            } else {
-                $query = $query->where('invoice_code', 'like', '%'.$search.'%')->latest();
-            }
+            $query = $query->latest();
 
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
                 $page = is_numeric($page) ? abs($page) : 1;
 
-                $result = $query->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $result = $query->paginate(perPage: $perPage, page: $page);
             } else {
                 $result = $query->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -127,7 +130,7 @@ class PurchaseOrderActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
