@@ -32,7 +32,7 @@ class RoleAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', []));
+        $api = $this->getJson(route('api.get.db.admin.role.read_any', []));
 
         $api->assertStatus(403);
     }
