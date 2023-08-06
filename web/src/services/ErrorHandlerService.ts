@@ -15,16 +15,16 @@ export default class ErrorHandlerService {
 
     public generateAxiosErrorServiceResponse(axiosErr: AxiosError): ServiceResponse<null> {
         const axiosResp = axiosErr.response as AxiosResponse;
-
         const result: ServiceResponse<null> = {
             success: false,
             errors: {
                 axios: [
                     axiosResp.data.message,
                     axiosResp.status,
-                    axiosResp.statusText
+                    axiosResp.statusText,
+                    axiosResp.data.errors
                 ]
-            }
+            },
         };
 
         return result;

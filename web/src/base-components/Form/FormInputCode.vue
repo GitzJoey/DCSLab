@@ -46,12 +46,11 @@ const computedClass = computed(() =>
 
 const emit = defineEmits<FormInputEmit>();
 
-// let localValue = ref<string>('[AUTO]')
 
 function handleClickAutoButton() {
     isAuto.value = !isAuto.value;
     if(isAuto.value) {
-        localValue.value = '[AUTO]'
+        localValue.value = '_AUTO_'
     }else {
         localValue.value = ''
     }   
@@ -60,7 +59,7 @@ function handleClickAutoButton() {
 const localValue = computed({
   get() {
         if(isAuto.value) {
-            return '[AUTO]'
+            return '_AUTO_'
         }else {
             return props.modelValue === undefined ? props.value : props.modelValue;
         }
@@ -72,7 +71,7 @@ const localValue = computed({
 });
 
 onMounted(() => {
-  if(props.modelValue) {
+  if(props.value) {
     isAuto.value = false
   }
 })
@@ -84,9 +83,8 @@ onMounted(() => {
       v-model="localValue"
       :disabled="isAuto"
       :class="computedClass"
-      :type="props.type"
+      :type="props.type? props.type : 'text' "
       v-bind="_.omit(attrs, 'class')"
-
     />
     <div 
         class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
