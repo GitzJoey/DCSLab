@@ -103,7 +103,7 @@ class UnitActions
                 }
                 )->latest();
             }
-            
+
             if ($withTrashed) {
                 $unit = $unit->withTrashed();
             }
