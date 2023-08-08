@@ -216,7 +216,7 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
   }
 
   if (!result.success) {
-    actions.setErrors(result?.errors?.axios[3]);
+    actions.setFieldError('code', 'test');
   } else {
     backToList();
   }
@@ -410,7 +410,8 @@ watch(
                   </FormLabel>
                   <VeeField v-slot="{ field }" v-model="companyForm.data.code" name="code" rules="required|alpha_dash"
                     :label="t('views.company.fields.code')">
-                    <FormInputCode id="code" name="code"  v-bind="field"  :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.company.fields.code')" />
+                    <FormInputCode id="code" name="code" v-bind="field" :class="{ 'border-danger': errors['code'] }"
+                      :placeholder="t('views.company.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
                 </div>
