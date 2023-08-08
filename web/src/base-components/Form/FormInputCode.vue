@@ -71,8 +71,9 @@ const localValue = computed({
 });
 
 onMounted(() => {
-  if(props.value) {
+  if(props.value && props.value !== "_AUTO_") {
     isAuto.value = false
+    handleClickAutoButton()
   }
 })
 </script>
