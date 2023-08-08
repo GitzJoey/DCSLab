@@ -66,11 +66,11 @@ class WarehouseActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'readAny_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -87,31 +87,33 @@ class WarehouseActions
             $warehouse = count($with) != 0 ? Warehouse::with($with) : Warehouse::with('company', 'branch');
             $warehouse = $warehouse->whereCompanyId($companyId);
 
+            if (empty($search)) {
+                $warehouse =$warehouse->latest();
+            } else {
+                $warehouse = $warehouse->where(function ($query) use ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('name', 'like', '%'.$search.'%')
+                              ->orWhere('address', 'like', '%'.$search.'%')
+                              ->orWhere('city', 'like', '%'.$search.'%');
+                    });
+                }
+                )->latest();
+            }
+
             if ($withTrashed) {
                 $warehouse = $warehouse->withTrashed();
             }
 
-            if (empty($search)) {
-                $warehouse = $warehouse->latest();
-            } else {
-                $warehouse = $warehouse->where('name', 'like', '%'.$search.'%')->latest();
-            }
-
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $warehouse->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $warehouse->paginate(abs($perPage));
             } else {
                 $result = $warehouse->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -119,7 +121,7 @@ class WarehouseActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 

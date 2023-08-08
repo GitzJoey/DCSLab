@@ -25,8 +25,11 @@ class UserAPICreateTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Hashids::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
-        $userArr['roles'][0] = $role;
+        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $userArr['roles'][0] = [
+            'id' => HashIds::encode($role->id),
+            'display_name' => $role->display_name,
+        ];
 
         $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
@@ -43,8 +46,11 @@ class UserAPICreateTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Hashids::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
-        $userArr['roles'][0] = $role;
+        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $userArr['roles'][0] = [
+            'id' => HashIds::encode($role->id),
+            'display_name' => $role->display_name,
+        ];
 
         $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
@@ -72,8 +78,11 @@ class UserAPICreateTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Hashids::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
-        $userArr['roles'][0] = $role;
+        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $userArr['roles'][0] = [
+            'id' => HashIds::encode($role->id),
+            'display_name' => $role->display_name,
+        ];
 
         $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 

@@ -99,11 +99,11 @@ class CustomerGroupActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'readAny_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -117,29 +117,34 @@ class CustomerGroupActions
                 return null;
             }
 
-            $customerGroup = count($with) != 0 ? CustomerGroup::with($with) : CustomerGroup::with('company');
+            $customerGroup = count($with) != 0 ? CustomerGroup::with($with) : CustomerGroup::with(['company']);
+
             $customerGroup = $customerGroup->whereCompanyId($companyId);
+
+            if (empty($search)) {
+                $customerGroup = $customerGroup->latest();
+            } else {
+                $customerGroup = $customerGroup->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('payment_term_type', 'like', '%'.$search.'%');
+                }
+                )->latest();
+            }
 
             if ($withTrashed) {
                 $customerGroup = $customerGroup->withTrashed();
             }
 
-            if (empty($search)) {
-                $customerGroup = $customerGroup->latest();
-            } else {
-                $customerGroup = $customerGroup->where('name', 'like', '%'.$search.'%')->latest();
-            }
-
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $customerGroup->paginate(perPage: abs($perPage), page: abs($page));
+                $result = $customerGroup->paginate(abs($perPage));
             } else {
                 $result = $customerGroup->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -147,7 +152,7 @@ class CustomerGroupActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 

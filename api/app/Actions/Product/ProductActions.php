@@ -97,11 +97,11 @@ class ProductActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'readAny_'.$companyId.'-'.$productCategory.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -129,31 +129,39 @@ class ProductActions
                     break;
             }
 
+            if (empty($search)) {
+                $product = $product->latest();
+            } else {
+                $product = $product->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('product_type', 'like', '%'.$search.'%')
+                        ->orWhereHas('productGroup', function ($query) use ($search) {
+                            $query->where('name', 'like', '%'.$search.'%');
+                        })
+                        ->orWhereHas('brand', function ($query) use ($search) {
+                            $query->where('name', 'like', '%'.$search.'%');
+                        })
+                        ->orWhereHas('productUnits', function ($query) use ($search) {
+                            $query->where('name', 'like', '%'.$search.'%');
+                        });
+                }
+                )->latest();
+            }
+
             if ($withTrashed) {
                 $product = $product->withTrashed();
             }
 
-            if (empty($search)) {
-                $product = $product->latest();
-            } else {
-                $product = $product->where('name', 'like', '%'.$search.'%')->latest();
-            }
-
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $product->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $product->paginate(abs($perPage));
             } else {
                 $result = $product->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -161,7 +169,7 @@ class ProductActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 

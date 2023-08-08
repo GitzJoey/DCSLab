@@ -87,9 +87,8 @@ class CompanyActions
         $timer_start = microtime(true);
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'read_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -134,9 +133,7 @@ class CompanyActions
                 $result = $companies->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {

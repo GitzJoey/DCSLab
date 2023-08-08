@@ -35,7 +35,12 @@ class UserAPIEditTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $userArr['roles'][0] = HashIds::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $userArr['roles'][0] = [
+            'id' => HashIds::encode($role->id),
+            'display_name' => $role->display_name,
+        ];
+
         $userArr['theme'] = Setting::factory()->createDefaultSetting_PREF_THEME()->make();
         $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
         $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
@@ -64,7 +69,12 @@ class UserAPIEditTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $userArr['roles'][0] = HashIds::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $userArr['roles'][0] = [
+            'id' => HashIds::encode($role->id),
+            'display_name' => $role->display_name,
+        ];
+
         $userArr['theme'] = Setting::factory()->createDefaultSetting_PREF_THEME()->make();
         $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
         $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();
@@ -104,7 +114,12 @@ class UserAPIEditTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $userArr['roles'][0] = HashIds::encode(Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $userArr['roles'][0] = [
+            'id' => HashIds::encode($role->id),
+            'display_name' => $role->display_name,
+        ];
+
         $userArr['theme'] = Setting::factory()->createDefaultSetting_PREF_THEME()->make();
         $userArr['date_format'] = Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT()->make();
         $userArr['time_format'] = Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT()->make();

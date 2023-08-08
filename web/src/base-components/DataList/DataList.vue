@@ -68,6 +68,18 @@ const enableSearch = toRef(props, "enableSearch");
 const search = ref<string>('');
 const perPage = ref<number>(10);
 
+const textInfo = computed(() => {
+  if (props.pagination == null) return '';
+  if (props.pagination.from == null) return '';
+  if (props.pagination.to == null) return '';
+  if (props.pagination.total == null) return '';
+
+  return t('components.data-list.showing') + ' ' + props.pagination.from.toString() + ' ' +
+    t('components.data-list.to') + ' ' + props.pagination.to.toString() + ' ' +
+    t('components.data-list.of') + ' ' + props.pagination.total.toString() + ' ' +
+    t('components.data-list.entries');
+});
+
 const pages = computed(() => {
   if (props.pagination == null) return [];
   return generatePaginationArray(props.pagination.current_page, props.pagination.total, props.pagination.per_page);
@@ -232,7 +244,6 @@ watch(perPage,
           </Menu>
         </div>
 
-
         <Button @click="refreshButtonClicked">
           <Lucide icon="RefreshCw" class="w-4 h-4" />
         </Button>
@@ -272,7 +283,8 @@ watch(perPage,
       </div>
     </div>
     <div v-if="pages.length > 0" class="flex">
-      <div class="w-1/2 flex justify-start">
+      <div class="w-1/2 flex items-center justify-start">
+        {{ textInfo }}
       </div>
       <div class="w-1/2 flex justify-end">
         <FormSelect v-model="perPage" class="w-20 mt-3 sm:mt-0">

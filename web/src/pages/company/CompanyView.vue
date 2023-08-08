@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import { TitleLayout, TwoColumnsLayout } from "../../base-components/Form/FormLayout";
-import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../../base-components/Form";
+import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch, FormInputCode } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
 import { Company } from "../../types/models/Company";
@@ -137,7 +137,7 @@ const emptyCompany = () => {
     data: {
       id: '',
       ulid: '',
-      code: '',
+      code: '[AUTO]',
       name: '',
       address: '',
       default: true,
@@ -186,10 +186,10 @@ const confirmDelete = async () => {
   if (result.success) {
     backToList();
   } else {
-    console.log(result);
+    backToList();
   }
 
-  loading.value = true;
+  loading.value = false;
 }
 
 const handleExpandCard = (index: number) => {
@@ -216,7 +216,7 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
   }
 
   if (!result.success) {
-    actions.setErrors({ code: 'error' });
+    actions.setFieldError('code', 'test');
   } else {
     backToList();
   }
@@ -408,10 +408,10 @@ watch(
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.company.fields.code') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="companyForm.data.code" name="code" rules="required"
+                  <VeeField v-slot="{ field }" v-model="companyForm.data.code" name="code" rules="required|alpha_dash"
                     :label="t('views.company.fields.code')">
-                    <FormInput id="code" name="code" v-bind="field" type="text"
-                      :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.company.fields.code')" />
+                    <FormInputCode id="code" name="code" v-bind="field" :class="{ 'border-danger': errors['code'] }"
+                      :placeholder="t('views.company.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
                 </div>
@@ -442,8 +442,11 @@ watch(
                   </FormLabel>
                   <VeeField v-slot="{ field }" v-model="companyForm.data.default" name="default"
                     :label="t('views.company.fields.default')">
-                    <FormSwitch.Input id="default" name="default" v-bind="field" type="checkbox"
-                      :class="{ 'border-danger': errors['default'] }" :placeholder="t('views.company.fields.default')" />
+                    <FormSwitch class="mt-2">
+                      <FormSwitch.Input id="default" name="default" v-bind="field" type="checkbox"
+                        :class="{ 'border-danger': errors['default'] }"
+                        :placeholder="t('views.company.fields.default')" />
+                    </FormSwitch>
                   </VeeField>
                 </div>
                 <div class="pb-4">

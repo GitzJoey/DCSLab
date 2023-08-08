@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use App\Actions\Role\RoleActions;
 use App\Actions\User\UserActions;
+use App\Enums\RecordStatus;
+use App\Enums\UserRoles;
+use Exception;
 use Illuminate\Console\Command;
 
 class AppUser extends Command
@@ -30,6 +33,9 @@ class AppUser extends Command
     public function handle()
     {
         switch (strtolower($this->argument('args'))) {
+            case 'create':
+                $this->createUser();
+                break;
             case 'changerole':
             case 'changeroles':
             case 'changeuserrole':
@@ -41,6 +47,73 @@ class AppUser extends Command
         }
 
         return Command::SUCCESS;
+    }
+
+    private function createUser()
+    {
+        $this->info('Creating User Account...');
+
+        $userName = 'GitzJoey';
+        $userEmail = 'gitzjoey@yahoo.com';
+        $userPassword = 'thepassword';
+
+        $invalid = true;
+
+        $userActions = new UserActions();
+        $roleActions = new RoleActions();
+
+        do {
+            $userType = $this->choice('Select Role: ', [
+                ucfirst(UserRoles::DEVELOPER->value),
+                ucfirst(UserRoles::ADMINISTRATOR->value),
+                ucfirst(UserRoles::USER->value),
+            ]);
+            $userName = $this->ask('Name', $userName);
+            $userEmail = $this->ask('Email', $userEmail);
+            $userPassword = $this->secret('Password', $userPassword);
+
+            $rolesId = [$roleActions->readBy('NAME', $userType)->id];
+
+            $profile = [
+                'first_name' => $userName,
+                'country' => 'Singapore',
+                'status' => RecordStatus::ACTIVE,
+            ];
+
+            $user = [
+                'name' => $userName,
+                'email' => $userEmail,
+                'password' => $userPassword,
+            ];
+
+            $confirmed = $this->confirm("Everything's OK? Do you wish to continue?");
+
+            try {
+                if (! $confirmed) {
+                    $this->error('Aborted');
+
+                    $invalid = false;
+                } else {
+                    $userActions->create(
+                        $user,
+                        $rolesId,
+                        $profile
+                    );
+
+                    $this->info('Creating Account...');
+                    $this->info('Name: '.$userName);
+                    $this->info('Email: '.$userEmail);
+                    $this->info('Password: '.'***********');
+                    $this->info('Account Type: '.$userType);
+
+                    $invalid = false;
+                }
+            } catch (Exception $e) {
+                $this->error($e->getMessage());
+                $this->info('');
+                $this->error('Retrying...');
+            }
+        } while ($invalid);
     }
 
     private function changeUserRoles()
