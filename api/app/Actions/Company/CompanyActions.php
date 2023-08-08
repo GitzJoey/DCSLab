@@ -109,7 +109,7 @@ class CompanyActions
             $query = $query->whereIn('id', $companyIds);
            
             if (!empty($search)) {
-                $query = $query->where('name', 'like', '%'.$search.'%')->latest();
+                $query = $query->where('name', 'like', '%'.$search.'%');
             }
 
             if ($withTrashed) $query = $query->withTrashed();
