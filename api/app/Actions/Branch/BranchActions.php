@@ -94,11 +94,11 @@ class BranchActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -112,34 +112,37 @@ class BranchActions
                 return null;
             }
 
-            $branch = count($with) != 0 ? Branch::with($with) : Branch::with('company');
-            $branch = $branch->whereCompanyId($companyId);
+            $branch = count($with) != 0 ? Branch::with($with) : Branch::with(['company']);
 
-            if ($withTrashed) {
-                $branch = $branch->withTrashed();
-            }
+            $branch = $branch->whereCompanyId($companyId);
 
             if (empty($search)) {
                 $branch = $branch->latest();
             } else {
-                $branch = $branch->where('name', 'like', '%'.$search.'%')->latest();
+                $branch = $branch->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('address', 'like', '%'.$search.'%')
+                        ->orWhere('city', 'like', '%'.$search.'%');
+                }
+                )->latest();
+            }
+
+            if ($withTrashed) {
+                $branch = $branch->withTrashed();
             }
 
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
                 $page = is_numeric($page) ? abs($page) : 1;
 
-                $result = $branch->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $result = $branch->paginate(perPage: $perPage, page: $page);
             } else {
                 $result = $branch->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -147,7 +150,7 @@ class BranchActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 

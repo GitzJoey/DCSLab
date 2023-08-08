@@ -118,11 +118,11 @@ class CustomerActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -136,34 +136,38 @@ class CustomerActions
                 return null;
             }
 
-            $customer = count($with) != 0 ? Customer::with($with) : Customer::with('company', 'customerGroup', 'customerAddresses', 'user.profile');
+            $customer = count($with) != 0 ? Customer::with($with) : Customer::with(['company', 'customerGroup', 'customerAddresses']);
+
             $customer = $customer->whereCompanyId($companyId);
+
+            if (empty($search)) {
+                $customer = $customer->latest();
+            } else {
+                $customer = $customer->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('zone', 'like', '%'.$search.'%')
+                        ->orWhereHas('customerAddresses', function ($query) use ($search) {
+                            $query->where('address', 'like', '%'.$search.'%')
+                                ->orWhere('city', 'like', '%'.$search.'%');
+                        });
+                }
+                )->latest();
+            }
 
             if ($withTrashed) {
                 $customer = $customer->withTrashed();
             }
 
-            if (empty($search)) {
-                $customer = $customer->latest();
-            } else {
-                $customer = $customer->where('name', 'like', '%'.$search.'%')->latest();
-            }
-
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $customer->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $customer->paginate(abs($perPage));
             } else {
                 $result = $customer->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -171,7 +175,7 @@ class CustomerActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 

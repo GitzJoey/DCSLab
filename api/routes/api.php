@@ -251,5 +251,16 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
             Route::post('user/upload', [DashboardController::class, 'userUpload'])->name('.user.upload');
         });
 
+        Route::group(['prefix' => 'module', 'as' => '.module'], function () {
+            Route::group(['prefix' => 'profile', 'as' => '.profile'], function () {
+                Route::post('update/info', [ProfileController::class, 'updateProfile'])->name('.update.info');
+                Route::post('update/roles', [ProfileController::class, 'updateRoles'])->name('.update.roles');
+                Route::post('update/setting', [ProfileController::class, 'updateSettings'])->name('.update.setting');
+
+                Route::post('update/password', [ProfileController::class, 'changePassword'])->name('.update.password');
+
+                Route::post('send/verification', [ProfileController::class, 'sendEmailVerification'])->name('.send.email_verification');
+            });
+        });
     });
 });

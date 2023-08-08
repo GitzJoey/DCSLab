@@ -65,11 +65,11 @@ class UnitActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
-            $cacheKey = '';
+            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
-                $cacheKey = 'read_'.$companyId.'-'.$category.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
                 $cacheResult = $this->readFromCache($cacheKey);
 
                 if (! is_null($cacheResult)) {
@@ -79,11 +79,9 @@ class UnitActions
 
             $result = null;
 
-            if (count($with) != 0) {
-                $unit = Unit::with($with)->whereCompanyId($companyId);
-            } else {
-                $unit = Unit::whereCompanyId($companyId);
-            }
+            $unit = count($with) != 0 ? Unit::with($with) : Unit::with(['company']);
+
+            $unit = $unit->whereCompanyId($companyId);
 
             if ($category) {
                 switch ($category) {
@@ -96,31 +94,30 @@ class UnitActions
                 }
             }
 
+            if (empty($search)) {
+                $unit = $unit->latest();
+            } else {
+                $unit = $unit->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('category', 'like', '%'.$search.'%');
+                }
+                )->latest();
+            }
+
             if ($withTrashed) {
                 $unit = $unit->withTrashed();
             }
 
-            if (empty($search)) {
-                $unit = $unit->latest();
-            } else {
-                $unit = $unit->where('name', 'like', '%'.$search.'%')->latest();
-            }
-
             if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $unit->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $unit->paginate(abs($perPage));
             } else {
                 $result = $unit->get();
             }
 
-            if ($useCache) {
-                $this->saveToCache($cacheKey, $result);
-            }
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
 
             return $result;
         } catch (Exception $e) {
@@ -128,7 +125,7 @@ class UnitActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
