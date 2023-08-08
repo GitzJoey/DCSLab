@@ -97,7 +97,8 @@ class BranchActions
         $recordsCount = 0;
 
         try {
-            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheSearch = empty($search) ? '[empty]' : $search;
+            $cacheKey = 'readAny_'.$companyId.'_'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
                 $cacheResult = $this->readFromCache($cacheKey);
 
@@ -108,36 +109,33 @@ class BranchActions
 
             $result = null;
 
-            if (! $companyId) {
-                return null;
-            }
+            if (! $companyId) return null;
 
-            $branch = count($with) != 0 ? Branch::with($with) : Branch::with(['company']);
+            $relationship = ['company'];
+            $relationship = count($with) > 0 ? $with : $relationship;
+            $query = Branch::with($relationship);
 
-            $branch = $branch->whereCompanyId($companyId);
+            $query = $query->whereCompanyId($companyId);
 
-            if (empty($search)) {
-                $branch = $branch->latest();
-            } else {
-                $branch = $branch->where(function ($query) use ($search) {
+            if (!empty($search)) {                
+                $query = $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%'.$search.'%')
                         ->orWhere('address', 'like', '%'.$search.'%')
                         ->orWhere('city', 'like', '%'.$search.'%');
-                }
-                )->latest();
+                });
             }
 
-            if ($withTrashed) {
-                $branch = $branch->withTrashed();
-            }
+            if ($withTrashed) $query = $query->withTrashed();
+
+            $query = $query->latest();
 
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
                 $page = is_numeric($page) ? abs($page) : 1;
 
-                $result = $branch->paginate(perPage: $perPage, page: $page);
+                $result = $query ->paginate(perPage: $perPage, page: $page);
             } else {
-                $result = $branch->get();
+                $result = $query->get();
             }
 
             $recordsCount = $result->count();

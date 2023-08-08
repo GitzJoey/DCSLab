@@ -9,7 +9,7 @@ import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import { TitleLayout, TwoColumnsLayout } from "../../base-components/Form/FormLayout";
-import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../../base-components/Form";
+import { FormInput, FormInputCode, FormLabel, FormTextarea, FormSelect, FormSwitch } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import BranchService from "../../services/BranchService";
 import { Branch } from "../../types/models/Branch";
@@ -164,7 +164,7 @@ const emptyBranch = () => {
         default: false,
         status: ''
       },
-      code: '[AUTO]',
+      code: '',
       name: '',
       address: '',
       city: '',
@@ -456,8 +456,8 @@ watch(
                   </FormLabel>
                   <VeeField v-slot="{ field }" v-model="branchForm.data.code" name="code" rules="required|alpha_dash"
                     :label="t('views.branch.fields.code')">
-                    <FormInput id="code" v-bind="field" name="code" type="text"
-                      :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.branch.fields.code')" />
+                    <FormInputCode id="code" v-bind="field" name="code" type="text" :class="{ 'border-danger': errors['code'] }" 
+                      :placeholder="t('views.branch.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
                 </div>

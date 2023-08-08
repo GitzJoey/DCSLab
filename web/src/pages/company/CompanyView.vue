@@ -137,7 +137,7 @@ const emptyCompany = () => {
     data: {
       id: '',
       ulid: '',
-      code: '[AUTO]',
+      code: '',
       name: '',
       address: '',
       default: true,
