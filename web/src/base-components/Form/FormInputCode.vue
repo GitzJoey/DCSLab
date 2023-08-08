@@ -71,9 +71,10 @@ const localValue = computed({
 });
 
 onMounted(() => {
-  if(props.value) {
+  console.log(props.value, "<< ini")
+  if(props.value && props.value !== "_AUTO_") {
+    console.log("== masuk sini")
     isAuto.value = false
-    handleClickAutoButton()
   }
 })
 </script>
