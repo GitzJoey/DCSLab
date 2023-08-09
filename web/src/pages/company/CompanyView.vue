@@ -10,7 +10,6 @@ import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
 import { TitleLayout, TwoColumnsLayout } from "../../base-components/Form/FormLayout";
 import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch, FormInputCode } from "../../base-components/Form";
-import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch, FormInputCode } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
 import { Company } from "../../types/models/Company";
@@ -138,7 +137,7 @@ const emptyCompany = () => {
     data: {
       id: '',
       ulid: '',
-      code: '',
+      code: '_AUTO_',
       name: '',
       address: '',
       default: true,

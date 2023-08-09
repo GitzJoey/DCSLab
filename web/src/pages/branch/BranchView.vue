@@ -164,7 +164,7 @@ const emptyBranch = () => {
         default: false,
         status: ''
       },
-      code: '',
+      code: '_AUTO_',
       name: '',
       address: '',
       city: '',
