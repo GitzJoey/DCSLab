@@ -109,7 +109,9 @@ class BranchActions
 
             $result = null;
 
-            if (! $companyId) return null;
+            if (! $companyId) {
+                return null;
+            }
 
             $relationship = ['company'];
             $relationship = count($with) > 0 ? $with : $relationship;
@@ -117,7 +119,7 @@ class BranchActions
 
             $query = $query->whereCompanyId($companyId);
 
-            if (!empty($search)) {                
+            if (! empty($search)) {
                 $query = $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%'.$search.'%')
                         ->orWhere('address', 'like', '%'.$search.'%')
@@ -125,7 +127,9 @@ class BranchActions
                 });
             }
 
-            if ($withTrashed) $query = $query->withTrashed();
+            if ($withTrashed) {
+                $query = $query->withTrashed();
+            }
 
             $query = $query->latest();
 
@@ -133,7 +137,7 @@ class BranchActions
                 $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
                 $page = is_numeric($page) ? abs($page) : 1;
 
-                $result = $query ->paginate(perPage: $perPage, page: $page);
+                $result = $query->paginate(perPage: $perPage, page: $page);
             } else {
                 $result = $query->get();
             }

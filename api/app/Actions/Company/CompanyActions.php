@@ -102,17 +102,21 @@ class CompanyActions
             $relationship = ['branches'];
             $relationship = count($with) > 0 ? $with : $relationship;
             $query = Company::with($relationship);
-           
+
             $user = User::find($userId);
-            if (! $user) return null;
-            $companyIds = $user->companies()->pluck('company_id');            
+            if (! $user) {
+                return null;
+            }
+            $companyIds = $user->companies()->pluck('company_id');
             $query = $query->whereIn('id', $companyIds);
-           
-            if (!empty($search)) {
+
+            if (! empty($search)) {
                 $query = $query->where('name', 'like', '%'.$search.'%');
             }
 
-            if ($withTrashed) $query = $query->withTrashed();
+            if ($withTrashed) {
+                $query = $query->withTrashed();
+            }
 
             $query = $query->latest();
 
