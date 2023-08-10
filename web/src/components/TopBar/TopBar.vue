@@ -58,7 +58,6 @@ const switchLanguage = (lang: "en" | "id"): void => {
   switchLang(lang);
 }
 
-
 const loading = ref<boolean>(false);
 
 const showSlideover = ref(false);
