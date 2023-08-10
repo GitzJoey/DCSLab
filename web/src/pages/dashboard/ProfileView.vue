@@ -21,16 +21,22 @@ import posSystemImage from "../../assets/images/pos_system.png";
 import wareHouseImage from "../../assets/images/warehouse_system.png";
 import accountingImage from "../../assets/images/accounting_system.jpg";
 import { Check } from "lucide-vue-next";
-import { formatDate } from '../../utils/helper'
+import Button from "../../base-components/Button";
+import { formatDate } from "../../utils/helper";
+import RoleService from "../../services/RoleService";
+import ProfileService from "../../services/ProfileService";
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
 const userContextStore = useUserContextStore();
 type Roles = {
-  active : boolean,
-  images : string
-}
+  active: boolean;
+  images: string;
+  value: string;
+};
+const rolesServices = new RoleService();
+const profileServices = new ProfileService();
 //#endregion
 
 //#region Data - Pinia
@@ -49,18 +55,21 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
 
 const roles = ref<Array<Roles>>([
   {
-    images : posSystemImage,
-    active : false,
+    images: posSystemImage,
+    active: false,
+    value: "pos",
   },
   {
-    images : wareHouseImage,
-    active : false
+    images: wareHouseImage,
+    active: false,
+    value: "wh",
   },
   {
-    images : accountingImage,
-    active : false
-  }
-] )
+    images: accountingImage,
+    active: false,
+    value: "wh",
+  },
+]);
 //#endregion
 
 //#region Data - Views
@@ -82,14 +91,34 @@ const handleExpandCard = (index: number) => {
   }
 };
 
-function handleChangeRole(index:number) {
-  roles.value[index].active = !roles.value[index].active
-  for(let i = 0 ; i < roles.value.length ; i++) {
-    if(roles.value[index].active && i !== index) {
-      roles.value[i].active = false
-
+async function handleChangeRole(index: number) {
+  roles.value[index].active = !roles.value[index].active;
+  for (let i = 0; i < roles.value.length; i++) {
+    if (roles.value[index].active && i !== index) {
+      roles.value[i].active = false;
     }
   }
+
+  if (roles.value[index].active) {
+    const role = roles.value[index].value;
+    const resp = await rolesServices.Update(role);
+  }
+}
+
+async function handleUpdateAccountSettings() {
+  const payload = {
+    first_name: userContext.value.profile.first_name,
+    last_name: userContext.value.profile.last_name ,
+    address: userContext.value.profile.address,
+    city: userContext.value.profile.city,
+    postal_code: userContext.value.profile.postal_code,
+    country: userContext.value.profile.country,
+    tax_id: userContext.value.profile.tax_id,
+    ic_num: userContext.value.profile.ic_num,
+    remarks: userContext.value.profile.remarks,
+  };
+  const resp = await profileServices.updateProfile(payload);
+  console.log(resp, "<< ini ");
 }
 
 const onSubmit = async () => {
@@ -290,6 +319,20 @@ const onSubmit = async () => {
                   :placeholder="t('views.profile.fields.remarks')"
                 />
               </div>
+
+              <div class="flex gap-4">
+                <Button
+                  variant="primary"
+                  class="w-28 shadow-md"
+                  @click="handleUpdateAccountSettings"
+                >
+                  {{ t("components.buttons.submit") }}
+                </Button>
+
+                <Button variant="soft-secondary" class="w-28 shadow-md">
+                  {{ t("components.buttons.reset") }}
+                </Button>
+              </div>
             </div>
           </template>
 
@@ -378,7 +421,7 @@ const onSubmit = async () => {
                 <FormLabel html-for="time_format">
                   {{ t("views.profile.fields.settings.time_format") }}
                 </FormLabel>
-                <FormSelect  id="time_format" name="time_format">
+                <FormSelect id="time_format" name="time_format">
                   <option value="hh_mm_ss">
                     {{ formatDate(new Date().toString(), "HH:mm:ss") }}
                   </option>
@@ -394,21 +437,26 @@ const onSubmit = async () => {
             <div class="p-5">
               <div class="pb-4">
                 <div class="grid grid-cols-3 gap-2 place-items center">
-                  <div v-for="(item, index) in roles" :key="index" class="flex flex-col items-center">
-                    <div 
-                    @click="handleChangeRole(index)"
-                    class="cursor-pointer flex flex-col items-center justify-center">
-                      <img
-                        alt=""
-                        :src="item.images"
-                        width="100"
-                        height="100"
-  
-                      />
-                      <div v-if="item.active" class="grid grid-cols-1 place-items-center">
+                  <div
+                    v-for="(item, index) in roles"
+                    :key="index"
+                    class="flex flex-col items-center"
+                  >
+                    <div
+                      @click="handleChangeRole(index)"
+                      class="cursor-pointer flex flex-col items-center justify-center"
+                    >
+                      <img alt="" :src="item.images" width="100" height="100" />
+                      <div
+                        v-if="item.active"
+                        class="grid grid-cols-1 place-items-center"
+                      >
                         <Check class="text-success" />
                       </div>
-                      <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
+                      <button
+                        v-else
+                        class="btn btn-sm btn-secondary hover:btn-primary"
+                      >
                         {{ t("components.buttons.activate") }}
                       </button>
                     </div>

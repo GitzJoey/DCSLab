@@ -85,6 +85,7 @@ class CompanyActions
         bool $useCache = true
     ): Paginator|Collection {
         $timer_start = microtime(true);
+        $recordsCount = 0;
 
         try {
             $cacheKey = 'readAny_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
@@ -98,40 +99,37 @@ class CompanyActions
 
             $result = null;
 
-            $usr = User::find($userId);
-            if (! $usr) {
+            $relationship = ['branches'];
+            $relationship = count($with) > 0 ? $with : $relationship;
+            $query = Company::with($relationship);
+
+            $user = User::find($userId);
+            if (! $user) {
                 return null;
             }
+            $companyIds = $user->companies()->pluck('company_id');
+            $query = $query->whereIn('id', $companyIds);
 
-            $compIds = $usr->companies()->pluck('company_id');
-
-            if (count($with) != 0) {
-                $companies = Company::with($with)->whereIn('id', $compIds);
-            } else {
-                $companies = Company::with('branches')->whereIn('id', $compIds);
+            if (! empty($search)) {
+                $query = $query->where('name', 'like', '%'.$search.'%');
             }
 
             if ($withTrashed) {
-                $companies = $companies->withTrashed();
+                $query = $query->withTrashed();
             }
 
-            if (empty($search)) {
-                $companies = $companies->latest();
-            } else {
-                $companies = $companies->where('name', 'like', '%'.$search.'%')->latest();
-            }
+            $query = $query->latest();
 
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
                 $page = is_numeric($page) ? abs($page) : 1;
 
-                $result = $companies->paginate(
-                    perPage: $perPage,
-                    page: $page
-                );
+                $result = $query->paginate(perPage: $perPage, page: $page);
             } else {
-                $result = $companies->get();
+                $result = $query->get();
             }
+
+            $recordsCount = $result->count();
 
             $this->saveToCache($cacheKey, $result);
 
@@ -141,7 +139,7 @@ class CompanyActions
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
         }
     }
 
