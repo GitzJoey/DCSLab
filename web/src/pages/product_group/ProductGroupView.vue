@@ -13,6 +13,7 @@ import { FormInput, FormLabel, FormSelect } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import ProductGroupService from "../../services/ProductGroupService";
 import { ProductGroup } from "../../types/models/ProductGroup";
+import { ProductGroupFormFieldValues } from "../../types/requests/ProductGroupFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -21,7 +22,6 @@ import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { DropDownOption } from "../../types/services/DropDownOption";
 import { ProductGroupFormRequest } from "../../types/requests/ProductGroupFormRequest";
-import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
@@ -33,17 +33,11 @@ import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
 
 //#region Interfaces
-interface ProductGroupFormFieldValues {
-  code: string,
-  name: string,
-  category: string
-}
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
 const cacheServices = new CacheService();
-const dashboardServices = new DashboardService();
 const selectedUserStore = useSelectedUserLocationStore();
 const userLocation = computed(() => selectedUserStore.selectedUserLocation);
 const productGroupServices = new ProductGroupService();
@@ -57,6 +51,7 @@ const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
+  { title: 'Company Information', state: CardState.Expanded, },
   { title: 'ProductGroup Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
 ]);
@@ -81,7 +76,7 @@ const productGroupForm = ref<ProductGroupFormRequest>({
     },
     code: '',
     name: '',
-    category: 'PRODUCTS',
+    category: '',
   }
 });
 
@@ -118,6 +113,7 @@ onMounted(async () => {
 const getProductGroups = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {  
   loading.value = true;
 
+  
   let company_id = userLocation.value.company.id;  
 
   const searchReq: SearchRequest = {
@@ -140,9 +136,13 @@ const getProductGroups = async (search: string, refresh: boolean, paginate: bool
 }
 
 const getDDL = (): void => {
-  dashboardServices.getProductGroupCategoryDDL().then((result: Array<DropDownOption> | null) => {
+  productGroupServices.getProductGroupCategoryDDL().then((result: Array<DropDownOption> | null) => {
     productGroupCategoryDDL.value = result;
   });
+}
+
+const selectedCompanyId = () => {
+  return userLocation.value.company.id;
 }
 
 const emptyProductGroup = () => {
@@ -161,7 +161,7 @@ const emptyProductGroup = () => {
       },
       code: '',
       name: '',
-      category: 'PRODUCTS',
+      category: '',
     }
   }
 }
@@ -227,21 +227,11 @@ const onSubmit = async (values: ProductGroupFormFieldValues, actions: FormAction
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    let company_id = userLocation.value.company.id;
-    
-    result = await productGroupServices.create(
-      company_id, 
-      productGroupForm.value
-    );
+    result = await productGroupServices.create(values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
-    let product_group_ulid = productGroupForm.value.data.ulid;
-    let company_id = userLocation.value.company.id;
+    let productGroup_ulid = productGroupForm.value.data.ulid;
 
-    result = await productGroupServices.update(
-      product_group_ulid, 
-      company_id, 
-      productGroupForm.value
-    );
+    result = await productGroupServices.update( productGroup_ulid, values);
   } else {
     result.success = false;
   }
@@ -418,23 +408,36 @@ watch(
             <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
-                  <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
-                    {{ t('views.product_group.fields.code') }}
-                  </FormLabel>
-                  <VeeField v-slot="{ field }" name="code" rules="required|alpha_num"
-                    :label="t('views.product_group.fields.code')">
-                    <FormInput id="code" v-model="productGroupForm.data.code" v-bind="field" name="code" type="text"
-                      :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.product_group.fields.code')" />
+                  <label for="code" class="block bold font-semibold">{{ t('views.company.fields.name') }}</label>
+                  <div class="flex-1">{{ userLocation.company.name }}</div>
+                </div>
+              </div>
+            </template>
+            <template #card-items-1>
+              <div class="p-5">
+                <div class="pb-4">
+                  <VeeField v-slot="{ field }" :value=selectedCompanyId() name="company_id">
+                    <FormInput id="company_id" name="company_id" type="hidden" v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="code" class="mt-2 text-danger" />
+                  <div class="pb-4">
+                    <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
+                      {{ t('views.product_group.fields.code') }}
+                    </FormLabel>
+                    <VeeField v-slot="{ field }" v-model="productGroupForm.data.code" name="code" rules="required|alpha_dash"
+                      :label="t('views.product_group.fields.code')">
+                      <FormInput id="code" v-bind="field" name="code" type="text"
+                        :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.product_group.fields.code')" />
+                    </VeeField>
+                    <VeeErrorMessage name="code" class="mt-2 text-danger" />
+                  </div>
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.product_group.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required"
+                  <VeeField v-slot="{ field }" v-model="productGroupForm.data.name" name="name" rules="required"
                     :label="t('views.product_group.fields.name')">
-                    <FormInput id="name" v-model="productGroupForm.data.name" v-bind="field" name="name" type="text"
+                    <FormInput id="name" v-bind="field" name="name" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.product_group.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />

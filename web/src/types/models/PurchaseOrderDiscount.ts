@@ -7,7 +7,7 @@ export interface PurchaseOrderDiscount {
     ulid: string,
     company: Company,
     branch: Branch,
-    purchase_order: PurchaseOrder,
+    purchase_order?: PurchaseOrder | null,
     discount_type: string,
     amount: number,
 }

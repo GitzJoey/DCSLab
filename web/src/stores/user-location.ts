@@ -4,6 +4,7 @@ export interface SelectedUserLocation {
     company: {
         id: string,
         ulid: string,
+        code: string,
         name: string,
     },
     branch: {
@@ -23,6 +24,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             company: {
                 id: '',
                 ulid: '',
+                code: '',
                 name: '',
             },
             branch: {
@@ -69,14 +71,15 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
     },
     actions: {
         clearSelectedUserLocation() {
-            this.selectedUserLocation.company = { id: '', ulid: '', name: '' };
+            this.selectedUserLocation.company = { id: '', ulid: '', code: '', name: ''  };
             this.selectedUserLocation.branch = { id: '', ulid: '', name: '' };
         },
-        setSelectedUserLocation(companyId: string, companyUlid: string, companyName: string, branchId: string, branchUlid: string, branchName: string) {
+        setSelectedUserLocation(companyId: string, companyUlid: string,  companyCode: string, companyName: string, branchId: string, branchUlid: string, branchName: string) {
             this.clearSelectedUserLocation();
 
             this.selectedUserLocation.company.id = companyId;
             this.selectedUserLocation.company.ulid = companyUlid;
+            this.selectedUserLocation.company.code = companyCode;
             this.selectedUserLocation.company.name = companyName;
 
             this.selectedUserLocation.branch.id = branchId;

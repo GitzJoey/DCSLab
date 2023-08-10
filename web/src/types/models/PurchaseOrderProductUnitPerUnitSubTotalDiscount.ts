@@ -6,10 +6,10 @@ import { PurchaseOrderProductUnit } from "./PurchaseOrderProductUnit"
 export interface PurchaseOrderProductUnitPerUnitSubTotalDiscount {
     id: string,
     ulid: string,
-    company: Company,
-    branch: Branch,
-    purchase_order: PurchaseOrder,
-    purchase_order_product_unit: PurchaseOrderProductUnit,
+    company: Array<Company>,
+    branch: Array<Branch>,
+    purchase_order: Array<PurchaseOrder>,
+    purchase_order_product_unit: Array<PurchaseOrderProductUnit>,
     discount_type: string,
     amount: number,
 }

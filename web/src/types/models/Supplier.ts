@@ -18,7 +18,7 @@ export interface Supplier {
     remarks: string,
     status: string,
     supplier_pic: User,
-    supplier_products: Array<SupplierProduct>,
-    selected_products: Array<string>,
-    main_products: Array<string>,
+    supplier_products: SupplierProduct,
+    selected_products: string,
+    main_products: string,
 }

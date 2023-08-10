@@ -6,7 +6,7 @@ export interface ProductUnit {
     id: string,
     ulid: string,
     company: Company,
-    product: Product,
+    product?: Product | null,    
     code: string,
     unit: Unit,
     is_base: boolean,

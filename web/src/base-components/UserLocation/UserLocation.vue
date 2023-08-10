@@ -54,7 +54,7 @@ const setNewUserLocation = (companyId: string, branchId: string) => {
   let branch = branchId == '' ? _.find(company.branches, { is_main: true }) : _.find(company.branches, { id: branchId });
 
   if (branch) {
-    selectedUserStore.setSelectedUserLocation(company.id, company.ulid, company.name, branch.id, branch.ulid, branch.name);
+    selectedUserStore.setSelectedUserLocation(company.id, company.ulid, company.code, company.name, branch.id, branch.ulid, branch.name);
   }
 }
 </script>

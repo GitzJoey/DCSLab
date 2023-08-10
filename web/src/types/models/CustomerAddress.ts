@@ -3,8 +3,8 @@ import { Customer } from "./Customer"
 
 export interface CustomerAddress {
     ulid: string,
-    company: Company,
-    customer: Customer,
+    company: Array<Company>,
+    customer: Array<Customer>,
     address: string,
     city: string,
     contact: string,

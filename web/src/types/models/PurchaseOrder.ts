@@ -14,8 +14,8 @@ export interface PurchaseOrder {
     shipping_date: string,
     shipping_address: string,
     supplier: Supplier,
-    global_discounts: Array<PurchaseOrderDiscount>,
-    product_units: Array<PurchaseOrderProductUnit>,
+    global_discounts: PurchaseOrderDiscount,
+    product_units: PurchaseOrderProductUnit,
     remarks: string,
     status: string,
 }

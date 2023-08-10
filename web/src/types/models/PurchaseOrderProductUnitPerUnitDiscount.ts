@@ -8,8 +8,8 @@ export interface PurchaseOrderProductUnitPerUnitDiscount {
     ulid: string,
     company: Company,
     branch: Branch,
-    purchase_order: PurchaseOrder,
-    purchase_order_product_unit: PurchaseOrderProductUnit,
+    purchase_order?: Array<PurchaseOrder | null>,
+    purchase_order_product_unit: Array<PurchaseOrderProductUnit>,
     discount_type: string,
     amount: number,
 }

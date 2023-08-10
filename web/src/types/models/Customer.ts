@@ -6,11 +6,11 @@ import { User } from "./User"
 export interface Customer {
     id: string,
     ulid: string,
-    company: Company,
+    company: Array<Company>,
     code: string,
     name: string,
     is_member: boolean,
-    customer_group: CustomerGroup,
+    customer_group: Array<CustomerGroup>,
     zone: string,
     customer_addresses: Array<CustomerAddress>,
     max_open_invoice: number,
@@ -22,5 +22,5 @@ export interface Customer {
     taxable_enterprise: boolean,
     remarks: string,
     status: string,
-    customer_pic: User
+    customer_pic: Array<User>
 }

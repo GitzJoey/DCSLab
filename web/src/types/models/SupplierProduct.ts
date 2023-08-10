@@ -5,8 +5,8 @@ import { Product } from "./Product"
 export interface SupplierProduct {
     id: string,
     ulid: string,
-    company: Company,
-    supplier: Supplier,
-    product: Product,
+    company: Array<Company>,
+    supplier: Array<Supplier>,
+    product: Array<Product>,
     main_product: boolean,
 }

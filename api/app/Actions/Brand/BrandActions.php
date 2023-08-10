@@ -64,7 +64,8 @@ class BrandActions
         $recordsCount = 0;
 
         try {
-            $cacheKey = 'readAny_'.$companyId.'_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheSearch = empty($search) ? '[empty]' : $search;
+            $cacheKey = 'readAny_'.$companyId.'_'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
             if ($useCache) {
                 $cacheResult = $this->readFromCache($cacheKey);
 
@@ -79,28 +80,27 @@ class BrandActions
                 return null;
             }
 
-            $brand = count($with) != 0 ? Brand::with($with) : Brand::with(['company']);
+            $relationship = ['company'];
+            $relationship = count($with) > 0 ? $with : $relationship;
+            $query = Brand::with($relationship);
 
-            $brand = $brand->whereCompanyId($companyId);
+            $query = $query->whereCompanyId($companyId);
 
-            if (empty($search)) {
-                $brand = $brand->latest();
-            } else {
-                $brand = $brand->where(function ($query) use ($search) {
+            if (! empty($search)) {
+                $query = $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%'.$search.'%');
-                }
-                )->latest();
+                });
             }
 
             if ($withTrashed) {
-                $brand = $brand->withTrashed();
+                $query = $query->withTrashed();
             }
 
             if ($paginate) {
                 $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $brand->paginate(abs($perPage));
+                $result = $query->paginate(abs($perPage));
             } else {
-                $result = $brand->get();
+                $result = $query->get();
             }
 
             $recordsCount = $result->count();

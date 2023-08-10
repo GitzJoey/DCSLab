@@ -53,6 +53,7 @@ const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
+  { title: 'Company Information', state: CardState.Expanded, },
   { title: 'Branch Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
 ]);
@@ -446,6 +447,14 @@ watch(
           <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
+              <div class="p-5">
+                <div class="pb-4">
+                  <label for="code" class="block bold font-semibold">{{ t('views.company.fields.name') }}</label>
+                  <div class="flex-1">{{ userLocation.company.name }}</div>
+                </div>
+              </div>
+            </template>
+            <template #card-items-1>
               <div class="p-5">
                 <VeeField v-slot="{ field }" :value=selectedCompanyId() name="company_id">                  
                   <FormInput id="company_id" name="company_id" type="hidden" v-bind="field" />

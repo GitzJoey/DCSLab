@@ -13,6 +13,7 @@ import { FormInput, FormLabel } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import BrandService from "../../services/BrandService";
 import { Brand } from "../../types/models/Brand";
+import { BrandFormFieldValues } from "../../types/requests/BrandFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -20,7 +21,6 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
  import { BrandFormRequest } from "../../types/requests/BrandFormRequest";
-import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
@@ -32,16 +32,11 @@ import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
 
 //#region Interfaces
-interface BrandFormFieldValues {
-  code: string,
-  name: string
-}
 //#endregion
 
 //#region Declarations
 const { t } = useI18n();
 const cacheServices = new CacheService();
-const dashboardServices = new DashboardService();
 const selectedUserStore = useSelectedUserLocationStore();
 const userLocation = computed(() => selectedUserStore.selectedUserLocation);
 const brandServices = new BrandService();
@@ -55,6 +50,7 @@ const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
+  { title: 'Company Information', state: CardState.Expanded, },
   { title: 'Brand Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
 ]);
@@ -114,6 +110,7 @@ onMounted(async () => {
 const getBrands = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {  
   loading.value = true;
 
+  
   let company_id = userLocation.value.company.id;  
 
   const searchReq: SearchRequest = {
@@ -137,6 +134,10 @@ const getBrands = async (search: string, refresh: boolean, paginate: boolean, pa
 
 const getDDL = (): void => {
 
+}
+
+const selectedCompanyId = () => {
+  return userLocation.value.company.id;
 }
 
 const emptyBrand = () => {
@@ -220,21 +221,11 @@ const onSubmit = async (values: BrandFormFieldValues, actions: FormActions<Brand
   }
 
   if (mode.value == ViewMode.FORM_CREATE) {
-    let company_id = userLocation.value.company.id;
-    
-    result = await brandServices.create(
-      company_id, 
-      brandForm.value
-    );
+    result = await brandServices.create(values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
     let brand_ulid = brandForm.value.data.ulid;
-    let company_id = userLocation.value.company.id;
 
-    result = await brandServices.update(
-      brand_ulid, 
-      company_id, 
-      brandForm.value
-    );
+    result = await brandServices.update( brand_ulid, values);
   } else {
     result.success = false;
   }
@@ -258,8 +249,6 @@ const backToList = async () => {
 
   loading.value = false;
 }
-
-
 //#endregion
 
 //#region Computed
@@ -395,23 +384,36 @@ watch(
             <template #card-items-0>
               <div class="p-5">
                 <div class="pb-4">
-                  <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
-                    {{ t('views.brand.fields.code') }}
-                  </FormLabel>
-                  <VeeField v-slot="{ field }" name="code" rules="required|alpha_num"
-                    :label="t('views.brand.fields.code')">
-                    <FormInput id="code" v-model="brandForm.data.code" v-bind="field" name="code" type="text"
-                      :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.brand.fields.code')" />
+                  <label for="code" class="block bold font-semibold">{{ t('views.company.fields.name') }}</label>
+                  <div class="flex-1">{{ userLocation.company.name }}</div>
+                </div>
+              </div>
+            </template>
+            <template #card-items-1>
+              <div class="p-5">
+                <div class="pb-4">
+                  <VeeField v-slot="{ field }" :value=selectedCompanyId() name="company_id">
+                    <FormInput id="company_id" name="company_id" type="hidden" v-bind="field" />
                   </VeeField>
-                  <VeeErrorMessage name="code" class="mt-2 text-danger" />
+                  <div class="pb-4">
+                    <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
+                      {{ t('views.brand.fields.code') }}
+                    </FormLabel>
+                    <VeeField v-slot="{ field }" v-model="brandForm.data.code" name="code" rules="required|alpha_dash"
+                      :label="t('views.brand.fields.code')">
+                      <FormInput id="code" v-bind="field" name="code" type="text"
+                        :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.brand.fields.code')" />
+                    </VeeField>
+                    <VeeErrorMessage name="code" class="mt-2 text-danger" />
+                  </div>
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.brand.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" name="name" rules="required"
+                  <VeeField v-slot="{ field }" v-model="brandForm.data.name" name="name" rules="required"
                     :label="t('views.brand.fields.name')">
-                    <FormInput id="name" v-model="brandForm.data.name" v-bind="field" name="name" type="text"
+                    <FormInput id="name" v-bind="field" name="name" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.brand.fields.name')" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />

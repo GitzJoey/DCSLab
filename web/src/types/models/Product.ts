@@ -6,11 +6,12 @@ import { ProductUnit } from "./ProductUnit"
 export interface Product {
     id: string,
     ulid: string,
-    company: Company,
+    company?: Company | null,
+    code: string,
     product_group: ProductGroup,
     brand: Brand,
-    code: string,
     name: string,
+    product_units?: Array<ProductUnit | null>,
     product_type: string,
     taxable_supply: string,
     standard_rated_supply: number,
@@ -20,5 +21,4 @@ export interface Product {
     has_expiry_date: boolean,
     status: string,
     remarks: string,
-    product_units: Array<ProductUnit>,
 }
