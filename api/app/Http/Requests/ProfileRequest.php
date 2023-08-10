@@ -52,7 +52,7 @@ class ProfileRequest extends FormRequest
                     'last_name' => 'nullable',
                     'address' => 'nullable',
                     'city' => 'nullable',
-                    'postal_code' => 'numeric|max:10',
+                    'postal_code' => 'numeric|max:6',
                     'country' => 'nullable',
                     'tax_id' => 'required',
                     'ic_num' => 'required',
