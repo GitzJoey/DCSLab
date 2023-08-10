@@ -130,8 +130,7 @@ export default class BranchService {
             const url = route('api.post.db.company.branch.edit', ulid, false, this.ziggyRoute);        
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
 
-            const response: AxiosResponse<Branch> = await axios.post(
-                url, payload);
+            const response: AxiosResponse<Branch> = await axios.post(url, payload);
             
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
