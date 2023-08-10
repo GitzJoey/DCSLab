@@ -36,6 +36,20 @@ class ProfileController extends BaseController
         }
     }
 
+    public function updateUser(ProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
+
+        $userArr = [
+            'name' => $request['name'],
+        ];
+
+        $result = $this->userActions->updateUser($user, $userArr, true);
+
+        return ! $result ? response()->error() : response()->success();
+    }
+
     public function updateProfile(ProfileRequest $profileRequest)
     {
         $request = $profileRequest->validated();
