@@ -399,7 +399,7 @@ watch(
         </DataList>
       </div>
       <div v-else>
-        <VeeForm id="companyForm" v-slot="{ errors }" @submit="onSubmit">
+        <VeeForm id="companyForm" v-slot="{ errors, handleReset }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
@@ -469,7 +469,7 @@ watch(
                 <Button type="submit" href="#" variant="primary" class="w-28 shadow-md">
                   {{ t("components.buttons.submit") }}
                 </Button>
-                <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
+                <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="handleReset">
                   {{ t("components.buttons.reset") }}
                 </Button>
               </div>
