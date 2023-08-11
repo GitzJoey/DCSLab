@@ -24,6 +24,18 @@ class UserController extends BaseController
 
     public function readAny(UserRequest $userRequest)
     {
+        //Throw Error
+        //throw New \Exception('Test Exception From Controller');
+
+        //Throw Empty Response Error (HttpStatus 500)
+        //return response()->error();
+
+        //Custom Validation Error 1 Message (HttpStatus 422)
+        //return response()->error('Custom Validation Error 1 Message', 422);
+
+        //Custom Validation With Multiple Error (HttpStatus 422)
+        //return response()->error(['search' => ['Custom Validation With Multiple Error 1'], 'search' => ['Custom Validation With Multiple Error 2']], 422);
+
         $request = $userRequest->validated();
 
         $search = $request['search'];

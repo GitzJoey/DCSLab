@@ -56,8 +56,6 @@ export default class UserService {
             success: false,
         }
 
-        let response: AxiosResponse<Collection<Array<User>>> | null = null;
-
         try {
             const queryParams: Record<string, string | number | boolean> = {};
             queryParams['search'] = args.search ? args.search : '';
@@ -72,7 +70,7 @@ export default class UserService {
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            response = await axios.get(url);
+            const response: AxiosResponse<Collection<Array<User>>> = await axios.get(url);
 
             //Slow API Call (10 seconds Delay)
             /*
@@ -92,8 +90,8 @@ export default class UserService {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
             } else if (isAxiosError(e)) {
-                if (response != null) {
-                    switch (response.status) {
+                if (e.response) {
+                    switch (e.response.status) {
                         case StatusCode.UnprocessableEntity:
                             return this.errorHandlerService.generateAxiosValidationErrorServiceResponse(e as AxiosError);
                         default:
