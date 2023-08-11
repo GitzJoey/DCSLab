@@ -29,7 +29,7 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import RoleService from "../../services/RoleService";
-import { DropDownOption } from "../../types/services/DropDownOption";
+import { DropDownOption } from "../../types/models/DropDownOption";
 import { UserFormRequest } from "../../types/requests/UserFormRequest";
 import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
@@ -37,8 +37,6 @@ import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
-import { LaravelError } from "../../types/errors/LaravelError";
-import { VeeValidateError } from "../../types/errors/VeeValidateError";
 import { FormActions } from "vee-validate";
 //#endregion
 
@@ -59,7 +57,7 @@ const cacheServices = new CacheService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
+const datalistErrors = ref<Record<string, string> | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'User Information', state: CardState.Expanded, },
   { title: 'User Profile', state: CardState.Expanded },
@@ -154,7 +152,7 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   if (result.success && result.data) {
     userLists.value = result.data as Collection<Array<User>>;
   } else {
-    datalistErrors.value = result.errors as LaravelError;
+    datalistErrors.value = result.errors as Record<string, string>;
   }
 
   loading.value = false;

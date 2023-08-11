@@ -3,12 +3,10 @@ import { toRef, computed } from "vue";
 import Alert from "../Alert";
 import Lucide from "../Lucide";
 import { useI18n } from "vue-i18n";
-import { LaravelError } from "../../types/errors/LaravelError";
-import { VeeValidateError } from "../../types/errors/VeeValidateError";
 
 export interface AlertPlaceholderProps {
     alertType: string,
-    errors: LaravelError | VeeValidateError | null,
+    errors: Record<string, string> | null,
     title: string,
 }
 
@@ -48,8 +46,6 @@ const computedVariant = computed(() => {
                     <ul class="list-disc">
                         <template v-for="(e, eIdx) in errors" :key="eIdx">
                             <li v-if="(typeof e === 'string')">{{ e }}</li>
-                            <li v-for="(ee, eeIdx) in e" v-else-if="(typeof e === 'object' && Array.isArray(e))"
-                                :key="eeIdx" class="ml-5">{{ ee }}</li>
                         </template>
                     </ul>
                 </div>

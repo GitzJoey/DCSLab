@@ -20,15 +20,13 @@ import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
-import { DropDownOption } from "../../types/services/DropDownOption";
+import { DropDownOption } from "../../types/models/DropDownOption";
 import { CompanyFormRequest } from "../../types/requests/CompanyFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
-import { LaravelError } from "../../types/errors/LaravelError";
-import { VeeValidateError } from "../../types/errors/VeeValidateError";
 import { FormActions } from "vee-validate";
 //#endregion
 
@@ -49,7 +47,7 @@ const companyServices = new CompanyService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
+const datalistErrors = ref<Record<string, string> | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Company Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
@@ -120,7 +118,7 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   if (result.success && result.data) {
     companyLists.value = result.data as Collection<Array<Company>>;
   } else {
-    datalistErrors.value = result.errors as LaravelError;
+    datalistErrors.value = result.errors as Record<string, string>;
   }
 
   loading.value = false;

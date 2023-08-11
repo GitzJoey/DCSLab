@@ -25,6 +25,7 @@ class ProfileRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
 
         switch ($currentRouteMethod) {
+            case 'updateUser':
             case 'updateProfile':
             case 'updateRoles':
             case 'updateSettings':
@@ -45,9 +46,12 @@ class ProfileRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
 
         switch ($currentRouteMethod) {
-            case 'updateProfile':
+            case 'updateUser':
                 return [
                     'name' => 'nullable',
+                ];
+            case 'updateProfile':
+                return [
                     'first_name' => 'nullable',
                     'last_name' => 'nullable',
                     'address' => 'nullable',

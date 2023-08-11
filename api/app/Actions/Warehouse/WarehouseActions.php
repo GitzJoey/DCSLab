@@ -88,13 +88,13 @@ class WarehouseActions
             $warehouse = $warehouse->whereCompanyId($companyId);
 
             if (empty($search)) {
-                $warehouse =$warehouse->latest();
+                $warehouse = $warehouse->latest();
             } else {
                 $warehouse = $warehouse->where(function ($query) use ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('name', 'like', '%'.$search.'%')
-                              ->orWhere('address', 'like', '%'.$search.'%')
-                              ->orWhere('city', 'like', '%'.$search.'%');
+                            ->orWhere('address', 'like', '%'.$search.'%')
+                            ->orWhere('city', 'like', '%'.$search.'%');
                     });
                 }
                 )->latest();
