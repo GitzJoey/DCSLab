@@ -66,6 +66,17 @@ class UserRequest extends FormRequest
         ];
 
         if ($this->route()->getActionMethod() == 'readAny') {
+            //Validation Error
+            /*
+            $rules_read_any = [
+                'search' => ['required'],
+                'paginate' => ['required', 'boolean'],
+                'page' => ['required_if:paginate,true', 'numeric'],
+                'per_page' => ['required_if:paginate,true', 'numeric'],
+                'refresh' => ['nullable', 'boolean'],
+            ];
+            */
+
             $rules_read_any = [
                 'search' => ['present', 'string'],
                 'paginate' => ['required', 'boolean'],
