@@ -66,6 +66,27 @@ class UserRequest extends FormRequest
         ];
 
         if ($this->route()->getActionMethod() == 'readAny') {
+            //Validation Error
+            /*
+            $rules_read_any = [
+                'search' => ['present', 'string', 'min:255'],
+                'paginate' => ['required', 'boolean'],
+                'page' => ['required_if:paginate,true', 'numeric'],
+                'per_page' => ['required_if:paginate,true', 'numeric'],
+                'refresh' => ['nullable', 'boolean'],
+            ];
+            */
+
+            //Multiple Validation Error In Same Fields
+            /*
+            $rules_read_any = [
+                'search' => ['present', 'string', 'min:255', 'email'],
+                'paginate' => ['required', 'boolean'],
+                'page' => ['required_if:paginate,true', 'numeric'],
+                'per_page' => ['required_if:paginate,true', 'numeric'],
+                'refresh' => ['nullable', 'boolean'],
+            ];
+            */
             $rules_read_any = [
                 'search' => ['present', 'string'],
                 'paginate' => ['required', 'boolean'],
