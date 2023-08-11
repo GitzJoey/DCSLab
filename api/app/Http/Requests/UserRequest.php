@@ -87,6 +87,7 @@ class UserRequest extends FormRequest
                 'refresh' => ['nullable', 'boolean'],
             ];
             */
+
             $rules_read_any = [
                 'search' => ['present', 'string'],
                 'paginate' => ['required', 'boolean'],
