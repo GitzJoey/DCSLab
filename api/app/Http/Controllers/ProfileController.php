@@ -88,13 +88,13 @@ class ProfileController extends BaseController
         $usr = Auth::user();
         $settings = [
             'PREFS.THEME' => $request['theme'],
-            'PREFS.DATE_FORMAT' => $request['dateFormat'],
-            'PREFS.TIME_FORMAT' => $request['timeFormat'],
+            'PREFS.DATE_FORMAT' => $request['date_format'],
+            'PREFS.TIME_FORMAT' => $request['time_format'],
         ];
 
         $result = $this->userActions->updateSettings($usr, $settings, true);
 
-        if (array_key_exists('apiToken', $request)) {
+        if (array_key_exists('api_token', $request)) {
             $this->userActions->resetTokens($usr->id);
         }
 
