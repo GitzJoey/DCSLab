@@ -13,12 +13,32 @@ export default class ErrorHandlerService {
         return result;
     }
 
+    public generateAxiosValidationErrorServiceResponse(axiosErr: AxiosError): ServiceResponse<null> {
+        const result: ServiceResponse<null> = {
+            success: false,
+        }
+
+        const axiosResp = axiosErr.response as AxiosResponse;
+
+        const keys = Object.keys(axiosResp.data.errors);
+        for (const key of keys) {
+            if (result.errors == undefined) {
+                result.errors = {};
+            }
+
+            result.errors[key] = axiosResp.data.errors[key][0];
+        }
+
+        return result;
+    }
+
     public generateAxiosErrorServiceResponse(axiosErr: AxiosError): ServiceResponse<null> {
         const axiosResp = axiosErr.response as AxiosResponse;
+
         const result: ServiceResponse<null> = {
             success: false,
             errors: {
-                axios: axiosResp.status + ':' + axiosResp.statusText + ' - ' + axiosResp.data.message + '(' + axiosResp.data.errors + ')'
+                axios: axiosResp.data.message + ' (' + axiosResp.status + ':' + axiosResp.statusText + ')'
             }
         }
 

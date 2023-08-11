@@ -9,6 +9,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchRequest } from "../types/requests/SearchRequest";
 import { UserFormFieldValues } from "../types/requests/UserFormFieldValues";
+import { StatusCode } from "../types/enums/StatusCode";
 
 export default class UserService {
     private ziggyRoute: Config;
@@ -55,6 +56,8 @@ export default class UserService {
             success: false,
         }
 
+        let response: AxiosResponse<Collection<Array<User>>> | null = null;
+
         try {
             const queryParams: Record<string, string | number | boolean> = {};
             queryParams['search'] = args.search ? args.search : '';
@@ -69,7 +72,7 @@ export default class UserService {
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Collection<Array<User>>> = await axios.get(url);
+            response = await axios.get(url);
 
             //Slow API Call (10 seconds Delay)
             /*
@@ -79,15 +82,26 @@ export default class UserService {
             console.log('Slow API Call (10 Seconds Delay)');
             */
 
-            result.success = true;
-            result.data = response.data;
+            if (response != null) {
+                result.success = true;
+                result.data = response.data;
+            }
 
             return result;
         } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
             } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+                if (response != null) {
+                    switch (response.status) {
+                        case StatusCode.UnprocessableEntity:
+                            return this.errorHandlerService.generateAxiosValidationErrorServiceResponse(e as AxiosError);
+                        default:
+                            return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+                    }
+                } else {
+                    return result;
+                }
             } else {
                 return result;
             }
@@ -126,7 +140,7 @@ export default class UserService {
             success: false,
         }
 
-        try {            
+        try {
             const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

@@ -69,7 +69,7 @@ class UserRequest extends FormRequest
             //Validation Error
             /*
             $rules_read_any = [
-                'search' => ['present', 'string', 'min:255'],
+                'search' => ['required'],
                 'paginate' => ['required', 'boolean'],
                 'page' => ['required_if:paginate,true', 'numeric'],
                 'per_page' => ['required_if:paginate,true', 'numeric'],
