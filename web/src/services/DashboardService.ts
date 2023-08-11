@@ -1,4 +1,4 @@
-import axios, { authAxiosInstance, axiosInstance } from "../axios";
+import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
@@ -8,7 +8,7 @@ import { UserProfile } from "../types/models/UserProfile";
 import { Menu as sMenu } from "../stores/side-menu";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { Resource } from "../types/resources/Resource";
-import { DropDownOption } from "../types/services/DropDownOption";
+import { DropDownOption } from "../types/models/DropDownOption";
 
 export default class DashboardService {
     private ziggyRoute: Config;
@@ -149,27 +149,57 @@ export default class DashboardService {
         }
     }
 
-    public async uploadFile(file : any) : Promise<any> {
-        const result: ServiceResponse<Config> | null = {
-            success : false
+    public async uploadFile(file: File): Promise<ServiceResponse<string>> {
+        const result: ServiceResponse<string> | null = {
+            success: false
         }
 
         try {
+            const formData = new FormData()
+            formData.append('file', file)
+
             const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute)
+
+            axios.defaults.headers.common['Content-Type'] = "multipart/form-data"
+
+            const data = await axios.post(url, formData);
+
             const data = await authAxiosInstance.post(url, {
                 file : file
             })
             console.log(data)
             return {
-                success : true,
-                statusCode : data.status,
-                data : data.data
+                success: true,
+                data: data.data
             }
-        } catch (error) {
-            
+        } catch (e: unknown) {
+            return result;
         }
+    }
 
-        return 
+    public async getProductTypeDDL(): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'productTypeDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.product.common.read.product.type', undefined, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
+        }
     }
 
     public async getProductTypeDDL(): Promise<Array<DropDownOption> | null> {

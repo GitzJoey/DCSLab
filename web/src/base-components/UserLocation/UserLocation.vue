@@ -11,10 +11,10 @@ import _ from "lodash";
 const { t } = useI18n();
 
 const userContextStore = useUserContextStore();
-const selectedUserStore = useSelectedUserLocationStore();
+const selectedUserLocationStore = useSelectedUserLocationStore();
 
 const userContext = computed(() => userContextStore.userContext);
-const userLocation = computed(() => selectedUserStore.selectedUserLocation);
+const userLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
 const userLocationText = computed(() => {
   let result = '';
@@ -43,7 +43,7 @@ const userLocationLength = computed((): number => {
 });
 
 onMounted(() => {
-  selectedUserStore.getSelectedUserLocation;
+  selectedUserLocationStore.getSelectedUserLocation;
 });
 
 const setNewUserLocation = (companyId: string, branchId: string) => {
@@ -54,7 +54,7 @@ const setNewUserLocation = (companyId: string, branchId: string) => {
   let branch = branchId == '' ? _.find(company.branches, { is_main: true }) : _.find(company.branches, { id: branchId });
 
   if (branch) {
-    selectedUserStore.setSelectedUserLocation(company.id, company.ulid, company.code, company.name, branch.id, branch.ulid, branch.name);
+    selectedUserLocationStore.setSelectedUserLocation(company.id, company.ulid, company.name, branch.id, branch.ulid, branch.name);
   }
 }
 </script>

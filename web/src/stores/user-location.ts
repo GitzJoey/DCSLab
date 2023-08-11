@@ -39,7 +39,8 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
 
             if (serializedSelectedUserLocation) {
-                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(atob(serializedSelectedUserLocation));
+                const debug = import.meta.env.VITE_APP_DEBUG === 'true';
+                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(debug ? serializedSelectedUserLocation : atob(serializedSelectedUserLocation));
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
             }
@@ -50,7 +51,8 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
 
             if (serializedSelectedUserLocation) {
-                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(atob(serializedSelectedUserLocation));
+                const debug = import.meta.env.VITE_APP_DEBUG === 'true';
+                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(debug ? serializedSelectedUserLocation : atob(serializedSelectedUserLocation));
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
             }
@@ -61,7 +63,8 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
 
             if (serializedSelectedUserLocation) {
-                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(atob(serializedSelectedUserLocation));
+                const debug = import.meta.env.VITE_APP_DEBUG === 'true';
+                const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(debug ? serializedSelectedUserLocation : atob(serializedSelectedUserLocation));
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
             }
@@ -86,7 +89,8 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             this.selectedUserLocation.branch.ulid = branchUlid;
             this.selectedUserLocation.branch.name = branchName;
 
-            sessionStorage.setItem('selectedUserLocation', btoa(JSON.stringify(this.selectedUserLocation)));
+            const debug = import.meta.env.VITE_APP_DEBUG === 'true';
+            sessionStorage.setItem('selectedUserLocation', debug ? JSON.stringify(this.selectedUserLocation) : btoa(JSON.stringify(this.selectedUserLocation)));
         }
     },
 });

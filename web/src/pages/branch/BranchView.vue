@@ -20,15 +20,13 @@ import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
-import { DropDownOption } from "../../types/services/DropDownOption";
+import { DropDownOption } from "../../types/models/DropDownOption";
 import { BranchFormRequest } from "../../types/requests/BranchFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
-import { LaravelError } from "../../types/errors/LaravelError";
-import { VeeValidateError } from "../../types/errors/VeeValidateError";
 import { FormActions } from "vee-validate";
 import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
@@ -51,7 +49,7 @@ const branchServices = new BranchService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
+const datalistErrors = ref<Record<string, string> | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Company Information', state: CardState.Expanded, },
   { title: 'Branch Information', state: CardState.Expanded, },
@@ -117,10 +115,10 @@ onMounted(async () => {
 //#endregion
 
 //#region Methods
-const getBranches = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {  
+const getBranches = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   loading.value = true;
 
-  let company_id = userLocation.value.company.id;  
+  let company_id = userLocation.value.company.id;
 
   const searchReq: SearchRequest = {
     search: search,
@@ -135,7 +133,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
   if (result.success && result.data) {
     branchLists.value = result.data as Collection<Branch[]>;
   } else {
-    datalistErrors.value = result.errors as LaravelError;
+    datalistErrors.value = result.errors as Record<string, string>;
   }
 
   loading.value = false;
@@ -145,10 +143,6 @@ const getDDL = (): void => {
   dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
     statusDDL.value = result;
   });
-}
-
-const selectedCompanyId = () => {
-  return userLocation.value.company.id;
 }
 
 const emptyBranch = () => {
@@ -242,7 +236,7 @@ const onSubmit = async (values: BranchFormFieldValues, actions: FormActions<Bran
   } else if (mode.value == ViewMode.FORM_EDIT) {
     let branch_ulid = branchForm.value.data.ulid;
 
-    result = await branchServices.update( branch_ulid, values);
+    result = await branchServices.update(branch_ulid, values);
   } else {
     result.success = false;
   }
@@ -291,6 +285,14 @@ watch(
   }, 500),
   { deep: true }
 );
+
+watch(
+  userLocation,
+  async () => {
+    await getBranches('', true, true, 1, 10);
+  },
+  { deep: true }
+)
 //#endregion
 </script>
 
@@ -430,7 +432,8 @@ watch(
                   </div>
                 </div>
                 <div class="px-5 pb-8 text-center">
-                  <Button type="button" variant="outline-secondary" class="w-24 mr-1" @click="() => { deleteModalShow = false; }">
+                  <Button type="button" variant="outline-secondary" class="w-24 mr-1"
+                    @click="() => { deleteModalShow = false; }">
                     {{ t('components.buttons.cancel') }}
                   </Button>
                   <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
@@ -443,7 +446,7 @@ watch(
         </DataList>
       </div>
       <div v-else>
-        <VeeForm id="branchForm" v-slot="{ errors }" @submit="onSubmit">
+        <VeeForm id="branchForm" v-slot="{ errors, handleReset }" @submit="onSubmit">
           <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
@@ -456,17 +459,26 @@ watch(
             </template>
             <template #card-items-1>
               <div class="p-5">
-                <VeeField v-slot="{ field }" :value=selectedCompanyId() name="company_id">                  
+                <div class="pb-4">
+                  <label for="code" class="block bold font-semibold">{{ t('views.company.fields.name') }}</label>
+                  <div class="flex-1">{{ userLocation.company.name }}</div>
+                </div>
+              </div>
+            </template>
+            <template #card-items-1>
+              <div class="p-5">
+                <VeeField v-slot="{ field }" v-model="userLocation.company.id" name="company_id" rules="required"
+                  :label="t('views.branch.fields.company_id')">
                   <FormInput id="company_id" name="company_id" type="hidden" v-bind="field" />
-                </VeeField>                
+                </VeeField>
                 <div class="pb-4">
                   <FormLabel html-for="code" :class="{ 'text-danger': errors['code'] }">
                     {{ t('views.branch.fields.code') }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" v-model="branchForm.data.code" name="code" rules="required|alpha_dash"
                     :label="t('views.branch.fields.code')">
-                    <FormInputCode id="code" v-bind="field" name="code" type="text" :class="{ 'border-danger': errors['code'] }" 
-                      :placeholder="t('views.branch.fields.code')" />
+                    <FormInputCode id="code" v-bind="field" name="code" type="text"
+                      :class="{ 'border-danger': errors['code'] }" :placeholder="t('views.branch.fields.code')" />
                   </VeeField>
                   <VeeErrorMessage name="code" class="mt-2 text-danger" />
                 </div>
@@ -512,13 +524,13 @@ watch(
                   </VeeField>
                 </div>
                 <div class="pb-4">
-                  <FormLabel html-for="is_main" :class="{ 'text-danger': errors['is_main']} " class="pr-5">
+                  <FormLabel html-for="is_main" :class="{ 'text-danger': errors['is_main'] }" class="pr-5">
                     {{ t('views.branch.fields.is_main') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="branchForm.data.is_main" name="is_main" :label="t('views.branch.fields.is_main')">
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.is_main" name="is_main"
+                    :label="t('views.branch.fields.is_main')">
                     <FormSwitch.Input id="is_main" v-bind="field" name="is_main" type="checkbox"
-                      :class="{ 'border-danger': errors['is_main'] }" :placeholder="t('views.branch.fields.is_main')"
-                    />
+                      :class="{ 'border-danger': errors['is_main'] }" :placeholder="t('views.branch.fields.is_main')" />
                   </VeeField>
                   <VeeErrorMessage name="is_main" class="mt-2 text-danger" />
                 </div>
@@ -526,18 +538,20 @@ watch(
                   <FormLabel html-for="remarks" :class="{ 'text-danger': errors['remarks'] }">
                     {{ t('views.branch.fields.remarks') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="branchForm.data.remarks" name="remarks" :label="t('views.branch.fields.remarks')">
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.remarks" name="remarks"
+                    :label="t('views.branch.fields.remarks')">
                     <FormTextarea id="remarks" v-bind="field" name="remarks" type="text"
-                      :class="{ 'border-danger': errors['remarks'] }" :placeholder="t('views.branch.fields.remarks')" rows="3" />
+                      :class="{ 'border-danger': errors['remarks'] }" :placeholder="t('views.branch.fields.remarks')"
+                      rows="3" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="status" :class="{ 'text-danger': errors['status'] }">
                     {{ t('views.branch.fields.status') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="branchForm.data.status" name="status" rules="required" :label="t('views.branch.fields.status')">
-                    <FormSelect id="status" v-bind="field" name="status"
-                      :class="{ 'border-danger': errors['status'] }">
+                  <VeeField v-slot="{ field }" v-model="branchForm.data.status" name="status" rules="required"
+                    :label="t('views.branch.fields.status')">
+                    <FormSelect id="status" v-bind="field" name="status" :class="{ 'border-danger': errors['status'] }">
                       <option value="">{{ t('components.dropdown.placeholder') }}</option>
                       <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
                     </FormSelect>
@@ -551,7 +565,7 @@ watch(
                 <Button type="submit" href="#" variant="primary" class="w-28 shadow-md">
                   {{ t("components.buttons.submit") }}
                 </Button>
-                <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
+                <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="handleReset">
                   {{ t("components.buttons.reset") }}
                 </Button>
               </div>

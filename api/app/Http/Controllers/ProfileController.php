@@ -36,6 +36,20 @@ class ProfileController extends BaseController
         }
     }
 
+    public function updateUser(ProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
+
+        $userArr = [
+            'name' => $request['name'],
+        ];
+
+        $result = $this->userActions->updateUser($user, $userArr, true);
+
+        return ! $result ? response()->error() : response()->success();
+    }
+
     public function updateProfile(ProfileRequest $profileRequest)
     {
         $request = $profileRequest->validated();
@@ -64,7 +78,7 @@ class ProfileController extends BaseController
 
         $usr = Auth::user();
 
-        $this->userActions->changePassword($usr, $request->password);
+        $this->userActions->changePassword($usr, $request['password']);
     }
 
     public function updateSettings(ProfileRequest $profileRequest)
@@ -74,13 +88,13 @@ class ProfileController extends BaseController
         $usr = Auth::user();
         $settings = [
             'PREFS.THEME' => $request['theme'],
-            'PREFS.DATE_FORMAT' => $request['dateFormat'],
-            'PREFS.TIME_FORMAT' => $request['timeFormat'],
+            'PREFS.DATE_FORMAT' => $request['date_format'],
+            'PREFS.TIME_FORMAT' => $request['time_format'],
         ];
 
         $result = $this->userActions->updateSettings($usr, $settings, true);
 
-        if (array_key_exists('apiToken', $request)) {
+        if (array_key_exists('api_token', $request)) {
             $this->userActions->resetTokens($usr->id);
         }
 
