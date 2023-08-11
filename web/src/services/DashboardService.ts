@@ -1,4 +1,4 @@
-import axios, { authAxiosInstance, axiosInstance } from "../axios";
+import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
@@ -8,7 +8,7 @@ import { UserProfile } from "../types/models/UserProfile";
 import { Menu as sMenu } from "../stores/side-menu";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { Resource } from "../types/resources/Resource";
-import { DropDownOption } from "../types/services/DropDownOption";
+import { DropDownOption } from "../types/models/DropDownOption";
 
 export default class DashboardService {
     private ziggyRoute: Config;
@@ -149,26 +149,27 @@ export default class DashboardService {
         }
     }
 
-    public async uploadFile(file : any) : Promise<any> {
-        const result: ServiceResponse<Config> | null = {
-            success : false
+    public async uploadFile(file: File): Promise<ServiceResponse<string>> {
+        const result: ServiceResponse<string> | null = {
+            success: false
         }
 
         try {
-            let formData = new FormData()
+            const formData = new FormData()
             formData.append('file', file)
-            const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute)
-            authAxiosInstance.defaults.headers.common['Content-Type'] = "multipart/form-data"
-            const data = await authAxiosInstance.post(url,formData)
-            return {
-                success : true,
-                statusCode : data.status,
-                data : data.data
-            }
-        } catch (error) {
-            
-        }
 
-        return 
+            const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute)
+
+            axios.defaults.headers.common['Content-Type'] = "multipart/form-data"
+
+            const data = await axios.post(url, formData);
+
+            return {
+                success: true,
+                data: data.data
+            }
+        } catch (e: unknown) {
+            return result;
+        }
     }
 }

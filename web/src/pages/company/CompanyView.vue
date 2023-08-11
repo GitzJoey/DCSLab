@@ -20,7 +20,7 @@ import { Resource } from "../../types/resources/Resource";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
-import { DropDownOption } from "../../types/services/DropDownOption";
+import { DropDownOption } from "../../types/models/DropDownOption";
 import { CompanyFormRequest } from "../../types/requests/CompanyFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";

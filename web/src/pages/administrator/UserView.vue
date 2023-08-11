@@ -29,7 +29,7 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import RoleService from "../../services/RoleService";
-import { DropDownOption } from "../../types/services/DropDownOption";
+import { DropDownOption } from "../../types/models/DropDownOption";
 import { UserFormRequest } from "../../types/requests/UserFormRequest";
 import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
