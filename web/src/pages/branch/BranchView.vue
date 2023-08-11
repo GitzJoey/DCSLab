@@ -27,8 +27,6 @@ import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
-import { LaravelError } from "../../types/errors/LaravelError";
-import { VeeValidateError } from "../../types/errors/VeeValidateError";
 import { FormActions } from "vee-validate";
 import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
@@ -51,7 +49,7 @@ const branchServices = new BranchService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<LaravelError | VeeValidateError | null>(null);
+const datalistErrors = ref<Record<string, string> | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Branch Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
@@ -134,7 +132,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
   if (result.success && result.data) {
     branchLists.value = result.data as Collection<Branch[]>;
   } else {
-    datalistErrors.value = result.errors as LaravelError;
+    datalistErrors.value = result.errors as Record<string, string>;
   }
 
   loading.value = false;
