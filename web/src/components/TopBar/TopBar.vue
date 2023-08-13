@@ -17,6 +17,7 @@ import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
 import { useZiggyRouteStore } from "../../stores/ziggy-route";
 import { Config } from "ziggy-js";
 import UserLocation from "../../base-components/UserLocation";
+import { switchLang } from "../../lang";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -51,6 +52,10 @@ const logout = () => {
 
 const toggleMenu = () => {
   dashboardStore.toggleLayoutValue();
+}
+
+const switchLanguage = (lang: "en" | "id"): void => {
+  switchLang(lang);
 }
 
 const loading = ref<boolean>(false);
@@ -135,8 +140,10 @@ onMounted(async () => {
           <Lucide icon="Globe" />
         </Menu.Button>
         <Menu.Items class="w-48 h-24 overflow-y-auto" placement="bottom-end">
-          <Menu.Item><span class="text-primary">{{ t('components.top-bar.language.english') }}</span></Menu.Item>
-          <Menu.Item><span class="text-primary">{{ t('components.top-bar.language.indonesia') }}</span></Menu.Item>
+          <Menu.Item @click="switchLanguage('en')"><span class="text-primary">{{ t('components.top-bar.language.english')
+          }}</span></Menu.Item>
+          <Menu.Item @click="switchLanguage('id')"><span class="text-primary">{{
+            t('components.top-bar.language.indonesia') }}</span></Menu.Item>
         </Menu.Items>
       </Menu>
 

@@ -1,4 +1,4 @@
-import { DropDownOption } from "../types/services/DropDownOption";
+import { DropDownOption } from "../types/models/DropDownOption";
 import { omit } from "lodash";
 
 export default class CacheService {

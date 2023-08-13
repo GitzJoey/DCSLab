@@ -6,8 +6,27 @@ export default class ErrorHandlerService {
         const result: ServiceResponse<null> = {
             success: false,
             errors: {
-                ziggy: [message ? message : 'Ziggy error: unknown'],
+                ziggy: message ? message : 'Ziggy error: unknown',
             }
+        }
+
+        return result;
+    }
+
+    public generateAxiosValidationErrorServiceResponse(axiosErr: AxiosError): ServiceResponse<null> {
+        const result: ServiceResponse<null> = {
+            success: false,
+        }
+
+        const axiosResp = axiosErr.response as AxiosResponse;
+
+        const keys = Object.keys(axiosResp.data.errors);
+        for (const key of keys) {
+            if (result.errors == undefined) {
+                result.errors = {};
+            }
+
+            result.errors[key] = axiosResp.data.errors[key][0];
         }
 
         return result;
@@ -15,17 +34,13 @@ export default class ErrorHandlerService {
 
     public generateAxiosErrorServiceResponse(axiosErr: AxiosError): ServiceResponse<null> {
         const axiosResp = axiosErr.response as AxiosResponse;
+
         const result: ServiceResponse<null> = {
             success: false,
             errors: {
-                axios: [
-                    axiosResp.data.message,
-                    axiosResp.status,
-                    axiosResp.statusText,
-                    axiosResp.data.errors
-                ]
-            },
-        };
+                axios: axiosResp.data.message + ' (' + axiosResp.status + ':' + axiosResp.statusText + ')'
+            }
+        }
 
         return result;
     }
