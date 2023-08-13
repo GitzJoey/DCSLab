@@ -151,7 +151,6 @@ export default class ProfileService {
     theme: string;
     date_format: string;
     time_format: string;
-    api_token?: string;
   }): Promise<ServiceResponse<Resource<Record<string, never>> | null>> {
     const result: ServiceResponse<Resource<Record<string, never>>> = {
       success: false,

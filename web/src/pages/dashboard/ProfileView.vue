@@ -7,7 +7,6 @@ import {
   FormLabel,
   FormTextarea,
   FormSelect,
-  FormSwitch,
 } from "../../base-components/Form";
 import { useUserContextStore } from "../../stores/user-context";
 import {
@@ -140,7 +139,6 @@ async function handleSubmitUserSetting(value: {
   theme: string;
   date_format: string;
   time_format: string;
-  api_token?: string;
 }): Promise<void> {
   loading.value = true;
   await profileServices.updateUserSetting(value);
@@ -607,32 +605,6 @@ async function handleSubmitUserProfile(values: {
                   </FormSelect>
                 </VeeField>
               </div>
-
-              <div class="pb-4">
-                <Formlabel html-for="api_token">
-                  {{ t("views.profile.fields.settings.api_token") }}
-                </Formlabel>
-
-                <VeeField
-                  v-slot="{ field }"
-                  v-model="userContext.settings.api_token"
-                  name="api_token"
-                >
-                  <FormSwitch class="mt-2">
-                    <FormSwitch.Input
-                      id="default"
-                      name="default"
-                      v-bind="field"
-                      type="checkbox"
-                      :class="{ 'border-danger': errors['default'] }"
-                      :placeholder="
-                        t('views.company.fields.settings.api_token')
-                      "
-                    />
-                  </FormSwitch>
-                </VeeField>
-              </div>
-
               <div class="flex gap-4">
                 <Button variant="primary" class="w-28 shadow-md">
                   {{ t("components.buttons.submit") }}
