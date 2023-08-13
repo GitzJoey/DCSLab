@@ -56,7 +56,7 @@ class ProfileRequest extends FormRequest
                     'last_name' => 'nullable',
                     'address' => 'nullable',
                     'city' => 'nullable',
-                    'postal_code' => 'alpha_dash|min:5max:10',
+                    'postal_code' => 'alpha_dash|min:5|max:10',
                     'country' => 'nullable',
                     'tax_id' => 'required',
                     'ic_num' => 'required',
