@@ -23,7 +23,6 @@ import accountingImage from "../../assets/images/accounting_system.jpg";
 import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
-import RoleService from "../../services/RoleService";
 import ProfileService from "../../services/ProfileService";
 //#endregion
 
@@ -35,7 +34,6 @@ type Roles = {
   images: string;
   value: string;
 };
-const rolesServices = new RoleService();
 const profileServices = new ProfileService();
 //#endregion
 
@@ -73,7 +71,11 @@ const roles = ref<Array<Roles>>([
 //#endregion
 
 //#region Data - Views
-const userProfileForm = ref();
+const passwordSetting = ref({
+  currentPassword : '',
+  new_password : '',
+  confirm_password : ''
+})
 //#endregion
 
 //#region onMounted
@@ -91,6 +93,7 @@ const handleExpandCard = (index: number) => {
   }
 };
 
+
 async function handleChangeRole(index: number) {
   roles.value[index].active = !roles.value[index].active;
   for (let i = 0; i < roles.value.length; i++) {
@@ -101,11 +104,12 @@ async function handleChangeRole(index: number) {
 
   if (roles.value[index].active) {
     const role = roles.value[index].value;
-    const resp = await rolesServices.Update(role);
+    await profileServices.updateRoles(role);
   }
 }
 
-async function handleUpdateAccountSettings() {
+async function handleUpdateAccountSettings() : Promise<void> {
+
   const payload = {
     first_name: userContext.value.profile.first_name,
     last_name: userContext.value.profile.last_name ,
@@ -117,13 +121,21 @@ async function handleUpdateAccountSettings() {
     ic_num: userContext.value.profile.ic_num,
     remarks: userContext.value.profile.remarks,
   };
-  const resp = await profileServices.updateProfile(payload);
-  console.log(resp, "<< ini ");
+  await profileServices.updateProfile(payload);
+}
+
+async function handleChangePassword() : Promise<void> {
+  const payload = {
+    password : passwordSetting.value.new_password,
+    confirm_password : passwordSetting.value.confirm_password,
+    current_password : passwordSetting.value.currentPassword
+  }
+
+  await profileServices.updatePassword(payload)
 }
 
 const onSubmit = async () => {
   loading.value = true;
-
   loading.value = false;
 };
 // End Region Method
@@ -328,10 +340,6 @@ const onSubmit = async () => {
                 >
                   {{ t("components.buttons.submit") }}
                 </Button>
-
-                <Button variant="soft-secondary" class="w-28 shadow-md">
-                  {{ t("components.buttons.reset") }}
-                </Button>
               </div>
             </div>
           </template>
@@ -346,6 +354,7 @@ const onSubmit = async () => {
                 </FormLabel>
                 <FormInput
                   id="currentPassword"
+                  v-model="passwordSetting.currentPassword"
                   name="currentPassword"
                   type="password"
                   class="w-full"
@@ -361,6 +370,7 @@ const onSubmit = async () => {
                 </FormLabel>
                 <FormInput
                   id="new_password"
+                  v-model="passwordSetting.new_password"
                   name="new_password"
                   type="password"
                   class="w-full"
@@ -378,6 +388,7 @@ const onSubmit = async () => {
                 </FormLabel>
                 <FormInput
                   id="confirm_password"
+                  v-model="passwordSetting.confirm_password"
                   name="confirm_password"
                   type="password"
                   class="w-full"
@@ -385,6 +396,16 @@ const onSubmit = async () => {
                     t('views.profile.fields.change_password.confirm_password')
                   "
                 />
+              </div>
+
+              <div class="flex gap-4">
+                <Button
+                  variant="primary"
+                  class="w-28 shadow-md"
+                  @click="handleChangePassword"
+                >
+                  {{ t("components.buttons.submit") }}
+                </Button>
               </div>
             </div>
           </template>
@@ -443,9 +464,9 @@ const onSubmit = async () => {
                     class="flex flex-col items-center"
                   >
                     <div
-                      @click="handleChangeRole(index)"
                       class="cursor-pointer flex flex-col items-center justify-center"
-                    >
+                      @click="handleChangeRole(index)"
+                      >
                       <img alt="" :src="item.images" width="100" height="100" />
                       <div
                         v-if="item.active"
