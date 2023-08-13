@@ -11,7 +11,6 @@ import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from 
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 import DashboardService from '../../services/DashboardService'
-import { authAxiosInstance } from "../../axios";
 import noImage from '../../assets/images/no_image.png'
 
 interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
@@ -98,7 +97,7 @@ onMounted(() => {
     <img class="rounded aspect-auto" :src="imageUrl ? imageUrl : ''" alt="Image Preview">
   </div>
   <div class="flex gap-2 mt-4">
-    <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" v-model="localValue" />
+    <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')"  />
     <input id="upload" type="file" hidden @change="(e) => handleUpload(e)" />
     <label class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
       for="upload">Choose File</label>
