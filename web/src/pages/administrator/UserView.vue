@@ -277,6 +277,14 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
     if (value == undefined) return;
     crudErrors.value[key] = [value];
   }
+
+  if (Object.keys(formResults.errors).length > 0) {
+    const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
+
+    if (errorField) {
+      errorField.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
 }
 
 const backToList = async () => {
