@@ -37,7 +37,7 @@ import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
-import { FormActions } from "vee-validate";
+import { FormActions, InvalidSubmissionContext } from "vee-validate";
 //#endregion
 
 //#region Interfaces
@@ -58,6 +58,7 @@ const cacheServices = new CacheService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string> | null>(null);
+const crudErrors = ref<Record<string, Array<string>>>({});
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'User Information', state: CardState.Expanded, },
   { title: 'User Profile', state: CardState.Expanded },
@@ -271,6 +272,13 @@ const onSubmit = async (values: UserFormFieldValues, actions: FormActions<UserFo
   loading.value = false;
 };
 
+const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
+  for (const [key, value] of Object.entries(formResults.errors)) {
+    if (value == undefined) return;
+    crudErrors.value[key] = [value];
+  }
+}
+
 const backToList = async () => {
   cacheServices.removeLastEntity('User');
 
@@ -483,7 +491,7 @@ watch(
         </DataList>
       </div>
       <div v-else>
-        <VeeForm id="userForm" v-slot="{ errors, handleReset }" @submit="onSubmit">
+        <VeeForm id="userForm" v-slot="{ errors, handleReset }" @submit="onSubmit" @invalid-submit="onInvalidSubmit">
           <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>

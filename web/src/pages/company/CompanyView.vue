@@ -27,7 +27,7 @@ import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
-import { FormActions } from "vee-validate";
+import { FormActions, InvalidSubmissionContext } from "vee-validate";
 //#endregion
 
 //#region Interfaces
@@ -48,6 +48,7 @@ const companyServices = new CompanyService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string> | null>(null);
+const crudErrors = ref<Record<string, Array<string>>>({});
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Company Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
@@ -221,6 +222,13 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
 
   loading.value = false;
 };
+
+const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
+  for (const [key, value] of Object.entries(formResults.errors)) {
+    if (value == undefined) return;
+    crudErrors.value[key] = [value];
+  }
+}
 
 const backToList = async () => {
   loading.value = true;
@@ -397,7 +405,7 @@ watch(
         </DataList>
       </div>
       <div v-else>
-        <VeeForm id="companyForm" v-slot="{ errors, handleReset }" @submit="onSubmit">
+        <VeeForm id="companyForm" v-slot="{ errors, handleReset }" @submit="onSubmit" @invalid-submit="onInvalidSubmit">
           <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
