@@ -27,7 +27,7 @@ import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchRequest } from "../../types/requests/SearchRequest";
-import { FormActions } from "vee-validate";
+import { FormActions, InvalidSubmissionContext } from "vee-validate";
 import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
 
@@ -50,6 +50,7 @@ const branchServices = new BranchService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string> | null>(null);
+const crudErrors = ref<Record<string, string> | null>(null);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Branch Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
@@ -249,6 +250,10 @@ const onSubmit = async (values: BranchFormFieldValues, actions: FormActions<Bran
   loading.value = false;
 };
 
+const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
+  crudErrors.value = formResults.errors as Record<string, string>;
+}
+
 const backToList = async () => {
   loading.value = true;
 
@@ -445,7 +450,7 @@ watch(
         </DataList>
       </div>
       <div v-else>
-        <VeeForm id="branchForm" v-slot="{ errors, handleReset }" @submit="onSubmit">
+        <VeeForm id="branchForm" v-slot="{ errors, handleReset }" @submit="onSubmit" @invalid-submit="onInvalidSubmit">
           <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
