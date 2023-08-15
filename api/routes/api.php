@@ -146,6 +146,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         Route::group(['prefix' => 'module', 'as' => '.module'], function () {
             Route::group(['prefix' => 'profile', 'as' => '.profile'], function () {
                 Route::get('read', [ProfileController::class, 'readProfile'])->name('.read');
+
+                Route::get('2fa/status', [ProfileController::class, 'checkTwoFAStatus'])->name('.2fa.status');
             });
         });
     });

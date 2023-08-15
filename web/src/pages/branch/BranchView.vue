@@ -50,7 +50,7 @@ const branchServices = new BranchService();
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, string> | null>(null);
-const crudErrors = ref<Record<string, string> | null>(null);
+const crudErrors = ref<Record<string, Array<string>>>({});
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Branch Information', state: CardState.Expanded, },
   { title: '', state: CardState.Hidden, id: 'button' }
@@ -251,7 +251,19 @@ const onSubmit = async (values: BranchFormFieldValues, actions: FormActions<Bran
 };
 
 const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
-  crudErrors.value = formResults.errors as Record<string, string>;
+  for (const [key, value] of Object.entries(formResults.errors)) {
+    if (value == undefined) return;
+    crudErrors.value[key] = [value];
+  }
+
+  if (Object.keys(formResults.errors).length > 0) {
+    const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
+
+    if (errorField) {
+      errorField.scrollIntoView({ behavior: 'smooth' });
+      window.scrollBy(0, -10);
+    }
+  }
 }
 
 const backToList = async () => {
