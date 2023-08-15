@@ -101,9 +101,6 @@ const userForm = ref<UserFormRequest>({
       date_format: 'yyyy_MM_dd',
       time_format: 'hh_mm_ss',
     }
-  },
-  additional: {
-    tokens_reset: false,
   }
 });
 const userLists = ref<Collection<Array<User>> | null>({
@@ -203,9 +200,6 @@ const emptyUser = () => {
         date_format: 'yyyy_MM_dd',
         time_format: 'hh_mm_ss',
       }
-    },
-    additional: {
-      tokens_reset: false
     }
   }
 }
