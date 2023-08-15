@@ -11,7 +11,7 @@ import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
 import AuthService from "../../services/AuthServices";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { ResetPasswordRequest } from "../../types/requests/AuthRequests";
+import { ResetPasswordFormFieldValues } from "../../types/requests/AuthFormFieldValues";
 import { ResetPassword } from "../../types/models/ResetPassword";
 
 const { t } = useI18n();
@@ -21,7 +21,7 @@ const authService = new AuthService();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 
-const resetPasswordForm = ref<ResetPasswordRequest>({
+const resetPasswordForm = ref<ResetPasswordFormFieldValues>({
   email: '',
   token: '',
   password: '',
@@ -37,7 +37,7 @@ onMounted(async () => {
   if (token != null) resetPasswordForm.value.token = token;
 });
 
-const submitForm = async (values: ResetPasswordRequest) => {
+const submitForm = async (values: ResetPasswordFormFieldValues) => {
   let result: ServiceResponse<ResetPassword | null> = await authService.resetPassword(values);
 
   console.log(result);
@@ -83,25 +83,26 @@ const submitForm = async (values: ResetPasswordRequest) => {
               <VeeForm v-slot="{ errors }" @submit="submitForm">
                 <input v-model="resetPasswordForm.token" type="hidden" name="token" />
                 <div class="mt-8 intro-x">
-                  <FormInput v-model="resetPasswordForm.email" type="text" name="email"
-                    class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
-                    :placeholder="t('views.reset_password.fields.email')" disabled />
+                  <VeeField v-slot="{ field }" v-model="resetPasswordForm.email" name="email">
+                    <FormInput v-bind="field" type="text" name="email"
+                      class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
+                      :placeholder="t('views.reset_password.fields.email')" disabled />
+                  </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
-                  <VeeField v-slot="{ field }" name="password" rules="required"
+                  <VeeField v-slot="{ field }" v-model="resetPasswordForm.password" name="password" rules="required"
                     :label="t('views.reset_password.fields.password')">
-                    <FormInput v-model="resetPasswordForm.password" type="password" name="password"
+                    <FormInput v-bind="field" type="password" name="password"
                       class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['password'] }"
-                      :placeholder="t('views.reset_password.fields.password')" v-bind="field" />
+                      :placeholder="t('views.reset_password.fields.password')" />
                   </VeeField>
                   <VeeErrorMessage name="password" class="mt-2 text-danger" />
-                  <VeeField v-slot="{ field }" name="password_confirmation" rules="confirmed:@password"
+                  <VeeField v-slot="{ field }" v-model="resetPasswordForm.password_confirmation"
+                    name="password_confirmation" rules="confirmed:@password"
                     :label="t('views.reset_password.fields.password_confirmation')">
-                    <FormInput v-model="resetPasswordForm.password_confirmation" name="password_confirmation"
-                      type="password"
+                    <FormInput v-bind="field" name="password_confirmation" type="password"
                       :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['password'] }"
-                      :placeholder="t('views.reset_password.fields.password_confirmation')
-                        " v-bind="field" />
+                      :placeholder="t('views.reset_password.fields.password_confirmation')" />
                   </VeeField>
                   <VeeErrorMessage name="password_confirmation" class="mt-2 text-danger" />
                 </div>
