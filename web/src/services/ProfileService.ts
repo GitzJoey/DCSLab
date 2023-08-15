@@ -88,9 +88,9 @@ export default class ProfileService {
     };
 
     try {
-      const url = route("api.post.db.module.profile.update.password", undefined, false, this.ziggyRoute );
+      const url = route("api.post.db.module.profile.update.password", undefined, false, this.ziggyRoute);
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-      
+
       const response: AxiosResponse<User> = await axios.post(url, payload);
 
       if (response.status == StatusCode.OK) {
