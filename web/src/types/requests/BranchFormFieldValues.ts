@@ -7,5 +7,5 @@ export interface BranchFormFieldValues {
 	contact: string,
 	is_main: boolean,
 	remarks: string,
-	status: string
-  }
+	status: string,
+}
