@@ -11,7 +11,7 @@ import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
 import AuthService from "../../services/AuthServices";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { ForgotPasswordRequest } from "../../types/requests/AuthRequests";
+import { ForgotPasswordFormFieldValues } from "../../types/requests/AuthFormFieldValues";
 import { ForgotPassword } from "../../types/models/ForgotPassword";
 import { FormActions } from "vee-validate";
 import Alert from "../../base-components/Alert";
@@ -25,11 +25,11 @@ const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 const link_sent = ref<boolean>(false);
 
-const forgotPasswordForm = ref<ForgotPasswordRequest>({
+const forgotPasswordForm = ref<ForgotPasswordFormFieldValues>({
   email: ''
 });
 
-const submitForm = async (values: ForgotPasswordRequest, actions: FormActions<ForgotPasswordRequest>) => {
+const submitForm = async (values: ForgotPasswordFormFieldValues, actions: FormActions<ForgotPasswordFormFieldValues>) => {
   loading.value = true;
 
   let result: ServiceResponse<ForgotPassword | null> = await authService.requestResetPassword(values);
@@ -37,7 +37,7 @@ const submitForm = async (values: ForgotPasswordRequest, actions: FormActions<Fo
   if (result.success) {
     link_sent.value = true;
   } else {
-    actions.setErrors(result.errors as Partial<Record<string, string[]>>);
+    actions.setErrors(result.errors as Partial<Record<string, string>>);
   }
 
   loading.value = false;
@@ -87,12 +87,12 @@ const submitForm = async (values: ForgotPasswordRequest, actions: FormActions<Fo
               </div>
               <VeeForm v-slot="{ errors }" @submit="submitForm">
                 <div class="mt-8 intro-x">
-                  <VeeField v-slot="{ field }" name="email" rules="required|email"
+                  <VeeField v-slot="{ field }" v-model="forgotPasswordForm.email" name="email" rules="required|email"
                     :label="t('views.forgot_password.fields.email')">
-                    <FormInput v-model="forgotPasswordForm.email" type="text" name="email"
+                    <FormInput v-bind="field" type="text" name="email"
                       class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
-                      :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.forgot_password.fields.email')"
-                      v-bind="field" />
+                      :class="{ 'border-danger': errors['email'] }"
+                      :placeholder="t('views.forgot_password.fields.email')" />
                   </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
                 </div>

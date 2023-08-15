@@ -10,7 +10,7 @@ import { useI18n } from "vue-i18n";
 import AuthService from "../../services/AuthServices";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
-import { RegisterRequest } from "../../types/requests/AuthRequests";
+import { RegisterFormFieldValues } from "../../types/requests/AuthFormFieldValues";
 import { FormActions } from "vee-validate";
 import { UserProfile } from "../../types/models/UserProfile";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
@@ -22,7 +22,7 @@ const authService = new AuthService();
 
 const loading = ref<boolean>(false);
 
-const registerForm = ref<RegisterRequest>({
+const registerForm = ref<RegisterFormFieldValues>({
   name: '',
   email: '',
   password: '',
@@ -30,7 +30,7 @@ const registerForm = ref<RegisterRequest>({
   terms: false
 });
 
-const onSubmit = async (values: RegisterRequest, actions: FormActions<RegisterRequest>) => {
+const onSubmit = async (values: RegisterFormFieldValues, actions: FormActions<RegisterFormFieldValues>) => {
   loading.value = true;
 
   let result: ServiceResponse<UserProfile | null> = await authService.register(values);
@@ -84,22 +84,23 @@ const onSubmit = async (values: RegisterRequest, actions: FormActions<RegisterRe
               </div>
               <VeeForm id="registerForm" v-slot="{ errors }" @submit="onSubmit">
                 <div class="mt-8 intro-x">
-                  <VeeField v-slot="{ field }" name="name" rules="required" :label="t('views.register.fields.name')">
-                    <FormInput v-model="registerForm.name" name="name" type="text"
+                  <VeeField v-slot="{ field }" v-model="registerForm.name" name="name" rules="required"
+                    :label="t('views.register.fields.name')">
+                    <FormInput name="name" type="text"
                       :class="{ 'block px-4 py-3 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['name'] }"
                       :placeholder="t('views.register.fields.name')" v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="name" class="mt-2 text-danger" />
-                  <VeeField v-slot="{ field }" name="email" rules="required|email"
+                  <VeeField v-slot="{ field }" v-model="registerForm.email" name="email" rules="required|email"
                     :label="t('views.register.fields.email')">
-                    <FormInput v-model="registerForm.email" name="email" type="text"
+                    <FormInput name="email" type="text"
                       :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['email'] }"
                       :placeholder="t('views.register.fields.email')" v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
-                  <VeeField v-slot="{ field }" name="password" rules="required|alpha_num|min:6"
-                    :label="t('views.register.fields.password')">
-                    <FormInput v-model="registerForm.password" name="password" type="password"
+                  <VeeField v-slot="{ field }" v-model="registerForm.password" name="password"
+                    rules="required|alpha_num|min:6" :label="t('views.register.fields.password')">
+                    <FormInput name="password" type="password"
                       :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['password'] }"
                       :placeholder="t('views.register.fields.password')" v-bind="field" />
                   </VeeField>
@@ -108,15 +109,15 @@ const onSubmit = async (values: RegisterRequest, actions: FormActions<RegisterRe
                     :label="t('views.register.fields.password_confirmation')">
                     <FormInput name="password_confirmation" type="password"
                       :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': errors['password'] }"
-                      :placeholder="t('views.register.fields.password_confirmation')
-                        " v-bind="field" />
+                      :placeholder="t('views.register.fields.password_confirmation')" v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="password_confirmation" class="mt-2 text-danger" />
                 </div>
                 <div class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
-                  <VeeField v-slot="{ field }" name="terms" rules="required" :label="t('views.register.fields.terms')">
+                  <VeeField v-slot="{ field }" v-model="registerForm.terms" name="terms" rules="required"
+                    :label="t('views.register.fields.terms')">
                     <FormCheck>
-                      <FormCheck.Input id="terms" v-model="registerForm.terms" name="terms" type="checkbox"
+                      <FormCheck.Input id="terms" name="terms" type="checkbox"
                         :class="{ 'border-danger': errors['terms'] }" v-bind="field" />
                       <FormCheck.Label class="cursor-pointer select-none" html-for="terms">
                         I agree to the

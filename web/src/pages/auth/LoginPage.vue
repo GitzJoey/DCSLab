@@ -10,7 +10,7 @@ import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
 import { useRouter } from "vue-router";
-import { LoginRequest } from "../../types/requests/AuthRequests";
+import { LoginFormFieldValues } from "../../types/requests/AuthFormFieldValues";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { UserProfile } from "../../types/models/UserProfile";
 import { FormActions } from "vee-validate";
@@ -23,13 +23,13 @@ const authService = new AuthService();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 
-const loginForm = ref<LoginRequest>({
+const loginForm = ref<LoginFormFieldValues>({
   email: "",
   password: "",
   remember: false
 });
 
-const onSubmit = async (values: LoginRequest, actions: FormActions<LoginRequest>) => {
+const onSubmit = async (values: LoginFormFieldValues, actions: FormActions<LoginFormFieldValues>) => {
   loading.value = true;
 
   let result: ServiceResponse<UserProfile | null> = await authService.doLogin(values);
@@ -82,15 +82,16 @@ const onSubmit = async (values: LoginRequest, actions: FormActions<LoginRequest>
               </div>
               <VeeForm id="loginForm" v-slot="{ errors }" @submit="onSubmit">
                 <div class="mt-8 intro-x">
-                  <VeeField v-slot="{ field }" name="email" rules="required|email" :label="t('views.login.fields.email')">
-                    <FormInput v-model="loginForm.email" type="text" name="email"
-                      class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
+                  <VeeField v-slot="{ field }" v-model="loginForm.email" name="email" rules="required|email"
+                    :label="t('views.login.fields.email')">
+                    <FormInput type="text" name="email" class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['email'] }" :placeholder="t('views.login.fields.email')"
                       v-bind="field" />
                   </VeeField>
                   <VeeErrorMessage name="email" class="mt-2 text-danger" />
-                  <VeeField v-slot="{ field }" name="password" rules="required" :label="t('views.login.fields.password')">
-                    <FormInput v-model="loginForm.password" type="password" name="password"
+                  <VeeField v-slot="{ field }" v-model="loginForm.password" name="password" rules="required"
+                    :label="t('views.login.fields.password')">
+                    <FormInput type="password" name="password"
                       class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
                       :class="{ 'border-danger': errors['password'] }" :placeholder="t('views.login.fields.password')"
                       v-bind="field" />
@@ -99,12 +100,15 @@ const onSubmit = async (values: LoginRequest, actions: FormActions<LoginRequest>
                 </div>
                 <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
-                    <FormCheck>
-                      <FormCheck.Input id="remember-me" v-model="loginForm.remember" name="remember-me" type="checkbox" />
-                      <FormCheck.Label html-for="remember-me">
-                        {{ t("views.login.fields.remember_me") }}
-                      </FormCheck.Label>
-                    </FormCheck>
+                    <VeeField v-slot="{ field }" v-model="loginForm.password" name="remember-me">
+                      <FormCheck>
+                        <FormCheck.Input id="remember-me" v-model="loginForm.remember" v-bind="field" name="remember-me"
+                          type="checkbox" />
+                        <FormCheck.Label html-for="remember-me">
+                          {{ t("views.login.fields.remember_me") }}
+                        </FormCheck.Label>
+                      </FormCheck>
+                    </VeeField>
                   </div>
                   <RouterLink to="/auth/forgot-password">{{
                     t("views.login.fields.forgot_pass")
