@@ -214,8 +214,4 @@ class UserController extends BaseController
     {
         return $this->userActions->getTokensCount($user);
     }
-
-    public function resetPassword($id)
-    {
-    }
 }
