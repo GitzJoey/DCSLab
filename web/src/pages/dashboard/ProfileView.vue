@@ -24,6 +24,12 @@ import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
+import { InvalidSubmissionContext } from "vee-validate";
+import { UserProfileUpdateUserRoleFormFieldValues } from "../../types/requests/UserProfileUpdateUserRoleFormFieldValues";
+import { UserProfileUpdateUserProfileFormFieldValues } from "../../types/requests/UserProfileUpdateUserProfileFormFieldValues";
+import { UserProfileUpdateUserPasswordFormFieldValues } from "../../types/requests/UserProfileUpdateUserPasswordFormFieldValues";
+import { UserProfileUpdateUserSettingFormFieldValues } from "../../types/requests/UserProfileUpdateUserSettingFormFieldValues";
+import { UserProfileUpdateUserFormFieldValues } from "../../types/requests/UserProfileUpdateUserFormFieldValues";
 //#endregion
 
 //#region Declarations
@@ -50,6 +56,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: "User Setting", state: CardState.Expanded },
   { title: "Roles", state: CardState.Expanded, id: "roles" },
 ]);
+const crudErrors = ref<Record<string, Array<string>>>({});
 
 const roles = ref<Array<Roles>>([
   {
@@ -103,51 +110,34 @@ async function handleChangeRole(index: number) {
   }
 
   if (roles.value[index].active) {
-    const role = roles.value[index].value;
+    const role: UserProfileUpdateUserRoleFormFieldValues = {
+      roles: roles.value[index].value
+    };
+
     await profileServices.updateRoles(role);
   }
   loading.value = false;
 }
 
-async function handleUpdateAccountSettings(value: {
-  first_name: string;
-  last_name: string;
-  address: string;
-  city: string;
-  postal_code: string;
-  country: string;
-  tax_id: number;
-  ic_num: number;
-  remarks: string;
-}): Promise<void> {
+async function handleUpdateAccountSettings(values: UserProfileUpdateUserProfileFormFieldValues): Promise<void> {
   loading.value = true;
-  await profileServices.updateProfile(value);
+  await profileServices.updateProfile(values);
   loading.value = false;
 }
 
-async function handleChangePassword(value: {
-  password: string;
-  confirm_password: string;
-  current_password: string;
-}): Promise<void> {
+async function handleChangePassword(values: UserProfileUpdateUserPasswordFormFieldValues): Promise<void> {
   loading.value = true;
-  await profileServices.updatePassword(value);
+  await profileServices.updatePassword(values);
   loading.value = false;
 }
 
-async function handleSubmitUserSetting(value: {
-  theme: string;
-  date_format: string;
-  time_format: string;
-}): Promise<void> {
+async function handleSubmitUserSetting(values: UserProfileUpdateUserSettingFormFieldValues): Promise<void> {
   loading.value = true;
-  await profileServices.updateUserSetting(value);
+  await profileServices.updateUserSetting(values);
   loading.value = false;
 }
 
-async function handleSubmitUserProfile(values: {
-  name: string;
-}): Promise<void> {
+async function handleSubmitUserProfile(values: UserProfileUpdateUserFormFieldValues): Promise<void> {
   loading.value = true;
   await profileServices.updateUser(values);
   loading.value = false;
@@ -156,6 +146,22 @@ async function handleSubmitUserProfile(values: {
 //   loading.value = true;
 //   loading.value = false;
 // };
+
+const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
+  for (const [key, value] of Object.entries(formResults.errors)) {
+    if (value == undefined) return;
+    crudErrors.value[key] = [value];
+  }
+
+  if (Object.keys(formResults.errors).length > 0) {
+    const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
+
+    if (errorField) {
+      errorField.scrollIntoView({ behavior: 'smooth' });
+      window.scrollBy(0, -10);
+    }
+  }
+}
 // End Region Method
 
 //#region Watcher
@@ -184,6 +190,7 @@ async function handleSubmitUserProfile(values: {
             id="userProfie"
             v-slot="{ errors }"
             @submit="handleSubmitUserProfile"
+            @invalid-submit="onInvalidSubmit"
           >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
@@ -237,6 +244,7 @@ async function handleSubmitUserProfile(values: {
             id="accountSetting"
             v-slot="{ errors }"
             @submit="handleUpdateAccountSettings"
+            @invalid-submit="onInvalidSubmit"
           >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
@@ -441,6 +449,7 @@ async function handleSubmitUserProfile(values: {
             id="password"
             v-slot="{ errors }"
             @submit="handleChangePassword"
+            @invalid-submit="onInvalidSubmit"
           >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
@@ -529,6 +538,7 @@ async function handleSubmitUserProfile(values: {
             id="userSetting"
             v-slot="{ errors }"
             @submit="handleSubmitUserSetting"
+            @invalid-submit="onInvalidSubmit"
           >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
