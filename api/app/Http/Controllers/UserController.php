@@ -199,6 +199,10 @@ class UserController extends BaseController
             if (array_key_exists('api_token', $request)) {
                 $this->userActions->resetTokens($user);
             }
+
+            if (array_key_exists('reset_password', $request)) {
+                $this->userActions->resetPassword(($user));
+            }
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -209,9 +213,5 @@ class UserController extends BaseController
     public function getTokensCount(User $user)
     {
         return $this->userActions->getTokensCount($user);
-    }
-
-    public function resetPassword($id)
-    {
     }
 }

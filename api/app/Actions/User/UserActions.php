@@ -382,6 +382,12 @@ class UserActions
         $user->tokens()->delete();
     }
 
+    public function resetPassword(User $user): void
+    {
+        $user->password_changed_at = null;
+        $user->save();
+    }
+
     public function createDefaultSettings(): array
     {
         $settingPrefsTheme = new Setting();

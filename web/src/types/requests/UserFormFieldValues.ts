@@ -6,7 +6,7 @@ export interface UserFormFieldValues {
   last_name: string,
   address: string,
   city: string,
-  postal_code: number,    
+  postal_code: number,
   country: string,
   img_path: string,
   tax_id: number,
@@ -18,5 +18,5 @@ export interface UserFormFieldValues {
 
   theme: string,
   date_format: string,
-  time_format: string
+  time_format: string,
 }

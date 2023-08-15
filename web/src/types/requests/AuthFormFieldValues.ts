@@ -1,10 +1,10 @@
-export interface LoginRequest {
+export interface LoginFormFieldValues {
     email: string,
     password: string,
     remember: boolean | string | undefined,
 }
 
-export interface RegisterRequest {
+export interface RegisterFormFieldValues {
     name: string,
     email: string,
     password: string,
@@ -12,11 +12,11 @@ export interface RegisterRequest {
     terms: boolean,
 }
 
-export interface ForgotPasswordRequest {
+export interface ForgotPasswordFormFieldValues {
     email: string,
 }
 
-export interface ResetPasswordRequest {
+export interface ResetPasswordFormFieldValues {
     token: string,
     email: string,
     password: string,
