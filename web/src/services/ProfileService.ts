@@ -61,9 +61,7 @@ export default class ProfileService {
     
     try {
       const url = route("api.post.db.module.profile.update.roles", undefined, false, this.ziggyRoute);
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-      
-      console.log(payload);
+      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();      
 
       const response: AxiosResponse<Role> = await axios.post(url, payload);
       
