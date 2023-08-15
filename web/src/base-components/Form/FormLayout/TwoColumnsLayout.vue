@@ -78,8 +78,9 @@ const toggleSideTab = (show: boolean | undefined) => {
               <div
                 :class="{ 'transition ease-in duration-100 ml-auto mr-5 hidden xl:block': true, 'transform rotate-180': link.state }"
                 @click="onLinkClicked(index)">
-                <Lucide v-if="link.state" class="w-4 h-4" icon="Minus" />
-                <Lucide v-else class="w-4 h-4" icon="Plus" />
+                <!-- <p>{{ link.state }}</p> -->
+                <Lucide v-if="link.state === 'EXPANDED'" class="w-4 h-4" icon="Minus" />
+                <Lucide v-else-if="link.state" class="w-4 h-4" icon="Plus" />
               </div>
             </a>
           </template>
