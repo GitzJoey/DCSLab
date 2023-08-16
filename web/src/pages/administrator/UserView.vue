@@ -17,6 +17,7 @@ import {
   FormTextarea,
   FormSelect,
   FormFileUpload,
+  FormSwitch
 } from "../../base-components/Form";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
@@ -124,6 +125,8 @@ const userLists = ref<Collection<Array<User>> | null>({
 const rolesDDL = ref<Array<Role> | null>(null);
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 const countriesDDL = ref<Array<DropDownOption> | null>(null);
+const apiToken = ref<boolean>(false)
+const resetPassword = ref<boolean>(false)
 //#endregion
 
 //#region onMounted
@@ -252,6 +255,7 @@ const onSubmit = async (values: UserFormFieldValues, actions: FormActions<UserFo
   if (mode.value == ViewMode.FORM_CREATE) {
     result = await userServices.create(values);
   } else if (mode.value == ViewMode.FORM_EDIT) {
+    console.log(values, "<< ini values")
     result = await userServices.edit(userForm.value.data.ulid, values);
   } else {
     result.success = false;
@@ -502,7 +506,8 @@ watch(
                   <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                     {{ t('views.user.fields.name') }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userForm.data.name" name="name" rules="required|alpha_num"
+                  <VeeField v-slot="{ field }" v-model="userForm.data.name" name="name" 
+                  rules="required|alpha_num"
                     :label="t('views.user.fields.name')">
                     <FormInput id="name" name="name" v-bind="field" type="text"
                       :class="{ 'border-danger': errors['name'] }" :placeholder="t('views.user.fields.name')" />
@@ -688,19 +693,32 @@ watch(
                 </div>
               </div>
             </template>
-            <template #card-items-4>
+            <template  v-show="mode == ViewMode.FORM_EDIT" #card-items-4>
               <div class="p-5">
                 <div class="pb-4">
                   <FormLabel html-for="tokens_reset">
                     {{ t('views.user.fields.tokens.reset') }}
                   </FormLabel>
+                  <VeeField v-slot="{field}" v-model="apiToken" name="api_token" >
+                    <FormSwitch>
+                      <FormSwitch.Input id="api_token" name="api_token" v-bind="field" type="checkbox" :class="{ 'border-danger': errors['api_token'] }"  />
+                    </FormSwitch>
+                  </VeeField>
 
                 </div>
               </div>
             </template>
-            <template #card-items-5>
-              <div class="p-5">
+            <template  v-show="mode == ViewMode.FORM_EDIT" #card-items-5 >
+              <div  class="p-5" >
                 <div class="pb-4">
+                  <FormLabel html-for="reset_password">
+                    {{ t('views.user.fields.reset_password') }}
+                  </FormLabel>
+                  <VeeField v-slot="{field}" v-model="resetPassword" name="reset_password" >
+                    <FormSwitch>
+                      <FormSwitch.Input id="reset_password" name="reset_password" v-bind="field" type="checkbox" :class="{ 'border-danger': errors['reset_password'] }"  />
+                    </FormSwitch>
+                  </VeeField>
 
                 </div>
               </div>
