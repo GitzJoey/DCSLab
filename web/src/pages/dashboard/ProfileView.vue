@@ -1,6 +1,6 @@
 <script setup lang="ts">
 //#region Imports
-import { computed, ref } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -24,6 +24,8 @@ import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
+import { DropDownOption } from "../../types/models/DropDownOption";
+import DashboardService from "../../services/DashboardService";
 import { InvalidSubmissionContext } from "vee-validate";
 import { UserProfileUpdateUserRoleFormFieldValues } from "../../types/requests/UserProfileUpdateUserRoleFormFieldValues";
 import { UserProfileUpdateUserProfileFormFieldValues } from "../../types/requests/UserProfileUpdateUserProfileFormFieldValues";
@@ -34,6 +36,7 @@ import { UserProfileUpdateUserFormFieldValues } from "../../types/requests/UserP
 
 //#region Declarations
 const { t } = useI18n();
+const dashboardServices = new DashboardService();
 const userContextStore = useUserContextStore();
 
 const profileServices = new ProfileService();
@@ -61,9 +64,14 @@ const passwordSetting = ref({
   new_password: "",
   new_password_confirmation: "",
 });
+
+const countriesDDL = ref<Array<DropDownOption> | null>(null);
 //#endregion
 
 //#region onMounted
+onMounted(async () => {
+  getDDL();
+});
 //#endregion
 
 //#region Computed
@@ -96,6 +104,12 @@ const updateRoles = async (role_param: string) => {
     window.location.reload();
 
     loading.value = false;
+}
+
+const getDDL = (): void => {
+  dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
+    countriesDDL.value = result;
+  });
 }
 
 async function handleUpdateAccountSettings(values: UserProfileUpdateUserProfileFormFieldValues): Promise<void> {
@@ -221,7 +235,7 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
                     {{ t("views.profile.fields.city") }}
                   </FormLabel>
                   <VeeField v-slot="{ field }" v-model="userContext.profile.city" name="city" >
-                    <FormInput id="address" v-bind="{ field }" name="city" type="text" class="w-full" :placeholder="t('views.profile.fields.city')" />
+                    <FormInput id="city" v-bind="field" name="city" type="text" class="w-full" :placeholder="t('views.profile.fields.city')" />
                   </VeeField>
                 </div>
                 <div class="pb-4">
@@ -240,8 +254,8 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
                 <VeeField v-slot="{ field }" v-model="userContext.profile.country" name="country" >
                   <FormSelect
                     id="country" v-bind="field" name="country" :class="{'w-full' : true, 'border-danger':errors['country']}" :placeholder="t('views.profile.fields.country')" >
-                    <option>Singapore</option>
-                    <option>Indonesia</option>
+                      <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                      <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
                   </FormSelect>
                 </VeeField>
               </div>
