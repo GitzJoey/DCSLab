@@ -35,26 +35,12 @@ import { UserProfileUpdateUserFormFieldValues } from "../../types/requests/UserP
 //#region Declarations
 const { t } = useI18n();
 const userContextStore = useUserContextStore();
-type Roles = {
-  active: boolean;
-  images: string;
-  value: string;
-};
+
 const profileServices = new ProfileService();
 //#endregion
 
 //#region Data - Pinia
 const userContext = computed(() => userContextStore.getUserContext);
-
-const hasRolePOSOwner = computed(() => {
-  let result = false;
-  for (const r of userContext.value.roles) {
-    if (r.display_name == 'POS-owner') {
-      result = true;
-    }
-  }
-  return result;
-});
 //#endregion
 
 //#region Data - UI
@@ -67,31 +53,13 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: "Roles", state: CardState.Expanded, id: "roles" },
 ]);
 const crudErrors = ref<Record<string, Array<string>>>({});
-
-const roles = ref<Array<Roles>>([
-  {
-    images: posSystemImage,
-    active: false,
-    value: "pos",
-  },
-  {
-    images: wareHouseImage,
-    active: false,
-    value: "wh",
-  },
-  {
-    images: accountingImage,
-    active: false,
-    value: "wh",
-  },
-]);
 //#endregion
 
 //#region Data - Views
 const passwordSetting = ref({
   current_password: "",
-  password: "",
-  password_confirmation: "",
+  new_password: "",
+  new_password_confirmation: "",
 });
 //#endregion
 
@@ -99,6 +67,13 @@ const passwordSetting = ref({
 //#endregion
 
 //#region Computed
+const hasRolePOSOwner = computed(() => {
+  return userContext.value.roles.some(role => role.display_name === 'POS-owner');
+});
+
+const hasRoleWHOwner = computed(() => {
+    return false;
+});
 //#endregion
 
 // Region Method
@@ -110,23 +85,17 @@ const handleExpandCard = (index: number) => {
   }
 };
 
-async function handleChangeRole(index: number) {
-  loading.value = true;
-  roles.value[index].active = !roles.value[index].active;
-  for (let i = 0; i < roles.value.length; i++) {
-    if (roles.value[index].active && i !== index) {
-      roles.value[i].active = false;
-    }
-  }
-
-  if (roles.value[index].active) {
+const updateRoles = async (role_param: string) => {
+    loading.value = true;
     const role: UserProfileUpdateUserRoleFormFieldValues = {
-      roles: roles.value[index].value
+      roles: role_param
     };
-
+    
     await profileServices.updateRoles(role);
-  }
-  loading.value = false;
+
+    window.location.reload();
+
+    loading.value = false;
 }
 
 async function handleUpdateAccountSettings(values: UserProfileUpdateUserProfileFormFieldValues): Promise<void> {
@@ -195,7 +164,7 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">
-                <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
+                <FormLabel html-for="name" :class="{'text-danger' : errors['name']}">
                   {{ t("views.profile.fields.name") }}
                 </FormLabel>
                 <VeeField v-slot="{ field }" v-model="userContext.name" name="name" rules="required" :label="t('views.profile.fields.name')" >
@@ -206,8 +175,7 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
                 <FormLabel html-for="email">
                   {{ t("views.profile.fields.email") }}
                 </FormLabel>
-                <FormInput id="email" v-model="userContext.email" name="email" type="text" class="w-full"
-                  :placeholder="t('views.profile.fields.email')" readonly />
+                <FormInput id="email" v-model="userContext.email" name="email" type="text" class="w-full" :placeholder="t('views.profile.fields.email')" readonly />
               </div>
 
               <div class="flex gap-4">
@@ -220,7 +188,7 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
         </template>
 
         <template #card-items-1>
-          <VeeForm id="accountSetting" v-slot="{ errors }" @submit="handleUpdateAccountSettings">
+          <VeeForm id="accountSetting" v-slot="{ errors }" @submit="handleUpdateAccountSettings" @invalid-submit="onInvalidSubmit" >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">
@@ -325,20 +293,20 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
               </div>
 
               <div class="pb-4">
-                <FormLabel html-for="password">
-                  {{ t("views.profile.fields.change_password.password") }}
+                <FormLabel html-for="new_password">
+                  {{ t("views.profile.fields.change_password.new_password") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="passwordSetting.password" name="password" >
-                  <FormInput id="password" v-bind="field" name="password" type="password" class="w-full" :placeholder=" t('views.profile.fields.change_password.password') " />
+                <VeeField v-slot="{ field }" v-model="passwordSetting.new_password" name="new_password" >
+                  <FormInput id="new_password" v-bind="field" name="new_password" type="password" class="w-full" :placeholder=" t('views.profile.fields.change_password.new_password') " />
                 </VeeField>
               </div>
 
               <div class="pb-4">
-                <FormLabel html-for="password_confirmation">
-                  {{ t("views.profile.fields.change_password.password_confirmation") }}
+                <FormLabel html-for="new_password_confirmation">
+                  {{ t("views.profile.fields.change_password.new_password_confirmation") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="passwordSetting.password_confirmation" name="password_confirmation" >
-                  <FormInput id="password_confirmation" v-bind="field" name="password_confirmation" type="password" class="w-full" :placeholder=" t('views.profile.fields.change_password.password_confirmation') " />
+                <VeeField v-slot="{ field }" v-model="passwordSetting.new_password_confirmation" name="new_password_confirmation" >
+                  <FormInput id="new_password_confirmation" v-bind="field" name="new_password_confirmation" type="password" class="w-full" :placeholder=" t('views.profile.fields.change_password.new_password_confirmation') " />
                 </VeeField>
               </div>
 
@@ -415,17 +383,21 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
         <template #card-items-roles>
           <div class="p-5">
             <div class="pb-4">
-              <div class="grid grid-cols-3 gap-2 place-items center">
-                <div v-for="(item, index) in roles" :key="index" class="flex flex-col items-center" >
-                  <div class="cursor-pointer flex flex-col items-center justify-center" @click="handleChangeRole(index)" >
-                    <img alt="" :src="item.images" width="100" height="100" />
-                    <div v-if="item.active" class="grid grid-cols-1 place-items-center" >
-                      <Check class="text-success" />
-                    </div>
-                    <button v-else class="btn btn-sm btn-secondary hover:btn-primary" >
-                      {{ t("components.buttons.activate") }}
-                    </button>
-                  </div>
+              <div class="grid grid-cols-4 gap-2 place-items-center">
+                <div class="flex flex-col">
+                  <img alt="" :src="posSystemImage" width="100" height="100" />
+                  <div v-if="hasRolePOSOwner" class="grid grid-cols-1 place-items-center"><Check class="text-success" /></div>
+                  <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('pos')">{{ t('components.buttons.activate') }}</button>
+                </div>
+                <div class="text-center">                  
+                  <img alt="" :src="wareHouseImage" width="100" height="100" />
+                  <div v-if="hasRoleWHOwner" class="grid grid-cols-1 place-items-center"><Check class="text-success" /></div>
+                  <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
+                </div>
+                <div class="text-center">                  
+                  <img alt="" :src="accountingImage" width="100" height="100" />
+                  <div v-if="hasRoleWHOwner" class="grid grid-cols-1 place-items-center"><Check class="text-success" /></div>
+                  <button v-else class="btn btn-sm btn-secondary hover:btn-primary" @click="updateRoles('wh')">{{ t('components.buttons.activate') }}</button>
                 </div>
               </div>
             </div>
