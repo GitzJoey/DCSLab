@@ -27,8 +27,8 @@
         },
         "change_password": {
             "current_password": "Password Sekarang",
-            "password": "Password Baru",
-            "password_confirmation": "Konfirmasi Password Baru"
+            "new_password": "Password Baru",
+            "new_password_confirmation": "Konfirmasi Password Baru"
         }
     },
     "tooltip": {

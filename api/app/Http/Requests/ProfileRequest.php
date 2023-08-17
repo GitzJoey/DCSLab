@@ -76,8 +76,8 @@ class ProfileRequest extends FormRequest
             case 'changePassword':
                 return [
                     'current_password' => 'required',
-                    'password' => 'required|confirmed',
-                    'password_confirmation' => 'required',
+                    'new_password' => 'required|confirmed',
+                    'new_password_confirmation' => 'required',
                 ];
             default:
                 return [

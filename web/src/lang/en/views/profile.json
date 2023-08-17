@@ -27,8 +27,8 @@
         },
         "change_password": {
             "current_password": "Current Password",
-            "password": "New Password",
-            "password_confirmation": "Confirm Password"
+            "new_password": "New Password",
+            "new_password_confirmation": "Confirm Password"
         }
     },
     "tooltip": {
