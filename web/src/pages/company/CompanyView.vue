@@ -59,7 +59,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const companyForm = ref<CompanyFormRequest>({
+const companyForm = ref<Resource<Company>>({
   data: {
     id: '',
     ulid: '',

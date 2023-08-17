@@ -74,7 +74,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const userForm = ref<UserFormRequest>({
+const userForm = ref<Resource<User>>({
   data: {
     id: '',
     ulid: '',

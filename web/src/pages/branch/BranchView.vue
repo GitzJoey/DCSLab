@@ -61,7 +61,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const branchForm = ref<BranchFormRequest>({
+const branchForm = ref<Resource<Branch>>({
   data: {
     id: '',
     ulid: '',
