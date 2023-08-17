@@ -254,7 +254,7 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
     const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
 
     if (errorField) {
-      errorField.scrollIntoView({ behavior: 'smooth' });
+      errorField.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }
 }
