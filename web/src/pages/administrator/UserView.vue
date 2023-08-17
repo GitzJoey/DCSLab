@@ -21,7 +21,7 @@ import {
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
-import { UserFormFieldValues } from "../../types/requests/UserFormFieldValues";
+import { UserFormFieldValues } from "../../types/forms/UserFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -30,13 +30,12 @@ import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import RoleService from "../../services/RoleService";
 import { DropDownOption } from "../../types/models/DropDownOption";
-import { UserFormRequest } from "../../types/requests/UserFormRequest";
 import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
-import { SearchRequest } from "../../types/requests/SearchRequest";
+import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { FormActions, InvalidSubmissionContext } from "vee-validate";
 //#endregion
 
@@ -137,7 +136,7 @@ onMounted(async () => {
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   loading.value = true;
 
-  const searchReq: SearchRequest = {
+  const searchReq: SearchFormFieldValues = {
     search: search,
     refresh: refresh,
     paginate: paginate,
@@ -213,7 +212,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('User');
 
-  userForm.value = cachedData == null ? emptyUser() : cachedData as UserFormRequest;
+  userForm.value = cachedData == null ? emptyUser() : cachedData as Resource<User>;
 }
 
 const viewSelected = (idx: number) => {

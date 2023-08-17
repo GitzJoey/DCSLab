@@ -13,7 +13,7 @@ import { FormInput, FormInputCode, FormLabel, FormTextarea, FormSelect, FormSwit
 import { ViewMode } from "../../types/enums/ViewMode";
 import BranchService from "../../services/BranchService";
 import { Branch } from "../../types/models/Branch";
-import { BranchFormFieldValues } from "../../types/requests/BranchFormFieldValues";
+import { BranchFormFieldValues } from "../../types/forms/BranchFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -21,12 +21,11 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { DropDownOption } from "../../types/models/DropDownOption";
-import { BranchFormRequest } from "../../types/requests/BranchFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
-import { SearchRequest } from "../../types/requests/SearchRequest";
+import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { FormActions, InvalidSubmissionContext } from "vee-validate";
 import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
@@ -120,7 +119,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
 
   let company_id = userLocation.value.company.id;
 
-  const searchReq: SearchRequest = {
+  const searchReq: SearchFormFieldValues = {
     search: search,
     refresh: refresh,
     paginate: paginate,
@@ -180,7 +179,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('Branch');
 
-  branchForm.value = cachedData == null ? emptyBranch() : cachedData as BranchFormRequest;
+  branchForm.value = cachedData == null ? emptyBranch() : cachedData as Resource<Branch>;
 }
 
 const viewSelected = (idx: number) => {

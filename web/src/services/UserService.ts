@@ -7,8 +7,8 @@ import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { SearchRequest } from "../types/requests/SearchRequest";
-import { UserFormFieldValues } from "../types/requests/UserFormFieldValues";
+import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
+import { UserFormFieldValues } from "../types/forms/UserFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class UserService {
@@ -51,7 +51,7 @@ export default class UserService {
         }
     }
 
-    public async readAny(args: SearchRequest): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
+    public async readAny(args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
         const result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = {
             success: false,
         }

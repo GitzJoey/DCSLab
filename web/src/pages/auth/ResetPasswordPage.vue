@@ -11,7 +11,7 @@ import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
 import AuthService from "../../services/AuthServices";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { ResetPasswordFormFieldValues } from "../../types/requests/AuthFormFieldValues";
+import { ResetPasswordFormFieldValues } from "../../types/forms/AuthFormFieldValues";
 import { ResetPassword } from "../../types/models/ResetPassword";
 
 const { t } = useI18n();
