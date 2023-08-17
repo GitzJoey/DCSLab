@@ -1,0 +1,88 @@
+.mobile-menu {
+  .menu__divider {
+    width: 100%;
+    height: 1px;
+    background-color: theme("colors.white" / 8%);
+    position: relative;
+  }
+  .menu {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    color: white;
+    .menu__title {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-left: theme("spacing.3");
+      .menu__sub-icon {
+        transition-property: theme("transitionProperty.DEFAULT");
+        transition-timing-function: theme("transitionTimingFunction.in");
+        transition-duration: theme("transitionDuration.100");
+        margin-left: auto;
+        svg {
+          width: theme("spacing.5");
+          height: theme("spacing.5");
+        }
+      }
+    }
+  }
+  ul {
+    & > li {
+      /* First level */
+      & > .menu {
+        padding-left: theme("spacing.6");
+        padding-right: theme("spacing.6");
+      }
+      & > ul {
+        background: theme("colors.black" / 10%);
+        border-radius: theme("borderRadius.lg");
+        margin: theme("spacing.1") theme("spacing.4");
+        &:not(.menu__sub-open) {
+          display: none;
+        }
+        & > li {
+          /* Second level */
+          & > .menu {
+            padding-left: theme("spacing.4");
+            padding-right: theme("spacing.4");
+          }
+          & > ul {
+            background: theme("colors.black" / 10%);
+            border-radius: theme("borderRadius.lg");
+            margin: theme("spacing.1") auto;
+            &:not(.menu__sub-open) {
+              display: none;
+            }
+            & > li {
+              /* Third level */
+              & > .menu {
+                padding-left: theme("spacing.4");
+                padding-right: theme("spacing.4");
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.dark {
+  .mobile-menu {
+    ul {
+      & > li {
+        /* First level */
+        & > ul {
+          background-color: theme("colors.darkmode.700");
+          & > li {
+            /* Second level */
+            & > ul {
+              background-color: theme("colors.darkmode.600");
+            }
+          }
+        }
+      }
+    }
+  }
+}
