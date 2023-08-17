@@ -3,7 +3,7 @@ import { authAxiosInstance } from "../axios";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { Resource } from "../types/resources/Resource";
 import { UserProfile } from "../types/models/UserProfile";
-import { LoginRequest, RegisterRequest, ForgotPasswordRequest, ResetPasswordRequest } from "../types/requests/AuthRequests";
+import { LoginRequest, RegisterRequest, ForgotPasswordRequest, ResetPasswordRequest } from "../types/forms/AuthRequests";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { ForgotPassword } from "../types/models/ForgotPassword";
 import { ResetPassword } from "../types/models/ResetPassword";

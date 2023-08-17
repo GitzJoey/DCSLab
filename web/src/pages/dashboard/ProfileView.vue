@@ -45,6 +45,16 @@ const profileServices = new ProfileService();
 
 //#region Data - Pinia
 const userContext = computed(() => userContextStore.getUserContext);
+
+const hasRolePOSOwner = computed(() => {
+  let result = false;
+  for (const r of userContext.value.roles) {
+    if (r.display_name == 'POS-owner') {
+      result = true;
+    }
+  }
+  return result;
+});
 //#endregion
 
 //#region Data - UI
@@ -185,7 +195,7 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">
-                <FormLabel html-for="name" :class="{'text-danger' : errors['name']}">
+                <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
                   {{ t("views.profile.fields.name") }}
                 </FormLabel>
                 <VeeField v-slot="{ field }" v-model="userContext.name" name="name" rules="required" :label="t('views.profile.fields.name')" >
@@ -196,7 +206,8 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
                 <FormLabel html-for="email">
                   {{ t("views.profile.fields.email") }}
                 </FormLabel>
-                <FormInput id="email" v-model="userContext.email" name="email" type="text" class="w-full" :placeholder="t('views.profile.fields.email')" readonly />
+                <FormInput id="email" v-model="userContext.email" name="email" type="text" class="w-full"
+                  :placeholder="t('views.profile.fields.email')" readonly />
               </div>
 
               <div class="flex gap-4">
@@ -209,7 +220,7 @@ const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
         </template>
 
         <template #card-items-1>
-          <VeeForm id="accountSetting" v-slot="{ errors }" @submit="handleUpdateAccountSettings" @invalid-submit="onInvalidSubmit" >
+          <VeeForm id="accountSetting" v-slot="{ errors }" @submit="handleUpdateAccountSettings">
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">

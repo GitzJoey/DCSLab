@@ -13,7 +13,7 @@ import { FormInput, FormLabel, FormTextarea, FormSelect, FormSwitch, FormInputCo
 import { ViewMode } from "../../types/enums/ViewMode";
 import CompanyService from "../../services/CompanyService";
 import { Company } from "../../types/models/Company";
-import { CompanyFormFieldValues } from "../../types/requests/CompanyFormFieldValues";
+import { CompanyFormFieldValues } from "../../types/forms/CompanyFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -21,12 +21,11 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { DropDownOption } from "../../types/models/DropDownOption";
-import { CompanyFormRequest } from "../../types/requests/CompanyFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
-import { SearchRequest } from "../../types/requests/SearchRequest";
+import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { FormActions, InvalidSubmissionContext } from "vee-validate";
 //#endregion
 
@@ -47,7 +46,7 @@ const companyServices = new CompanyService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<Record<string, string> | null>(null);
+const datalistErrors = ref<Record<string, Array<string>> | null>(null);
 const crudErrors = ref<Record<string, Array<string>>>({});
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Company Information', state: CardState.Expanded, },
@@ -59,7 +58,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const companyForm = ref<CompanyFormRequest>({
+const companyForm = ref<Resource<Company>>({
   data: {
     id: '',
     ulid: '',
@@ -106,7 +105,7 @@ onMounted(async () => {
 const getCompanies = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   loading.value = true;
 
-  const searchReq: SearchRequest = {
+  const searchReq: SearchFormFieldValues = {
     search: search,
     refresh: refresh,
     paginate: paginate,
@@ -119,7 +118,7 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   if (result.success && result.data) {
     companyLists.value = result.data as Collection<Array<Company>>;
   } else {
-    datalistErrors.value = result.errors as Record<string, string>;
+    datalistErrors.value = result.errors as Record<string, Array<string>>;
   }
 
   loading.value = false;
@@ -155,7 +154,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('Company');
 
-  companyForm.value = cachedData == null ? emptyCompany() : cachedData as CompanyFormRequest;
+  companyForm.value = cachedData == null ? emptyCompany() : cachedData as Resource<Company>;
 }
 
 const viewSelected = (idx: number) => {
@@ -224,17 +223,11 @@ const onSubmit = async (values: CompanyFormFieldValues, actions: FormActions<Com
 };
 
 const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
-  for (const [key, value] of Object.entries(formResults.errors)) {
-    if (value == undefined) return;
-    crudErrors.value[key] = [value];
-  }
-
   if (Object.keys(formResults.errors).length > 0) {
     const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
 
     if (errorField) {
-      errorField.scrollIntoView({ behavior: 'smooth' });
-      window.scrollBy(0, -10);
+      errorField.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }
 }
@@ -414,8 +407,8 @@ watch(
         </DataList>
       </div>
       <div v-else>
+        <AlertPlaceholder :errors="crudErrors" />
         <VeeForm id="companyForm" v-slot="{ errors, handleReset }" @submit="onSubmit" @invalid-submit="onInvalidSubmit">
-          <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">

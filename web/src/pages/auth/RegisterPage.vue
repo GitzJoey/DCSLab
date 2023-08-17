@@ -10,7 +10,7 @@ import { useI18n } from "vue-i18n";
 import AuthService from "../../services/AuthServices";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
-import { RegisterFormFieldValues } from "../../types/requests/AuthFormFieldValues";
+import { RegisterFormFieldValues } from "../../types/forms/AuthFormFieldValues";
 import { FormActions } from "vee-validate";
 import { UserProfile } from "../../types/models/UserProfile";
 import { ServiceResponse } from "../../types/services/ServiceResponse";

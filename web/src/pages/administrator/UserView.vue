@@ -21,7 +21,7 @@ import {
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
-import { UserFormFieldValues } from "../../types/requests/UserFormFieldValues";
+import { UserFormFieldValues } from "../../types/forms/UserFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -30,13 +30,12 @@ import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import RoleService from "../../services/RoleService";
 import { DropDownOption } from "../../types/models/DropDownOption";
-import { UserFormRequest } from "../../types/requests/UserFormRequest";
 import DashboardService from "../../services/DashboardService";
 import { Role } from "../../types/models/Role";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
-import { SearchRequest } from "../../types/requests/SearchRequest";
+import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { FormActions, InvalidSubmissionContext } from "vee-validate";
 //#endregion
 
@@ -57,7 +56,7 @@ const cacheServices = new CacheService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<Record<string, string> | null>(null);
+const datalistErrors = ref<Record<string, Array<string>> | null>(null);
 const crudErrors = ref<Record<string, Array<string>>>({});
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'User Information', state: CardState.Expanded, },
@@ -74,7 +73,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const userForm = ref<UserFormRequest>({
+const userForm = ref<Resource<User>>({
   data: {
     id: '',
     ulid: '',
@@ -137,7 +136,7 @@ onMounted(async () => {
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   loading.value = true;
 
-  const searchReq: SearchRequest = {
+  const searchReq: SearchFormFieldValues = {
     search: search,
     refresh: refresh,
     paginate: paginate,
@@ -150,7 +149,7 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
   if (result.success && result.data) {
     userLists.value = result.data as Collection<Array<User>>;
   } else {
-    datalistErrors.value = result.errors as Record<string, string>;
+    datalistErrors.value = result.errors as Record<string, Array<string>>;
   }
 
   loading.value = false;
@@ -213,7 +212,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('User');
 
-  userForm.value = cachedData == null ? emptyUser() : cachedData as UserFormRequest;
+  userForm.value = cachedData == null ? emptyUser() : cachedData as Resource<User>;
 }
 
 const viewSelected = (idx: number) => {
@@ -267,16 +266,11 @@ const onSubmit = async (values: UserFormFieldValues, actions: FormActions<UserFo
 };
 
 const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
-  for (const [key, value] of Object.entries(formResults.errors)) {
-    if (value == undefined) return;
-    crudErrors.value[key] = [value];
-  }
-
   if (Object.keys(formResults.errors).length > 0) {
     const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
 
     if (errorField) {
-      errorField.scrollIntoView({ behavior: 'smooth' });
+      errorField.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }
 }
@@ -493,8 +487,8 @@ watch(
         </DataList>
       </div>
       <div v-else>
+        <AlertPlaceholder :errors="crudErrors" />
         <VeeForm id="userForm" v-slot="{ errors, handleReset }" @submit="onSubmit" @invalid-submit="onInvalidSubmit">
-          <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">

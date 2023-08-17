@@ -7,8 +7,8 @@ import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { SearchRequest } from "../types/requests/SearchRequest";
-import { BranchFormFieldValues } from "../types/requests/BranchFormFieldValues";
+import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
+import { BranchFormFieldValues } from "../types/forms/BranchFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class BranchService {
@@ -29,7 +29,7 @@ export default class BranchService {
         }
 
         try {
-            const url = route('api.post.db.company.branch.save', undefined, false, this.ziggyRoute);        
+            const url = route('api.post.db.company.branch.save', undefined, false, this.ziggyRoute);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Branch> = await axios.post(url, payload);
@@ -53,7 +53,7 @@ export default class BranchService {
         }
     }
 
-    public async readAny(company_id: string, args: SearchRequest): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
+    public async readAny(company_id: string, args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
         const result: ServiceResponse<Collection<Branch[]> | Resource<Branch[]> | null> = {
             success: false
         }
@@ -127,11 +127,11 @@ export default class BranchService {
         }
 
         try {
-            const url = route('api.post.db.company.branch.edit', ulid, false, this.ziggyRoute);        
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();        
+            const url = route('api.post.db.company.branch.edit', ulid, false, this.ziggyRoute);
+            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Branch> = await axios.post(url, payload);
-            
+
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             if (response.status == StatusCode.OK) {

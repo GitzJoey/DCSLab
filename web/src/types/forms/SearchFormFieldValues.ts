@@ -1,4 +1,4 @@
-export interface SearchRequest {
+export interface SearchFormFieldValues {
     search: string | null,
     refresh: boolean,
     paginate: boolean,
