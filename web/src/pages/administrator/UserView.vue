@@ -266,11 +266,6 @@ const onSubmit = async (values: UserFormFieldValues, actions: FormActions<UserFo
 };
 
 const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
-  for (const [key, value] of Object.entries(formResults.errors)) {
-    if (value == undefined) return;
-    crudErrors.value[key] = [value];
-  }
-
   if (Object.keys(formResults.errors).length > 0) {
     const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
 
@@ -492,8 +487,8 @@ watch(
         </DataList>
       </div>
       <div v-else>
+        <AlertPlaceholder :errors="crudErrors" />
         <VeeForm id="userForm" v-slot="{ errors, handleReset }" @submit="onSubmit" @invalid-submit="onInvalidSubmit">
-          <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">
