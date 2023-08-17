@@ -6,7 +6,7 @@ import { useI18n } from "vue-i18n";
 
 export interface AlertPlaceholderProps {
     alertType: string,
-    errors: Record<string, string> | null,
+    errors: Record<string, Array<string>> | null,
     title: string,
 }
 
@@ -46,6 +46,8 @@ const computedVariant = computed(() => {
                     <ul class="list-disc">
                         <template v-for="(e, eIdx) in errors" :key="eIdx">
                             <li v-if="(typeof e === 'string')">{{ e }}</li>
+                            <li v-for="(ee, eeIdx) in e" v-else-if="(typeof e === 'object' && Array.isArray(e))"
+                                :key="eeIdx" class="ml-5">{{ ee }}</li>
                         </template>
                     </ul>
                 </div>

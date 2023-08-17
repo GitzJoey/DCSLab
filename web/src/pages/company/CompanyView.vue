@@ -47,7 +47,7 @@ const companyServices = new CompanyService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<Record<string, string> | null>(null);
+const datalistErrors = ref<Record<string, Array<string>> | null>(null);
 const crudErrors = ref<Record<string, Array<string>>>({});
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Company Information', state: CardState.Expanded, },
@@ -119,7 +119,7 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
   if (result.success && result.data) {
     companyLists.value = result.data as Collection<Array<Company>>;
   } else {
-    datalistErrors.value = result.errors as Record<string, string>;
+    datalistErrors.value = result.errors as Record<string, Array<string>>;
   }
 
   loading.value = false;

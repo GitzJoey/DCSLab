@@ -6,7 +6,7 @@ export default class ErrorHandlerService {
         const result: ServiceResponse<null> = {
             success: false,
             errors: {
-                ziggy: message ? message : 'Ziggy error: unknown',
+                ziggy: [message ? message : 'Ziggy error: unknown'],
             }
         }
 
@@ -26,7 +26,7 @@ export default class ErrorHandlerService {
                 result.errors = {};
             }
 
-            result.errors[key] = axiosResp.data.errors[key][0];
+            result.errors[key] = axiosResp.data.errors[key];
         }
 
         return result;
@@ -38,7 +38,7 @@ export default class ErrorHandlerService {
         const result: ServiceResponse<null> = {
             success: false,
             errors: {
-                axios: axiosResp.data.message + ' (' + axiosResp.status + ':' + axiosResp.statusText + ')'
+                axios: [axiosResp.data.message + ' (' + axiosResp.status + ':' + axiosResp.statusText + ')']
             }
         }
 
