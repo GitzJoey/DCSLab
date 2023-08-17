@@ -12,27 +12,48 @@ return [
     'truncate_tables' => true,
 
     'roles_structure' => [
-        'superadministrator' => [
-            'users' => 'c,r,u,d',
-            'payments' => 'c,r,u,d',
+        'developer' => [
             'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'setting' => 'r,u',
         ],
         'administrator' => [
-            'users' => 'c,r,u,d',
             'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'setting' => 'r,u',
+
+            'user' => 'c,r,ra,u',
         ],
         'user' => [
             'profile' => 'r,u',
+            'messaging' => 'c,r,u,d',
+            'setting' => 'r,u',
         ],
-        'role_name' => [
-            'module_1_name' => 'c,r,u,d',
+        /* #region Extensions */
+        'POS-owner' => [
+            'company' => 'c,r,ra,u,d',
+            'branch' => 'c,r,ra,u,d',
         ],
+        'POS-employee' => [
+            'company' => 'c',
+            'branch' => 'c',
+        ],
+        /* #endregion */
     ],
 
     'permissions_map' => [
         'c' => 'create',
         'r' => 'read',
+        'ra' => 'readAny',
         'u' => 'update',
         'd' => 'delete',
+
+        'rs' => 'restore',
+
+        'ac' => 'authorizeCreate',
+        'au' => 'authorizeUpdate',
+        'ad' => 'authorizeDelete',
+
+        'ars' => 'authorizeRestore',
     ],
 ];

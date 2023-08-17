@@ -1,0 +1,8 @@
+{
+    "preset": "laravel",
+    "notPath": [
+        "config/laratrust.php",
+        "config/laratrust_seeder.php",
+        "database/seeders/LaratrustSeeder.php"
+    ]
+}
