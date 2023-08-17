@@ -3,18 +3,9 @@
 namespace App\Console\Commands;
 
 use Database\Seeders\BranchTableSeeder;
-use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\CustomerGroupTableSeeder;
-use Database\Seeders\CustomerTableSeeder;
-use Database\Seeders\EmployeeTableSeeder;
-use Database\Seeders\ProductGroupTableSeeder;
-use Database\Seeders\ProductTableSeeder;
 use Database\Seeders\RoleTableSeeder;
-use Database\Seeders\SupplierTableSeeder;
-use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\UserTableSeeder;
-use Database\Seeders\WarehouseTableSeeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
 

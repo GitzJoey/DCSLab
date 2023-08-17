@@ -38,7 +38,7 @@ class RoleActions
         return $role->with('permissions')->first();
     }
 
-    public function readBy(string $key, string $value): Role|null
+    public function readBy(string $key, string $value): ?Role
     {
         switch (strtoupper($key)) {
             case 'ID':

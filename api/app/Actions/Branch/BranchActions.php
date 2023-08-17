@@ -289,7 +289,7 @@ class BranchActions
         return $code;
     }
 
-    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
+    public function isUniqueCode(string $code, int $companyId, int $exceptId = null): bool
     {
         $result = Branch::whereCompanyId($companyId)->where('code', '=', $code);
 

@@ -208,7 +208,7 @@ class UserActions
         }
     }
 
-    public function update(User $user, ?array $userArr = null, ?array $rolesArr = null, ?array $profileArr = null, ?array $settingsArr = null): User
+    public function update(User $user, array $userArr = null, array $rolesArr = null, array $profileArr = null, array $settingsArr = null): User
     {
         DB::beginTransaction();
         $timer_start = microtime(true);
