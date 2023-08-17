@@ -2,8 +2,8 @@
 
 namespace App\Actions\Company;
 
-use App\Actions\ChartOfAccount\ChartOfAccountActions;
 use App\Actions\Randomizer\RandomizerActions;
+use App\Enums\RecordStatus;
 use App\Models\Company;
 use App\Models\User;
 use App\Traits\CacheHelper;
@@ -43,7 +43,7 @@ class CompanyActions
 
             if ($usr->companies()->count() == 0) {
                 $default = true;
-                $status = 1;
+                $status = RecordStatus::ACTIVE->value;
             }
 
             $company = new Company();
@@ -55,9 +55,6 @@ class CompanyActions
             $company->save();
 
             $usr->companies()->attach([$company->id]);
-
-            $coaAction = app(ChartOfAccountActions::class);
-            $coaAction->createDefaultAccountPerCompany($company->id);
 
             DB::commit();
 
@@ -145,7 +142,7 @@ class CompanyActions
 
     public function read(Company $company): Company
     {
-        return $company->with('branches.warehouses')->first();
+        return $company->with('branches')->first();
     }
 
     public function isDefaultCompany(Company $company): bool
@@ -183,18 +180,6 @@ class CompanyActions
 
             if (in_array('branches', $with)) {
                 $companies = $companies->with(['branches' => function ($query) {
-                    $query->where('status', '=', 1);
-                }]);
-            }
-
-            if (in_array('warehouses', $with)) {
-                $companies = $companies->with(['warehouses' => function ($query) {
-                    $query->where('status', '=', 1);
-                }]);
-            }
-
-            if (in_array('employees', $with)) {
-                $companies = $companies->with(['employees' => function ($query) {
                     $query->where('status', '=', 1);
                 }]);
             }

@@ -2,7 +2,6 @@
 
 namespace App\Actions\Branch;
 
-use App\Actions\ChartOfAccount\ChartOfAccountActions;
 use App\Actions\Randomizer\RandomizerActions;
 use App\Models\Branch;
 use App\Models\Company;
@@ -57,16 +56,6 @@ class BranchActions
             $branch->remarks = $remarks;
             $branch->status = $status;
             $branch->save();
-
-            $coaActions = app(ChartOfAccountActions::class);
-            if ($branch->company->chartOfAccounts()->count() == 0) {
-                $coaActions->createDefaultAccountPerCompany($branch->company_id);
-            }
-
-            $coaActions->createDefaultAccountPerBranch(
-                $branch->company_id,
-                $branch->id
-            );
 
             DB::commit();
 
@@ -158,7 +147,7 @@ class BranchActions
 
     public function read(Branch $branch): Branch
     {
-        return $branch->with('warehouses')->first();
+        return $branch->first();
     }
 
     public function getBranchByCompany(int $companyId = 0, Company $company = null): Collection

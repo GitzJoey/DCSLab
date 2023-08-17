@@ -36,9 +36,6 @@ class CompanyResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('branches'), [
                 'branches' => BranchResource::collection($this->branches),
             ]),
-            $this->mergeWhen($this->relationLoaded('warehouses'), [
-                'warehouses' => WarehouseResource::collection($this->warehouses),
-            ]),
         ];
     }
 
