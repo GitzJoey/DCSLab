@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
-import SimpleMenu from "../layouts/SimpleMenu/SimpleMenu.vue";
 import Page1 from "../pages/Page1.vue";
 import Page2 from "../pages/Page2.vue";
 
