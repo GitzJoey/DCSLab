@@ -60,11 +60,11 @@ const setNewUserLocation = (companyId: string, branchId: string) => {
 </script>
 
 <template>
-  <Breadcrumb light :class="[
-    'h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x md:pl-6']">
+  <Breadcrumb light
+    :class="['h-[45px] md:ml-10 md:border-l border-white/[0.08] dark:border-white/[0.08] mr-auto -intro-x md:pl-6']">
     <Breadcrumb.Text>
       <Menu>
-        <Menu.Button var iant="primary">
+        <Menu.Button variant="primary">
           <Lucide icon="Umbrella" />
         </Menu.Button>
         <Menu.Items :class="{

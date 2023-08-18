@@ -16,6 +16,7 @@ import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import defUserUrl from "../../assets/images/def-user.png";
+import UserLocation from "../../base-components/UserLocation";
 
 const dashboardService = new DashboardService();
 
