@@ -30,4 +30,12 @@ export const useSideMenuStore = defineStore("sideMenu", {
       }
     ],
   }),
+  getters: {
+    getUserMenu: state => state.menu,
+  },
+  actions: {
+    setUserMenu(userMenu: Array<Menu>) {
+      this.menu = userMenu;
+    }
+  }
 });
