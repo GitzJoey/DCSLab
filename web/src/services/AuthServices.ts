@@ -3,7 +3,7 @@ import { authAxiosInstance } from "../axios";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { Resource } from "../types/resources/Resource";
 import { UserProfile } from "../types/models/UserProfile";
-import { LoginRequest, RegisterRequest, ForgotPasswordRequest, ResetPasswordRequest } from "../types/forms/AuthRequests";
+import { LoginFormFieldValues, RegisterFormFieldValues, ForgotPasswordFormFieldValues, ResetPasswordFormFieldValues } from "../types/forms/AuthFormFieldValues";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { ForgotPassword } from "../types/models/ForgotPassword";
 import { ResetPassword } from "../types/models/ResetPassword";
@@ -15,7 +15,7 @@ export default class AuthService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async doLogin(request: LoginRequest): Promise<ServiceResponse<UserProfile | null>> {
+    public async doLogin(request: LoginFormFieldValues): Promise<ServiceResponse<UserProfile | null>> {
         const result: ServiceResponse<UserProfile | null> = {
             success: false
         }
@@ -37,7 +37,7 @@ export default class AuthService {
         }
     }
 
-    public async register(request: RegisterRequest): Promise<ServiceResponse<UserProfile | null>> {
+    public async register(request: RegisterFormFieldValues): Promise<ServiceResponse<UserProfile | null>> {
         const result: ServiceResponse<UserProfile | null> = {
             success: false
         }
@@ -61,7 +61,7 @@ export default class AuthService {
         }
     }
 
-    public async requestResetPassword(request: ForgotPasswordRequest): Promise<ServiceResponse<ForgotPassword | null>> {
+    public async requestResetPassword(request: ForgotPasswordFormFieldValues): Promise<ServiceResponse<ForgotPassword | null>> {
         const result: ServiceResponse<ForgotPassword> = {
             success: false
         }
@@ -84,7 +84,7 @@ export default class AuthService {
         }
     }
 
-    public async resetPassword(request: ResetPasswordRequest): Promise<ServiceResponse<ResetPassword | null>> {
+    public async resetPassword(request: ResetPasswordFormFieldValues): Promise<ServiceResponse<ResetPassword | null>> {
         const result: ServiceResponse<ResetPassword> = {
             success: false
         }

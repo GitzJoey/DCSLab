@@ -1,13 +1,7 @@
 {
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build"
-    },
-    "devDependencies": {
-        "axios": "^1.1.2",
-        "laravel-vite-plugin": "^0.8.0",
-        "vite": "^4.0.0"
-    }
+  "name": "api",
+  "scripts": {
+    "serve": "php artisan serve",
+    "host": "php artisan serve --host=0.0.0.0"
+  }
 }

@@ -13,34 +13,31 @@ import { useRouter } from "vue-router";
 import { LoginFormFieldValues } from "../../types/forms/AuthFormFieldValues";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { UserProfile } from "../../types/models/UserProfile";
-import { useForm } from 'laravel-precognition-vue';
 
 const { t } = useI18n();
 const router = useRouter();
 
 const authService = new AuthService();
 
+const beUrl = import.meta.env.VITE_BACKEND_URL;
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 
-const loginForm = useForm('post', 'http://localhost:8000/login', {
+const loginForm = ref<LoginFormFieldValues>({
   email: '',
   password: '',
   remember: false
 });
 
 const onSubmit = async () => {
-  const submit = loginForm.submit();
-  console.log(submit);
-  return;
   loading.value = true;
 
-  let result: ServiceResponse<UserProfile | null> = await authService.doLogin(values);
+  let result: ServiceResponse<UserProfile | null> = await authService.doLogin(loginForm.value);
 
   if (result.success) {
     router.push({ name: "side-menu-dashboard-maindashboard" });
   } else {
-    actions.setErrors({ email: 'Invalid email and password' });
+
   }
 
   loading.value = false;
