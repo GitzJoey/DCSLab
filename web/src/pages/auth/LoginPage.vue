@@ -13,8 +13,7 @@ import { useRouter } from "vue-router";
 import { LoginFormFieldValues } from "../../types/forms/AuthFormFieldValues";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { UserProfile } from "../../types/models/UserProfile";
-import { useVuelidate } from '@vuelidate/core';
-import { required, email } from '@vuelidate/validators';
+import { useForm } from 'laravel-precognition-vue';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -24,26 +23,16 @@ const authService = new AuthService();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 
-const loginForm = ref<LoginFormFieldValues>({
+const loginForm = useForm('post', 'http://localhost:8000/login', {
   email: '',
   password: '',
   remember: false
 });
 
-const loginFormRules = computed(() => {
-  return {
-    email: { required, email },
-    password: { required }
-  }
-});
-
-const vl = useVuelidate(loginFormRules, loginForm);
-
 const onSubmit = async () => {
-  console.log(vl.value.$validate());
-  console.log((vl.value.$errors));
+  const submit = loginForm.submit();
+  console.log(submit);
   return;
-
   loading.value = true;
 
   let result: ServiceResponse<UserProfile | null> = await authService.doLogin(values);
