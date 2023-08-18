@@ -20,6 +20,7 @@ import {
 import { watch, reactive, ref, computed, onMounted, provide } from "vue";
 import { useDashboardStore } from "../../stores/dashboard";
 import { useI18n } from "vue-i18n";
+import ScrollToTop from "../../base-components/ScrollToTop";
 
 const { t } = useI18n();
 const route: Route = useRoute();
@@ -313,6 +314,8 @@ onMounted(() => {
         'before:content-[\'\'] before:w-full before:h-px before:block',
       ]">
         <RouterView />
+        <br v-for="i in 3" :key="i" />
+        <ScrollToTop :visible="showBackToTop" />
       </div>
     </div>
   </div>
