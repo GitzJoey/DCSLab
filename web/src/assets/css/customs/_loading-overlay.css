@@ -1,0 +1,21 @@
+.loading-container {
+  @apply relative;
+  @apply z-0;
+  @apply p-2;
+  @apply rounded-lg;
+}
+
+.loading-overlay {
+  @apply absolute inset-0;
+  @apply flex items-center justify-center;
+  @apply bg-no-repeat bg-center z-[150] opacity-50;
+}
+
+.spinner {
+  @apply absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  @apply z-[151];
+}
+
+.loading-overlay-gray {
+  @apply bg-gray-200;
+}
