@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
@@ -13,6 +13,8 @@ import { useRouter } from "vue-router";
 import { LoginFormFieldValues } from "../../types/forms/AuthFormFieldValues";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { UserProfile } from "../../types/models/UserProfile";
+import { useVuelidate } from '@vuelidate/core';
+import { required, email } from '@vuelidate/validators';
 
 const { t } = useI18n();
 const router = useRouter();
@@ -28,7 +30,20 @@ const loginForm = ref<LoginFormFieldValues>({
   remember: false
 });
 
-const onSubmit = async (values: LoginFormFieldValues, actions: FormActions<LoginFormFieldValues>) => {
+const loginFormRules = computed(() => {
+  return {
+    email: { required, email },
+    password: { required }
+  }
+});
+
+const vl = useVuelidate(loginFormRules, loginForm);
+
+const onSubmit = async () => {
+  console.log(vl.value.$validate());
+  console.log((vl.value.$errors));
+  return;
+
   loading.value = true;
 
   let result: ServiceResponse<UserProfile | null> = await authService.doLogin(values);
@@ -79,7 +94,7 @@ const onSubmit = async (values: LoginFormFieldValues, actions: FormActions<Login
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
                 &nbsp;
               </div>
-              <form id="loginForm" @submit="onSubmit">
+              <form id="loginForm" @submit.prevent="onSubmit">
                 <div class="mt-8 intro-x">
                   <FormInput v-model="loginForm.email" type="text" name="email"
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]" :class="{ 'border-danger': false }"
