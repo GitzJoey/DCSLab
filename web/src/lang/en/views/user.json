@@ -1,0 +1,47 @@
+{
+    "page_title": "Users",
+    "table": {
+        "title": "User Lists",
+        "cols": {
+            "name": "Name",
+            "email": "Email",
+            "roles": "Roles",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create User",
+        "edit": "Edit User",
+        "show": "Show User"
+    },
+    "fields": {
+        "name": "Name",
+        "email": "Email",
+        "roles": "Roles",
+        "picture": "Picture",
+        "first_name": "First Name",
+        "last_name": "Last Name",
+        "address": "Address",
+        "ic_num": "IC Number",
+        "country": "Country",
+        "remarks": "Remarks",
+        "status": "Status",
+        "tax_id": "Tax ID",
+        "postal_code": "Postal Code",
+        "city": "City",
+        "settings": {
+            "settings": "Settings",
+            "theme": "Themes",
+            "date_format": "Date Format",
+            "time_format": "Time Format",
+            "api_token": "API Token"
+        },
+        "tokens": {
+            "tokens": "Tokens",
+            "count": "Total Tokens",
+            "reset": "Reset"
+        },
+        "reset_password": "Reset Password",
+        "email_reset_password": "Send Email"
+    }
+}

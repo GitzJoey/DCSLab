@@ -1,0 +1,47 @@
+{
+    "page_title": "Produk",
+    "table": {
+        "title": "Daftar Produk",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "brand": "Merk",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Produk",
+        "edit": "Ubah Produk",
+        "show": "Tampilkan Produk",
+        "delete": "Hapus Produk"
+    },
+    "fields": {
+        "company": "Perusahaan",
+        "code": "Kode",
+        "name": "Nama",
+        "product_group": "Nama Kelompok Produk",
+        "brand": "Nama Merk",
+        "product_type": "Tipe Produk",
+        "taxable_supply": "Produk Kena Pajak",
+        "price_include_vat": "Harga Termasuk Pajak",
+        "standard_rated_supply": "Nilai Pajak Standard",
+        "point": "Poin",
+        "use_serial_number": "Menggunakan Nomor Seri",
+        "has_expiry_date": "Memiliki Tanggal Kadaluarsa",
+        "remarks": "Keterangan",
+        "status": "Status",
+        "units": {
+            "title": "Satuan",
+            "table": {
+                "cols": {
+                    "code": "Kode",
+                    "unit": "Satuan",
+                    "conversion_value": "Nilai Tukar Product Satuan",
+                    "is_base": "Satuan Dasar Product Satuan",
+                    "is_primary": "Satuan Utama Product Satuan",
+                    "remarks": "Keterangan"
+                }
+            }
+        }
+    }
+}

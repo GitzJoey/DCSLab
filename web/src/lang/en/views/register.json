@@ -1,0 +1,14 @@
+{
+    "title": "Register",
+    "fields": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "password_confirmation": "Password Confirmation",
+        "terms": "Terms",
+        "agree_1": "I agree to terms ",
+        "agree_2": "& conditions",
+        "already_member": "I already have a membership",
+        "terms_and_cond": "Terms & Condition"
+    }
+}

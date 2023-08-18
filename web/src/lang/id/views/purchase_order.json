@@ -1,0 +1,70 @@
+{
+    "page_title": "Pembelian",
+    "table": {
+        "title": "Daftar Pembelian",
+        "cols": {
+            "code": "Kode",
+            "supplier": "Pemasok",
+            "shipping_date": "Tanggal Pengiriman",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Pembelian",
+        "edit": "Ubah Pembelian",
+        "show": "Tampilkan Pembelian",
+        "delete": "Hapus Pembelian"
+    },
+    "fields": {
+        "company": "Perusahaan",
+        "branch": "Cabang",
+        "invoice_code": "Nomor Faktur",
+        "invoice_date": "Tanggal Faktur",
+        "supplier": "Pemasok",
+        "shipping_date": "Tanggal Pengiriman",
+        "shipping_address": "Alamat Pengiriman",
+        "remarks": "Keterangan",
+        "status": "Status",
+        "discount_global": {
+            "title": "Diskon Global",
+            "table": {
+                "cols": {
+                    "discount_type": "Tipe Diskon",
+                    "amount": "Jumlah"
+                }
+            }
+        },
+        "product_unit": {
+            "title": "Satuan Produk",
+            "table": {
+                "cols": {
+                    "product_unit": "Satuan Produk",
+                    "qty": "Jumlah",
+                    "amount_per_unit": "Jumlah Per Satuan",
+                    "initial_price": "Harga Awal",
+                    "product_unit_per_unit_discount": {
+                        "title": "Satuan Produk Per Diskon Satuaan",
+                        "table": {
+                            "cols": {
+                                "discount_type": "Tipe Diskon",
+                                "amount": "Jumlah"
+                            }
+                        }
+                    },
+                    "product_unit_per_unit_sub_total_discount": {
+                        "title": "Satuan Produk Per Total Diskon Satuan",
+                        "table": {
+                            "cols": {
+                                "discount_type": "Tipe Diskon",
+                                "amount": "Jumlah"
+                            }
+                        }
+                    },
+                    "vat_status": "Status Pajak",
+                    "vat_rate": "Rate Pajak",
+                    "vat_remarks":" Keterangan Pajak"
+                }
+            }
+        }
+    }
+}

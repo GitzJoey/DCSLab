@@ -1,0 +1,33 @@
+{
+    "page_title": "Cabang",
+    "table": {
+        "title": "Daftar Cabang",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "address": "Alamat",
+            "city": "Kota",
+            "contact": "Kontak",
+            "is_main": "Cabang Utama",
+            "remarks": "Keterangan",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Cabang",
+        "edit": "Ubah Cabang",
+        "show": "Tampilkan Cabang",
+        "delete": "Hapus Cabang"
+    },
+    "fields": {
+        "company_id": "Perusahaan",
+        "code": "Kode",
+        "name": "Nama",
+        "address": "Alamat",
+        "city": "Kota",
+        "contact": "Kontak",
+        "is_main": "Cabang Utama",
+        "remarks": "Keterangan",
+        "status": "Status"
+    }
+}

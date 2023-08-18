@@ -1,0 +1,21 @@
+{
+    "profile_ddl": {
+        "profile": "Profile",
+        "inbox": "Inbox",
+        "activity": "Activity",
+        "logout": "Logout"
+    },
+    "language": {
+        "indonesia": "Indonesia",
+        "english": "English"
+    },
+    "slide_over": {
+        "footer": {
+            "copyright": "Copyright",
+            "copyright_name": "GitzJoey",
+            "contributors": "Contributors",
+            "rights": "All rights reserved.",
+            "powered_by": "Powered By Coffee & Curiosity."
+        }
+    }
+}
