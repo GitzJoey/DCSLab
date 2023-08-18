@@ -21,6 +21,7 @@ import { watch, reactive, ref, computed, onMounted, provide } from "vue";
 import { useDashboardStore } from "../../stores/dashboard";
 import { useI18n } from "vue-i18n";
 import ScrollToTop from "../../base-components/ScrollToTop";
+import NotificationWidget from "../../base-components/NotificationWidget";
 
 const { t } = useI18n();
 const route: Route = useRoute();
@@ -318,5 +319,6 @@ onMounted(() => {
         <ScrollToTop :visible="showBackToTop" />
       </div>
     </div>
+    <NotificationWidget />
   </div>
 </template>
