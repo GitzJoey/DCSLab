@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { Icon } from "../base-components/Lucide/Lucide.vue";
 
 export interface Menu {
-  icon: Icon;
+  icon: Icon | "";
   title: string;
   pageName?: string;
   subMenu?: Menu[];
@@ -17,15 +17,17 @@ export const useSideMenuStore = defineStore("sideMenu", {
   state: (): SideMenuState => ({
     menu: [
       {
-        icon: "Activity",
-        pageName: "side-menu-page-1",
-        title: "Page 1",
-      },
-      {
-        icon: "Activity",
-        pageName: "side-menu-page-2",
-        title: "Page 2",
-      },
+        icon: 'Home',
+        pageName: 'side-menu-dashboard',
+        title: 'Dashboard',
+        subMenu: [
+          {
+            icon: "",
+            pageName: "side-menu-dashboard-maindashboard",
+            title: "Main Dashboard",
+          }
+        ]
+      }
     ],
   }),
 });
