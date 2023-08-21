@@ -21,9 +21,9 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
 }
 
 interface FormUploadResponse {
-  data : { url : string },
-  statusCode : number,
-  success : boolean
+  data: { url: string },
+  statusCode: number,
+  success: boolean
 }
 interface HTMLInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
@@ -68,22 +68,22 @@ const localValue = computed({
 });
 
 const handleUpload = async (event: Event) => {
-    const _event = event as HTMLInputEvent
-    const files = _event.target.files 
-    const fileReader = new FileReader()
-    if(files) {
-      let filename : string = files[0].name;
-      fileReader.readAsDataURL(files[0]);
-      localValue.value = filename
-      let uploadResponse : FormUploadResponse = await dashboardService.uploadFile(files[0])
-      if (uploadResponse) {
-        imageUrl.value = uploadResponse.data.url
-      }
+  const _event = event as HTMLInputEvent
+  const files = _event.target.files
+  const fileReader = new FileReader()
+  if (files) {
+    let filename: string = files[0].name;
+    fileReader.readAsDataURL(files[0]);
+    localValue.value = filename
+    let uploadResponse: FormUploadResponse = await dashboardService.uploadFile(files[0])
+    if (uploadResponse) {
+      imageUrl.value = uploadResponse.data.url
     }
+  }
 }
 
 onMounted(() => {
-  if(!imageUrl.value) {
+  if (!imageUrl.value) {
     imageUrl.value = noImage
   }
 })
@@ -97,7 +97,7 @@ onMounted(() => {
     <img class="rounded aspect-auto" :src="imageUrl ? imageUrl : ''" alt="Image Preview">
   </div>
   <div class="flex gap-2 mt-4">
-    <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')"  />
+    <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" />
     <input id="upload" type="file" hidden @change="(e) => handleUpload(e)" />
     <label class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
       for="upload">Choose File</label>

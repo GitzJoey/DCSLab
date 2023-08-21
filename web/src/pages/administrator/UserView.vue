@@ -16,8 +16,9 @@ import {
     FormLabel,
     FormTextarea,
     FormSelect,
+    FormInputCode,
+    FormFileUpload,
 } from "../../base-components/Form";
-import { FormInputCode, FormFileUpload } from "../../base-components/Form/CustomForm";
 import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
