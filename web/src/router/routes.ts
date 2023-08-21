@@ -11,7 +11,7 @@ import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 //import PlayTwo from "../pages/dev/PlayTwo.vue";
 //import ErrorView from "../pages/dashboard/ErrorView.vue";
 //import ErrorPage from "../pages/error/ErrorPage.vue";
-//import UserView from "../pages/administrator/UserView.vue";
+import UserView from "../pages/administrator/UserView.vue";
 //import CompanyView from "../pages/company/CompanyView.vue";
 //import BranchView from "../pages/branch/BranchView.vue";
 
@@ -87,6 +87,7 @@ export default [
                     },
                 ]
             },
+            */
             {
                 path: "/dashboard/administrator",
                 name: "side-menu-administrator",
@@ -98,6 +99,7 @@ export default [
                     }
                 ]
             },
+            /*
             {
                 path: "/dashboard/devtool",
                 name: "side-menu-devtool",
