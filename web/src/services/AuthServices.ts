@@ -15,13 +15,41 @@ export default class AuthService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
+    public async ensureCSRF(): Promise<void> {
+        let resultXSRF = await this.checkCookieExists('XSRF-TOKEN');
+
+        if (resultXSRF) return;
+
+        await this.generateCSRF();
+    }
+
+    private checkCookieExists = (cookieName: string): Promise<boolean> => {
+        return new Promise<boolean>((resolve) => {
+            const cookies = document.cookie.split('; ');
+            console.log(cookies);
+            for (const cookie of cookies) {
+                const [name] = cookie.split('=');
+                if (name === cookieName) {
+                    resolve(true);
+                    return;
+                }
+            }
+
+            resolve(false);
+        });
+    };
+
+    public async generateCSRF(): Promise<void> {
+        await authAxiosInstance.get('/sanctum/csrf-cookie');
+    }
+
     public async doLogin(request: LoginFormFieldValues): Promise<ServiceResponse<UserProfile | null>> {
         const result: ServiceResponse<UserProfile | null> = {
             success: false
         }
 
         try {
-            await authAxiosInstance.get('/sanctum/csrf-cookie');
+
             const response: AxiosResponse<Resource<UserProfile>> = await authAxiosInstance.post('login', {
                 email: request.email,
                 password: request.password,
@@ -43,7 +71,6 @@ export default class AuthService {
         }
 
         try {
-            await authAxiosInstance.get('/sanctum/csrf-cookie');
             const response: AxiosResponse<Resource<UserProfile>> = await authAxiosInstance.post('register', {
                 name: request.name,
                 email: request.email,
