@@ -21,6 +21,10 @@ export default [
         redirect: "/auth/login",
     },
     {
+        path: "/home",
+        redirect: "/dashboard/main",
+    },
+    {
         path: "/auth",
         children: [
             {
