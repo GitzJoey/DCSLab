@@ -37,6 +37,7 @@ import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
 import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
+import { client, useForm } from "laravel-precognition-vue";
 //#endregion
 
 //#region Interfaces
@@ -73,6 +74,11 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
+client.axios().defaults.withCredentials = true;
+const userForm2 = useForm('post', 'http://localhost:8000/api/post/dashboard/admin/user/save', {
+    email: '',
+});
+
 const userForm = ref<Resource<User>>({
     data: {
         id: '',
@@ -161,7 +167,7 @@ const getDDL = (): void => {
             rolesDDL.value = result.data.data as Array<Role>;
         }
     });
-
+    /*
     dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
         countriesDDL.value = result;
     });
@@ -169,6 +175,7 @@ const getDDL = (): void => {
     dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
         statusDDL.value = result;
     });
+    */
 }
 
 const emptyUser = () => {
@@ -523,9 +530,9 @@ watch(
                             <div class="p-5">
                                 <div class="pb-4">
                                     <FormLabel html-for="first_name">{{ t('views.user.fields.first_name') }}</FormLabel>
-                                    <FormInput v-model="userForm.data.profile.first_name" id="first_name" name="first_name"
-                                        type="text" :class="{ 'border-danger': false }"
-                                        :placeholder="t('views.user.fields.name')" />
+                                    <FormInput v-model="userForm2.email" id="first_name" name="first_name" type="text"
+                                        :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.name')"
+                                        @change="console.log('a'); userForm2.validate('email')" />
                                 </div>
                                 <div class="pb-4">
                                     <FormLabel html-for="last_name">{{ t('views.user.fields.last_name') }}</FormLabel>

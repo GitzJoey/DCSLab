@@ -7,6 +7,7 @@ import { LoginFormFieldValues, RegisterFormFieldValues, ForgotPasswordFormFieldV
 import ErrorHandlerService from "./ErrorHandlerService";
 import { ForgotPassword } from "../types/models/ForgotPassword";
 import { ResetPassword } from "../types/models/ResetPassword";
+import { client, useForm } from "laravel-precognition-vue";
 
 export default class AuthService {
     private errorHandlerService;
@@ -26,7 +27,7 @@ export default class AuthService {
     private checkCookieExists = (cookieName: string): Promise<boolean> => {
         return new Promise<boolean>((resolve) => {
             const cookies = document.cookie.split('; ');
-            console.log(cookies);
+
             for (const cookie of cookies) {
                 const [name] = cookie.split('=');
                 if (name === cookieName) {
@@ -43,13 +44,24 @@ export default class AuthService {
         await authAxiosInstance.get('/sanctum/csrf-cookie');
     }
 
+    public createLoginForm() {
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/login', {
+            email: '',
+            password: '',
+            remember: false,
+        });
+
+        return form;
+    }
+
     public async doLogin(request: LoginFormFieldValues): Promise<ServiceResponse<UserProfile | null>> {
         const result: ServiceResponse<UserProfile | null> = {
             success: false
         }
 
         try {
-
+            this.ensureCSRF();
             const response: AxiosResponse<Resource<UserProfile>> = await authAxiosInstance.post('login', {
                 email: request.email,
                 password: request.password,
@@ -71,6 +83,7 @@ export default class AuthService {
         }
 
         try {
+            this.ensureCSRF();
             const response: AxiosResponse<Resource<UserProfile>> = await authAxiosInstance.post('register', {
                 name: request.name,
                 email: request.email,

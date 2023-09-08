@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
 import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
 import illustrationUrl from "../../assets/images/illustration.svg";
-import { FormInput, FormCheck } from "../../base-components/Form";
+import { FormInput, FormCheck, FormErrorMessage } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -13,34 +13,37 @@ import { useRouter } from "vue-router";
 import { LoginFormFieldValues } from "../../types/forms/AuthFormFieldValues";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { UserProfile } from "../../types/models/UserProfile";
+import { client, useForm } from "laravel-precognition-vue";
+import { StatusCode } from "../../types/enums/StatusCode";
+import { AxiosResponse } from "axios";
 
 const { t } = useI18n();
 const router = useRouter();
 
 const authService = new AuthService();
 
-const beUrl = import.meta.env.VITE_BACKEND_URL;
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 
-const loginForm = ref<LoginFormFieldValues>({
-  email: '',
-  password: '',
-  remember: false
+const loginForm = authService.createLoginForm();
+
+onMounted(async () => {
+  authService.ensureCSRF();
 });
 
 const onSubmit = async () => {
   loading.value = true;
 
-  let result: ServiceResponse<UserProfile | null> = await authService.doLogin(loginForm.value);
+  loginForm.submit().then(response => {
+    console.log(response);
+    //if (response.status == StatusCode.OK) {
 
-  if (result.success) {
-    router.push({ name: "side-menu-dashboard-maindashboard" });
-  } else {
-
-  }
-
-  loading.value = false;
+    //}
+  }).catch(error => {
+    console.log(error.response);
+  }).finally(() => {
+    loading.value = false;
+  });
 };
 </script>
 
@@ -85,9 +88,11 @@ const onSubmit = async () => {
                   <FormInput v-model="loginForm.email" type="text" name="email"
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]" :class="{ 'border-danger': false }"
                     :placeholder="t('views.login.fields.email')" />
+                  <span class="ml-1 text-danger">{{ loginForm.errors.email }}</span>
                   <FormInput v-model="loginForm.password" type="password" name="password"
                     class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]" :class="{ 'border-danger': false }"
                     :placeholder="t('views.login.fields.password')" />
+                  <span class="ml-1 text-danger">{{ loginForm.errors.password }}</span>
                 </div>
                 <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
