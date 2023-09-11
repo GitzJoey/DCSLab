@@ -10,6 +10,7 @@ import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
 import { UserFormFieldValues } from "../types/forms/UserFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
+import { client, useForm } from "laravel-precognition-vue";
 
 export default class UserService {
     private ziggyRoute: Config;
@@ -21,6 +22,31 @@ export default class UserService {
         this.ziggyRoute = this.ziggyRouteStore.getZiggy;
 
         this.errorHandlerService = new ErrorHandlerService();
+    }
+
+    public transformDataToForm(data: Resource<User>) {
+        return {
+            name: data.data.name,
+            email: data.data.email,
+
+            first_name: data.data.profile.first_name,
+            last_name: data.data.profile.last_name,
+            address: data.data.profile.address,
+            city: data.data.profile.city,
+            postal_code: data.data.profile.postal_code,
+            country: data.data.profile.country,
+            img_path: data.data.profile.img_path,
+            tax_id: data.data.profile.tax_id,
+            ic_num: data.data.profile.ic_num,
+            status: data.data.profile.status,
+            remarks: data.data.profile.remarks,
+
+            roles: [],
+
+            theme: data.data.settings.theme,
+            date_format: data.data.settings.date_format,
+            time_format: data.data.settings.time_format,
+        }
     }
 
     public async create(payload: UserFormFieldValues): Promise<ServiceResponse<User | null>> {
@@ -49,6 +75,37 @@ export default class UserService {
                 return result;
             }
         }
+    }
+
+    public pakaiuseUserCreateForm() {
+        const url = route('api.post.db.admin.user.save', undefined, false, this.ziggyRoute);
+        if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', url, {
+            name: '',
+            email: '',
+
+            first_name: '',
+            last_name: '',
+            address: '',
+            city: '',
+            postal_code: '',
+            country: '',
+            img_path: '',
+            tax_id: 0,
+            ic_num: 0,
+            status: '',
+            remarks: '',
+
+            roles: [],
+
+            theme: '',
+            date_format: '',
+            time_format: '',
+        });
+
+        return form;
     }
 
     public async readAny(args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
@@ -157,6 +214,37 @@ export default class UserService {
                 return result;
             }
         }
+    }
+
+    public async useUserEditForm(ulid: string, data: Resource<User>) {
+        const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
+        if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', url, {
+            name: data.data.name,
+            email: data.data.email,
+
+            first_name: data.data.profile.first_name,
+            last_name: data.data.profile.last_name,
+            address: data.data.profile.address,
+            city: data.data.profile.city,
+            postal_code: data.data.profile.postal_code,
+            country: data.data.profile.country,
+            img_path: data.data.profile.img_path,
+            tax_id: data.data.profile.tax_id,
+            ic_num: data.data.profile.ic_num,
+            status: data.data.profile.status,
+            remarks: data.data.profile.remarks,
+
+            roles: [],
+
+            theme: data.data.settings.theme,
+            date_format: data.data.settings.date_format,
+            time_format: data.data.settings.time_format,
+        });
+
+        return form;
     }
 
     public async getTokensCount(ulid: string): Promise<ServiceResponse<number | null>> {

@@ -12,6 +12,7 @@ import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 //import ErrorView from "../pages/dashboard/ErrorView.vue";
 //import ErrorPage from "../pages/error/ErrorPage.vue";
 import UserView from "../pages/administrator/UserView.vue";
+import UserCreate from "../pages/administrator/UserCreate.vue";
 //import CompanyView from "../pages/company/CompanyView.vue";
 //import BranchView from "../pages/branch/BranchView.vue";
 
@@ -99,7 +100,19 @@ export default [
                     {
                         path: "/dashboard/administrator/user",
                         name: "side-menu-administrator-user",
-                        component: UserView
+                        component: UserView,
+                        children: [
+                            {
+                                path: "/dashboard/administrator/user/create",
+                                name: "side-menu-administrator-user-create",
+                                component: UserCreate
+                            },
+                            {
+                                path: "/dashboard/administrator/user/edit/:ulid",
+                                name: "side-menu-administrator-user-edit",
+                                component: UserCreate
+                            }
+                        ]
                     }
                 ]
             },
