@@ -19,7 +19,7 @@ const authService = new AuthService();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 
-const loginForm = authService.createLoginForm();
+const loginForm = authService.useLoginForm();
 
 onMounted(async () => {
   authService.ensureCSRF();

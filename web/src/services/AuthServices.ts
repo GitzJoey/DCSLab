@@ -44,7 +44,7 @@ export default class AuthService {
         await authAxiosInstance.get('/sanctum/csrf-cookie');
     }
 
-    public createLoginForm() {
+    public useLoginForm() {
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/login', {
             email: '',

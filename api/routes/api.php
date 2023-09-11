@@ -75,7 +75,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
     });
 });
 
-Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,1'], 'as' => 'api.post'], function () {
+Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'precognitive', 'throttle:50,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
         /* #region Extensions */
         Route::group(['prefix' => 'company', 'as' => '.company'], function () {
