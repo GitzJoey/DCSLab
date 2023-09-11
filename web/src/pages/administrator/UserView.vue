@@ -19,7 +19,6 @@ import {
     FormInputCode,
     FormFileUpload,
 } from "../../base-components/Form";
-import { ViewMode } from "../../types/enums/ViewMode";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
 import { Collection } from "../../types/resources/Collection";
@@ -47,7 +46,6 @@ const userServices = new UserService();
 //#endregion
 
 //#region Data - UI
-const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, Array<string>> | null>(null);
 const crudErrors = ref<Record<string, Array<string>>>({});
@@ -177,17 +175,7 @@ const flattenedRoles = (roles: Array<Role>): string => {
 //#endregion
 
 //#region Computed
-const titleView = computed((): string => {
-    switch (mode.value) {
-        case ViewMode.FORM_CREATE:
-            return t('views.user.actions.create');
-        case ViewMode.FORM_EDIT:
-            return t('views.user.actions.edit');
-        case ViewMode.LIST:
-        default:
-            return t('views.user.page_title');
-    }
-});
+const titleView = computed((): string => { return t('views.user.page_title'); });
 //#endregion
 
 //#region Watcher
@@ -204,8 +192,7 @@ const titleView = computed((): string => {
                 </template>
                 <template #optional>
                     <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-                        <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md"
-                            @click="createNew">
+                        <Button as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
                             <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
                                 t("components.buttons.create_new")
                             }}
@@ -214,180 +201,174 @@ const titleView = computed((): string => {
                 </template>
             </TitleLayout>
 
-            <div v-if="mode == ViewMode.LIST">
-                <AlertPlaceholder :errors="datalistErrors" />
-                <DataList :title="t('views.user.table.title')" :enable-search="true" :can-print="true" :can-export="true"
-                    :pagination="userLists ? userLists.meta : null" @dataListChanged="onDataListChanged">
-                    <template #content>
-                        <Table class="mt-5" :hover="true">
-                            <Table.Thead variant="light">
-                                <Table.Tr>
-                                    <Table.Th class="whitespace-nowrap">
-                                        {{ t("views.user.table.cols.name") }}
-                                    </Table.Th>
-                                    <Table.Th class="whitespace-nowrap">
-                                        {{ t("views.user.table.cols.email") }}
-                                    </Table.Th>
-                                    <Table.Th class="whitespace-nowrap">
-                                        {{ t("views.user.table.cols.roles") }}
-                                    </Table.Th>
-                                    <Table.Th class="whitespace-nowrap">
-                                        {{ t("views.user.table.cols.status") }}
-                                    </Table.Th>
-                                    <Table.Th class="whitespace-nowrap"></Table.Th>
+            <AlertPlaceholder :errors="datalistErrors" />
+            <DataList :title="t('views.user.table.title')" :enable-search="true" :can-print="true" :can-export="true"
+                :pagination="userLists ? userLists.meta : null" @dataListChanged="onDataListChanged">
+                <template #content>
+                    <Table class="mt-5" :hover="true">
+                        <Table.Thead variant="light">
+                            <Table.Tr>
+                                <Table.Th class="whitespace-nowrap">
+                                    {{ t("views.user.table.cols.name") }}
+                                </Table.Th>
+                                <Table.Th class="whitespace-nowrap">
+                                    {{ t("views.user.table.cols.email") }}
+                                </Table.Th>
+                                <Table.Th class="whitespace-nowrap">
+                                    {{ t("views.user.table.cols.roles") }}
+                                </Table.Th>
+                                <Table.Th class="whitespace-nowrap">
+                                    {{ t("views.user.table.cols.status") }}
+                                </Table.Th>
+                                <Table.Th class="whitespace-nowrap"></Table.Th>
+                            </Table.Tr>
+                        </Table.Thead>
+                        <Table.Tbody v-if="userLists !== null">
+                            <template v-if="userLists.data.length == 0">
+                                <Table.Tr class="intro-x">
+                                    <Table.Td colspan="5">
+                                        <div class="flex justify-center italic">{{
+                                            t('components.data-list.data_not_found') }}</div>
+                                    </Table.Td>
                                 </Table.Tr>
-                            </Table.Thead>
-                            <Table.Tbody v-if="userLists !== null">
-                                <template v-if="userLists.data.length == 0">
-                                    <Table.Tr class="intro-x">
-                                        <Table.Td colspan="5">
-                                            <div class="flex justify-center italic">{{
-                                                t('components.data-list.data_not_found') }}</div>
-                                        </Table.Td>
-                                    </Table.Tr>
-                                </template>
-                                <template v-for="( item, itemIdx ) in userLists.data" :key="item.ulid">
-                                    <Table.Tr class="intro-x">
-                                        <Table.Td>{{ item.name }}</Table.Td>
-                                        <Table.Td>
-                                            <a href="" class="hover:animate-pulse" @click.prevent="viewSelected(itemIdx)">
-                                                {{ item.email }}
-                                            </a>
-                                        </Table.Td>
-                                        <Table.Td>
-                                            <span v-for=" r  in  item.roles " :key="r.id">{{ r.display_name }} </span>
-                                        </Table.Td>
-                                        <Table.Td>
-                                            <Lucide v-if="item.profile.status === 'ACTIVE'" icon="CheckCircle" />
-                                            <Lucide v-if="item.profile.status === 'INACTIVE'" icon="X" />
-                                        </Table.Td>
-                                        <Table.Td>
-                                            <div class="flex justify-end gap-1">
-                                                <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
-                                                    <Lucide icon="Info" class="w-4 h-4" />
-                                                </Button>
-                                                <Button variant="outline-secondary" @click="editSelected(itemIdx)">
-                                                    <Lucide icon="CheckSquare" class="w-4 h-4" />
-                                                </Button>
-                                                <Button variant="outline-secondary" disabled>
-                                                    <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                                                </Button>
+                            </template>
+                            <template v-for="( item, itemIdx ) in userLists.data" :key="item.ulid">
+                                <Table.Tr class="intro-x">
+                                    <Table.Td>{{ item.name }}</Table.Td>
+                                    <Table.Td>
+                                        <a href="" class="hover:animate-pulse" @click.prevent="viewSelected(itemIdx)">
+                                            {{ item.email }}
+                                        </a>
+                                    </Table.Td>
+                                    <Table.Td>
+                                        <span v-for=" r  in  item.roles " :key="r.id">{{ r.display_name }} </span>
+                                    </Table.Td>
+                                    <Table.Td>
+                                        <Lucide v-if="item.profile.status === 'ACTIVE'" icon="CheckCircle" />
+                                        <Lucide v-if="item.profile.status === 'INACTIVE'" icon="X" />
+                                    </Table.Td>
+                                    <Table.Td>
+                                        <div class="flex justify-end gap-1">
+                                            <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
+                                                <Lucide icon="Info" class="w-4 h-4" />
+                                            </Button>
+                                            <Button variant="outline-secondary" @click="editSelected(itemIdx)">
+                                                <Lucide icon="CheckSquare" class="w-4 h-4" />
+                                            </Button>
+                                            <Button variant="outline-secondary" disabled>
+                                                <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                                            </Button>
+                                        </div>
+                                    </Table.Td>
+                                </Table.Tr>
+                                <Table.Tr :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
+                                    <Table.Td colspan="5">
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.name') }}
                                             </div>
-                                        </Table.Td>
-                                    </Table.Tr>
-                                    <Table.Tr
-                                        :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
-                                        <Table.Td colspan="5">
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.name') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.name }}</div>
+                                            <div class="flex-1">{{ item.name }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.email') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.email') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.email }}</div>
+                                            <div class="flex-1">{{ item.email }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.first_name')
+                                            }}</div>
+                                            <div class="flex-1">{{ item.profile.first_name }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.last_name')
+                                            }}</div>
+                                            <div class="flex-1">{{ item.profile.last_name }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.address') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.first_name')
-                                                }}</div>
-                                                <div class="flex-1">{{ item.profile.first_name }}</div>
+                                            <div class="flex-1">{{ item.profile.address }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.city') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.last_name')
-                                                }}</div>
-                                                <div class="flex-1">{{ item.profile.last_name }}</div>
+                                            <div class="flex-1">{{ item.profile.city }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.postal_code')
+                                            }}</div>
+                                            <div class="flex-1">{{ item.profile.postal_code }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.country') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.address') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.profile.address }}</div>
+                                            <div class="flex-1">{{ item.profile.country }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.picture') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.city') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.profile.city }}</div>
+                                            <div class="flex-1">{{ item.profile.img_path }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.tax_id') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.postal_code')
-                                                }}</div>
-                                                <div class="flex-1">{{ item.profile.postal_code }}</div>
+                                            <div class="flex-1">{{ item.profile.tax_id }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.ic_num') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.country') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.profile.country }}</div>
+                                            <div class="flex-1">{{ item.profile.ic_num }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.remarks') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.picture') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.profile.img_path }}</div>
+                                            <div class="flex-1">{{ item.profile.remarks }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.tax_id') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.profile.tax_id }}</div>
+                                            <div class="flex-1">
+                                                <span v-if="item.profile.status === 'ACTIVE'">
+                                                    {{ t('components.dropdown.values.statusDDL.active') }}
+                                                </span>
+                                                <span v-if="item.profile.status === 'INACTIVE'">
+                                                    {{ t('components.dropdown.values.statusDDL.inactive') }}
+                                                </span>
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.ic_num') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.profile.ic_num }}</div>
+                                        </div>
+                                        <div class="flex flex-row">
+                                            <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}
                                             </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.remarks') }}
-                                                </div>
-                                                <div class="flex-1">{{ item.profile.remarks }}</div>
-                                            </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.status') }}
-                                                </div>
-                                                <div class="flex-1">
-                                                    <span v-if="item.profile.status === 'ACTIVE'">
-                                                        {{ t('components.dropdown.values.statusDDL.active') }}
-                                                    </span>
-                                                    <span v-if="item.profile.status === 'INACTIVE'">
-                                                        {{ t('components.dropdown.values.statusDDL.inactive') }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="flex flex-row">
-                                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.roles') }}
-                                                </div>
-                                                <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
-                                            </div>
-                                        </Table.Td>
-                                    </Table.Tr>
-                                </template>
-                            </Table.Tbody>
-                        </Table>
-                        <Dialog :open="deleteModalShow" @close="() => { deleteModalShow = false; }">
-                            <Dialog.Panel>
-                                <div class="p-5 text-center">
-                                    <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
-                                    <div class="mt-5 text-3xl">{{ t('components.delete-modal.title') }}</div>
-                                    <div class="mt-2 text-slate-500">
-                                        {{ t('components.delete-modal.desc_1') }}
-                                        <br />
-                                        {{ t('components.delete-modal.desc_2') }}
-                                    </div>
+                                            <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
+                                        </div>
+                                    </Table.Td>
+                                </Table.Tr>
+                            </template>
+                        </Table.Tbody>
+                    </Table>
+                    <Dialog :open="deleteModalShow" @close="() => { deleteModalShow = false; }">
+                        <Dialog.Panel>
+                            <div class="p-5 text-center">
+                                <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
+                                <div class="mt-5 text-3xl">{{ t('components.delete-modal.title') }}</div>
+                                <div class="mt-2 text-slate-500">
+                                    {{ t('components.delete-modal.desc_1') }}
+                                    <br />
+                                    {{ t('components.delete-modal.desc_2') }}
                                 </div>
-                                <div class="px-5 pb-8 text-center">
-                                    <Button type="button" variant="outline-secondary" class="w-24 mr-1"
-                                        @click="() => { deleteModalShow = false; }">
-                                        {{ t('components.buttons.cancel') }}
-                                    </Button>
-                                    <Button type="button" variant="danger" class="w-24">
-                                        {{ t('components.buttons.delete') }}
-                                    </Button>
-                                </div>
-                            </Dialog.Panel>
-                        </Dialog>
-                    </template>
-                </DataList>
-            </div>
-            <div v-else>
-
-            </div>
+                            </div>
+                            <div class="px-5 pb-8 text-center">
+                                <Button type="button" variant="outline-secondary" class="w-24 mr-1"
+                                    @click="() => { deleteModalShow = false; }">
+                                    {{ t('components.buttons.cancel') }}
+                                </Button>
+                                <Button type="button" variant="danger" class="w-24">
+                                    {{ t('components.buttons.delete') }}
+                                </Button>
+                            </div>
+                        </Dialog.Panel>
+                    </Dialog>
+                </template>
+            </DataList>
         </LoadingOverlay>
     </div>
 </template>
