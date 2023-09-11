@@ -45,29 +45,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 
-const userForm = useForm('post', '', {
-    name: '',
-    email: '',
-
-    first_name: '',
-    last_name: '',
-    address: '',
-    city: '',
-    postal_code: '',
-    country: '',
-    img_path: '',
-    tax_id: 0,
-    ic_num: 0,
-    status: '',
-    remarks: '',
-
-    roles: [],
-
-    theme: '',
-    date_format: '',
-    time_format: '',
-});
-
+const userForm = userServices.useUserCreateForm();
 const rolesDDL = ref<Array<Role> | null>(null);
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 const countriesDDL = ref<Array<DropDownOption> | null>(null);

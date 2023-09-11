@@ -77,9 +77,8 @@ export default class UserService {
         }
     }
 
-    public pakaiuseUserCreateForm() {
+    public useUserCreateForm() {
         const url = route('api.post.db.admin.user.save', undefined, false, this.ziggyRoute);
-        if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
@@ -218,7 +217,6 @@ export default class UserService {
 
     public async useUserEditForm(ulid: string, data: Resource<User>) {
         const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
-        if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
