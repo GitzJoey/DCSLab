@@ -10,12 +10,6 @@ import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
 import { useRouter } from "vue-router";
-import { LoginFormFieldValues } from "../../types/forms/AuthFormFieldValues";
-import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { UserProfile } from "../../types/models/UserProfile";
-import { client, useForm } from "laravel-precognition-vue";
-import { StatusCode } from "../../types/enums/StatusCode";
-import { AxiosResponse } from "axios";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -34,13 +28,10 @@ onMounted(async () => {
 const onSubmit = async () => {
   loading.value = true;
 
-  loginForm.submit().then(response => {
-    console.log(response);
-    //if (response.status == StatusCode.OK) {
-
-    //}
+  loginForm.submit().then(() => {
+    router.push({ name: 'side-menu-dashboard-maindashboard' });
   }).catch(error => {
-    console.log(error.response);
+    console.error(error.response.data.message);
   }).finally(() => {
     loading.value = false;
   });
