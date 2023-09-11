@@ -4,7 +4,7 @@ import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
 import illustrationUrl from "../../assets/images/illustration.svg";
-import { FormInput, FormCheck, FormErrorMessage } from "../../base-components/Form";
+import { FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
