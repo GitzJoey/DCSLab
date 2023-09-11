@@ -1,4 +1,5 @@
 import { client, useForm } from "laravel-precognition-vue";
+import { authAxiosInstance } from "../axios";
 
 export default class AuthService {
     public async ensureCSRF(): Promise<void> {
@@ -26,7 +27,7 @@ export default class AuthService {
     };
 
     public async generateCSRF(): Promise<void> {
-        await fetch('/sanctum/csrf-cookie');
+        await authAxiosInstance.get('/sanctum/csrf-cookie');
     }
 
     public useLoginForm() {

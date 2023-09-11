@@ -1,7 +1,7 @@
 import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 
 import LoginPage from "../pages/auth/LoginPage.vue";
-//import RegisterPage from "../pages/auth/RegisterPage.vue";
+import RegisterPage from "../pages/auth/RegisterPage.vue";
 //import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage.vue";
 //import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
@@ -33,12 +33,13 @@ export default [
                 name: "login",
                 component: LoginPage,
             },
-            /*
+
             {
                 path: "/auth/register",
                 name: 'register',
                 component: RegisterPage,
             },
+            /*
             {
                 path: "/auth/forgot-password",
                 name: 'forgot-password',

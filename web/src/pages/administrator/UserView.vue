@@ -8,29 +8,17 @@ import { useI18n } from "vue-i18n";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import Table from "../../base-components/Table";
-import {
-    TitleLayout, TwoColumnsLayout
-} from "../../base-components/Form/FormLayout";
-import {
-    FormInput,
-    FormLabel,
-    FormTextarea,
-    FormSelect,
-    FormInputCode,
-    FormFileUpload,
-} from "../../base-components/Form";
+import { TitleLayout } from "../../base-components/Form/FormLayout";
 import UserService from "../../services/UserService";
 import { User } from "../../types/models/User";
 import { Collection } from "../../types/resources/Collection";
 import { Role } from "../../types/models/Role";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { Dialog } from "../../base-components/Headless";
-import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
-import { debounce } from "lodash";
-import { CardState } from "../../types/enums/CardState";
 import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
+import router from "../../router";
 //#endregion
 
 //#region Interfaces
@@ -48,16 +36,7 @@ const userServices = new UserService();
 //#region Data - UI
 const loading = ref<boolean>(false);
 const datalistErrors = ref<Record<string, Array<string>> | null>(null);
-const crudErrors = ref<Record<string, Array<string>>>({});
-const cards = ref<Array<TwoColumnsLayoutCards>>([
-    { title: 'User Information', state: CardState.Expanded, },
-    { title: 'User Profile', state: CardState.Expanded },
-    { title: 'Roles', state: CardState.Expanded },
-    { title: 'Settings', state: CardState.Expanded },
-    { title: 'Token Managements', state: CardState.Expanded },
-    { title: 'Password Managements', state: CardState.Expanded },
-    { title: '', state: CardState.Hidden, id: 'button' }
-]);
+
 const deleteId = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -113,46 +92,12 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
     loading.value = false;
 }
 
-
-
-const emptyUser = () => {
-    return {
-        data: {
-            id: '',
-            ulid: '',
-            name: '',
-            email: '',
-            email_verified: false,
-            profile: {
-                first_name: '',
-                last_name: '',
-                address: '',
-                city: '',
-                postal_code: '',
-                country: '',
-                status: 'ACTIVE',
-                tax_id: 0,
-                ic_num: 0,
-                img_path: '',
-                remarks: '',
-            },
-            roles: [],
-            companies: [],
-            settings: {
-                theme: 'side-menu-light-full',
-                date_format: 'yyyy_MM_dd',
-                time_format: 'hh_mm_ss',
-            }
-        }
-    }
-}
-
 const onDataListChanged = async (data: DataListEmittedData) => {
     await getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
 }
 
 const createNew = () => {
-
+    router.push({ name: 'side-menu-administrator-user-create' });
 }
 
 const viewSelected = (idx: number) => {
@@ -164,9 +109,11 @@ const viewSelected = (idx: number) => {
 };
 
 const editSelected = (itemIdx: number) => {
+    if (!userLists.value) return;
 
+    let ulid = userLists.value.data[itemIdx].ulid;
+    router.push({ name: 'side-menu-administrator-user-create', params: { ulid: ulid } });
 }
-
 
 const flattenedRoles = (roles: Array<Role>): string => {
     if (roles.length == 0) return '';
