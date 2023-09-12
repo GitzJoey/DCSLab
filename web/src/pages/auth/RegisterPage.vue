@@ -90,11 +90,11 @@ const onSubmit = async () => {
                     :placeholder="t('views.register.fields.password')" />
                   <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
                   <FormInput v-model="registerForm.password_confirmation" name="password_confirmation" type="password"
-                    :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('password_confirmation') }"
+                    :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('password') }"
                     :placeholder="t('views.register.fields.password_confirmation')" />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.password_confirmation }}</span>
+                  <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
                 </div>
-                <div class="flex items-center mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
+                <div class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <FormCheck>
                     <FormCheck.Input v-model="registerForm.terms" id="terms" name="terms" type="checkbox"
                       :class="{ 'border-danger': registerForm.errors.terms }" />
@@ -103,6 +103,7 @@ const onSubmit = async () => {
                       {{ t("views.register.fields.terms_and_cond") }}
                     </FormCheck.Label>
                   </FormCheck>
+                  <span class="ml-1 text-danger">{{ registerForm.errors.terms }}</span>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
