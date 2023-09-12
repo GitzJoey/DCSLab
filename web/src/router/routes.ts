@@ -11,8 +11,10 @@ import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 //import PlayTwo from "../pages/dev/PlayTwo.vue";
 //import ErrorView from "../pages/dashboard/ErrorView.vue";
 //import ErrorPage from "../pages/error/ErrorPage.vue";
+import UserIndex from "../pages/administrator/UserIndex.vue";
 import UserView from "../pages/administrator/UserView.vue";
 import UserCreate from "../pages/administrator/UserCreate.vue";
+import UserEdit from "../pages/administrator/UserEdit.vue";
 //import CompanyView from "../pages/company/CompanyView.vue";
 //import BranchView from "../pages/branch/BranchView.vue";
 
@@ -101,8 +103,13 @@ export default [
                     {
                         path: "/dashboard/administrator/user",
                         name: "side-menu-administrator-user",
-                        component: UserView,
+                        component: UserIndex,
                         children: [
+                            {
+                                path: "/dashboard/administrator/user/list",
+                                name: "side-menu-administrator-user-list",
+                                component: UserView
+                            },
                             {
                                 path: "/dashboard/administrator/user/create",
                                 name: "side-menu-administrator-user-create",
@@ -111,10 +118,11 @@ export default [
                             {
                                 path: "/dashboard/administrator/user/edit/:ulid",
                                 name: "side-menu-administrator-user-edit",
-                                component: UserCreate
+                                component: UserEdit
                             }
                         ]
                     }
+
                 ]
             },
             /*
