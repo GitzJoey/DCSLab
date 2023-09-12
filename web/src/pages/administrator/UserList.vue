@@ -64,13 +64,14 @@ const userLists = ref<Collection<Array<User>> | null>({
 
 //#region onMounted
 onMounted(async () => {
+    emit('title-view', t('views.user.page_title'));
     await getUsers('', true, true, 1, 10);
 });
 //#endregion
 
 //#region Methods
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-    emit('loading-state', 'true');
+    emit('loading-state', true);
 
     const searchReq: SearchFormFieldValues = {
         search: search,
@@ -88,7 +89,7 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
         datalistErrors.value = result.errors as Record<string, Array<string>>;
     }
 
-    emit('loading-state', 'false');
+    emit('loading-state', false);
 }
 
 const onDataListChanged = async (data: DataListEmittedData) => {
@@ -107,7 +108,7 @@ const editSelected = (itemIdx: number) => {
     if (!userLists.value) return;
 
     let ulid = userLists.value.data[itemIdx].ulid;
-    router.push({ name: 'side-menu-administrator-user-create', params: { ulid: ulid } });
+    router.push({ name: 'side-menu-administrator-user-edit', params: { ulid: ulid } });
 }
 
 const flattenedRoles = (roles: Array<Role>): string => {

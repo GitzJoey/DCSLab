@@ -22,6 +22,7 @@ import {
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "../../types/enums/CardState";
 import { client, useForm } from "laravel-precognition-vue";
+import Button from "../../base-components/Button";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -29,6 +30,8 @@ const userServices = new UserService();
 const roleServices = new RoleService();
 const dashboardServices = new DashboardService();
 const cacheServices = new CacheService();
+
+const emit = defineEmits(['title-view', 'loading-state']);
 
 const loading = ref<boolean>(false);
 const titleView = computed((): string => { return t('views.user.actions.create'); });
@@ -57,6 +60,7 @@ const handleExpandCard = (index: number) => {
 
 //#region onMounted
 onMounted(async () => {
+    emit('title-view', t('views.user.actions.create'));
     getDDL();
 });
 //#endregion

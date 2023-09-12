@@ -13,7 +13,7 @@ const router = useRouter();
 
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const titleView = computed((): string => { return t('views.user.page_title'); });
+const titleView = ref<string>(t('views.user.page_title'));
 
 //#region onMounted
 onMounted(() => {
@@ -22,21 +22,23 @@ onMounted(() => {
 //#endregion
 
 const createNew = () => {
+    mode.value = ViewMode.FORM_CREATE;
     router.push({ name: 'side-menu-administrator-user-create' });
 }
 
 const backToList = async () => {
+    mode.value = ViewMode.LIST;
     //cacheServices.removeLastEntity('User');
 
-    //router.push({ name: 'side-menu-administrator-user' });
+    router.push({ name: 'side-menu-administrator-user-list' });
 }
 
 const onLoadingStateChanged = (state: boolean) => {
-
+    loading.value = state;
 }
 
-const onTitleViewChanged = (title: boolean) => {
-
+const onTitleViewChanged = (title: string) => {
+    titleView.value = title;
 }
 </script>
 
@@ -49,8 +51,8 @@ const onTitleViewChanged = (title: boolean) => {
                 </template>
                 <template #optional>
                     <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-                        <Button v-if="mode == ViewMode.FORM_CREATE || mode == ViewMode.FORM_EDIT" as="a" href="#"
-                            variant="primary" class="shadow-md" @click="createNew">
+                        <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md"
+                            @click="createNew">
                             <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.create_new") }}
                         </Button>
                         <Button v-else as="a" href="#" variant="primary" class="shadow-md" @click="backToList">
@@ -59,8 +61,8 @@ const onTitleViewChanged = (title: boolean) => {
                     </div>
                 </template>
             </TitleLayout>
-        </LoadingOverlay>
 
-        <router-view @loading-state="onLoadingStateChanged" @title-view="onTitleViewChanged" />
+            <router-view @loading-state="onLoadingStateChanged" @title-view="onTitleViewChanged" />
+        </LoadingOverlay>
     </div>
 </template>
