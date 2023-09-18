@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// #region Imports
 import { onMounted, ref, computed, inject } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -23,18 +24,26 @@ import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/Two
 import { CardState } from "../../types/enums/CardState";
 import { client, useForm } from "laravel-precognition-vue";
 import Button from "../../base-components/Button";
+import { ViewMode } from "../../types/enums/ViewMode";
+// #endregion
 
+// #region Interfaces
+// #endregion
+
+// #region Declarations
 const { t } = useI18n();
 const router = useRouter();
 const userServices = new UserService();
 const roleServices = new RoleService();
 const dashboardServices = new DashboardService();
 const cacheServices = new CacheService();
+// #endregion
 
-const emit = defineEmits(['title-view', 'loading-state']);
+// #region Props, Emits
+const emit = defineEmits(['mode-state', 'loading-state']);
+// #endregion
 
-const loading = ref<boolean>(false);
-const titleView = computed((): string => { return t('views.user.actions.create'); });
+// #region Refs
 const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: 'User Information', state: CardState.Expanded, },
     { title: 'User Profile', state: CardState.Expanded },
@@ -45,26 +54,24 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 
-const userForm = userServices.useUserCreateForm();
 const rolesDDL = ref<Array<Role> | null>(null);
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 const countriesDDL = ref<Array<DropDownOption> | null>(null);
 
-const handleExpandCard = (index: number) => {
-    if (cards.value[index].state === CardState.Collapsed) {
-        cards.value[index].state = CardState.Expanded
-    } else if (cards.value[index].state === CardState.Expanded) {
-        cards.value[index].state = CardState.Collapsed
-    }
-}
+const userForm = userServices.useUserCreateForm();
+// #endregion
 
-//#region onMounted
+// #region Computed
+// #endregion
+
+// #region Lifecycle Hooks
 onMounted(async () => {
-    emit('title-view', t('views.user.actions.create'));
+    emit('mode-state', ViewMode.FORM_CREATE);
     getDDL();
 });
-//#endregion
+// #endregion
 
+// #region Methods
 const getDDL = (): void => {
     roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
         if (result.success && result.data) {
@@ -81,11 +88,21 @@ const getDDL = (): void => {
     });
 }
 
-const onSubmit = async () => {
-    loading.value = true;
+const handleExpandCard = (index: number) => {
+    if (cards.value[index].state === CardState.Collapsed) {
+        cards.value[index].state = CardState.Expanded
+    } else if (cards.value[index].state === CardState.Expanded) {
+        cards.value[index].state = CardState.Collapsed
+    }
+}
 
-    loading.value = false;
+const onSubmit = async () => {
+
 };
+// #endregion
+
+// #region Watchers
+// #endregion
 </script>
 
 <template>

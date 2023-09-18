@@ -1,6 +1,6 @@
 <script setup lang="ts">
-//#region Imports
-import { onMounted, ref, computed } from "vue";
+// #region Imports
+import { onMounted, ref } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import { useI18n } from "vue-i18n";
@@ -12,36 +12,28 @@ import { User } from "../../types/models/User";
 import { Collection } from "../../types/resources/Collection";
 import { Role } from "../../types/models/Role";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
-import { Dialog } from "../../base-components/Headless";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { useRouter } from "vue-router";
-//#endregion
+// #endregion
 
-//#region Interfaces
-//#endregion
+// #region Interfaces
+// #endregion
 
-//#region Declarations
+// #region Declarations
 const { t } = useI18n();
 const router = useRouter();
 const userServices = new UserService();
+// #endregion
 
+// #region Props, Emits
 const emit = defineEmits(['title-view', 'loading-state']);
-//#endregion
+// #endregion
 
-//#region Data - Pinia
-//#endregion
-
-//#region Data - UI
+// #region Refs
 const datalistErrors = ref<Record<string, Array<string>> | null>(null);
-
-const deleteId = ref<string>("");
-const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
-//#endregion
-
-//#region Data - Views
 const userLists = ref<Collection<Array<User>> | null>({
     data: [],
     meta: {
@@ -60,16 +52,19 @@ const userLists = ref<Collection<Array<User>> | null>({
         next: null,
     }
 });
-//#endregion
+// #endregion
 
-//#region onMounted
+// #region Computed
+// #endregion
+
+// #region Lifecycle Hooks
 onMounted(async () => {
     emit('title-view', t('views.user.page_title'));
     await getUsers('', true, true, 1, 10);
 });
-//#endregion
+// #endregion
 
-//#region Methods
+// #region Methods
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
     emit('loading-state', true);
 
@@ -115,15 +110,10 @@ const flattenedRoles = (roles: Array<Role>): string => {
     if (roles.length == 0) return '';
     return roles.map((x: Role) => x.display_name).join(', ');
 }
-//#endregion
+// #endregion
 
-//#region Computed
-const titleView = computed((): string => { return t('views.user.page_title'); });
-//#endregion
-
-//#region Watcher
-
-//#endregion
+// #region Watchers
+// #endregion
 </script>
 
 <template>
@@ -180,9 +170,6 @@ const titleView = computed((): string => { return t('views.user.page_title'); })
                                     </Button>
                                     <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                                         <Lucide icon="CheckSquare" class="w-4 h-4" />
-                                    </Button>
-                                    <Button variant="outline-secondary" disabled>
-                                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                                     </Button>
                                 </div>
                             </Table.Td>
@@ -271,28 +258,6 @@ const titleView = computed((): string => { return t('views.user.page_title'); })
                     </template>
                 </Table.Tbody>
             </Table>
-            <Dialog :open="deleteModalShow" @close="() => { deleteModalShow = false; }">
-                <Dialog.Panel>
-                    <div class="p-5 text-center">
-                        <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
-                        <div class="mt-5 text-3xl">{{ t('components.delete-modal.title') }}</div>
-                        <div class="mt-2 text-slate-500">
-                            {{ t('components.delete-modal.desc_1') }}
-                            <br />
-                            {{ t('components.delete-modal.desc_2') }}
-                        </div>
-                    </div>
-                    <div class="px-5 pb-8 text-center">
-                        <Button type="button" variant="outline-secondary" class="w-24 mr-1"
-                            @click="() => { deleteModalShow = false; }">
-                            {{ t('components.buttons.cancel') }}
-                        </Button>
-                        <Button type="button" variant="danger" class="w-24">
-                            {{ t('components.buttons.delete') }}
-                        </Button>
-                    </div>
-                </Dialog.Panel>
-            </Dialog>
         </template>
     </DataList>
 </template>

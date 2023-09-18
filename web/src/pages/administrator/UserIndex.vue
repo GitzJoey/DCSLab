@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from "vue";
+// #region Imports
+import { onMounted, ref } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { TitleLayout } from "../../base-components/Form/FormLayout";
 import { useRouter } from "vue-router";
@@ -7,20 +8,35 @@ import { useI18n } from "vue-i18n";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import { ViewMode } from "../../types/enums/ViewMode";
+// #endregion
 
+// #region Interfaces
+// #endregion
+
+// #region Declarations
 const { t } = useI18n();
 const router = useRouter();
+// #endregion
 
+// #region Props, Emits
+// #endregion
+
+// #region Refs
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
 const titleView = ref<string>(t('views.user.page_title'));
+// #endregion
 
-//#region onMounted
+// #region Computed
+// #endregion
+
+// #region Lifecycle Hooks
 onMounted(() => {
     router.push({ name: 'side-menu-administrator-user-list' });
 });
-//#endregion
+// #endregion
 
+// #region Methods
 const createNew = () => {
     mode.value = ViewMode.FORM_CREATE;
     router.push({ name: 'side-menu-administrator-user-create' });
@@ -37,9 +53,26 @@ const onLoadingStateChanged = (state: boolean) => {
     loading.value = state;
 }
 
-const onTitleViewChanged = (title: string) => {
-    titleView.value = title;
+const onModeStateChanged = (state: ViewMode) => {
+    mode.value = state;
+
+    switch (state) {
+        case ViewMode.FORM_CREATE:
+            titleView.value = t('views.user.actions.create');
+            break;
+        case ViewMode.FORM_EDIT:
+            titleView.value = t('views.user.actions.edit');
+            break;
+        case ViewMode.LIST:
+        default:
+            titleView.value = t('views.user.page_title');
+            break;
+    }
 }
+// #endregion
+
+// #region Watchers
+// #endregion
 </script>
 
 <template>
@@ -62,7 +95,7 @@ const onTitleViewChanged = (title: string) => {
                 </template>
             </TitleLayout>
 
-            <router-view @loading-state="onLoadingStateChanged" @title-view="onTitleViewChanged" />
+            <router-view @loading-state="onLoadingStateChanged" @mode-state="onModeStateChanged" />
         </LoadingOverlay>
     </div>
 </template>
