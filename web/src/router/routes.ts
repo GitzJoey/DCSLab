@@ -103,6 +103,7 @@ export default [
                     {
                         path: "/dashboard/administrator/user",
                         name: "side-menu-administrator-user",
+                        redirect: '/dashboard/administrator/user/list',
                         component: UserIndex,
                         children: [
                             {

@@ -78,7 +78,7 @@ export default class UserService {
     }
 
     public useUserCreateForm() {
-        const url = route('api.post.db.admin.user.save', undefined, false, this.ziggyRoute);
+        const url = route('api.post.db.admin.user.save', undefined, true, this.ziggyRoute);
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {

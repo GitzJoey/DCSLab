@@ -31,9 +31,6 @@ const titleView = ref<string>(t('views.user.page_title'));
 // #endregion
 
 // #region Lifecycle Hooks
-onMounted(() => {
-    router.push({ name: 'side-menu-administrator-user-list' });
-});
 // #endregion
 
 // #region Methods

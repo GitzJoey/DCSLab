@@ -19,10 +19,11 @@ import {
     FormSelect,
     FormInputCode,
     FormFileUpload,
+    FormInline,
+    FormInputState
 } from "../../base-components/Form";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "../../types/enums/CardState";
-import { client, useForm } from "laravel-precognition-vue";
 import Button from "../../base-components/Button";
 import { ViewMode } from "../../types/enums/ViewMode";
 // #endregion
@@ -114,15 +115,22 @@ const onSubmit = async () => {
                         <FormLabel html-for="name" :class="{ 'text-danger': false }">
                             {{ t('views.user.fields.name') }}
                         </FormLabel>
-                        <FormInput v-model="userForm.name" id="name" name="name" type="text"
-                            :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.name')" />
+                        <FormInline>
+                            <FormInput v-model="userForm.name" id="name" name="name" type="text"
+                                :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.name')" />
+                            <FormInputState :loading="userForm.validating" :invalid="userForm.invalid('name')" />
+                        </FormInline>
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="email" :class="{ 'text-danger': false }">
                             {{ t('views.user.fields.email') }}
                         </FormLabel>
-                        <FormInput v-model="userForm.email" id="email" name="email" type="text"
-                            :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.email')" />
+                        <FormInline>
+                            <FormInput v-model="userForm.email" id="email" name="email" type="text"
+                                :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.email')"
+                                @change="userForm.validate('email')" />
+                            <FormInputState :loading="userForm.validating" :invalid="userForm.invalid('email')" />
+                        </FormInline>
                     </div>
                 </div>
             </template>

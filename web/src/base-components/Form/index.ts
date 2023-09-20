@@ -9,6 +9,7 @@ import FormSwitch from "./FormSwitch";
 import InputGroup from "./InputGroup";
 import FormInputCode from "./FormInputCode.vue";
 import FormFileUpload from "./FormFileUpload.vue";
+import FormInputState from "./FormInputState.vue";
 
 export {
   FormCheck,
@@ -22,4 +23,5 @@ export {
   InputGroup,
   FormInputCode,
   FormFileUpload,
+  FormInputState,
 };
