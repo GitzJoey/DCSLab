@@ -75,16 +75,16 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
     });
 });
 
-Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'precognitive', 'throttle:50,1'], 'as' => 'api.post'], function () {
+Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,1'], 'as' => 'api.post'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
         /* #region Extensions */
-        Route::group(['prefix' => 'company', 'as' => '.company'], function () {
+        Route::group(['prefix' => 'company', 'middleware' => ['precognitive'], 'as' => '.company'], function () {
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::post('save', [CompanyController::class, 'store'])->name('.save');
                 Route::post('edit/{company:ulid}', [CompanyController::class, 'update'])->name('.edit');
                 Route::post('delete/{company:ulid}', [CompanyController::class, 'delete'])->name('.delete');
             });
-            Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
+            Route::group(['prefix' => 'branch', 'middleware' => ['precognitive'], 'as' => '.branch'], function () {
                 Route::post('save', [BranchController::class, 'store'])->name('.save');
                 Route::post('edit/{branch:ulid}', [BranchController::class, 'update'])->name('.edit');
                 Route::post('delete/{branch:ulid}', [BranchController::class, 'delete'])->name('.delete');
@@ -93,18 +93,18 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'precognitive
         /* #endregion */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
-            Route::group(['prefix' => 'user', 'as' => '.user'], function () {
+            Route::group(['prefix' => 'user', 'middleware' => ['precognitive'], 'as' => '.user'], function () {
                 Route::post('save', [UserController::class, 'store'])->name('.save');
                 Route::post('edit/{user:ulid}', [UserController::class, 'update'])->name('.edit');
             });
         });
 
-        Route::group(['prefix' => 'core', 'as' => '.core'], function () {
+        Route::group(['prefix' => 'core', 'middleware' => ['precognitive'], 'as' => '.core'], function () {
             Route::post('user/upload', [DashboardController::class, 'userUpload'])->name('.user.upload');
         });
 
         Route::group(['prefix' => 'module', 'as' => '.module'], function () {
-            Route::group(['prefix' => 'profile', 'as' => '.profile'], function () {
+            Route::group(['prefix' => 'profile', 'middleware' => ['precognitive'], 'as' => '.profile'], function () {
                 Route::post('update/user', [ProfileController::class, 'updateUser'])->name('.update.user');
                 Route::post('update/profile', [ProfileController::class, 'updateProfile'])->name('.update.profile');
                 Route::post('update/roles', [ProfileController::class, 'updateRoles'])->name('.update.roles');
