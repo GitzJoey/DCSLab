@@ -1,23 +1,24 @@
 <script setup lang="ts">
 import { computed, toRef } from 'vue';
+import messagesEn from '../../lang/messages.en';
 
 export interface FormInputErrorMessagesProps {
-    messages: Array<string>,
+    messages: string | undefined
 }
 
 const props = withDefaults(defineProps<FormInputErrorMessagesProps>(), {
-    messages: () => { return []; },
+    messages: '',
+});
+
+const messages = toRef(props, 'messages');
+
+const visible = computed(() => {
+    if (messages.value.length == 0) return false;
+
+    return true;
 });
 </script>
 
 <template>
-    <div class="mt-1">
-        <span class="text-danger">
-            asdf
-        </span>
-        <br />
-        <span class="text-danger">
-            asdf
-        </span>
-    </div>
+    <span v-if="visible" class="mt-1 text-danger">{{ messages }}</span>
 </template>

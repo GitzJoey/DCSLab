@@ -134,7 +134,7 @@ const onSubmit = async () => {
                             <FormInputState :loading="userForm.validating"
                                 :invalid="userForm.hasErrors && userForm.invalid('email')" />
                         </FormInline>
-                        <FormInputErrorMessages />
+                        <FormInputErrorMessages :messages="userForm.errors.email" />
                     </div>
                 </div>
             </template>
