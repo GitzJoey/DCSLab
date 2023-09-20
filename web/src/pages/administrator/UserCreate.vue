@@ -20,7 +20,8 @@ import {
     FormInputCode,
     FormFileUpload,
     FormInline,
-    FormInputState
+    FormInputState,
+    FormInputErrorMessages
 } from "../../base-components/Form";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "../../types/enums/CardState";
@@ -33,7 +34,7 @@ import { ViewMode } from "../../types/enums/ViewMode";
 
 // #region Declarations
 const { t } = useI18n();
-const router = useRouter();
+
 const userServices = new UserService();
 const roleServices = new RoleService();
 const dashboardServices = new DashboardService();
@@ -117,7 +118,8 @@ const onSubmit = async () => {
                         </FormLabel>
                         <FormInline>
                             <FormInput v-model="userForm.name" id="name" name="name" type="text"
-                                :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.name')" />
+                                :class="{ 'border-danger': userForm.invalid('name') }"
+                                :placeholder="t('views.user.fields.name')" />
                             <FormInputState :loading="userForm.validating" :invalid="userForm.invalid('name')" />
                         </FormInline>
                     </div>
@@ -127,10 +129,12 @@ const onSubmit = async () => {
                         </FormLabel>
                         <FormInline>
                             <FormInput v-model="userForm.email" id="email" name="email" type="text"
-                                :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.email')"
-                                @change="userForm.validate('email')" />
-                            <FormInputState :loading="userForm.validating" :invalid="userForm.invalid('email')" />
+                                :class="{ 'border-danger': userForm.hasErrors && userForm.invalid('email') }"
+                                :placeholder="t('views.user.fields.email')" @change="userForm.validate('email')" />
+                            <FormInputState :loading="userForm.validating"
+                                :invalid="userForm.hasErrors && userForm.invalid('email')" />
                         </FormInline>
+                        <FormInputErrorMessages />
                     </div>
                 </div>
             </template>

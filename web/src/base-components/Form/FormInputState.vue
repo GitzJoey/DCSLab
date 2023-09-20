@@ -24,8 +24,16 @@ const iconName = computed((): "Loader" | "X" | "Check" => {
         return "Check";
     }
 });
+
+const show = computed(() => {
+    if (validating.value) return true;
+    if (invalid.value) return true;
+
+    return false;
+});
 </script>
 
 <template>
-    <Lucide :icon="iconName" :class="{ 'mx-1': true, 'animate-spin': iconName == 'Loader' }" />
+    <Lucide v-if="show" :icon="iconName"
+        :class="{ 'mx-1': true, 'text-danger': iconName == 'X', 'animate-spin': iconName == 'Loader' }" />
 </template>
