@@ -161,6 +161,9 @@ export default class UserService {
             theme: 'side-menu-light-full',
             date_format: 'dd_MMM_yyyy',
             time_format: 'hh_mm_ss',
+
+            tokens_reset: false,
+            reset_password: false,
         });
 
         return form;

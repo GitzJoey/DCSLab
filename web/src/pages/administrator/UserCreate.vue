@@ -51,8 +51,6 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: 'User Profile', state: CardState.Expanded },
     { title: 'Roles', state: CardState.Expanded },
     { title: 'Settings', state: CardState.Expanded },
-    { title: 'Token Managements', state: CardState.Expanded },
-    { title: 'Password Managements', state: CardState.Expanded },
     { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 

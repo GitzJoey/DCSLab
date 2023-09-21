@@ -39,7 +39,7 @@
         "tokens": {
             "tokens": "Tokens",
             "count": "Total Tokens",
-            "reset": "Reset"
+            "reset": "Reset Tokens"
         },
         "reset_password": "Reset Password",
         "email_reset_password": "Send Email"
