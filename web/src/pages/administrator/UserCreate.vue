@@ -1,8 +1,7 @@
 <script setup lang="ts">
 // #region Imports
-import { onMounted, ref, computed, inject } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { Role } from "../../types/models/Role";
@@ -27,6 +26,7 @@ import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/Two
 import { CardState } from "../../types/enums/CardState";
 import Button from "../../base-components/Button";
 import { ViewMode } from "../../types/enums/ViewMode";
+import { debounce } from "lodash";
 // #endregion
 
 // #region Interfaces
@@ -70,6 +70,9 @@ const userForm = userServices.useUserCreateForm();
 onMounted(async () => {
     emit('mode-state', ViewMode.FORM_CREATE);
     getDDL();
+
+    let data = cacheServices.getLastEntity('USER_CREATE') as Record<string, unknown>;
+    userForm.setData(data);
 });
 // #endregion
 
@@ -98,12 +101,33 @@ const handleExpandCard = (index: number) => {
     }
 }
 
-const onSubmit = async () => {
+const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
 
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+const onSubmit = async () => {
+    if (userForm.hasErrors) {
+        scrollToError(Object.keys(userForm.errors)[0]);
+    }
 };
+
+const resetForm = () => {
+    userForm.reset();
+}
 // #endregion
 
 // #region Watchers
+watch(
+    userForm,
+    debounce((newValue): void => {
+        cacheServices.setLastEntity('USER_CREATE', newValue.data())
+    }, 500),
+    { deep: true }
+);
 // #endregion
 </script>
 
@@ -113,26 +137,26 @@ const onSubmit = async () => {
             <template #card-items-0>
                 <div class="p-5">
                     <div class="pb-4">
-                        <FormLabel html-for="name" :class="{ 'text-danger': false }">
+                        <FormLabel html-for="name" :class="{ 'text-danger': userForm.invalid('name') }">
                             {{ t('views.user.fields.name') }}
                         </FormLabel>
                         <FormInline>
                             <FormInput v-model="userForm.name" id="name" name="name" type="text"
                                 :class="{ 'border-danger': userForm.invalid('name') }"
-                                :placeholder="t('views.user.fields.name')" />
-                            <FormInputState :loading="userForm.validating" :invalid="userForm.invalid('name')" />
+                                :placeholder="t('views.user.fields.name')" @change="userForm.validate('name')" />
+                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('name')" />
                         </FormInline>
+                        <FormInputErrorMessages :messages="userForm.errors.name" />
                     </div>
                     <div class="pb-4">
-                        <FormLabel html-for="email" :class="{ 'text-danger': false }">
+                        <FormLabel html-for="email" :class="{ 'text-danger': userForm.invalid('email') }">
                             {{ t('views.user.fields.email') }}
                         </FormLabel>
                         <FormInline>
                             <FormInput v-model="userForm.email" id="email" name="email" type="text"
-                                :class="{ 'border-danger': userForm.hasErrors && userForm.invalid('email') }"
+                                :class="{ 'border-danger': userForm.invalid('email') }"
                                 :placeholder="t('views.user.fields.email')" @change="userForm.validate('email')" />
-                            <FormInputState :loading="userForm.validating"
-                                :invalid="userForm.hasErrors && userForm.invalid('email')" />
+                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('email')" />
                         </FormInline>
                         <FormInputErrorMessages :messages="userForm.errors.email" />
                     </div>
@@ -142,9 +166,8 @@ const onSubmit = async () => {
                 <div class="p-5">
                     <div class="pb-4">
                         <FormLabel html-for="first_name">{{ t('views.user.fields.first_name') }}</FormLabel>
-                        <FormInput v-model="userForm.email" id="first_name" name="first_name" type="text"
-                            :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.name')"
-                            @change="userForm.validate('email')" />
+                        <FormInput v-model="userForm.first_name" id="first_name" name="first_name" type="text"
+                            :placeholder="t('views.user.fields.name')" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="last_name">{{ t('views.user.fields.last_name') }}</FormLabel>
@@ -169,15 +192,20 @@ const onSubmit = async () => {
                             :placeholder="t('views.user.fields.postal_code')" />
                     </div>
                     <div class="pb-4">
-                        <FormLabel html-for="country" :class="{ 'text-danger': false }">
+                        <FormLabel html-for="country" :class="{ 'text-danger': userForm.invalid('country') }">
                             {{ t('views.user.fields.country') }}
                         </FormLabel>
-                        <FormSelect v-model="userForm.country" id="country" name="country"
-                            :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.country')">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}
-                            </option>
-                        </FormSelect>
+                        <FormInline>
+                            <FormSelect v-model="userForm.country" id="country" name="country"
+                                :class="{ 'border-danger': userForm.invalid('country') }"
+                                :placeholder="t('views.user.fields.country')" @change="userForm.validate('country')">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
+                            </FormSelect>
+                            <FormInputState :is-validating="userForm.validating"
+                                :is-invalid="userForm.invalid('country')" />
+                        </FormInline>
+                        <FormInputErrorMessages :messages="userForm.errors.country" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="img_path" :class="{ 'text-danger': false }">
@@ -187,28 +215,41 @@ const onSubmit = async () => {
                             :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.picture')" />
                     </div>
                     <div class="pb-4">
-                        <FormLabel html-for="tax_id" :class="{ 'text-danger': false }">
+                        <FormLabel html-for="tax_id" :class="{ 'text-danger': userForm.invalid('tax_id') }">
                             {{ t('views.user.fields.tax_id') }}
                         </FormLabel>
-                        <FormInput v-model="userForm.tax_id" id="tax_id" name="tax_id" type="text"
-                            :class="{ 'border-danger': false }" />
+                        <FormInline>
+                            <FormInput v-model="userForm.tax_id" id="tax_id" name="tax_id" type="text"
+                                :class="{ 'border-danger': userForm.invalid('tax_id') }"
+                                @change="userForm.validate('tax_id')" />
+                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('tax_id')" />
+                        </FormInline>
+                        <FormInputErrorMessages :messages="userForm.errors.tax_id" />
                     </div>
                     <div class="pb-4">
-                        <FormLabel html-for="ic_num" :class="{ 'text-danger': false }">
+                        <FormLabel html-for="ic_num" :class="{ 'text-danger': userForm.invalid('ic_num') }">
                             {{ t('views.user.fields.ic_num') }}
                         </FormLabel>
-                        <FormInput id="ic_num" v-model="userForm.ic_num" name="ic_num" type="text"
-                            :class="{ 'border-danger': false }" />
+                        <FormInline>
+                            <FormInput id="ic_num" v-model="userForm.ic_num" name="ic_num" type="text"
+                                :class="{ 'border-danger': false }" @change="userForm.validate('ic_num')" />
+                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('ic_num')" />
+                        </FormInline>
+                        <FormInputErrorMessages :messages="userForm.errors.ic_num" />
                     </div>
                     <div class="pb-4">
-                        <FormLabel html-for="status" :class="{ 'text-danger': false }">
+                        <FormLabel html-for="status" :class="{ 'text-danger': userForm.invalid('status') }">
                             {{ t('views.user.fields.status') }}
                         </FormLabel>
-                        <FormSelect id="status" v-model="userForm.status" name="status" :class="{ 'border-danger': false }">
-                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}
-                            </option>
-                        </FormSelect>
+                        <FormInline>
+                            <FormSelect id="status" v-model="userForm.status" name="status"
+                                :class="{ 'border-danger': false }" @change="userForm.validate('status')">
+                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                            </FormSelect>
+                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('status')" />
+                        </FormInline>
+                        <FormInputErrorMessages :messages="userForm.errors.status" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="remarks" :class="{ 'text-danger': false }">
@@ -222,15 +263,20 @@ const onSubmit = async () => {
             <template #card-items-2>
                 <div class="p-5">
                     <div class="pb-4">
-                        <FormLabel html-for="roles" :class="{ 'text-danger': false }">
+                        <FormLabel html-for="roles" :class="{ 'text-danger': userForm.invalid('roles') }">
                             {{ t('views.user.fields.roles') }}
                         </FormLabel>
-                        <FormSelect id="roles" v-model="userForm.roles" multiple size="6"
-                            :class="{ 'border-danger': false }">
-                            <option v-for="r in rolesDDL" :key="r.id" :value="r">
-                                {{ r.display_name }}
-                            </option>
-                        </FormSelect>
+                        <FormInline>
+                            <FormSelect id="roles" v-model="userForm.roles" multiple size="6"
+                                :class="{ 'border-danger': userForm.invalid('roles') }"
+                                @change="userForm.validate('roles')">
+                                <option v-for="r in rolesDDL" :key="r.id" :value="r">
+                                    {{ r.display_name }}
+                                </option>
+                            </FormSelect>
+                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('roles')" />
+                        </FormInline>
+                        <FormInputErrorMessages :messages="userForm.errors.roles" />
                     </div>
                 </div>
             </template>
@@ -289,7 +335,7 @@ const onSubmit = async () => {
                     <Button type="submit" href="#" variant="primary" class="w-28 shadow-md">
                         {{ t("components.buttons.submit") }}
                     </Button>
-                    <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md">
+                    <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
                         {{ t("components.buttons.reset") }}
                     </Button>
                 </div>

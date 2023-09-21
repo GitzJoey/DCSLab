@@ -2,15 +2,13 @@
 // #region Imports
 import { onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { Role } from "../../types/models/Role";
 import UserService from "../../services/UserService";
 import RoleService from "../../services/RoleService";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
-import {
-    TitleLayout, TwoColumnsLayout
-} from "../../base-components/Form/FormLayout";
+import { TwoColumnsLayout } from "../../base-components/Form/FormLayout";
 import {
     FormInput,
     FormLabel,
@@ -18,14 +16,16 @@ import {
     FormSelect,
     FormInputCode,
     FormFileUpload,
+    FormInputState,
+    FormInputErrorMessages,
 } from "../../base-components/Form";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "../../types/enums/CardState";
 import { DropDownOption } from "../../types/models/DropDownOption";
-import { client, useForm } from "laravel-precognition-vue";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { ViewMode } from "../../types/enums/ViewMode";
+import { User } from "../../types/models/User";
 // #endregion
 
 // #region Interfaces
@@ -34,6 +34,7 @@ import { ViewMode } from "../../types/enums/ViewMode";
 // #region Declarations
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
 const userServices = new UserService();
 const roleServices = new RoleService();
 const dashboardServices = new DashboardService();
@@ -59,28 +60,7 @@ const rolesDDL = ref<Array<Role> | null>(null);
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 const countriesDDL = ref<Array<DropDownOption> | null>(null);
 
-const userForm = useForm('post', '', {
-    name: '',
-    email: '',
-
-    first_name: '',
-    last_name: '',
-    address: '',
-    city: '',
-    postal_code: '',
-    country: '',
-    img_path: '',
-    tax_id: 0,
-    ic_num: 0,
-    status: '',
-    remarks: '',
-
-    roles: [],
-
-    theme: '',
-    date_format: '',
-    time_format: '',
-});
+const userForm = userServices.useUserEditForm(route.params.ulid as string);
 // #endregion
 
 // #region Computed
@@ -90,10 +70,49 @@ const userForm = useForm('post', '', {
 onMounted(async () => {
     emit('mode-state', ViewMode.FORM_EDIT);
     getDDL();
+
+    await loadData(route.params.ulid as string);
 });
 // #endregion
 
 // #region Methods
+const loadData = async (ulid: string) => {
+    let response: ServiceResponse<User | null> = await userServices.read(ulid);
+
+    if (response && response.data) {
+        let rolesArr: Array<Role> = [];
+        response.data.roles.forEach((r) => {
+            rolesArr.push({
+                id: r.id,
+                display_name: r.display_name
+            });
+        });
+
+        userForm.setData({
+            name: response.data.name,
+            email: response.data.email,
+
+            first_name: response.data.profile.first_name,
+            last_name: response.data.profile.last_name,
+            address: response.data.profile.address,
+            city: response.data.profile.city,
+            postal_code: response.data.profile.postal_code,
+            country: response.data.profile.country,
+            img_path: response.data.profile.img_path,
+            tax_id: response.data.profile.tax_id,
+            ic_num: response.data.profile.ic_num,
+            status: response.data.profile.status,
+            remarks: response.data.profile.remarks,
+
+            roles: rolesArr,
+
+            theme: response.data.settings.theme,
+            date_format: response.data.settings.date_format,
+            time_format: response.data.settings.time_format,
+        });
+    }
+}
+
 const getDDL = (): void => {
     roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
         if (result.success && result.data) {

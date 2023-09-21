@@ -41,7 +41,6 @@ const createNew = () => {
 
 const backToList = async () => {
     mode.value = ViewMode.LIST;
-    //cacheServices.removeLastEntity('User');
 
     router.push({ name: 'side-menu-administrator-user-list' });
 }

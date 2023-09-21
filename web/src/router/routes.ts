@@ -119,7 +119,7 @@ export default [
                             {
                                 path: "/dashboard/administrator/user/edit/:ulid",
                                 name: "side-menu-administrator-user-edit",
-                                component: UserEdit
+                                component: UserEdit,
                             }
                         ]
                     }

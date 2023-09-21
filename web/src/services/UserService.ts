@@ -24,59 +24,6 @@ export default class UserService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public transformDataToForm(data: Resource<User>) {
-        return {
-            name: data.data.name,
-            email: data.data.email,
-
-            first_name: data.data.profile.first_name,
-            last_name: data.data.profile.last_name,
-            address: data.data.profile.address,
-            city: data.data.profile.city,
-            postal_code: data.data.profile.postal_code,
-            country: data.data.profile.country,
-            img_path: data.data.profile.img_path,
-            tax_id: data.data.profile.tax_id,
-            ic_num: data.data.profile.ic_num,
-            status: data.data.profile.status,
-            remarks: data.data.profile.remarks,
-
-            roles: [],
-
-            theme: data.data.settings.theme,
-            date_format: data.data.settings.date_format,
-            time_format: data.data.settings.time_format,
-        }
-    }
-
-    public async create(payload: UserFormFieldValues): Promise<ServiceResponse<User | null>> {
-        const result: ServiceResponse<User | null> = {
-            success: false,
-        }
-
-        try {
-            const url = route('api.post.db.admin.user.save', undefined, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
-            const response: AxiosResponse<User> = await axios.post(url, payload);
-
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
-            result.success = true;
-            result.data = response.data;
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
-
     public useUserCreateForm() {
         const url = route('api.post.db.admin.user.save', undefined, true, this.ziggyRoute);
 
@@ -99,9 +46,9 @@ export default class UserService {
 
             roles: [],
 
-            theme: '',
-            date_format: '',
-            time_format: '',
+            theme: 'side-menu-light-full',
+            date_format: 'dd_MMM_yyyy',
+            time_format: 'hh_mm_ss',
         });
 
         return form;
@@ -189,57 +136,31 @@ export default class UserService {
         }
     }
 
-    public async edit(ulid: string, payload: UserFormFieldValues): Promise<ServiceResponse<User | null>> {
-        const result: ServiceResponse<User | null> = {
-            success: false,
-        }
-
-        try {
-            const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
-            const response: AxiosResponse<User> = await axios.post(url, payload);
-
-            result.success = true;
-            result.data = response.data;
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
-
-    public async useUserEditForm(ulid: string, data: Resource<User>) {
-        const url = route('api.post.db.admin.user.edit', ulid, false, this.ziggyRoute);
+    public useUserEditForm(ulid: string) {
+        const url = route('api.post.db.admin.user.edit', ulid, true, this.ziggyRoute);
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
-            name: data.data.name,
-            email: data.data.email,
+            name: '',
+            email: '',
 
-            first_name: data.data.profile.first_name,
-            last_name: data.data.profile.last_name,
-            address: data.data.profile.address,
-            city: data.data.profile.city,
-            postal_code: data.data.profile.postal_code,
-            country: data.data.profile.country,
-            img_path: data.data.profile.img_path,
-            tax_id: data.data.profile.tax_id,
-            ic_num: data.data.profile.ic_num,
-            status: data.data.profile.status,
-            remarks: data.data.profile.remarks,
+            first_name: '',
+            last_name: '',
+            address: '',
+            city: '',
+            postal_code: '',
+            country: '',
+            img_path: '',
+            tax_id: 0,
+            ic_num: 0,
+            status: '',
+            remarks: '',
 
             roles: [],
 
-            theme: data.data.settings.theme,
-            date_format: data.data.settings.date_format,
-            time_format: data.data.settings.time_format,
+            theme: 'side-menu-light-full',
+            date_format: 'dd_MMM_yyyy',
+            time_format: 'hh_mm_ss',
         });
 
         return form;

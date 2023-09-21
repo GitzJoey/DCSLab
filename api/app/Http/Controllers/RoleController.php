@@ -57,12 +57,12 @@ class RoleController extends BaseController
         if (! $usr) {
             return $result;
         }
-        if (! $usr->roles->count() == 0) {
+        if ($usr->roles->count() == 0) {
             return $result;
         }
 
         foreach ($usr->roles as $r) {
-            if (ucfirst($r->name) == UserRoles::ADMINISTRATOR->value) {
+            if (strtolower($r->name) == UserRoles::ADMINISTRATOR->value) {
                 $result = true;
 
                 return $result;
@@ -80,12 +80,12 @@ class RoleController extends BaseController
         if (! $usr) {
             return $result;
         }
-        if (! $usr->roles->count() == 0) {
+        if ($usr->roles->count() == 0) {
             return $result;
         }
 
         foreach ($usr->roles as $r) {
-            if (ucfirst($r->name) == UserRoles::DEVELOPER->value) {
+            if (strtolower($r->name) == UserRoles::DEVELOPER->value) {
                 $result = true;
 
                 return $result;

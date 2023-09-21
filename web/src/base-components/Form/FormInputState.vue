@@ -3,31 +3,28 @@ import { computed, toRef } from 'vue';
 import Lucide from '../Lucide';
 
 export interface FormInputStateProps {
-    invalid: boolean,
-    validating: boolean,
+    isInvalid: boolean,
+    isValidating: boolean,
 }
 
 const props = withDefaults(defineProps<FormInputStateProps>(), {
-    invalid: false,
-    validating: false,
+    isInvalid: false,
+    isValidating: false,
 });
 
-const invalid = toRef(props, 'invalid');
-const validating = toRef(props, 'validating');
+const isInvalid = toRef(props, 'isInvalid');
+const isValidating = toRef(props, 'isValidating');
 
-const iconName = computed((): "Loader" | "X" | "Check" => {
-    if (validating.value) return "Loader";
+const iconName = computed((): "Loader" | "X" | "Asterisk" => {
+    if (isValidating.value) return "Loader";
+    if (isInvalid.value) return "X";
 
-    if (invalid.value) {
-        return "X";
-    } else {
-        return "Check";
-    }
+    else return "Asterisk";
 });
 
 const show = computed(() => {
-    if (validating.value) return true;
-    if (invalid.value) return true;
+    if (isValidating.value) return true;
+    if (isInvalid.value) return true;
 
     return false;
 });
