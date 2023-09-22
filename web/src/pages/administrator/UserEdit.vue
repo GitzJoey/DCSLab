@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { Role } from "../../types/models/Role";
@@ -29,6 +29,7 @@ import { Resource } from "../../types/resources/Resource";
 import { ViewMode } from "../../types/enums/ViewMode";
 import { User } from "../../types/models/User";
 import Button from "../../base-components/Button";
+import { debounce } from "lodash";
 // #endregion
 
 // #region Interfaces
@@ -74,7 +75,9 @@ onMounted(async () => {
     emit('mode-state', ViewMode.FORM_EDIT);
     getDDL();
 
+    emit('loading-state', true);
     await loadData(route.params.ulid as string);
+    emit('loading-state', false);
 });
 // #endregion
 
@@ -150,6 +153,13 @@ const resetForm = () => {
 // #endregion
 
 // #region Watchers
+watch(
+    userForm,
+    debounce((newValue): void => {
+        cacheServices.setLastEntity('USER_EDIT', newValue.data())
+    }, 500),
+    { deep: true }
+);
 // #endregion
 </script>
 

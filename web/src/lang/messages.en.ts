@@ -6,6 +6,7 @@ import top_bar from "./en/components/top-bar.json";
 import data_list from "./en/components/data-list.json"
 import user_location from "./en/components/user-location.json";
 import delete_modal from "./en/components/delete-modal.json";
+import file_upload from "./en/components/file-upload.json";
 
 import login from "./en/views/login.json";
 import register from "./en/views/register.json";
@@ -36,6 +37,7 @@ export default {
         "data-list": data_list,
         "user-location": user_location,
         "delete-modal": delete_modal,
+        "file-upload": file_upload,
     },
     "views": {
         "login": login,

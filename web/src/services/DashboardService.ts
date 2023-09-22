@@ -9,6 +9,7 @@ import { Menu as sMenu } from "../stores/side-menu";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { Resource } from "../types/resources/Resource";
 import { DropDownOption } from "../types/models/DropDownOption";
+import { FileUpload } from "../types/models/FileUpload";
 
 export default class DashboardService {
     private ziggyRoute: Config;
@@ -149,8 +150,8 @@ export default class DashboardService {
         }
     }
 
-    public async uploadFile(file: File): Promise<ServiceResponse<string>> {
-        const result: ServiceResponse<string> | null = {
+    public async uploadFile(file: File): Promise<ServiceResponse<FileUpload | null>> {
+        const result: ServiceResponse<FileUpload | null> = {
             success: false
         }
 
@@ -162,14 +163,20 @@ export default class DashboardService {
 
             axios.defaults.headers.common['Content-Type'] = "multipart/form-data"
 
-            const data = await axios.post(url, formData);
+            const response: AxiosResponse<Resource<FileUpload>> = await axios.post(url, formData);
 
-            return {
-                success: true,
-                data: data.data
-            }
-        } catch (e: unknown) {
+            result.success = true;
+            result.data = response.data.data;
+
             return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
         }
     }
 }

@@ -10,8 +10,11 @@ import { twMerge } from "tailwind-merge";
 import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
-import DashboardService from '../../services/DashboardService'
-import noImage from '../../assets/images/no_image.png'
+import DashboardService from "../../services/DashboardService";
+import noImage from "../../assets/images/no_image.png";
+import { useI18n } from "vue-i18n";
+import { FileUpload } from "../../types/models/FileUpload";
+import { ServiceResponse } from "../../types/services/ServiceResponse";
 
 interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   value?: InputHTMLAttributes["value"];
@@ -20,23 +23,17 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   rounded?: boolean;
 }
 
-interface FormUploadResponse {
-  data: { url: string },
-  statusCode: number,
-  success: boolean
-}
 interface HTMLInputEvent extends Event {
   target: HTMLInputElement & EventTarget;
 }
 
+const { t } = useI18n();
 const props = defineProps<FormInputProps>();
 const attrs = useAttrs();
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
-const imageUrl = ref<string | undefined>('')
-const dashboardService = new DashboardService()
-
-
+const imageUrl = ref<string | undefined>('');
+const dashboardService = new DashboardService();
 
 const computedClass = computed(() =>
   twMerge([
@@ -68,27 +65,27 @@ const localValue = computed({
 });
 
 const handleUpload = async (event: Event) => {
-  const _event = event as HTMLInputEvent
-  const files = _event.target.files
-  const fileReader = new FileReader()
+  const _event = event as HTMLInputEvent;
+  const files = _event.target.files;
+  const fileReader = new FileReader();
+
   if (files) {
     let filename: string = files[0].name;
     fileReader.readAsDataURL(files[0]);
     localValue.value = filename
-    let uploadResponse: FormUploadResponse = await dashboardService.uploadFile(files[0])
-    if (uploadResponse) {
-      imageUrl.value = uploadResponse.data.url
+    let uploadResponse: ServiceResponse<FileUpload | null> = await dashboardService.uploadFile(files[0])
+
+    if (uploadResponse && uploadResponse.data) {
+      imageUrl.value = uploadResponse.data.url;
     }
   }
 }
 
 onMounted(() => {
   if (!imageUrl.value) {
-    imageUrl.value = noImage
+    imageUrl.value = noImage;
   }
-})
-
-
+});
 </script>
 
 <template>
@@ -99,7 +96,7 @@ onMounted(() => {
   <div class="flex gap-2 mt-4">
     <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" />
     <input id="upload" type="file" hidden @change="(e) => handleUpload(e)" />
-    <label class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
-      for="upload">Choose File</label>
+    <label class="border-slate-200 border w-[15%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
+      for="upload">{{ t('components.file-upload.browse') }}</label>
   </div>
 </template>

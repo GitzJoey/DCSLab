@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Dashboard\DashboardActions;
 use App\Http\Requests\FileUploadRequest;
+use App\Http\Resources\FileUploadResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Tightenco\Ziggy\Ziggy;
@@ -47,6 +48,16 @@ class DashboardController extends BaseController
 
         $url = asset('storage/'.$path);
 
-        return response()->json(['url' => $url], 200);
+        $data = [
+            'url' => $url
+        ];
+
+        if (empty($url)) {
+            return response()->error();
+        } else {
+            $response = (new FileUploadResource($data));
+
+            return $response;
+        }
     }
 }

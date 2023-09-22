@@ -4,8 +4,9 @@ import alert_placeholder from "./id/components/alert-placeholder.json";
 import dropdown from "./id/components/dropdown.json";
 import top_bar from "./id/components/top-bar.json";
 import data_list from "./id/components/data-list.json";
-import user_location from "./en/components/user-location.json";
-import delete_modal from "./en/components/delete-modal.json";
+import user_location from "./id/components/user-location.json";
+import delete_modal from "./id/components/delete-modal.json";
+import file_upload from "./id/components/file-upload.json";
 
 import login from "./id/views/login.json";
 import register from "./id/views/register.json";
