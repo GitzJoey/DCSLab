@@ -100,7 +100,7 @@ const toggleSideTab = (show: boolean | undefined) => {
       `${usingSideTab && !isShowSideTab && 'col-span-11'}`
     ]">
       <Transition>
-        <div class="grid grid-cols-12 gap-6 box p-4">
+        <div class="mt-1 grid grid-cols-12 gap-6 box p-4">
           <div v-for="(card, index) in cards" :key="index" :class="[
             'intro-y',
             { 'border': card.state === CardState.Expanded },
