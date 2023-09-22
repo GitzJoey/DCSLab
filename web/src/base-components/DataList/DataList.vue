@@ -65,6 +65,8 @@ const canPrint = toRef(props, "canPrint");
 const canExport = toRef(props, "canExport");
 const enableSearch = toRef(props, "enableSearch");
 
+const showExportButtonGroups = ref<boolean>(false);
+
 const search = ref<string>('');
 const perPage = ref<number>(10);
 
@@ -160,6 +162,11 @@ const printButtonClicked = () => {
 }
 
 const exportButtonClicked = (type: string) => {
+  if (type.length == 0) {
+    showExportButtonGroups.value = !showExportButtonGroups.value;
+    return;
+  }
+
   emits('export', type);
 }
 
@@ -220,35 +227,31 @@ watch(perPage,
           <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
 
-        <div v-if="canPrint" class="">
-          <Menu>
-            <Menu.Button v-if="canPrint" :as="Button" class="px-2">
-              <span class="flex items-center justify-center w-5 h-5">
-                <Lucide icon="Printer" class="w-4 h-4" />
-              </span>
-            </Menu.Button>
-            <Menu.Items v-if="canPrint || canExport" class="w-40" placement="left-end">
-              <Menu.Item v-if="canPrint">
-                <Lucide icon="Printer" class="w-4 h-4 mr-2" @click="printButtonClicked" />
-                {{ t("components.data-list.print") }}
-              </Menu.Item>
-              <Menu.Item v-if="canExport">
-                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('XLS')" />
-                {{ t("components.data-list.export_to_excel") }}
-              </Menu.Item>
-              <Menu.Item v-if="canExport">
-                <Lucide icon="FileText" class="w-4 h-4 mr-2" @click="exportButtonClicked('PDF')" />
-                {{ t("components.data-list.export_to_pdf") }}
-              </Menu.Item>
-            </Menu.Items>
-          </Menu>
-        </div>
-
         <Button @click="refreshButtonClicked">
           <Lucide icon="RefreshCw" class="w-4 h-4" />
         </Button>
+
+        <Button v-if="canPrint" @click="printButtonClicked">
+          <Lucide icon="Printer" class="w-4 h-4" />
+        </Button>
+
+        <Button v-if="canExport" @click="exportButtonClicked('')">
+          <Lucide icon="FileText" class="w-4 h-4" />
+        </Button>
       </div>
     </div>
+
+    <div v-if="showExportButtonGroups" class="mt-2 grid justify-items-end">
+      <div class="flex gap-2">
+        <Button size="sm" @click="exportButtonClicked('PDF')">
+          {{ t('components.data-list.export_to_pdf') }}
+        </Button>
+        <Button size="sm" @click="exportButtonClicked('XLS')">
+          {{ t('components.data-list.export_to_excel') }}
+        </Button>
+      </div>
+    </div>
+
     <div class="overflow-x-auto mb-4">
       <slot name="content"></slot>
     </div>
@@ -263,7 +266,8 @@ watch(perPage,
           </Pagination.Link>
           <template v-for="n in pages" :key="n">
             <template v-if="n > 0">
-              <Pagination.Link :active="n == pagination?.current_page" @click="paginationNumberButtonClicked(n)">
+              <Pagination.Link :active="pagination ? n == pagination.current_page : false"
+                @click="paginationNumberButtonClicked(n)">
                 {{ n }}
               </Pagination.Link>
             </template>
