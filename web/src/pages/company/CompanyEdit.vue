@@ -19,7 +19,7 @@ import {
     FormInputCode,
     FormFileUpload,
     FormInputState,
-    FormInputErrorMessages,
+    FormErrorMessages,
 } from "../../base-components/Form";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "../../types/enums/CardState";
@@ -178,7 +178,7 @@ watch(
                                 :placeholder="t('views.user.fields.name')" @change="userForm.validate('name')" />
                             <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('name')" />
                         </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.name" />
+                        <FormErrorMessages :messages="userForm.errors.name" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="email">
@@ -231,7 +231,7 @@ watch(
                             <FormInputState :is-validating="userForm.validating"
                                 :is-invalid="userForm.invalid('country')" />
                         </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.country" />
+                        <FormErrorMessages :messages="userForm.errors.country" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="img_path" :class="{ 'text-danger': false }">
@@ -250,7 +250,7 @@ watch(
                                 @change="userForm.validate('tax_id')" />
                             <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('tax_id')" />
                         </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.tax_id" />
+                        <FormErrorMessages :messages="userForm.errors.tax_id" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="ic_num" :class="{ 'text-danger': userForm.invalid('ic_num') }">
@@ -262,7 +262,7 @@ watch(
                                 @change="userForm.validate('ic_num')" />
                             <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('ic_num')" />
                         </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.ic_num" />
+                        <FormErrorMessages :messages="userForm.errors.ic_num" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="status" :class="{ 'text-danger': userForm.invalid('status') }">
@@ -278,7 +278,7 @@ watch(
                             </FormSelect>
                             <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('status')" />
                         </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.status" />
+                        <FormErrorMessages :messages="userForm.errors.status" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="remarks">
@@ -305,7 +305,7 @@ watch(
                             </FormSelect>
                             <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('roles')" />
                         </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.roles" />
+                        <FormErrorMessages :messages="userForm.errors.roles" />
                     </div>
                 </div>
             </template>

@@ -2,9 +2,6 @@
 // #region Imports
 import { onMounted, ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { Resource } from "../../types/resources/Resource";
-import { Role } from "../../types/models/Role";
 import CompanyService from "../../services/CompanyService";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
@@ -20,7 +17,7 @@ import {
     FormFileUpload,
     FormInline,
     FormInputState,
-    FormInputErrorMessages
+    FormErrorMessages
 } from "../../base-components/Form";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "../../types/enums/CardState";
@@ -50,9 +47,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 
-const rolesDDL = ref<Array<Role> | null>(null);
 const statusDDL = ref<Array<DropDownOption> | null>(null);
-const countriesDDL = ref<Array<DropDownOption> | null>(null);
 
 const companyForm = companyServices.useCompanyCreateForm();
 // #endregion
@@ -121,68 +116,49 @@ watch(
                         <FormLabel html-for="code" :class="{ 'text-danger': companyForm.invalid('code') }">
                             {{ t('views.company.fields.code') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormInputCode id="code" v-model="companyForm.code" name="code"
-                                :class="{ 'border-danger': companyForm.invalid('code') }"
-                                :placeholder="t('views.company.fields.code')" @change="companyForm.validate('code')" />
-                            <FormInputState :is-validating="companyForm.validating"
-                                :is-invalid="companyForm.invalid('code')" />
-                        </FormInline>
-
-                        <FormInputErrorMessages :messages="companyForm.errors.code" />
+                        <FormInputCode id="code" v-model="companyForm.code" name="code"
+                            :class="{ 'border-danger': companyForm.invalid('code') }"
+                            :placeholder="t('views.company.fields.code')" @change="companyForm.validate('code')" />
+                        <FormErrorMessages :messages="companyForm.errors.code" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="name" :class="{ 'text-danger': companyForm.invalid('name') }">
                             {{ t('views.company.fields.name') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormInput id="name" v-model="companyForm.name" name="name" type="text"
-                                :class="{ 'border-danger': companyForm.invalid('name') }"
-                                :placeholder="t('views.company.fields.name')" @change="companyForm.validate('name')" />
-                            <FormInputState :is-validating="companyForm.validating"
-                                :is-invalid="companyForm.invalid('name')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="companyForm.errors.name" />
+                        <FormInput id="name" v-model="companyForm.name" name="name" type="text"
+                            :class="{ 'border-danger': companyForm.invalid('name') }"
+                            :placeholder="t('views.company.fields.name')" @change="companyForm.validate('name')" />
+                        <FormErrorMessages :messages="companyForm.errors.name" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="address">
                             {{ t('views.company.fields.address') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormTextarea id="address" v-model="companyForm.address" name="address" type="text"
-                                :placeholder="t('views.company.fields.address')" />
-                        </FormInline>
+                        <FormTextarea id="address" v-model="companyForm.address" name="address" type="text"
+                            :placeholder="t('views.company.fields.address')" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="default" :class="{ 'text-danger': companyForm.invalid('default') }">
                             {{ t('views.company.fields.default') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormSwitch class="mt-2">
-                                <FormSwitch.Input id="default" v-model="companyForm.default" name="default" type="checkbox"
-                                    :class="{ 'border-danger': companyForm.invalid('default') }"
-                                    :placeholder="t('views.company.fields.default')" />
-                                <FormInputState :is-validating="companyForm.validating"
-                                    :is-invalid="companyForm.invalid('default')" />
-                            </FormSwitch>
-                        </FormInline>
-                        <FormInputErrorMessages :messages="companyForm.errors.default" />
+                        <FormSwitch class="mt-2">
+                            <FormSwitch.Input id="default" v-model="companyForm.default" name="default" type="checkbox"
+                                :class="{ 'border-danger': companyForm.invalid('default') }"
+                                :placeholder="t('views.company.fields.default')" />
+                        </FormSwitch>
+                        <FormErrorMessages :messages="companyForm.errors.default" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="status" :class="{ 'text-danger': companyForm.invalid('status') }">
                             {{ t('views.company.fields.status') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormSelect id="status" v-model="companyForm.status" name="status"
-                                :class="{ 'border-danger': companyForm.invalid('status') }"
-                                @change="companyForm.validate('status')">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                            </FormSelect>
-                            <FormInputState :is-validating="companyForm.validating"
-                                :is-invalid="companyForm.invalid('status')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="companyForm.errors.status" />
+                        <FormSelect id="status" v-model="companyForm.status" name="status"
+                            :class="{ 'border-danger': companyForm.invalid('status') }"
+                            @change="companyForm.validate('status')">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </FormSelect>
+                        <FormErrorMessages :messages="companyForm.errors.status" />
                     </div>
                 </div>
             </template>

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, toRef } from 'vue';
-import messagesEn from '../../lang/messages.en';
 
-export interface FormInputErrorMessagesProps {
+export interface FormErrorMessagesProps {
     messages: string | undefined
 }
 
-const props = withDefaults(defineProps<FormInputErrorMessagesProps>(), {
+const props = withDefaults(defineProps<FormErrorMessagesProps>(), {
     messages: '',
 });
 

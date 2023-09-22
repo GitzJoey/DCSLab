@@ -16,11 +16,8 @@ import {
     FormLabel,
     FormTextarea,
     FormSelect,
-    FormInputCode,
     FormFileUpload,
-    FormInline,
-    FormInputState,
-    FormInputErrorMessages
+    FormErrorMessages
 } from "../../base-components/Form";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "../../types/enums/CardState";
@@ -138,25 +135,19 @@ watch(
                         <FormLabel html-for="name" :class="{ 'text-danger': userForm.invalid('name') }">
                             {{ t('views.user.fields.name') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormInput v-model="userForm.name" id="name" name="name" type="text"
-                                :class="{ 'border-danger': userForm.invalid('name') }"
-                                :placeholder="t('views.user.fields.name')" @change="userForm.validate('name')" />
-                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('name')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.name" />
+                        <FormInput v-model="userForm.name" id="name" name="name" type="text"
+                            :class="{ 'border-danger': userForm.invalid('name') }"
+                            :placeholder="t('views.user.fields.name')" @change="userForm.validate('name')" />
+                        <FormErrorMessages :messages="userForm.errors.name" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="email" :class="{ 'text-danger': userForm.invalid('email') }">
                             {{ t('views.user.fields.email') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormInput v-model="userForm.email" id="email" name="email" type="text"
-                                :class="{ 'border-danger': userForm.invalid('email') }"
-                                :placeholder="t('views.user.fields.email')" @change="userForm.validate('email')" />
-                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('email')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.email" />
+                        <FormInput v-model="userForm.email" id="email" name="email" type="text"
+                            :class="{ 'border-danger': userForm.invalid('email') }"
+                            :placeholder="t('views.user.fields.email')" @change="userForm.validate('email')" />
+                        <FormErrorMessages :messages="userForm.errors.email" />
                     </div>
                 </div>
             </template>
@@ -193,17 +184,13 @@ watch(
                         <FormLabel html-for="country" :class="{ 'text-danger': userForm.invalid('country') }">
                             {{ t('views.user.fields.country') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormSelect v-model="userForm.country" id="country" name="country"
-                                :class="{ 'border-danger': userForm.invalid('country') }"
-                                :placeholder="t('views.user.fields.country')" @change="userForm.validate('country')">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
-                            </FormSelect>
-                            <FormInputState :is-validating="userForm.validating"
-                                :is-invalid="userForm.invalid('country')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.country" />
+                        <FormSelect v-model="userForm.country" id="country" name="country"
+                            :class="{ 'border-danger': userForm.invalid('country') }"
+                            :placeholder="t('views.user.fields.country')" @change="userForm.validate('country')">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in countriesDDL" :key="c.name" :value="c.name">{{ c.name }}</option>
+                        </FormSelect>
+                        <FormErrorMessages :messages="userForm.errors.country" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="img_path" :class="{ 'text-danger': false }">
@@ -216,38 +203,29 @@ watch(
                         <FormLabel html-for="tax_id" :class="{ 'text-danger': userForm.invalid('tax_id') }">
                             {{ t('views.user.fields.tax_id') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormInput v-model="userForm.tax_id" id="tax_id" name="tax_id" type="text"
-                                :class="{ 'border-danger': userForm.invalid('tax_id') }"
-                                @change="userForm.validate('tax_id')" />
-                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('tax_id')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.tax_id" />
+                        <FormInput v-model="userForm.tax_id" id="tax_id" name="tax_id" type="text"
+                            :class="{ 'border-danger': userForm.invalid('tax_id') }"
+                            @change="userForm.validate('tax_id')" />
+                        <FormErrorMessages :messages="userForm.errors.tax_id" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="ic_num" :class="{ 'text-danger': userForm.invalid('ic_num') }">
                             {{ t('views.user.fields.ic_num') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormInput id="ic_num" v-model="userForm.ic_num" name="ic_num" type="text"
-                                :class="{ 'border-danger': false }" @change="userForm.validate('ic_num')" />
-                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('ic_num')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.ic_num" />
+                        <FormInput id="ic_num" v-model="userForm.ic_num" name="ic_num" type="text"
+                            :class="{ 'border-danger': false }" @change="userForm.validate('ic_num')" />
+                        <FormErrorMessages :messages="userForm.errors.ic_num" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="status" :class="{ 'text-danger': userForm.invalid('status') }">
                             {{ t('views.user.fields.status') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormSelect id="status" v-model="userForm.status" name="status"
-                                :class="{ 'border-danger': false }" @change="userForm.validate('status')">
-                                <option value="">{{ t('components.dropdown.placeholder') }}</option>
-                                <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
-                            </FormSelect>
-                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('status')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.status" />
+                        <FormSelect id="status" v-model="userForm.status" name="status" :class="{ 'border-danger': false }"
+                            @change="userForm.validate('status')">
+                            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+                            <option v-for="c in statusDDL" :key="c.code" :value="c.code">{{ t(c.name) }}</option>
+                        </FormSelect>
+                        <FormErrorMessages :messages="userForm.errors.status" />
                     </div>
                     <div class="pb-4">
                         <FormLabel html-for="remarks" :class="{ 'text-danger': false }">
@@ -264,17 +242,13 @@ watch(
                         <FormLabel html-for="roles" :class="{ 'text-danger': userForm.invalid('roles') }">
                             {{ t('views.user.fields.roles') }}
                         </FormLabel>
-                        <FormInline>
-                            <FormSelect id="roles" v-model="userForm.roles" multiple size="6"
-                                :class="{ 'border-danger': userForm.invalid('roles') }"
-                                @change="userForm.validate('roles')">
-                                <option v-for="r in rolesDDL" :key="r.id" :value="r">
-                                    {{ r.display_name }}
-                                </option>
-                            </FormSelect>
-                            <FormInputState :is-validating="userForm.validating" :is-invalid="userForm.invalid('roles')" />
-                        </FormInline>
-                        <FormInputErrorMessages :messages="userForm.errors.roles" />
+                        <FormSelect id="roles" v-model="userForm.roles" multiple size="6"
+                            :class="{ 'border-danger': userForm.invalid('roles') }" @change="userForm.validate('roles')">
+                            <option v-for="r in rolesDDL" :key="r.id" :value="r">
+                                {{ r.display_name }}
+                            </option>
+                        </FormSelect>
+                        <FormErrorMessages :messages="userForm.errors.roles" />
                     </div>
                 </div>
             </template>
@@ -308,23 +282,6 @@ watch(
                             <option value="hh_mm_ss">{{ 'HH:mm:ss' }}</option>
                             <option value="h_m_A">{{ 'H:m A' }}</option>
                         </FormSelect>
-                    </div>
-                </div>
-            </template>
-            <template #card-items-4>
-                <div class="p-5">
-                    <div class="pb-4">
-                        <FormLabel html-for="tokens_reset">
-                            {{ t('views.user.fields.tokens.reset') }}
-                        </FormLabel>
-
-                    </div>
-                </div>
-            </template>
-            <template #card-items-5>
-                <div class="p-5">
-                    <div class="pb-4">
-
                     </div>
                 </div>
             </template>
