@@ -21,6 +21,7 @@ import { CardState } from "../../types/enums/CardState";
 import Button from "../../base-components/Button";
 import { ViewMode } from "../../types/enums/ViewMode";
 import { debounce } from "lodash";
+import Lucide from "../../base-components/Lucide";
 // #endregion
 
 // #region Interfaces
@@ -161,8 +162,12 @@ watch(
             </template>
             <template #card-items-button>
                 <div class="flex gap-4">
-                    <Button type="submit" href="#" variant="primary" class="w-28 shadow-md">
-                        {{ t("components.buttons.submit") }}
+                    <Button type="submit" href="#" variant="primary" class="w-28 shadow-md"
+                        :disabled="companyForm.validating || companyForm.hasErrors">
+                        <Lucide v-if="companyForm.validating" icon="Loader" class="animate-spin" />
+                        <template v-else>
+                            {{ t("components.buttons.submit") }}
+                        </template>
                     </Button>
                     <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
                         {{ t("components.buttons.reset") }}

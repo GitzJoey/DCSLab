@@ -82,7 +82,7 @@ export default class CompanyService {
 
         try {
             const url = route('api.get.db.company.company.read', {
-                user: ulid
+                company: ulid
             }, false, this.ziggyRoute);
 
             const response: AxiosResponse<Resource<Company>> = await axios.get(url);
@@ -104,32 +104,19 @@ export default class CompanyService {
         }
     }
 
-    public async update(ulid: string, payload: CompanyFormFieldValues): Promise<ServiceResponse<Company | null>> {
-        const result: ServiceResponse<Company | null> = {
-            success: false,
-        }
+    public useCompanyEditForm(ulid: string) {
+        const url = route('api.post.db.company.company.edit', ulid, true, this.ziggyRoute);
 
-        try {
-            const url = route('api.post.db.company.company.edit', ulid, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', url, {
+            code: '',
+            name: '',
+            address: '',
+            default: false,
+            status: 'ACTIVE',
+        });
 
-            const response: AxiosResponse<Company> = await axios.post(url, payload);
-
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data;
-            }
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+        return form;
     }
 
     public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {

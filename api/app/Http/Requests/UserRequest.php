@@ -52,6 +52,9 @@ class UserRequest extends FormRequest
      */
     public function rules()
     {
+        //Precognition Delayed Validation
+        //\Illuminate\Support\Sleep::for(2)->seconds();
+
         $nullableArr = [
             'first_name' => 'nullable',
             'last_name' => 'nullable',
