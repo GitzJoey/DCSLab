@@ -3,7 +3,6 @@
 import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
-import { Role } from "../../types/models/Role";
 import CompanyService from "../../services/CompanyService";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";

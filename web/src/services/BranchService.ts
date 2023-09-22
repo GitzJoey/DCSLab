@@ -8,8 +8,8 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
-import { BranchFormFieldValues } from "../types/forms/BranchFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
+import { client, useForm } from "laravel-precognition-vue";
 
 export default class BranchService {
     private ziggyRoute: Config;
@@ -23,34 +23,14 @@ export default class BranchService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: BranchFormFieldValues): Promise<ServiceResponse<Branch | null>> {
-        const result: ServiceResponse<Branch | null> = {
-            success: false,
-        }
+    public useBranchCreateForm() {
+        const url = route('api.post.db.company.branch.save', undefined, true, this.ziggyRoute);
 
-        try {
-            const url = route('api.post.db.company.branch.save', undefined, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', url, {
+        });
 
-            const response: AxiosResponse<Branch> = await axios.post(url, payload);
-
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data;
-            }
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+        return form;
     }
 
     public async readAny(company_id: string, args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
@@ -99,7 +79,7 @@ export default class BranchService {
 
         try {
             const url = route('api.get.db.company.branch.read', {
-                user: ulid
+                branch: ulid
             }, false, this.ziggyRoute);
 
             const response: AxiosResponse<Resource<Branch>> = await axios.get(url);
@@ -121,34 +101,14 @@ export default class BranchService {
         }
     }
 
-    public async update(ulid: string, payload: BranchFormFieldValues): Promise<ServiceResponse<Branch | null>> {
-        const result: ServiceResponse<Branch | null> = {
-            success: false,
-        }
+    public useBranchEditForm(ulid: string) {
+        const url = route('api.post.db.company.branch.edit', ulid, true, this.ziggyRoute);
 
-        try {
-            const url = route('api.post.db.company.branch.edit', ulid, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', url, {
+        });
 
-            const response: AxiosResponse<Branch> = await axios.post(url, payload);
-
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data;
-            }
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+        return form;
     }
 
     public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
