@@ -15,7 +15,10 @@ import UserIndex from "../pages/administrator/UserIndex.vue";
 import UserList from "../pages/administrator/UserList.vue";
 import UserCreate from "../pages/administrator/UserCreate.vue";
 import UserEdit from "../pages/administrator/UserEdit.vue";
-//import CompanyView from "../pages/company/CompanyView.vue";
+import CompanyIndex from "../pages/company/CompanyIndex.vue";
+import CompanyList from "../pages/company/CompanyList.vue";
+import CompanyCreate from "../pages/company/CompanyCreate.vue";
+import CompanyEdit from "../pages/company/CompanyEdit.vue";
 //import BranchView from "../pages/branch/BranchView.vue";
 
 export default [
@@ -80,22 +83,42 @@ export default [
                     skipBeforeEach: false
                 }
             },
+            */
             {
                 path: "/dashboard/company",
                 children: [
                     {
                         path: "/dashboard/company/company",
                         name: "side-menu-company-company",
-                        component: CompanyView
+                        redirect: "/dashboard/company/company/list",
+                        component: CompanyIndex,
+                        children: [
+                            {
+                                path: "/dashboard/company/company/list",
+                                name: "side-menu-company-company-list",
+                                component: CompanyList,
+                            },
+                            {
+                                path: "/dashboard/company/company/create",
+                                name: "side-menu-company-company-create",
+                                component: CompanyCreate,
+                            },
+                            {
+                                path: "/dashboard/company/company/edit/:ulid",
+                                name: "side-menu-company-company-edit",
+                                component: CompanyEdit,
+                            }
+                        ]
                     },
+                    /*
                     {
                         path: "/dashboard/company/branch",
                         name: "side-menu-company-branch",
                         component: BranchView
                     },
+                    */
                 ]
             },
-            */
             {
                 path: "/dashboard/administrator",
                 name: "side-menu-administrator",
@@ -103,18 +126,18 @@ export default [
                     {
                         path: "/dashboard/administrator/user",
                         name: "side-menu-administrator-user",
-                        redirect: '/dashboard/administrator/user/list',
+                        redirect: "/dashboard/administrator/user/list",
                         component: UserIndex,
                         children: [
                             {
                                 path: "/dashboard/administrator/user/list",
                                 name: "side-menu-administrator-user-list",
-                                component: UserList
+                                component: UserList,
                             },
                             {
                                 path: "/dashboard/administrator/user/create",
                                 name: "side-menu-administrator-user-create",
-                                component: UserCreate
+                                component: UserCreate,
                             },
                             {
                                 path: "/dashboard/administrator/user/edit/:ulid",

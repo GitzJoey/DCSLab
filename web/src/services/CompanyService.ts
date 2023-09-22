@@ -10,6 +10,7 @@ import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
 import { CompanyFormFieldValues } from "../types/forms/CompanyFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
+import { client, useForm } from "laravel-precognition-vue";
 
 export default class CompanyService {
     private ziggyRoute: Config;
@@ -23,34 +24,19 @@ export default class CompanyService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public async create(payload: CompanyFormFieldValues): Promise<ServiceResponse<Company | null>> {
-        const result: ServiceResponse<Company | null> = {
-            success: false,
-        }
+    public useCompanyCreateForm() {
+        const url = route('api.post.db.company.company.save', undefined, true, this.ziggyRoute);
 
-        try {
-            const url = route('api.post.db.company.company.save', undefined, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', url, {
+            code: '',
+            name: '',
+            address: '',
+            default: false,
+            status: 'ACTIVE',
+        });
 
-            const response: AxiosResponse<Company> = await axios.post(url, payload);
-
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data;
-            }
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+        return form;
     }
 
     public async readAny(args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<Company>> | Resource<Array<Company>> | null>> {

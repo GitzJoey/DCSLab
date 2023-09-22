@@ -39,7 +39,7 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
   ])
 );
@@ -48,21 +48,21 @@ const emit = defineEmits<FormInputEmit>();
 
 
 function handleClickAutoButton() {
-    isAuto.value = !isAuto.value;
-    if(isAuto.value) {
-        localValue.value = '_AUTO_'
-    }else {
-        localValue.value = ''
-    }   
+  isAuto.value = !isAuto.value;
+  if (isAuto.value) {
+    localValue.value = '_AUTO_'
+  } else {
+    localValue.value = ''
+  }
 }
 
 const localValue = computed({
   get() {
-        if(isAuto.value) {
-            return '_AUTO_'
-        }else {
-            return props.modelValue === undefined ? props.value : props.modelValue;
-        }
+    if (isAuto.value) {
+      return '_AUTO_'
+    } else {
+      return props.modelValue === undefined ? props.value : props.modelValue;
+    }
 
   },
   set(newValue) {
@@ -71,26 +71,19 @@ const localValue = computed({
 });
 
 onMounted(() => {
-  if(props.value && props.value !== "_AUTO_") {
+  if (props.value && props.value !== "_AUTO_") {
     isAuto.value = false
   }
 })
 </script>
 
 <template>
-  <div class="flex gap-2">
-    <input
-      v-model="localValue"
-      :disabled="isAuto"
-      :class="computedClass"
-      :type="props.type? props.type : 'text' "
-      v-bind="_.omit(attrs, 'class')"
-    />
-    <div 
-        class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
-        @click="handleClickAutoButton"
-    >
+  <div class="block flex gap-2">
+    <input v-model="localValue" :disabled="isAuto" :class="computedClass" :type="props.type ? props.type : 'text'"
+      v-bind="_.omit(attrs, 'class')" />
+    <div class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
+      @click="handleClickAutoButton">
       Auto
-  </div>
+    </div>
   </div>
 </template>
