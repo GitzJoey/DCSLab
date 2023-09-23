@@ -313,7 +313,6 @@ const flattenedRoles = (roles: Array<Role>): string => {
 
 //#region Computed
 const titleView = computed((): string => {
-  console.log(mode.value, "<< mode value");
   switch (mode.value) {
     case ViewMode.FORM_CREATE:
       return t("views.user.actions.create");
