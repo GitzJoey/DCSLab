@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed, ErrorCodes } from "vue";
 import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import DataList from "../../base-components/DataList";
 import { useI18n } from "vue-i18n";
@@ -16,6 +16,8 @@ import { Resource } from "../../types/resources/Resource";
 import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { useRouter } from "vue-router";
 import { Dialog } from "../../base-components/Headless";
+import { useSelectedUserLocationStore } from "../../stores/user-location";
+import { ErrorCode } from "../../types/enums/ErrorCode";
 // #endregion
 
 // #region Interfaces
@@ -25,6 +27,7 @@ import { Dialog } from "../../base-components/Headless";
 const { t } = useI18n();
 const router = useRouter();
 const branchServices = new BranchService();
+const selectedUserStore = useSelectedUserLocationStore();
 // #endregion
 
 // #region Props, Emits
@@ -57,10 +60,15 @@ const branchLists = ref<Collection<Array<Branch>> | null>({
 // #endregion
 
 // #region Computed
+const userLocationSelected = computed(() => selectedUserStore.userLocationSelected);
 // #endregion
 
 // #region Lifecycle Hooks
 onMounted(async () => {
+  if (!userLocationSelected.value) {
+    router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
+  }
+
   emit('title-view', t('views.user.page_title'));
   await getBranches('', true, true, 1, 10);
 });

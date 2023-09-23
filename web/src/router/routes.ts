@@ -6,11 +6,11 @@ import RegisterPage from "../pages/auth/RegisterPage.vue";
 //import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 //import ProfileView from "../pages/dashboard/ProfileView.vue";
-//import DevTool from "../pages/dev/DevTool.vue";
-//import PlayOne from "../pages/dev/PlayOne.vue";
-//import PlayTwo from "../pages/dev/PlayTwo.vue";
-//import ErrorView from "../pages/dashboard/ErrorView.vue";
-//import ErrorPage from "../pages/error/ErrorPage.vue";
+import DevTool from "../pages/dev/DevTool.vue";
+import PlayOne from "../pages/dev/PlayOne.vue";
+import PlayTwo from "../pages/dev/PlayTwo.vue";
+import ErrorView from "../pages/error/ErrorView.vue";
+import ErrorPage from "../pages/error/ErrorPage.vue";
 import UserIndex from "../pages/administrator/UserIndex.vue";
 import UserList from "../pages/administrator/UserList.vue";
 import UserCreate from "../pages/administrator/UserCreate.vue";
@@ -19,7 +19,10 @@ import CompanyIndex from "../pages/company/CompanyIndex.vue";
 import CompanyList from "../pages/company/CompanyList.vue";
 import CompanyCreate from "../pages/company/CompanyCreate.vue";
 import CompanyEdit from "../pages/company/CompanyEdit.vue";
-//import BranchView from "../pages/branch/BranchView.vue";
+import BranchIndex from "../pages/branch/BranchIndex.vue";
+import BranchList from "../pages/branch/BranchList.vue";
+import BranchCreate from "../pages/branch/BranchCreate.vue";
+import BranchEdit from "../pages/branch/BranchEdit.vue";
 
 export default [
     {
@@ -110,13 +113,29 @@ export default [
                             }
                         ]
                     },
-                    /*
                     {
                         path: "/dashboard/company/branch",
                         name: "side-menu-company-branch",
-                        component: BranchView
+                        redirect: "/dashboard/company/branch/list",
+                        component: BranchIndex,
+                        children: [
+                            {
+                                path: "/dashboard/company/branch/list",
+                                name: "side-menu-company-branch-list",
+                                component: BranchList,
+                            },
+                            {
+                                path: "/dashboard/company/branch/create",
+                                name: "side-menu-company-branch-create",
+                                component: BranchCreate,
+                            },
+                            {
+                                path: "/dashboard/company/branch/edit/:ulid",
+                                name: "side-menu-company-branch-edit",
+                                component: BranchEdit,
+                            }
+                        ]
                     },
-                    */
                 ]
             },
             {
@@ -149,7 +168,6 @@ export default [
 
                 ]
             },
-            /*
             {
                 path: "/dashboard/devtool",
                 name: "side-menu-devtool",
@@ -187,7 +205,6 @@ export default [
                     skipBeforeEach: true
                 }
             }
-            */
         ],
     },
     /*

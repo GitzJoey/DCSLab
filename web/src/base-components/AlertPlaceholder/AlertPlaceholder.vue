@@ -15,7 +15,7 @@ const { t } = useI18n();
 const props = withDefaults(defineProps<AlertPlaceholderProps>(), {
     alertType: 'danger',
     errors: null,
-    title: ''
+    title: '',
 });
 
 const alertType = toRef(props, 'alertType');

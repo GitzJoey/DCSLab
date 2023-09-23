@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { TitleLayout } from "../../base-components/Form/FormLayout";
 import { useRouter } from "vue-router";
@@ -22,9 +22,9 @@ const router = useRouter();
 // #endregion
 
 // #region Refs
-const mode = ref<ViewMode>(ViewMode.LIST);
+const mode = ref<ViewMode>(ViewMode.INDEX);
 const loading = ref<boolean>(false);
-const titleView = ref<string>(t('views.company.page_title'));
+const titleView = ref<string>(t('views.branch.page_title'));
 // #endregion
 
 // #region Computed
@@ -36,13 +36,13 @@ const titleView = ref<string>(t('views.company.page_title'));
 // #region Methods
 const createNew = () => {
     mode.value = ViewMode.FORM_CREATE;
-    router.push({ name: 'side-menu-company-company-create' });
+    router.push({ name: 'side-menu-company-branch-create' });
 }
 
 const backToList = async () => {
     mode.value = ViewMode.LIST;
 
-    router.push({ name: 'side-menu-company-company-list' });
+    router.push({ name: 'side-menu-company-branch-list' });
 }
 
 const onLoadingStateChanged = (state: boolean) => {
@@ -54,14 +54,15 @@ const onModeStateChanged = (state: ViewMode) => {
 
     switch (state) {
         case ViewMode.FORM_CREATE:
-            titleView.value = t('views.company.actions.create');
+            titleView.value = t('views.branch.actions.create');
             break;
         case ViewMode.FORM_EDIT:
-            titleView.value = t('views.company.actions.edit');
+            titleView.value = t('views.branch.actions.edit');
             break;
+        case ViewMode.INDEX:
         case ViewMode.LIST:
         default:
-            titleView.value = t('views.company.page_title');
+            titleView.value = t('views.branch.page_title');
             break;
     }
 }
@@ -79,7 +80,7 @@ const onModeStateChanged = (state: ViewMode) => {
                     {{ titleView }}
                 </template>
                 <template #optional>
-                    <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
+                    <div v-if="mode != ViewMode.INDEX" class="flex w-full mt-4 sm:w-auto sm:mt-0">
                         <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md"
                             @click="createNew">
                             <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.create_new") }}

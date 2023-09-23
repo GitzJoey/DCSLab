@@ -22,7 +22,7 @@ const router = useRouter();
 // #endregion
 
 // #region Refs
-const mode = ref<ViewMode>(ViewMode.LIST);
+const mode = ref<ViewMode>(ViewMode.INDEX);
 const loading = ref<boolean>(false);
 const titleView = ref<string>(t('views.company.page_title'));
 // #endregion
@@ -59,6 +59,7 @@ const onModeStateChanged = (state: ViewMode) => {
         case ViewMode.FORM_EDIT:
             titleView.value = t('views.company.actions.edit');
             break;
+        case ViewMode.INDEX:
         case ViewMode.LIST:
         default:
             titleView.value = t('views.company.page_title');
