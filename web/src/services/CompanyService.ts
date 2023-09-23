@@ -7,8 +7,8 @@ import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { SearchRequest } from "../types/requests/SearchRequest";
-import { CompanyFormFieldValues } from "../types/requests/CompanyFormFieldValues";
+import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
+import { CompanyFormFieldValues } from "../types/forms/CompanyFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 
 export default class CompanyService {
@@ -53,7 +53,7 @@ export default class CompanyService {
         }
     }
 
-    public async readAny(args: SearchRequest): Promise<ServiceResponse<Collection<Array<Company>> | Resource<Array<Company>> | null>> {
+    public async readAny(args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<Company>> | Resource<Array<Company>> | null>> {
         const result: ServiceResponse<Collection<Array<Company>> | Resource<Array<Company>> | null> = {
             success: false
         }

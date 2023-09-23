@@ -13,7 +13,7 @@ import { FormInput, FormInputCode, FormLabel, FormTextarea, FormSelect, FormSwit
 import { ViewMode } from "../../types/enums/ViewMode";
 import BranchService from "../../services/BranchService";
 import { Branch } from "../../types/models/Branch";
-import { BranchFormFieldValues } from "../../types/requests/BranchFormFieldValues";
+import { BranchFormFieldValues } from "../../types/forms/BranchFormFieldValues";
 import { Collection } from "../../types/resources/Collection";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
@@ -21,12 +21,11 @@ import { DataListEmittedData } from "../../base-components/DataList/DataList.vue
 import { Dialog } from "../../base-components/Headless";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import { DropDownOption } from "../../types/models/DropDownOption";
-import { BranchFormRequest } from "../../types/requests/BranchFormRequest";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
 import { debounce } from "lodash";
 import { CardState } from "../../types/enums/CardState";
-import { SearchRequest } from "../../types/requests/SearchRequest";
+import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { FormActions, InvalidSubmissionContext } from "vee-validate";
 import { useSelectedUserLocationStore } from "../../stores/user-location";
 //#endregion
@@ -49,7 +48,7 @@ const branchServices = new BranchService();
 //#region Data - UI
 const mode = ref<ViewMode>(ViewMode.LIST);
 const loading = ref<boolean>(false);
-const datalistErrors = ref<Record<string, string> | null>(null);
+const datalistErrors = ref<Record<string, Array<string>> | null>(null);
 const crudErrors = ref<Record<string, Array<string>>>({});
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'Branch Information', state: CardState.Expanded, },
@@ -61,7 +60,7 @@ const expandDetail = ref<number | null>(null);
 //#endregion
 
 //#region Data - Views
-const branchForm = ref<BranchFormRequest>({
+const branchForm = ref<Resource<Branch>>({
   data: {
     id: '',
     ulid: '',
@@ -120,7 +119,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
 
   let company_id = userLocation.value.company.id;
 
-  const searchReq: SearchRequest = {
+  const searchReq: SearchFormFieldValues = {
     search: search,
     refresh: refresh,
     paginate: paginate,
@@ -133,7 +132,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
   if (result.success && result.data) {
     branchLists.value = result.data as Collection<Branch[]>;
   } else {
-    datalistErrors.value = result.errors as Record<string, string>;
+    datalistErrors.value = result.errors as Record<string, Array<string>>;
   }
 
   loading.value = false;
@@ -180,7 +179,7 @@ const createNew = () => {
 
   let cachedData: unknown | null = cacheServices.getLastEntity('Branch');
 
-  branchForm.value = cachedData == null ? emptyBranch() : cachedData as BranchFormRequest;
+  branchForm.value = cachedData == null ? emptyBranch() : cachedData as Resource<Branch>;
 }
 
 const viewSelected = (idx: number) => {
@@ -251,17 +250,11 @@ const onSubmit = async (values: BranchFormFieldValues, actions: FormActions<Bran
 };
 
 const onInvalidSubmit = (formResults: InvalidSubmissionContext) => {
-  for (const [key, value] of Object.entries(formResults.errors)) {
-    if (value == undefined) return;
-    crudErrors.value[key] = [value];
-  }
-
   if (Object.keys(formResults.errors).length > 0) {
     const errorField = document.getElementById(Object.keys(formResults.errors)[0]);
 
     if (errorField) {
-      errorField.scrollIntoView({ behavior: 'smooth' });
-      window.scrollBy(0, -10);
+      errorField.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }
 }
@@ -462,8 +455,8 @@ watch(
         </DataList>
       </div>
       <div v-else>
+        <AlertPlaceholder :errors="crudErrors" />
         <VeeForm id="branchForm" v-slot="{ errors, handleReset }" @submit="onSubmit" @invalid-submit="onInvalidSubmit">
-          <AlertPlaceholder :errors="errors" />
           <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
               <div class="p-5">

@@ -11,7 +11,7 @@ import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { useRouter } from "vue-router";
 import AuthService from "../../services/AuthServices";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { ForgotPasswordFormFieldValues } from "../../types/requests/AuthFormFieldValues";
+import { ForgotPasswordFormFieldValues } from "../../types/forms/AuthFormFieldValues";
 import { ForgotPassword } from "../../types/models/ForgotPassword";
 import { FormActions } from "vee-validate";
 import Alert from "../../base-components/Alert";
