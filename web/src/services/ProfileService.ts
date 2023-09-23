@@ -217,4 +217,36 @@ export default class ProfileService {
       }
     }
   }
+
+  async confirmPassword(payload : {
+    password: string
+  }): Promise<ServiceResponse<Resource<Record<string, never>> | null>> {
+    const result:  ServiceResponse<Resource<Record<string, never>>>  = { success : false}
+
+    try {
+      const url = route("password.confirm", undefined, false, this.ziggyRoute)
+
+      if(!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse()
+
+      const response: AxiosResponse<Resource<Record<string, never>>> = await axios.post(url, payload)
+
+      console.log(response, '#response')
+      result.success = true
+      result.data = response.data
+
+      return result
+    } catch (e) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError
+        );
+      } else {
+        return result;
+      }
+    }
+  }
 }

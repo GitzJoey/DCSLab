@@ -34,6 +34,11 @@ type Roles = {
   images: string;
   value: string;
 };
+
+type TwoFactorAuthVariable = {
+  isEnabled2Fa: boolean;
+  password: string;
+};
 const profileServices = new ProfileService();
 //#endregion
 
@@ -43,7 +48,7 @@ const userContext = computed(() => userContextStore.getUserContext);
 const hasRolePOSOwner = computed(() => {
   let result = false;
   for (const r of userContext.value.roles) {
-    if (r.display_name == 'POS-owner') {
+    if (r.display_name == "POS-owner") {
       result = true;
     }
   }
@@ -58,6 +63,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: "Account Settings", state: CardState.Expanded },
   { title: "Change Password", state: CardState.Expanded },
   { title: "User Setting", state: CardState.Expanded },
+  { title: "Two Factor Authentication", state: CardState.Expanded, id: "2fa" },
   { title: "Roles", state: CardState.Expanded, id: "roles" },
 ]);
 
@@ -69,7 +75,7 @@ const roles = ref<Array<Roles>>([
   },
   {
     images: wareHouseImage,
-    active: false,
+    active: true,
     value: "wh",
   },
   {
@@ -78,6 +84,13 @@ const roles = ref<Array<Roles>>([
     value: "wh",
   },
 ]);
+
+const twoFactorAuthVariable = ref<TwoFactorAuthVariable>({
+  isEnabled2Fa: false,
+  password: "",
+});
+
+const isEnabled2fa = ref<boolean>(false);
 //#endregion
 
 //#region Data - Views
@@ -86,6 +99,8 @@ const passwordSetting = ref({
   new_password: "",
   confirm_password: "",
 });
+
+const isEnabled2Fa = ref(false);
 //#endregion
 
 //#region onMounted
@@ -162,6 +177,11 @@ async function handleSubmitUserProfile(values: {
   await profileServices.updateUser(values);
   loading.value = false;
 }
+
+async function handleConfirmPassword() {
+  const password = twoFactorAuthVariable.value.password
+  const result = profileServices.confirmPassword({password})
+}
 // const onSubmit = async () => {
 //   loading.value = true;
 //   loading.value = false;
@@ -180,31 +200,63 @@ async function handleSubmitUserProfile(values: {
           {{ t("views.profile.title") }}
         </template>
       </TitleLayout>
-      <TwoColumnsLayout :cards="cards" :show-side-tab="true" :using-side-tab="true" @handleExpandCard="handleExpandCard">
+      <TwoColumnsLayout
+        :cards="cards"
+        :show-side-tab="true"
+        :using-side-tab="true"
+        @handleExpandCard="handleExpandCard"
+      >
         <template #side-menu-title>
           {{ userContext.name }}
         </template>
         <template #card-items-0>
-          <VeeForm id="userProfie" v-slot="{ errors }" @submit="handleSubmitUserProfile">
+          <VeeForm
+            id="userProfie"
+            v-slot="{ errors }"
+            @submit="handleSubmitUserProfile"
+          >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">
-                <FormLabel html-for="name" :class="{ 'text-danger': errors['name'] }">
+                <FormLabel
+                  html-for="name"
+                  :class="{ 'text-danger': errors['name'] }"
+                >
                   {{ t("views.profile.fields.name") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.name" name="name" rules="required"
-                  :label="t('views.profile.fields.name')">
-                  <FormInput id="name" name="name" type="text"
-                    :class="{ 'w-full': true, 'border-danger': errors['status'] }" v-bind="field"
-                    :placeholder="t('views.profile.fields.name')" />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.name"
+                  name="name"
+                  rules="required"
+                  :label="t('views.profile.fields.name')"
+                >
+                  <FormInput
+                    id="name"
+                    name="name"
+                    type="text"
+                    :class="{
+                      'w-full': true,
+                      'border-danger': errors['status'],
+                    }"
+                    v-bind="field"
+                    :placeholder="t('views.profile.fields.name')"
+                  />
                 </VeeField>
               </div>
               <div class="pb-4">
                 <FormLabel html-for="email">
                   {{ t("views.profile.fields.email") }}
                 </FormLabel>
-                <FormInput id="email" v-model="userContext.email" name="email" type="text" class="w-full"
-                  :placeholder="t('views.profile.fields.email')" readonly />
+                <FormInput
+                  id="email"
+                  v-model="userContext.email"
+                  name="email"
+                  type="text"
+                  class="w-full"
+                  :placeholder="t('views.profile.fields.email')"
+                  readonly
+                />
               </div>
 
               <div class="flex gap-4">
@@ -217,38 +269,76 @@ async function handleSubmitUserProfile(values: {
         </template>
 
         <template #card-items-1>
-          <VeeForm id="accountSetting" v-slot="{ errors }" @submit="handleUpdateAccountSettings">
+          <VeeForm
+            id="accountSetting"
+            v-slot="{ errors }"
+            @submit="handleUpdateAccountSettings"
+          >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">
-                <VeeField v-slot="{ field }" v-model="userContext.profile.first_name" name="first_name"
-                  :label="t('views.profile.fields.first_name')">
-                  <FormLabel v-bind="field" html-for="first_name" :class="{
-                    'flex flex-col w-full sm:flex-row': true,
-                    'text-danger': errors['first_name'],
-                  }">
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.profile.first_name"
+                  name="first_name"
+                  :label="t('views.profile.fields.first_name')"
+                >
+                  <FormLabel
+                    v-bind="field"
+                    html-for="first_name"
+                    :class="{
+                      'flex flex-col w-full sm:flex-row': true,
+                      'text-danger': errors['first_name'],
+                    }"
+                  >
                     {{ t("views.profile.fields.first_name") }}
                   </FormLabel>
-                  <FormInput id="first_name" v-model="userContext.profile.first_name" name="first_name" type="text"
-                    class="w-full" :placeholder="t('views.profile.fields.first_name')" />
+                  <FormInput
+                    id="first_name"
+                    v-model="userContext.profile.first_name"
+                    name="first_name"
+                    type="text"
+                    class="w-full"
+                    :placeholder="t('views.profile.fields.first_name')"
+                  />
                 </VeeField>
               </div>
               <div class="pb-4">
                 <FormLabel html-for="last_name">
                   {{ t("views.profile.fields.last_name") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.profile.last_name" name="last_name">
-                  <FormInput id="last_name" v-bind="field" name="last_name" type="text" class="w-full"
-                    :placeholder="t('views.profile.fields.last_name')" />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.profile.last_name"
+                  name="last_name"
+                >
+                  <FormInput
+                    id="last_name"
+                    v-bind="field"
+                    name="last_name"
+                    type="text"
+                    class="w-full"
+                    :placeholder="t('views.profile.fields.last_name')"
+                  />
                 </VeeField>
               </div>
               <div class="pb-4">
                 <FormLabel html-for="address">
                   {{ t("views.profile.fields.address") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.profile.address" name="address">
-                  <FormTextarea id="address" v-bind="field" name="address" class="w-full" rows="5"
-                    :placeholder="t('views.profile.fields.address')" />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.profile.address"
+                  name="address"
+                >
+                  <FormTextarea
+                    id="address"
+                    v-bind="field"
+                    name="address"
+                    class="w-full"
+                    rows="5"
+                    :placeholder="t('views.profile.fields.address')"
+                  />
                 </VeeField>
               </div>
               <div class="flex gap-2">
@@ -256,18 +346,38 @@ async function handleSubmitUserProfile(values: {
                   <FormLabel html-for="city">
                     {{ t("views.profile.fields.city") }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userContext.profile.city" name="city">
-                    <FormInput id="address" v-bind="{ field }" name="city" type="text" class="w-full"
-                      :placeholder="t('views.profile.fields.city')" />
+                  <VeeField
+                    v-slot="{ field }"
+                    v-model="userContext.profile.city"
+                    name="city"
+                  >
+                    <FormInput
+                      id="address"
+                      v-bind="{ field }"
+                      name="city"
+                      type="text"
+                      class="w-full"
+                      :placeholder="t('views.profile.fields.city')"
+                    />
                   </VeeField>
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="postal_code">
                     {{ t("views.profile.fields.postal_code") }}
                   </FormLabel>
-                  <VeeField v-slot="{ field }" v-model="userContext.profile.postal_code" name="postal_code">
-                    <FormInput id="postal_code" v-bind="field" name="postal_code" type="number" class="w-full"
-                      :placeholder="t('views.profile.fields.postal_code')" />
+                  <VeeField
+                    v-slot="{ field }"
+                    v-model="userContext.profile.postal_code"
+                    name="postal_code"
+                  >
+                    <FormInput
+                      id="postal_code"
+                      v-bind="field"
+                      name="postal_code"
+                      type="number"
+                      class="w-full"
+                      :placeholder="t('views.profile.fields.postal_code')"
+                    />
                   </VeeField>
                 </div>
               </div>
@@ -275,10 +385,21 @@ async function handleSubmitUserProfile(values: {
                 <FormLabel html-for="country">
                   {{ t("views.profile.fields.country") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.profile.country" name="country">
-                  <FormSelect id="country" v-bind="field" name="country"
-                    :class="{ 'w-full': true, 'border-danger': errors['country'] }"
-                    :placeholder="t('views.profile.fields.country')">
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.profile.country"
+                  name="country"
+                >
+                  <FormSelect
+                    id="country"
+                    v-bind="field"
+                    name="country"
+                    :class="{
+                      'w-full': true,
+                      'border-danger': errors['country'],
+                    }"
+                    :placeholder="t('views.profile.fields.country')"
+                  >
                     <option>Singapore</option>
                     <option>Indonesia</option>
                   </FormSelect>
@@ -288,30 +409,66 @@ async function handleSubmitUserProfile(values: {
                 <FormLabel html-for="tax_id">
                   {{ t("views.profile.fields.tax_id") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.profile.tax_id" name="tax_id" rules="required"
-                  :label="t('views.profile.fields.tax_id')">
-                  <FormInput id="tax_id" v-bind="field" name="tax_id" type="text"
-                    :class="{ 'w-full': true, 'border-danger': errors['tax_id'] }"
-                    :placeholder="t('views.profile.fields.tax_id')" />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.profile.tax_id"
+                  name="tax_id"
+                  rules="required"
+                  :label="t('views.profile.fields.tax_id')"
+                >
+                  <FormInput
+                    id="tax_id"
+                    v-bind="field"
+                    name="tax_id"
+                    type="text"
+                    :class="{
+                      'w-full': true,
+                      'border-danger': errors['tax_id'],
+                    }"
+                    :placeholder="t('views.profile.fields.tax_id')"
+                  />
                 </VeeField>
               </div>
               <div class="pb-4">
                 <FormLabel html-for="ic_num">
                   {{ t("views.profile.fields.ic_num") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.profile.ic_num" name="ic_num" rules="required">
-                  <FormInput id="ic_num" v-bind="field" name="ic_num" type="text"
-                    :class="{ 'w-full': true, 'border-danger': errors['ic_num'] }"
-                    :placeholder="t('views.profile.fields.ic_num')" />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.profile.ic_num"
+                  name="ic_num"
+                  rules="required"
+                >
+                  <FormInput
+                    id="ic_num"
+                    v-bind="field"
+                    name="ic_num"
+                    type="text"
+                    :class="{
+                      'w-full': true,
+                      'border-danger': errors['ic_num'],
+                    }"
+                    :placeholder="t('views.profile.fields.ic_num')"
+                  />
                 </VeeField>
               </div>
               <div class="pb-4">
                 <FormLabel html-for="remarks">
                   {{ t("views.profile.fields.remarks") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.profile.remarks" name="remarks">
-                  <FormTextarea id="remarks" v-bind="field" name="remarks" class="w-full" rows="5"
-                    :placeholder="t('views.profile.fields.remarks')" />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.profile.remarks"
+                  name="remarks"
+                >
+                  <FormTextarea
+                    id="remarks"
+                    v-bind="field"
+                    name="remarks"
+                    class="w-full"
+                    rows="5"
+                    :placeholder="t('views.profile.fields.remarks')"
+                  />
                 </VeeField>
               </div>
 
@@ -325,7 +482,11 @@ async function handleSubmitUserProfile(values: {
         </template>
 
         <template #card-items-2>
-          <VeeForm id="password" v-slot="{ errors }" @submit="handleChangePassword">
+          <VeeForm
+            id="password"
+            v-slot="{ errors }"
+            @submit="handleChangePassword"
+          >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">
@@ -334,11 +495,22 @@ async function handleSubmitUserProfile(values: {
                     t("views.profile.fields.change_password.current_password")
                   }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="passwordSetting.currentPassword" name="currentPassword"
-                  rules="required">
-                  <FormInput id="currentPassword" v-bind="field" name="currentPassword" type="password" class="w-full"
-                    :placeholder="t('views.profile.fields.change_password.current_password')
-                      " />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="passwordSetting.currentPassword"
+                  name="currentPassword"
+                  rules="required"
+                >
+                  <FormInput
+                    id="currentPassword"
+                    v-bind="field"
+                    name="currentPassword"
+                    type="password"
+                    class="w-full"
+                    :placeholder="
+                      t('views.profile.fields.change_password.current_password')
+                    "
+                  />
                 </VeeField>
               </div>
 
@@ -346,10 +518,21 @@ async function handleSubmitUserProfile(values: {
                 <FormLabel html-for="new_password">
                   {{ t("views.profile.fields.change_password.new_password") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="passwordSetting.new_password" name="new_password">
-                  <FormInput id="new_password" v-bind="field" name="new_password" type="password" class="w-full"
-                    :placeholder="t('views.profile.fields.change_password.new_password')
-                      " />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="passwordSetting.new_password"
+                  name="new_password"
+                >
+                  <FormInput
+                    id="new_password"
+                    v-bind="field"
+                    name="new_password"
+                    type="password"
+                    class="w-full"
+                    :placeholder="
+                      t('views.profile.fields.change_password.new_password')
+                    "
+                  />
                 </VeeField>
               </div>
 
@@ -359,10 +542,21 @@ async function handleSubmitUserProfile(values: {
                     t("views.profile.fields.change_password.confirm_password")
                   }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="passwordSetting.confirm_password" name="confirm_password">
-                  <FormInput id="confirm_password" v-bind="field" name="confirm_password" type="password" class="w-full"
-                    :placeholder="t('views.profile.fields.change_password.confirm_password')
-                      " />
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="passwordSetting.confirm_password"
+                  name="confirm_password"
+                >
+                  <FormInput
+                    id="confirm_password"
+                    v-bind="field"
+                    name="confirm_password"
+                    type="password"
+                    class="w-full"
+                    :placeholder="
+                      t('views.profile.fields.change_password.confirm_password')
+                    "
+                  />
                 </VeeField>
               </div>
 
@@ -376,15 +570,24 @@ async function handleSubmitUserProfile(values: {
         </template>
 
         <template #card-items-3>
-          <VeeForm id="userSetting" v-slot="{ errors }" @submit="handleSubmitUserSetting">
+          <VeeForm
+            id="userSetting"
+            v-slot="{ errors }"
+            @submit="handleSubmitUserSetting"
+          >
             <AlertPlaceholder :errors="errors" />
             <div class="p-5">
               <div class="pb-4">
                 <FormLabel html-for="themes">
                   {{ t("views.profile.fields.settings.theme") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.settings.theme" name="theme" rules="required"
-                  :label="t(t('views.profile.fields.settings.theme'))">
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.settings.theme"
+                  name="theme"
+                  rules="required"
+                  :label="t(t('views.profile.fields.settings.theme'))"
+                >
                   <FormSelect id="themes" name="themes" v-bind="field">
                     <option value="side-menu-light-full">Menu Light</option>
                     <option value="side-menu-light-mini">
@@ -400,9 +603,18 @@ async function handleSubmitUserProfile(values: {
                 <FormLabel html-for="date_format">
                   {{ t("views.profile.fields.settings.date_format") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.settings.date_format" name="date_format"
-                  rules="required" :label="t('views.profile.fields.settings.date_format')">
-                  <FormSelect id="date_format" name="date_format" v-bind="field">
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.settings.date_format"
+                  name="date_format"
+                  rules="required"
+                  :label="t('views.profile.fields.settings.date_format')"
+                >
+                  <FormSelect
+                    id="date_format"
+                    name="date_format"
+                    v-bind="field"
+                  >
                     <option value="yyyy_MM_dd">
                       {{ formatDate(new Date().toString(), "YYYY-MM-DD") }}
                     </option>
@@ -417,9 +629,18 @@ async function handleSubmitUserProfile(values: {
                 <FormLabel html-for="time_format">
                   {{ t("views.profile.fields.settings.time_format") }}
                 </FormLabel>
-                <VeeField v-slot="{ field }" v-model="userContext.settings.time_format" name="time_format"
-                  rules="required" :label="t('views.profile.fields.settings.time_format')">
-                  <FormSelect id="time_format" name="time_format" v-bind="field">
+                <VeeField
+                  v-slot="{ field }"
+                  v-model="userContext.settings.time_format"
+                  name="time_format"
+                  rules="required"
+                  :label="t('views.profile.fields.settings.time_format')"
+                >
+                  <FormSelect
+                    id="time_format"
+                    name="time_format"
+                    v-bind="field"
+                  >
                     <option value="hh_mm_ss">
                       {{ formatDate(new Date().toString(), "HH:mm:ss") }}
                     </option>
@@ -438,17 +659,91 @@ async function handleSubmitUserProfile(values: {
           </VeeForm>
         </template>
 
+        <template #card-items-2fa>
+
+            <div class="p-5">
+              <div
+                v-if="
+                  twoFactorAuthVariable && twoFactorAuthVariable.isEnabled2Fa
+                "
+                class="pb-4"
+              >
+                <FormLabel html-for="2faPassword"> Password </FormLabel>
+                  <FormInput
+                    id="2faPassword"
+                    v-model="twoFactorAuthVariable.password"
+                    type="password"
+                    name="2faPassword"
+                    class="w-full pt-2"
+                    placeholder="Password"
+                  />
+              </div>
+              <div 
+              v-if="twoFactorAuthVariable.isEnabled2Fa"
+              class="flex gap-2"
+              >
+                <Button
+                variant="primary"
+                class="shadow-md"
+                @click="handleConfirmPassword"
+                >
+                  Confirm Password
+                </Button>
+
+                <Button
+                variant="danger"
+                class="shadow-md"
+                @click="() => {
+                  twoFactorAuthVariable.isEnabled2Fa = false
+                }"
+                >
+                  Cancel
+                </Button>
+              </div>
+
+
+              <Button
+              v-else
+              variant="warning"
+              @click="
+                () => {
+                  twoFactorAuthVariable.isEnabled2Fa = true
+                }
+              "
+            >
+              {{
+                twoFactorAuthVariable.isEnabled2Fa
+                  ? "Disabled 2FA"
+                  : "Enable 2FA"
+              }}
+            </Button>
+            </div>
+
+        </template>
         <template #card-items-roles>
           <div class="p-5">
             <div class="pb-4">
               <div class="grid grid-cols-3 gap-2 place-items center">
-                <div v-for="(item, index) in roles" :key="index" class="flex flex-col items-center">
-                  <div class="cursor-pointer flex flex-col items-center justify-center" @click="handleChangeRole(index)">
+                <div
+                  v-for="(item, index) in roles"
+                  :key="index"
+                  class="flex flex-col items-center"
+                >
+                  <div
+                    class="cursor-pointer flex flex-col items-center justify-center"
+                    @click="handleChangeRole(index)"
+                  >
                     <img alt="" :src="item.images" width="100" height="100" />
-                    <div v-if="item.active" class="grid grid-cols-1 place-items-center">
+                    <div
+                      v-if="item.active"
+                      class="grid grid-cols-1 place-items-center"
+                    >
                       <Check class="text-success" />
                     </div>
-                    <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
+                    <button
+                      v-else
+                      class="btn btn-sm btn-secondary hover:btn-primary"
+                    >
                       {{ t("components.buttons.activate") }}
                     </button>
                   </div>
