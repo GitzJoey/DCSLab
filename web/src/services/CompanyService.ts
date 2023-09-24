@@ -52,11 +52,13 @@ export default class CompanyService {
             if (args.page) queryParams['page'] = args.page;
             if (args.per_page) queryParams['per_page'] = args.per_page;
 
-            const url = route('api.get.db.company.company.read_any', { _query: queryParams }, false, this.ziggyRoute);
+            const url = route('api.get.db.company.company.read_any', {
+                _query: queryParams
+            }, false, this.ziggyRoute);
 
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Collection<Company[]>> = await axios.get(url);
+            const response: AxiosResponse<Collection<Array<Company>>> = await axios.get(url);
 
             if (response.status == StatusCode.OK) {
                 result.success = true;

@@ -34,7 +34,7 @@ export default class BranchService {
     }
 
     public async readAny(company_id: string, args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
-        const result: ServiceResponse<Collection<Branch[]> | Resource<Branch[]> | null> = {
+        const result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = {
             success: false
         }
 
@@ -51,9 +51,10 @@ export default class BranchService {
                 _query: queryParams
             }, false, this.ziggyRoute);
 
+            console.log(url);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-            const response: AxiosResponse<Collection<Branch[]>> = await axios.get(url);
+            const response: AxiosResponse<Collection<Array<Branch>>> = await axios.get(url);
 
             if (response.status == StatusCode.OK) {
                 result.success = true;

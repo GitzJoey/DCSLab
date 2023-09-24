@@ -30,8 +30,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::get('read', [CompanyController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{company:ulid}', [CompanyController::class, 'read'])->name('.read');
-
-                Route::get('read/all/active', [CompanyController::class, 'getAllActiveCompany'])->name('.read.all.active');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
                 Route::get('read', [BranchController::class, 'readAny'])->name('.read_any');

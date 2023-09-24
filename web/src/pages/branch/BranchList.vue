@@ -27,7 +27,7 @@ import { ErrorCode } from "../../types/enums/ErrorCode";
 const { t } = useI18n();
 const router = useRouter();
 const branchServices = new BranchService();
-const selectedUserStore = useSelectedUserLocationStore();
+const selectedUserLocationStore = useSelectedUserLocationStore();
 // #endregion
 
 // #region Props, Emits
@@ -60,7 +60,8 @@ const branchLists = ref<Collection<Array<Branch>> | null>({
 // #endregion
 
 // #region Computed
-const userLocationSelected = computed(() => selectedUserStore.userLocationSelected);
+const userLocationSelected = computed(() => selectedUserLocationStore.userLocationSelected);
+const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 // #endregion
 
 // #region Lifecycle Hooks
@@ -78,6 +79,8 @@ onMounted(async () => {
 const getBranches = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   emit('loading-state', true);
 
+  let company_id = selectedUserLocation.value.company.id;
+
   const searchReq: SearchFormFieldValues = {
     search: search,
     refresh: refresh,
@@ -86,7 +89,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
     per_page: per_page
   };
 
-  let result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = await branchServices.readAny('', searchReq);
+  let result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = await branchServices.readAny(company_id, searchReq);
 
   if (result.success && result.data) {
     branchLists.value = result.data as Collection<Array<Branch>>;
