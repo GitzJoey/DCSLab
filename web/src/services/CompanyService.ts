@@ -29,7 +29,7 @@ export default class CompanyService {
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
-            code: '',
+            code: '_AUTO_',
             name: '',
             address: '',
             default: false,
@@ -111,7 +111,7 @@ export default class CompanyService {
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
-            code: '',
+            code: '_AUTO_',
             name: '',
             address: '',
             default: false,

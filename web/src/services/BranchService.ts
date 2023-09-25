@@ -29,7 +29,7 @@ export default class BranchService {
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
             company_id: '',
-            code: '',
+            code: '_AUTO_',
             name: '',
             address: '',
             city: '',
@@ -116,7 +116,7 @@ export default class BranchService {
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
             company_id: '',
-            code: '',
+            code: '_AUTO_',
             name: '',
             address: '',
             city: '',
