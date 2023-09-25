@@ -28,6 +28,15 @@ export default class BranchService {
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
+            company_id: '',
+            code: '',
+            name: '',
+            address: '',
+            city: '',
+            contact: '',
+            is_main: false,
+            remarks: '',
+            status: 'ACTIVE',
         });
 
         return form;
@@ -51,7 +60,6 @@ export default class BranchService {
                 _query: queryParams
             }, false, this.ziggyRoute);
 
-            console.log(url);
             if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Collection<Array<Branch>>> = await axios.get(url);
@@ -107,6 +115,15 @@ export default class BranchService {
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
+            company_id: '',
+            code: '',
+            name: '',
+            address: '',
+            city: '',
+            contact: '',
+            is_main: false,
+            remarks: '',
+            status: 'ACTIVE',
         });
 
         return form;

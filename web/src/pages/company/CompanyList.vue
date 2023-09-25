@@ -17,6 +17,7 @@ import { Resource } from "../../types/resources/Resource";
 import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { useRouter } from "vue-router";
 import { Dialog } from "../../base-components/Headless";
+import { ViewMode } from "../../types/enums/ViewMode";
 // #endregion
 
 // #region Interfaces
@@ -29,7 +30,7 @@ const companyServices = new CompanyService();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['title-view', 'loading-state']);
+const emit = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -62,7 +63,7 @@ const companyLists = ref<Collection<Array<Company>> | null>({
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-  emit('title-view', t('views.user.page_title'));
+  emit('mode-state', ViewMode.LIST);
   await getCompanies('', true, true, 1, 10);
 });
 // #endregion

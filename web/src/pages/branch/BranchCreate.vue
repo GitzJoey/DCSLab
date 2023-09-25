@@ -22,6 +22,9 @@ import Button from "../../base-components/Button";
 import { ViewMode } from "../../types/enums/ViewMode";
 import { debounce } from "lodash";
 import Lucide from "../../base-components/Lucide";
+import { useSelectedUserLocationStore } from "../../stores/user-location";
+import { useRouter } from "vue-router";
+import { ErrorCode } from "../../types/enums/ErrorCode";
 // #endregion
 
 // #region Interfaces
@@ -29,10 +32,12 @@ import Lucide from "../../base-components/Lucide";
 
 // #region Declarations
 const { t } = useI18n();
-
+const router = useRouter();
 const branchServices = new BranchService();
 const dashboardServices = new DashboardService();
 const cacheServices = new CacheService();
+
+const selectedUserLocationStore = useSelectedUserLocationStore();
 // #endregion
 
 // #region Props, Emits
@@ -52,12 +57,23 @@ const branchForm = branchServices.useBranchCreateForm();
 // #endregion
 
 // #region Computed
+const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 // #endregion
 
 // #region Lifecycle Hooks
 onMounted(async () => {
     emit('mode-state', ViewMode.FORM_CREATE);
+
+    if (!isUserLocationSelected.value) {
+        router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
+    }
+
     getDDL();
+
+    branchForm.setData({
+        company_id: selectedUserLocation.value.company.id,
+    });
 });
 // #endregion
 
@@ -111,7 +127,16 @@ watch(
         <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <template #card-items-0>
                 <div class="p-5">
+                    <FormLabel>
+                        {{ selectedUserLocation.company.code }}
+                        <br />
+                        {{ selectedUserLocation.company.name }}
+                    </FormLabel>
+                    <FormInput type="hidden" v-model="branchForm.company_id" />
                 </div>
+            </template>
+            <template #card-items-1>
+
             </template>
             <template #card-items-button>
                 <div class="flex gap-4">

@@ -18,6 +18,7 @@ import { useRouter } from "vue-router";
 import { Dialog } from "../../base-components/Headless";
 import { useSelectedUserLocationStore } from "../../stores/user-location";
 import { ErrorCode } from "../../types/enums/ErrorCode";
+import { ViewMode } from "../../types/enums/ViewMode";
 // #endregion
 
 // #region Interfaces
@@ -31,7 +32,7 @@ const selectedUserLocationStore = useSelectedUserLocationStore();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['title-view', 'loading-state']);
+const emit = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -60,17 +61,18 @@ const branchLists = ref<Collection<Array<Branch>> | null>({
 // #endregion
 
 // #region Computed
-const userLocationSelected = computed(() => selectedUserLocationStore.userLocationSelected);
+const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
 const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 // #endregion
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-  if (!userLocationSelected.value) {
+  emit('mode-state', ViewMode.LIST);
+
+  if (!isUserLocationSelected.value) {
     router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
   }
 
-  emit('title-view', t('views.user.page_title'));
   await getBranches('', true, true, 1, 10);
 });
 // #endregion
@@ -116,7 +118,7 @@ const editSelected = (itemIdx: number) => {
   if (!branchLists.value) return;
 
   let ulid = branchLists.value.data[itemIdx].ulid;
-  router.push({ name: 'side-menu-company-company-edit', params: { ulid: ulid } });
+  router.push({ name: 'side-menu-company-branch-edit', params: { ulid: ulid } });
 }
 
 const deleteSelected = (itemIdx: number) => {
@@ -153,7 +155,21 @@ const confirmDelete = async () => {
     <template #content>
       <Table class="mt-5" :hover="true">
         <Table.Thead variant="light">
-
+          <Table.Tr>
+            <Table.Th class="whitespace-nowrap">
+              {{ t("views.branch.table.cols.code") }}
+            </Table.Th>
+            <Table.Th class="whitespace-nowrap">
+              {{ t("views.branch.table.cols.name") }}
+            </Table.Th>
+            <Table.Th class="whitespace-nowrap">
+              {{ t("views.branch.table.cols.is_main") }}
+            </Table.Th>
+            <Table.Th class="whitespace-nowrap">
+              {{ t("views.branch.table.cols.status") }}
+            </Table.Th>
+            <Table.Th class="whitespace-nowrap"></Table.Th>
+          </Table.Tr>
         </Table.Thead>
         <Table.Tbody v-if="branchLists !== null">
           <template v-if="branchLists.data.length == 0">
@@ -166,11 +182,74 @@ const confirmDelete = async () => {
           </template>
           <template v-for="( item, itemIdx ) in branchLists.data" :key="item.ulid">
             <Table.Tr class="intro-x">
-
+              <Table.Td>{{ item.code }}</Table.Td>
+              <Table.Td>{{ item.name }}</Table.Td>
+              <Table.Td>
+                <Lucide v-if="item.is_main === true" icon="CheckCircle" />
+                <Lucide v-if="item.is_main === false" icon="X" />
+              </Table.Td>
+              <Table.Td>
+                <Lucide v-if="item.status === 'ACTIVE'" icon="CheckCircle" />
+                <Lucide v-if="item.status === 'INACTIVE'" icon="X" />
+              </Table.Td>
+              <Table.Td>
+                <div class="flex justify-end gap-1">
+                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
+                    <Lucide icon="Info" class="w-4 h-4" />
+                  </Button>
+                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
+                    <Lucide icon="CheckSquare" class="w-4 h-4" />
+                  </Button>
+                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
+                    <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                  </Button>
+                </div>
+              </Table.Td>
             </Table.Tr>
             <Table.Tr :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
               <Table.Td colspan="5">
-
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.code') }}</div>
+                  <div class="flex-1">{{ item.code }}</div>
+                </div>
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
+                  <div class="flex-1">{{ item.name }}</div>
+                </div>
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.address') }}</div>
+                  <div class="flex-1">{{ item.address }}</div>
+                </div>
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.city') }}</div>
+                  <div class="flex-1">{{ item.city }}</div>
+                </div>
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.contact') }}</div>
+                  <div class="flex-1">{{ item.contact }}</div>
+                </div>
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
+                  <div class="flex-1">
+                    <span v-if="item.is_main">{{ t('components.dropdown.values.switch.on') }}</span>
+                    <span v-else>{{ t('components.dropdown.values.switch.off') }}</span>
+                  </div>
+                </div>
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.remarks') }}</div>
+                  <div class="flex-1">{{ item.remarks }}</div>
+                </div>
+                <div class="flex flex-row">
+                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.status') }}</div>
+                  <div class="flex-1">
+                    <span v-if="item.status === 'ACTIVE'">
+                      {{ t('components.dropdown.values.statusDDL.active') }}
+                    </span>
+                    <span v-if="item.status === 'INACTIVE'">
+                      {{ t('components.dropdown.values.statusDDL.inactive') }}
+                    </span>
+                  </div>
+                </div>
               </Table.Td>
             </Table.Tr>
           </template>

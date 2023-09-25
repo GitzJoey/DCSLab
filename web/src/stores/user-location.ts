@@ -4,32 +4,36 @@ export interface SelectedUserLocation {
     company: {
         id: string,
         ulid: string,
+        code: string,
         name: string,
     },
     branch: {
         id: string,
         ulid: string,
+        code: string,
         name: string,
     }
 }
 
 export interface SelectedUserLocationState {
-    userLocationSelected: boolean,
+    isUserLocationSelected: boolean,
     selectedUserLocation: SelectedUserLocation,
 }
 
 export const useSelectedUserLocationStore = defineStore("selectedUserLocation", {
     state: (): SelectedUserLocationState => ({
-        userLocationSelected: false,
+        isUserLocationSelected: false,
         selectedUserLocation: {
             company: {
                 id: '',
                 ulid: '',
+                code: '',
                 name: '',
             },
             branch: {
                 id: '',
                 ulid: '',
+                code: '',
                 name: '',
             }
         }
@@ -44,7 +48,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
 
-                state.userLocationSelected = true;
+                state.isUserLocationSelected = true;
             }
 
             return state.selectedUserLocation;
@@ -58,7 +62,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
 
-                state.userLocationSelected = true;
+                state.isUserLocationSelected = true;
             }
 
             return state.selectedUserLocation.company;
@@ -72,7 +76,7 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
 
                 state.selectedUserLocation = derializedSelectedUserLocation;
 
-                state.userLocationSelected = true;
+                state.isUserLocationSelected = true;
             }
 
             return state.selectedUserLocation.branch;
@@ -80,26 +84,28 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
     },
     actions: {
         clearSelectedUserLocation() {
-            this.selectedUserLocation.company = { id: '', ulid: '', name: '' };
-            this.selectedUserLocation.branch = { id: '', ulid: '', name: '' };
+            this.selectedUserLocation.company = { id: '', ulid: '', code: '', name: '' };
+            this.selectedUserLocation.branch = { id: '', ulid: '', code: '', name: '' };
 
-            this.userLocationSelected = false;
+            this.isUserLocationSelected = false;
         },
-        setSelectedUserLocation(companyId: string, companyUlid: string, companyName: string, branchId: string, branchUlid: string, branchName: string) {
+        setSelectedUserLocation(companyId: string, companyUlid: string, companyCode: string, companyName: string, branchId: string, branchUlid: string, branchCode: string, branchName: string) {
             this.clearSelectedUserLocation();
 
             this.selectedUserLocation.company.id = companyId;
             this.selectedUserLocation.company.ulid = companyUlid;
+            this.selectedUserLocation.company.code = companyCode;
             this.selectedUserLocation.company.name = companyName;
 
             this.selectedUserLocation.branch.id = branchId;
             this.selectedUserLocation.branch.ulid = branchUlid;
+            this.selectedUserLocation.branch.code = branchCode;
             this.selectedUserLocation.branch.name = branchName;
 
             const debug = import.meta.env.VITE_APP_DEBUG === 'true';
             sessionStorage.setItem('selectedUserLocation', debug ? JSON.stringify(this.selectedUserLocation) : btoa(JSON.stringify(this.selectedUserLocation)));
 
-            this.userLocationSelected = true;
+            this.isUserLocationSelected = true;
         }
     },
 });
