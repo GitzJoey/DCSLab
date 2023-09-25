@@ -7,15 +7,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class RoleResource extends JsonResource
 {
-    protected string $type;
-
-    public function type(string $value)
-    {
-        $this->type = $value;
-
-        return $this;
-    }
-
     /**
      * Transform the resource into an array.
      *
@@ -28,7 +19,7 @@ class RoleResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'display_name' => $this->display_name,
             $this->mergeWhen($this->relationLoaded('permissions'), [
-                'permissions' => PermissionResource::collection($this->permissions),
+                'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
             ]),
         ];
     }

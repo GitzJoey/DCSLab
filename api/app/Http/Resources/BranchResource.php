@@ -8,15 +8,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class BranchResource extends JsonResource
 {
-    protected string $type = '';
-
-    public function type(string $value)
-    {
-        $this->type = $value;
-
-        return $this;
-    }
-
     /**
      * Transform the resource into an array.
      *
@@ -29,7 +20,7 @@ class BranchResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->company),
+                'company' => new CompanyResource($this->whenLoaded('company')),
             ]),
             'code' => $this->code,
             'name' => $this->name,

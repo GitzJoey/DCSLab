@@ -6,15 +6,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SettingResource extends JsonResource
 {
-    protected string $type = '';
-
-    public function type(string $value)
-    {
-        $this->type = $value;
-
-        return $this;
-    }
-
     /**
      * Transform the resource into an array.
      *

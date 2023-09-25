@@ -8,15 +8,6 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class CompanyResource extends JsonResource
 {
-    protected string $type = '';
-
-    public function type(string $value)
-    {
-        $this->type = $value;
-
-        return $this;
-    }
-
     /**
      * Transform the resource into an array.
      *
@@ -34,7 +25,7 @@ class CompanyResource extends JsonResource
             'default' => $this->default,
             'status' => $this->setStatus($this->status, $this->deleted_at),
             $this->mergeWhen($this->relationLoaded('branches'), [
-                'branches' => BranchResource::collection($this->branches),
+                'branches' => BranchResource::collection($this->whenLoaded('branches')),
             ]),
         ];
     }
