@@ -51,7 +51,6 @@ function handleClickAutoButton() {
   isAuto.value = !isAuto.value;
   if (isAuto.value) {
     localValue.value = '_AUTO_'
-    emit("update:modelValue", '_AUTO_');
   } else {
     localValue.value = ''
   }

@@ -5,7 +5,7 @@ import RegisterPage from "../pages/auth/RegisterPage.vue";
 //import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage.vue";
 //import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
-//import ProfileView from "../pages/dashboard/ProfileView.vue";
+import ProfileView from "../pages/dashboard/ProfileView.vue";
 import DevTool from "../pages/dev/DevTool.vue";
 import PlayOne from "../pages/dev/PlayOne.vue";
 import PlayTwo from "../pages/dev/PlayTwo.vue";
@@ -75,7 +75,6 @@ export default [
                     skipBeforeEach: false
                 }
             },
-            /*
             {
                 path: "/dashboard/profile",
                 name: "side-menu-dashboard-profile",
@@ -86,7 +85,6 @@ export default [
                     skipBeforeEach: false
                 }
             },
-            */
             {
                 path: "/dashboard/company",
                 children: [

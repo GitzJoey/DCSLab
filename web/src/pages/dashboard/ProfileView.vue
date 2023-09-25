@@ -82,7 +82,7 @@ const userContext = computed(() => userContextStore.getUserContext);
 
 // #region Lifecycle Hooks
 onMounted(() => {
-
+  checkRoles();
 });
 // #endregion
 
@@ -132,13 +132,18 @@ const hasRoleACCOwner = () => {
 };
 
 const checkRoles = () => {
+  console.log(hasRolePOSOwner());
+  console.log(hasRoleWHOwner());
+  console.log(hasRoleACCOwner());
+
+
   if (!hasRolePOSOwner()) { roleSelection.value[0].selectable = true; }
   if (!hasRoleWHOwner()) { roleSelection.value[1].selectable = true; }
   if (!hasRoleACCOwner()) { roleSelection.value[2].selectable = true; }
 }
 
 const onSubmit = async () => {
-  checkRoles();
+
 };
 // #region Methods
 
@@ -333,7 +338,7 @@ const onSubmit = async () => {
                     <div class="cursor-pointer flex flex-col items-center justify-center"
                       @click="handleChangeRole(index)">
                       <img alt="" :src="item.images" width="100" height="100" />
-                      <div v-if="!item.selectable" class="grid grid-cols-1 place-items-center">
+                      <div v-if="item.selectable" class="grid grid-cols-1 place-items-center">
                         <Check class="text-success" />
                       </div>
                       <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
