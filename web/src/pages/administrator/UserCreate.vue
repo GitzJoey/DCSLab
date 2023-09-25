@@ -67,12 +67,17 @@ onMounted(async () => {
     emit('mode-state', ViewMode.FORM_CREATE);
     getDDL();
 
-    let data = cacheServices.getLastEntity('USER_CREATE') as Record<string, unknown>;
-    userForm.setData(data);
+    loadFromCache();
 });
 // #endregion
 
 // #region Methods
+const loadFromCache = () => {
+    let data = cacheServices.getLastEntity('USER_CREATE') as Record<string, unknown>;
+    if (!data) return;
+    userForm.setData(data);
+}
+
 const getDDL = (): void => {
     roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
         if (result.success && result.data) {

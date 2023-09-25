@@ -71,13 +71,23 @@ onMounted(async () => {
 
     getDDL();
 
-    branchForm.setData({
-        company_id: selectedUserLocation.value.company.id,
-    });
+    setCompanyIdData();
+    loadFromCache();
 });
 // #endregion
 
 // #region Methods
+const setCompanyIdData = () => {
+    branchForm.setData({
+        company_id: selectedUserLocation.value.company.id,
+    });
+}
+const loadFromCache = () => {
+    let data = cacheServices.getLastEntity('BRANCH_CREATE') as Record<string, unknown>;
+    if (!data) return;
+    branchForm.setData(data);
+}
+
 const getDDL = (): void => {
     dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
         statusDDL.value = result;

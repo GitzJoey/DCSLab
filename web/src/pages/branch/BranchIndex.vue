@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import { TitleLayout } from "../../base-components/Form/FormLayout";
 import { useRouter } from "vue-router";
@@ -8,6 +8,7 @@ import { useI18n } from "vue-i18n";
 import Button from "../../base-components/Button";
 import Lucide from "../../base-components/Lucide";
 import { ViewMode } from "../../types/enums/ViewMode";
+import CacheService from "../../services/CacheService";
 // #endregion
 
 // #region Interfaces
@@ -16,6 +17,8 @@ import { ViewMode } from "../../types/enums/ViewMode";
 // #region Declarations
 const { t } = useI18n();
 const router = useRouter();
+
+const cacheService = new CacheService();
 // #endregion
 
 // #region Props, Emits
@@ -40,6 +43,7 @@ const createNew = () => {
 }
 
 const backToList = async () => {
+    clearCache(mode.value);
     mode.value = ViewMode.LIST;
 
     router.push({ name: 'side-menu-company-branch-list' });
@@ -63,6 +67,19 @@ const onModeStateChanged = (state: ViewMode) => {
         case ViewMode.LIST:
         default:
             titleView.value = t('views.branch.page_title');
+            break;
+    }
+}
+
+const clearCache = (mode: ViewMode) => {
+    switch (mode) {
+        case ViewMode.FORM_CREATE:
+            cacheService.removeLastEntity('BRANCH_CREATE');
+            break;
+        case ViewMode.FORM_EDIT:
+            cacheService.removeLastEntity('BRANCH_EDIT');
+            break;
+        default:
             break;
     }
 }

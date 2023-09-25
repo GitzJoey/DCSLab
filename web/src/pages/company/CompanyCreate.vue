@@ -57,10 +57,18 @@ const companyForm = companyServices.useCompanyCreateForm();
 onMounted(async () => {
     emit('mode-state', ViewMode.FORM_CREATE);
     getDDL();
+
+    loadFromCache();
 });
 // #endregion
 
 // #region Methods
+const loadFromCache = () => {
+    let data = cacheServices.getLastEntity('USER_CREATE') as Record<string, unknown>;
+    if (!data) return;
+    companyForm.setData(data);
+}
+
 const getDDL = (): void => {
     dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
         statusDDL.value = result;
