@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Role\RoleActions;
 use App\Actions\User\UserActions;
-use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\UserProfileRequest;
 use App\Http\Resources\UserProfileResource;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +36,7 @@ class ProfileController extends BaseController
         }
     }
 
-    public function updateUser(ProfileRequest $profileRequest)
+    public function updateUserProfile(UserProfileRequest $profileRequest)
     {
         $request = $profileRequest->validated();
         $user = Auth::user();
@@ -47,15 +47,7 @@ class ProfileController extends BaseController
 
         $result = $this->userActions->updateUser($user, $userArr, true);
 
-        return ! $result ? response()->error() : response()->success();
-    }
-
-    public function updateProfile(ProfileRequest $profileRequest)
-    {
-        $request = $profileRequest->validated();
-        $user = Auth::user();
-
-        $profile = [
+        $profileArr = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'address' => $request['address'],
@@ -67,56 +59,17 @@ class ProfileController extends BaseController
             'remarks' => $request['remarks'],
         ];
 
-        $result = $this->userActions->updateProfile($user, $profile, true);
+        $result = $this->userActions->updateProfile($user, $profileArr, true);
 
-        return ! $result ? response()->error() : response()->success();
-    }
-
-    public function changePassword(ProfileRequest $profileRequest)
-    {
-        $request = $profileRequest->validated();
-
-        $usr = Auth::user();
-
-        $this->userActions->changePassword($usr, $request['password']);
-    }
-
-    public function updateSettings(ProfileRequest $profileRequest)
-    {
-        $request = $profileRequest->validated();
-
-        $usr = Auth::user();
-        $settings = [
+        $settingsArr = [
             'PREFS.THEME' => $request['theme'],
             'PREFS.DATE_FORMAT' => $request['date_format'],
             'PREFS.TIME_FORMAT' => $request['time_format'],
         ];
 
-        $result = $this->userActions->updateSettings($usr, $settings, true);
-
-        if (array_key_exists('api_token', $request)) {
-            $this->userActions->resetTokens($usr->id);
-        }
+        $result = $this->userActions->updateSettings($user, $settingsArr, true);
 
         return ! $result ? response()->error() : response()->success();
-    }
-
-    public function updateRoles(ProfileRequest $profileRequest)
-    {
-        $request = $profileRequest->validated();
-
-        $usr = Auth::user();
-
-        $roles = $request['roles'];
-        $rolesId = $usr->roles->pluck('id');
-
-        if ($roles === 'pos') {
-            $rolesId->push($this->roleActions->readBy('NAME', 'POS-owner')->id);
-        }
-
-        $result = $this->userActions->updateRoles($usr, $rolesId->toArray(), true);
-
-        return is_null($result) ? response()->error() : response()->success();
     }
 
     public function checkTwoFAStatus()

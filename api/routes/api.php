@@ -103,10 +103,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
 
         Route::group(['prefix' => 'module', 'as' => '.module'], function () {
             Route::group(['prefix' => 'profile', 'middleware' => ['precognitive'], 'as' => '.profile'], function () {
-                Route::post('update/user', [ProfileController::class, 'updateUser'])->name('.update.user');
-                Route::post('update/profile', [ProfileController::class, 'updateProfile'])->name('.update.profile');
-                Route::post('update/roles', [ProfileController::class, 'updateRoles'])->name('.update.roles');
-                Route::post('update/setting', [ProfileController::class, 'updateSettings'])->name('.update.setting');
+                Route::post('update', [ProfileController::class, 'updateUserProfile'])->name('.update');
 
                 Route::post('update/password', [ProfileController::class, 'changePassword'])->name('.update.password');
 

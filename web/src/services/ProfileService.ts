@@ -5,6 +5,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import { Resource } from "../types/resources/Resource";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import ErrorHandlerService from "./ErrorHandlerService";
+import { client, useForm } from "laravel-precognition-vue";
 
 export default class ProfileService {
   private ziggyRoute: Config;
@@ -17,6 +18,43 @@ export default class ProfileService {
 
     this.errorHandlerService = new ErrorHandlerService();
   }
+
+  public useUserProfileUpdateForm() {
+    const url = route('api.post.db.module.profile.update', undefined, true, this.ziggyRoute);
+
+    client.axios().defaults.withCredentials = true;
+    const form = useForm('post', url, {
+      name: '',
+
+      first_name: '',
+      last_name: '',
+      address: '',
+      city: '',
+      postal_code: '',
+      country: '',
+      img_path: '',
+      tax_id: 0,
+      ic_num: 0,
+      status: '',
+      remarks: '',
+
+      roles: [],
+
+      theme: 'side-menu-light-full',
+      date_format: 'dd_MMM_yyyy',
+      time_format: 'hh_mm_ss',
+
+      tokens_reset: false,
+      reset_password: false,
+
+      current_password: '',
+      new_password: '',
+      new_password_confirmation: '',
+    });
+
+    return form;
+  }
+
 
   async updateProfile(payload: {
     first_name: string;

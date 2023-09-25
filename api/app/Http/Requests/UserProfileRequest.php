@@ -6,7 +6,7 @@ use App\Models\Profile;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class ProfileRequest extends FormRequest
+class UserProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,11 +25,7 @@ class ProfileRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
 
         switch ($currentRouteMethod) {
-            case 'updateUser':
-            case 'updateProfile':
-            case 'updateRoles':
-            case 'updateSettings':
-            case 'changePassword':
+            case 'update':
                 return $user->can('update', Profile::class) ? true : false;
             default:
                 return false;
@@ -46,12 +42,10 @@ class ProfileRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
 
         switch ($currentRouteMethod) {
-            case 'updateUser':
+            case 'update':
                 return [
-                    'name' => 'nullable',
-                ];
-            case 'updateProfile':
-                return [
+                    'name' => 'required|alpha_num',
+
                     'first_name' => 'nullable',
                     'last_name' => 'nullable',
                     'address' => 'nullable',
@@ -61,27 +55,21 @@ class ProfileRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required',
                     'remarks' => 'nullable',
-                ];
-            case 'updateRoles':
-                return [
+
                     'roles' => 'required',
-                ];
-            case 'updateSettings':
-                return [
+
                     'theme' => 'required',
                     'date_format' => 'required',
                     'time_format' => 'required',
                     'api_token' => 'nullable',
-                ];
-            case 'changePassword':
-                return [
+
                     'current_password' => 'required',
                     'password' => 'required|confirmed',
                     'password_confirmation' => 'required',
                 ];
             default:
                 return [
-                    //
+                    '' => 'required',
                 ];
         }
     }
