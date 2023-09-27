@@ -114,7 +114,6 @@ class ProfileController extends BaseController
 
     public function updateTokens(UserProfileRequest $profileRequest)
     {
-        $request = $profileRequest->validated();
         $user = Auth::user();
 
         $result = $this->userActions->resetTokens($user);

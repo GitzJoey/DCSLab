@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import {
   FormInput,
   FormLabel,
+  FormSwitch,
   FormTextarea,
   FormSelect,
   FormErrorMessages,
@@ -16,7 +17,6 @@ import {
 } from "../../base-components/Form/FormLayout";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
-import AlertPlaceholder from "../../base-components/AlertPlaceholder";
 import { CardState } from "../../types/enums/CardState";
 import posSystemImage from "../../assets/images/pos_system.png";
 import wareHouseImage from "../../assets/images/warehouse_system.png";
@@ -80,6 +80,7 @@ const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
 const updateAccountSettingsForm = profileServices.useUpdateAccountSettingsForm();
 const updateUserRolesForm = profileServices.useUpdateUserRolesForm();
 const updatePasswordForm = profileServices.useUpdatePasswordForm();
+const updateTokensForm = profileServices.useUpdateTokenForm();
 // #endregion
 
 // #region Computed
@@ -365,7 +366,14 @@ const onSubmit = async () => {
         </template>
         <template #card-items-5>
           <div class="p-5">
-
+            <div class="pb-4">
+              <FormLabel html-for="tokens_reset">
+                {{ t('views.user.fields.tokens.reset') }}
+              </FormLabel>
+              <FormSwitch>
+                <FormSwitch.Input type="checkbox" v-model="updateTokensForm.reset_tokens" />
+              </FormSwitch>
+            </div>
           </div>
         </template>
         <template #card-items-6>

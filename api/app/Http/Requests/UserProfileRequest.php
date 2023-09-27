@@ -81,7 +81,7 @@ class UserProfileRequest extends FormRequest
                 ];
             case 'updateTokens':
                 return [
-                    'reset_token' => 'required',
+                    'reset_tokens' => 'required',
                 ];                
             default:
                 return [
