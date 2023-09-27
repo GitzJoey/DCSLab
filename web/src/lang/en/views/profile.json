@@ -5,7 +5,9 @@
         "personal_information": "Personal Information",
         "account_settings": "Account Settings",
         "roles": "Roles",
-        "change_password": "Change Password"
+        "change_password": "Change Password",
+        "api_token": "API Token",
+        "two_factor_authentication": "Two Factor Authentication"
     },
     "fields": {
         "name": "Name",
@@ -19,16 +21,21 @@
         "remarks": "Remarks",
         "email": "Email",
         "ic_num": "IC No.",
-        "settings":  {
+        "settings": {
             "theme": "Themes",
             "date_format": "Date Format",
-            "time_format": "Time Format",
-            "api_token": "API Token"
+            "time_format": "Time Format"
         },
         "change_password": {
             "current_password": "Current Password",
             "new_password": "New Password",
             "confirm_password": "Confirm Password"
+        },
+        "api_token": {
+            "reset": "Reset Token"
+        },
+        "2fa": {
+            "enable": "Enable 2FA Authentication"
         }
     },
     "tooltip": {
