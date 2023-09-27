@@ -48,11 +48,13 @@ const userContextStore = useUserContextStore();
 // #region Refs
 const loading = ref<boolean>(false);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: "User Profile", state: CardState.Expanded },
-  { title: "Account Settings", state: CardState.Expanded },
-  { title: "Change Password", state: CardState.Expanded },
-  { title: "User Setting", state: CardState.Expanded },
-  { title: "Roles", state: CardState.Expanded, id: "roles" },
+  { title: t('views.profile.field_groups.user_profile'), state: CardState.Expanded },
+  { title: t('views.profile.field_groups.personal_information'), state: CardState.Expanded },
+  { title: t('views.profile.field_groups.account_settings'), state: CardState.Expanded },
+  { title: t('views.profile.field_groups.roles'), state: CardState.Expanded },
+  { title: t('views.profile.field_groups.change_password'), state: CardState.Expanded },
+  { title: t('views.profile.field_groups.api_token'), state: CardState.Expanded },
+  { title: t('views.profile.field_groups.two_factor_authentication'), state: CardState.Expanded },
 ]);
 
 const roleSelection = ref<Array<RoleSelection>>([
@@ -73,7 +75,11 @@ const roleSelection = ref<Array<RoleSelection>>([
   },
 ]);
 
-const userProfileForm = profileServices.useUserProfileUpdateForm();
+const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
+const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
+const updateAccountSettingsForm = profileServices.useUpdateAccountSettingsForm();
+const updateUserRolesForm = profileServices.useUpdateUserRolesForm();
+const updatePasswordForm = profileServices.useUpdatePasswordForm();
 // #endregion
 
 // #region Computed
@@ -159,22 +165,22 @@ const onSubmit = async () => {
           {{ t("views.profile.title") }}
         </template>
       </TitleLayout>
-      <form id="userProfileForm" @submit.prevent="onSubmit">
-        <TwoColumnsLayout :cards="cards" :show-side-tab="true" :using-side-tab="true"
-          @handleExpandCard="handleExpandCard">
-          <template #side-menu-title>
-            {{ userContext.name }}
-          </template>
-          <template #card-items-0>
-            <div class="p-5">
+
+      <TwoColumnsLayout :cards="cards" :show-side-tab="true" :using-side-tab="true" @handleExpandCard="handleExpandCard">
+        <template #side-menu-title>
+          {{ userContext.name }}
+        </template>
+        <template #card-items-0>
+          <div class="p-5">
+            <form id="updateUserProfileForm">
               <div class="pb-4">
-                <FormLabel html-for="name" :class="{ 'text-danger': userProfileForm.invalid('name') }">
+                <FormLabel html-for="name" :class="{ 'text-danger': updateUserProfileForm.invalid('name') }">
                   {{ t("views.profile.fields.name") }}
                 </FormLabel>
-                <FormInput id="name" v-model="userProfileForm.name" name="name" type="text"
-                  :class="{ 'w-full': true, 'border-danger': userProfileForm.invalid('name') }"
-                  :placeholder="t('views.profile.fields.name')" @change="userProfileForm.validate('name')" />
-                <FormErrorMessages :messages="userProfileForm.errors.name" />
+                <FormInput id="name" v-model="updateUserProfileForm.name" name="name" type="text"
+                  :class="{ 'border-danger': updateUserProfileForm.invalid('name') }"
+                  :placeholder="t('views.profile.fields.name')" @change="updateUserProfileForm.validate('name')" />
+                <FormErrorMessages :messages="updateUserProfileForm.errors.name" />
               </div>
               <div class="pb-4">
                 <FormLabel html-for="email">
@@ -183,29 +189,31 @@ const onSubmit = async () => {
                 <FormInput id="email" v-model="userContext.email" name="email" type="text" class="w-full"
                   :placeholder="t('views.profile.fields.email')" disabled />
               </div>
-            </div>
-          </template>
-          <template #card-items-1>
-            <div class="p-5">
+            </form>
+          </div>
+        </template>
+        <template #card-items-1>
+          <div class="p-5">
+            <form id="updatePersonalInfoForm">
               <div class="pb-4">
                 <FormLabel html-for="first_name">
                   {{ t("views.profile.fields.first_name") }}
                 </FormLabel>
-                <FormInput id="first_name" v-model="userProfileForm.first_name" name="first_name" type="text"
+                <FormInput id="first_name" v-model="updatePersonalInfoForm.first_name" name="first_name" type="text"
                   :placeholder="t('views.profile.fields.first_name')" />
               </div>
               <div class="pb-4">
                 <FormLabel html-for="last_name">
                   {{ t("views.profile.fields.last_name") }}
                 </FormLabel>
-                <FormInput id="last_name" v-model="userProfileForm.last_name" name="last_name" type="text"
+                <FormInput id="last_name" v-model="updatePersonalInfoForm.last_name" name="last_name" type="text"
                   :placeholder="t('views.profile.fields.last_name')" />
               </div>
               <div class="pb-4">
                 <FormLabel html-for="address">
                   {{ t("views.profile.fields.address") }}
                 </FormLabel>
-                <FormTextarea id="address" v-model="userProfileForm.address" name="address" rows="5"
+                <FormTextarea id="address" v-model="updatePersonalInfoForm.address" name="address" rows="5"
                   :placeholder="t('views.profile.fields.address')" />
               </div>
               <div class="flex gap-2">
@@ -213,145 +221,153 @@ const onSubmit = async () => {
                   <FormLabel html-for="city">
                     {{ t("views.profile.fields.city") }}
                   </FormLabel>
-                  <FormInput id="address" v-model="userProfileForm.city" name="city" type="text" class="w-full"
+                  <FormInput id="address" v-model="updatePersonalInfoForm.city" name="city" type="text" class="w-full"
                     :placeholder="t('views.profile.fields.city')" />
                 </div>
                 <div class="pb-4">
                   <FormLabel html-for="postal_code">
                     {{ t("views.profile.fields.postal_code") }}
                   </FormLabel>
-                  <FormInput id="postal_code" v-model="userProfileForm.postal_code" name="postal_code" type="number"
-                    class="w-full" :placeholder="t('views.profile.fields.postal_code')" />
+                  <FormInput id="postal_code" v-model="updatePersonalInfoForm.postal_code" name="postal_code"
+                    type="number" :placeholder="t('views.profile.fields.postal_code')" />
                 </div>
               </div>
               <div class="pb-4">
                 <FormLabel html-for="country">
                   {{ t("views.profile.fields.country") }}
                 </FormLabel>
-                <FormSelect id="country" v-model="userProfileForm.country" name="country"
-                  :class="{ 'w-full': true, 'border-danger': userProfileForm.invalid('country') }"
-                  :placeholder="t('views.profile.fields.country')" @change="userProfileForm.validate('country')">
+                <FormSelect id="country" v-model="updatePersonalInfoForm.country" name="country"
+                  :class="{ 'border-danger': updatePersonalInfoForm.invalid('country') }"
+                  :placeholder="t('views.profile.fields.country')" @change="updatePersonalInfoForm.validate('country')">
                   <option>Singapore</option>
                   <option>Indonesia</option>
                 </FormSelect>
-                <FormErrorMessages :messages="userProfileForm.errors.country" />
+                <FormErrorMessages :messages="updatePersonalInfoForm.errors.country" />
               </div>
               <div class="pb-4">
-                <FormLabel html-for="tax_id" :class="{ 'border-danger': userProfileForm.invalid('tax_id') }">
+                <FormLabel html-for="tax_id" :class="{ 'text-danger': updatePersonalInfoForm.invalid('tax_id') }">
                   {{ t("views.profile.fields.tax_id") }}
                 </FormLabel>
-                <FormInput id="tax_id" v-model="userProfileForm.tax_id" name="tax_id" type="text"
-                  :class="{ 'w-full': true, 'border-danger': userProfileForm.invalid('tax_id') }"
-                  :placeholder="t('views.profile.fields.tax_id')" />
-                <FormErrorMessages :messages="userProfileForm.errors.tax_id" />
+                <FormInput id="tax_id" v-model="updatePersonalInfoForm.tax_id" name="tax_id" type="text"
+                  :class="{ 'border-danger': updatePersonalInfoForm.invalid('tax_id') }"
+                  :placeholder="t('views.profile.fields.tax_id')" @change="updatePersonalInfoForm.validate('tax_id')" />
+                <FormErrorMessages :messages="updatePersonalInfoForm.errors.tax_id" />
               </div>
               <div class="pb-4">
-                <FormLabel html-for="ic_num" :class="{ 'border-danger': userProfileForm.invalid('ic_num') }">
+                <FormLabel html-for="ic_num" :class="{ 'text-danger': updatePersonalInfoForm.invalid('ic_num') }">
                   {{ t("views.profile.fields.ic_num") }}
                 </FormLabel>
-                <FormInput id="ic_num" v-model="userProfileForm.ic_num" name="ic_num" type="text"
-                  :class="{ 'w-full': true, 'border-danger': userProfileForm.invalid('ic_num') }"
-                  :placeholder="t('views.profile.fields.ic_num')" />
+                <FormInput id="ic_num" v-model="updatePersonalInfoForm.ic_num" name="ic_num" type="text"
+                  :class="{ 'border-danger': updatePersonalInfoForm.invalid('ic_num') }"
+                  :placeholder="t('views.profile.fields.ic_num')" @change="updatePersonalInfoForm.validate('ic_num')" />
               </div>
               <div class="pb-4">
                 <FormLabel html-for="remarks">
                   {{ t("views.profile.fields.remarks") }}
                 </FormLabel>
-                <FormTextarea id="remarks" v-model="userProfileForm.remarks" name="remarks" class="w-full" rows="5"
+                <FormTextarea id="remarks" v-model="updatePersonalInfoForm.remarks" name="remarks" class="w-full" rows="5"
                   :placeholder="t('views.profile.fields.remarks')" />
               </div>
+            </form>
+          </div>
+        </template>
+        <template #card-items-2>
+          <div class="p-5">
+            <div class="pb-4">
+              <FormLabel html-for="themes">
+                {{ t("views.profile.fields.settings.theme") }}
+              </FormLabel>
+              <FormSelect id="themes" v-model="updateAccountSettingsForm.theme" name="themes">
+                <option value="side-menu-light-full">Menu Light</option>
+                <option value="side-menu-light-mini">Mini Menu Light</option>
+                <option value="side-menu-dark-full">Menu Dark</option>
+                <option value="side-menu-dark-mini">Mini Menu Dark</option>
+              </FormSelect>
             </div>
-          </template>
-          <template #card-items-2>
-            <div class="p-5">
-              <div class="pb-4">
-                <FormLabel html-for="current_password">
-                  {{ t("views.profile.fields.change_password.current_password") }}
-                </FormLabel>
-                <FormInput id="current_password" v-model="userProfileForm.current_password" name="current_password"
-                  type="password" class="w-full"
-                  :placeholder="t('views.profile.fields.change_password.current_password')" />
-              </div>
-              <div class="pb-4">
-                <FormLabel html-for="new_password">
-                  {{ t("views.profile.fields.change_password.new_password") }}
-                </FormLabel>
-                <FormInput id="new_password" v-model="userProfileForm.new_password" name="new_password" type="password"
-                  class="w-full" :placeholder="t('views.profile.fields.change_password.new_password')" />
-              </div>
-              <div class="pb-4">
-                <FormLabel html-for="new_password_confirmation">
-                  {{ t("views.profile.fields.change_password.confirm_password") }}
-                </FormLabel>
-                <FormInput id="new_password_confirmation" v-model="userProfileForm.new_password_confirmation"
-                  name="new_password_confirmation" type="password" class="w-full"
-                  :placeholder="t('views.profile.fields.change_password.confirm_password')" />
-              </div>
+            <div class="pb-4">
+              <FormLabel html-for="date_format">
+                {{ t("views.profile.fields.settings.date_format") }}
+              </FormLabel>
+              <FormSelect id="date_format" v-model="updateAccountSettingsForm.date_format" name="date_format">
+                <option value="yyyy_MM_dd">
+                  {{ formatDate(new Date().toString(), "YYYY-MM-DD") }}
+                </option>
+                <option value="dd_MMM_yyyy">
+                  {{ formatDate(new Date().toString(), "DD-MMM-YYYY") }}
+                </option>
+              </FormSelect>
             </div>
-          </template>
-          <template #card-items-3>
-            <div class="p-5">
-              <div class="pb-4">
-                <FormLabel html-for="themes">
-                  {{ t("views.profile.fields.settings.theme") }}
-                </FormLabel>
-                <FormSelect id="themes" v-model="userProfileForm.theme" name="themes">
-                  <option value="side-menu-light-full">Menu Light</option>
-                  <option value="side-menu-light-mini">Mini Menu Light</option>
-                  <option value="side-menu-dark-full">Menu Dark</option>
-                  <option value="side-menu-dark-mini">Mini Menu Dark</option>
-                </FormSelect>
-              </div>
-              <div class="pb-4">
-                <FormLabel html-for="date_format">
-                  {{ t("views.profile.fields.settings.date_format") }}
-                </FormLabel>
-                <FormSelect id="date_format" v-model="userProfileForm.date_format" name="date_format">
-                  <option value="yyyy_MM_dd">
-                    {{ formatDate(new Date().toString(), "YYYY-MM-DD") }}
-                  </option>
-                  <option value="dd_MMM_yyyy">
-                    {{ formatDate(new Date().toString(), "DD-MMM-YYYY") }}
-                  </option>
-                </FormSelect>
-              </div>
-              <div class="pb-4">
-                <FormLabel html-for="time_format">
-                  {{ t("views.profile.fields.settings.time_format") }}
-                </FormLabel>
-                <FormSelect id="time_format" v-model="userProfileForm.time_format" name="time_format">
-                  <option value="hh_mm_ss">
-                    {{ formatDate(new Date().toString(), "HH:mm:ss") }}
-                  </option>
-                  <option value="h_m_A">
-                    {{ formatDate(new Date().toString(), "H:m A") }}
-                  </option>
-                </FormSelect>
-              </div>
+            <div class="pb-4">
+              <FormLabel html-for="time_format">
+                {{ t("views.profile.fields.settings.time_format") }}
+              </FormLabel>
+              <FormSelect id="time_format" v-model="updateAccountSettingsForm.time_format" name="time_format">
+                <option value="hh_mm_ss">
+                  {{ formatDate(new Date().toString(), "HH:mm:ss") }}
+                </option>
+                <option value="h_m_A">
+                  {{ formatDate(new Date().toString(), "H:m A") }}
+                </option>
+              </FormSelect>
             </div>
-          </template>
-          <template #card-items-roles>
-            <div class="p-5">
-              <div class="pb-4">
-                <div class="grid grid-cols-3 gap-2 place-items center">
-                  <div v-for="(item, index) in roleSelection" :key="index" class="flex flex-col items-center">
-                    <div class="cursor-pointer flex flex-col items-center justify-center"
-                      @click="handleChangeRole(index)">
-                      <img alt="" :src="item.images" width="100" height="100" />
-                      <div v-if="item.selectable" class="grid grid-cols-1 place-items-center">
-                        <Check class="text-success" />
-                      </div>
-                      <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
-                        {{ t("components.buttons.activate") }}
-                      </button>
+          </div>
+        </template>
+        <template #card-items-3>
+          <div class="p-5">
+            <div class="pb-4">
+              <div class="grid grid-cols-3 gap-2 place-items center">
+                <div v-for="(item, index) in roleSelection" :key="index" class="flex flex-col items-center">
+                  <div class="cursor-pointer flex flex-col items-center justify-center" @click="handleChangeRole(index)">
+                    <img alt="" :src="item.images" width="100" height="100" />
+                    <div v-if="item.selectable" class="grid grid-cols-1 place-items-center">
+                      <Check class="text-success" />
                     </div>
+                    <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
+                      {{ t("components.buttons.activate") }}
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
-          </template>
-        </TwoColumnsLayout>
-      </form>
+          </div>
+        </template>
+        <template #card-items-4>
+          <div class="p-5">
+            <div class="pb-4">
+              <FormLabel html-for="current_password">
+                {{ t("views.profile.fields.change_password.current_password") }}
+              </FormLabel>
+              <FormInput id="current_password" v-model="updatePasswordForm.current_password" name="current_password"
+                type="password" :placeholder="t('views.profile.fields.change_password.current_password')" />
+            </div>
+            <div class="pb-4">
+              <FormLabel html-for="new_password">
+                {{ t("views.profile.fields.change_password.new_password") }}
+              </FormLabel>
+              <FormInput id="new_password" v-model="updatePasswordForm.new_password" name="new_password" type="password"
+                :placeholder="t('views.profile.fields.change_password.new_password')" />
+            </div>
+            <div class="pb-4">
+              <FormLabel html-for="new_password_confirmation">
+                {{ t("views.profile.fields.change_password.confirm_password") }}
+              </FormLabel>
+              <FormInput id="new_password_confirmation" v-model="updatePasswordForm.new_password_confirmation"
+                name="new_password_confirmation" type="password"
+                :placeholder="t('views.profile.fields.change_password.confirm_password')" />
+            </div>
+          </div>
+        </template>
+        <template #card-items-5>
+          <div class="p-5">
+
+          </div>
+        </template>
+        <template #card-items-6>
+          <div class="p-5">
+
+          </div>
+        </template>
+      </TwoColumnsLayout>
     </LoadingOverlay>
   </div>
 </template>

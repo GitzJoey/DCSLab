@@ -47,6 +47,14 @@ class ProfileController extends BaseController
 
         $result = $this->userActions->updateUser($user, $userArr, true);
 
+        return ! $result ? response()->error() : response()->success();
+    }
+
+    public function updatePersonalInformation(UserProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
+
         $profileArr = [
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
@@ -61,6 +69,14 @@ class ProfileController extends BaseController
 
         $result = $this->userActions->updateProfile($user, $profileArr, true);
 
+        return ! $result ? response()->error() : response()->success();
+    }
+
+    public function updateAccountSettings(UserProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
+
         $settingsArr = [
             'PREFS.THEME' => $request['theme'],
             'PREFS.DATE_FORMAT' => $request['date_format'],
@@ -68,6 +84,28 @@ class ProfileController extends BaseController
         ];
 
         $result = $this->userActions->updateSettings($user, $settingsArr, true);
+
+        return ! $result ? response()->error() : response()->success();
+    }
+
+    public function updateUserRoles(UserProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
+
+        $rolesArr = [];
+
+        $result = $this->userActions->updateRoles($user, $rolesArr, true);
+
+        return ! $result ? response()->error() : response()->success();
+    }
+
+    public function updateTokens(UserProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
+
+        $result = $this->userActions->resetTokens($user);
 
         return ! $result ? response()->error() : response()->success();
     }

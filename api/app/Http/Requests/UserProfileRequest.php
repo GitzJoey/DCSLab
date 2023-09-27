@@ -25,7 +25,12 @@ class UserProfileRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
 
         switch ($currentRouteMethod) {
-            case 'update':
+            case 'updateUserProfile':
+            case 'updatePersonalInformation':
+            case 'updateAccountSettings':
+            case 'updateUserRoles':
+            case 'updateUserProfile':
+            case 'updateUserProfile':
                 return $user->can('update', Profile::class) ? true : false;
             default:
                 return false;
@@ -42,10 +47,12 @@ class UserProfileRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
 
         switch ($currentRouteMethod) {
-            case 'update':
+            case 'updateUserProfile':
                 return [
                     'name' => 'required|alpha_num',
-
+                ];
+            case 'updatePersonalInformation':
+                return [
                     'first_name' => 'nullable',
                     'last_name' => 'nullable',
                     'address' => 'nullable',
@@ -55,18 +62,27 @@ class UserProfileRequest extends FormRequest
                     'tax_id' => 'required',
                     'ic_num' => 'required',
                     'remarks' => 'nullable',
-
-                    'roles' => 'required',
-
+                ];
+            case 'updateAccountSettings':
+                return [
                     'theme' => 'required',
                     'date_format' => 'required',
                     'time_format' => 'required',
-                    'api_token' => 'nullable',
-
+                ];
+            case 'updateUserRoles':
+                return [
+                    'roles' => 'required',
+                ];
+            case 'updatePassword':
+                return [
                     'current_password' => 'required',
                     'password' => 'required|confirmed',
                     'password_confirmation' => 'required',
                 ];
+            case 'updateTokens':
+                return [
+                    'reset_token' => 'required',
+                ];                
             default:
                 return [
                     '' => 'required',
