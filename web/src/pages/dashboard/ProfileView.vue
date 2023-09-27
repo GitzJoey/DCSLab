@@ -334,26 +334,32 @@ const onSubmit = async () => {
         <template #card-items-4>
           <div class="p-5">
             <div class="pb-4">
-              <FormLabel html-for="current_password">
+              <FormLabel html-for="current_password"
+                :class="{ 'text-danger': updatePasswordForm.invalid('current_password') }">
                 {{ t("views.profile.fields.change_password.current_password") }}
               </FormLabel>
               <FormInput id="current_password" v-model="updatePasswordForm.current_password" name="current_password"
-                type="password" :placeholder="t('views.profile.fields.change_password.current_password')" />
+                type="password" :class="{ 'border-danger': updatePasswordForm.invalid('current_password') }"
+                :placeholder="t('views.profile.fields.change_password.current_password')"
+                @change="updatePasswordForm.validate('current_password')" />
+              <FormErrorMessages :messages="updatePasswordForm.errors.current_password" />
             </div>
             <div class="pb-4">
-              <FormLabel html-for="new_password">
-                {{ t("views.profile.fields.change_password.new_password") }}
+              <FormLabel html-for="password" :class="{ 'text-danger': updatePasswordForm.invalid('password') }">
+                {{ t("views.profile.fields.change_password.password") }}
               </FormLabel>
-              <FormInput id="new_password" v-model="updatePasswordForm.new_password" name="new_password" type="password"
-                :placeholder="t('views.profile.fields.change_password.new_password')" />
+              <FormInput id="password" v-model="updatePasswordForm.password" name="password" type="password"
+                :class="{ 'border-danger': updatePasswordForm.invalid('password') }"
+                :placeholder="t('views.profile.fields.change_password.password')" />
+              <FormErrorMessages :messages="updatePasswordForm.errors.password" />
             </div>
             <div class="pb-4">
-              <FormLabel html-for="new_password_confirmation">
-                {{ t("views.profile.fields.change_password.confirm_password") }}
+              <FormLabel html-for="password_confirmation">
+                {{ t("views.profile.fields.change_password.password_confirmation") }}
               </FormLabel>
-              <FormInput id="new_password_confirmation" v-model="updatePasswordForm.new_password_confirmation"
-                name="new_password_confirmation" type="password"
-                :placeholder="t('views.profile.fields.change_password.confirm_password')" />
+              <FormInput id="password_confirmation" v-model="updatePasswordForm.password_confirmation"
+                name="password_confirmation" type="password"
+                :placeholder="t('views.profile.fields.change_password.password_confirmation')" />
             </div>
           </div>
         </template>

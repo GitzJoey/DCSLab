@@ -72,8 +72,8 @@ export default class ProfileService {
     client.axios().defaults.withCredentials = true;
     const form = useForm('post', url, {
       current_password: '',
-      new_password: '',
-      new_password_confirmation: '',
+      password: '',
+      password_confirmation: '',
     });
 
     return form;

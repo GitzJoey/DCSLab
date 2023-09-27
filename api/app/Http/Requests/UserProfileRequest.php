@@ -29,8 +29,8 @@ class UserProfileRequest extends FormRequest
             case 'updatePersonalInformation':
             case 'updateAccountSettings':
             case 'updateUserRoles':
-            case 'updateUserProfile':
-            case 'updateUserProfile':
+            case 'updatePassword':
+            case 'updateTokens':
                 return $user->can('update', Profile::class) ? true : false;
             default:
                 return false;
@@ -75,7 +75,7 @@ class UserProfileRequest extends FormRequest
                 ];
             case 'updatePassword':
                 return [
-                    'current_password' => 'required',
+                    'current_password' => 'required|current_password',
                     'password' => 'required|confirmed',
                     'password_confirmation' => 'required',
                 ];

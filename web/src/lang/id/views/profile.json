@@ -28,8 +28,8 @@
         },
         "change_password": {
             "current_password": "Password Sekarang",
-            "new_password": "Password Baru",
-            "confirm_password": "Konfirmasi Password Baru"
+            "password": "Password Baru",
+            "password_confirmation": "Konfirmasi Password Baru"
         },
         "api_token": {
             "reset": "Reset Token"

@@ -100,6 +100,18 @@ class ProfileController extends BaseController
         return ! $result ? response()->error() : response()->success();
     }
 
+    public function updatePassword(UserProfileRequest $profileRequest)
+    {
+        $request = $profileRequest->validated();
+        $user = Auth::user();
+
+        $new_pass = $request['password'];
+
+        $result = $this->userActions->changePassword($user, $new_pass);
+
+        return ! $result ? response()->error() : response()->success();
+    }
+
     public function updateTokens(UserProfileRequest $profileRequest)
     {
         $request = $profileRequest->validated();
