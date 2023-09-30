@@ -90,7 +90,6 @@ const twoFactorAuthVariable = ref<TwoFactorAuthVariable>({
   password: "",
 });
 
-const isEnabled2fa = ref<boolean>(false);
 //#endregion
 
 //#region Data - Views
@@ -100,7 +99,6 @@ const passwordSetting = ref({
   confirm_password: "",
 });
 
-const isEnabled2Fa = ref(false);
 //#endregion
 
 //#region onMounted
@@ -181,11 +179,12 @@ async function handleSubmitUserProfile(values: {
 async function handleConfirmPassword() {
   const password = twoFactorAuthVariable.value.password
   const result = profileServices.confirmPassword({password})
+
+  if ((await result).success) {
+    await profileServices.getQrCode()
+  }
+
 }
-// const onSubmit = async () => {
-//   loading.value = true;
-//   loading.value = false;
-// };
 // End Region Method
 
 //#region Watcher
