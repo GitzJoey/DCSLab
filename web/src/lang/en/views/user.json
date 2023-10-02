@@ -14,6 +14,14 @@
         "edit": "Edit User",
         "show": "Show User"
     },
+    "field_groups": {
+        "user_info": "User Information",
+        "user_profile": "User Profile",
+        "roles": "Roles",
+        "settings": "Settings",
+        "tokens_management": "Tokens Management",
+        "password_management": "Password Management"
+    },
     "fields": {
         "name": "Name",
         "email": "Email",

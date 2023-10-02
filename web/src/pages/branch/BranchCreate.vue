@@ -46,8 +46,8 @@ const emits = defineEmits(['mode-state', 'loading-state']);
 
 // #region Refs
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-    { title: 'Company Information', state: CardState.Expanded, },
-    { title: 'Branch Information', state: CardState.Expanded, },
+    { title: t('views.branch.field_groups.company_info'), state: CardState.Expanded, },
+    { title: t('views.branch.field_groups.branch_data'), state: CardState.Expanded, },
     { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 

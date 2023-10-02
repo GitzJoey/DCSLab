@@ -19,6 +19,10 @@
         "show": "Tampilkan Cabang",
         "delete": "Hapus Cabang"
     },
+    "field_groups": {
+        "company_info": "Informasi Perusahaan",
+        "branch_data": "Data Cabang"
+    },
     "fields": {
         "company_id": "Perusahaan",
         "code": "Kode",

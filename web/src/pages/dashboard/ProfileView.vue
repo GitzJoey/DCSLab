@@ -92,6 +92,10 @@ const userContext = computed(() => userContextStore.getUserContext);
 // #region Lifecycle Hooks
 onMounted(async () => {
   loading.value = true;
+  if (userContextIsLoaded.value) {
+    setFormData();
+    loading.value = false;
+  }
 });
 // #endregion
 
@@ -113,6 +117,12 @@ const setFormData = () => {
     ic_num: userContext.value.profile.ic_num,
     status: userContext.value.profile.status,
     remarks: userContext.value.profile.remarks,
+  });
+
+  updateAccountSettingsForm.setData({
+    theme: userContext.value.settings.theme,
+    date_format: userContext.value.settings.date_format,
+    time_format: userContext.value.settings.time_format,
   });
 }
 

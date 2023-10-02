@@ -16,6 +16,9 @@
         "show": "Show Company",
         "delete": "Delete Company"
     },
+    "field_groups": {
+        "company_data": "Company Data"
+    },
     "fields": {
         "code": "Code",
         "name": "Name",

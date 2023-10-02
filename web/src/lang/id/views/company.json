@@ -16,6 +16,9 @@
         "show": "Tampilkan Perusahaan",
         "delete": "Hapus Perusahaan"
     },
+    "field_groups": {
+        "company_data": "Data Perusahaan"
+    },
     "fields": {
         "code": "Kode",
         "name": "Nama",

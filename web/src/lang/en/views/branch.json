@@ -19,6 +19,10 @@
         "show": "Show Branch",
         "delete": "Delete Branch"
     },
+    "field_groups": {
+        "company_info": "Company Information",
+        "branch_data": "Branch Data"
+    },
     "fields": {
         "company_id": "Company",
         "code": "Code",
