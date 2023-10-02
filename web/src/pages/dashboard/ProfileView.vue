@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { onMounted, computed, ref, watch } from "vue";
+import { onMounted, computed, ref, inject, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -43,6 +43,7 @@ const userContextStore = useUserContextStore();
 // #endregion
 
 // #region Props, Emits
+const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -84,15 +85,13 @@ const updateTokensForm = profileServices.useUpdateTokenForm();
 // #endregion
 
 // #region Computed
+const userContextIsLoaded = computed(() => userContextStore.getIsLoaded);
 const userContext = computed(() => userContextStore.getUserContext);
 // #endregion
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-  console.log('onMounted ProfileView');
-  console.log(userContext.value.name);
-
-  setFormData();
+  emits('loading-state', true);
 });
 // #endregion
 
@@ -193,6 +192,12 @@ const onSubmitUpdateTokens = async () => {
 // #region Methods
 
 // #region Watchers
+watchEffect(() => {
+  if (userContextIsLoaded.value) {
+    emits('loading-state', false);
+    setFormData();
+  }
+});
 // #endregion
 </script>
 

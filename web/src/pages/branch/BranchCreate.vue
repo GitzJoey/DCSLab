@@ -41,7 +41,7 @@ const selectedUserLocationStore = useSelectedUserLocationStore();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['mode-state', 'loading-state']);
+const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -63,7 +63,7 @@ const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUs
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-    emit('mode-state', ViewMode.FORM_CREATE);
+    emits('mode-state', ViewMode.FORM_CREATE);
 
     if (!isUserLocationSelected.value) {
         router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });

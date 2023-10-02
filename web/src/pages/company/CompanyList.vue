@@ -30,7 +30,7 @@ const companyServices = new CompanyService();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['mode-state', 'loading-state']);
+const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -63,14 +63,14 @@ const companyLists = ref<Collection<Array<Company>> | null>({
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-  emit('mode-state', ViewMode.LIST);
+  emits('mode-state', ViewMode.LIST);
   await getCompanies('', true, true, 1, 10);
 });
 // #endregion
 
 // #region Methods
 const getCompanies = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-  emit('loading-state', true);
+  emits('loading-state', true);
 
   const searchReq: SearchFormFieldValues = {
     search: search,
@@ -88,7 +88,7 @@ const getCompanies = async (search: string, refresh: boolean, paginate: boolean,
     datalistErrors.value = result.errors as Record<string, Array<string>>;
   }
 
-  emit('loading-state', false);
+  emits('loading-state', false);
 }
 
 const onDataListChanged = async (data: DataListEmittedData) => {
@@ -121,7 +121,7 @@ const deleteSelected = (itemIdx: number) => {
 
 const confirmDelete = async () => {
   deleteModalShow.value = false;
-  emit('loading-state', true);
+  emits('loading-state', true);
 
   let result: ServiceResponse<boolean | null> = await companyServices.delete(deleteUlid.value);
 
@@ -129,7 +129,7 @@ const confirmDelete = async () => {
     await getCompanies('', true, true, 1, 10);
   }
 
-  emit('loading-state', false);
+  emits('loading-state', false);
 }
 // #endregion
 

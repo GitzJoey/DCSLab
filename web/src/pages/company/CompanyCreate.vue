@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { onMounted, ref, computed, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import CompanyService from "../../services/CompanyService";
 import DashboardService from "../../services/DashboardService";
@@ -36,7 +36,7 @@ const cacheServices = new CacheService();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['mode-state', 'loading-state']);
+const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -55,7 +55,7 @@ const companyForm = companyServices.useCompanyCreateForm();
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-    emit('mode-state', ViewMode.FORM_CREATE);
+    emits('mode-state', ViewMode.FORM_CREATE);
     getDDL();
 
     loadFromCache();

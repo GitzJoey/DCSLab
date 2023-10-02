@@ -44,7 +44,7 @@ const cacheServices = new CacheService();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['mode-state', 'loading-state']);
+const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -70,12 +70,12 @@ const userForm = userServices.useUserEditForm(route.params.ulid as string);
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-    emit('mode-state', ViewMode.FORM_EDIT);
+    emits('mode-state', ViewMode.FORM_EDIT);
     getDDL();
 
-    emit('loading-state', true);
+    emits('loading-state', true);
     await loadData(route.params.ulid as string);
-    emit('loading-state', false);
+    emits('loading-state', false);
 });
 // #endregion
 

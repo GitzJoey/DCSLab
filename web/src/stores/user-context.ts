@@ -2,12 +2,14 @@ import { defineStore } from "pinia";
 import { UserProfile } from "../types/models/UserProfile";
 
 export interface UserContextState {
+  isLoaded: boolean,
   isAuthenticated: boolean,
   userContext: UserProfile,
 }
 
 export const useUserContextStore = defineStore("userContext", {
   state: (): UserContextState => ({
+    isLoaded: false,
     isAuthenticated: false,
     userContext: {
       id: '',
@@ -38,6 +40,7 @@ export const useUserContextStore = defineStore("userContext", {
     },
   }),
   getters: {
+    getIsLoaded: state => state.isLoaded,
     getIsAuthenticated: state => state.isAuthenticated,
     getUserContext: state => state.userContext,
   },
@@ -45,6 +48,7 @@ export const useUserContextStore = defineStore("userContext", {
     setUserContext(userContext: UserProfile) {
       this.userContext = userContext;
 
+      this.isLoaded = true;
       this.isAuthenticated = true;
     },
   },

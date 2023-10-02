@@ -28,7 +28,7 @@ const userServices = new UserService();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['title-view', 'loading-state']);
+const emits = defineEmits(['title-view', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -59,14 +59,14 @@ const userLists = ref<Collection<Array<User>> | null>({
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-    emit('title-view', t('views.user.page_title'));
+    emits('title-view', t('views.user.page_title'));
     await getUsers('', true, true, 1, 10);
 });
 // #endregion
 
 // #region Methods
 const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-    emit('loading-state', true);
+    emits('loading-state', true);
 
     const searchReq: SearchFormFieldValues = {
         search: search,
@@ -84,7 +84,7 @@ const getUsers = async (search: string, refresh: boolean, paginate: boolean, pag
         datalistErrors.value = result.errors as Record<string, Array<string>>;
     }
 
-    emit('loading-state', false);
+    emits('loading-state', false);
 }
 
 const onDataListChanged = async (data: DataListEmittedData) => {

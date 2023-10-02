@@ -32,7 +32,7 @@ const selectedUserLocationStore = useSelectedUserLocationStore();
 // #endregion
 
 // #region Props, Emits
-const emit = defineEmits(['mode-state', 'loading-state']);
+const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -67,7 +67,7 @@ const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUs
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-  emit('mode-state', ViewMode.LIST);
+  emits('mode-state', ViewMode.LIST);
 
   if (!isUserLocationSelected.value) {
     router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
@@ -79,7 +79,7 @@ onMounted(async () => {
 
 // #region Methods
 const getBranches = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-  emit('loading-state', true);
+  emits('loading-state', true);
 
   let company_id = selectedUserLocation.value.company.id;
 
@@ -99,7 +99,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
     datalistErrors.value = result.errors as Record<string, Array<string>>;
   }
 
-  emit('loading-state', false);
+  emits('loading-state', false);
 }
 
 const onDataListChanged = async (data: DataListEmittedData) => {
@@ -132,7 +132,7 @@ const deleteSelected = (itemIdx: number) => {
 
 const confirmDelete = async () => {
   deleteModalShow.value = false;
-  emit('loading-state', true);
+  emits('loading-state', true);
 
   let result: ServiceResponse<boolean | null> = await branchServices.delete(deleteUlid.value);
 
@@ -140,7 +140,7 @@ const confirmDelete = async () => {
     await getBranches('', true, true, 1, 10);
   }
 
-  emit('loading-state', false);
+  emits('loading-state', false);
 }
 // #endregion
 
