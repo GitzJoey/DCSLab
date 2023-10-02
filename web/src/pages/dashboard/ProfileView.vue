@@ -30,7 +30,7 @@ import ProfileService from "../../services/ProfileService";
 // #region Interfaces
 interface RoleSelection {
   images: string;
-  selectable: boolean,
+  state: 'selectable' | 'checked' | 'disabled',
   rolekey: string;
 };
 // #endregion
@@ -61,17 +61,17 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
 const roleSelection = ref<Array<RoleSelection>>([
   {
     images: posSystemImage,
-    selectable: false,
+    state: 'disabled',
     rolekey: "pos",
   },
   {
     images: wareHouseImage,
-    selectable: false,
+    state: 'disabled',
     rolekey: "wh",
   },
   {
     images: accountingImage,
-    selectable: false,
+    state: 'disabled',
     rolekey: "wh",
   },
 ]);
@@ -124,6 +124,10 @@ const setFormData = () => {
     date_format: userContext.value.settings.date_format,
     time_format: userContext.value.settings.time_format,
   });
+
+  if (!hasRolePOSOwner()) { roleSelection.value[0].state = 'selectable' }
+  if (!hasRoleWHOwner()) { roleSelection.value[1].state = 'selectable' }
+  if (!hasRoleACCOwner()) { roleSelection.value[2].state = 'selectable' }
 }
 
 const handleExpandCard = (index: number) => {
@@ -137,7 +141,9 @@ const handleExpandCard = (index: number) => {
 const handleChangeRole = (index: number) => {
   let activeRole: string = roleSelection.value[index].rolekey;
 
-  console.log(activeRole);
+  updateUserRolesForm.setData({
+    roles: activeRole
+  });
 }
 
 const hasRolePOSOwner = () => {
@@ -169,17 +175,6 @@ const hasRoleACCOwner = () => {
   }
   return result;
 };
-
-const checkRoles = () => {
-  console.log(hasRolePOSOwner());
-  console.log(hasRoleWHOwner());
-  console.log(hasRoleACCOwner());
-
-
-  if (!hasRolePOSOwner()) { roleSelection.value[0].selectable = true; }
-  if (!hasRoleWHOwner()) { roleSelection.value[1].selectable = true; }
-  if (!hasRoleACCOwner()) { roleSelection.value[2].selectable = true; }
-}
 
 const onSubmitUpdateUserProfile = async () => {
 
@@ -404,15 +399,17 @@ watchEffect(() => {
               <div class="pb-4">
                 <div class="grid grid-cols-3 gap-2 place-items center">
                   <div v-for="(item, index) in roleSelection" :key="index" class="flex flex-col items-center">
-                    <div class="cursor-pointer flex flex-col items-center justify-center"
+                    <div
+                      :class="{ 'cursor-pointer': item.state == 'selectable', 'flex flex-col items-center justify-center': true }"
                       @click="handleChangeRole(index)">
                       <img alt="" :src="item.images" width="100" height="100" />
-                      <div v-if="item.selectable" class="grid grid-cols-1 place-items-center">
+                      <div v-if="item.state == 'checked'" class="grid grid-cols-1 place-items-center">
                         <Check class="text-success" />
                       </div>
-                      <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
+                      <button v-else-if="item.state == 'selectable'" class="btn btn-sm btn-secondary hover:btn-primary">
                         {{ t("components.buttons.activate") }}
                       </button>
+                      <span v-else>&nbsp;</span>
                     </div>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Role\RoleActions;
 use App\Actions\User\UserActions;
+use App\Enums\UserRoles;
 use App\Http\Requests\UserProfileRequest;
 use App\Http\Resources\UserProfileResource;
 use Illuminate\Support\Facades\Auth;
@@ -93,7 +94,17 @@ class ProfileController extends BaseController
         $request = $profileRequest->validated();
         $user = Auth::user();
 
-        $rolesArr = [];
+        $addedRole = $request->roles;
+
+        $roleId = '';
+        if ($addedRole == 'pos') {
+            $roleId = $this->roleActions->readBy('NAME', UserRoles::POS_OWNER->value)->id;
+        }
+
+        if (empty($roleId)) 
+            return response()->error();
+
+        $rolesArr = [$roleId];
 
         $result = $this->userActions->updateRoles($user, $rolesArr, true);
 
