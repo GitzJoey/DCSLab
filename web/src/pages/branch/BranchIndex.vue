@@ -109,7 +109,7 @@ const clearCache = (mode: ViewMode) => {
                 </template>
             </TitleLayout>
 
-            <router-view @loading-state="onLoadingStateChanged" @mode-state="onModeStateChanged" />
+            <RouterView @loading-state="onLoadingStateChanged" @mode-state="onModeStateChanged" />
         </LoadingOverlay>
     </div>
 </template>

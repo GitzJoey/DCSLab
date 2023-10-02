@@ -46,6 +46,9 @@ class UserActions
         $profile = [
             'first_name' => $first_name,
             'last_name' => $last_name,
+            'tax_id' => 0,
+            'ic_num' => 0,
+            'country' => 'Singapore',
             'status' => RecordStatus::ACTIVE,
         ];
 

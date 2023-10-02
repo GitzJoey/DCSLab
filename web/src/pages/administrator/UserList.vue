@@ -16,6 +16,7 @@ import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
 import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
 import { useRouter } from "vue-router";
+import { ViewMode } from "../../types/enums/ViewMode";
 // #endregion
 
 // #region Interfaces
@@ -28,7 +29,7 @@ const userServices = new UserService();
 // #endregion
 
 // #region Props, Emits
-const emits = defineEmits(['title-view', 'loading-state']);
+const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -59,7 +60,7 @@ const userLists = ref<Collection<Array<User>> | null>({
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-    emits('title-view', t('views.user.page_title'));
+    emits('mode-state', ViewMode.LIST);
     await getUsers('', true, true, 1, 10);
 });
 // #endregion

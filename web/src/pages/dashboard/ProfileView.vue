@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { onMounted, computed, ref, inject, watchEffect } from "vue";
+import { onMounted, computed, ref, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -91,7 +91,7 @@ const userContext = computed(() => userContextStore.getUserContext);
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-  emits('loading-state', true);
+  loading.value = true;
 });
 // #endregion
 
@@ -102,17 +102,17 @@ const setFormData = () => {
   });
 
   updatePersonalInfoForm.setData({
-    first_name: '',
-    last_name: '',
-    address: '',
-    city: '',
-    postal_code: '',
-    country: '',
-    img_path: '',
-    tax_id: 0,
-    ic_num: 0,
-    status: '',
-    remarks: '',
+    first_name: userContext.value.profile.first_name,
+    last_name: userContext.value.profile.last_name,
+    address: userContext.value.profile.address,
+    city: userContext.value.profile.city,
+    postal_code: userContext.value.profile.postal_code,
+    country: userContext.value.profile.country,
+    img_path: userContext.value.profile.img_path,
+    tax_id: userContext.value.profile.tax_id,
+    ic_num: userContext.value.profile.ic_num,
+    status: userContext.value.profile.status,
+    remarks: userContext.value.profile.remarks,
   });
 }
 
@@ -194,8 +194,9 @@ const onSubmitUpdateTokens = async () => {
 // #region Watchers
 watchEffect(() => {
   if (userContextIsLoaded.value) {
-    emits('loading-state', false);
     setFormData();
+
+    loading.value = false;
   }
 });
 // #endregion

@@ -76,6 +76,8 @@ class AppUser extends Command
 
             $profile = [
                 'first_name' => $userName,
+                'tax_id' => 0,
+                'ic_num' => 0,
                 'country' => 'Singapore',
                 'status' => RecordStatus::ACTIVE,
             ];
