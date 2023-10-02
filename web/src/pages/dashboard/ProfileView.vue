@@ -90,7 +90,6 @@ const twoFactorAuthVariable = ref<TwoFactorAuthVariable>({
   password: "",
 });
 
-const isEnabled2fa = ref<boolean>(false);
 //#endregion
 
 //#region Data - Views
@@ -100,7 +99,6 @@ const passwordSetting = ref({
   confirm_password: "",
 });
 
-const isEnabled2Fa = ref(false);
 //#endregion
 
 //#region onMounted
@@ -181,11 +179,12 @@ async function handleSubmitUserProfile(values: {
 async function handleConfirmPassword() {
   const password = twoFactorAuthVariable.value.password
   const result = profileServices.confirmPassword({password})
+
+  if ((await result).success) {
+    await profileServices.getQrCode()
+  }
+
 }
-// const onSubmit = async () => {
-//   loading.value = true;
-//   loading.value = false;
-// };
 // End Region Method
 
 //#region Watcher
@@ -659,67 +658,6 @@ async function handleConfirmPassword() {
           </VeeForm>
         </template>
 
-        <template #card-items-2fa>
-
-            <div class="p-5">
-              <div
-                v-if="
-                  twoFactorAuthVariable && twoFactorAuthVariable.isEnabled2Fa
-                "
-                class="pb-4"
-              >
-                <FormLabel html-for="2faPassword"> Password </FormLabel>
-                  <FormInput
-                    id="2faPassword"
-                    v-model="twoFactorAuthVariable.password"
-                    type="password"
-                    name="2faPassword"
-                    class="w-full pt-2"
-                    placeholder="Password"
-                  />
-              </div>
-              <div 
-              v-if="twoFactorAuthVariable.isEnabled2Fa"
-              class="flex gap-2"
-              >
-                <Button
-                variant="primary"
-                class="shadow-md"
-                @click="handleConfirmPassword"
-                >
-                  Confirm Password
-                </Button>
-
-                <Button
-                variant="danger"
-                class="shadow-md"
-                @click="() => {
-                  twoFactorAuthVariable.isEnabled2Fa = false
-                }"
-                >
-                  Cancel
-                </Button>
-              </div>
-
-
-              <Button
-              v-else
-              variant="warning"
-              @click="
-                () => {
-                  twoFactorAuthVariable.isEnabled2Fa = true
-                }
-              "
-            >
-              {{
-                twoFactorAuthVariable.isEnabled2Fa
-                  ? "Disabled 2FA"
-                  : "Enable 2FA"
-              }}
-            </Button>
-            </div>
-
-        </template>
         <template #card-items-roles>
           <div class="p-5">
             <div class="pb-4">
@@ -740,10 +678,7 @@ async function handleConfirmPassword() {
                     >
                       <Check class="text-success" />
                     </div>
-                    <button
-                      v-else
-                      class="btn btn-sm btn-secondary hover:btn-primary"
-                    >
+                    <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
                       {{ t("components.buttons.activate") }}
                     </button>
                   </div>
