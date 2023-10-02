@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { onMounted, computed, ref } from "vue";
+import { onMounted, computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import {
   FormInput,
@@ -88,12 +88,35 @@ const userContext = computed(() => userContextStore.getUserContext);
 // #endregion
 
 // #region Lifecycle Hooks
-onMounted(() => {
-  checkRoles();
+onMounted(async () => {
+  console.log('onMounted ProfileView');
+  console.log(userContext.value.name);
+
+  setFormData();
 });
 // #endregion
 
 // #region Methods
+const setFormData = () => {
+  updateUserProfileForm.setData({
+    name: userContext.value.name,
+  });
+
+  updatePersonalInfoForm.setData({
+    first_name: '',
+    last_name: '',
+    address: '',
+    city: '',
+    postal_code: '',
+    country: '',
+    img_path: '',
+    tax_id: 0,
+    ic_num: 0,
+    status: '',
+    remarks: '',
+  });
+}
+
 const handleExpandCard = (index: number) => {
   if (cards.value[index].state === CardState.Collapsed) {
     cards.value[index].state = CardState.Expanded;
@@ -149,7 +172,22 @@ const checkRoles = () => {
   if (!hasRoleACCOwner()) { roleSelection.value[2].selectable = true; }
 }
 
-const onSubmit = async () => {
+const onSubmitUpdateUserProfile = async () => {
+
+};
+const onSubmitUpdatePersonalInfo = async () => {
+
+};
+const onSubmitUpdateAccountSettings = async () => {
+
+};
+const onSubmitUpdateUserRoles = async () => {
+
+};
+const onSubmitUpdatePassword = async () => {
+
+};
+const onSubmitUpdateTokens = async () => {
 
 };
 // #region Methods
@@ -173,7 +211,7 @@ const onSubmit = async () => {
         </template>
         <template #card-items-0>
           <div class="p-5">
-            <form id="updateUserProfileForm">
+            <form id="updateUserProfileForm" @submit.prevent="onSubmitUpdateUserProfile">
               <div class="pb-4">
                 <FormLabel html-for="name" :class="{ 'text-danger': updateUserProfileForm.invalid('name') }">
                   {{ t("views.profile.fields.name") }}
@@ -187,15 +225,24 @@ const onSubmit = async () => {
                 <FormLabel html-for="email">
                   {{ t("views.profile.fields.email") }}
                 </FormLabel>
-                <FormInput id="email" v-model="userContext.email" name="email" type="text" class="w-full"
+                <FormInput id="email" v-model="userContext.email" name="email" type="text"
                   :placeholder="t('views.profile.fields.email')" disabled />
+              </div>
+              <div>
+                <Button type="submit" size="sm" href="#" variant="primary" class="w-28 shadow-md"
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors">
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
+                  <template v-else>
+                    {{ t("components.buttons.update") }}
+                  </template>
+                </Button>
               </div>
             </form>
           </div>
         </template>
         <template #card-items-1>
           <div class="p-5">
-            <form id="updatePersonalInfoForm">
+            <form id="updatePersonalInfoForm" @submit.prevent="onSubmitUpdatePersonalInfo">
               <div class="pb-4">
                 <FormLabel html-for="first_name">
                   {{ t("views.profile.fields.first_name") }}
@@ -239,7 +286,8 @@ const onSubmit = async () => {
                 </FormLabel>
                 <FormSelect id="country" v-model="updatePersonalInfoForm.country" name="country"
                   :class="{ 'border-danger': updatePersonalInfoForm.invalid('country') }"
-                  :placeholder="t('views.profile.fields.country')" @change="updatePersonalInfoForm.validate('country')">
+                  :placeholder="t('views.profile.fields.country')"
+                  @change="updatePersonalInfoForm.validate('country'); updatePersonalInfoForm.submit()">
                   <option>Singapore</option>
                   <option>Indonesia</option>
                 </FormSelect>
@@ -251,7 +299,8 @@ const onSubmit = async () => {
                 </FormLabel>
                 <FormInput id="tax_id" v-model="updatePersonalInfoForm.tax_id" name="tax_id" type="text"
                   :class="{ 'border-danger': updatePersonalInfoForm.invalid('tax_id') }"
-                  :placeholder="t('views.profile.fields.tax_id')" @change="updatePersonalInfoForm.validate('tax_id')" />
+                  :placeholder="t('views.profile.fields.tax_id')"
+                  @change="updatePersonalInfoForm.validate('tax_id'); updatePersonalInfoForm.submit();" />
                 <FormErrorMessages :messages="updatePersonalInfoForm.errors.tax_id" />
               </div>
               <div class="pb-4">
@@ -266,102 +315,136 @@ const onSubmit = async () => {
                 <FormLabel html-for="remarks">
                   {{ t("views.profile.fields.remarks") }}
                 </FormLabel>
-                <FormTextarea id="remarks" v-model="updatePersonalInfoForm.remarks" name="remarks" class="w-full" rows="5"
+                <FormTextarea id="remarks" v-model="updatePersonalInfoForm.remarks" name="remarks" rows="5"
                   :placeholder="t('views.profile.fields.remarks')" />
+              </div>
+              <div>
+                <Button type="submit" size="sm" href="#" variant="primary" class="w-28 shadow-md"
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors">
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
+                  <template v-else>
+                    {{ t("components.buttons.update") }}
+                  </template>
+                </Button>
               </div>
             </form>
           </div>
         </template>
         <template #card-items-2>
           <div class="p-5">
-            <div class="pb-4">
-              <FormLabel html-for="themes">
-                {{ t("views.profile.fields.settings.theme") }}
-              </FormLabel>
-              <FormSelect id="themes" v-model="updateAccountSettingsForm.theme" name="themes">
-                <option value="side-menu-light-full">Menu Light</option>
-                <option value="side-menu-light-mini">Mini Menu Light</option>
-                <option value="side-menu-dark-full">Menu Dark</option>
-                <option value="side-menu-dark-mini">Mini Menu Dark</option>
-              </FormSelect>
-            </div>
-            <div class="pb-4">
-              <FormLabel html-for="date_format">
-                {{ t("views.profile.fields.settings.date_format") }}
-              </FormLabel>
-              <FormSelect id="date_format" v-model="updateAccountSettingsForm.date_format" name="date_format">
-                <option value="yyyy_MM_dd">
-                  {{ formatDate(new Date().toString(), "YYYY-MM-DD") }}
-                </option>
-                <option value="dd_MMM_yyyy">
-                  {{ formatDate(new Date().toString(), "DD-MMM-YYYY") }}
-                </option>
-              </FormSelect>
-            </div>
-            <div class="pb-4">
-              <FormLabel html-for="time_format">
-                {{ t("views.profile.fields.settings.time_format") }}
-              </FormLabel>
-              <FormSelect id="time_format" v-model="updateAccountSettingsForm.time_format" name="time_format">
-                <option value="hh_mm_ss">
-                  {{ formatDate(new Date().toString(), "HH:mm:ss") }}
-                </option>
-                <option value="h_m_A">
-                  {{ formatDate(new Date().toString(), "H:m A") }}
-                </option>
-              </FormSelect>
-            </div>
+            <form id="updateAccountSettingsForm" @submit.prevent="onSubmitUpdateAccountSettings">
+              <div class="pb-4">
+                <FormLabel html-for="themes">
+                  {{ t("views.profile.fields.settings.theme") }}
+                </FormLabel>
+                <FormSelect id="themes" v-model="updateAccountSettingsForm.theme" name="themes">
+                  <option value="side-menu-light-full">Menu Light</option>
+                  <option value="side-menu-light-mini">Mini Menu Light</option>
+                  <option value="side-menu-dark-full">Menu Dark</option>
+                  <option value="side-menu-dark-mini">Mini Menu Dark</option>
+                </FormSelect>
+              </div>
+              <div class="pb-4">
+                <FormLabel html-for="date_format">
+                  {{ t("views.profile.fields.settings.date_format") }}
+                </FormLabel>
+                <FormSelect id="date_format" v-model="updateAccountSettingsForm.date_format" name="date_format">
+                  <option value="yyyy_MM_dd">
+                    {{ formatDate(new Date().toString(), "YYYY-MM-DD") }}
+                  </option>
+                  <option value="dd_MMM_yyyy">
+                    {{ formatDate(new Date().toString(), "DD-MMM-YYYY") }}
+                  </option>
+                </FormSelect>
+              </div>
+              <div class="pb-4">
+                <FormLabel html-for="time_format">
+                  {{ t("views.profile.fields.settings.time_format") }}
+                </FormLabel>
+                <FormSelect id="time_format" v-model="updateAccountSettingsForm.time_format" name="time_format">
+                  <option value="hh_mm_ss">
+                    {{ formatDate(new Date().toString(), "HH:mm:ss") }}
+                  </option>
+                  <option value="h_m_A">
+                    {{ formatDate(new Date().toString(), "H:m A") }}
+                  </option>
+                </FormSelect>
+              </div>
+              <div>
+                <Button type="submit" size="sm" href="#" variant="primary" class="w-28 shadow-md"
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors">
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
+                  <template v-else>
+                    {{ t("components.buttons.update") }}
+                  </template>
+                </Button>
+              </div>
+            </form>
           </div>
         </template>
         <template #card-items-3>
           <div class="p-5">
-            <div class="pb-4">
-              <div class="grid grid-cols-3 gap-2 place-items center">
-                <div v-for="(item, index) in roleSelection" :key="index" class="flex flex-col items-center">
-                  <div class="cursor-pointer flex flex-col items-center justify-center" @click="handleChangeRole(index)">
-                    <img alt="" :src="item.images" width="100" height="100" />
-                    <div v-if="item.selectable" class="grid grid-cols-1 place-items-center">
-                      <Check class="text-success" />
+            <form id="updateUserRolesForm" @submit.prevent="onSubmitUpdateUserRoles">
+              <div class="pb-4">
+                <div class="grid grid-cols-3 gap-2 place-items center">
+                  <div v-for="(item, index) in roleSelection" :key="index" class="flex flex-col items-center">
+                    <div class="cursor-pointer flex flex-col items-center justify-center"
+                      @click="handleChangeRole(index)">
+                      <img alt="" :src="item.images" width="100" height="100" />
+                      <div v-if="item.selectable" class="grid grid-cols-1 place-items-center">
+                        <Check class="text-success" />
+                      </div>
+                      <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
+                        {{ t("components.buttons.activate") }}
+                      </button>
                     </div>
-                    <button v-else class="btn btn-sm btn-secondary hover:btn-primary">
-                      {{ t("components.buttons.activate") }}
-                    </button>
                   </div>
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </template>
         <template #card-items-4>
           <div class="p-5">
-            <div class="pb-4">
-              <FormLabel html-for="current_password"
-                :class="{ 'text-danger': updatePasswordForm.invalid('current_password') }">
-                {{ t("views.profile.fields.change_password.current_password") }}
-              </FormLabel>
-              <FormInput id="current_password" v-model="updatePasswordForm.current_password" name="current_password"
-                type="password" :class="{ 'border-danger': updatePasswordForm.invalid('current_password') }"
-                :placeholder="t('views.profile.fields.change_password.current_password')"
-                @change="updatePasswordForm.validate('current_password')" />
-              <FormErrorMessages :messages="updatePasswordForm.errors.current_password" />
-            </div>
-            <div class="pb-4">
-              <FormLabel html-for="password" :class="{ 'text-danger': updatePasswordForm.invalid('password') }">
-                {{ t("views.profile.fields.change_password.password") }}
-              </FormLabel>
-              <FormInput id="password" v-model="updatePasswordForm.password" name="password" type="password"
-                :class="{ 'border-danger': updatePasswordForm.invalid('password') }"
-                :placeholder="t('views.profile.fields.change_password.password')" />
-              <FormErrorMessages :messages="updatePasswordForm.errors.password" />
-            </div>
-            <div class="pb-4">
-              <FormLabel html-for="password_confirmation">
-                {{ t("views.profile.fields.change_password.password_confirmation") }}
-              </FormLabel>
-              <FormInput id="password_confirmation" v-model="updatePasswordForm.password_confirmation"
-                name="password_confirmation" type="password"
-                :placeholder="t('views.profile.fields.change_password.password_confirmation')" />
-            </div>
+            <form id="updatePasswordForm" @submit.prevent="onSubmitUpdatePassword">
+              <div class="pb-4">
+                <FormLabel html-for="current_password"
+                  :class="{ 'text-danger': updatePasswordForm.invalid('current_password') }">
+                  {{ t("views.profile.fields.change_password.current_password") }}
+                </FormLabel>
+                <FormInput id="current_password" v-model="updatePasswordForm.current_password" name="current_password"
+                  type="password" :class="{ 'border-danger': updatePasswordForm.invalid('current_password') }"
+                  :placeholder="t('views.profile.fields.change_password.current_password')"
+                  @change="updatePasswordForm.validate('current_password')" />
+                <FormErrorMessages :messages="updatePasswordForm.errors.current_password" />
+              </div>
+              <div class="pb-4">
+                <FormLabel html-for="password" :class="{ 'text-danger': updatePasswordForm.invalid('password') }">
+                  {{ t("views.profile.fields.change_password.password") }}
+                </FormLabel>
+                <FormInput id="password" v-model="updatePasswordForm.password" name="password" type="password"
+                  :class="{ 'border-danger': updatePasswordForm.invalid('password') }"
+                  :placeholder="t('views.profile.fields.change_password.password')" />
+                <FormErrorMessages :messages="updatePasswordForm.errors.password" />
+              </div>
+              <div class="pb-4">
+                <FormLabel html-for="password_confirmation">
+                  {{ t("views.profile.fields.change_password.password_confirmation") }}
+                </FormLabel>
+                <FormInput id="password_confirmation" v-model="updatePasswordForm.password_confirmation"
+                  name="password_confirmation" type="password"
+                  :placeholder="t('views.profile.fields.change_password.password_confirmation')" />
+              </div>
+              <div>
+                <Button type="submit" size="sm" href="#" variant="primary" class="w-28 shadow-md"
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors">
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
+                  <template v-else>
+                    {{ t("components.buttons.update") }}
+                  </template>
+                </Button>
+              </div>
+            </form>
           </div>
         </template>
         <template #card-items-5>
