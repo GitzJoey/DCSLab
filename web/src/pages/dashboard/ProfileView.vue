@@ -406,9 +406,10 @@ watchEffect(() => {
                       <div v-if="item.state == 'checked'" class="grid grid-cols-1 place-items-center">
                         <Check class="text-success" />
                       </div>
-                      <button v-else-if="item.state == 'selectable'" class="btn btn-sm btn-secondary hover:btn-primary">
+                      <Button v-else-if="item.state == 'selectable'" type="submit" variant="primary" size="sm"
+                        class="w-28 shadow-md">
                         {{ t("components.buttons.activate") }}
-                      </button>
+                      </Button>
                       <span v-else>&nbsp;</span>
                     </div>
                   </div>

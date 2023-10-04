@@ -2,8 +2,8 @@ import SideMenu from "../layouts/SideMenu/SideMenu.vue";
 
 import LoginPage from "../pages/auth/LoginPage.vue";
 import RegisterPage from "../pages/auth/RegisterPage.vue";
-//import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage.vue";
-//import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
+import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage.vue";
+import ResetPasswordPage from "../pages/auth/ResetPasswordPage.vue";
 import MainDashboard from "../pages/dashboard/MainDashboard.vue";
 import ProfileView from "../pages/dashboard/ProfileView.vue";
 import DevTool from "../pages/dev/DevTool.vue";
@@ -47,7 +47,6 @@ export default [
                 name: 'register',
                 component: RegisterPage,
             },
-            /*
             {
                 path: "/auth/forgot-password",
                 name: 'forgot-password',
@@ -58,7 +57,6 @@ export default [
                 name: 'reset-password',
                 component: ResetPasswordPage,
             },
-            */
         ]
     },
     {

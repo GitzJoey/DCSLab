@@ -79,25 +79,27 @@ const onSubmit = async () => {
                 <div class="mt-8 intro-x">
                   <FormInput v-model="registerForm.name" name="name" type="text"
                     :class="{ 'block px-4 py-3 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('name') }"
-                    :placeholder="t('views.register.fields.name')" />
+                    :placeholder="t('views.register.fields.name')" @focus="registerForm.forgetError('name')" />
                   <span class="ml-1 text-danger">{{ registerForm.errors.name }}</span>
                   <FormInput v-model="registerForm.email" name="email" type="text"
                     :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('email') }"
-                    :placeholder="t('views.register.fields.email')" />
+                    :placeholder="t('views.register.fields.email')" @focus="registerForm.forgetError('email')" />
                   <span class="ml-1 text-danger">{{ registerForm.errors.email }}</span>
                   <FormInput v-model="registerForm.password" name="password" type="password"
                     :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('password') }"
-                    :placeholder="t('views.register.fields.password')" />
+                    :placeholder="t('views.register.fields.password')" @focus="registerForm.forgetError('password')" />
                   <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
                   <FormInput v-model="registerForm.password_confirmation" name="password_confirmation" type="password"
                     :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('password') }"
-                    :placeholder="t('views.register.fields.password_confirmation')" />
+                    :placeholder="t('views.register.fields.password_confirmation')"
+                    @focus="registerForm.forgetError('password_confirmation')" />
                   <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
                 </div>
                 <div class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <FormCheck>
                     <FormCheck.Input v-model="registerForm.terms" id="terms" name="terms" type="checkbox"
-                      :class="{ 'border-danger': registerForm.errors.terms }" />
+                      :class="{ 'border-danger': registerForm.errors.terms }"
+                      @focus="registerForm.forgetError('terms')" />
                     <FormCheck.Label class="cursor-pointer select-none" html-for="terms">
                       I agree to the
                       {{ t("views.register.fields.terms_and_cond") }}

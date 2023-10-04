@@ -78,13 +78,13 @@ const onSubmit = async () => {
                 <div class="mt-8 intro-x">
                   <FormInput v-model="loginForm.email" type="text" name="email"
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
-                    :class="{ 'border-danger': loginForm.invalid('email') }"
-                    :placeholder="t('views.login.fields.email')" />
+                    :class="{ 'border-danger': loginForm.invalid('email') }" :placeholder="t('views.login.fields.email')"
+                    @focus="loginForm.forgetError('email')" />
                   <span class="ml-1 text-danger">{{ loginForm.errors.email }}</span>
                   <FormInput v-model="loginForm.password" type="password" name="password"
                     class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
                     :class="{ 'border-danger': loginForm.invalid('password') }"
-                    :placeholder="t('views.login.fields.password')" />
+                    :placeholder="t('views.login.fields.password')" @focus="loginForm.forgetError('password')" />
                   <span class="ml-1 text-danger">{{ loginForm.errors.password }}</span>
                 </div>
                 <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
