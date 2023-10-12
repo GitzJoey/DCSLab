@@ -84,7 +84,7 @@ export default class ProfileService {
 
     client.axios().defaults.withCredentials = true;
     const form = useForm('post', url, {
-      reset_tokens: false,
+      reset_tokens: true,
     });
 
     return form;

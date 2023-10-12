@@ -191,7 +191,7 @@ const onSubmitUpdateUserRoles = async () => {
 const onSubmitUpdatePassword = async () => {
 
 };
-const onSubmitUpdateTokens = async () => {
+const onSubmitUpdateToken = async () => {
 
 };
 // #region Methods
@@ -463,14 +463,18 @@ watchEffect(() => {
         </template>
         <template #card-items-5>
           <div class="p-5">
-            <div class="pb-4">
-              <FormLabel html-for="tokens_reset">
-                {{ t('views.user.fields.tokens.reset') }}
-              </FormLabel>
-              <FormSwitch>
-                <FormSwitch.Input type="checkbox" v-model="updateTokensForm.reset_tokens" />
-              </FormSwitch>
-            </div>
+            <form id="updateTokenForm" @submit.prevent="onSubmitUpdateToken">
+              <input id="resetToken" type="hidden" v-model="updateTokensForm.reset_tokens" />
+              <div>
+                <Button type="submit" size="sm" href="#" variant="primary" class="w-28 shadow-md"
+                  :disabled="updateTokensForm.validating || updateTokensForm.hasErrors">
+                  <Lucide v-if="updateTokensForm.validating" icon="Loader" class="animate-spin" />
+                  <template v-else>
+                    {{ t("components.buttons.reset") }}
+                  </template>
+                </Button>
+              </div>
+            </form>
           </div>
         </template>
         <template #card-items-6>
