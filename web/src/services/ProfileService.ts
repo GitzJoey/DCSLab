@@ -5,6 +5,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosResponse, isAxiosError, AxiosError } from "axios";
 import axios from "../axios";
 import ErrorHandlerService from "./ErrorHandlerService";
+import { QRCode } from "../types/models/QRCode";
 
 export default class ProfileService {
   private ziggyRoute: Config;
@@ -151,15 +152,15 @@ export default class ProfileService {
     }
   }
 
-  public async twoFactorQR(): Promise<ServiceResponse<string | null>> {
-    const result: ServiceResponse<string | null> = {
+  public async twoFactorQR(): Promise<ServiceResponse<QRCode | null>> {
+    const result: ServiceResponse<QRCode | null> = {
       success: false,
     }
 
     try {
       const url = route('two-factor.qr-code', undefined, false, this.ziggyRoute);
 
-      const response: AxiosResponse<string> = await axios.get(url);
+      const response: AxiosResponse<QRCode> = await axios.get(url);
 
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
