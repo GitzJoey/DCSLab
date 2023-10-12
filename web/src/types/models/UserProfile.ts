@@ -12,5 +12,6 @@ export interface UserProfile {
     profile: Profile,
     roles: Array<Role>,
     companies: Array<Company>,
-    settings: Setting
+    settings: Setting,
+    two_factor: boolean
 }

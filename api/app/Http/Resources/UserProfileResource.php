@@ -35,6 +35,7 @@ class UserProfileResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('settings'), [
                 'settings' => (new SettingResource($this->whenLoaded('settings'))),
             ]),
+            'two_factor' => $this->getTwoFactorStatus(),
         ];
     }
 
@@ -47,5 +48,11 @@ class UserProfileResource extends JsonResource
         $diff = Carbon::now()->diffInDays(Carbon::parse($this->password_changed_at)->addDays(config('dcslab.PASSWORD_EXPIRY_DAYS')), false);
 
         return $diff <= 0 ? 0 : $diff;
+    }
+
+    private function getTwoFactorStatus()
+    {
+        if (!auth()->user()) return false;
+        return auth()->user()->two_factor_secret !== null;
     }
 }

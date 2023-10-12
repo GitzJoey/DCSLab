@@ -132,13 +132,6 @@ class ProfileController extends BaseController
         return ! $result ? response()->error() : response()->success();
     }
 
-    public function checkTwoFAStatus()
-    {
-        return response()->json([
-            'enabled' => auth()->user()->two_factor_secret !== null,
-        ]);
-    }
-
     public function sendEmailVerification()
     {
         /** @var \App\User */

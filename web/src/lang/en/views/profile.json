@@ -35,7 +35,8 @@
             "reset": "Reset Token"
         },
         "2fa": {
-            "enable": "Enable 2FA Authentication"
+            "status": "2FA Authentication Enabled",
+            "qr-code": "QR Code"
         }
     },
     "tooltip": {

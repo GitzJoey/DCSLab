@@ -35,7 +35,8 @@
             "reset": "Reset Token"
         },
         "2fa": {
-            "enable": "Aktifkan 2FA Authentication"
+            "status": "Verifikasi Dua Langkah Aktif",
+            "qr-code": "QR Code"
         }
     },
     "tooltip": {
