@@ -2,6 +2,7 @@
     "title": "Profile",
     "field_groups": {
         "user_profile": "User Profile",
+        "email_verification": "Email Verification",
         "personal_information": "Personal Information",
         "account_settings": "Account Settings",
         "roles": "Roles",

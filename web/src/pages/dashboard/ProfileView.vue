@@ -52,6 +52,7 @@ const emits = defineEmits(['mode-state', 'loading-state']);
 const loading = ref<boolean>(false);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: t('views.profile.field_groups.user_profile'), state: CardState.Expanded },
+    { title: t('views.profile.field_groups.email_verification'), state: CardState.Expanded },
     { title: t('views.profile.field_groups.personal_information'), state: CardState.Expanded },
     { title: t('views.profile.field_groups.account_settings'), state: CardState.Expanded },
     { title: t('views.profile.field_groups.roles'), state: CardState.Expanded },
@@ -307,6 +308,18 @@ watchEffect(() => {
                 </template>
                 <template #card-items-1>
                     <div class="p-5">
+                        <div v-if="userContext.email_verified" class="pb-4">
+                            <span>{{ t('views.profile.tooltip.email_verified') }}</span>
+                        </div>
+                        <div v-else>
+                            <Button type="button" size="sm" href="#" variant="primary" class="w-42 shadow-md">
+                                {{ t("components.buttons.send_verification_email") }}
+                            </Button>
+                        </div>
+                    </div>
+                </template>
+                <template #card-items-2>
+                    <div class="p-5">
                         <form id="updatePersonalInfoForm" @submit.prevent="onSubmitUpdatePersonalInfo">
                             <div class="pb-4">
                                 <FormLabel html-for="first_name">
@@ -399,7 +412,7 @@ watchEffect(() => {
                         </form>
                     </div>
                 </template>
-                <template #card-items-2>
+                <template #card-items-3>
                     <div class="p-5">
                         <form id="updateAccountSettingsForm" @submit.prevent="onSubmitUpdateAccountSettings">
                             <div class="pb-4">
@@ -453,7 +466,7 @@ watchEffect(() => {
                         </form>
                     </div>
                 </template>
-                <template #card-items-3>
+                <template #card-items-4>
                     <div class="p-5">
                         <form id="updateUserRolesForm" @submit.prevent="onSubmitUpdateUserRoles">
                             <div class="pb-4">
@@ -478,7 +491,7 @@ watchEffect(() => {
                         </form>
                     </div>
                 </template>
-                <template #card-items-4>
+                <template #card-items-5>
                     <div class="p-5">
                         <form id="updatePasswordForm" @submit.prevent="onSubmitUpdatePassword">
                             <div class="pb-4">
@@ -523,7 +536,7 @@ watchEffect(() => {
                         </form>
                     </div>
                 </template>
-                <template #card-items-5>
+                <template #card-items-6>
                     <div class="p-5">
                         <form id="updateTokenForm" @submit.prevent="onSubmitUpdateToken">
                             <input id="resetToken" type="hidden" v-model="updateTokensForm.reset_tokens" />
@@ -539,7 +552,7 @@ watchEffect(() => {
                         </form>
                     </div>
                 </template>
-                <template #card-items-6>
+                <template #card-items-7>
                     <div class="p-5">
                         <div class="pb-4">
                             <FormLabel html-for="status_2fa">

@@ -2,12 +2,13 @@
     "title": "Profil",
     "field_groups": {
         "user_profile": "Profil Pengguna",
+        "email_verification": "Verifikasi Email",
         "personal_information": "Informasi Pribadi",
         "account_settings": "Pengaturan Akun",
         "roles": "Peran",
         "change_password": "Ubah Password",
         "api_token": "API Token",
-        "two_factor_authentication": "Two Factor Authentication"
+        "two_factor_authentication": "Verifikasi Dua Langkah"
     },
     "fields": {
         "name": "Nama",
