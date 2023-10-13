@@ -25,7 +25,7 @@ import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
-import { QRCode } from "../../types/models/QRCode";
+import { QRCode, ConfirmedPasswordStatus } from "../../types/models/TwoFactorAuthentication";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 // #endregion
 
@@ -82,6 +82,10 @@ const qrCode = ref<QRCode>({
     svg: '',
     url: '',
 });
+
+const confirmedPasswordStatus = ref<ConfirmedPasswordStatus>({
+    confirmed: false
+})
 
 const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
 const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
@@ -193,6 +197,7 @@ const setTwoFactor = async (event: Event) => {
     if (checked) {
         await enableTwoFactor();
         await showQR();
+        await showConfirmedPasswordStatus();
     } else {
         await disableTwoFactor();
     }
@@ -211,6 +216,14 @@ const showQR = async () => {
 
     if (response.success && response.data) {
         qrCode.value = response.data;
+    }
+}
+
+const showConfirmedPasswordStatus = async () => {
+    let response: ServiceResponse<ConfirmedPasswordStatus | null> = await profileServices.confirmedPasswordStatus();
+
+    if (response.success && response.data) {
+        confirmedPasswordStatus.value = response.data;
     }
 }
 
@@ -539,6 +552,9 @@ watchEffect(() => {
                         </div>
                         <div class="pb-4">
                             <img v-html="qrCode.svg" alt="QR Code" />
+                        </div>
+                        <div class="pb-4">
+                            {{ confirmedPasswordStatus.confirmed }}
                         </div>
                     </div>
                 </template>

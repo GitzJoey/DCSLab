@@ -5,7 +5,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosResponse, isAxiosError, AxiosError } from "axios";
 import axios from "../axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { QRCode } from "../types/models/QRCode";
+import { QRCode, ConfirmedPasswordStatus } from "../types/models/TwoFactorAuthentication";
 
 export default class ProfileService {
   private ziggyRoute: Config;
@@ -134,6 +134,33 @@ export default class ProfileService {
       const url = route('two-factor.disable', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<boolean> = await axios.delete(url);
+
+      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+      result.success = true;
+      result.data = response.data;
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
+  public async confirmedPasswordStatus(): Promise<ServiceResponse<ConfirmedPasswordStatus | null>> {
+    const result: ServiceResponse<ConfirmedPasswordStatus | null> = {
+      success: false,
+    }
+
+    try {
+      const url = route('password.confirmation', undefined, false, this.ziggyRoute);
+
+      const response: AxiosResponse<ConfirmedPasswordStatus> = await axios.get(url);
 
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
