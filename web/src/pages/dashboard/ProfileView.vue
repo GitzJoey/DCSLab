@@ -228,6 +228,10 @@ const showConfirmedPasswordStatus = async () => {
     }
 }
 
+const sendEmailVerification = () => {
+
+}
+
 const onSubmitUpdateUserProfile = async () => {
 
 };
@@ -312,7 +316,8 @@ watchEffect(() => {
                             <span>{{ t('views.profile.tooltip.email_verified') }}</span>
                         </div>
                         <div v-else>
-                            <Button type="button" size="sm" href="#" variant="primary" class="w-42 shadow-md">
+                            <Button type="button" size="sm" href="#" variant="primary" class="w-42 shadow-md"
+                                @click="sendEmailVerification">
                                 {{ t("components.buttons.send_verification_email") }}
                             </Button>
                         </div>

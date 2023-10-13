@@ -22,6 +22,7 @@ import { useDashboardStore } from "../../stores/dashboard";
 import { useI18n } from "vue-i18n";
 import ScrollToTop from "../../base-components/ScrollToTop";
 import NotificationWidget from "../../base-components/NotificationWidget";
+import { EmailVerificationAlert } from "../../base-components/AlertPlaceholder";
 
 const { t } = useI18n();
 const route: Route = useRoute();
@@ -314,6 +315,7 @@ onMounted(() => {
         'max-w-full md:max-w-none rounded-[30px] md:rounded-none px-4 md:px-[22px] min-w-0 min-h-screen bg-slate-100 flex-1 md:pt-20 pb-10 mt-5 md:mt-1 relative dark:bg-darkmode-700',
         'before:content-[\'\'] before:w-full before:h-px before:block',
       ]">
+        <EmailVerificationAlert />
         <RouterView />
         <br v-for="i in 3" :key="i" />
         <ScrollToTop :visible="showBackToTop" />

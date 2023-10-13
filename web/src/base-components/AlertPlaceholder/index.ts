@@ -1,3 +1,7 @@
 import AlertPlaceholder from "./AlertPlaceholder.vue";
+import EmailVerificationAlert from "./EmailVerificationAlert.vue";
 
-export default AlertPlaceholder;
+export {
+    AlertPlaceholder as default,
+    EmailVerificationAlert,
+};
