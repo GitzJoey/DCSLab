@@ -23,6 +23,7 @@ return [
                 'forgot-password', 
                 'user/two-factor-authentication',
                 'user/two-factor-qr-code',
+                'user/confirmed-password-status',
             ],
 
     'allowed_methods' => ['*'],
