@@ -2,7 +2,6 @@
 import { computed, ref, toRef, watch } from "vue";
 import { FormInput, FormSelect } from "../../base-components/Form";
 import Button from "../../base-components/Button";
-import { Menu } from "../../base-components/Headless";
 import Lucide from "../../base-components/Lucide";
 import Pagination from "../../base-components/Pagination";
 import { useI18n } from "vue-i18n";
