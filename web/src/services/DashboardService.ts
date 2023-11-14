@@ -4,7 +4,6 @@ import route, { Config } from "ziggy-js";
 import CacheService from "./CacheService";
 import { AxiosResponse, AxiosError, isAxiosError } from "axios";
 import { ServiceResponse } from "../types/services/ServiceResponse";
-import { UserProfile } from "../types/models/UserProfile";
 import { Menu as sMenu } from "../stores/side-menu";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { Resource } from "../types/resources/Resource";
@@ -23,31 +22,6 @@ export default class DashboardService {
 
         this.cacheService = new CacheService();
         this.errorHandlerService = new ErrorHandlerService();
-    }
-
-    public async readProfile(): Promise<ServiceResponse<UserProfile | null>> {
-        const result: ServiceResponse<UserProfile> | null = {
-            success: false,
-        };
-
-        try {
-            const url = route('api.get.db.module.profile.read', undefined, false, this.ziggyRoute);
-
-            const response: AxiosResponse<Resource<UserProfile>> = await axios.get(url);
-
-            result.success = true;
-            result.data = response.data.data;
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
     }
 
     public async readUserMenu(): Promise<ServiceResponse<Array<sMenu> | null>> {

@@ -6,6 +6,7 @@ import logoUrl from "../../assets/images/logo.svg";
 import { Menu, Slideover } from "../../base-components/Headless";
 import _ from "lodash";
 import DashboardService from "../../services/DashboardService";
+import ProfileService from "../../services/ProfileService";
 import { useDashboardStore } from "../../stores/dashboard";
 import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
 import { useZiggyRouteStore } from "../../stores/ziggy-route";
@@ -18,7 +19,8 @@ import { useRouter } from "vue-router";
 import defUserUrl from "../../assets/images/def-user.png";
 import UserLocation from "../../base-components/UserLocation";
 
-const dashboardService = new DashboardService();
+const dashboardServices = new DashboardService();
+const profileServices = new ProfileService();
 
 const dashboardStore = useDashboardStore();
 const sideMenuStore = useSideMenuStore();
@@ -66,13 +68,13 @@ const toggleSlideover = (value: boolean) => {
 onMounted(async () => {
   loading.value = true;
 
-  let userprofile = await dashboardService.readProfile();
+  let userprofile = await profileServices.readProfile();
   userContextStore.setUserContext(userprofile.data as UserProfile);
 
-  let menuResult = await dashboardService.readUserMenu();
+  let menuResult = await dashboardServices.readUserMenu();
   sideMenuStore.setUserMenu(menuResult.data as Array<sMenu>);
 
-  let apiResult = await dashboardService.readUserApi();
+  let apiResult = await dashboardServices.readUserApi();
   ziggyRouteStore.setZiggy(apiResult.data as Config);
 
   loading.value = false;

@@ -36,8 +36,9 @@
             "reset": "Reset Token"
         },
         "2fa": {
-            "status": "2FA Authentication Enabled",
-            "qr-code": "QR Code"
+            "status": "2FA Authentication Status",
+            "qr-code": "QR Code",
+            "confirm_password": "Confirm Password"
         }
     },
     "tooltip": {

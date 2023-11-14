@@ -25,8 +25,10 @@ import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
-import { QRCode, ConfirmedPasswordStatus } from "../../types/models/TwoFactorAuthentication";
+import { TwoFactorResponse, QRCode, ConfirmedPasswordStatus } from "../../types/models/TwoFactorAuthentication";
+import { UserProfile } from "../../types/models/UserProfile";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
+import { Dialog } from "../../base-components/Headless";
 // #endregion
 
 // #region Interfaces
@@ -87,6 +89,9 @@ const qrCode = ref<QRCode>({
 const confirmedPasswordStatus = ref<ConfirmedPasswordStatus>({
     confirmed: false
 })
+
+const showTwoFactorPasswordConfirmationDialog = ref<boolean>(false);
+const confirm_password_2fa = ref<string>('');
 
 const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
 const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
@@ -196,20 +201,18 @@ const setTwoFactor = async (event: Event) => {
     let checked: boolean = (event.target as HTMLInputElement).checked;
 
     if (checked) {
-        await enableTwoFactor();
-        await showQR();
-        await showConfirmedPasswordStatus();
+        let enableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.enableTwoFactor();
+
+        if (!enableTwoFactorResponse.success) {
+            showTwoFactorPasswordConfirmationDialog.value = true;
+        }
     } else {
-        await disableTwoFactor();
+        let disableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.disableTwoFactor();
+
+        if (!disableTwoFactorResponse.success) {
+            showTwoFactorPasswordConfirmationDialog.value = true;
+        }
     }
-}
-
-const enableTwoFactor = async () => {
-    await profileServices.enableTwoFactor();
-}
-
-const disableTwoFactor = async () => {
-    await profileServices.disableTwoFactor();
 }
 
 const showQR = async () => {
@@ -220,11 +223,24 @@ const showQR = async () => {
     }
 }
 
+const reloadUserContext = async () => {
+    let userprofile = await profileServices.readProfile();
+    userContextStore.setUserContext(userprofile.data as UserProfile);
+}
+
 const showConfirmedPasswordStatus = async () => {
     let response: ServiceResponse<ConfirmedPasswordStatus | null> = await profileServices.confirmedPasswordStatus();
 
     if (response.success && response.data) {
         confirmedPasswordStatus.value = response.data;
+    }
+}
+
+const submitTwoFactorPasswordConfirmation = (state: boolean) => {
+    if (state) {
+
+    } else {
+        showTwoFactorPasswordConfirmationDialog.value = state;
     }
 }
 
@@ -573,6 +589,33 @@ watchEffect(() => {
                         </div>
                         <div class="pb-4">
                             {{ confirmedPasswordStatus.confirmed }}
+                        </div>
+                        <div class="pb-4">
+                            <Dialog staticBackdrop :open="showTwoFactorPasswordConfirmationDialog"
+                                @close="() => { submitTwoFactorPasswordConfirmation(false); }">
+                                <Dialog.Panel class="px-5 py-10">
+                                    <div class="text-center">
+                                        <div class="mb-5">
+                                            <FormLabel html-for="confirm_password_2fa">
+                                                {{ t('views.profile.fields.2fa.confirm_password') }}
+                                            </FormLabel>
+                                            <FormInput id="confirm_password_2fa" v-model="confirm_password_2fa"
+                                                name="confirm_password_2fa" type="password"
+                                                :placeholder="t('views.profile.fields.2fa.confirm_password')" />
+                                        </div>
+                                        <div class="flex gap-2 justify-center items-center">
+                                            <Button type="button" variant="primary"
+                                                @click="() => { submitTwoFactorPasswordConfirmation(true); }" class="w-24">
+                                                {{ t('components.buttons.submit') }}
+                                            </Button>
+                                            <Button type="button" variant="primary"
+                                                @click="() => { submitTwoFactorPasswordConfirmation(false); }" class="w-24">
+                                                {{ t('components.buttons.cancel') }}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </Dialog.Panel>
+                            </Dialog>
                         </div>
                     </div>
                 </template>
