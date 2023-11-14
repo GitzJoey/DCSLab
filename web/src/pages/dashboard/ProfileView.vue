@@ -236,12 +236,13 @@ const showConfirmedPasswordStatus = async () => {
     }
 }
 
-const submitTwoFactorPasswordConfirmation = (state: boolean) => {
-    if (state) {
+const submitTwoFactorPasswordConfirmation = async () => {
+    let response: ServiceResponse<ConfirmedPasswordStatus | null> = await profileServices.TwoFactorConfirmPassword(confirm_password_2fa.value);
 
-    } else {
-        showTwoFactorPasswordConfirmationDialog.value = state;
-    }
+}
+
+const cancelTwoFactorPasswordConfirmation = async () => {
+    showTwoFactorPasswordConfirmationDialog.value = false;
 }
 
 const sendEmailVerification = () => {
@@ -580,8 +581,7 @@ watchEffect(() => {
                                 {{ t('views.profile.fields.2fa.status') }}
                             </FormLabel>
                             <FormSwitch>
-                                <FormSwitch.Input type="checkbox" @change="setTwoFactor"
-                                    :checked="userContext.two_factor == true" />
+                                <FormSwitch.Input type="checkbox" @change="setTwoFactor" v-model="userContext.two_factor" />
                             </FormSwitch>
                         </div>
                         <div class="pb-4">
@@ -592,7 +592,7 @@ watchEffect(() => {
                         </div>
                         <div class="pb-4">
                             <Dialog staticBackdrop :open="showTwoFactorPasswordConfirmationDialog"
-                                @close="() => { submitTwoFactorPasswordConfirmation(false); }">
+                                @close="() => { cancelTwoFactorPasswordConfirmation(); }">
                                 <Dialog.Panel class="px-5 py-10">
                                     <div class="text-center">
                                         <div class="mb-5">
@@ -605,11 +605,11 @@ watchEffect(() => {
                                         </div>
                                         <div class="flex gap-2 justify-center items-center">
                                             <Button type="button" variant="primary"
-                                                @click="() => { submitTwoFactorPasswordConfirmation(true); }" class="w-24">
+                                                @click="() => { submitTwoFactorPasswordConfirmation(); }" class="w-24">
                                                 {{ t('components.buttons.submit') }}
                                             </Button>
                                             <Button type="button" variant="primary"
-                                                @click="() => { submitTwoFactorPasswordConfirmation(false); }" class="w-24">
+                                                @click="() => { cancelTwoFactorPasswordConfirmation(); }" class="w-24">
                                                 {{ t('components.buttons.cancel') }}
                                             </Button>
                                         </div>
