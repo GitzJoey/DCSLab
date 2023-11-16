@@ -238,6 +238,12 @@ const reloadUserContext = async () => {
 const submitTwoFactorConfirmPassword = async () => {
     let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorConfirmPassword(twoFactorConfirmPasswordText.value);
 
+    if (!response.success) {
+        console.log(response);
+    } else {
+        console.log(response);
+    }
+
     await reloadUserContext();
 
     showTwoFactorConfirmPasswordDialog.value = false;
