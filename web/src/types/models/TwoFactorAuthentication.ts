@@ -1,5 +1,6 @@
 export interface TwoFactorResponse {
-    message: string
+    message: string,
+    error?: Record<string, Array<string>>
 }
 
 export interface QRCode {

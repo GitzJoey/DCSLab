@@ -217,22 +217,26 @@ export default class ProfileService {
     }
   }
 
-  public async TwoFactorConfirmPassword(password: string): Promise<ServiceResponse<ConfirmedPasswordStatus | null>> {
-    const result: ServiceResponse<ConfirmedPasswordStatus | null> = {
+  public async TwoFactorConfirmPassword(password: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
+    const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
     }
 
     try {
-      const url = route('password.confirm', {
-        password: password
-      }, false, this.ziggyRoute);
+      const url = route('password.confirm', undefined, false, this.ziggyRoute);
 
-      const response: AxiosResponse<ConfirmedPasswordStatus> = await axios.get(url);
+      const response: AxiosResponse<TwoFactorResponse> = await axios.post(url, {
+        password: password
+      });
 
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-      result.success = true;
-      result.data = response.data;
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+      } else {
+        result.success = false;
+        result.data = response.data;
+      }
 
       return result;
     } catch (e: unknown) {

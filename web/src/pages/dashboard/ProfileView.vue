@@ -204,12 +204,14 @@ const setTwoFactor = async (event: Event) => {
         let enableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.enableTwoFactor();
 
         if (!enableTwoFactorResponse.success) {
+            confirm_password_2fa.value = '';
             showTwoFactorPasswordConfirmationDialog.value = true;
         }
     } else {
         let disableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.disableTwoFactor();
 
         if (!disableTwoFactorResponse.success) {
+            confirm_password_2fa.value = '';
             showTwoFactorPasswordConfirmationDialog.value = true;
         }
     }
@@ -237,12 +239,15 @@ const showConfirmedPasswordStatus = async () => {
 }
 
 const submitTwoFactorPasswordConfirmation = async () => {
-    let response: ServiceResponse<ConfirmedPasswordStatus | null> = await profileServices.TwoFactorConfirmPassword(confirm_password_2fa.value);
+    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorConfirmPassword(confirm_password_2fa.value);
 
+    await reloadUserContext();
 }
 
 const cancelTwoFactorPasswordConfirmation = async () => {
     showTwoFactorPasswordConfirmationDialog.value = false;
+
+    await reloadUserContext();
 }
 
 const sendEmailVerification = () => {
