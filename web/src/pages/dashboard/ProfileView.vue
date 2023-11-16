@@ -86,10 +86,6 @@ const qrCode = ref<QRCode>({
     url: '',
 });
 
-const confirmedPasswordStatus = ref<ConfirmedPasswordStatus>({
-    confirmed: false
-})
-
 const showTwoFactorPasswordConfirmationDialog = ref<boolean>(false);
 const confirm_password_2fa = ref<string>('');
 
@@ -228,14 +224,6 @@ const showQR = async () => {
 const reloadUserContext = async () => {
     let userprofile = await profileServices.readProfile();
     userContextStore.setUserContext(userprofile.data as UserProfile);
-}
-
-const showConfirmedPasswordStatus = async () => {
-    let response: ServiceResponse<ConfirmedPasswordStatus | null> = await profileServices.confirmedPasswordStatus();
-
-    if (response.success && response.data) {
-        confirmedPasswordStatus.value = response.data;
-    }
 }
 
 const submitTwoFactorPasswordConfirmation = async () => {
@@ -593,7 +581,7 @@ watchEffect(() => {
                             <img v-html="qrCode.svg" alt="QR Code" />
                         </div>
                         <div class="pb-4">
-                            {{ confirmedPasswordStatus.confirmed }}
+
                         </div>
                         <div class="pb-4">
                             <Dialog staticBackdrop :open="showTwoFactorPasswordConfirmationDialog"
