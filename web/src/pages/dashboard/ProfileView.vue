@@ -81,13 +81,14 @@ const roleSelection = ref<Array<RoleSelection>>([
     },
 ]);
 
+const showQRCodeField = ref<boolean>(false);
 const qrCode = ref<QRCode>({
     svg: '',
     url: '',
 });
 
-const showTwoFactorPasswordConfirmationDialog = ref<boolean>(false);
-const confirm_password_2fa = ref<string>('');
+const showTwoFactorConfirmPasswordDialog = ref<boolean>(false);
+const twoFactorConfirmPasswordText = ref<string>('');
 
 const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
 const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
@@ -141,10 +142,6 @@ const setFormData = () => {
     if (!hasRolePOSOwner()) { roleSelection.value[0].state = 'selectable' }
     if (!hasRoleWHOwner()) { roleSelection.value[1].state = 'selectable' }
     if (!hasRoleACCOwner()) { roleSelection.value[2].state = 'selectable' }
-
-    if (userContext.value.two_factor == true) {
-        showQR();
-    }
 }
 
 const handleExpandCard = (index: number) => {
@@ -193,6 +190,14 @@ const hasRoleACCOwner = () => {
     return result;
 };
 
+const setTwoFactorFields = () => {
+    if (userContext.value.two_factor) {
+        showQRCodeField.value = true;
+    } else {
+        showQRCodeField.value = false;
+    }
+}
+
 const setTwoFactor = async (event: Event) => {
     let checked: boolean = (event.target as HTMLInputElement).checked;
 
@@ -200,15 +205,19 @@ const setTwoFactor = async (event: Event) => {
         let enableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.enableTwoFactor();
 
         if (!enableTwoFactorResponse.success) {
-            confirm_password_2fa.value = '';
-            showTwoFactorPasswordConfirmationDialog.value = true;
+            twoFactorConfirmPasswordText.value = '';
+            showTwoFactorConfirmPasswordDialog.value = true;
+        } else {
+            showQRCodeField.value = true;
         }
     } else {
         let disableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.disableTwoFactor();
 
         if (!disableTwoFactorResponse.success) {
-            confirm_password_2fa.value = '';
-            showTwoFactorPasswordConfirmationDialog.value = true;
+            twoFactorConfirmPasswordText.value = '';
+            showTwoFactorConfirmPasswordDialog.value = true;
+        } else {
+            showQRCodeField.value = false;
         }
     }
 }
@@ -226,14 +235,16 @@ const reloadUserContext = async () => {
     userContextStore.setUserContext(userprofile.data as UserProfile);
 }
 
-const submitTwoFactorPasswordConfirmation = async () => {
-    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorConfirmPassword(confirm_password_2fa.value);
+const submitTwoFactorConfirmPassword = async () => {
+    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorConfirmPassword(twoFactorConfirmPasswordText.value);
 
     await reloadUserContext();
+
+    showTwoFactorConfirmPasswordDialog.value = false;
 }
 
-const cancelTwoFactorPasswordConfirmation = async () => {
-    showTwoFactorPasswordConfirmationDialog.value = false;
+const cancelTwoFactorConfirmPassword = async () => {
+    showTwoFactorConfirmPasswordDialog.value = false;
 
     await reloadUserContext();
 }
@@ -266,8 +277,15 @@ const onSubmitUpdateToken = async () => {
 watchEffect(() => {
     if (userContextIsLoaded.value) {
         setFormData();
+        setTwoFactorFields();
 
         loading.value = false;
+    }
+});
+
+watchEffect(() => {
+    if (showQRCodeField.value) {
+        showQR();
     }
 });
 // #endregion
@@ -577,32 +595,37 @@ watchEffect(() => {
                                 <FormSwitch.Input type="checkbox" @change="setTwoFactor" v-model="userContext.two_factor" />
                             </FormSwitch>
                         </div>
-                        <div class="pb-4">
+                        <div v-if="showQRCodeField" class="pb-4">
                             <img v-html="qrCode.svg" alt="QR Code" />
+                            <br />
+                            {{ t('views.profile.fields.2fa.qr-code_description_1') }}
+                            <br />
+                            {{ t('views.profile.fields.2fa.qr-code_description_2') }}
                         </div>
                         <div class="pb-4">
 
                         </div>
                         <div class="pb-4">
-                            <Dialog staticBackdrop :open="showTwoFactorPasswordConfirmationDialog"
-                                @close="() => { cancelTwoFactorPasswordConfirmation(); }">
+                            <Dialog staticBackdrop :open="showTwoFactorConfirmPasswordDialog"
+                                @close="() => { cancelTwoFactorConfirmPassword(); }">
                                 <Dialog.Panel class="px-5 py-10">
                                     <div class="text-center">
                                         <div class="mb-5">
-                                            <FormLabel html-for="confirm_password_2fa">
+                                            <FormLabel html-for="twoFactorConfirmPasswordText">
                                                 {{ t('views.profile.fields.2fa.confirm_password') }}
                                             </FormLabel>
-                                            <FormInput id="confirm_password_2fa" v-model="confirm_password_2fa"
-                                                name="confirm_password_2fa" type="password"
+                                            <FormInput id="twoFactorConfirmPasswordText"
+                                                v-model="twoFactorConfirmPasswordText" name="twoFactorConfirmPasswordText"
+                                                type="password"
                                                 :placeholder="t('views.profile.fields.2fa.confirm_password')" />
                                         </div>
                                         <div class="flex gap-2 justify-center items-center">
                                             <Button type="button" variant="primary"
-                                                @click="() => { submitTwoFactorPasswordConfirmation(); }" class="w-24">
+                                                @click="() => { submitTwoFactorConfirmPassword(); }" class="w-24">
                                                 {{ t('components.buttons.submit') }}
                                             </Button>
                                             <Button type="button" variant="primary"
-                                                @click="() => { cancelTwoFactorPasswordConfirmation(); }" class="w-24">
+                                                @click="() => { cancelTwoFactorConfirmPassword(); }" class="w-24">
                                                 {{ t('components.buttons.cancel') }}
                                             </Button>
                                         </div>

@@ -38,6 +38,8 @@
         "2fa": {
             "status": "Status Verifikasi Dua Langkah",
             "qr-code": "QR Code",
+            "qr-code_description_1": "Silakan pindai Kode QR ini di Aplikasi Google Authenticator Anda",
+            "qr-code_description_2": "Unduh Google Authenticator di Google Play",
             "confirm_password": "Konfirmasi Password"
         }
     },
