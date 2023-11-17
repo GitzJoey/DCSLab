@@ -22,8 +22,10 @@ return [
                 'logout', 
                 'forgot-password', 
                 'user/two-factor-authentication',
-                'user/two-factor-qr-code',
                 'user/confirm-password',
+                'user/confirmed-two-factor-authentication',
+                'user/two-factor-qr-code',
+                'user/two-factor-recovery-codes',
                 'user/confirmed-password-status',
             ],
 

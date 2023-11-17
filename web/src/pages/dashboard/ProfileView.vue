@@ -86,9 +86,12 @@ const qrCode = ref<QRCode>({
     svg: '',
     url: '',
 });
-
 const showTwoFactorConfirmPasswordDialog = ref<boolean>(false);
 const twoFactorConfirmPasswordText = ref<string>('');
+const twoFactorRecoveryCodes = ref<Array<string>>([]);
+const twoFactorConfirmedPasswordStatus = ref<ConfirmedPasswordStatus>({
+    confirmed: false
+});
 
 const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
 const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
@@ -209,6 +212,7 @@ const setTwoFactor = async (event: Event) => {
             showTwoFactorConfirmPasswordDialog.value = true;
         } else {
             showQRCodeField.value = true;
+            await confirmTwoFactorAuthentication();
         }
     } else {
         let disableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.disableTwoFactor();
@@ -222,11 +226,34 @@ const setTwoFactor = async (event: Event) => {
     }
 }
 
+const confirmTwoFactorAuthentication = async () => {
+    let response: ServiceResponse<any | null> = await profileServices.TwoFactorAuthenticationConfirmed();
+
+    console.log('confirmTwoFactorAuthentication');
+    console.log(response);
+}
+
 const showQR = async () => {
     let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
 
     if (response.success && response.data) {
         qrCode.value = response.data;
+    }
+}
+
+const showRecoveryCodes = async () => {
+    let response: ServiceResponse<Array<string> | null> = await profileServices.twoFactorRecoveryCodes();
+
+    if (response.success && response.data) {
+        twoFactorRecoveryCodes.value = response.data;
+    }
+}
+
+const showConfirmedPasswordStatus = async () => {
+    let response: ServiceResponse<ConfirmedPasswordStatus | null> = await profileServices.TwoFactorConfirmedPasswordStatus();
+
+    if (response.success && response.data) {
+        twoFactorConfirmedPasswordStatus.value = response.data;
     }
 }
 
@@ -239,7 +266,7 @@ const submitTwoFactorConfirmPassword = async () => {
     let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorConfirmPassword(twoFactorConfirmPasswordText.value);
 
     if (!response.success) {
-        console.log(response);
+        await confirmTwoFactorAuthentication();
     } else {
         console.log(response);
     }
@@ -292,6 +319,8 @@ watchEffect(() => {
 watchEffect(() => {
     if (showQRCodeField.value) {
         showQR();
+        showRecoveryCodes();
+        showConfirmedPasswordStatus();
     }
 });
 // #endregion
@@ -601,12 +630,27 @@ watchEffect(() => {
                                 <FormSwitch.Input type="checkbox" @change="setTwoFactor" v-model="userContext.two_factor" />
                             </FormSwitch>
                         </div>
-                        <div v-if="showQRCodeField" class="pb-4">
-                            <img v-html="qrCode.svg" alt="QR Code" />
-                            <br />
-                            {{ t('views.profile.fields.2fa.qr-code_description_1') }}
-                            <br />
-                            {{ t('views.profile.fields.2fa.qr-code_description_2') }}
+                        <div class="pb-4">
+                            <div v-if="showQRCodeField">
+                                <img v-html="qrCode.svg" alt="QR Code" />
+                                <br />
+                                {{ t('views.profile.fields.2fa.qr-code_description_1') }}
+                                <br />
+                                {{ t('views.profile.fields.2fa.qr-code_description_2') }}
+                                <br />
+                                <br />
+                            </div>
+                            <div>
+                                <FormLabel html-for="recoverycodes_2fa">
+                                    {{ t('views.profile.fields.2fa.recovery-codes') }}
+                                </FormLabel>
+                                <div>
+                                    <template v-for="(rc, rcIdx) in twoFactorRecoveryCodes">
+                                        <span class="italic">{{ rcIdx + 1 }}. {{ rc }}</span>
+                                        <br />
+                                    </template>
+                                </div>
+                            </div>
                         </div>
                         <div class="pb-4">
 
