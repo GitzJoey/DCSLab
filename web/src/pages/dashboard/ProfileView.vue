@@ -226,8 +226,8 @@ const setTwoFactor = async (event: Event) => {
     }
 }
 
-const confirmTwoFactorAuthentication = async () => {
-    let response: ServiceResponse<any | null> = await profileServices.TwoFactorAuthenticationConfirmed();
+const confirmTwoFactorAuthentication = async (code: string) => {
+    let response: ServiceResponse<any | null> = await profileServices.TwoFactorAuthenticationConfirmed(code);
 
     console.log('confirmTwoFactorAuthentication');
     console.log(response);
