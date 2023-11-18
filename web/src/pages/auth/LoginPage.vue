@@ -48,8 +48,7 @@ const onSubmit = async () => {
 const onTwoFactorLoginSubmit = async () => {
   loading.value = true;
 
-  twoFactorLoginForm.submit().then((response: unknown) => {
-    console.log(response);
+  twoFactorLoginForm.submit().then(() => {
     router.push({ name: 'side-menu-dashboard-maindashboard' });
   }).catch(error => {
     console.error(error.response.data.message);
