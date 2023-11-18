@@ -43,7 +43,8 @@
             "recovery-codes": "Recovery Codes",
             "recovery-codes_description_1": "",
             "recovery-codes_description_2": "",
-            "confirm_password": "Konfirmasi Password"
+            "confirm_password": "Konfirmasi Password",
+            "confirm_password_error": "Kata Sandi Yang Diberikan Salah."
         }
     },
     "tooltip": {

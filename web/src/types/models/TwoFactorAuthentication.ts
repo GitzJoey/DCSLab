@@ -8,7 +8,7 @@ export interface QRCode {
     url: string,
 }
 
-export interface ConfirmedPasswordStatus {
+export interface ConfirmPasswordStatusResponse {
     confirmed: boolean
 }
 

@@ -5,7 +5,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosResponse, isAxiosError, AxiosError } from "axios";
 import axios from "../axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { TwoFactorResponse, QRCode, ConfirmedPasswordStatus } from "../types/models/TwoFactorAuthentication";
+import { TwoFactorResponse, QRCode, ConfirmPasswordStatusResponse } from "../types/models/TwoFactorAuthentication";
 import { StatusCode } from "../types/enums/StatusCode";
 import { UserProfile } from "../types/models/UserProfile";
 import { Resource } from "../types/resources/Resource";
@@ -204,7 +204,7 @@ export default class ProfileService {
 
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
-      if (response.status == StatusCode.OK) {
+      if (response.status == StatusCode.OK || response.status == StatusCode.Created) {
         result.success = true;
       } else {
         result.success = false;
@@ -223,15 +223,15 @@ export default class ProfileService {
     }
   }
 
-  public async TwoFactorConfirmedPasswordStatus(): Promise<ServiceResponse<ConfirmedPasswordStatus | null>> {
-    const result: ServiceResponse<ConfirmedPasswordStatus | null> = {
+  public async TwoFactorConfirmPasswordStatus(): Promise<ServiceResponse<ConfirmPasswordStatusResponse | null>> {
+    const result: ServiceResponse<ConfirmPasswordStatusResponse | null> = {
       success: false,
     }
 
     try {
       const url = route('password.confirmation', undefined, false, this.ziggyRoute);
 
-      const response: AxiosResponse<ConfirmedPasswordStatus> = await axios.get(url);
+      const response: AxiosResponse<ConfirmPasswordStatusResponse> = await axios.get(url);
 
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
@@ -316,7 +316,33 @@ export default class ProfileService {
 
       const response: AxiosResponse<Array<string>> = await axios.get(url);
 
-      console.log(response);
+      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
+
+      result.success = true;
+      result.data = response.data;
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
+  public async twoFactorSecretKey(): Promise<ServiceResponse<any | null>> {
+    const result: ServiceResponse<any | null> = {
+      success: false,
+    }
+
+    try {
+      const url = route('two-factor.secret-key', undefined, false, this.ziggyRoute);
+
+      const response: AxiosResponse<any> = await axios.get(url);
+
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
       result.success = true;
