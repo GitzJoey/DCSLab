@@ -10,6 +10,7 @@ import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
 import AuthService from "../../services/AuthServices";
 import { useRouter } from "vue-router";
+import { LoginResponse } from "../../types/models/Auth";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -18,6 +19,7 @@ const authService = new AuthService();
 
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
+const requireTwoFactor = ref<boolean>(false);
 
 const loginForm = authService.useLoginForm();
 
@@ -28,8 +30,13 @@ onMounted(async () => {
 const onSubmit = async () => {
   loading.value = true;
 
-  loginForm.submit().then(() => {
-    router.push({ name: 'side-menu-dashboard-maindashboard' });
+  loginForm.submit().then((response: unknown) => {
+    let loginResp = response as LoginResponse;
+    if (loginResp.data.two_factor) {
+      console.log(response);
+    } else {
+      router.push({ name: 'side-menu-dashboard-maindashboard' });
+    }
   }).catch(error => {
     console.error(error.response.data.message);
   }).finally(() => {
