@@ -4,6 +4,12 @@
         "email": "Email",
         "password": "Password",
         "remember_me": "Ingat Aku",
-        "forgot_pass": "Lupa Password"
+        "forgot_pass": "Lupa Password",
+        "2fa": {
+            "label": "Tantangan Dua Faktor",
+            "label_description": "",
+            "code": "Kode",
+            "recovery_code": "Kode Pemulihan"
+        }
     }
 }

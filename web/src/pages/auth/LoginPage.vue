@@ -4,7 +4,7 @@ import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
 import illustrationUrl from "../../assets/images/illustration.svg";
-import { FormInput, FormCheck } from "../../base-components/Form";
+import { FormLabel, FormInput, FormCheck } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -22,6 +22,7 @@ const loading = ref<boolean>(false);
 const requireTwoFactor = ref<boolean>(false);
 
 const loginForm = authService.useLoginForm();
+const twoFactorLoginForm = authService.useTwoFactorLoginForm();
 
 onMounted(async () => {
   authService.ensureCSRF();
@@ -33,7 +34,7 @@ const onSubmit = async () => {
   loginForm.submit().then((response: unknown) => {
     let loginResp = response as LoginResponse;
     if (loginResp.data.two_factor) {
-      console.log(response);
+      requireTwoFactor.value = true;
     } else {
       router.push({ name: 'side-menu-dashboard-maindashboard' });
     }
@@ -43,6 +44,19 @@ const onSubmit = async () => {
     loading.value = false;
   });
 };
+
+const onTwoFactorLoginSubmit = async () => {
+  loading.value = true;
+
+  twoFactorLoginForm.submit().then((response: unknown) => {
+    console.log(response);
+    router.push({ name: 'side-menu-dashboard-maindashboard' });
+  }).catch(error => {
+    console.error(error.response.data.message);
+  }).finally(() => {
+    loading.value = false;
+  });
+}
 </script>
 
 <template>
@@ -81,7 +95,7 @@ const onSubmit = async () => {
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
                 &nbsp;
               </div>
-              <form id="loginForm" @submit.prevent="onSubmit">
+              <form v-if="!requireTwoFactor" id="loginForm" @submit.prevent="onSubmit">
                 <div class="mt-8 intro-x">
                   <FormInput v-model="loginForm.email" type="text" name="email"
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
@@ -114,6 +128,23 @@ const onSubmit = async () => {
                   <Button variant="outline-secondary" class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
                     @click="router.push({ name: 'register' })">
                     {{ t("components.buttons.register") }}
+                  </Button>
+                </div>
+              </form>
+              <form v-else id="twoFactorLoginForm" @submit.prevent="onTwoFactorLoginSubmit">
+                <div class="mt-8 intro-x">
+                  <FormLabel html-for="two_factor_challenge">
+                    {{ t('views.login.fields.2fa.label') }}
+                  </FormLabel>
+                  <FormInput v-model="twoFactorLoginForm.code" type="text" name="code"
+                    class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
+                    :class="{ 'border-danger': twoFactorLoginForm.invalid('code') }"
+                    :placeholder="t('views.login.fields.2fa.code')" @focus="twoFactorLoginForm.forgetError('code')" />
+                  <span class="ml-1 text-danger">{{ twoFactorLoginForm.errors.code }}</span>
+                </div>
+                <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
+                  <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
+                    {{ t("components.buttons.login") }}
                   </Button>
                 </div>
               </form>

@@ -6,6 +6,12 @@
         "remember_me": "Remember Me",
         "forgot_pass": "Forgot Password",
         "terms_and_cond": "Terms & Condition",
-        "privacy_policy": "Privacy Policy"
+        "privacy_policy": "Privacy Policy",
+        "2fa": {
+            "label": "Two Factor Challenge",
+            "label_description": "",
+            "code": "Code",
+            "recovery_code": "Recovery Code"
+        }
     }
 }

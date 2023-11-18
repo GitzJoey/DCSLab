@@ -28,6 +28,7 @@ return [
                 'user/two-factor-qr-code',
                 'user/two-factor-recovery-codes',
                 'user/two-factor-secret-key',
+                'two-factor-challenge'
             ],
 
     'allowed_methods' => ['*'],

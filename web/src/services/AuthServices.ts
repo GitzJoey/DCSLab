@@ -41,6 +41,16 @@ export default class AuthService {
         return form;
     }
 
+    public useTwoFactorLoginForm() {
+        client.axios().defaults.withCredentials = true;
+        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/two-factor-challenge', {
+            code: '',
+            recovery_code: '',
+        });
+
+        return form;
+    }
+
     public useRegisterForm() {
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/register', {
