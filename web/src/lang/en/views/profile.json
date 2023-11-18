@@ -43,8 +43,13 @@
             "recovery-codes": "Recovery Codes",
             "recovery-codes_description_1": "",
             "recovery-codes_description_2": "",
+            "secret-key": "Secret Key",
+            "secret-key_description_1": "",
+            "secret-key_description_2": "",
             "confirm_password": "Confirm Password",
-            "confirm_password_error": "The provided password was incorrect."
+            "confirm_password_error": "The Provided Password Was Incorrect.",
+            "confirm_2fa_auth": "Code From Google Authenticator",
+            "confirm_2fa_auth_error": "The Provided Code Was Incorrect."
         }
     },
     "tooltip": {

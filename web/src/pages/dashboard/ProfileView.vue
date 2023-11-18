@@ -25,7 +25,7 @@ import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
-import { TwoFactorResponse, QRCode, ConfirmPasswordStatusResponse } from "../../types/models/TwoFactorAuthentication";
+import { TwoFactorResponse, QRCode, ConfirmPasswordStatusResponse, SecretKeyResponse } from "../../types/models/TwoFactorAuthentication";
 import { UserProfile } from "../../types/models/UserProfile";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Dialog } from "../../base-components/Headless";
@@ -94,6 +94,7 @@ const twoFactorConfirmPasswordErrorText = ref<string>('');
 const twoFactorConfirmPasswordText = ref<string>('');
 const twoFactorCode = ref<string>('');
 const twoFactorRecoveryCodes = ref<Array<string>>([]);
+const twoFactorSecretKey = ref<string>('');
 const twoFactorConfirmPasswordStatus = ref<ConfirmPasswordStatusResponse>({
     confirmed: false
 });
@@ -202,9 +203,13 @@ const setTwoFactorSection = () => {
     if (userContext.value.two_factor) {
         twoFactorAuthStatus.value = true;
         showQRCodeField.value = true;
+        showRecoveryCodesField.value = true;
+        showSecretKeyField.value = true;
     } else {
         twoFactorAuthStatus.value = false;
         showQRCodeField.value = false;
+        showRecoveryCodesField.value = true;
+        showSecretKeyField.value = true;
     }
 }
 
@@ -271,9 +276,13 @@ const showRecoveryCodes = async () => {
 }
 
 const showSecretKey = async () => {
-    let response: ServiceResponse<any | null> = await profileServices.twoFactorSecretKey();
+    let response: ServiceResponse<SecretKeyResponse | null> = await profileServices.twoFactorSecretKey();
 
-    console.log(response);
+    if (response.success) {
+        if (response.data) {
+            twoFactorSecretKey.value = response.data.secretKey;
+        }
+    }
 }
 
 const checkConfirmPasswordStatus = async () => {
@@ -684,8 +693,24 @@ watchEffect(() => {
                                     </template>
                                 </div>
                             </div>
+                            <br />
+                            <div v-if="showSecretKeyField">
+                                <FormLabel html-for="secretkey_2fa">
+                                    {{ t('views.profile.fields.2fa.secret-key') }}
+                                </FormLabel>
+                                <div>
+                                    {{ twoFactorSecretKey }}
+                                </div>
+                            </div>
+                            <br />
                             <div>
-                                <FormInput id="twoFactorCode" v-model="twoFactorCode" name="twoFactorConfirmPasswordText" />
+                                <FormLabel html-for="code_2fa">
+                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
+                                </FormLabel>
+                                <FormInput id="twoFactorCode" v-model="twoFactorCode" name="twoFactorCode" />
+                                <span class="text-danger">
+                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth_error') }}
+                                </span>
                                 <Button type="button" variant="primary"
                                     @click="() => { doConfirmTwoFactorAuthentication(); }" class="mt-2 w-24">
                                     {{ t('components.buttons.submit') }}

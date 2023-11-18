@@ -5,7 +5,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosResponse, isAxiosError, AxiosError } from "axios";
 import axios from "../axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { TwoFactorResponse, QRCode, ConfirmPasswordStatusResponse } from "../types/models/TwoFactorAuthentication";
+import { TwoFactorResponse, QRCode, ConfirmPasswordStatusResponse, SecretKeyResponse } from "../types/models/TwoFactorAuthentication";
 import { StatusCode } from "../types/enums/StatusCode";
 import { UserProfile } from "../types/models/UserProfile";
 import { Resource } from "../types/resources/Resource";
@@ -333,15 +333,15 @@ export default class ProfileService {
     }
   }
 
-  public async twoFactorSecretKey(): Promise<ServiceResponse<any | null>> {
-    const result: ServiceResponse<any | null> = {
+  public async twoFactorSecretKey(): Promise<ServiceResponse<SecretKeyResponse | null>> {
+    const result: ServiceResponse<SecretKeyResponse | null> = {
       success: false,
     }
 
     try {
       const url = route('two-factor.secret-key', undefined, false, this.ziggyRoute);
 
-      const response: AxiosResponse<any> = await axios.get(url);
+      const response: AxiosResponse<SecretKeyResponse> = await axios.get(url);
 
       if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 

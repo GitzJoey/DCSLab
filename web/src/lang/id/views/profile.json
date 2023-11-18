@@ -43,8 +43,13 @@
             "recovery-codes": "Recovery Codes",
             "recovery-codes_description_1": "",
             "recovery-codes_description_2": "",
+            "secret-key": "Kunci Rahasia",
+            "secret-key_description_1": "",
+            "secret-key_description_2": "",
             "confirm_password": "Konfirmasi Password",
-            "confirm_password_error": "Kata Sandi Yang Diberikan Salah."
+            "confirm_password_error": "Kata Sandi Yang Diberikan Salah.",
+            "confirm_2fa_auth": "Kode Dari Google Authenticator",
+            "confirm_2fa_auth_error": "Kode Yang Diberikan Salah."
         }
     },
     "tooltip": {
