@@ -682,6 +682,20 @@ watchEffect(() => {
                                 <br />
                                 <br />
                             </div>
+                            <br />
+                            <div>
+                                <FormLabel html-for="code_2fa">
+                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
+                                </FormLabel>
+                                <FormInput id="twoFactorCode" v-model="twoFactorCode" name="twoFactorCode" />
+                                <span class="text-danger">
+                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth_error') }}
+                                </span>
+                                <Button type="button" variant="primary"
+                                    @click="() => { doConfirmTwoFactorAuthentication(); }" class="mt-2 w-24">
+                                    {{ t('components.buttons.submit') }}
+                                </Button>
+                            </div>
                             <div v-if="showRecoveryCodesField">
                                 <FormLabel html-for="recoverycodes_2fa">
                                     {{ t('views.profile.fields.2fa.recovery-codes') }}
@@ -702,20 +716,6 @@ watchEffect(() => {
                                     {{ twoFactorSecretKey }}
                                 </div>
                             </div>
-                            <br />
-                            <div>
-                                <FormLabel html-for="code_2fa">
-                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
-                                </FormLabel>
-                                <FormInput id="twoFactorCode" v-model="twoFactorCode" name="twoFactorCode" />
-                                <span class="text-danger">
-                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth_error') }}
-                                </span>
-                                <Button type="button" variant="primary"
-                                    @click="() => { doConfirmTwoFactorAuthentication(); }" class="mt-2 w-24">
-                                    {{ t('components.buttons.submit') }}
-                                </Button>
-                            </div>
                         </div>
                         <div class="pb-4">
 
@@ -733,10 +733,8 @@ watchEffect(() => {
                                                 v-model="twoFactorConfirmPasswordText" name="twoFactorConfirmPasswordText"
                                                 type="password"
                                                 :placeholder="t('views.profile.fields.2fa.confirm_password')" />
-                                            <span class="text-left text-danger"
-                                                v-if="twoFactorConfirmPasswordErrorText != ''">
-                                                {{ twoFactorConfirmPasswordErrorText }}
-                                            </span>
+                                            <FormErrorMessages v-if="twoFactorConfirmPasswordErrorText != ''"
+                                                :messages="twoFactorConfirmPasswordErrorText" />
                                         </div>
                                         <div class="flex gap-2 justify-center items-center">
                                             <Button type="button" variant="primary"
