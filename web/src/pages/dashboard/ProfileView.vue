@@ -93,6 +93,7 @@ const showTwoFactorConfirmPasswordDialog = ref<boolean>(false);
 const twoFactorConfirmPasswordErrorText = ref<string>('');
 const twoFactorConfirmPasswordText = ref<string>('');
 const twoFactorCode = ref<string>('');
+const twoFactorCodeErrorText = ref<string>('');
 const twoFactorRecoveryCodes = ref<Array<string>>([]);
 const twoFactorSecretKey = ref<string>('');
 const twoFactorConfirmPasswordStatus = ref<ConfirmPasswordStatusResponse>({
@@ -208,8 +209,8 @@ const setTwoFactorSection = () => {
     } else {
         twoFactorAuthStatus.value = false;
         showQRCodeField.value = false;
-        showRecoveryCodesField.value = true;
-        showSecretKeyField.value = true;
+        showRecoveryCodesField.value = false;
+        showSecretKeyField.value = false;
     }
 }
 
@@ -255,8 +256,11 @@ const doConfirmTwoFactorAuthentication = async () => {
     let code = twoFactorCode.value;
     let response: ServiceResponse<any | null> = await profileServices.TwoFactorAuthenticationConfirmed(code);
 
-    console.log('confirmTwoFactorAuthentication');
-    console.log(response);
+    if (response.success) {
+
+    } else {
+        twoFactorCodeErrorText.value = t('views.profile.fields.2fa.confirm_2fa_auth_error');
+    }
 }
 
 const showQR = async () => {
@@ -348,20 +352,6 @@ watchEffect(() => {
         setTwoFactorSection();
 
         loading.value = false;
-    }
-});
-
-watchEffect(() => {
-    if (showQRCodeField.value) {
-        showQR();
-    }
-
-    if (showRecoveryCodesField.value) {
-        showRecoveryCodes();
-    }
-
-    if (showSecretKeyField.value) {
-        showSecretKey();
     }
 });
 // #endregion
@@ -672,84 +662,71 @@ watchEffect(() => {
                                     v-model="twoFactorAuthStatus" />
                             </FormSwitch>
                         </div>
-                        <div class="pb-4">
-                            <div v-if="showQRCodeField">
-                                <img v-html="qrCode.svg" alt="QR Code" />
-                                <br />
-                                {{ t('views.profile.fields.2fa.qr-code_description_1') }}
-                                <br />
-                                {{ t('views.profile.fields.2fa.qr-code_description_2') }}
-                                <br />
-                                <br />
-                            </div>
+                        <div v-if="showQRCodeField" class="pb-4">
+                            <img v-html="qrCode.svg" alt="QR Code" />
                             <br />
+                            {{ t('views.profile.fields.2fa.qr-code_description_1') }}
+                            <br />
+                            {{ t('views.profile.fields.2fa.qr-code_description_2') }}
+                            <br />
+                            <br />
+                            <FormLabel html-for="code_2fa">
+                                {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
+                            </FormLabel>
+                            <FormInput id="twoFactorCode" v-model="twoFactorCode" name="twoFactorCode" />
+                            <FormErrorMessages v-if="twoFactorCodeErrorText != ''" :messages="twoFactorCodeErrorText" />
+                            <br />
+                            <Button type="button" variant="primary" @click="() => { doConfirmTwoFactorAuthentication(); }"
+                                class="mt-2 w-24">
+                                {{ t('components.buttons.submit') }}
+                            </Button>
+                        </div>
+                        <div v-if="showRecoveryCodesField" class="pb-4">
+                            <FormLabel html-for="recoverycodes_2fa">
+                                {{ t('views.profile.fields.2fa.recovery-codes') }}
+                            </FormLabel>
                             <div>
-                                <FormLabel html-for="code_2fa">
-                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
-                                </FormLabel>
-                                <FormInput id="twoFactorCode" v-model="twoFactorCode" name="twoFactorCode" />
-                                <span class="text-danger">
-                                    {{ t('views.profile.fields.2fa.confirm_2fa_auth_error') }}
-                                </span>
-                                <Button type="button" variant="primary"
-                                    @click="() => { doConfirmTwoFactorAuthentication(); }" class="mt-2 w-24">
-                                    {{ t('components.buttons.submit') }}
-                                </Button>
-                            </div>
-                            <div v-if="showRecoveryCodesField">
-                                <FormLabel html-for="recoverycodes_2fa">
-                                    {{ t('views.profile.fields.2fa.recovery-codes') }}
-                                </FormLabel>
-                                <div>
-                                    <template v-for="(rc, rcIdx) in twoFactorRecoveryCodes">
-                                        <span class="italic">{{ rcIdx + 1 }}. {{ rc }}</span>
-                                        <br />
-                                    </template>
-                                </div>
-                            </div>
-                            <br />
-                            <div v-if="showSecretKeyField">
-                                <FormLabel html-for="secretkey_2fa">
-                                    {{ t('views.profile.fields.2fa.secret-key') }}
-                                </FormLabel>
-                                <div>
-                                    {{ twoFactorSecretKey }}
-                                </div>
+                                <template v-for="(rc, rcIdx) in twoFactorRecoveryCodes">
+                                    <span class="italic">{{ rcIdx + 1 }}. {{ rc }}</span>
+                                    <br />
+                                </template>
                             </div>
                         </div>
-                        <div class="pb-4">
-
+                        <div v-if="showSecretKeyField" class="pb-4">
+                            <FormLabel html-for="secretkey_2fa">
+                                {{ t('views.profile.fields.2fa.secret-key') }}
+                            </FormLabel>
+                            <div>
+                                {{ twoFactorSecretKey }}
+                            </div>
                         </div>
-                        <div class="pb-4">
-                            <Dialog staticBackdrop :open="showTwoFactorConfirmPasswordDialog"
-                                @close="() => { cancelTwoFactorConfirmPassword(); }">
-                                <Dialog.Panel class="px-5 py-10">
-                                    <div class="text-center">
-                                        <div class="mb-5">
-                                            <FormLabel html-for="twoFactorConfirmPasswordText">
-                                                {{ t('views.profile.fields.2fa.confirm_password') }}
-                                            </FormLabel>
-                                            <FormInput id="twoFactorConfirmPasswordText"
-                                                v-model="twoFactorConfirmPasswordText" name="twoFactorConfirmPasswordText"
-                                                type="password"
-                                                :placeholder="t('views.profile.fields.2fa.confirm_password')" />
-                                            <FormErrorMessages v-if="twoFactorConfirmPasswordErrorText != ''"
-                                                :messages="twoFactorConfirmPasswordErrorText" />
-                                        </div>
-                                        <div class="flex gap-2 justify-center items-center">
-                                            <Button type="button" variant="primary"
-                                                @click="() => { submitTwoFactorConfirmPassword(); }" class="w-24">
-                                                {{ t('components.buttons.submit') }}
-                                            </Button>
-                                            <Button type="button" variant="primary"
-                                                @click="() => { cancelTwoFactorConfirmPassword(); }" class="w-24">
-                                                {{ t('components.buttons.cancel') }}
-                                            </Button>
-                                        </div>
+                        <Dialog staticBackdrop :open="showTwoFactorConfirmPasswordDialog"
+                            @close="() => { cancelTwoFactorConfirmPassword(); }">
+                            <Dialog.Panel class="px-5 py-10">
+                                <div class="text-center">
+                                    <div class="mb-5">
+                                        <FormLabel html-for="twoFactorConfirmPasswordText">
+                                            {{ t('views.profile.fields.2fa.confirm_password') }}
+                                        </FormLabel>
+                                        <FormInput id="twoFactorConfirmPasswordText" v-model="twoFactorConfirmPasswordText"
+                                            name="twoFactorConfirmPasswordText" type="password"
+                                            :placeholder="t('views.profile.fields.2fa.confirm_password')" />
+                                        <FormErrorMessages v-if="twoFactorConfirmPasswordErrorText != ''"
+                                            :messages="twoFactorConfirmPasswordErrorText" />
                                     </div>
-                                </Dialog.Panel>
-                            </Dialog>
-                        </div>
+                                    <div class="flex gap-2 justify-center items-center">
+                                        <Button type="button" variant="primary"
+                                            @click="() => { submitTwoFactorConfirmPassword(); }" class="w-24">
+                                            {{ t('components.buttons.submit') }}
+                                        </Button>
+                                        <Button type="button" variant="primary"
+                                            @click="() => { cancelTwoFactorConfirmPassword(); }" class="w-24">
+                                            {{ t('components.buttons.cancel') }}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </Dialog.Panel>
+                        </Dialog>
                     </div>
                 </template>
             </TwoColumnsLayout>
