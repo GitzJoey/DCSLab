@@ -38,8 +38,10 @@
         "2fa": {
             "status": "2FA Authentication Status",
             "qr-code": "QR Code",
-            "qr-code_description_1": "Please scan this QR Code in your Google Authenticator App",
-            "qr-code_description_2": "Download Google Authenticator in Google Play",
+            "qr-code_description_1": "Please Scan This QR Code In Your Google Authenticator App",
+            "qr-code_description_2": "Download Google Authenticator In Google Play",
+            "qr-code_description_3": "Then Please Input The Code Displayed In Google Authenticator App",
+            "qr-code_description_4": "",
             "recovery-codes": "Recovery Codes",
             "recovery-codes_description_1": "",
             "recovery-codes_description_2": "",

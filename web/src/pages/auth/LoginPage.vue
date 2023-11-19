@@ -4,7 +4,7 @@ import DarkModeSwitcher from "../../components/DarkModeSwitcher";
 import MainColorSwitcher from "../../components/MainColorSwitcher";
 import logoUrl from "../../assets/images/logo.svg";
 import illustrationUrl from "../../assets/images/illustration.svg";
-import { FormLabel, FormInput, FormCheck } from "../../base-components/Form";
+import { FormLabel, FormInput, FormCheck, FormErrorMessages } from "../../base-components/Form";
 import Button from "../../base-components/Button";
 import { useI18n } from "vue-i18n";
 import LoadingOverlay from "../../base-components/LoadingOverlay";
@@ -100,12 +100,12 @@ const onTwoFactorLoginSubmit = async () => {
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
                     :class="{ 'border-danger': loginForm.invalid('email') }" :placeholder="t('views.login.fields.email')"
                     @focus="loginForm.forgetError('email')" />
-                  <span class="ml-1 text-danger">{{ loginForm.errors.email }}</span>
+                  <FormErrorMessages :messages="loginForm.errors.email" />
                   <FormInput v-model="loginForm.password" type="password" name="password"
                     class="block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]"
                     :class="{ 'border-danger': loginForm.invalid('password') }"
                     :placeholder="t('views.login.fields.password')" @focus="loginForm.forgetError('password')" />
-                  <span class="ml-1 text-danger">{{ loginForm.errors.password }}</span>
+                  <FormErrorMessages :messages="loginForm.errors.password" />
                 </div>
                 <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
@@ -116,9 +116,9 @@ const onTwoFactorLoginSubmit = async () => {
                       </FormCheck.Label>
                     </FormCheck>
                   </div>
-                  <RouterLink to="/auth/forgot-password">{{
-                    t("views.login.fields.forgot_pass")
-                  }}</RouterLink>
+                  <RouterLink to="/auth/forgot-password">
+                    {{ t("views.login.fields.forgot_pass") }}
+                  </RouterLink>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
@@ -139,7 +139,7 @@ const onTwoFactorLoginSubmit = async () => {
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
                     :class="{ 'border-danger': twoFactorLoginForm.invalid('code') }"
                     :placeholder="t('views.login.fields.2fa.code')" @focus="twoFactorLoginForm.forgetError('code')" />
-                  <span class="ml-1 text-danger">{{ twoFactorLoginForm.errors.code }}</span>
+                  <FormErrorMessages :messages="twoFactorLoginForm.errors.code" />
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">

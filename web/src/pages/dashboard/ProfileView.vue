@@ -21,6 +21,7 @@ import { CardState } from "../../types/enums/CardState";
 import posSystemImage from "../../assets/images/pos_system.png";
 import wareHouseImage from "../../assets/images/warehouse_system.png";
 import accountingImage from "../../assets/images/accounting_system.jpg";
+import googlePlayBadge from "../../assets/images/google-play-badge.png";
 import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
@@ -200,18 +201,10 @@ const hasRoleACCOwner = () => {
     return result;
 };
 
-const setTwoFactorSection = () => {
-    if (userContext.value.two_factor) {
-        twoFactorAuthStatus.value = true;
-        showQRCodeField.value = true;
-        showRecoveryCodesField.value = true;
-        showSecretKeyField.value = true;
-    } else {
-        twoFactorAuthStatus.value = false;
-        showQRCodeField.value = false;
-        showRecoveryCodesField.value = false;
-        showSecretKeyField.value = false;
-    }
+const setTwoFactorAuthStatus = () => {
+    twoFactorAuthStatus.value = userContext.value.two_factor;
+
+    showQR();
 }
 
 const setTwoFactor = async (event: Event) => {
@@ -234,30 +227,23 @@ const setTwoFactorWithConfirmPassword = async () => {
 
 const setTwoFactorWithoutOrAfterConfirmPassword = async () => {
     if (twoFactorAuthStatus.value) {
-        let enableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.enableTwoFactor();
-
-        if (enableTwoFactorResponse.success) {
-            showQRCodeField.value = true;
-            showRecoveryCodesField.value = true;
-            showSecretKeyField.value = true;
-        }
+        await profileServices.enableTwoFactor();
+        await showQR();
     } else {
-        let disableTwoFactorResponse: ServiceResponse<TwoFactorResponse | null> = await profileServices.disableTwoFactor();
-
-        if (disableTwoFactorResponse.success) {
-            showQRCodeField.value = false;
-            showRecoveryCodesField.value = false;
-            showSecretKeyField.value = false;
-        }
+        await profileServices.disableTwoFactor();
+        await reloadUserContext();
     }
 }
 
 const doConfirmTwoFactorAuthentication = async () => {
     let code = twoFactorCode.value;
-    let response: ServiceResponse<any | null> = await profileServices.TwoFactorAuthenticationConfirmed(code);
+    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorAuthenticationConfirmed(code);
 
     if (response.success) {
+        showQRCodeField.value = false;
 
+        await showRecoveryCodes();
+        await showSecretKey();
     } else {
         twoFactorCodeErrorText.value = t('views.profile.fields.2fa.confirm_2fa_auth_error');
     }
@@ -268,6 +254,7 @@ const showQR = async () => {
 
     if (response.success && response.data) {
         qrCode.value = response.data;
+        showQRCodeField.value = true;
     }
 }
 
@@ -276,6 +263,7 @@ const showRecoveryCodes = async () => {
 
     if (response.success && response.data) {
         twoFactorRecoveryCodes.value = response.data;
+        showRecoveryCodesField.value = true;
     }
 }
 
@@ -285,6 +273,7 @@ const showSecretKey = async () => {
     if (response.success) {
         if (response.data) {
             twoFactorSecretKey.value = response.data.secretKey;
+            showSecretKeyField.value = true;
         }
     }
 }
@@ -349,7 +338,7 @@ const onSubmitUpdateToken = async () => {
 watchEffect(() => {
     if (userContextIsLoaded.value) {
         setFormData();
-        setTwoFactorSection();
+        setTwoFactorAuthStatus();
 
         loading.value = false;
     }
@@ -669,6 +658,11 @@ watchEffect(() => {
                             <br />
                             {{ t('views.profile.fields.2fa.qr-code_description_2') }}
                             <br />
+                            <img :src="googlePlayBadge" alt="Google Play" width="120" height="120" />
+                            <br />
+                            {{ t('views.profile.fields.2fa.qr-code_description_3') }}
+                            <br />
+                            {{ t('views.profile.fields.2fa.qr-code_description_4') }}
                             <br />
                             <FormLabel html-for="code_2fa">
                                 {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}

@@ -250,15 +250,15 @@ export default class ProfileService {
     }
   }
 
-  public async TwoFactorAuthenticationConfirmed(code: string): Promise<ServiceResponse<any | null>> {
-    const result: ServiceResponse<any | null> = {
+  public async TwoFactorAuthenticationConfirmed(code: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
+    const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
     }
 
     try {
       const url = route('two-factor.confirm', undefined, false, this.ziggyRoute);
 
-      const response: AxiosResponse<any> = await axios.post(url, {
+      const response: AxiosResponse<TwoFactorResponse | null> = await axios.post(url, {
         code: code
       });
 
