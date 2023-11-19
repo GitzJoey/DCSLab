@@ -117,6 +117,10 @@ class UserRequest extends FormRequest
                 'ic_num' => 'required',
                 'status' => [new Enum(RecordStatus::class)],
                 'country' => 'required',
+
+                'api_token' => 'nullable|boolean',
+                'reset_password' => 'nullable|boolean',
+                'reset_2fa' => 'nullable|boolean',
             ];
 
             return array_merge($rules_update, $nullableArr);

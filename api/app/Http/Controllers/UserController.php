@@ -203,6 +203,10 @@ class UserController extends BaseController
             if (array_key_exists('reset_password', $request)) {
                 $this->userActions->resetPassword(($user));
             }
+
+            if (array_key_exists('reset_2fa', $request)) {
+                $this->userActions->resetTwoFactorAuth(($user));
+            }
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

@@ -20,7 +20,8 @@
         "roles": "Roles",
         "settings": "Settings",
         "tokens_management": "Tokens Management",
-        "password_management": "Password Management"
+        "password_management": "Password Management",
+        "two_factor_auth": "Verifikasi Dua Langkah"
     },
     "fields": {
         "name": "Nama",
@@ -49,6 +50,7 @@
             "reset": "Reset"
         },
         "reset_password": "Reset Password",
-        "email_reset_password": "Kirim Email"
+        "email_reset_password": "Kirim Email",
+        "reset_2fa": "Reset Verifikasi Dua Langkah"
     }
 }

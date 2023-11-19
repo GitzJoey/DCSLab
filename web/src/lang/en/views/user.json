@@ -20,7 +20,8 @@
         "roles": "Roles",
         "settings": "Settings",
         "tokens_management": "Tokens Management",
-        "password_management": "Password Management"
+        "password_management": "Password Management",
+        "two_factor_auth": "Two Factor Authentication"
     },
     "fields": {
         "name": "Name",
@@ -50,6 +51,7 @@
             "reset": "Reset Tokens"
         },
         "reset_password": "Reset Password",
-        "email_reset_password": "Send Email"
+        "email_reset_password": "Send Email",
+        "reset_2fa": "Reset Two Factor Authentication"
     }
 }

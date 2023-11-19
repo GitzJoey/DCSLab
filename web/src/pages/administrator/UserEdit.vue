@@ -55,6 +55,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: t('views.user.field_groups.settings'), state: CardState.Expanded },
     { title: t('views.user.field_groups.tokens_management'), state: CardState.Expanded },
     { title: t('views.user.field_groups.password_management'), state: CardState.Expanded },
+    { title: t('views.user.field_groups.two_factor_auth'), state: CardState.Expanded },
     { title: '', state: CardState.Hidden, id: 'button' }
 ]);
 
@@ -339,6 +340,18 @@ watch(
                         </FormLabel>
                         <FormSwitch>
                             <FormSwitch.Input type="checkbox" v-model="userForm.reset_password" />
+                        </FormSwitch>
+                    </div>
+                </div>
+            </template>
+            <template #card-items-6>
+                <div class="p-5">
+                    <div class="pb-4">
+                        <FormLabel html-for="reset_2fa">
+                            {{ t('views.user.fields.reset_2fa') }}
+                        </FormLabel>
+                        <FormSwitch>
+                            <FormSwitch.Input type="checkbox" v-model="userForm.reset_2fa" />
                         </FormSwitch>
                     </div>
                 </div>

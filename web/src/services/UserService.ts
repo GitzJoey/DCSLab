@@ -164,6 +164,7 @@ export default class UserService {
 
             tokens_reset: false,
             reset_password: false,
+            reset_2fa: false,
         });
 
         return form;
