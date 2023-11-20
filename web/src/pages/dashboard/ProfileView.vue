@@ -203,8 +203,6 @@ const hasRoleACCOwner = () => {
 
 const setTwoFactorAuthStatus = () => {
     twoFactorAuthStatus.value = userContext.value.two_factor;
-
-    showQR();
 }
 
 const setTwoFactor = async (event: Event) => {
