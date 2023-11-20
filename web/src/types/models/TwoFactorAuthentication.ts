@@ -8,10 +8,6 @@ export interface QRCode {
     url: string,
 }
 
-export interface ConfirmPasswordStatusResponse {
-    confirmed: boolean
-}
-
 export interface SecretKeyResponse {
     secretKey: string
 }

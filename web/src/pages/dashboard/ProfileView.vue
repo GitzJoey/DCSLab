@@ -26,7 +26,8 @@ import { Check } from "lucide-vue-next";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
-import { TwoFactorResponse, QRCode, ConfirmPasswordStatusResponse, SecretKeyResponse } from "../../types/models/TwoFactorAuthentication";
+import { TwoFactorResponse, QRCode, SecretKeyResponse } from "../../types/models/TwoFactorAuthentication";
+import { ConfirmPasswordStatusResponse } from "../../types/models/ConfirmPassword";
 import { UserProfile } from "../../types/models/UserProfile";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Dialog } from "../../base-components/Headless";
@@ -90,16 +91,17 @@ const qrCode = ref<QRCode>({
     svg: '',
     url: '',
 });
-const showTwoFactorConfirmPasswordDialog = ref<boolean>(false);
-const twoFactorConfirmPasswordErrorText = ref<string>('');
-const twoFactorConfirmPasswordText = ref<string>('');
 const twoFactorCode = ref<string>('');
 const twoFactorCodeErrorText = ref<string>('');
 const twoFactorRecoveryCodes = ref<Array<string>>([]);
 const twoFactorSecretKey = ref<string>('');
-const twoFactorConfirmPasswordStatus = ref<ConfirmPasswordStatusResponse>({
+
+const confirmPasswordStatus = ref<ConfirmPasswordStatusResponse>({
     confirmed: false
 });
+const showConfirmPasswordDialog = ref<boolean>(false);
+const confirmPasswordErrorText = ref<string>('');
+const confirmPasswordText = ref<string>('');
 
 const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
 const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
@@ -209,9 +211,9 @@ const setTwoFactor = async (event: Event) => {
     let checked: boolean = (event.target as HTMLInputElement).checked;
     twoFactorAuthStatus.value = checked;
 
-    await checkConfirmPasswordStatus();
+    await doConfirmPassword();
 
-    if (twoFactorConfirmPasswordStatus.value.confirmed) {
+    if (confirmPasswordStatus.value.confirmed) {
         await setTwoFactorWithoutOrAfterConfirmPassword();
     } else {
         await setTwoFactorWithConfirmPassword();
@@ -219,8 +221,8 @@ const setTwoFactor = async (event: Event) => {
 }
 
 const setTwoFactorWithConfirmPassword = async () => {
-    twoFactorConfirmPasswordText.value = '';
-    showTwoFactorConfirmPasswordDialog.value = true;
+    confirmPasswordText.value = '';
+    showConfirmPasswordDialog.value = true;
 }
 
 const setTwoFactorWithoutOrAfterConfirmPassword = async () => {
@@ -276,36 +278,39 @@ const showSecretKey = async () => {
     }
 }
 
-const checkConfirmPasswordStatus = async () => {
-    let response: ServiceResponse<ConfirmPasswordStatusResponse | null> = await profileServices.TwoFactorConfirmPasswordStatus();
+const doConfirmPassword = async () => {
+    let response: ServiceResponse<ConfirmPasswordStatusResponse | null> = await profileServices.confirmPasswordStatus();
 
     if (response.success && response.data) {
-        twoFactorConfirmPasswordStatus.value = response.data;
+        confirmPasswordStatus.value = response.data;
     }
+
+    if (!confirmPasswordStatus.value.confirmed) {
+        showConfirmPasswordDialog.value = true;
+        confirmPasswordErrorText.value = '';
+        confirmPasswordText.value = '';
+    }
+}
+
+const submitConfirmPassword = async () => {
+    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.confirmPassword(confirmPasswordText.value);
+
+    if (response.success) {
+        showConfirmPasswordDialog.value = false;
+    } else {
+        confirmPasswordErrorText.value = t('views.profile.fields.2fa.confirm_password_error');
+    }
+}
+
+const cancelConfirmPassword = async () => {
+    showConfirmPasswordDialog.value = false;
+    confirmPasswordErrorText.value = '';
+    confirmPasswordText.value = '';
 }
 
 const reloadUserContext = async () => {
     let userprofile = await profileServices.readProfile();
     userContextStore.setUserContext(userprofile.data as UserProfile);
-}
-
-const submitTwoFactorConfirmPassword = async () => {
-    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorConfirmPassword(twoFactorConfirmPasswordText.value);
-
-    if (response.success) {
-        await setTwoFactorWithoutOrAfterConfirmPassword();
-        showTwoFactorConfirmPasswordDialog.value = false;
-    } else {
-        twoFactorAuthStatus.value = false;
-
-        twoFactorConfirmPasswordErrorText.value = t('views.profile.fields.2fa.confirm_password_error');
-    }
-}
-
-const cancelTwoFactorConfirmPassword = async () => {
-    showTwoFactorConfirmPasswordDialog.value = false;
-    twoFactorAuthStatus.value = false;
-    twoFactorConfirmPasswordErrorText.value = '';
 }
 
 const sendEmailVerification = () => {
@@ -692,27 +697,27 @@ watchEffect(() => {
                                 {{ twoFactorSecretKey }}
                             </div>
                         </div>
-                        <Dialog staticBackdrop :open="showTwoFactorConfirmPasswordDialog"
-                            @close="() => { cancelTwoFactorConfirmPassword(); }">
+                        <Dialog staticBackdrop :open="showConfirmPasswordDialog"
+                            @close="() => { cancelConfirmPassword(); }">
                             <Dialog.Panel class="px-5 py-10">
                                 <div class="text-center">
                                     <div class="mb-5">
-                                        <FormLabel html-for="twoFactorConfirmPasswordText">
+                                        <FormLabel html-for="confirmPasswordText">
                                             {{ t('views.profile.fields.2fa.confirm_password') }}
                                         </FormLabel>
-                                        <FormInput id="twoFactorConfirmPasswordText" v-model="twoFactorConfirmPasswordText"
-                                            name="twoFactorConfirmPasswordText" type="password"
+                                        <FormInput id="confirmPasswordText" v-model="confirmPasswordText"
+                                            name="confirmPasswordText" type="password"
                                             :placeholder="t('views.profile.fields.2fa.confirm_password')" />
-                                        <FormErrorMessages v-if="twoFactorConfirmPasswordErrorText != ''"
-                                            :messages="twoFactorConfirmPasswordErrorText" />
+                                        <FormErrorMessages v-if="confirmPasswordErrorText != ''"
+                                            :messages="confirmPasswordErrorText" />
                                     </div>
                                     <div class="flex gap-2 justify-center items-center">
-                                        <Button type="button" variant="primary"
-                                            @click="() => { submitTwoFactorConfirmPassword(); }" class="w-24">
+                                        <Button type="button" variant="primary" @click="() => { submitConfirmPassword(); }"
+                                            class="w-24">
                                             {{ t('components.buttons.submit') }}
                                         </Button>
-                                        <Button type="button" variant="primary"
-                                            @click="() => { cancelTwoFactorConfirmPassword(); }" class="w-24">
+                                        <Button type="button" variant="primary" @click="() => { cancelConfirmPassword(); }"
+                                            class="w-24">
                                             {{ t('components.buttons.cancel') }}
                                         </Button>
                                     </div>

@@ -5,7 +5,8 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosResponse, isAxiosError, AxiosError } from "axios";
 import axios from "../axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { TwoFactorResponse, QRCode, ConfirmPasswordStatusResponse, SecretKeyResponse } from "../types/models/TwoFactorAuthentication";
+import { TwoFactorResponse, QRCode, SecretKeyResponse } from "../types/models/TwoFactorAuthentication";
+import { ConfirmPasswordStatusResponse } from "../types/models/ConfirmPassword";
 import { StatusCode } from "../types/enums/StatusCode";
 import { UserProfile } from "../types/models/UserProfile";
 import { Resource } from "../types/resources/Resource";
@@ -190,7 +191,7 @@ export default class ProfileService {
     }
   }
 
-  public async TwoFactorConfirmPassword(password: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
+  public async confirmPassword(password: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
     const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
     }
@@ -223,7 +224,7 @@ export default class ProfileService {
     }
   }
 
-  public async TwoFactorConfirmPasswordStatus(): Promise<ServiceResponse<ConfirmPasswordStatusResponse | null>> {
+  public async confirmPasswordStatus(): Promise<ServiceResponse<ConfirmPasswordStatusResponse | null>> {
     const result: ServiceResponse<ConfirmPasswordStatusResponse | null> = {
       success: false,
     }
