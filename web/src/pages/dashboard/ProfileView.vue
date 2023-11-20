@@ -87,6 +87,7 @@ const twoFactorAuthStatus = ref<boolean>(false);
 const showQRCodeField = ref<boolean>(false);
 const showRecoveryCodesField = ref<boolean>(false);
 const showSecretKeyField = ref<boolean>(false);
+
 const qrCode = ref<QRCode>({
     svg: '',
     url: '',
@@ -203,7 +204,7 @@ const hasRoleACCOwner = () => {
     return result;
 };
 
-const setTwoFactorAuthStatus = () => {
+const setTwoFactorAuthStatus = async () => {
     twoFactorAuthStatus.value = userContext.value.two_factor;
 }
 
@@ -250,11 +251,15 @@ const doConfirmTwoFactorAuthentication = async () => {
 }
 
 const showQR = async () => {
-    let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
+    await doConfirmPassword();
 
-    if (response.success && response.data) {
-        qrCode.value = response.data;
-        showQRCodeField.value = true;
+    if (confirmPasswordStatus.value.confirmed) {
+        let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
+
+        if (response.success && response.data) {
+            qrCode.value = response.data;
+            showQRCodeField.value = true;
+        }
     }
 }
 
@@ -338,10 +343,10 @@ const onSubmitUpdateToken = async () => {
 // #region Methods
 
 // #region Watchers
-watchEffect(() => {
+watchEffect(async () => {
     if (userContextIsLoaded.value) {
         setFormData();
-        setTwoFactorAuthStatus();
+        await setTwoFactorAuthStatus();
 
         loading.value = false;
     }
@@ -663,9 +668,10 @@ watchEffect(() => {
                             <br />
                             <img :src="googlePlayBadge" alt="Google Play" width="120" height="120" />
                             <br />
-                            {{ t('views.profile.fields.2fa.qr-code_description_3') }}
+                            {{ t('views.profile.fields.2fa.confirm_2fa_auth_description_1') }}
                             <br />
-                            {{ t('views.profile.fields.2fa.qr-code_description_4') }}
+                            {{ t('views.profile.fields.2fa.confirm_2fa_auth_description_2') }}
+                            <br />
                             <br />
                             <FormLabel html-for="code_2fa">
                                 {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}

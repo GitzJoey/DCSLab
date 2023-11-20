@@ -40,7 +40,7 @@
             "qr-code": "QR Code",
             "qr-code_description_1": "Silakan Pindai Kode QR Ini Di Aplikasi Google Authenticator Anda",
             "qr-code_description_2": "Unduh Google Authenticator di Google Play",
-            "qr-code_description_3": "Kemudian Silakan Masukkan Kode Yang Ditampilkan Di Aplikasi Google Authenticator",
+            "qr-code_description_3": "",
             "qr-code_description_4": "",
             "recovery-codes": "Recovery Codes",
             "recovery-codes_description_1": "",
@@ -50,6 +50,8 @@
             "secret-key_description_2": "",
             "confirm_password": "Konfirmasi Password",
             "confirm_password_error": "Kata Sandi Yang Diberikan Salah.",
+            "confirm_2fa_auth_description_1": "Otentikasi Dua Faktor Anda Juga Perlu Diaktifkan.",
+            "confirm_2fa_auth_description_2": "Silakan Masukkan Kode Yang Ditampilkan Di Aplikasi Google Authenticator",
             "confirm_2fa_auth": "Kode Dari Google Authenticator",
             "confirm_2fa_auth_error": "Kode Yang Diberikan Salah."
         }

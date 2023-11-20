@@ -40,7 +40,7 @@
             "qr-code": "QR Code",
             "qr-code_description_1": "Please Scan This QR Code In Your Google Authenticator App",
             "qr-code_description_2": "Download Google Authenticator In Google Play",
-            "qr-code_description_3": "Then Please Input The Code Displayed In Google Authenticator App",
+            "qr-code_description_3": "",
             "qr-code_description_4": "",
             "recovery-codes": "Recovery Codes",
             "recovery-codes_description_1": "",
@@ -50,6 +50,8 @@
             "secret-key_description_2": "",
             "confirm_password": "Confirm Password",
             "confirm_password_error": "The Provided Password Was Incorrect.",
+            "confirm_2fa_auth_description_1": "Your Two Factor Authentication Also Need To Be Activated.",
+            "confirm_2fa_auth_description_2": "Please Input The Code Displayed In Google Authenticator App",
             "confirm_2fa_auth": "Code From Google Authenticator",
             "confirm_2fa_auth_error": "The Provided Code Was Incorrect."
         }
