@@ -114,6 +114,10 @@ const loadData = async (ulid: string) => {
             theme: response.data.settings.theme,
             date_format: response.data.settings.date_format,
             time_format: response.data.settings.time_format,
+
+            tokens_reset: false,
+            reset_password: false,
+            reset_2fa: false,
         });
     }
 }
@@ -142,8 +146,18 @@ const handleExpandCard = (index: number) => {
     }
 }
 
-const onSubmit = async () => {
+const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
 
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+const onSubmit = async () => {
+    if (userForm.hasErrors) {
+        scrollToError(Object.keys(userForm.errors)[0]);
+    }
 };
 
 const resetForm = () => {
