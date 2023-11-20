@@ -10,7 +10,7 @@
             "label_description": "",
             "code": "Kode",
             "recovery_code": "Kode Pemulihan",
-            "use_recovery_code": "Menggunakan Recovery Codes"
+            "use_recovery_codes": "Menggunakan Recovery Codes"
         }
     }
 }

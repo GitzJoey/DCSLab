@@ -159,7 +159,7 @@ const onTwoFactorLoginSubmit = async () => {
                       <FormCheck.Input v-model="twoFactorRecoveryCodesMode" id="twoFactorRecoveryCodesMode"
                         type="checkbox" />
                       <FormCheck.Label html-for="twoFactorRecoveryCodesMode">
-                        Use Recovery Codes
+                        {{ t('views.login.fields.2fa.use_recovery_codes') }}
                       </FormCheck.Label>
                     </FormCheck>
                   </div>
