@@ -20,6 +20,7 @@ const authService = new AuthService();
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
 const requireTwoFactor = ref<boolean>(false);
+const twoFactorRecoveryCodesMode = ref<boolean>(false);
 
 const loginForm = authService.useLoginForm();
 const twoFactorLoginForm = authService.useTwoFactorLoginForm();
@@ -131,7 +132,7 @@ const onTwoFactorLoginSubmit = async () => {
                 </div>
               </form>
               <form v-else id="twoFactorLoginForm" @submit.prevent="onTwoFactorLoginSubmit">
-                <div class="mt-8 intro-x">
+                <div v-if="!twoFactorRecoveryCodesMode" class="mt-8 intro-x">
                   <FormLabel html-for="two_factor_challenge">
                     {{ t('views.login.fields.2fa.label') }}
                   </FormLabel>
@@ -140,6 +141,28 @@ const onTwoFactorLoginSubmit = async () => {
                     :class="{ 'border-danger': twoFactorLoginForm.invalid('code') }"
                     :placeholder="t('views.login.fields.2fa.code')" @focus="twoFactorLoginForm.forgetError('code')" />
                   <FormErrorMessages :messages="twoFactorLoginForm.errors.code" />
+                </div>
+                <div v-else class="mt-8 intro-x">
+                  <FormLabel html-for="two_factor_challenge">
+                    {{ t('views.login.fields.2fa.recovery_code') }}
+                  </FormLabel>
+                  <FormInput v-model="twoFactorLoginForm.recovery_code" type="text" name="recovery_code"
+                    class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
+                    :class="{ 'border-danger': twoFactorLoginForm.invalid('recovery_code') }"
+                    :placeholder="t('views.login.fields.2fa.recovery_code')"
+                    @focus="twoFactorLoginForm.forgetError('recovery_code')" />
+                  <FormErrorMessages :messages="twoFactorLoginForm.errors.recovery_code" />
+                </div>
+                <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
+                  <div class="flex items-center mr-auto">
+                    <FormCheck>
+                      <FormCheck.Input v-model="twoFactorRecoveryCodesMode" id="twoFactorRecoveryCodesMode"
+                        type="checkbox" />
+                      <FormCheck.Label html-for="twoFactorRecoveryCodesMode">
+                        Use Recovery Codes
+                      </FormCheck.Label>
+                    </FormCheck>
+                  </div>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">

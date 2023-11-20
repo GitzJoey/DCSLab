@@ -246,6 +246,7 @@ const doConfirmTwoFactorAuthentication = async () => {
     if (response.success) {
         showQRCodeField.value = false;
 
+        await reloadUserContext();
         await showRecoveryCodes();
         await showSecretKey();
     } else {
@@ -336,6 +337,8 @@ const closeConfirmPasswordDialog = async () => {
     confirmPasswordErrorText.value = '';
 
     confirmPasswordPurpose.value = '';
+
+    await reloadUserContext();
 }
 
 const reloadUserContext = async () => {
@@ -710,6 +713,11 @@ watchEffect(async () => {
                             </Button>
                         </div>
                         <div v-if="showRecoveryCodesField" class="pb-4">
+                            {{ t('views.profile.fields.2fa.recovery-codes_description_1') }}
+                            <br />
+                            {{ t('views.profile.fields.2fa.recovery-codes_description_2') }}
+                            <br />
+                            <br />
                             <FormLabel html-for="recoverycodes_2fa">
                                 {{ t('views.profile.fields.2fa.recovery-codes') }}
                             </FormLabel>
@@ -721,10 +729,15 @@ watchEffect(async () => {
                             </div>
                         </div>
                         <div v-if="showSecretKeyField" class="pb-4">
+                            {{ t('views.profile.fields.2fa.secret-key_description_1') }}
+                            <br />
+                            {{ t('views.profile.fields.2fa.secret-key_description_2') }}
+                            <br />
+                            <br />
                             <FormLabel html-for="secretkey_2fa">
                                 {{ t('views.profile.fields.2fa.secret-key') }}
                             </FormLabel>
-                            <div>
+                            <div class="italic">
                                 {{ twoFactorSecretKey }}
                             </div>
                         </div>
