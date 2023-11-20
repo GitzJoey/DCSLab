@@ -101,8 +101,9 @@ const confirmPasswordStatus = ref<ConfirmPasswordStatusResponse>({
     confirmed: false
 });
 const showConfirmPasswordDialog = ref<boolean>(false);
-const confirmPasswordErrorText = ref<string>('');
+const confirmPasswordPurpose = ref<'2FA' | 'QRCODE' | ''>('');
 const confirmPasswordText = ref<string>('');
+const confirmPasswordErrorText = ref<string>('');
 
 const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
 const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
@@ -212,17 +213,19 @@ const setTwoFactor = async (event: Event) => {
     let checked: boolean = (event.target as HTMLInputElement).checked;
     twoFactorAuthStatus.value = checked;
 
-    await doConfirmPassword();
+    await checkConfirmPasswordStatus();
 
     if (confirmPasswordStatus.value.confirmed) {
         await setTwoFactorWithoutOrAfterConfirmPassword();
     } else {
+        confirmPasswordPurpose.value = '2FA';
         await setTwoFactorWithConfirmPassword();
     }
 }
 
 const setTwoFactorWithConfirmPassword = async () => {
     confirmPasswordText.value = '';
+    confirmPasswordErrorText.value = '';
     showConfirmPasswordDialog.value = true;
 }
 
@@ -251,16 +254,29 @@ const doConfirmTwoFactorAuthentication = async () => {
 }
 
 const showQR = async () => {
-    await doConfirmPassword();
+    await checkConfirmPasswordStatus();
 
     if (confirmPasswordStatus.value.confirmed) {
-        let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
-
-        if (response.success && response.data) {
-            qrCode.value = response.data;
-            showQRCodeField.value = true;
-        }
+        await showQRWithoutOrAfterConfirmPassword();
+    } else {
+        confirmPasswordPurpose.value = 'QRCODE';
+        await showQRWithConfirmPassword();
     }
+}
+
+const showQRWithoutOrAfterConfirmPassword = async () => {
+    let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
+
+    if (response.success && response.data) {
+        qrCode.value = response.data;
+        showQRCodeField.value = true;
+    }
+}
+
+const showQRWithConfirmPassword = async () => {
+    confirmPasswordText.value = '';
+    confirmPasswordErrorText.value = '';
+    showConfirmPasswordDialog.value = true;
 }
 
 const showRecoveryCodes = async () => {
@@ -283,17 +299,11 @@ const showSecretKey = async () => {
     }
 }
 
-const doConfirmPassword = async () => {
+const checkConfirmPasswordStatus = async () => {
     let response: ServiceResponse<ConfirmPasswordStatusResponse | null> = await profileServices.confirmPasswordStatus();
 
     if (response.success && response.data) {
         confirmPasswordStatus.value = response.data;
-    }
-
-    if (!confirmPasswordStatus.value.confirmed) {
-        showConfirmPasswordDialog.value = true;
-        confirmPasswordErrorText.value = '';
-        confirmPasswordText.value = '';
     }
 }
 
@@ -301,16 +311,31 @@ const submitConfirmPassword = async () => {
     let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.confirmPassword(confirmPasswordText.value);
 
     if (response.success) {
-        showConfirmPasswordDialog.value = false;
+        switch (confirmPasswordPurpose.value) {
+            case '2FA':
+                await setTwoFactorWithoutOrAfterConfirmPassword();
+                break;
+            case 'QRCODE':
+                await showQRWithoutOrAfterConfirmPassword();
+                break;
+            case '':
+            default:
+                break;
+        }
+
+        await closeConfirmPasswordDialog();
     } else {
         confirmPasswordErrorText.value = t('views.profile.fields.2fa.confirm_password_error');
     }
 }
 
-const cancelConfirmPassword = async () => {
+const closeConfirmPasswordDialog = async () => {
     showConfirmPasswordDialog.value = false;
-    confirmPasswordErrorText.value = '';
+
     confirmPasswordText.value = '';
+    confirmPasswordErrorText.value = '';
+
+    confirmPasswordPurpose.value = '';
 }
 
 const reloadUserContext = async () => {
@@ -704,7 +729,7 @@ watchEffect(async () => {
                             </div>
                         </div>
                         <Dialog staticBackdrop :open="showConfirmPasswordDialog"
-                            @close="() => { cancelConfirmPassword(); }">
+                            @close="() => { closeConfirmPasswordDialog(); }">
                             <Dialog.Panel class="px-5 py-10">
                                 <div class="text-center">
                                     <div class="mb-5">
@@ -722,8 +747,8 @@ watchEffect(async () => {
                                             class="w-24">
                                             {{ t('components.buttons.submit') }}
                                         </Button>
-                                        <Button type="button" variant="primary" @click="() => { cancelConfirmPassword(); }"
-                                            class="w-24">
+                                        <Button type="button" variant="primary"
+                                            @click="() => { closeConfirmPasswordDialog(); }" class="w-24">
                                             {{ t('components.buttons.cancel') }}
                                         </Button>
                                     </div>
