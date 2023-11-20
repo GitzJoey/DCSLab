@@ -11,7 +11,8 @@
             "label": "Two Factor Challenge",
             "label_description": "",
             "code": "Code",
-            "recovery_code": "Recovery Code"
+            "recovery_code": "Recovery Code",
+            "use_recovery_code": "Use Recovery Codes"
         }
     }
 }

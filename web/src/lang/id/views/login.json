@@ -9,7 +9,8 @@
             "label": "Tantangan Dua Faktor",
             "label_description": "",
             "code": "Kode",
-            "recovery_code": "Kode Pemulihan"
+            "recovery_code": "Kode Pemulihan",
+            "use_recovery_code": "Menggunakan Recovery Codes"
         }
     }
 }
