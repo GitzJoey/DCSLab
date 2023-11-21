@@ -118,6 +118,7 @@ const onSubmit = async () => {
 
 const resetForm = () => {
     branchForm.reset();
+    branchForm.setErrors({});
 }
 // #endregion
 

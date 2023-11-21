@@ -13,9 +13,7 @@ import {
     FormTextarea,
     FormSelect,
     FormSwitch,
-    FormInline,
     FormInputCode,
-    FormFileUpload,
     FormErrorMessages,
 } from "../../base-components/Form";
 import { TwoColumnsLayoutCards } from "../../base-components/Form/FormLayout/TwoColumnsLayout.vue";
@@ -23,7 +21,6 @@ import { CardState } from "../../types/enums/CardState";
 import { DropDownOption } from "../../types/models/DropDownOption";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { ViewMode } from "../../types/enums/ViewMode";
-import { User } from "../../types/models/User";
 import Button from "../../base-components/Button";
 import { debounce } from "lodash";
 import Lucide from "../../base-components/Lucide";
@@ -107,6 +104,7 @@ const onSubmit = async () => {
 
 const resetForm = () => {
     companyForm.reset();
+    companyForm.setErrors({});
 }
 // #endregion
 

@@ -99,6 +99,7 @@ const onSubmit = async () => {
 
 const resetForm = () => {
     companyForm.reset();
+    companyForm.setErrors({});
 }
 // #endregion
 

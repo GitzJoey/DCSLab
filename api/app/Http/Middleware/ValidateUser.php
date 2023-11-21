@@ -47,13 +47,7 @@ class ValidateUser
             ], 401);
         }
 
-        if (! $profile->status == RecordStatus::INACTIVE->value) {
-            return response()->json([
-                'message' => __('rules.inactive_user')
-            ], 401);
-        }
-
-        if (! $profile->status == RecordStatus::INACTIVE->value) {
+        if (! $profile->status == RecordStatus::ACTIVE) {
             return response()->json([
                 'message' => __('rules.inactive_user')
             ], 401);

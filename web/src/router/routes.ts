@@ -69,9 +69,7 @@ export default [
                 component: MainDashboard,
                 meta: {
                     remember: true,
-                    log_route: true,
-                    skipBeforeEach: false
-                }
+                },
             },
             {
                 path: "/dashboard/profile",
@@ -79,9 +77,7 @@ export default [
                 component: ProfileView,
                 meta: {
                     remember: true,
-                    log_route: true,
-                    skipBeforeEach: false
-                }
+                },
             },
             {
                 path: "/dashboard/company",
@@ -96,16 +92,25 @@ export default [
                                 path: "/dashboard/company/company/list",
                                 name: "side-menu-company-company-list",
                                 component: CompanyList,
+                                meta: {
+                                    remember: true,
+                                },
                             },
                             {
                                 path: "/dashboard/company/company/create",
                                 name: "side-menu-company-company-create",
                                 component: CompanyCreate,
+                                meta: {
+                                    remember: true,
+                                },
                             },
                             {
                                 path: "/dashboard/company/company/edit/:ulid",
                                 name: "side-menu-company-company-edit",
                                 component: CompanyEdit,
+                                meta: {
+                                    remember: true,
+                                },
                             }
                         ]
                     },
@@ -119,16 +124,25 @@ export default [
                                 path: "/dashboard/company/branch/list",
                                 name: "side-menu-company-branch-list",
                                 component: BranchList,
+                                meta: {
+                                    remember: true,
+                                },
                             },
                             {
                                 path: "/dashboard/company/branch/create",
                                 name: "side-menu-company-branch-create",
                                 component: BranchCreate,
+                                meta: {
+                                    remember: true,
+                                },
                             },
                             {
                                 path: "/dashboard/company/branch/edit/:ulid",
                                 name: "side-menu-company-branch-edit",
                                 component: BranchEdit,
+                                meta: {
+                                    remember: true,
+                                },
                             }
                         ]
                     },
@@ -148,16 +162,25 @@ export default [
                                 path: "/dashboard/administrator/user/list",
                                 name: "side-menu-administrator-user-list",
                                 component: UserList,
+                                meta: {
+                                    remember: true,
+                                },
                             },
                             {
                                 path: "/dashboard/administrator/user/create",
                                 name: "side-menu-administrator-user-create",
                                 component: UserCreate,
+                                meta: {
+                                    remember: true,
+                                },
                             },
                             {
                                 path: "/dashboard/administrator/user/edit/:ulid",
                                 name: "side-menu-administrator-user-edit",
                                 component: UserEdit,
+                                meta: {
+                                    remember: true,
+                                },
                             }
                         ]
                     }
@@ -171,7 +194,10 @@ export default [
                     {
                         path: "/dashboard/devtool/devtool",
                         name: "side-menu-devtool-devtool",
-                        component: DevTool
+                        component: DevTool,
+                        meta: {
+                            remember: false,
+                        },
                     },
                     {
                         path: "/dashboard/devtool/playground",
@@ -180,12 +206,18 @@ export default [
                             {
                                 path: "/dashboard/devtool/playground/p1",
                                 name: "side-menu-devtool-playground-p1",
-                                component: PlayOne
+                                component: PlayOne,
+                                meta: {
+                                    remember: true,
+                                },
                             },
                             {
                                 path: "/dashboard/devtool/playground/p2",
                                 name: "side-menu-devtool-playground-p2",
-                                component: PlayTwo
+                                component: PlayTwo,
+                                meta: {
+                                    remember: true,
+                                },
                             }
                         ]
                     }
@@ -197,21 +229,23 @@ export default [
                 component: ErrorView,
                 meta: {
                     remember: false,
-                    log_route: false,
-                    skipBeforeEach: true
-                }
+                },
             }
         ],
     },
-    /*
     {
         path: "/:pathMatch(.*)*",
-        component: ErrorPage
+        component: ErrorPage,
+        meta: {
+            remember: false,
+        },
     },
     {
         path: "/error-page",
         name: "error-page",
-        component: ErrorPage
+        component: ErrorPage,
+        meta: {
+            remember: false,
+        },
     }
-    */
 ];
