@@ -118,6 +118,7 @@ const onSubmit = async () => {
 
 const resetForm = () => {
     userForm.reset();
+    userForm.setErrors({});
 }
 // #endregion
 
