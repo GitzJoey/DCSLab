@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { ref, provide } from "vue";
+import { ref, provide, computed, watch } from "vue";
 import Lucide from "../Lucide";
 import Notification, { NotificationElement } from "../Notification";
 import Button from "../Button";
+import { useNotificationWidgetStore } from "../../stores/notification-widget";
+
+const notificationWidgetStore = useNotificationWidgetStore();
+const notificationWidgetHasWork = computed(() => notificationWidgetStore.notificationWidgetHasWork);
+const notificationWidgetValue = computed(() => notificationWidgetStore.getNotificationWidgetValue);
 
 export interface NotificationManagerProps {
     debug: boolean,
@@ -23,6 +28,12 @@ const mainNotificationToggle = () => {
         mainNotification.value.showToast();
     }
 };
+
+watch(notificationWidgetHasWork, (newVal, oldVal) => {
+    if (notificationWidgetHasWork.value) {
+        mainNotificationToggle();
+    }
+});
 </script>
 
 <template>
@@ -31,12 +42,12 @@ const mainNotificationToggle = () => {
             @click="mainNotificationToggle">
             Trigger Notification
         </Button>
-        <Notification ref-key="mainNotification" :options="{ duration: 3000, }" class="flex">
+        <Notification ref-key="mainNotification" :options="{ duration: notificationWidgetValue.timeout, }" class="flex">
             <Lucide icon="CheckCircle" class="text-success" />
             <div class="ml-4 mr-4">
-                <div class="font-medium">Message Saved!</div>
+                <div class="font-medium">{{ notificationWidgetValue.title }}</div>
                 <div class="mt-1 text-slate-500">
-                    The message will be sent in 5 minutes.
+                    {{ notificationWidgetValue.message }}
                 </div>
             </div>
         </Notification>

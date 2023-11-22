@@ -5,6 +5,10 @@ import Button from "../../base-components/Button";
 import {
     FormInput
 } from "../../base-components/Form";
+import { useNotificationWidgetStore } from "../../stores/notification-widget";
+import { NotificationWidget } from "../../types/models/NotificationWidget";
+
+const notificationWidgetStore = useNotificationWidgetStore();
 
 const is_active_1 = ref<boolean>(false);
 const is_active_2 = ref<boolean>(true);
@@ -13,6 +17,14 @@ const inputTestVal = ref<number>(1);
 
 const changeInputTriggered = () => {
     console.log('changeInputTriggered' + Date());
+}
+
+const triggerNotification = () => {
+    notificationWidgetStore.setNotificationValue({
+        title: 'Test',
+        message: 'Test ' + Date(),
+        timeout: 30
+    });
 }
 </script>
 
@@ -33,6 +45,11 @@ const changeInputTriggered = () => {
             <FormInput id="ic_num" v-model="inputTestVal" name="ic_num" type="text" @change="changeInputTriggered" />
 
             <Button variant="primary" @click="inputTestVal = 2">Change Input Value To 2</Button>
+        </div>
+        <br />
+        <div>
+            <p>Test Notificaiton</p>
+            <Button variant="primary" @click="triggerNotification">Trigger here</Button>
         </div>
     </div>
 </template>
