@@ -21,6 +21,8 @@ provide("bind[mainNotification]", (el: NotificationElement) => {
     mainNotification.value = el;
 });
 
+const countDown = ref<number>(0);
+
 const mainNotification = ref<NotificationElement>();
 
 const mainNotificationToggle = () => {
@@ -29,8 +31,20 @@ const mainNotificationToggle = () => {
     }
 };
 
-watch(notificationWidgetHasWork, (newVal, oldVal) => {
+const startCountDown = () => {
+    const interval = setInterval(() => {
+        if (countDown.value != 0) {
+            countDown.value--;
+        } else {
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+
+watch(notificationWidgetHasWork, () => {
     if (notificationWidgetHasWork.value) {
+        countDown.value = notificationWidgetValue.value.timeout;
+        startCountDown();
         mainNotificationToggle();
     }
 });
@@ -42,12 +56,13 @@ watch(notificationWidgetHasWork, (newVal, oldVal) => {
             @click="mainNotificationToggle">
             Trigger Notification
         </Button>
-        <Notification ref-key="mainNotification" :options="{ duration: notificationWidgetValue.timeout, }" class="flex">
+        <Notification ref-key="mainNotification" :options="{ duration: notificationWidgetValue.timeout * 1000, }"
+            class="flex">
             <Lucide icon="CheckCircle" class="text-success" />
             <div class="ml-4 mr-4">
                 <div class="font-medium">{{ notificationWidgetValue.title }}</div>
                 <div class="mt-1 text-slate-500">
-                    {{ notificationWidgetValue.message }}
+                    {{ notificationWidgetValue.message }}&nbsp;({{ countDown }}s)
                 </div>
             </div>
         </Notification>
