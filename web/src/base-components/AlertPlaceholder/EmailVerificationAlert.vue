@@ -8,9 +8,9 @@ const { t } = useI18n();
 
 <template>
     <div class="mt-8">
-        <Alert variant="secondary" class="flex items-center mb-2">
+        <Alert variant="secondary" class="flex items-center mb-2" v-slot="{ dismiss }">
             {{ t('components.alert-placeholder.email_verification.message') }}
-            <Alert.DismissButton type="button" class="text-white" aria-label="Close">
+            <Alert.DismissButton type="button" class="text-white" aria-label="Close" @click="dismiss">
                 <Lucide icon="X" class="text-black w-4 h-4" />
             </Alert.DismissButton>
         </Alert>
