@@ -112,7 +112,7 @@ class UserRequest extends FormRequest
             $id = $this->route('user')->id;
             $rules_update = [
                 'name' => ['required', 'alpha_num'],
-                'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($id)],
+                'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($id)],
                 'roles' => ['required'],
                 'tax_id' => ['required'],
                 'ic_num' => ['required'],
