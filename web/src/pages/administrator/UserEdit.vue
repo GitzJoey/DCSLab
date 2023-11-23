@@ -158,6 +158,16 @@ const onSubmit = async () => {
     if (userForm.hasErrors) {
         scrollToError(Object.keys(userForm.errors)[0]);
     }
+
+    emits('loading-state', true);
+    await userForm.submit().then(() => {
+        resetForm();
+        router.push({ name: 'side-menu-administrator-user-list' });
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        emits('loading-state', false);
+    });
 };
 
 const resetForm = () => {
@@ -203,7 +213,7 @@ watch(
                 <div class="p-5">
                     <div class="pb-4">
                         <FormLabel html-for="first_name">{{ t('views.user.fields.first_name') }}</FormLabel>
-                        <FormInput v-model="userForm.email" id="first_name" name="first_name" type="text"
+                        <FormInput v-model="userForm.first_name" id="first_name" name="first_name" type="text"
                             :class="{ 'border-danger': false }" :placeholder="t('views.user.fields.name')" />
                     </div>
                     <div class="pb-4">

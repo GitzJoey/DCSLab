@@ -25,6 +25,7 @@ import Button from "../../base-components/Button";
 import { ViewMode } from "../../types/enums/ViewMode";
 import { debounce } from "lodash";
 import Lucide from "../../base-components/Lucide";
+import { useRouter } from "vue-router";
 // #endregion
 
 // #region Interfaces
@@ -32,6 +33,7 @@ import Lucide from "../../base-components/Lucide";
 
 // #region Declarations
 const { t } = useI18n();
+const router = useRouter();
 
 const userServices = new UserService();
 const roleServices = new RoleService();
@@ -114,6 +116,16 @@ const onSubmit = async () => {
     if (userForm.hasErrors) {
         scrollToError(Object.keys(userForm.errors)[0]);
     }
+
+    emits('loading-state', true);
+    await userForm.submit().then(() => {
+        resetForm();
+        router.push({ name: 'side-menu-administrator-user-list' });
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        emits('loading-state', false);
+    });
 };
 
 const resetForm = () => {

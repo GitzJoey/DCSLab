@@ -6,6 +6,7 @@ use App\Enums\RecordStatus;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class UserRequest extends FormRequest
@@ -97,30 +98,30 @@ class UserRequest extends FormRequest
             return $rules_read;
         } elseif ($this->route()->getActionMethod() == 'store') {
             $rules_store = [
-                'name' => 'required|alpha_num',
-                'email' => 'required|email|max:255|unique:users',
-                'roles' => 'required',
-                'tax_id' => 'required',
-                'ic_num' => 'required',
+                'name' => ['required', 'alpha_num'],
+                'email' => ['required', 'email', 'max:255', 'unique:users'],
+                'roles' => ['required'],
+                'tax_id' => ['required'],
+                'ic_num' => ['required'],
                 'status' => [new Enum(RecordStatus::class)],
-                'country' => 'required',
+                'country' => ['required'],
             ];
 
             return array_merge($rules_store, $nullableArr);
         } elseif ($this->route()->getActionMethod() == 'update') {
-            $id = $this->route('user')->id;
+            $ulid = $this->route('user')->ulid;
             $rules_update = [
-                'name' => 'required|alpha_num',
-                'email' => 'required|email|max:255|unique:users,email,'.$id,
-                'roles' => 'required',
-                'tax_id' => 'required',
-                'ic_num' => 'required',
+                'name' => ['required', 'alpha_num'],
+                'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($ulid, 'ulid')],
+                'roles' => ['required'],
+                'tax_id' => ['required'],
+                'ic_num' => ['required'],
                 'status' => [new Enum(RecordStatus::class)],
-                'country' => 'required',
+                'country' => ['required'],
 
-                'api_token' => 'nullable|boolean',
-                'reset_password' => 'nullable|boolean',
-                'reset_2fa' => 'nullable|boolean',
+                'api_token' => ['nullable', 'boolean'],
+                'reset_password' => ['nullable', 'boolean'],
+                'reset_2fa' => ['nullable', 'boolean'],
             ];
 
             return array_merge($rules_update, $nullableArr);
