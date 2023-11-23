@@ -109,10 +109,10 @@ class UserRequest extends FormRequest
 
             return array_merge($rules_store, $nullableArr);
         } elseif ($this->route()->getActionMethod() == 'update') {
-            $ulid = $this->route('user')->ulid;
+            $id = $this->route('user')->id;
             $rules_update = [
                 'name' => ['required', 'alpha_num'],
-                'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($ulid, 'ulid')],
+                'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($id)],
                 'roles' => ['required'],
                 'tax_id' => ['required'],
                 'ic_num' => ['required'],
