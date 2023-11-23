@@ -147,7 +147,7 @@ class BranchActions
 
     public function read(Branch $branch): Branch
     {
-        return $branch->with('company')->first();
+        return $branch->load('company');
     }
 
     public function getBranchByCompany(int $companyId = 0, Company $company = null): Collection

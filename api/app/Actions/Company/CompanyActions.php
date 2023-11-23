@@ -142,7 +142,7 @@ class CompanyActions
 
     public function read(Company $company): Company
     {
-        return $company->with('branches')->first();
+        return $company->load('branches');
     }
 
     public function isDefaultCompany(Company $company): bool
