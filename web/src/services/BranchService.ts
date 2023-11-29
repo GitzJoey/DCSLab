@@ -42,14 +42,16 @@ export default class BranchService {
         return form;
     }
 
-    public async readAny(company_id: string, args: ReadAnyRequest): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
+    public async readAny(args: ReadAnyRequest): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
         const result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = {
             success: false
         }
 
         try {
             const queryParams: Record<string, string | number | boolean> = {};
-            queryParams['company_id'] = company_id;
+            if (args.company_id) {
+                queryParams['company_id'] = args.company_id;
+            }
             queryParams['search'] = args.search ? args.search : '';
             queryParams['refresh'] = args.refresh;
             queryParams['paginate'] = args.paginate;
@@ -59,8 +61,6 @@ export default class BranchService {
             const url = route('api.get.db.company.branch.read_any', {
                 _query: queryParams
             }, false, this.ziggyRoute);
-
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<Collection<Array<Branch>>> = await axios.get(url);
 
@@ -136,7 +136,6 @@ export default class BranchService {
 
         try {
             const url = route('api.post.db.company.branch.delete', ulid, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<boolean | null> = await axios.post(url);
 

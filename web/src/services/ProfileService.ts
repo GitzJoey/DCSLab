@@ -23,7 +23,7 @@ export default class ProfileService {
   }
 
   public async readProfile(): Promise<ServiceResponse<UserProfile | null>> {
-    const result: ServiceResponse<UserProfile> | null = {
+    const result: ServiceResponse<UserProfile | null> = {
       success: false,
     };
 
@@ -137,8 +137,6 @@ export default class ProfileService {
 
       const response: AxiosResponse<TwoFactorResponse> = await axios.post(url);
 
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
       if (response.status == StatusCode.OK) {
         result.success = true;
         result.data = response.data;
@@ -168,8 +166,6 @@ export default class ProfileService {
       const url = route('two-factor.disable', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<TwoFactorResponse> = await axios.delete(url);
-
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -203,8 +199,6 @@ export default class ProfileService {
         password: password
       });
 
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
       if (response.status == StatusCode.OK || response.status == StatusCode.Created) {
         result.success = true;
       } else {
@@ -234,8 +228,6 @@ export default class ProfileService {
 
       const response: AxiosResponse<ConfirmPasswordStatusResponse> = await axios.get(url);
 
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
       result.success = true;
       result.data = response.data;
 
@@ -263,8 +255,6 @@ export default class ProfileService {
         code: code
       });
 
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
       result.success = true;
       result.data = response.data;
 
@@ -289,8 +279,6 @@ export default class ProfileService {
       const url = route('two-factor.qr-code', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<QRCode> = await axios.get(url);
-
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
       result.success = true;
       result.data = response.data;
@@ -317,8 +305,6 @@ export default class ProfileService {
 
       const response: AxiosResponse<Array<string>> = await axios.get(url);
 
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
       result.success = true;
       result.data = response.data;
 
@@ -343,8 +329,6 @@ export default class ProfileService {
       const url = route('two-factor.secret-key', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<SecretKeyResponse> = await axios.get(url);
-
-      if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
       result.success = true;
       result.data = response.data;

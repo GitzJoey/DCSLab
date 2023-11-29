@@ -27,8 +27,6 @@ export default class RoleService {
         try {
             const url = route('api.get.db.admin.role.read_any', undefined, false, this.ziggyRoute);
 
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
             const response: AxiosResponse<Resource<Array<Role>>> = await axios.get(url);
 
             result.success = true;
@@ -46,18 +44,18 @@ export default class RoleService {
         }
     }
 
-    public async Update(roles :string ) : Promise<ServiceResponse<Resource<Role> | null > >  {
-        const result: ServiceResponse<Resource<Role> | null > = {
-            success : false
+    public async Update(roles: string): Promise<ServiceResponse<Resource<Role> | null>> {
+        const result: ServiceResponse<Resource<Role> | null> = {
+            success: false
         }
         try {
             const url = route('api.post.db.module.profile.update.roles', undefined, false, this.ziggyRoute);
-            if(!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-            const response : AxiosResponse<Resource<Role>> = await axios.post(url, {'roles' : roles})
+
+            const response: AxiosResponse<Resource<Role>> = await axios.post(url, { 'roles': roles })
             result.success = true
             result.data = response.data
             return result
-        } catch (e:unknown) {
+        } catch (e: unknown) {
             if (e instanceof Error && e.message.includes('Ziggy error')) {
                 return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
             } else if (isAxiosError(e)) {

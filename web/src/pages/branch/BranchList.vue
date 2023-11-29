@@ -84,6 +84,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
   let company_id = selectedUserLocation.value.company.id;
 
   const searchReq: ReadAnyRequest = {
+    company_id: company_id,
     search: search,
     refresh: refresh,
     paginate: paginate,
@@ -91,7 +92,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
     per_page: per_page
   };
 
-  let result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = await branchServices.readAny(company_id, searchReq);
+  let result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = await branchServices.readAny(searchReq);
 
   if (result.success && result.data) {
     branchLists.value = result.data as Collection<Array<Branch>>;

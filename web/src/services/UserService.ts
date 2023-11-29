@@ -70,8 +70,6 @@ export default class UserService {
             //const url = route('invalid.route', undefined, false, this.ziggyRoute);
             const url = route('api.get.db.admin.user.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
             const response: AxiosResponse<Collection<Array<User>>> = await axios.get(url);
 
             //Slow API Call (10 seconds Delay)

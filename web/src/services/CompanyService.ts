@@ -55,8 +55,6 @@ export default class CompanyService {
                 _query: queryParams
             }, false, this.ziggyRoute);
 
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
-
             const response: AxiosResponse<Collection<Array<Company>>> = await axios.get(url);
 
             if (response.status == StatusCode.OK) {
@@ -127,7 +125,6 @@ export default class CompanyService {
 
         try {
             const url = route('api.post.db.company.company.delete', ulid, false, this.ziggyRoute);
-            if (!url) return this.errorHandlerService.generateZiggyUrlErrorServiceResponse();
 
             const response: AxiosResponse<boolean | null> = await axios.post(url);
 
