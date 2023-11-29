@@ -8,7 +8,6 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { ReadAnyRequest } from "../types/services/ServiceRequest";
-import { UserFormFieldValues } from "../types/forms/UserFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 import { client, useForm } from "laravel-precognition-vue";
 
