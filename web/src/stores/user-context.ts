@@ -36,7 +36,8 @@ export const useUserContextStore = defineStore("userContext", {
         theme: '',
         date_format: '',
         time_format: '',
-      }
+      },
+      two_factor: false,
     },
   }),
   getters: {

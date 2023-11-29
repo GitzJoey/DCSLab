@@ -47,7 +47,8 @@ export const useZiggyRouteStore = defineStore("ziggyRoute", {
     getZiggy(state): Config {
       const serializedZiggy = sessionStorage.getItem('ziggyRoute');
       if (serializedZiggy) {
-        const deserializedZiggy: Config = JSON.parse(atob(serializedZiggy));
+        const debug = import.meta.env.VITE_APP_DEBUG === 'true';
+        const deserializedZiggy: Config = JSON.parse(debug ? serializedZiggy : atob(serializedZiggy));
         this.ziggyRoute = deserializedZiggy;
       }
       return state.ziggyRoute;
@@ -56,7 +57,8 @@ export const useZiggyRouteStore = defineStore("ziggyRoute", {
   actions: {
     setZiggy(ziggy: Config) {
       if (ziggy != undefined) {
-        sessionStorage.setItem('ziggyRoute', btoa(JSON.stringify(ziggy)));
+        const debug = import.meta.env.VITE_APP_DEBUG === 'true';
+        sessionStorage.setItem('ziggyRoute', debug ? JSON.stringify(ziggy) : btoa(JSON.stringify(ziggy)));
         this.ziggyRoute = ziggy;
       }
     },
