@@ -7,7 +7,7 @@ import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
+import { ReadAnyRequest } from "../types/services/ServiceRequest";
 import { StatusCode } from "../types/enums/StatusCode";
 import { client, useForm } from "laravel-precognition-vue";
 
@@ -42,7 +42,7 @@ export default class BranchService {
         return form;
     }
 
-    public async readAny(company_id: string, args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
+    public async readAny(company_id: string, args: ReadAnyRequest): Promise<ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null>> {
         const result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = {
             success: false
         }

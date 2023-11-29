@@ -7,7 +7,7 @@ import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { SearchFormFieldValues } from "../types/forms/SearchFormFieldValues";
+import { ReadAnyRequest } from "../types/services/ServiceRequest";
 import { UserFormFieldValues } from "../types/forms/UserFormFieldValues";
 import { StatusCode } from "../types/enums/StatusCode";
 import { client, useForm } from "laravel-precognition-vue";
@@ -54,7 +54,7 @@ export default class UserService {
         return form;
     }
 
-    public async readAny(args: SearchFormFieldValues): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
+    public async readAny(args: ReadAnyRequest): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
         const result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = {
             success: false,
         }

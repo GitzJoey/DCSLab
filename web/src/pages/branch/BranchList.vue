@@ -13,7 +13,7 @@ import { Collection } from "../../types/resources/Collection";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
-import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
+import { ReadAnyRequest } from "../../types/services/ServiceRequest";
 import { useRouter } from "vue-router";
 import { Dialog } from "../../base-components/Headless";
 import { useSelectedUserLocationStore } from "../../stores/user-location";
@@ -83,7 +83,7 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
 
   let company_id = selectedUserLocation.value.company.id;
 
-  const searchReq: SearchFormFieldValues = {
+  const searchReq: ReadAnyRequest = {
     search: search,
     refresh: refresh,
     paginate: paginate,

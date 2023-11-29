@@ -14,7 +14,7 @@ import { Role } from "../../types/models/Role";
 import { DataListEmittedData } from "../../base-components/DataList/DataList.vue";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Resource } from "../../types/resources/Resource";
-import { SearchFormFieldValues } from "../../types/forms/SearchFormFieldValues";
+import { ReadAnyRequest } from "../../types/services/ServiceRequest";
 import { useRouter } from "vue-router";
 import { Dialog } from "../../base-components/Headless";
 import { ViewMode } from "../../types/enums/ViewMode";
@@ -72,7 +72,7 @@ onMounted(async () => {
 const getCompanies = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
   emits('loading-state', true);
 
-  const searchReq: SearchFormFieldValues = {
+  const searchReq: ReadAnyRequest = {
     search: search,
     refresh: refresh,
     paginate: paginate,
