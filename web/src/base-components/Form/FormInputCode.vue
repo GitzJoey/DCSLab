@@ -46,7 +46,6 @@ const computedClass = computed(() =>
 
 const emit = defineEmits<FormInputEmit>();
 
-
 function handleClickAutoButton() {
   isAuto.value = !isAuto.value;
   if (isAuto.value) {
@@ -63,7 +62,6 @@ const localValue = computed({
     } else {
       return props.modelValue === undefined ? props.value : props.modelValue;
     }
-
   },
   set(newValue) {
     emit("update:modelValue", newValue);
