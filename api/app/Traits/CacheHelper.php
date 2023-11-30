@@ -44,7 +44,7 @@ trait CacheHelper
             }
 
             $tagsArr = [auth()->user()->id, class_basename(__CLASS__)];
-            Cache::tags($tagsArr)->add($key, $val, Config::get('dcslab.DATA_CACHE.CACHE_TIME'));
+            Cache::tags($tagsArr)->put($key, $val, Config::get('dcslab.DATA_CACHE.CACHE_TIME'));
         } catch (Exception $e) {
             Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
         } finally {
