@@ -74,11 +74,10 @@ const toggleSideTab = (show: boolean | undefined) => {
           <template v-for="(link, index) in cards" :key="index">
             <a class="flex items-center mt-5" :href="`#${index}`">
               <Lucide icon="CircleDot" class="w-4 h-4 mr-2" />
-              {{ link.title }}
+              {{ t(link.title) }}
               <div
                 :class="{ 'transition ease-in duration-100 ml-auto mr-5 hidden xl:block': true, 'transform rotate-180': link.state }"
                 @click="onLinkClicked(index)">
-                <!-- <p>{{ link.state }}</p> -->
                 <Lucide v-if="link.state === 'EXPANDED'" class="w-4 h-4" icon="Minus" />
                 <Lucide v-else-if="link.state" class="w-4 h-4" icon="Plus" />
               </div>

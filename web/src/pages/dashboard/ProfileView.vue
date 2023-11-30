@@ -55,14 +55,14 @@ const emits = defineEmits(['mode-state', 'loading-state']);
 // #region Refs
 const loading = ref<boolean>(false);
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-    { title: t('views.profile.field_groups.user_profile'), state: CardState.Expanded },
-    { title: t('views.profile.field_groups.email_verification'), state: CardState.Expanded },
-    { title: t('views.profile.field_groups.personal_information'), state: CardState.Expanded },
-    { title: t('views.profile.field_groups.account_settings'), state: CardState.Expanded },
-    { title: t('views.profile.field_groups.roles'), state: CardState.Expanded },
-    { title: t('views.profile.field_groups.change_password'), state: CardState.Expanded },
-    { title: t('views.profile.field_groups.api_token'), state: CardState.Expanded },
-    { title: t('views.profile.field_groups.two_factor_authentication'), state: CardState.Expanded },
+    { title: 'views.profile.field_groups.user_profile', state: CardState.Expanded },
+    { title: 'views.profile.field_groups.email_verification', state: CardState.Expanded },
+    { title: 'views.profile.field_groups.personal_information', state: CardState.Expanded },
+    { title: 'views.profile.field_groups.account_settings', state: CardState.Expanded },
+    { title: 'views.profile.field_groups.roles', state: CardState.Expanded },
+    { title: 'views.profile.field_groups.change_password', state: CardState.Expanded },
+    { title: 'views.profile.field_groups.api_token', state: CardState.Expanded },
+    { title: 'views.profile.field_groups.two_factor_authentication', state: CardState.Expanded },
 ]);
 
 const roleSelection = ref<Array<RoleSelection>>([
