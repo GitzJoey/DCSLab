@@ -16,11 +16,9 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   modelValue?: InputHTMLAttributes["value"];
   formInputSize?: "sm" | "lg";
   rounded?: boolean;
-  triggerChangeOnModelUpdate?: boolean
 }
 
 interface FormInputEmit {
-  (e: "change", value: string): void;
   (e: "update:modelValue", value: string): void;
 }
 
@@ -52,10 +50,6 @@ const localValue = computed({
   },
   set(newValue) {
     emit("update:modelValue", newValue);
-
-    if (props.triggerChangeOnModelUpdate != undefined && props.triggerChangeOnModelUpdate == true) {
-      emit("change", newValue);
-    }
   },
 });
 </script>
