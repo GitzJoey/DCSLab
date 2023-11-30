@@ -27,7 +27,7 @@ const cacheService = new CacheService();
 // #region Refs
 const mode = ref<ViewMode>(ViewMode.INDEX);
 const loading = ref<boolean>(false);
-const titleView = ref<string>(t('views.company.page_title'));
+const titleView = ref<string>('views.company.page_title');
 // #endregion
 
 // #region Computed
@@ -57,15 +57,15 @@ const onModeStateChanged = (state: ViewMode) => {
 
     switch (state) {
         case ViewMode.FORM_CREATE:
-            titleView.value = t('views.company.actions.create');
+            titleView.value = 'views.company.actions.create';
             break;
         case ViewMode.FORM_EDIT:
-            titleView.value = t('views.company.actions.edit');
+            titleView.value = 'views.company.actions.edit';
             break;
         case ViewMode.INDEX:
         case ViewMode.LIST:
         default:
-            titleView.value = t('views.company.page_title');
+            titleView.value = 'views.company.page_title';
             break;
     }
 }
@@ -93,7 +93,7 @@ const clearCache = (mode: ViewMode) => {
         <LoadingOverlay :visible="loading">
             <TitleLayout>
                 <template #title>
-                    {{ titleView }}
+                    {{ t(titleView) }}
                 </template>
                 <template #optional>
                     <div class="flex w-full mt-4 sm:w-auto sm:mt-0">

@@ -24,7 +24,7 @@ const router = useRouter();
 // #region Refs
 const mode = ref<ViewMode>(ViewMode.INDEX);
 const loading = ref<boolean>(false);
-const titleView = ref<string>(t('views.user.page_title'));
+const titleView = ref<string>('views.user.page_title');
 // #endregion
 
 // #region Computed
@@ -54,15 +54,15 @@ const onModeStateChanged = (state: ViewMode) => {
 
     switch (state) {
         case ViewMode.FORM_CREATE:
-            titleView.value = t('views.user.actions.create');
+            titleView.value = 'views.user.actions.create';
             break;
         case ViewMode.FORM_EDIT:
-            titleView.value = t('views.user.actions.edit');
+            titleView.value = 'views.user.actions.edit';
             break;
         case ViewMode.INDEX:
         case ViewMode.LIST:
         default:
-            titleView.value = t('views.user.page_title');
+            titleView.value = 'views.user.page_title';
             break;
     }
 }
@@ -77,7 +77,7 @@ const onModeStateChanged = (state: ViewMode) => {
         <LoadingOverlay :visible="loading">
             <TitleLayout>
                 <template #title>
-                    {{ titleView }}
+                    {{ t(titleView) }}
                 </template>
                 <template #optional>
                     <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
