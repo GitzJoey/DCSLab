@@ -75,14 +75,13 @@ onMounted(async () => {
 
     getDDL();
 
-    emits('loading-state', true);
     await loadData(route.params.ulid as string);
-    emits('loading-state', false);
 });
 // #endregion
 
 // #region Methods
 const loadData = async (ulid: string) => {
+    emits('loading-state', true);
     let response: ServiceResponse<Branch | null> = await branchServices.read(ulid);
 
     if (response && response.data) {
@@ -98,6 +97,7 @@ const loadData = async (ulid: string) => {
             status: response.data.status,
         });
     }
+    emits('loading-state', false);
 }
 
 const getDDL = (): void => {
@@ -118,9 +118,10 @@ const onSubmit = async () => {
 
 };
 
-const resetForm = () => {
+const resetForm = async () => {
     branchForm.reset();
     branchForm.setErrors({});
+    await loadData(route.params.ulid as string);
 }
 // #endregion
 

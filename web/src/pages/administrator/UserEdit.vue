@@ -74,14 +74,13 @@ onMounted(async () => {
     emits('mode-state', ViewMode.FORM_EDIT);
     getDDL();
 
-    emits('loading-state', true);
     await loadData(route.params.ulid as string);
-    emits('loading-state', false);
 });
 // #endregion
 
 // #region Methods
 const loadData = async (ulid: string) => {
+    emits('loading-state', true);
     let response: ServiceResponse<User | null> = await userServices.read(ulid);
 
     if (response && response.data) {
@@ -120,6 +119,7 @@ const loadData = async (ulid: string) => {
             reset_2fa: false,
         });
     }
+    emits('loading-state', false);
 }
 
 const getDDL = (): void => {
@@ -170,9 +170,10 @@ const onSubmit = async () => {
     });
 };
 
-const resetForm = () => {
+const resetForm = async () => {
     userForm.reset();
     userForm.setErrors({});
+    await loadData(route.params.ulid as string);
 }
 // #endregion
 
