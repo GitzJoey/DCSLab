@@ -27,8 +27,17 @@ onMounted(() => {
         <div v-else-if="errorCode == 403">
             {{ t('views.error.code.403') }}
         </div>
-        <div v-else="errorCode == 500">
+        <div v-else-if="errorCode == 500">
             {{ t('views.error.code.500') }}
+        </div>
+        <div v-else-if="errorCode == 500">
+            {{ t('views.error.code.500') }}
+        </div>
+        <div v-else-if="errorCode == 10000">
+            {{ t('views.error.code.10000') }}
+        </div>
+        <div v-else>
+
         </div>
     </div>
 </template>
