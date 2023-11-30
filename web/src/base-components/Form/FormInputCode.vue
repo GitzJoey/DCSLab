@@ -65,6 +65,10 @@ const localValue = computed({
     }
   },
   set(newValue) {
+    if (newValue == "_AUTO_" && isAuto.value == false) {
+      isAuto.value = true;
+    }
+
     emit("update:modelValue", newValue);
     emit("change", newValue);
   },
