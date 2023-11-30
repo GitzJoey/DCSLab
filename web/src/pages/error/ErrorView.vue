@@ -2,7 +2,9 @@
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { TitleLayout } from '../../base-components/Form/FormLayout';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const route = useRoute();
 const errorCode = ref<number>(0);
 
@@ -15,12 +17,18 @@ onMounted(() => {
     <div class="mt-8">
         <TitleLayout>
             <template #title>
-                Error
+                {{ t('views.error.title') }}
             </template>
         </TitleLayout>
 
-        <div v-if="errorCode == 10000">
-            User Location not found
+        <div v-if="errorCode == 401">
+            {{ t('views.error.code.401') }}
+        </div>
+        <div v-else-if="errorCode == 403">
+            {{ t('views.error.code.403') }}
+        </div>
+        <div v-else="errorCode == 500">
+            {{ t('views.error.code.500') }}
         </div>
     </div>
 </template>

@@ -18,6 +18,7 @@ import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import defUserUrl from "../../assets/images/def-user.png";
 import UserLocation from "../../base-components/UserLocation";
+import { switchLang } from "../../lang";
 
 const dashboardServices = new DashboardService();
 const profileServices = new ProfileService();
@@ -55,7 +56,7 @@ const toggleMenu = () => {
 }
 
 const switchLanguage = (lang: "en" | "id"): void => {
-
+  switchLang(lang);
 }
 
 const loading = ref<boolean>(false);
@@ -69,13 +70,17 @@ onMounted(async () => {
   loading.value = true;
 
   let userprofile = await profileServices.readProfile();
-  userContextStore.setUserContext(userprofile.data as UserProfile);
+  if (userprofile.success) {
+    userContextStore.setUserContext(userprofile.data as UserProfile);
 
-  let menuResult = await dashboardServices.readUserMenu();
-  sideMenuStore.setUserMenu(menuResult.data as Array<sMenu>);
+    let menuResult = await dashboardServices.readUserMenu();
+    sideMenuStore.setUserMenu(menuResult.data as Array<sMenu>);
 
-  let apiResult = await dashboardServices.readUserApi();
-  ziggyRouteStore.setZiggy(apiResult.data as Config);
+    let apiResult = await dashboardServices.readUserApi();
+    ziggyRouteStore.setZiggy(apiResult.data as Config);
+  } else {
+    router.push({ name: 'side-menu-error-code', params: { code: 403 } });
+  }
 
   loading.value = false;
 })

@@ -1,0 +1,8 @@
+{
+    "title": "Error",
+    "code": {
+        "401": "Unauthenticated",
+        "403": "Forbidden",
+        "500": "Internal Error"
+    }
+}
