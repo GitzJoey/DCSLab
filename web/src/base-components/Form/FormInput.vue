@@ -16,9 +16,11 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   modelValue?: InputHTMLAttributes["value"];
   formInputSize?: "sm" | "lg";
   rounded?: boolean;
+  triggerChangeOnModelUpdate?: boolean
 }
 
 interface FormInputEmit {
+  (e: "change", value: string): void;
   (e: "update:modelValue", value: string): void;
 }
 
@@ -37,7 +39,7 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
   ])
 );
@@ -50,15 +52,14 @@ const localValue = computed({
   },
   set(newValue) {
     emit("update:modelValue", newValue);
+
+    if (props.triggerChangeOnModelUpdate != undefined && props.triggerChangeOnModelUpdate == true) {
+      emit("change", newValue);
+    }
   },
 });
 </script>
 
 <template>
-  <input
-    :class="computedClass"
-    :type="props.type"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  />
+  <input :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" v-model="localValue" />
 </template>

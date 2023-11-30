@@ -19,6 +19,7 @@ interface FormInputProps extends /* @vue-ignore */ InputHTMLAttributes {
 }
 
 interface FormInputEmit {
+  (e: "change", value: string): void;
   (e: "update:modelValue", value: string): void;
 }
 
@@ -65,6 +66,7 @@ const localValue = computed({
   },
   set(newValue) {
     emit("update:modelValue", newValue);
+    emit("change", newValue);
   },
 });
 
