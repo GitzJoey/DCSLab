@@ -2,7 +2,7 @@
 // #region Imports
 import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import CompanyService from "../../services/CompanyService";
 import DashboardService from "../../services/DashboardService";
 import CacheService from "../../services/CacheService";
@@ -32,7 +32,6 @@ import { Company } from "../../types/models/Company";
 
 // #region Declarations
 const { t } = useI18n();
-const router = useRouter();
 const route = useRoute();
 
 const companyServices = new CompanyService();
