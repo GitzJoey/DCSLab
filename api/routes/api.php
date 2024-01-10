@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
                 Route::get('read', [BranchController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{branch:ulid}', [BranchController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
+                Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -85,6 +90,11 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('edit/{branch:ulid}', [BranchController::class, 'update'])->name('.edit');
                 Route::post('delete/{branch:ulid}', [BranchController::class, 'delete'])->name('.delete');
             });
+            Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
+                Route::post('save', [WarehouseController::class, 'store'])->name('.save');
+                Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
+                Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
         });
         /* #endregion */
 
@@ -106,7 +116,7 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('update/account_settings', [ProfileController::class, 'updateAccountSettings'])->name('.update.account_settings');
                 Route::post('update/roles', [ProfileController::class, 'updateUserRoles'])->name('.update.roles');
                 Route::post('update/password', [ProfileController::class, 'updatePassword'])->name('.update.password');
-                Route::post('update/tokens', [ProfileController::class, 'updateTokens'])->name('.update.tokens');                
+                Route::post('update/tokens', [ProfileController::class, 'updateTokens'])->name('.update.tokens');
 
                 Route::post('send/verification', [ProfileController::class, 'sendEmailVerification'])->name('.send.email_verification');
             });

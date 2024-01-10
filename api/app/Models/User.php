@@ -14,8 +14,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements LaratrustUser
 {
-    use HasRolesAndPermissions;
     use HasApiTokens, HasFactory, Notifiable;
+    use HasRolesAndPermissions;
     use TwoFactorAuthenticatable;
 
     /**

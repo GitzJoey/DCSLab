@@ -6,23 +6,23 @@ use App\Enums\RecordStatus;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Profile extends Model
+class Warehouse extends Model
 {
     use BootableModel;
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'company_id',
+        'branch_id',
+        'code',
+        'name',
         'address',
         'city',
-        'postal_code',
-        'country',
+        'contact',
         'status',
-        'tax_id',
-        'ic_num',
-        'img_path',
         'remarks',
     ];
 
@@ -30,8 +30,13 @@ class Profile extends Model
         'status' => RecordStatus::class,
     ];
 
-    public function user()
+    public function company()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Company::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

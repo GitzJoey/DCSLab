@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
+    use BootableModel;
     use HasFactory;
     use SoftDeletes;
-    use BootableModel;
 
     protected $fillable = [
         'code',
@@ -35,5 +35,10 @@ class Company extends Model
     public function branches()
     {
         return $this->hasMany(Branch::class);
+    }
+
+    public function warehouses()
+    {
+        return $this->hasMany(Warehouse::class);
     }
 }

@@ -196,16 +196,16 @@ class UserController extends BaseController
                 $settingsArr
             );
 
-            if (array_key_exists('api_token', $request) && (bool)$request['api_token']) {
+            if (array_key_exists('api_token', $request) && (bool) $request['api_token']) {
 
                 $this->userActions->resetTokens($user);
             }
 
-            if (array_key_exists('reset_password', $request) && (bool)$request['reset_password']) {
+            if (array_key_exists('reset_password', $request) && (bool) $request['reset_password']) {
                 $this->userActions->resetPassword(($user));
             }
 
-            if (array_key_exists('reset_2fa', $request) && (bool)$request['reset_2fa']) {
+            if (array_key_exists('reset_2fa', $request) && (bool) $request['reset_2fa']) {
                 $this->userActions->resetTwoFactorAuth(($user));
             }
         } catch (Exception $e) {
