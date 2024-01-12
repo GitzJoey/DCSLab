@@ -101,8 +101,9 @@ class ProfileController extends BaseController
             $roleId = $this->roleActions->readBy('NAME', UserRoles::POS_OWNER->value)->id;
         }
 
-        if (empty($roleId)) 
+        if (empty($roleId)) {
             return response()->error();
+        }
 
         $rolesArr = [$roleId];
 
