@@ -23,19 +23,19 @@ class ValidateUser
 
         if (! $user) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized',
             ], 401);
         }
 
         if (is_null($user->password_changed_at)) {
             return response()->json([
-                'message' => __('rules.must_reset_password')
+                'message' => __('rules.must_reset_password'),
             ], 403);
         }
 
         if (Carbon::now()->diffInDays(Carbon::parse($user->password_changed_at)->addDays(Config::get('dcslab.PASSWORD_EXPIRY_DAYS')), false) <= 0) {
             return response()->json([
-                'message' => __('rules.must_reset_password')
+                'message' => __('rules.must_reset_password'),
             ], 403);
         }
 
@@ -43,13 +43,13 @@ class ValidateUser
 
         if (! $profile) {
             return response()->json([
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized',
             ], 401);
         }
 
         if (! $profile->status == RecordStatus::ACTIVE) {
             return response()->json([
-                'message' => __('rules.inactive_user')
+                'message' => __('rules.inactive_user'),
             ], 403);
         }
 

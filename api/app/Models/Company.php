@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
+    use BootableModel;
     use HasFactory;
     use SoftDeletes;
-    use BootableModel;
 
     protected $fillable = [
         'code',

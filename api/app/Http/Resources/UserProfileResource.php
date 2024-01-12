@@ -52,8 +52,11 @@ class UserProfileResource extends JsonResource
 
     private function getTwoFactorStatus()
     {
-        if (!auth()->user()) return false;
-        return (auth()->user()->two_factor_secret !== null) && 
+        if (! auth()->user()) {
+            return false;
+        }
+
+        return (auth()->user()->two_factor_secret !== null) &&
                 (auth()->user()->two_factor_confirmed_at !== null);
     }
 }

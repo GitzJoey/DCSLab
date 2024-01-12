@@ -49,7 +49,7 @@ class DashboardController extends BaseController
         $url = asset('storage/'.$path);
 
         $data = [
-            'url' => $url
+            'url' => $url,
         ];
 
         if (empty($url)) {
