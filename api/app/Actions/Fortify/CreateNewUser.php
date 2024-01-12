@@ -29,7 +29,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
-            'terms' => ['required', 'accepted']
+            'terms' => ['required', 'accepted'],
         ])->validate();
 
         $userActions = app(UserActions::class);
