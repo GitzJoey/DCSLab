@@ -15,6 +15,11 @@
         "show": "Tampilkan Gudang",
         "delete": "Hapus Gudang"
     },
+    "field_groups": {
+        "company_info": "Informasi Perusahaan",
+        "branch_info": "Informasi Cabang",
+        "warehouse_data": "Data Gudang"
+    },
     "fields": {
         "company": "Nama Perusahaan",
         "branch": "Cabang",

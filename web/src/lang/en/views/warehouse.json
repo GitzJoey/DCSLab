@@ -15,6 +15,11 @@
         "show": "Show Warehouse",
         "delete": "Delete Warehouse"
     },
+    "field_groups": {
+        "company_info": "Company Information",
+        "branch_info": "Branch Information",
+        "warehouse_data": "Warehouse Data"
+    },
     "fields": {
         "company": "Company",
         "branch": "Branch",
