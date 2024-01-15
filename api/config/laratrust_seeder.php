@@ -33,10 +33,18 @@ return [
         'POS-owner' => [
             'company' => 'c,r,ra,u,d',
             'branch' => 'c,r,ra,u,d',
+            'warehouse' => 'c,r,ra,u,d',
         ],
         'POS-employee' => [
             'company' => 'c',
             'branch' => 'c',
+            'warehouse' => 'c,u',
+        ],
+        'POS-supplier' => [
+            'supplier' => 'r,u',
+        ],
+        'POS-customer' => [
+            'customer' => 'r,u',
         ],
         /* #endregion */
     ],

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Branch extends Model
+class Warehouse extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -16,18 +16,17 @@ class Branch extends Model
 
     protected $fillable = [
         'company_id',
+        'branch_id',
         'code',
         'name',
         'address',
         'city',
         'contact',
-        'is_main',
-        'remarks',
         'status',
+        'remarks',
     ];
 
     protected $casts = [
-        'is_main' => 'boolean',
         'status' => RecordStatus::class,
     ];
 
@@ -36,8 +35,8 @@ class Branch extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function warehouses()
+    public function branch()
     {
-        return $this->hasMany(Warehouse::class);
+        return $this->belongsTo(Branch::class);
     }
 }
