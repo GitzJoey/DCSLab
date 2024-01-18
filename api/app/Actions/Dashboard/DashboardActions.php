@@ -104,6 +104,12 @@ class DashboardActions
             'title' => 'components.menu.company-branch',
         ];
 
+        $employees = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-company-employee',
+            'title' => 'components.menu.company-employee',
+        ];
+
         $root_array = [
             'icon' => 'Umbrella',
             'pageName' => 'side-menu-company',
@@ -112,7 +118,7 @@ class DashboardActions
         ];
 
         if ($hasCompany || $hasDevRole) {
-            array_push($root_array['subMenu'], $company, $branches);
+            array_push($root_array['subMenu'], $company, $branches, $employees);
         } else {
             array_push($root_array['subMenu'], $company);
         }

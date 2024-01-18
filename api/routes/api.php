@@ -5,6 +5,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -35,6 +36,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
                 Route::get('read', [BranchController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{branch:ulid}', [BranchController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'employee', 'as' => '.employee'], function () {
+                Route::get('read', [EmployeeController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{employee:ulid}', [EmployeeController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
@@ -89,6 +94,11 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [BranchController::class, 'store'])->name('.save');
                 Route::post('edit/{branch:ulid}', [BranchController::class, 'update'])->name('.edit');
                 Route::post('delete/{branch:ulid}', [BranchController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'employee', 'middleware' => ['precognitive'], 'as' => '.employee'], function () {
+                Route::post('save', [EmployeeController::class, 'store'])->name('.save');
+                Route::post('edit/{employee:ulid}', [EmployeeController::class, 'update'])->name('.edit');
+                Route::post('delete/{employee:ulid}', [EmployeeController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
