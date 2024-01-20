@@ -5,6 +5,7 @@ return [
     'valid_dropdown' => 'Invalid value',
     'valid_company' => 'Invalid company value',
     'valid_branch' => 'Invalid branch value',
+    'valid_employee' => 'Invalid employee value',
     'valid_warehouse' => 'Invalid warehouse value',
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',

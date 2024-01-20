@@ -8,42 +8,36 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Company extends Model
+class Employee extends Model
 {
     use BootableModel;
     use HasFactory;
     use SoftDeletes;
 
     protected $fillable = [
+        'company_id',
         'code',
-        'name',
-        'address',
-        'default',
+        'join_date',
         'status',
     ];
 
     protected $casts = [
-        'default' => 'boolean',
         'status' => RecordStatus::class,
+        'join_date' => 'datetime',
     ];
 
-    public function users()
+    public function company()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(Company::class);
     }
 
-    public function branches()
+    public function user()
     {
-        return $this->hasMany(Branch::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function employees()
+    public function employeeAccesses()
     {
-        return $this->hasMany(Employee::class);
-    }
-
-    public function warehouses()
-    {
-        return $this->hasMany(Warehouse::class);
+        return $this->hasMany(EmployeeAccess::class);
     }
 }
