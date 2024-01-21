@@ -7,6 +7,7 @@ return [
     'valid_branch' => 'Cabang tidak valid',
     'valid_employee' => 'Karyawan tidak valid',
     'valid_warehouse' => 'Gudang tidak valid',
+    'valid_product_group' => 'Kelompok produk tidak valid',
     'too_many_tokens' => 'Terlalu banyak permintaan token',
     'must_reset_password' => 'Harap lakukan reset password',
     'inactive_user' => 'Profil anda tidak aktif',
