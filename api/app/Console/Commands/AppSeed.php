@@ -229,6 +229,26 @@ class AppSeed extends Command
         $seeder->callWith(EmployeeTableSeeder::class, [$employeePerCompanies, $onlyThisCompanyId, $onlyThisBranchId]);
     }
 
+    private function runEmployeeTableSeederInteractive()
+    {
+        $this->info('Starting EmployeeTableSeeder');
+        $employeePerCompanies = $this->ask('How many employees per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+        $onlyThisBranchId = $this->ask('Only for this branchId (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runEmployeeTableSeeder($employeePerCompanies, $onlyThisCompanyId, $onlyThisBranchId);
+
+        $this->info('EmployeeTableSeeder Finish.');
+    }
+
+    private function runEmployeeTableSeeder($employeePerCompanies, $onlyThisCompanyId, $onlyThisBranchId)
+    {
+        $seeder = new EmployeeTableSeeder();
+        $seeder->callWith(EmployeeTableSeeder::class, [$employeePerCompanies, $onlyThisCompanyId, $onlyThisBranchId]);
+    }
+
     private function runWarehouseTableSeederInteractive()
     {
         $this->info('Starting WarehouseTableSeeder');
