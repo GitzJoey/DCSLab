@@ -6,6 +6,7 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -41,9 +42,19 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [EmployeeController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{employee:ulid}', [EmployeeController::class, 'read'])->name('.read');
             });
+            Route::group(['prefix' => 'employee', 'as' => '.employee'], function () {
+                Route::get('read', [EmployeeController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{employee:ulid}', [EmployeeController::class, 'read'])->name('.read');
+            });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
+            });
+        });
+        Route::group(['prefix' => 'product', 'as' => '.product'], function () {
+            Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function () {
+                Route::get('read', [ProductGroupController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{productgroup:ulid}', [ProductGroupController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -100,10 +111,23 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('edit/{employee:ulid}', [EmployeeController::class, 'update'])->name('.edit');
                 Route::post('delete/{employee:ulid}', [EmployeeController::class, 'delete'])->name('.delete');
             });
+            Route::group(['prefix' => 'employee', 'middleware' => ['precognitive'], 'as' => '.employee'], function () {
+                Route::post('save', [EmployeeController::class, 'store'])->name('.save');
+                Route::post('edit/{employee:ulid}', [EmployeeController::class, 'update'])->name('.edit');
+                Route::post('delete/{employee:ulid}', [EmployeeController::class, 'delete'])->name('.delete');
+            });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
                 Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
                 Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
+        });
+
+        Route::group(['prefix' => 'product', 'middleware' => ['precognitive'], 'as' => '.product'], function () {
+            Route::group(['prefix' => 'product_group', 'middleware' => ['precognitive'], 'as' => '.product_group'], function () {
+                Route::post('save', [ProductGroupController::class, 'store'])->name('.save');
+                Route::post('edit/{productgroup:ulid}', [ProductGroupController::class, 'update'])->name('.edit');
+                Route::post('delete/{productgroup:ulid}', [ProductGroupController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */

@@ -46,4 +46,9 @@ class Company extends Model
     {
         return $this->hasMany(Warehouse::class);
     }
+
+    public function productGroups()
+    {
+        return $this->hasMany(ProductGroup::class);
+    }
 }
