@@ -7,6 +7,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,20 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'company', 'as' => '.company'], function () {
                 Route::get('read', [CompanyController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{company:ulid}', [CompanyController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
+                Route::get('read', [BranchController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{branch:ulid}', [BranchController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
+                Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
+            });
+        });
+        Route::group(['prefix' => 'product', 'as' => '.product'], function () {
+            Route::group(['prefix' => 'unit', 'as' => '.unit'], function () {
+                Route::get('read', [UnitController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{unit:ulid}', [UnitController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'branch', 'as' => '.branch'], function () {
                 Route::get('read', [BranchController::class, 'readAny'])->name('.read_any');
@@ -94,6 +109,13 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
                 Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
                 Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
+        });
+        Route::group(['prefix' => 'product', 'middleware' => ['precognitive'], 'as' => '.product'], function () {
+            Route::group(['prefix' => 'unit', 'as' => '.unit'], function () {
+                Route::post('save', [UnitController::class, 'store'])->name('.save');
+                Route::post('edit/{unit:ulid}', [UnitController::class, 'update'])->name('.edit');
+                Route::post('delete/{unit:ulid}', [UnitController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */

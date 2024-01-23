@@ -41,4 +41,9 @@ class Company extends Model
     {
         return $this->hasMany(Warehouse::class);
     }
+
+    public function units()
+    {
+        return $this->hasMany(Unit::class);
+    }
 }

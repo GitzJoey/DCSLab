@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\RoleTableSeeder;
+use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\UserTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
 use Illuminate\Console\Command;
@@ -89,6 +90,10 @@ class AppSeed extends Command
                 case 'warehousetableseeder':
                     $this->runWarehouseTableSeederInteractive();
                     break;
+                case 'unit':
+                case 'unittableseeder':
+                    $this->runUnitTableSeederInteractive();
+                    break;
                 default:
                     $this->info('Cannot find seeder for '.$args);
                     break;
@@ -112,6 +117,8 @@ class AppSeed extends Command
         $this->runBranchTableSeeder(5, 0);
         $progressBar->advance();
         $this->runWarehouseTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runUnitTableSeeder(5, 0, 0);
         $progressBar->advance();
 
         $progressBar->finish();
@@ -212,5 +219,25 @@ class AppSeed extends Command
     {
         $seeder = new WarehouseTableSeeder();
         $seeder->callWith(WarehouseTableSeeder::class, [$warehousePerCompanies, $onlyThisCompanyId]);
+    }
+
+    private function runUnitTableSeederInteractive()
+    {
+        $this->info('Starting UnitTableSeeder');
+        $countPerCompany = $this->ask('How many unit per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+        $$category = $this->ask('Category (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runUnitTableSeeder($countPerCompany, $onlyThisCompanyId, $category);
+
+        $this->info('UnitTableSeeder Finish.');
+    }
+
+    private function runUnitTableSeeder($countPerCompany, $onlyThisCompanyId, $category)
+    {
+        $seeder = new UnitTableSeeder();
+        $seeder->callWith(UnitTableSeeder::class, [$countPerCompany, $onlyThisCompanyId, $category]);
     }
 }
