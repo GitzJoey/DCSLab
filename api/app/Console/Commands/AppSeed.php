@@ -112,7 +112,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 7;
+        $total = 8;
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
         $progressBar->start();
