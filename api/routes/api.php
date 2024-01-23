@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
@@ -55,6 +56,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function () {
                 Route::get('read', [ProductGroupController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{productgroup:ulid}', [ProductGroupController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
+                Route::get('read', [BrandController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{brand:ulid}', [BrandController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -128,6 +133,12 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [ProductGroupController::class, 'store'])->name('.save');
                 Route::post('edit/{productgroup:ulid}', [ProductGroupController::class, 'update'])->name('.edit');
                 Route::post('delete/{productgroup:ulid}', [ProductGroupController::class, 'delete'])->name('.delete');
+            });
+
+            Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
+                Route::post('save', [BrandController::class, 'store'])->name('.save');
+                Route::post('edit/{brand:ulid}', [BrandController::class, 'update'])->name('.edit');
+                Route::post('delete/{brand:ulid}', [BrandController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */
