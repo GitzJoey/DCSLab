@@ -15,7 +15,7 @@ class UnitTableSeeder extends Seeder
      *
      * @return void
      */
-    public function run($countPerCompany = 5, $onlyThisCompanyId = 0, $category = 0)
+    public function run($countPerCompany = 3, $onlyThisCompanyId = 0, $category = 0)
     {
         if ($onlyThisCompanyId != 0) {
             $companies = Company::where('id', '=', $onlyThisCompanyId)->get();
