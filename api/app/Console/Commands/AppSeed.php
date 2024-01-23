@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\EmployeeTableSeeder;
+use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\UserTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
@@ -86,14 +88,21 @@ class AppSeed extends Command
                 case 'branchtableseeder':
                     $this->runBranchTableSeederInteractive();
                     break;
+                case 'employee':
+                case 'employeetableseeder':
+                    $this->runEmployeeTableSeederInteractive();
+                    break;
                 case 'warehouse':
                 case 'warehousetableseeder':
                     $this->runWarehouseTableSeederInteractive();
                     break;
+                case 'productgroup':
+                case 'productgrouptableseeder':
+                    $this->runProductGroupTableSeederInteractive();
+                    break;
                 case 'brand':
                 case 'brandtableseeder':
                     $this->runBrandTableSeederInteractive();
-                    break;
                 default:
                     $this->info('Cannot find seeder for '.$args);
                     break;
@@ -103,7 +112,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 5;
+        $total = 7;
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
         $progressBar->start();
@@ -112,13 +121,17 @@ class AppSeed extends Command
         $progressBar->advance();
         $this->runRoleTableSeeder(true, 5);
         $progressBar->advance();
-        $this->runCompanyTableSeeder(5, 0);
+        $this->runCompanyTableSeeder(3, 0);
         $progressBar->advance();
-        $this->runBranchTableSeeder(5, 0);
+        $this->runBranchTableSeeder(3, 0);
         $progressBar->advance();
-        $this->runWarehouseTableSeeder(5, 0);
+        $this->runEmployeeTableSeeder(3, 0, 0);
         $progressBar->advance();
-        $this->runBrandTableSeeder(15, 0);
+        $this->runWarehouseTableSeeder(3, 0);
+        $progressBar->advance();
+        $this->runProductGroupTableSeeder(3, 0, 0);
+        $progressBar->advance();
+        $this->runBrandTableSeeder(10, 0);
         $progressBar->advance();
 
         $progressBar->finish();
@@ -202,6 +215,26 @@ class AppSeed extends Command
         $seeder->callWith(BranchTableSeeder::class, [$branchPerCompanies, $onlyThisCompanyId]);
     }
 
+    private function runEmployeeTableSeederInteractive()
+    {
+        $this->info('Starting EmployeeTableSeeder');
+        $employeePerCompanies = $this->ask('How many employees per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+        $onlyThisBranchId = $this->ask('Only for this branchId (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runEmployeeTableSeeder($employeePerCompanies, $onlyThisCompanyId, $onlyThisBranchId);
+
+        $this->info('EmployeeTableSeeder Finish.');
+    }
+
+    private function runEmployeeTableSeeder($employeePerCompanies, $onlyThisCompanyId, $onlyThisBranchId)
+    {
+        $seeder = new EmployeeTableSeeder();
+        $seeder->callWith(EmployeeTableSeeder::class, [$employeePerCompanies, $onlyThisCompanyId, $onlyThisBranchId]);
+    }
+
     private function runWarehouseTableSeederInteractive()
     {
         $this->info('Starting WarehouseTableSeeder');
@@ -221,6 +254,26 @@ class AppSeed extends Command
         $seeder->callWith(WarehouseTableSeeder::class, [$warehousePerCompanies, $onlyThisCompanyId]);
     }
 
+    private function runProductGroupTableSeederInteractive()
+    {
+        $this->info('Starting ProductGroupTableSeeder');
+        $countPerCompany = $this->ask('How many product groups per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+        $category = $this->ask('Product category (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runProductGroupTableSeeder($countPerCompany, $onlyThisCompanyId, $category);
+
+        $this->info('ProductGroupTableSeeder Finish.');
+    }
+
+    private function runProductGroupTableSeeder($countPerCompany, $onlyThisCompanyId, $category)
+    {
+        $seeder = new ProductGroupTableSeeder();
+        $seeder->callWith(ProductGroupTableSeeder::class, [$countPerCompany, $onlyThisCompanyId, $category]);
+    }
+    
     private function runBrandTableSeederInteractive()
     {
         $this->info('Starting BrandTableSeeder');
