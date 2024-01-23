@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BranchController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
@@ -39,6 +40,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
+            });
+        });
+        Route::group(['prefix' => 'product', 'as' => '.product'], function () {
+            Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
+                Route::get('read', [BrandController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{brand:ulid}', [BrandController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -94,6 +101,13 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
                 Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
                 Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
+        });
+        Route::group(['prefix' => 'product', 'middleware' => ['precognitive'], 'as' => '.product'], function () {
+            Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
+                Route::post('save', [BrandController::class, 'store'])->name('.save');
+                Route::post('edit/{brand:ulid}', [BrandController::class, 'update'])->name('.edit');
+                Route::post('delete/{brand:ulid}', [BrandController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */
