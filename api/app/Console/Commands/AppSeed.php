@@ -273,7 +273,7 @@ class AppSeed extends Command
         $seeder = new ProductGroupTableSeeder();
         $seeder->callWith(ProductGroupTableSeeder::class, [$countPerCompany, $onlyThisCompanyId, $category]);
     }
-    
+
     private function runBrandTableSeederInteractive()
     {
         $this->info('Starting BrandTableSeeder');

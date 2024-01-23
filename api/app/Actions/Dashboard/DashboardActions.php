@@ -150,7 +150,7 @@ class DashboardActions
             'subMenu' => [],
         ];
 
-        array_push($root_array['subMenu'], $product_group);        
+        array_push($root_array['subMenu'], $product_group);
         array_push($root_array['subMenu'], $brand);
 
         if ($hasCompany || $hasDevRole) {
