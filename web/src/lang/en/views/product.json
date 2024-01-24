@@ -1,0 +1,52 @@
+{
+    "page_title": "Product",
+    "table": {
+        "title": "Product List",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "brand": "Brand",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Product",
+        "edit": "Edit Product",
+        "show": "Show Product",
+        "delete": "Delete Product"
+    },
+    "field_groups": {
+        "company_info": "Company Information",
+        "branch_info": "Branch Information",
+        "product_info": "Product Information"
+    },
+    "fields": {
+        "company": "Company",
+        "code": "Code",
+        "name": "Name",
+        "product_group": "Group Name",
+        "brand": "Brand Name",
+        "product_type": "Product Type",
+        "taxable_supply": "Taxable Supply",
+        "price_include_vat": "Price Include VAT",
+        "standard_rated_supply": "Standard-Rated Supply",
+        "point": "Point",
+        "use_serial_number": "Use Serial Number",
+        "has_expiry_date": "Has Expiry Date",
+        "remarks": "Remarks",
+        "status": "Status",
+        "units": {
+            "title": "Units",
+            "table": {
+                "cols": {
+                    "code": "Code",
+                    "unit": "Unit",
+                    "conversion_value": "Conversion Value",
+                    "is_base": "Base Unit",
+                    "is_primary": "Primary Unit",
+                    "remarks": "Remarks"
+                }
+            }
+        }
+    }
+}
