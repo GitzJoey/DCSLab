@@ -317,7 +317,7 @@ class ProductActions
         return $code;
     }
 
-    public function isUniqueCodeForProduct(string $code, int $companyId, ?int $exceptId = null): bool
+    public function isUniqueCodeForProduct(string $code, int $companyId, int $exceptId = null): bool
     {
         $result = Product::whereCompanyId($companyId)->where('code', '=', $code);
 
@@ -328,7 +328,7 @@ class ProductActions
         return $result->count() == 0 ? true : false;
     }
 
-    public function isUniqueCodeForProductUnits(string $code, int $companyId, ?int $exceptId = null): bool
+    public function isUniqueCodeForProductUnits(string $code, int $companyId, int $exceptId = null): bool
     {
         $result = ProductUnit::whereCompanyId($companyId)->where('code', '=', $code);
 

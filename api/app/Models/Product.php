@@ -11,9 +11,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use BootableModel;
     use HasFactory;
     use SoftDeletes;
-    use BootableModel;
 
     protected $fillable = [
         'company_id',
