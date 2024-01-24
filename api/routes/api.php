@@ -140,19 +140,16 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('edit/{productgroup:ulid}', [ProductGroupController::class, 'update'])->name('.edit');
                 Route::post('delete/{productgroup:ulid}', [ProductGroupController::class, 'delete'])->name('.delete');
             });
-
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
                 Route::post('save', [BrandController::class, 'store'])->name('.save');
                 Route::post('edit/{brand:ulid}', [BrandController::class, 'update'])->name('.edit');
                 Route::post('delete/{brand:ulid}', [BrandController::class, 'delete'])->name('.delete');
             });
-
             Route::group(['prefix' => 'unit', 'as' => '.unit'], function () {
                 Route::post('save', [UnitController::class, 'store'])->name('.save');
                 Route::post('edit/{unit:ulid}', [UnitController::class, 'update'])->name('.edit');
                 Route::post('delete/{unit:ulid}', [UnitController::class, 'delete'])->name('.delete');
             });
-
             Route::group(['prefix' => 'product', 'as' => '.product'], function () {
                 Route::post('save', [ProductController::class, 'store'])->name('.save');
                 Route::post('edit/{product:ulid}', [ProductController::class, 'update'])->name('.edit');
