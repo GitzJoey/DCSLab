@@ -8,6 +8,7 @@ use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\EmployeeTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\RoleTableSeeder;
+use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\UserTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
 use Illuminate\Console\Command;
@@ -103,6 +104,10 @@ class AppSeed extends Command
                 case 'brand':
                 case 'brandtableseeder':
                     $this->runBrandTableSeederInteractive();
+                case 'unit':
+                case 'unittableseeder':
+                    $this->runUnitTableSeederInteractive();
+                    break;
                 default:
                     $this->info('Cannot find seeder for '.$args);
                     break;
@@ -112,7 +117,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 8;
+        $total = 9;
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
         $progressBar->start();
@@ -132,6 +137,8 @@ class AppSeed extends Command
         $this->runProductGroupTableSeeder(3, 0, 0);
         $progressBar->advance();
         $this->runBrandTableSeeder(10, 0);
+        $progressBar->advance();
+        $this->runUnitTableSeeder(3, 0, 0);
         $progressBar->advance();
 
         $progressBar->finish();
@@ -291,5 +298,25 @@ class AppSeed extends Command
     {
         $seeder = new BrandTableSeeder();
         $seeder->callWith(BrandTableSeeder::class, [$countPerCompany, $onlyThisCompanyId]);
+    }
+
+    private function runUnitTableSeederInteractive()
+    {
+        $this->info('Starting UnitTableSeeder');
+        $countPerCompany = $this->ask('How many unit per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+        $$category = $this->ask('Category (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runUnitTableSeeder($countPerCompany, $onlyThisCompanyId, $category);
+
+        $this->info('UnitTableSeeder Finish.');
+    }
+
+    private function runUnitTableSeeder($countPerCompany, $onlyThisCompanyId, $category)
+    {
+        $seeder = new UnitTableSeeder();
+        $seeder->callWith(UnitTableSeeder::class, [$countPerCompany, $onlyThisCompanyId, $category]);
     }
 }

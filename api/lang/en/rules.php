@@ -9,6 +9,7 @@ return [
     'valid_warehouse' => 'Invalid warehouse value',
     'valid_product_group' => 'Invalid product group value',
     'valid_brand' => 'Invalid brand value',
+    'valid_unit' => 'Invalid unit value',
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
     'inactive_user' => 'Your profile status is inactive',

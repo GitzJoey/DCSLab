@@ -10,6 +10,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
@@ -43,10 +44,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [EmployeeController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{employee:ulid}', [EmployeeController::class, 'read'])->name('.read');
             });
-            Route::group(['prefix' => 'employee', 'as' => '.employee'], function () {
-                Route::get('read', [EmployeeController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{employee:ulid}', [EmployeeController::class, 'read'])->name('.read');
-            });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
@@ -60,6 +57,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
                 Route::get('read', [BrandController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{brand:ulid}', [BrandController::class, 'read'])->name('.read');
+            });
+            Route::group(['prefix' => 'unit', 'as' => '.unit'], function () {
+                Route::get('read', [UnitController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{unit:ulid}', [UnitController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -139,6 +140,12 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [BrandController::class, 'store'])->name('.save');
                 Route::post('edit/{brand:ulid}', [BrandController::class, 'update'])->name('.edit');
                 Route::post('delete/{brand:ulid}', [BrandController::class, 'delete'])->name('.delete');
+            });
+
+            Route::group(['prefix' => 'unit', 'as' => '.unit'], function () {
+                Route::post('save', [UnitController::class, 'store'])->name('.save');
+                Route::post('edit/{unit:ulid}', [UnitController::class, 'update'])->name('.edit');
+                Route::post('delete/{unit:ulid}', [UnitController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */

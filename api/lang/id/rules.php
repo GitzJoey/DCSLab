@@ -9,6 +9,7 @@ return [
     'valid_warehouse' => 'Gudang tidak valid',
     'valid_product_group' => 'Kelompok produk tidak valid',
     'valid_brand' => 'Merk tidak valid',
+    'valid_unit' => 'Satuan tidak valid',
     'too_many_tokens' => 'Terlalu banyak permintaan token',
     'must_reset_password' => 'Harap lakukan reset password',
     'inactive_user' => 'Profil anda tidak aktif',

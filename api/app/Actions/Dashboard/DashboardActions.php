@@ -143,6 +143,12 @@ class DashboardActions
             'title' => 'components.menu.product-brand',
         ];
 
+        $unit = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-unit',
+            'title' => 'components.menu.product-unit',
+        ];
+
         $root_array = [
             'icon' => 'Package',
             'pageName' => 'side-menu-product',
@@ -152,6 +158,7 @@ class DashboardActions
 
         array_push($root_array['subMenu'], $product_group);
         array_push($root_array['subMenu'], $brand);
+        array_push($root_array['subMenu'], $unit);
 
         if ($hasCompany || $hasDevRole) {
             array_push($menu, $root_array);
