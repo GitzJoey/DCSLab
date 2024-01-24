@@ -2,37 +2,47 @@
 
 namespace App\Models;
 
-use App\Enums\UnitCategory;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Unit extends Model
+class ProductUnit extends Model
 {
     use BootableModel;
     use HasFactory;
     use SoftDeletes;
 
+    protected $table = 'product_units';
+
     protected $fillable = [
         'company_id',
+        'product_id',
+        'unit_id',
         'code',
-        'name',
-        'description',
-        'category',
+        'is_base',
+        'conversion_value',
+        'is_primary_unit',
+        'remarks',
     ];
 
     protected $casts = [
-        'category' => UnitCategory::class,
+        'is_base' => 'boolean',
+        'is_primary_unit' => 'boolean',
     ];
 
     public function company()
     {
         return $this->belongsTo(Company::class);
-    }    
+    }
 
-    public function productUnits()
+    public function product()
     {
-        return $this->hasMany(ProductUnit::class);
+        return $this->belongsTo(Product::class);
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }
