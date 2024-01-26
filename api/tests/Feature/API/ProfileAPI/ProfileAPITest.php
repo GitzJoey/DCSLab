@@ -80,8 +80,6 @@ class ProfileAPITest extends APITestCase
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
             ->create();
 
-        $user->password = hash::make('password');
-
         $this->actingAs($user);
 
         $password = 'test123';
@@ -91,8 +89,6 @@ class ProfileAPITest extends APITestCase
             'password' => $password,
             'password_confirmation' => $password,
         ];
-
-        $user['password'] = $password;
 
         $api = $this->json('POST', route('api.post.db.module.profile.update.password'), $changePasswordArr);
 
