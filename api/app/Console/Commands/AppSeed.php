@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\CustomerTableSeeder;
 use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\UserTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
@@ -89,6 +90,10 @@ class AppSeed extends Command
                 case 'warehousetableseeder':
                     $this->runWarehouseTableSeederInteractive();
                     break;
+                case 'customer':
+                case 'customertableseeder':
+                    $this->runCustomerTableSeederInteractive();
+                    break;
                 default:
                     $this->info('Cannot find seeder for '.$args);
                     break;
@@ -112,6 +117,8 @@ class AppSeed extends Command
         $this->runBranchTableSeeder(5, 0);
         $progressBar->advance();
         $this->runWarehouseTableSeeder(5, 0);
+        $progressBar->advance();
+        $this->runCustomerTableSeeder(3, 0);
         $progressBar->advance();
 
         $progressBar->finish();
@@ -212,5 +219,24 @@ class AppSeed extends Command
     {
         $seeder = new WarehouseTableSeeder();
         $seeder->callWith(WarehouseTableSeeder::class, [$warehousePerCompanies, $onlyThisCompanyId]);
+    }
+
+    private function runCustomerTableSeederInteractive()
+    {
+        $this->info('Starting CustomerTableSeeder');
+        $countPerCompany = $this->ask('How many warehouse per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runCustomerTableSeeder($countPerCompany, $onlyThisCompanyId);
+
+        $this->info('CustomerTableSeeder Finish.');
+    }
+
+    private function runCustomerTableSeeder($countPerCompany, $onlyThisCompanyId)
+    {
+        $seeder = new CustomerTableSeeder();
+        $seeder->callWith(CustomerTableSeeder::class, [$countPerCompany, $onlyThisCompanyId]);
     }
 }

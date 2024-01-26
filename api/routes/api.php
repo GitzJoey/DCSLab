@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -39,6 +40,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
+            });
+        });
+        Route::group(['prefix' => 'customer', 'as' => '.customer'], function () {
+            Route::group(['prefix' => 'customer', 'as' => '.customer'], function () {
+                Route::get('read', [CustomerController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{customer:ulid}', [CustomerController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -84,6 +91,23 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [CompanyController::class, 'store'])->name('.save');
                 Route::post('edit/{company:ulid}', [CompanyController::class, 'update'])->name('.edit');
                 Route::post('delete/{company:ulid}', [CompanyController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'branch', 'middleware' => ['precognitive'], 'as' => '.branch'], function () {
+                Route::post('save', [BranchController::class, 'store'])->name('.save');
+                Route::post('edit/{branch:ulid}', [BranchController::class, 'update'])->name('.edit');
+                Route::post('delete/{branch:ulid}', [BranchController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
+                Route::post('save', [WarehouseController::class, 'store'])->name('.save');
+                Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
+                Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
+        });
+        Route::group(['prefix' => 'customer', 'middleware' => ['precognitive'], 'as' => '.customer'], function () {
+            Route::group(['prefix' => 'customer', 'as' => '.customer'], function () {
+                Route::post('save', [CustomerController::class, 'store'])->name('.save');
+                Route::post('edit/{customer:ulid}', [CustomerController::class, 'update'])->name('.edit');
+                Route::post('delete/{customer:ulid}', [CustomerController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'branch', 'middleware' => ['precognitive'], 'as' => '.branch'], function () {
                 Route::post('save', [BranchController::class, 'store'])->name('.save');

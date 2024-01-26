@@ -46,6 +46,7 @@ class DashboardActions
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 
@@ -118,6 +119,30 @@ class DashboardActions
         }
 
         array_push($menu, $root_array);
+
+        return $menu;
+    }
+
+    private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $customer = [
+            'icon' => '',
+            'pageName' => 'side-menu-customer-customer',
+            'title' => 'components.menu.customer-customer',
+        ];
+
+        $root_array = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-customer',
+            'title' => 'components.menu.customer',
+            'subMenu' => [],
+        ];
+
+        array_push($root_array['subMenu'], $customer);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
 
         return $menu;
     }
