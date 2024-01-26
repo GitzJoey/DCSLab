@@ -5,10 +5,10 @@ namespace App\Console\Commands;
 use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\CustomerGroupTableSeeder;
 use Database\Seeders\EmployeeTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\ProductTableSeeder;
-use Database\Seeders\CustomerGroupTableSeeder;
 use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\UnitTableSeeder;
@@ -155,11 +155,11 @@ class AppSeed extends Command
         $progressBar->advance();
         $this->runUnitTableSeeder(3, 0, 0);
         $progressBar->advance();
-        $this->runProductTableSeeder(5, 0, 0); 
+        $this->runProductTableSeeder(5, 0, 0);
         $progressBar->advance();
-        $this->runSupplierTableSeeder(3, 0); 
+        $this->runSupplierTableSeeder(3, 0);
         $progressBar->advance();
-        $this->runCustomerGroupTableSeeder(3, 0); 
+        $this->runCustomerGroupTableSeeder(3, 0);
         $progressBar->advance();
 
         $progressBar->finish();
