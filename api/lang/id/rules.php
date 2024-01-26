@@ -12,6 +12,8 @@ return [
     'valid_unit' => 'Satuan tidak valid',
     'valid_product' => 'Produk tidak valid',
     'valid_supplier' => 'Pemasok tidak valid',
+    'valid_customer_group' => 'Kelompok pelanggan tidak valid',
+    'valid_customer' => 'Pelanggan tidak valid',
     'too_many_tokens' => 'Terlalu banyak permintaan token',
     'must_reset_password' => 'Harap lakukan reset password',
     'inactive_user' => 'Profil anda tidak aktif',

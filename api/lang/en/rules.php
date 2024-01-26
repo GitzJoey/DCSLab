@@ -12,6 +12,8 @@ return [
     'valid_unit' => 'Invalid unit value',
     'valid_product' => 'Invalid product value',
     'valid_supplier' => 'Invalid supplier value',
+    'valid_customer_group' => 'Invalid customer group value',
+    'valid_customer' => 'Invalid customer value',
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
     'inactive_user' => 'Your profile status is inactive',
