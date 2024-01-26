@@ -46,6 +46,7 @@ class DashboardActions
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
@@ -105,6 +106,12 @@ class DashboardActions
             'title' => 'components.menu.company-branch',
         ];
 
+        $employees = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-company-employee',
+            'title' => 'components.menu.company-employee',
+        ];
+
         $root_array = [
             'icon' => 'Umbrella',
             'pageName' => 'side-menu-company',
@@ -113,7 +120,7 @@ class DashboardActions
         ];
 
         if ($hasCompany || $hasDevRole) {
-            array_push($root_array['subMenu'], $company, $branches);
+            array_push($root_array['subMenu'], $company, $branches, $employees);
         } else {
             array_push($root_array['subMenu'], $company);
         }
@@ -123,8 +130,59 @@ class DashboardActions
         return $menu;
     }
 
+    private function createMenu_Product(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $product_group = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-product_group',
+            'title' => 'components.menu.product-product_group',
+        ];
+
+        $brand = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-brand',
+            'title' => 'components.menu.product-brand',
+        ];
+
+        $unit = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-unit',
+            'title' => 'components.menu.product-unit',
+        ];
+
+        $product = [
+            'icon' => '',
+            'pageName' => 'side-menu-product-product',
+            'title' => 'components.menu.product-product',
+        ];
+
+        $root_array = [
+            'icon' => 'Package',
+            'pageName' => 'side-menu-product',
+            'title' => 'components.menu.product',
+            'subMenu' => [],
+        ];
+
+        array_push($root_array['subMenu'], $product_group);
+        array_push($root_array['subMenu'], $brand);
+        array_push($root_array['subMenu'], $unit);
+        array_push($root_array['subMenu'], $product);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+
     private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
+        $customer_group = [
+            'icon' => '',
+            'pageName' => 'side-menu-customer-customer_group',
+            'title' => 'components.menu.customer-customer_group',
+        ];
+
         $customer = [
             'icon' => '',
             'pageName' => 'side-menu-customer-customer',
@@ -138,6 +196,7 @@ class DashboardActions
             'subMenu' => [],
         ];
 
+        array_push($root_array['subMenu'], $customer_group);
         array_push($root_array['subMenu'], $customer);
 
         if ($hasCompany || $hasDevRole) {

@@ -365,10 +365,19 @@ class UserActions
         }
     }
 
-    public function changePassword(User $user, string $newPassword): void
+    public function changePassword(User $user, string $newPassword): bool
     {
-        $user->password = Hash::make($newPassword);
-        $user->save();
+        $result = false;
+        try {
+            $user->password = Hash::make($newPassword);
+            $user->save();
+
+            $result = true;
+        } catch (Exception $e) {
+            $result = false;
+        }
+
+        return $result;
     }
 
     public function getTokensCount(User $user): int
