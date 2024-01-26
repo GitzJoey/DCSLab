@@ -7,6 +7,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
+            });
+        });
+        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+                Route::get('read', [SupplierController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{supplier:ulid}', [SupplierController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -94,6 +101,13 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
                 Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
                 Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
+        });
+        Route::group(['prefix' => 'supplier', 'middleware' => ['precognitive'], 'as' => '.supplier'], function () {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+                Route::post('save', [SupplierController::class, 'store'])->name('.save');
+                Route::post('edit/{supplier:ulid}', [SupplierController::class, 'update'])->name('.edit');
+                Route::post('delete/{supplier:ulid}', [SupplierController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */
