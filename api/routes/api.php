@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
@@ -76,6 +77,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/unit/category', [UnitController::class, 'getUnitCategory'])->name('.read.unit.categories');
                 Route::get('read/product/type', [ProductController::class, 'getProductType'])->name('.read.product.type');
                 Route::get('read/product/all/active', [ProductController::class, 'getAllActiveProduct'])->name('.read.product.all.active');
+            });
+        });
+        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+                Route::get('read', [SupplierController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{supplier:ulid}', [SupplierController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -169,6 +176,13 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [ProductController::class, 'store'])->name('.save');
                 Route::post('edit/{product:ulid}', [ProductController::class, 'update'])->name('.edit');
                 Route::post('delete/{product:ulid}', [ProductController::class, 'delete'])->name('.delete');
+            });
+        });
+        Route::group(['prefix' => 'supplier', 'middleware' => ['precognitive'], 'as' => '.supplier'], function () {
+            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
+                Route::post('save', [SupplierController::class, 'store'])->name('.save');
+                Route::post('edit/{supplier:ulid}', [SupplierController::class, 'update'])->name('.edit');
+                Route::post('delete/{supplier:ulid}', [SupplierController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */

@@ -11,6 +11,7 @@ return [
     'valid_brand' => 'Invalid brand value',
     'valid_unit' => 'Invalid unit value',
     'valid_product' => 'Invalid product value',
+    'valid_supplier' => 'Invalid supplier value',
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
     'inactive_user' => 'Your profile status is inactive',

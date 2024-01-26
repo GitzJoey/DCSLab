@@ -9,6 +9,7 @@ use Database\Seeders\EmployeeTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\ProductTableSeeder;
 use Database\Seeders\RoleTableSeeder;
+use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\UserTableSeeder;
 use Database\Seeders\WarehouseTableSeeder;
@@ -113,6 +114,10 @@ class AppSeed extends Command
                 case 'producttableseeder':
                     $this->runProductTableSeederInteractive();
                     break;
+                case 'supplier':
+                case 'suppliertableseeder':
+                    $this->runSupplierTableSeederInteractive();
+                    break;
                 default:
                     $this->info('Cannot find seeder for '.$args);
                     break;
@@ -122,7 +127,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 10;
+        $total = 11;
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
         $progressBar->start();
@@ -146,6 +151,8 @@ class AppSeed extends Command
         $this->runUnitTableSeeder(3, 0, 0);
         $progressBar->advance();
         $this->runProductTableSeeder(5, 0, 0);
+        $progressBar->advance();
+        $this->runSupplierTableSeeder(3, 0);
         $progressBar->advance();
 
         $progressBar->finish();
@@ -345,5 +352,24 @@ class AppSeed extends Command
     {
         $seeder = new ProductTableSeeder();
         $seeder->callWith(ProductTableSeeder::class, [$productPerCompany, $onlyThisCompanyId, $category]);
+    }
+
+    private function runSupplierTableSeederInteractive()
+    {
+        $this->info('Starting SupplierTableSeeder');
+        $supplierPerCompanies = $this->ask('How many supplier per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runSupplierTableSeeder($supplierPerCompanies, $onlyThisCompanyId);
+
+        $this->info('SupplierTableSeeder Finish.');
+    }
+
+    private function runSupplierTableSeeder($supplierPerCompanies, $onlyThisCompanyId)
+    {
+        $seeder = new SupplierTableSeeder();
+        $seeder->callWith(SupplierTableSeeder::class, [$supplierPerCompanies, $onlyThisCompanyId]);
     }
 }

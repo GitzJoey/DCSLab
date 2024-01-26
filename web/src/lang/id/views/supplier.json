@@ -1,0 +1,51 @@
+{
+    "page_title": "Pemasok",
+    "table": {
+        "title": "Daftar Pemasok",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "remarks": "Keterangan",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Pemasok",
+        "edit": "Ubah Pemasok",
+        "show": "Tampilkan Pemasok",
+        "delete": "Hapus Pemasok"
+    },
+    "field_groups": {
+        "company_info": "Informasi Perusahaan",
+        "branch_data": "Data Cabang",
+        "supplier_data": "Data Pemasok"
+    },
+    "fields": {
+        "company": "Nama Perusahaan",
+        "code": "Kode",
+        "name": "Nama",
+        "address": "Alamat",
+        "city": "Kota",
+        "contact": "Kontak",
+        "taxable_enterprise": "Perusahaan Kena Pajak",
+        "tax_id": "No. NPWP",
+        "payment_term_type": "Ketentuan Pembayaran",
+        "payment_term": "Tempo",
+        "remarks": "Keterangan",
+        "status": "Status",
+        "pic": {
+            "label": "Penanggung Jawab",
+            "name": "Nama",
+            "email": "Email",
+            "password": "Password"
+        },
+        "supplier_product": {
+            "title": "Pemasok Produk",
+            "table": {
+                "cols": {
+                    "main_product": "Produk Utama"
+                }
+            }
+        }
+    }
+}
