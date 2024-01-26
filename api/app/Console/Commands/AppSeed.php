@@ -6,10 +6,10 @@ use Database\Seeders\BranchTableSeeder;
 use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\CustomerGroupTableSeeder;
+use Database\Seeders\CustomerTableSeeder;
 use Database\Seeders\EmployeeTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
 use Database\Seeders\ProductTableSeeder;
-use Database\Seeders\CustomerTableSeeder;
 use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\SupplierTableSeeder;
 use Database\Seeders\UnitTableSeeder;
@@ -137,7 +137,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 12;
+        $total = 13;
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
         $progressBar->start();
@@ -162,11 +162,11 @@ class AppSeed extends Command
         $progressBar->advance();
         $this->runProductTableSeeder(5, 0, 0);
         $progressBar->advance();
-        $this->runSupplierTableSeeder(3, 0); 
+        $this->runSupplierTableSeeder(3, 0);
         $progressBar->advance();
-        $this->runCustomerGroupTableSeeder(3, 0); 
+        $this->runCustomerGroupTableSeeder(3, 0);
         $progressBar->advance();
-        $this->runCustomerTableSeeder(3, 0); 
+        $this->runCustomerTableSeeder(3, 0);
         $progressBar->advance();
 
         $progressBar->finish();
