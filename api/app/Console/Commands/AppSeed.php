@@ -7,6 +7,7 @@ use Database\Seeders\BrandTableSeeder;
 use Database\Seeders\CompanyTableSeeder;
 use Database\Seeders\EmployeeTableSeeder;
 use Database\Seeders\ProductGroupTableSeeder;
+use Database\Seeders\ProductTableSeeder;
 use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\UnitTableSeeder;
 use Database\Seeders\UserTableSeeder;
@@ -108,6 +109,10 @@ class AppSeed extends Command
                 case 'unittableseeder':
                     $this->runUnitTableSeederInteractive();
                     break;
+                case 'product':
+                case 'producttableseeder':
+                    $this->runProductTableSeederInteractive();
+                    break;
                 default:
                     $this->info('Cannot find seeder for '.$args);
                     break;
@@ -117,7 +122,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 9;
+        $total = 10;
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
         $progressBar->start();
@@ -139,6 +144,8 @@ class AppSeed extends Command
         $this->runBrandTableSeeder(10, 0);
         $progressBar->advance();
         $this->runUnitTableSeeder(3, 0, 0);
+        $progressBar->advance();
+        $this->runProductTableSeeder(5, 0, 0);
         $progressBar->advance();
 
         $progressBar->finish();
@@ -318,5 +325,25 @@ class AppSeed extends Command
     {
         $seeder = new UnitTableSeeder();
         $seeder->callWith(UnitTableSeeder::class, [$countPerCompany, $onlyThisCompanyId, $category]);
+    }
+
+    private function runProductTableSeederInteractive()
+    {
+        $this->info('Starting ProductTableSeeder');
+        $productPerCompany = $this->ask('How many product per company (0 to skip) :', 3);
+        $onlyThisCompanyId = $this->ask('Only for this companyId (0 to all):', 0);
+        $category = $this->ask('Category (0 to all):', 0);
+
+        $this->info('Seeding...');
+
+        $this->runProductTableSeeder($productPerCompany, $onlyThisCompanyId, $category);
+
+        $this->info('ProductTableSeeder Finish.');
+    }
+
+    private function runProductTableSeeder($productPerCompany, $onlyThisCompanyId, $category)
+    {
+        $seeder = new ProductTableSeeder();
+        $seeder->callWith(ProductTableSeeder::class, [$productPerCompany, $onlyThisCompanyId, $category]);
     }
 }
