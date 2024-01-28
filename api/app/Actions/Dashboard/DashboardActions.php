@@ -46,6 +46,9 @@ class DashboardActions
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
@@ -166,6 +169,30 @@ class DashboardActions
         array_push($root_array['subMenu'], $brand);
         array_push($root_array['subMenu'], $unit);
         array_push($root_array['subMenu'], $product);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+
+    private function createMenu_Supplier(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $supplier = [
+            'icon' => '',
+            'pageName' => 'side-menu-supplier-supplier',
+            'title' => 'components.menu.supplier-supplier',
+        ];
+
+        $root_array = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-supplier',
+            'title' => 'components.menu.supplier',
+            'subMenu' => [],
+        ];
+
+        array_push($root_array['subMenu'], $supplier);
 
         if ($hasCompany || $hasDevRole) {
             array_push($menu, $root_array);
