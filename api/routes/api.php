@@ -82,7 +82,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/product/all/active', [ProductController::class, 'getAllActiveProduct'])->name('.read.product.all.active');
             });
         });
-        
+
         Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
             Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
                 Route::get('read', [SupplierController::class, 'readAny'])->name('.read_any');
