@@ -1,0 +1,28 @@
+{
+    "page_title": "Product Group",
+    "table": {
+        "title": "Product Group Lists",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "category": "Category"
+        }
+    },
+    "actions": {
+        "create": "Create Product Group",
+        "edit": "Edit Product Group",
+        "show": "Show Product Group",
+        "delete": "Delete Product Group"
+    },
+    "field_groups": {
+        "company_info": "Company Information",
+        "branch_info": "Branch Information",
+        "product_group_data": "Product Group Data"
+    },
+    "fields": {
+        "company": "Company",
+        "code": "Code",
+        "name": "Name",
+        "category": "Category"
+    }
+}
