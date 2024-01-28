@@ -6,6 +6,7 @@ use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WarehouseController;
@@ -39,6 +40,13 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::get('read', [WarehouseController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{warehouse:ulid}', [WarehouseController::class, 'read'])->name('.read');
+            });
+        });
+
+        Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+            Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+                Route::get('read', [PurchaseOrderController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{purchase_order:ulid}', [PurchaseOrderController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -94,6 +102,14 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
                 Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
                 Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('.delete');
+            });
+        });
+
+        Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+            Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+                Route::post('save', [PurchaseOrderController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_order:ulid}', [PurchaseOrderController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */

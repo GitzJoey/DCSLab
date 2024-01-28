@@ -46,6 +46,7 @@ class DashboardActions
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 
@@ -118,6 +119,30 @@ class DashboardActions
         }
 
         array_push($menu, $root_array);
+
+        return $menu;
+    }
+
+    private function createMenu_PurchaseOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $po = [
+            'icon' => '',
+            'pageName' => 'side-menu-purchase_order-purchaseorder',
+            'title' => 'components.menu.purchase_order-purchaseorder',
+        ];
+
+        $root_array = [
+            'icon' => 'FilePlus',
+            'pageName' => 'side-menu-purchase_order',
+            'title' => 'components.menu.purchase_order',
+            'subMenu' => [],
+        ];
+
+        array_push($root_array['subMenu'], $po);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
 
         return $menu;
     }

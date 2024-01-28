@@ -6,6 +6,11 @@ return [
     'valid_company' => 'Perusahaan tidak valid',
     'valid_branch' => 'Cabang tidak valid',
     'valid_warehouse' => 'Gudang tidak valid',
+    'purchase_order' => [
+        'per_unit_discounts' => 'Discount per unit tidak valid',
+        'per_unit_subtotal_discounts' => 'Discount subtotal per unit tidak valid',
+        'global_discounts' => 'Discount global tidak valid',
+    ],
     'too_many_tokens' => 'Terlalu banyak permintaan token',
     'must_reset_password' => 'Harap lakukan reset password',
     'inactive_user' => 'Profil anda tidak aktif',
