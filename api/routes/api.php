@@ -12,6 +12,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductGroupController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UnitController;
@@ -81,12 +82,14 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/product/all/active', [ProductController::class, 'getAllActiveProduct'])->name('.read.product.all.active');
             });
         });
+
         Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
             Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
                 Route::get('read', [SupplierController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{supplier:ulid}', [SupplierController::class, 'read'])->name('.read');
             });
         });
+
         Route::group(['prefix' => 'customer', 'as' => '.customer'], function () {
             Route::group(['prefix' => 'customer_group', 'as' => '.customer_group'], function () {
                 Route::get('read', [CustomerGroupController::class, 'readAny'])->name('.read_any');
@@ -95,6 +98,13 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'customer', 'as' => '.customer'], function () {
                 Route::get('read', [CustomerController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{customer:ulid}', [CustomerController::class, 'read'])->name('.read');
+            });
+        });
+
+        Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+            Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+                Route::get('read', [PurchaseOrderController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{purchase_order:ulid}', [PurchaseOrderController::class, 'read'])->name('.read');
             });
         });
         /* #endregion */
@@ -209,6 +219,14 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [CustomerController::class, 'store'])->name('.save');
                 Route::post('edit/{customer:ulid}', [CustomerController::class, 'update'])->name('.edit');
                 Route::post('delete/{customer:ulid}', [CustomerController::class, 'delete'])->name('.delete');
+            });
+        });
+
+        Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+            Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+                Route::post('save', [PurchaseOrderController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_order:ulid}', [PurchaseOrderController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('.delete');
             });
         });
         /* #endregion */

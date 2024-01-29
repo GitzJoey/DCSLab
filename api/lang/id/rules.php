@@ -14,6 +14,11 @@ return [
     'valid_supplier' => 'Pemasok tidak valid',
     'valid_customer_group' => 'Kelompok pelanggan tidak valid',
     'valid_customer' => 'Pelanggan tidak valid',
+    'purchase_order' => [
+        'per_unit_discounts' => 'Discount per unit tidak valid',
+        'per_unit_subtotal_discounts' => 'Discount subtotal per unit tidak valid',
+        'global_discounts' => 'Discount global tidak valid',
+    ],
     'too_many_tokens' => 'Terlalu banyak permintaan token',
     'must_reset_password' => 'Harap lakukan reset password',
     'inactive_user' => 'Profil anda tidak aktif',

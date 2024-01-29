@@ -1,0 +1,75 @@
+{
+    "page_title": "Purchase Order",
+    "table": {
+        "title": "Purchase Order List",
+        "cols": {
+            "code": "Code",
+            "supplier": "Supplier",
+            "shipping_date": "Shipping Date",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Purchase Order",
+        "edit": "Edit Purchase Order",
+        "show": "Show Purchase Order",
+        "delete": "Delete Purchase Order"
+    },
+    "field_groups": {
+        "company_info": "Company Information",
+        "branch_data": "Branch Data",
+        "purchase_order_data": "Purchase Order Data"
+    },
+    "fields": {
+        "company": "Company",
+        "branch": "Branch",
+        "invoice_code": "Invoice Code",
+        "invoice_date": "Invoice Date",
+        "supplier": "Supplier",
+        "shipping_date": "Shipping Date",
+        "shipping_address": "Shipping Address",
+        "remarks": "Remarks",
+        "status": "Status",
+        "discount_global": {
+            "title": "Discount Global",
+            "table": {
+                "cols": {
+                    "discount_type": "Discount type",
+                    "amount": "Amount"
+                }
+            }
+        },
+        "product_unit": {
+            "title": "Product Unit",
+            "table": {
+                "cols": {
+                    "product_unit": "Product Unit",
+                    "qty": "Qty",
+                    "amount_per_unit": "Amount Per Unit",
+                    "initial_price": "Inital Price",
+                    "product_unit_per_unit_discount": {
+                        "title": "Product Unit Per Unit Discount",
+                        "table": {
+                            "cols": {
+                                "discount_type": "Discount type",
+                                "amount": "Amount"
+                            }
+                        }
+                    },
+                    "product_unit_per_unit_sub_total_discount": {
+                        "title": "Product Unit Per Unit Sub Total Discount",
+                        "table": {
+                            "cols": {
+                                "discount_type": "Discount type",
+                                "amount": "Amount"
+                            }
+                        }
+                    },
+                    "vat_status": "VAT Status",
+                    "vat_rate": "VAT Rate",
+                    "vat_remarks": "VAT Remarks"
+                }
+            }
+        }
+    }
+}

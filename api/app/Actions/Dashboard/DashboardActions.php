@@ -47,7 +47,9 @@ class DashboardActions
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Product($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Supplier($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Customer($menu, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_PurchaseOrder($menu, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 
@@ -175,6 +177,30 @@ class DashboardActions
         return $menu;
     }
 
+    private function createMenu_Supplier(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $supplier = [
+            'icon' => '',
+            'pageName' => 'side-menu-supplier-supplier',
+            'title' => 'components.menu.supplier-supplier',
+        ];
+
+        $root_array = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-supplier',
+            'title' => 'components.menu.supplier',
+            'subMenu' => [],
+        ];
+
+        array_push($root_array['subMenu'], $supplier);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+
     private function createMenu_Customer(array $menu, bool $hasCompany, bool $hasDevRole): array
     {
         $customer_group = [
@@ -198,6 +224,30 @@ class DashboardActions
 
         array_push($root_array['subMenu'], $customer_group);
         array_push($root_array['subMenu'], $customer);
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($menu, $root_array);
+        }
+
+        return $menu;
+    }
+
+    private function createMenu_PurchaseOrder(array $menu, bool $hasCompany, bool $hasDevRole): array
+    {
+        $purchase_order = [
+            'icon' => '',
+            'pageName' => 'side-menu-purchase_order-purchaseorder',
+            'title' => 'components.menu.purchase_order-purchaseorder',
+        ];
+
+        $root_array = [
+            'icon' => 'FilePlus',
+            'pageName' => 'side-menu-purchase_order',
+            'title' => 'components.menu.purchase_order',
+            'subMenu' => [],
+        ];
+
+        array_push($root_array['subMenu'], $purchase_order);
 
         if ($hasCompany || $hasDevRole) {
             array_push($menu, $root_array);
