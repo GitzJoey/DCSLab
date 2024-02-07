@@ -369,15 +369,12 @@ class UserActions
     {
         $result = false;
 
-        try
-        {
+        try {
             $user->password = Hash::make($newPassword);
             $user->save();
 
             $result = true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $result = false;
         }
 
