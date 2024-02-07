@@ -1,0 +1,49 @@
+{
+    "page_title": "Karyawan",
+    "table": {
+        "title": "Daftar Karyawan",
+        "cols": {
+            "company": "Nama Perusahaan",
+            "code": "Kode",
+            "name": "Nama",
+            "email": "Email",
+            "join_date": "Tanggal Bergabung",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Tambah Karyawan",
+        "edit": "Ubah Karyawan",
+        "show": "Tampilkan Karyawan",
+        "delete": "Hapus Karyawan"
+    },
+    "field_groups": {
+        "company_info": "Informasi Perusahaan",
+        "branch_info": "Informasi Cabang",
+        "employee_data": "Data Karyawan"
+    },
+    "fields": {
+        "company": "Nama Perusahaan",
+        "code": "Kode",
+        "name": "Nama",
+        "email": "Email",
+        "address": "Alamat",
+        "city": "Kota",
+        "postal_code": "Kode Pos",
+        "img_path": "Gambar",
+        "country": "Negara",
+        "tax_id": "No. NPWP",
+        "ic_num": "No. KTP",
+        "join_date": "Tanggal Bergabung",
+        "remarks": "Keterangan",
+        "status": "Status",
+        "access": {
+            "access_lists": "Daftar Akses",
+            "table": {
+                "cols": {
+                    "branch": "Cabang"
+                }
+            }
+        }
+    }
+}

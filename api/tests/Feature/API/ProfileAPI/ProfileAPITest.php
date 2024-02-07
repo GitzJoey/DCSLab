@@ -32,7 +32,7 @@ class ProfileAPITest extends APITestCase
 
         $userArr = User::factory()->make()->toArray();
 
-        $api = $this->json('POST', route('api.post.db.module.profile.update.user'), $userArr);
+        $api = $this->json('POST', route('api.post.db.module.profile.update.user_profile'), $userArr);
 
         $api->assertSuccessful();
 
@@ -56,7 +56,7 @@ class ProfileAPITest extends APITestCase
 
         $profileArr = Profile::factory()->make()->toArray();
 
-        $api = $this->json('POST', route('api.post.db.module.profile.update.profile'), $profileArr);
+        $api = $this->json('POST', route('api.post.db.module.profile.update.personal_info'), $profileArr);
 
         $api->assertSuccessful();
 
@@ -85,12 +85,10 @@ class ProfileAPITest extends APITestCase
         $password = 'test123';
 
         $changePasswordArr = [
-            'current_password' => $user->password,
+            'current_password' => 'password',
             'password' => $password,
             'password_confirmation' => $password,
         ];
-
-        $user['password'] = $password;
 
         $api = $this->json('POST', route('api.post.db.module.profile.update.password'), $changePasswordArr);
 

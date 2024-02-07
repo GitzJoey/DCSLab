@@ -1,0 +1,42 @@
+{
+    "page_title": "Customer Group",
+    "table": {
+        "title": "Customer Group List",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "remarks": "Remarks"
+        }
+    },
+    "actions": {
+        "create": "Create Customer Group",
+        "edit": "Edit Customer Group",
+        "show": "Show Customer Group",
+        "delete": "Delete Customer Group"
+    },
+    "field_groups": {
+        "company_info": "Company Information",
+        "branch_info": "Branch Information",
+        "customer_group_info": "Customer Group Information"
+    },
+    "fields": {
+        "company": "Company",
+        "code": "Code",
+        "name": "Name",
+        "max_open_invoice": "Max Open Invoice",
+        "max_outstanding_invoice": "Max Outstanding Invoice",
+        "max_invoice_age": "Max Invoice Age",
+        "payment_term_type": "Payment Term Type",
+        "payment_term": "Payment Term",
+        "selling_point": "Selling Point",
+        "selling_point_multiple": "Selling Point Multiple",
+        "sell_at_cost": "Sell At Cost",
+        "price_markup_percent": "Price Markup Percent",
+        "price_markup_nominal": "Price Markup Nominal",
+        "price_markdown_percent": "Price Markdown Percent",
+        "price_markdown_nominal": "Price Markdown Nominal",
+        "round_on": "Round On",
+        "round_digit": "Round Digit",
+        "remarks": "Remarks"
+    }
+}
