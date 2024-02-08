@@ -35,9 +35,4 @@ class Branch extends Model
     {
         return $this->belongsTo(Company::class);
     }
-
-    public function warehouses()
-    {
-        return $this->hasMany(Warehouse::class);
-    }
 }
