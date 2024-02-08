@@ -114,8 +114,28 @@ const handleExpandCard = (index: number) => {
     }
 }
 
-const onSubmit = async () => {
+const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
 
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+const onSubmit = async () => {
+    if (branchForm.hasErrors) {
+        scrollToError(Object.keys(branchForm.errors)[0]);
+    }
+
+    emits('loading-state', true);
+    await branchForm.submit().then(() => {
+        resetForm();
+        router.push({ name: 'side-menu-company-branch-list' });
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        emits('loading-state', false);
+    });
 };
 
 const resetForm = async () => {
