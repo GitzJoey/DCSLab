@@ -25,6 +25,7 @@ import Button from "../../base-components/Button";
 import { debounce } from "lodash";
 import Lucide from "../../base-components/Lucide";
 import { Company } from "../../types/models/Company";
+import { useRouter } from "vue-router";
 // #endregion
 
 // #region Interfaces
@@ -33,6 +34,7 @@ import { Company } from "../../types/models/Company";
 // #region Declarations
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
 
 const companyServices = new CompanyService();
 const dashboardServices = new DashboardService();
@@ -97,8 +99,28 @@ const handleExpandCard = (index: number) => {
     }
 }
 
-const onSubmit = async () => {
+const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
 
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+const onSubmit = async () => {
+    if (companyForm.hasErrors) {
+        scrollToError(Object.keys(companyForm.errors)[0]);
+    }
+
+    emits('loading-state', true);
+    await companyForm.submit().then(() => {
+        resetForm();
+        router.push({ name: 'side-menu-company-company-list' });
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        emits('loading-state', false);
+    });
 };
 
 const resetForm = async () => {

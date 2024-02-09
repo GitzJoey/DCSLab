@@ -22,6 +22,7 @@ import Button from "../../base-components/Button";
 import { ViewMode } from "../../types/enums/ViewMode";
 import { debounce } from "lodash";
 import Lucide from "../../base-components/Lucide";
+import { useRouter } from "vue-router";
 // #endregion
 
 // #region Interfaces
@@ -29,6 +30,7 @@ import Lucide from "../../base-components/Lucide";
 
 // #region Declarations
 const { t } = useI18n();
+const router = useRouter();
 
 const companyServices = new CompanyService();
 const dashboardServices = new DashboardService();
@@ -95,6 +97,16 @@ const onSubmit = async () => {
     if (companyForm.hasErrors) {
         scrollToError(Object.keys(companyForm.errors)[0]);
     }
+
+    emits('loading-state', true);
+    await companyForm.submit().then(() => {
+        resetForm();
+        router.push({ name: 'side-menu-company-company-list' });
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        emits('loading-state', false);
+    });
 };
 
 const resetForm = () => {

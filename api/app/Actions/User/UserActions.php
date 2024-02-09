@@ -368,6 +368,7 @@ class UserActions
     public function changePassword(User $user, string $newPassword): bool
     {
         $result = false;
+
         try {
             $user->password = Hash::make($newPassword);
             $user->save();
