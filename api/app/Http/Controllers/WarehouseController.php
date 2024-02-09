@@ -49,8 +49,8 @@ class WarehouseController extends BaseController
 
         $warehouseArr = [
             'company_id' => $company_id,
-            'code' => $code,
             'branch_id' => $branch_id,
+            'code' => $code,
             'name' => $request['name'],
             'address' => $request['address'],
             'city' => $request['city'],

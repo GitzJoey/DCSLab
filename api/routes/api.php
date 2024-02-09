@@ -161,11 +161,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('edit/{employee:ulid}', [EmployeeController::class, 'update'])->name('.edit');
                 Route::post('delete/{employee:ulid}', [EmployeeController::class, 'delete'])->name('.delete');
             });
-            Route::group(['prefix' => 'employee', 'middleware' => ['precognitive'], 'as' => '.employee'], function () {
-                Route::post('save', [EmployeeController::class, 'store'])->name('.save');
-                Route::post('edit/{employee:ulid}', [EmployeeController::class, 'update'])->name('.edit');
-                Route::post('delete/{employee:ulid}', [EmployeeController::class, 'delete'])->name('.delete');
-            });
             Route::group(['prefix' => 'warehouse', 'as' => '.warehouse'], function () {
                 Route::post('save', [WarehouseController::class, 'store'])->name('.save');
                 Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('.edit');
