@@ -125,7 +125,7 @@ class WarehouseActions
 
     public function read(Warehouse $warehouse): Warehouse
     {
-        return $warehouse->first();
+        return $warehouse->with('company', 'branch')->first();
     }
 
     public function update(
