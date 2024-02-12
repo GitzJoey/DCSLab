@@ -24,7 +24,7 @@ class WarehouseTableSeeder extends Seeder
 
         foreach ($companies as $company) {
             for ($i = 0; $i < $warehousePerCompanies; $i++) {
-                $branch = Branch::whereRelation('company', 'id', '=', $company)->inRandomOrder()->first();
+                $branch = Branch::whereRelation('company', 'id', '=', $company->id)->inRandomOrder()->first();
 
                 $makeItActiveStatus = boolval(random_int(0, 1));
 

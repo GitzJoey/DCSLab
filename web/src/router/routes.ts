@@ -23,6 +23,10 @@ import BranchIndex from "../pages/branch/BranchIndex.vue";
 import BranchList from "../pages/branch/BranchList.vue";
 import BranchCreate from "../pages/branch/BranchCreate.vue";
 import BranchEdit from "../pages/branch/BranchEdit.vue";
+import WarehouseIndex from "../pages/warehouse/WarehouseIndex.vue";
+import WarehouseList from "../pages/warehouse/WarehouseList.vue";
+import WarehouseCreate from "../pages/warehouse/WarehouseCreate.vue";
+import WarehouseEdit from "../pages/warehouse/WarehouseEdit.vue";
 
 export default [
     {
@@ -140,6 +144,38 @@ export default [
                                 path: "/dashboard/company/branch/edit/:ulid",
                                 name: "side-menu-company-branch-edit",
                                 component: BranchEdit,
+                                meta: {
+                                    remember: true,
+                                },
+                            }
+                        ]
+                    },
+                    {
+                        path: "/dashboard/company/warehouse",
+                        name: "side-menu-company-warehouse",
+                        redirect: "/dashboard/company/warehouse/list",
+                        component: WarehouseIndex,
+                        children: [
+                            {
+                                path: "/dashboard/company/warehouse/list",
+                                name: "side-menu-company-warehouse-list",
+                                component: WarehouseList,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/company/warehouse/create",
+                                name: "side-menu-company-warehouse-create",
+                                component: WarehouseCreate,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/company/warehouse/edit/:ulid",
+                                name: "side-menu-company-warehouse-edit",
+                                component: WarehouseEdit,
                                 meta: {
                                     remember: true,
                                 },
