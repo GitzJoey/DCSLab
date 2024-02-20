@@ -154,9 +154,20 @@ const setFormData = () => {
         time_format: userContext.value.settings.time_format,
     });
 
-    if (!hasRolePOSOwner()) { roleSelection.value[0].state = 'selectable' }
-    if (!hasRoleWHOwner()) { roleSelection.value[1].state = 'selectable' }
-    if (!hasRoleACCOwner()) { roleSelection.value[2].state = 'selectable' }
+    roleSelection.value.forEach((r) => {
+        if (r.rolekey == 'pos' && hasRolePOSOwner()) {
+            r.state = 'checked';
+        }
+        else if (r.rolekey == 'wh' && hasRoleWHOwner()) {
+            r.state = 'checked';
+        }
+        else if (r.rolekey == 'acc' && hasRoleACCOwner()) {
+            r.state = 'checked';
+        }
+        else {
+            r.state = 'selectable'
+        }
+    });
 }
 
 const handleExpandCard = (index: number) => {
@@ -178,6 +189,7 @@ const handleChangeRole = (index: number) => {
 const hasRolePOSOwner = () => {
     let result = false;
     for (const r of userContext.value.roles) {
+        console.log(r.display_name);
         if (r.display_name == 'POS-owner') {
             result = true;
         }
