@@ -360,26 +360,54 @@ const sendEmailVerification = () => {
 
 }
 
-const onSubmitUpdateUserProfile = async () => {
+const updateUserProfile = async () => {
+    let userprofile = await profileServices.readProfile();
+    if (userprofile.success) {
+        userContextStore.setUserContext(userprofile.data as UserProfile);
+    }
+}
 
+const onSubmitUpdateUserProfile = async () => {
+    loading.value = true;
+
+    await updateUserProfileForm.submit().then(async () => {
+        await updateUserProfile();
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        loading.value = false;
+    });
 }
 
 const onSubmitUpdatePersonalInfo = async () => {
+    loading.value = true;
 
+    await updatePersonalInfoForm.submit().then(async () => {
+        await updateUserProfile();
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        loading.value = false;
+    });
 }
 
 const onSubmitUpdateAccountSettings = async () => {
+    loading.value = true;
 
+    await updateAccountSettingsForm.submit().then(async () => {
+        await updateUserProfile();
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        loading.value = false;
+    });
 }
 
 const onSubmitUpdateUserRoles = async () => {
     loading.value = true;
 
     await updateUserRolesForm.submit().then(async () => {
-        let userprofile = await profileServices.readProfile();
-        if (userprofile.success) {
-            userContextStore.setUserContext(userprofile.data as UserProfile);
-        }        
+        await updateUserProfile();
     }).catch(error => {
         console.error(error);
     }).finally(() => {
