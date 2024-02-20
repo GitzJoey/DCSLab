@@ -94,7 +94,7 @@ class ProfileController extends BaseController
         $request = $profileRequest->validated();
         $user = Auth::user();
 
-        $currentRole = $user->roles->pluck('id');
+        $currentRole = $user->roles->pluck('id')->toArray();
         $addedRole = $request['roles'];
 
         $roleId = '';

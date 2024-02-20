@@ -49,7 +49,6 @@ const userContextStore = useUserContextStore();
 // #endregion
 
 // #region Props, Emits
-const emits = defineEmits(['mode-state', 'loading-state']);
 // #endregion
 
 // #region Refs
@@ -189,7 +188,6 @@ const handleChangeRole = (index: number) => {
 const hasRolePOSOwner = () => {
     let result = false;
     for (const r of userContext.value.roles) {
-        console.log(r.display_name);
         if (r.display_name == 'POS-owner') {
             result = true;
         }
@@ -375,14 +373,17 @@ const onSubmitUpdateAccountSettings = async () => {
 }
 
 const onSubmitUpdateUserRoles = async () => {
-    emits('loading-state', true);
+    loading.value = true;
 
-    await updateUserRolesForm.submit().then(() => {
-
+    await updateUserRolesForm.submit().then(async () => {
+        let userprofile = await profileServices.readProfile();
+        if (userprofile.success) {
+            userContextStore.setUserContext(userprofile.data as UserProfile);
+        }        
     }).catch(error => {
         console.error(error);
     }).finally(() => {
-        emits('loading-state', false);
+        loading.value = false;
     });
 }
 
