@@ -49,43 +49,43 @@ class UserProfileRequest extends FormRequest
         switch ($currentRouteMethod) {
             case 'updateUserProfile':
                 return [
-                    'name' => 'required|alpha_num',
+                    'name' => ['required', 'alpha_num'],
                 ];
             case 'updatePersonalInformation':
                 return [
-                    'first_name' => 'nullable',
-                    'last_name' => 'nullable',
-                    'address' => 'nullable',
-                    'city' => 'nullable',
-                    'postal_code' => 'alpha_dash|min:5|max:10',
-                    'country' => 'nullable',
-                    'tax_id' => 'required',
-                    'ic_num' => 'required',
-                    'remarks' => 'nullable',
+                    'first_name' => ['nullable'],
+                    'last_name' => ['nullable'],
+                    'address' => ['nullable'],
+                    'city' => ['nullable'],
+                    'postal_code' => ['alpha_dash', 'min:5', 'max:10'],
+                    'country' => ['nullable'],
+                    'tax_id' => ['required'],
+                    'ic_num' => ['required'],
+                    'remarks' => ['nullable'],
                 ];
             case 'updateAccountSettings':
                 return [
-                    'theme' => 'required',
-                    'date_format' => 'required',
-                    'time_format' => 'required',
+                    'theme' => ['required'],
+                    'date_format' => ['required'],
+                    'time_format' => ['required'],
                 ];
             case 'updateUserRoles':
                 return [
-                    'roles' => 'required',
+                    'roles' => ['required'],
                 ];
             case 'updatePassword':
                 return [
-                    'current_password' => 'required|current_password',
-                    'password' => 'required|confirmed',
-                    'password_confirmation' => 'required',
+                    'current_password' => ['required', 'current_password'],
+                    'password' => ['required', 'confirmed'],
+                    'password_confirmation' => ['required'],
                 ];
             case 'updateTokens':
                 return [
-                    'reset_tokens' => 'required',
+                    'reset_tokens' => ['required'],
                 ];
             default:
                 return [
-                    '' => 'required',
+                    '' => ['required'],
                 ];
         }
     }

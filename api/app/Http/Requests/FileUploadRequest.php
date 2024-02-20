@@ -30,7 +30,7 @@ class FileUploadRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|file|mimes:jpeg,png,pdf|max:2048',
+            'file' => ['required', 'file', 'mimes:jpeg,png,pdf', 'max:2048'],
         ];
     }
 }

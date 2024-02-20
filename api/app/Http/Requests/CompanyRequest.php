@@ -98,7 +98,7 @@ class CompanyRequest extends FormRequest
                 return $rules_delete;
             default:
                 return [
-                    '' => 'required',
+                    '' => ['required'],
                 ];
         }
     }

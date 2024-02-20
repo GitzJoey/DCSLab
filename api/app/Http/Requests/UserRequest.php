@@ -127,7 +127,7 @@ class UserRequest extends FormRequest
             return array_merge($rules_update, $nullableArr);
         } else {
             return [
-                '' => 'required',
+                '' => ['required'],
             ];
         }
     }
