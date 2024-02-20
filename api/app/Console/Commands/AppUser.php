@@ -157,9 +157,9 @@ class AppUser extends Command
                 }
 
                 if ($mode == 'Attach') {
-                    $usr->attachRole($role);
+                    $usr->addRole($role);
                 } elseif ($mode == 'Remove') {
-                    $usr->detachRole($role);
+                    $usr->removeRole($role);
                 } else {
                 }
 
