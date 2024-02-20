@@ -22,7 +22,7 @@ import posSystemImage from "../../assets/images/pos_system.png";
 import wareHouseImage from "../../assets/images/warehouse_system.png";
 import accountingImage from "../../assets/images/accounting_system.jpg";
 import googlePlayBadge from "../../assets/images/google-play-badge.png";
-import { Check } from "lucide-vue-next";
+import Lucide from "../../base-components/Lucide";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
@@ -352,19 +352,32 @@ const sendEmailVerification = () => {
 
 const onSubmitUpdateUserProfile = async () => {
 
-};
+}
+
 const onSubmitUpdatePersonalInfo = async () => {
 
-};
+}
+
 const onSubmitUpdateAccountSettings = async () => {
 
-};
-const onSubmitUpdateUserRoles = async () => {
+}
 
-};
+const onSubmitUpdateUserRoles = async () => {
+    emits('loading-state', true);
+
+    await updateUserRolesForm.submit().then(() => {
+
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        emits('loading-state', false);
+    });
+}
+
 const onSubmitUpdatePassword = async () => {
 
-};
+}
+
 const onSubmitUpdateToken = async () => {
 
 };
@@ -601,7 +614,7 @@ watchEffect(async () => {
                                             @click="handleChangeRole(index)">
                                             <img alt="" :src="item.images" width="100" height="100" />
                                             <div v-if="item.state == 'checked'" class="grid grid-cols-1 place-items-center">
-                                                <Check class="text-success" />
+                                                <Lucide icon="Check" class="text-success" />
                                             </div>
                                             <Button v-else-if="item.state == 'selectable'" type="submit" variant="primary"
                                                 size="sm" class="w-28 shadow-md">
