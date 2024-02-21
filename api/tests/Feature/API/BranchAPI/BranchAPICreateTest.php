@@ -33,7 +33,7 @@ class BranchAPICreateTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_branch_api_call_store_without_access_right_expect_forbidden_message()
@@ -52,7 +52,7 @@ class BranchAPICreateTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_branch_api_call_store_with_script_tags_in_payload_expect_stripped()
@@ -113,7 +113,7 @@ class BranchAPICreateTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.save'), $branchArr);
 
-        $api->assertStatus(422);
+        $api->assertUnprocessable();
         $api->assertJsonStructure([
             'errors',
         ]);

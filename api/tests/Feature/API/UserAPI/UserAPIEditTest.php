@@ -47,7 +47,7 @@ class UserAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.admin.user.edit', $user->ulid), $userArr);
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_user_api_call_update_without_access_right_expect_unauthorized_message()
@@ -81,7 +81,7 @@ class UserAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.admin.user.edit', $user->ulid), $userArr);
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_user_api_call_update_with_script_tags_in_payload_expect_stripped()

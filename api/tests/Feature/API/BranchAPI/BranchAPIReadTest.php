@@ -48,7 +48,7 @@ class BranchAPIReadTest extends APITestCase
             'refresh' => true,
         ]));
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_branch_api_call_read_any_without_access_right_expect_forbidden_message()
@@ -80,7 +80,7 @@ class BranchAPIReadTest extends APITestCase
             'refresh' => true,
         ]));
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_branch_api_call_read_without_authorization_expect_unauthorized_message()
@@ -106,7 +106,7 @@ class BranchAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_branch_api_call_read_with_sql_injection_expect_injection_ignored()
@@ -291,7 +291,7 @@ class BranchAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_branch_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
@@ -470,7 +470,7 @@ class BranchAPIReadTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ]));
 
-        $api->assertStatus(422);
+        $api->assertUnprocessable();
     }
 
     public function test_branch_api_call_read_any_with_special_char_in_search_expect_results()

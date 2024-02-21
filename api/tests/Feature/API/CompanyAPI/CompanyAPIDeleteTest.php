@@ -38,7 +38,7 @@ class CompanyAPIDeleteTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', $company->ulid));
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_company_api_call_delete_without_access_right_expect_unauthorized_message()
@@ -62,7 +62,7 @@ class CompanyAPIDeleteTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.company.delete', $company->ulid));
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_company_api_call_delete_expect_successful()

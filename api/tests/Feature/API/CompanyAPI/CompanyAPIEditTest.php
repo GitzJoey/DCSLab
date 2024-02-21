@@ -29,7 +29,7 @@ class CompanyAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_company_api_call_update_without_access_right_expect_unauthorized_message()
@@ -46,7 +46,7 @@ class CompanyAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_company_api_call_update_with_script_tags_in_payload_expect_stripped()
@@ -113,7 +113,7 @@ class CompanyAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.company.edit', $company_1->ulid), $companyArr);
 
-        $api->assertStatus(422);
+        $api->assertUnprocessable();
         $api->assertJsonStructure([
             'errors',
         ]);

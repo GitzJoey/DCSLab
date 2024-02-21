@@ -31,7 +31,7 @@ class BranchAPIDeleteTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->ulid));
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_branch_api_call_delete_without_access_right_expect_unauthorized_message()
@@ -48,7 +48,7 @@ class BranchAPIDeleteTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->ulid));
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_branch_api_call_delete_expect_successful()

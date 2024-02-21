@@ -36,7 +36,7 @@ class BranchAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch->ulid), $branchArr);
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_branch_api_call_update_without_access_right_expect_unauthorized_message()
@@ -58,7 +58,7 @@ class BranchAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch->ulid), $branchArr);
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_branch_api_call_update_with_script_tags_in_payload_expect_stripped()
@@ -124,7 +124,7 @@ class BranchAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.edit', $branch_2->ulid), $branchArr);
 
-        $api->assertStatus(422);
+        $api->assertUnprocessable();
         $api->assertJsonStructure([
             'errors',
         ]);

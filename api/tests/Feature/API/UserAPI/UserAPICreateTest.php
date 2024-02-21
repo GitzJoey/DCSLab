@@ -33,7 +33,7 @@ class UserAPICreateTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_user_api_call_store_without_access_right_expect_unauthorized_message()
@@ -54,7 +54,7 @@ class UserAPICreateTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.admin.user.save'), $userArr);
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_user_api_call_store_with_script_tags_in_payload_expect_stripped()

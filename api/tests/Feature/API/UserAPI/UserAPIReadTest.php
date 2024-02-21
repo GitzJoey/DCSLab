@@ -30,7 +30,7 @@ class UserAPIReadTest extends APITestCase
             'refresh' => true,
         ]));
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_user_api_call_read_any_without_access_right_expect_unauthorized_message()
@@ -48,7 +48,7 @@ class UserAPIReadTest extends APITestCase
             'refresh' => true,
         ]));
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_user_api_call_read_with_sql_injection_expect_injection_ignored()
@@ -64,7 +64,7 @@ class UserAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.admin.user.read', $user->ulid));
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_user_api_call_read_without_access_right_expect_unauthorized_message()
@@ -76,7 +76,7 @@ class UserAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.admin.user.read', $user->ulid));
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_user_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
@@ -191,7 +191,7 @@ class UserAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.admin.user.read_any', []));
 
-        $api->assertStatus(422);
+        $api->assertUnprocessable();
     }
 
     public function test_user_api_call_read_any_with_special_char_in_search_expect_results()

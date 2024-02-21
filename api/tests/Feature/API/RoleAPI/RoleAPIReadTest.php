@@ -22,7 +22,7 @@ class RoleAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.admin.role.read_any', []));
 
-        $api->assertStatus(401);
+        $api->assertUnauthorized();
     }
 
     public function test_role_api_call_read_any_without_access_right_expect_unauthorized_message()
@@ -36,7 +36,7 @@ class RoleAPIReadTest extends APITestCase
 
         $api = $this->getJson(route('api.get.db.admin.role.read_any', []));
 
-        $api->assertStatus(403);
+        $api->assertForbidden();
     }
 
     public function test_role_api_call_read_any_expect_collection()
