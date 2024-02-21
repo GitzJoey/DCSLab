@@ -14,7 +14,31 @@ class AuthAPITest extends APITestCase
 
     public function test_auth_api_call_register_expect_successful()
     {
-        $this->markTestSkipped('Test under construction');
+        $userArr = [
+            'name' => User::factory()->make()->only('name')['name'],
+            'email' => User::factory()->make()->only('email')['email'],
+            'password' => 'password',
+            'password_confirmation' => 'password',
+            'terms' => true,
+        ];
+
+        $api = $this->json('POST', '/register', $userArr);
+
+        $api->assertCreated();
+    }
+
+    public function test_auth_api_call_register_without_terms_expect_unsuccessful()
+    {
+        $userArr = [
+            'name' => User::factory()->make()->only('name')['name'],
+            'email' => User::factory()->make()->only('email')['email'],
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ];
+
+        $api = $this->json('POST', '/register', $userArr);
+
+        $api->assertUnprocessable();
     }
 
     public function test_auth_api_call_login_expect_successful()
