@@ -416,7 +416,16 @@ const onSubmitUpdateUserRoles = async () => {
 }
 
 const onSubmitUpdatePassword = async () => {
+    loading.value = true;
 
+    await updatePasswordForm.submit().then(async () => {
+        await updateUserProfile();
+        updatePasswordForm.reset();
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        loading.value = false;
+    });
 }
 
 const onSubmitUpdateToken = async () => {
