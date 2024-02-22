@@ -11,6 +11,8 @@ import {
     FormErrorMessages,
 } from "../../base-components/Form";
 import { useUserContextStore } from "../../stores/user-context";
+import { useZiggyRouteStore } from "../../stores/ziggy-route";
+import { useSideMenuStore, Menu as sMenu } from "../../stores/side-menu";
 import {
     TitleLayout,
     TwoColumnsLayout,
@@ -26,11 +28,13 @@ import Lucide from "../../base-components/Lucide";
 import Button from "../../base-components/Button";
 import { formatDate } from "../../utils/helper";
 import ProfileService from "../../services/ProfileService";
+import DashboardService from "../../services/DashboardService";
 import { TwoFactorResponse, QRCode, SecretKeyResponse } from "../../types/models/TwoFactorAuthentication";
 import { ConfirmPasswordStatusResponse } from "../../types/models/ConfirmPassword";
 import { UserProfile } from "../../types/models/UserProfile";
 import { ServiceResponse } from "../../types/services/ServiceResponse";
 import { Dialog } from "../../base-components/Headless";
+import { Config } from "ziggy-js";
 // #endregion
 
 // #region Interfaces
@@ -44,8 +48,12 @@ interface RoleSelection {
 // #region Declarations
 const { t } = useI18n();
 
+const dashboardServices = new DashboardService();
 const profileServices = new ProfileService();
+
 const userContextStore = useUserContextStore();
+const sideMenuStore = useSideMenuStore();
+const ziggyRouteStore = useZiggyRouteStore();
 // #endregion
 
 // #region Props, Emits
@@ -367,6 +375,14 @@ const updateUserProfile = async () => {
     }
 }
 
+const updateUserMenu = async () => {
+    let menuResult = await dashboardServices.readUserMenu();
+    sideMenuStore.setUserMenu(menuResult.data as Array<sMenu>);
+
+    let apiResult = await dashboardServices.readUserApi();
+    ziggyRouteStore.setZiggy(apiResult.data as Config);
+}
+
 const onSubmitUpdateUserProfile = async () => {
     loading.value = true;
 
@@ -408,6 +424,7 @@ const onSubmitUpdateUserRoles = async () => {
 
     await updateUserRolesForm.submit().then(async () => {
         await updateUserProfile();
+        await updateUserMenu();
     }).catch(error => {
         console.error(error);
     }).finally(() => {

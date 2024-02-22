@@ -58,11 +58,13 @@ function handleClickAutoButton() {
 
 const localValue = computed({
   get() {
-    if (isAuto.value) {
-      return '_AUTO_'
-    } else {
-      return props.modelValue === undefined ? props.value : props.modelValue;
+    let result = props.modelValue === undefined ? props.value : props.modelValue;
+
+    if (props.modelValue != '_AUTO_') {
+      isAuto.value = false;
     }
+
+    return result;
   },
   set(newValue) {
     if (newValue == "_AUTO_" && isAuto.value == false) {
