@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLinkProps } from "vue-router";
 import { computed, LiHTMLAttributes, inject } from "vue";
-import { ProvideBeradcrumb } from "./Breadcrumb.vue";
+import { ProvideBreadcrumb } from "./Breadcrumb.vue";
 
 interface LinkProps extends /* @vue-ignore */ LiHTMLAttributes {
   to?: RouterLinkProps["to"];
@@ -15,7 +15,7 @@ const { to, active, index } = withDefaults(defineProps<LinkProps>(), {
   index: 0,
 });
 
-const breadcrumb = inject<ProvideBeradcrumb>("breadcrumb");
+const breadcrumb = inject<ProvideBreadcrumb>("breadcrumb");
 
 const computedClass = computed(() => [
   index > 0 && "relative ml-5 pl-0.5",

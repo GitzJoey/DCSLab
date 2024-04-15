@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('purchase_order_id')->references('id')->on('purchase_orders');
-            $table->foreignId('coa_cash_and_bank_id')->references('id')->on('chart_of_accounts');
+            // $table->foreignId('coa_cash_and_bank_id')->references('id')->on('chart_of_accounts');
             $table->string('payment_code');
             $table->dateTime('date');
             $table->integer('payment_term');
