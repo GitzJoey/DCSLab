@@ -51,29 +51,6 @@ class ProductGroupActions
         }
     }
 
-    public function readBy(
-        string $key,
-        string $value
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            switch (strtoupper($key)) {
-                case 'ID':
-                    return ProductGroup::find($value);
-                default:
-                    return null;
-                    break;
-            }
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         int $companyId,
         ?int $category,
@@ -153,9 +130,66 @@ class ProductGroupActions
         }
     }
 
+    public function readBy(
+        string $key,
+        string $value
+    ) {
+        $timer_start = microtime(true);
+
+        try {
+            switch (strtoupper($key)) {
+                case 'ID':
+                    return ProductGroup::find($value);
+                default:
+                    return null;
+                    break;
+            }
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
     public function read(ProductGroup $productGroup): ProductGroup
     {
-        return $productGroup->first();
+        return $productGroup->with('company')->first();
+    }
+
+    public function readProductDDL($companyId)
+    {
+        $timer_start = microtime(true);
+        try {
+            return ProductGroup::where('category', '=', ProductGroupCategory::PRODUCTS->value)
+                ->where('company', '=', $companyId)
+                ->orderBy('name', 'asc')
+                ->get();
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function readServiceDDL($companyId)
+    {
+        $timer_start = microtime(true);
+        try {
+            return ProductGroup::where('category', '=', ProductGroupCategory::SERVICES->value)
+                ->where('company', '=', $companyId)
+                ->orderBy('name', 'asc')
+                ->get();
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(

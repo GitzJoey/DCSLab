@@ -30,6 +30,7 @@ class ProductGroupRequest extends FormRequest
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
             case 'readAny':
+            case 'readProductDDL':
                 return $user->can('viewAny', ProductGroup::class) ? true : false;
             case 'read':
                 return $user->can('view', ProductGroup::class, $productgroup) ? true : false;
@@ -68,6 +69,7 @@ class ProductGroupRequest extends FormRequest
 
                 return $rules_read_any;
             case 'read':
+            case 'readProductDDL':
                 $rules_read = [
                 ];
 
@@ -134,6 +136,7 @@ class ProductGroupRequest extends FormRequest
                 ]);
                 break;
             case 'read':
+            case 'readProductDDL':
                 $this->merge([]);
                 break;
             case 'store':

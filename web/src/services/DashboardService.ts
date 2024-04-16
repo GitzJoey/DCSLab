@@ -99,6 +99,56 @@ export default class DashboardService {
         }
     }
 
+    public async getProductGroupCategoryDDL(): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'categoryDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.product.common.read.productgroup.categories', undefined, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
+        }
+    }
+
+    public async getUnitCategoryDDL(): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'categoryDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.product.common.read.unit.categories', undefined, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
+        }
+    }
+
     public async getCountriesDDL(): Promise<Array<DropDownOption> | null> {
         const ddlName = 'countriesDDL';
         let result: Array<DropDownOption> = [];

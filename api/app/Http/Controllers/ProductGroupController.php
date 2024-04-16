@@ -124,6 +124,50 @@ class ProductGroupController extends BaseController
         }
     }
 
+    public function readProductDDL(ProductGroupRequest $productGroupRequest)
+    {
+        $request = $productGroupRequest->validated();
+
+        $companyId = $request['company_id'];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productGroupActions->readProductDDL($companyId);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return response()->success($result);
+        }
+    }
+
+    public function readServiceDDL(ProductGroupRequest $productGroupRequest)
+    {
+        $request = $productGroupRequest->validated();
+
+        $companyId = $request['company_id'];
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productGroupActions->readServiceDDL($companyId);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return response()->success($result);
+        }
+    }
+
     public function update(ProductGroup $productgroup, ProductGroupRequest $productGroupRequest)
     {
         $request = $productGroupRequest->validated();

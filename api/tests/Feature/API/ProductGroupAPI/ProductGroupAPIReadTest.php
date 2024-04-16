@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API\ProductGroupAPI;
 
+use App\Enums\ProductGroupCategory;
 use App\Enums\UserRoles;
 use App\Models\Company;
 use App\Models\ProductGroup;
@@ -260,7 +261,7 @@ class ProductGroupAPIReadTest extends APITestCase
         $api->assertStatus(422);
     }
 
-    public function test_product_group_api_call_read_with_sql_injection_expect_injection_ignored()
+    public function test_product_group_api_call_read_any_with_sql_injection_expect_injection_ignored()
     {
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
@@ -525,5 +526,59 @@ class ProductGroupAPIReadTest extends APITestCase
         $api = $this->getJson(route('api.get.db.product.product_group.read', $ulid));
 
         $api->assertStatus(404);
+    }
+
+    public function test_product_group_api_call_read_product_ddl_expect_all_data_for_product()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->create();
+
+        $this->actingAs($user);
+
+        $productGroupForProductCount = 3;
+        $productGroupForServiceCount = 1;
+        $company = Company::factory()->setStatusActive()->setIsDefault()
+            ->hasAttached($user)
+            ->has(ProductGroup::factory()->setCategoryToProduct()->count($productGroupForProductCount))
+            ->has(ProductGroup::factory()->setCategoryToService()->count($productGroupForServiceCount))
+            ->create();
+
+        $api = $this->getJson(route('api.get.db.product.product_group.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'category' => ProductGroupCategory::PRODUCTS->value,
+            'search' => '',
+            'paginate' => false,
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonCount($productGroupForProductCount, 'data');
+    }
+
+    public function test_product_group_api_call_read_service_ddl_expect_all_data_for_service()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->create();
+
+        $this->actingAs($user);
+
+        $productGroupForProductCount = 1;
+        $productGroupForServiceCount = 3;
+        $company = Company::factory()->setStatusActive()->setIsDefault()
+            ->hasAttached($user)
+            ->has(ProductGroup::factory()->setCategoryToProduct()->count($productGroupForProductCount))
+            ->has(ProductGroup::factory()->setCategoryToService()->count($productGroupForServiceCount))
+            ->create();
+
+        $api = $this->getJson(route('api.get.db.product.product_group.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'category' => ProductGroupCategory::SERVICES->value,
+            'search' => '',
+            'paginate' => false,
+        ]));
+
+        $api->assertSuccessful();
+        $api->assertJsonCount($productGroupForServiceCount, 'data');
     }
 }

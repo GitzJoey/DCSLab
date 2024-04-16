@@ -14,10 +14,11 @@ import forgot_password from "./en/views/forgot_password.json";
 import reset_password from "./en/views/reset_password.json";
 import profile from "./en/views/profile.json";
 import user from "./en/views/user.json";
-import company from "./en/views/company.json"
-import branch from "./en/views/branch.json"
-import warehouse from "./en/views/warehouse.json"
-import error from "./en/views/error.json"
+import company from "./en/views/company.json";
+import branch from "./en/views/branch.json";
+import warehouse from "./en/views/warehouse.json";
+import product_group from "./en/views/product_group.json";
+import error from "./en/views/error.json";
 
 export default {
     "components": {
@@ -40,7 +41,8 @@ export default {
         "user": user,
         "company": company,
         "branch": branch,
-        "warehouse": warehouse,
+        "warehouse": warehouse,  
+        "product_group": product_group,
         "error": error,
     }
 }
