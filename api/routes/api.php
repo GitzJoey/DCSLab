@@ -58,7 +58,8 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'product_group', 'as' => '.product_group'], function () {
                 Route::get('read', [ProductGroupController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{productgroup:ulid}', [ProductGroupController::class, 'read'])->name('.read');
-                Route::get('read/product', [ProductGroupController::class, 'readProductDDL'])->name('.read.product');
+                Route::get('read/ddl/product', [ProductGroupController::class, 'readProductDDL'])->name('.read.product');
+                Route::get('read/ddl/service', [ProductGroupController::class, 'readServiceDDL'])->name('.read.service');
             });
             Route::group(['prefix' => 'brand', 'as' => '.brand'], function () {
                 Route::get('read', [BrandController::class, 'readAny'])->name('.read_any');

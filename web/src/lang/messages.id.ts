@@ -18,6 +18,7 @@ import company from "./id/views/company.json";
 import branch from "./id/views/branch.json";
 import warehouse from "./id/views/warehouse.json";
 import product_group from "./id/views/product_group.json";
+import brand from "./id/views/brand.json";
 import error from "./id/views/error.json";
 
 export default {
@@ -40,8 +41,9 @@ export default {
         "user": user,
         "company": company,
         "branch": branch,
-        "warehouse": warehouse,  
+        "warehouse": warehouse,        
         "product_group": product_group,
+        "brand": brand,
         "error": error,
     }
 }

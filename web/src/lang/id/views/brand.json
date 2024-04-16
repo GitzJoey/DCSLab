@@ -16,7 +16,7 @@
     "field_groups": {
         "company_info": "Informasi Perusahaan",
         "branch_info": "Informasi Cabang",
-        "brand_info": "Informasi Merk"
+        "brand_data": "Data Merk"
     },
     "fields": {
         "company": "Nama Perusahaan",

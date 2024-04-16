@@ -119,7 +119,7 @@ class BrandActions
 
     public function read(Brand $brand): Brand
     {
-        return $brand->first();
+        return $brand::with('company')->first();
     }
 
     public function readBy(string $key, string $value)

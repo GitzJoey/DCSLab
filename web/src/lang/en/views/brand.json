@@ -16,7 +16,7 @@
     "field_groups": {
         "company_info": "Company Information",
         "branch_info": "Branch Information",
-        "brand_info": "Brand Information"
+        "brand_data": "Brand Data"
     },
     "fields": {
         "company": "Company",
