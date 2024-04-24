@@ -104,7 +104,7 @@ const getWarehouses = async (search: string, paginate: boolean, page: number, pe
 }
 
 const onDataListChanged = async (data: DataListEmittedData) => {
-    await getWarehouses(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+    await getWarehouses(data.search.text, true,data.pagination.page, data.pagination.per_page, false);
 }
 
 const viewSelected = (idx: number) => {
@@ -138,7 +138,7 @@ const confirmDelete = async () => {
     let result: ServiceResponse<boolean | null> = await warehouseServices.delete(deleteUlid.value);
 
     if (result.success) {
-        await getWarehouses('', true, true, 1, 10);
+        await getWarehouses('', true, 1, 10, true);
     }
 
     emits('loading-state', false);

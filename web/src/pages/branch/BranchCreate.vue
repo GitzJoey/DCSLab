@@ -114,6 +114,16 @@ const onSubmit = async () => {
     if (branchForm.hasErrors) {
         scrollToError(Object.keys(branchForm.errors)[0]);
     }
+
+    emits('loading-state', true);
+    await branchForm.submit().then(() => {
+        resetForm();
+        router.push({ name: 'side-menu-company-branch-list' });
+    }).catch(error => {
+        console.error(error);
+    }).finally(() => {
+        emits('loading-state', false);
+    });
 };
 
 const resetForm = () => {
