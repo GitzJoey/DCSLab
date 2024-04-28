@@ -134,7 +134,7 @@ class UnitActions
 
     public function read(Unit $unit): Unit
     {
-        return $unit->first();
+        return $unit::with('company')->first();
     }
 
     public function readBy(string $key, string $value)

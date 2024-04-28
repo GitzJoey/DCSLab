@@ -35,6 +35,10 @@ import BrandIndex from "../pages/brand/BrandIndex.vue";
 import BrandList from "../pages/brand/BrandList.vue";
 import BrandCreate from "../pages/brand/BrandCreate.vue";
 import BrandEdit from "../pages/brand/BrandEdit.vue";
+import UnitIndex from "../pages/unit/UnitIndex.vue";
+import UnitList from "../pages/unit/UnitList.vue";
+import UnitCreate from "../pages/unit/UnitCreate.vue";
+import UnitEdit from "../pages/unit/UnitEdit.vue";
 
 export default [
     {
@@ -258,6 +262,43 @@ export default [
                                 path: "/dashboard/product/brand/edit/:ulid",
                                 name: "side-menu-product-brand-edit",
                                 component: BrandEdit,
+                                meta: {
+                                    remember: true,
+                                },
+                            }
+                        ]
+                    },
+                ]
+            },
+            {
+                path: "/dashboard/product",
+                children: [
+                    {
+                        path: "/dashboard/product/unit",
+                        name: "side-menu-product-unit",
+                        redirect: "/dashboard/product/unit/list",
+                        component: UnitIndex,
+                        children: [
+                            {
+                                path: "/dashboard/product/unit/list",
+                                name: "side-menu-product-unit-list",
+                                component: UnitList,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/product/unit/create",
+                                name: "side-menu-product-unit-create",
+                                component: UnitCreate,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/product/unit/edit/:ulid",
+                                name: "side-menu-product-unit-edit",
+                                component: UnitEdit,
                                 meta: {
                                     remember: true,
                                 },

@@ -18,7 +18,7 @@
     "field_groups": {
         "company_info": "Company Information",
         "branch_info": "Branch Information",
-        "unit_info": "Unit Information"
+        "unit_data": "Unit Data"
     },
     "fields": {
         "company": "Company",

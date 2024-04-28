@@ -91,4 +91,14 @@ class Company extends Model
     {
         return $this->hasMany(CustomerAddress::class);
     }
+
+    public function hasBranches()
+    {
+        return $this->branches()->count() > 0;
+    }
+
+    public function hasNoBranches()
+    {
+        return !$this->hasBranches();
+    }
 }

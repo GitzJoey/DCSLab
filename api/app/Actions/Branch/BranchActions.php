@@ -29,32 +29,18 @@ class BranchActions
         $timer_start = microtime(true);
 
         try {
-            $company_id = $branchArr['company_id'];
-            $code = $branchArr['code'];
-            $name = $branchArr['name'];
-            $address = $branchArr['address'];
-            $city = $branchArr['city'];
-            $contact = $branchArr['contact'];
-            $is_main = $branchArr['is_main'];
-            $remarks = $branchArr['remarks'];
-            $status = $branchArr['status'];
-
-            $company = Company::find($company_id);
-            if ($company->branches()->count() == 0) {
-                $is_main = true;
-                $status = 1;
-            }
+            $company = Company::find($branchArr['company_id']);
 
             $branch = new Branch();
-            $branch->company_id = $company_id;
-            $branch->code = $code;
-            $branch->name = $name;
-            $branch->address = $address;
-            $branch->city = $city;
-            $branch->contact = $contact;
-            $branch->is_main = $is_main;
-            $branch->remarks = $remarks;
-            $branch->status = $status;
+            $branch->company_id = $company->id;
+            $branch->code = $branchArr['code'];
+            $branch->name = $branchArr['name'];
+            $branch->address = $branchArr['address'];
+            $branch->city = $branchArr['city'];
+            $branch->contact = $branchArr['contact'];
+            $branch->is_main = $company->hasNoBranches() ? true : $branchArr['is_main'];
+            $branch->remarks = $branchArr['remarks'];
+            $branch->status = $company->hasNoBranches() ? true : $branchArr['status'];
             $branch->save();
 
             DB::commit();
@@ -184,24 +170,15 @@ class BranchActions
         $timer_start = microtime(true);
 
         try {
-            $code = $branchArr['code'];
-            $name = $branchArr['name'];
-            $address = $branchArr['address'];
-            $city = $branchArr['city'];
-            $contact = $branchArr['contact'];
-            $is_main = $branchArr['is_main'];
-            $remarks = $branchArr['remarks'];
-            $status = $branchArr['status'];
-
             $branch->update([
-                'code' => $code,
-                'name' => $name,
-                'address' => $address,
-                'city' => $city,
-                'contact' => $contact,
-                'is_main' => $is_main,
-                'remarks' => $remarks,
-                'status' => $status,
+                'code' => $branchArr['code'],
+                'name' => $branchArr['name'],
+                'address' => $branchArr['address'],
+                'city' => $branchArr['city'],
+                'contact' => $branchArr['contact'],
+                'is_main' => $branchArr['is_main'],
+                'remarks' => $branchArr['remarks'],
+                'status' => $branchArr['status'],
             ]);
 
             DB::commit();

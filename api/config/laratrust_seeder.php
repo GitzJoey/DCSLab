@@ -36,6 +36,8 @@ return [
             'employee' => 'c,r,ra,u,d',
             'warehouse' => 'c,r,ra,u,d',
             'product_group' => 'c,r,ra,u,d',
+            'brand' => 'c,r,ra,u,d',
+            'unit' => 'c,r,ra,u,d',
         ],
         'POS-employee' => [
             'company' => 'c',
@@ -43,6 +45,8 @@ return [
             'employee' => 'c',
             'warehouse' => 'c,u',
             'product_group' => 'c,u',
+            'brand' => 'c,u',
+            'unit' => 'c,u',
         ],
         'POS-supplier' => [
             'supplier' => 'r,u',
