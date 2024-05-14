@@ -16,9 +16,11 @@ import profile from "./id/views/profile.json";
 import user from "./id/views/user.json";
 import company from "./id/views/company.json";
 import branch from "./id/views/branch.json";
+import employee from "./id/views/employee.json";
 import warehouse from "./id/views/warehouse.json";
 import product_group from "./id/views/product_group.json";
 import unit from "./id/views/unit.json";
+import product from "./id/views/product.json";
 import error from "./id/views/error.json";
 
 export default {
@@ -41,9 +43,11 @@ export default {
         "user": user,
         "company": company,
         "branch": branch,
+        "employee": employee,
         "warehouse": warehouse,        
         "product_group": product_group,
         "unit": unit,
+        "product": product,
         "error": error,
     }
 }

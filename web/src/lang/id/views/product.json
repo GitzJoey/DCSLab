@@ -5,7 +5,7 @@
         "cols": {
             "code": "Kode",
             "name": "Nama",
-            "brand": "Merk",
+            "remarks": "Keterangan",
             "status": "Status"
         }
     },
@@ -18,7 +18,7 @@
     "field_groups": {
         "company_info": "Informasi Perusahaan",
         "branch_info": "Informasi Cabang",
-        "product_info": "Informasi Produk"
+        "product_data": "Informasi Produk"
     },
     "fields": {
         "company": "Nama Perusahaan",

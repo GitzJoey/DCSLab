@@ -1,7 +1,7 @@
 import axios from "../axios";
 import { useZiggyRouteStore } from "../stores/ziggy-route";
 import route, { Config } from "ziggy-js";
-import { Employee } from "../types/models/Employee";
+import { Product } from "../types/models/Product";
 import { Resource } from "../types/resources/Resource";
 import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
@@ -11,7 +11,7 @@ import { ReadAnyRequest } from "../types/services/ServiceRequest";
 import { StatusCode } from "../types/enums/StatusCode";
 import { client, useForm } from "laravel-precognition-vue";
 
-export default class EmployeeService {
+export default class ProductService {
     private ziggyRoute: Config;
     private ziggyRouteStore = useZiggyRouteStore();
 
@@ -23,34 +23,39 @@ export default class EmployeeService {
         this.errorHandlerService = new ErrorHandlerService();
     }
 
-    public useEmployeeCreateForm() {
-        const url = route('api.post.db.company.employee.save', undefined, true, this.ziggyRoute);
+    public useProductCreateForm() {
+        const url = route('api.post.db.product.product.save', undefined, true, this.ziggyRoute);
 
         client.axios().defaults.withCredentials = true;
-        
         const form = useForm('post', url, {
             company_id: '',
-            code: '_AUTO_',
+            code: '',
             name: '',
-            email: '',
-            address: '',
-            city: '',
-            postal_code: '',
-            img_path: '',
-            country: '',
-            tax_id: '',
-            ic_num: '',
-            join_date: '',
+            product_group_id: '',
+            brand_id: '',
+            product_type: '',
+            taxable_supply: '',
+            price_include_vat: '',
+            standard_rated_supply: '',
+            point: '',
+            use_serial_number: '',
+            has_expiry_date: '',
             remarks: '',
-            status: 'ACTIVE',
-            arr_access_branch_id: [],
+            status: '',
+            arr_product_unit_id: '',
+            arr_product_unit_code: '',
+            arr_product_unit_unit_id: '',
+            arr_product_unit_conversion_value: '',
+            arr_product_unit_is_base: '',
+            arr_product_unit_is_primary_unit: '',
+            arr_product_unit_remarks: '',
         });
 
         return form;
     }
 
-    public async readAny(args: ReadAnyRequest): Promise<ServiceResponse<Collection<Array<Employee>> | Resource<Array<Employee>> | null>> {
-        const result: ServiceResponse<Collection<Array<Employee>> | Resource<Array<Employee>> | null> = {
+    public async readAny(args: ReadAnyRequest): Promise<ServiceResponse<Collection<Array<Product>> | Resource<Array<Product>> | null>> {
+        const result: ServiceResponse<Collection<Array<Product>> | Resource<Array<Product>> | null> = {
             success: false
         }
 
@@ -65,11 +70,11 @@ export default class EmployeeService {
             if (args.page) queryParams['page'] = args.page;
             if (args.per_page) queryParams['per_page'] = args.per_page;
 
-            const url = route('api.get.db.company.employee.read_any', {
+            const url = route('api.get.db.product.product.read_any', {
                 _query: queryParams
             }, false, this.ziggyRoute);
 
-            const response: AxiosResponse<Collection<Array<Employee>>> = await axios.get(url);
+            const response: AxiosResponse<Collection<Array<Product>>> = await axios.get(url);
 
             if (response.status == StatusCode.OK) {
                 result.success = true;
@@ -88,17 +93,17 @@ export default class EmployeeService {
         }
     }
 
-    public async read(ulid: string): Promise<ServiceResponse<Employee | null>> {
-        const result: ServiceResponse<Employee | null> = {
+    public async read(ulid: string): Promise<ServiceResponse<Product | null>> {
+        const result: ServiceResponse<Product | null> = {
             success: false
         }
 
         try {
-            const url = route('api.get.db.company.employee.read', {
-                employee: ulid
+            const url = route('api.get.db.product.product.read', {
+                product: ulid
             }, false, this.ziggyRoute);
 
-            const response: AxiosResponse<Resource<Employee>> = await axios.get(url);
+            const response: AxiosResponse<Resource<Product>> = await axios.get(url);
 
             if (response.status == StatusCode.OK) {
                 result.success = true;
@@ -117,26 +122,32 @@ export default class EmployeeService {
         }
     }
 
-    public useEmployeeEditForm(ulid: string) {
-        const url = route('api.post.db.company.employee.edit', ulid, true, this.ziggyRoute);
+    public useProductEditForm(ulid: string) {
+        const url = route('api.post.db.product.product.edit', ulid, true, this.ziggyRoute);
 
         client.axios().defaults.withCredentials = true;
         const form = useForm('post', url, {
             company_id: '',
             code: '',
             name: '',
-            email: '',
-            address: '',
-            city: '',
-            postal_code: '',
-            img_path: '',
-            country: '',
-            tax_id: '',
-            ic_num: '',
-            join_date: '',
+            product_group_id: '',
+            brand_id: '',
+            product_type: '',
+            taxable_supply: '',
+            price_include_vat: '',
+            standard_rated_supply: '',
+            point: '',
+            use_serial_number: '',
+            has_expiry_date: '',
             remarks: '',
-            status: 'ACTIVE',
-            arr_access_branch_id: [],
+            status: '',
+            arr_product_unit_id: '',
+            arr_product_unit_code: '',
+            arr_product_unit_unit_id: '',
+            arr_product_unit_conversion_value: '',
+            arr_product_unit_is_base: '',
+            arr_product_unit_is_primary_unit: '',
+            arr_product_unit_remarks: '',
         });
 
         return form;
@@ -148,7 +159,7 @@ export default class EmployeeService {
         }
 
         try {
-            const url = route('api.post.db.company.employee.delete', ulid, false, this.ziggyRoute);
+            const url = route('api.post.db.product.product.delete', ulid, false, this.ziggyRoute);
 
             const response: AxiosResponse<boolean | null> = await axios.post(url);
 

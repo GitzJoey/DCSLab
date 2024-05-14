@@ -23,6 +23,10 @@ import BranchIndex from "../pages/branch/BranchIndex.vue";
 import BranchList from "../pages/branch/BranchList.vue";
 import BranchCreate from "../pages/branch/BranchCreate.vue";
 import BranchEdit from "../pages/branch/BranchEdit.vue";
+import EmployeeIndex from "../pages/employee/EmployeeIndex.vue";
+import EmployeeList from "../pages/employee/EmployeeList.vue";
+import EmployeeCreate from "../pages/employee/EmployeeCreate.vue";
+import EmployeeEdit from "../pages/employee/EmployeeEdit.vue";
 import WarehouseIndex from "../pages/warehouse/WarehouseIndex.vue";
 import WarehouseList from "../pages/warehouse/WarehouseList.vue";
 import WarehouseCreate from "../pages/warehouse/WarehouseCreate.vue";
@@ -39,6 +43,10 @@ import UnitIndex from "../pages/unit/UnitIndex.vue";
 import UnitList from "../pages/unit/UnitList.vue";
 import UnitCreate from "../pages/unit/UnitCreate.vue";
 import UnitEdit from "../pages/unit/UnitEdit.vue";
+import ProductIndex from "../pages/product/ProductIndex.vue";
+import ProductList from "../pages/product/ProductList.vue";
+import ProductCreate from "../pages/product/ProductCreate.vue";
+import ProductEdit from "../pages/product/ProductEdit.vue";
 
 export default [
     {
@@ -156,6 +164,38 @@ export default [
                                 path: "/dashboard/company/branch/edit/:ulid",
                                 name: "side-menu-company-branch-edit",
                                 component: BranchEdit,
+                                meta: {
+                                    remember: true,
+                                },
+                            }
+                        ]
+                    },
+                    {
+                        path: "/dashboard/company/employee",
+                        name: "side-menu-company-employee",
+                        redirect: "/dashboard/company/employee/list",
+                        component: EmployeeIndex,
+                        children: [
+                            {
+                                path: "/dashboard/company/employee/list",
+                                name: "side-menu-company-employee-list",
+                                component: EmployeeList,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/company/employee/create",
+                                name: "side-menu-company-employee-create",
+                                component: EmployeeCreate,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/company/employee/edit/:ulid",
+                                name: "side-menu-company-employee-edit",
+                                component: EmployeeEdit,
                                 meta: {
                                     remember: true,
                                 },
@@ -299,6 +339,43 @@ export default [
                                 path: "/dashboard/product/unit/edit/:ulid",
                                 name: "side-menu-product-unit-edit",
                                 component: UnitEdit,
+                                meta: {
+                                    remember: true,
+                                },
+                            }
+                        ]
+                    },
+                ]
+            },
+            {
+                path: "/dashboard/product",
+                children: [
+                    {
+                        path: "/dashboard/product/product",
+                        name: "side-menu-product-product",
+                        redirect: "/dashboard/product/product/list",
+                        component: ProductIndex,
+                        children: [
+                            {
+                                path: "/dashboard/product/product/list",
+                                name: "side-menu-product-product-list",
+                                component: ProductList,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/product/product/create",
+                                name: "side-menu-product-product-create",
+                                component: ProductCreate,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/product/product/edit/:ulid",
+                                name: "side-menu-product-product-edit",
+                                component: ProductEdit,
                                 meta: {
                                     remember: true,
                                 },

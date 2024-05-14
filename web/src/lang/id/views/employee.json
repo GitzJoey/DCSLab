@@ -20,7 +20,8 @@
     "field_groups": {
         "company_info": "Informasi Perusahaan",
         "branch_info": "Informasi Cabang",
-        "employee_data": "Data Karyawan"
+        "employee_data": "Data Karyawan",
+        "employee_access": "Akses Karyawan"
     },
     "fields": {
         "company": "Nama Perusahaan",

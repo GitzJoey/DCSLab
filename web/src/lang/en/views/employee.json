@@ -20,7 +20,8 @@
     "field_groups": {
         "company_info": "Company Information",
         "branch_info": "Branch Information",
-        "employee_data": "Employee Data"
+        "employee_data": "Employee Data",
+        "employee_access": "Employee Access"
     },
     "fields": {
         "company": "Company Name",
@@ -39,9 +40,12 @@
         "status": "Status",
         "access": {
             "access_lists": "Access Lists",
+            "selected": "selected Access",
             "table": {
                 "cols": {
-                    "branch": "Branch"
+                    "branch": "Branch",
+                    "selected": "Selected",
+                    "available_access": "Available Access"
                 }
             }
         }

@@ -5,7 +5,7 @@
         "cols": {
             "code": "Code",
             "name": "Name",
-            "brand": "Brand",
+            "remarks": "Remarks",
             "status": "Status"
         }
     },
@@ -18,7 +18,7 @@
     "field_groups": {
         "company_info": "Company Information",
         "branch_info": "Branch Information",
-        "product_info": "Product Information"
+        "product_data": "Product Information"
     },
     "fields": {
         "company": "Company",

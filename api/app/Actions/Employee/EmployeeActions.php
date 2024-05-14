@@ -242,7 +242,7 @@ class EmployeeActions
         }
     }
 
-    public function generateUniqueCodeForProduct(): string
+    public function generateUniqueCode(): string
     {
         $rand = app(RandomizerActions::class);
         $code = $rand->generateAlpha().$rand->generateNumeric();

@@ -96,7 +96,7 @@ class CompanyActions
 
             $result = null;
 
-            $relationship = ['branches'];
+            $relationship = ['branches.company'];
             $relationship = count($with) > 0 ? $with : $relationship;
             $query = Company::with($relationship);
 

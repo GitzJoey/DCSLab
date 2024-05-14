@@ -38,6 +38,7 @@ return [
             'product_group' => 'c,r,ra,u,d',
             'brand' => 'c,r,ra,u,d',
             'unit' => 'c,r,ra,u,d',
+            'product' => 'c,r,ra,u,d',
         ],
         'POS-employee' => [
             'company' => 'c',
@@ -47,12 +48,14 @@ return [
             'product_group' => 'c,u',
             'brand' => 'c,u',
             'unit' => 'c,u',
+            'product' => 'c,u',
         ],
         'POS-supplier' => [
             'supplier' => 'r,u',
         ],
         'POS-customer' => [
             'customer' => 'r,u',
+            'product' => 'r',
         ],
         /* #endregion */
     ],
