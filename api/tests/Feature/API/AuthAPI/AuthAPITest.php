@@ -114,21 +114,21 @@ class AuthAPITest extends APITestCase
 
     public function test_auth_api_call_rejected_because_password_is_expired()
     {
-        $this->markTestSkipped('Under Constructions');
+        $this->markTestSkipped('Under Construction');
     }
 
     public function test_auth_api_call_rejected_because_user_id_is_inactive()
     {
-        $this->markTestSkipped('Under Constructions');
+        $this->markTestSkipped('Under Construction');
     }
 
     public function test_auth_api_call_api_auth_expect_token_created()
     {
-        $this->markTestSkipped('Under Constructions');
+        $this->markTestSkipped('Under Construction');
     }
 
     public function test_auth_api_call_api_auth_where_token_already_created_twice_expect_unsuccesful()
     {
-        $this->markTestSkipped('Under Constructions');
+        $this->markTestSkipped('Under Construction');
     }
 }

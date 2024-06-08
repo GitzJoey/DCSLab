@@ -81,7 +81,7 @@ class BranchAPIDeleteTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.db.company.branch.delete', $ulid));
 
-        $api->assertStatus(404);
+        $api->assertNotFound();
     }
 
     public function test_branch_api_call_delete_without_parameters_expect_failed()
@@ -91,5 +91,10 @@ class BranchAPIDeleteTest extends APITestCase
 
         $this->actingAs($user);
         $api = $this->json('POST', route('api.post.db.company.branch.delete', null));
+    }
+
+    public function test_branch_api_call_delete_default_branch()
+    {
+        $this->markTestSkipped('Under Construction');
     }
 }

@@ -13,6 +13,6 @@ class SearchAPIReadTest extends APITestCase
 
     public function test_search_api_search_()
     {
-        $this->markTestSkipped('Under Constructions');
+        $this->markTestSkipped('Under Construction');
     }
 }
