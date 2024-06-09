@@ -113,7 +113,7 @@ class AuthAPITest extends APITestCase
         $api->assertNoContent();
     }
 
-    public function test_api_auth_controller_call_auth_with_non_existance_email_return_error()
+    public function test_api_auth_controller_call_auth_with_non_existance_email_expect_unsuccessful()
     {
         $api = $this->json('POST', route('api.auth'), [
             'email' => 'nobody@nowhere.com'
@@ -121,7 +121,6 @@ class AuthAPITest extends APITestCase
 
         $api->assertUnprocessable();
 
-        /*
         $user = User::factory()->setNotRequiredResetPassword()
                 ->has(Profile::factory()->setStatusActive())->create();
 
@@ -130,19 +129,15 @@ class AuthAPITest extends APITestCase
             'password' => 'password'
         ]);
 
-        dd($api);
         $api->assertOk();
-        */
     }
 
-    public function test_api_auth_controller_call_auth_rejected_because_password_is_expired()
+    public function test_api_auth_controller_call_auth_with_user_password_is_expired_expect_unsuccessful()
     {
-        $user = User::factory()->create();
-
-
+        $this->markTestSkipped('Under Construction');
     }
 
-    public function test_api_auth_controller_call_auth_rejected_because_user_id_is_inactive()
+    public function test_api_auth_controller_call_auth_with_inactive_user_id_expect_unsuccessful()
     {
         $this->markTestSkipped('Under Construction');
     }
