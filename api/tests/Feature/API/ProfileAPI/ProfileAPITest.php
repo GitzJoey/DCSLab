@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\API\ProfileAPI;
 
+use App\Enums\RecordStatus;
 use App\Enums\UserRoles;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Tests\APITestCase;
 
@@ -188,5 +190,61 @@ class ProfileAPITest extends APITestCase
             'user_id' => $user->id,
             'role_id' => $rolesArr['roles'][0],
         ]);
+    }
+
+    public function test_profile_api_call_read_when_user_dont_have_profile_will_return_forbidden()
+    {
+        $userWithoutProfile = User::factory()->create();
+        $userWithoutProfile->password_changed_at = Carbon::now();
+        $userWithProfile = User::factory()->has(Profile::factory())->create();        
+        $userWithProfile->password_changed_at = Carbon::now();
+
+        $this->actingAs($userWithoutProfile);
+        $api = $this->json('GET', route('api.get.db.module.profile.read'));
+        $api->assertUnauthorized();
+
+        $this->actingAs($userWithProfile);
+        $api = $this->json('GET', route('api.get.db.module.profile.read'));
+        $api->assertOk();
+    }
+
+    public function test_profile_api_call_read_when_password_is_expired_will_return_forbidden()
+    {
+        $user = User::factory()
+                ->has(Profile::factory())->create();
+        $user->password_changed_at = null;
+        $user->save();
+
+        $this->actingAs($user);
+
+        $api = $this->json('GET', route('api.get.db.module.profile.read'));
+
+        $api->assertForbidden();
+
+        $user->password_changed_at = Carbon::now()->subDays(500);
+        $user->save();
+
+        $api = $this->json('GET', route('api.get.db.module.profile.read'));
+        $api->assertForbidden();
+
+        $user->password_changed_at = Carbon::now();
+        $user->save();
+
+        $api = $this->json('GET', route('api.get.db.module.profile.read'));
+        $api->assertOk();
+    }
+
+    public function test_profile_api_call_read_when_user_is_inactive_will_return_forbidden()
+    {
+        $user = User::factory()
+                ->has(Profile::factory()->setStatusInactive())->create();
+        $user->password_changed_at = Carbon::now();
+        $user->save();
+
+        $this->actingAs($user);
+
+        $api = $this->json('GET', route('api.get.db.module.profile.read'));
+
+        $api->assertForbidden();
     }
 }

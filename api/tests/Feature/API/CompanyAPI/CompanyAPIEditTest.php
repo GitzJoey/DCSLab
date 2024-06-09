@@ -118,4 +118,9 @@ class CompanyAPIEditTest extends APITestCase
             'errors',
         ]);
     }
+
+    public function test_company_api_call_update_set_to_non_default_company_when_only_have_one_company_expect_unsuccessful()
+    {
+        $this->markTestSkipped('Under Construction');
+    }
 }
