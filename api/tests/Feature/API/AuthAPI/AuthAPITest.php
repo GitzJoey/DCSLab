@@ -134,21 +134,58 @@ class AuthAPITest extends APITestCase
 
     public function test_api_auth_controller_call_auth_with_user_password_is_expired_expect_unsuccessful()
     {
-        $this->markTestSkipped('Under Construction');
+        $user = User::factory()
+                ->has(Profile::factory())->create();
+
+        $api = $this->json('POST', route('api.auth'), [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $api->assertUnprocessable();
     }
 
     public function test_api_auth_controller_call_auth_with_inactive_user_id_expect_unsuccessful()
     {
-        $this->markTestSkipped('Under Construction');
+        $user = User::factory()
+                ->has(Profile::factory())->create();
+
+        $api = $this->json('POST', route('api.auth'), [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $api->assertUnprocessable();
     }
 
     public function test_api_auth_controller_call_auth_expect_token_created()
     {
-        $this->markTestSkipped('Under Construction');
+        $user = User::factory()
+                ->setNotRequiredResetPassword()
+                ->has(Profile::factory()->setStatusActive())->create();
+
+        $api = $this->json('POST', route('api.auth'), [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $api->assertOk();
     }
 
     public function test_api_auth_controller_call_auth_where_token_already_created_twice_expect_unsuccesful()
     {
-        $this->markTestSkipped('Under Construction');
+        $user = User::factory()
+                ->setNotRequiredResetPassword()
+                ->has(Profile::factory()->setStatusActive())->create();
+        
+        $user->createToken('api')->plainTextToken;
+        $user->createToken('api')->plainTextToken;
+
+        $api = $this->json('POST', route('api.auth'), [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        $api->assertUnprocessable();        
     }
 }
