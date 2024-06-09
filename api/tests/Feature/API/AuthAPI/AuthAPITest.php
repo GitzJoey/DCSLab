@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API\AuthAPI;
 
+use App\Models\Profile;
 use App\Models\User;
 use Tests\APITestCase;
 
@@ -112,9 +113,33 @@ class AuthAPITest extends APITestCase
         $api->assertNoContent();
     }
 
+    public function test_api_auth_controller_call_auth_with_non_existance_email_return_error()
+    {
+        $api = $this->json('POST', route('api.auth'), [
+            'email' => 'nobody@nowhere.com'
+        ]);
+
+        $api->assertUnprocessable();
+
+        /*
+        $user = User::factory()->setNotRequiredResetPassword()
+                ->has(Profile::factory()->setStatusActive())->create();
+
+        $api = $this->json('POST', route('api.auth'), [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+
+        dd($api);
+        $api->assertOk();
+        */
+    }
+
     public function test_api_auth_controller_call_auth_rejected_because_password_is_expired()
     {
-        $this->markTestSkipped('Under Construction');
+        $user = User::factory()->create();
+
+
     }
 
     public function test_api_auth_controller_call_auth_rejected_because_user_id_is_inactive()

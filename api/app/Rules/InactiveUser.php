@@ -23,6 +23,10 @@ class InactiveUser implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (! $this->user && ! $this->user->profile) {
+            $fail('rules.inactive_user')->translate();
+        }
+
         if ($this->user->profile->status == RecordStatus::INACTIVE) {
             $fail('rules.inactive_user')->translate();
         }

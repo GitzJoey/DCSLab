@@ -23,6 +23,10 @@ class MaxTokens implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (! $this->user) {
+            $fail('rules.too_many_tokens')->translate();
+        }
+        
         if ($this->user->tokens->count() > $this->maxTokensPerUser) {
             $fail('rules.too_many_tokens')->translate();
         }

@@ -194,10 +194,9 @@ class ProfileAPITest extends APITestCase
 
     public function test_profile_api_call_read_when_user_dont_have_profile_will_return_forbidden()
     {
-        $userWithoutProfile = User::factory()->create();
-        $userWithoutProfile->password_changed_at = Carbon::now();
-        $userWithProfile = User::factory()->has(Profile::factory())->create();        
-        $userWithProfile->password_changed_at = Carbon::now();
+        $userWithoutProfile = User::factory()->setNotRequiredResetPassword()->create();
+        $userWithProfile = User::factory()->setNotRequiredResetPassword()
+                            ->has(Profile::factory()->setStatusActive())->create();
 
         $this->actingAs($userWithoutProfile);
         $api = $this->json('GET', route('api.get.db.module.profile.read'));
@@ -211,7 +210,7 @@ class ProfileAPITest extends APITestCase
     public function test_profile_api_call_read_when_password_is_expired_will_return_forbidden()
     {
         $user = User::factory()
-                ->has(Profile::factory())->create();
+                ->has(Profile::factory()->setStatusActive())->create();
         $user->password_changed_at = null;
         $user->save();
 
@@ -237,9 +236,8 @@ class ProfileAPITest extends APITestCase
     public function test_profile_api_call_read_when_user_is_inactive_will_return_forbidden()
     {
         $user = User::factory()
+                ->setNotRequiredResetPassword()
                 ->has(Profile::factory()->setStatusInactive())->create();
-        $user->password_changed_at = Carbon::now();
-        $user->save();
 
         $this->actingAs($user);
 

@@ -23,25 +23,23 @@ class ApiAuthController extends Controller
     public function auth(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email', 'exists:users,email'],
         ]);
 
         $user = $this->userActions->readBy('EMAIL', $request['email']);
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            $request->validate([
-                'email' => [new InactiveUser($user), new MaxTokens($user)],
-                'password' => [new MustResetPassword($user)],
-            ]);
+        if (! $user) return response()->error();
 
-            $token = $user->createToken(Config::get('dcslab.API_TOKEN_NAME'))->plainTextToken;
+        $request->validate([
+            'email' => [new InactiveUser($user), new MaxTokens($user)],
+            'password' => ['current_password', new MustResetPassword($user)],
+        ]);
 
-            return (new UserResource($user))->additional(['tokens' => [
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]]);
-        }
+        $token = $user->createToken(Config::get('dcslab.API_TOKEN_NAME'))->plainTextToken;
 
-        return response()->error();
+        return (new UserResource($user))->additional(['tokens' => [
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]]);
     }
 }

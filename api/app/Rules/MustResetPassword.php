@@ -24,6 +24,10 @@ class MustResetPassword implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (! $this->user && ! $this->user->profile) {
+            $fail('rules.must_reset_password')->translate();
+        }
+
         if (is_null($this->user->password_changed_at)) {
             $fail('rules.must_reset_password')->translate();
         }
