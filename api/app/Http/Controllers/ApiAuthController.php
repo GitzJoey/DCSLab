@@ -30,7 +30,7 @@ class ApiAuthController extends Controller
 
         if ($user && Hash::check($request->password, $user->password)) {
             $request->validate([
-                'email' => [new InactiveUser($user), new MaxTokens($user->email)],
+                'email' => [new InactiveUser($user), new MaxTokens($user)],
                 'password' => [new MustResetPassword($user)],
             ]);
 

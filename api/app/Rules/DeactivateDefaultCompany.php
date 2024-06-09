@@ -2,20 +2,19 @@
 
 namespace App\Rules;
 
-use App\Models\User;
+use App\Enums\RecordStatus;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class MaxTokens implements ValidationRule
+class DeactivateDefaultCompany implements ValidationRule
 {
-    private int $maxTokensPerUser;
-    private User $user;
+    private bool $isDefault;
 
-    public function __construct($user)
+    public function __construct(bool $isDefault)
     {
-        $this->user = $user;
-        $this->maxTokensPerUser = 2;
+        $this->isDefault = $isDefault;
     }
+
     /**
      * Run the validation rule.
      *
@@ -23,8 +22,8 @@ class MaxTokens implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($this->user->tokens->count() > $this->maxTokensPerUser) {
-            $fail('rules.too_many_tokens')->translate();
+        if ($this->isDefault == true && $value == RecordStatus::INACTIVE->value) {
+            $fail('rules.company.deactivate_default_company')->translate();
         }
     }
 }

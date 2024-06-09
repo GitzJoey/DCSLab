@@ -76,11 +76,7 @@ watch(
 );
 
 onMounted(async () => {
-  let menuResult = await dashboardServices.readUserMenu();
-  menuStore.setMenu(menuResult.data as Array<sMenu>);
-
-  let apiResult = await dashboardServices.readUserApi();
-  ziggyRouteStore.setZiggy(apiResult.data as Config);
+  await updateMenu();
 
   setFormattedMenu(menu.value);
 
@@ -90,6 +86,14 @@ onMounted(async () => {
 });
 
 const appName = import.meta.env.VITE_APP_NAME;
+
+const updateMenu = async () => {
+  let menuResult = await dashboardServices.readUserMenu();
+  menuStore.setMenu(menuResult.data as Array<sMenu>);
+
+  let apiResult = await dashboardServices.readUserApi();
+  ziggyRouteStore.setZiggy(apiResult.data as Config);
+};
 </script>
 
 <template>
@@ -298,7 +302,7 @@ const appName = import.meta.env.VITE_APP_NAME;
           >
             <TopBar />
             <EmailVerificationAlert />
-            <RouterView />
+            <RouterView @update-menu="updateMenu" />
             <br v-for="i in 3" :key="i" />
             <ScrollToTop :visible="showBackToTop" />
           </div>

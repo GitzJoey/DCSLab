@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\RecordStatus;
 use App\Models\Company;
-use App\Rules\deactivateDefaultCompany;
+use App\Rules\DeactivateDefaultCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -80,7 +80,7 @@ class CompanyRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => ['required', 'max:255'],
                     'default' => ['required', 'boolean'],
-                    'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))],
+                    'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($this->input('default'))],
                 ];
 
                 return array_merge($rules_store, $nullableArr);

@@ -85,14 +85,18 @@ watch(
 );
 
 onMounted(async () => {
+  await updateMenu();
+
+  setFormattedMenu(menu.value);
+});
+
+const updateMenu = async () => {
   let menuResult = await dashboardServices.readUserMenu();
   menuStore.setMenu(menuResult.data as Array<sMenu>);
 
   let apiResult = await dashboardServices.readUserApi();
   ziggyRouteStore.setZiggy(apiResult.data as Config);
-
-  setFormattedMenu(menu.value);
-});
+};
 </script>
 
 <template>
@@ -241,7 +245,7 @@ onMounted(async () => {
           class="rounded-[30px] min-w-0 min-h-screen flex-1 pb-10 bg-slate-100 dark:bg-darkmode-700 px-4 md:px-[22px] max-w-full md:max-w-auto before:content-[''] before:w-full before:h-px before:block"
         >
           <EmailVerificationAlert />
-          <RouterView />
+          <RouterView @update-menu="updateMenu" />
           <br v-for="i in 3" :key="i" />
           <ScrollToTop :visible="showBackToTop" />
         </div>

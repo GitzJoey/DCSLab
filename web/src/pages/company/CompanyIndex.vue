@@ -33,6 +33,7 @@ const profileService = new ProfileService();
 // #endregion
 
 // #region Props, Emits
+const emits = defineEmits(['update-menu']);
 // #endregion
 
 // #region Refs
@@ -103,6 +104,8 @@ const onUpdateProfileTriggered = async () => {
     if (userprofile.success) {
         userContextStore.setUserContext(userprofile.data as UserProfile);
     }
+
+    emits('update-menu');
 };
 
 const onAlertPlaceholderTriggered = (apProps: AlertPlaceholderProps) => {
