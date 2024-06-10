@@ -89,7 +89,7 @@ class CompanyRequest extends FormRequest
                     'code' => ['required', 'max:255'],
                     'name' => ['required', 'max:255'],
                     'default' => ['required', 'boolean'],
-                    'status' => [new Enum(RecordStatus::class), new deactivateDefaultCompany($this->input('default'), $this->input('status'))],
+                    'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($this->input('default'))],
                 ];
 
                 return array_merge($rules_update, $nullableArr);
