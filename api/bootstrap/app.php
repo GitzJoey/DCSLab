@@ -21,6 +21,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'precognitive' => HandlePrecognitiveRequests::class,
             'validate.user' => ValidateUser::class,
         ]);
+
+        $middleware->use([
+            /*
+            \App\Http\Middleware\ForceHeader::class,
+            \App\Http\Middleware\LogRequestResponse::class,
+            \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\XssSanitizer::class,
+            */
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
