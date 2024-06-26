@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\RecordStatus;
 use App\Models\Branch;
 use App\Rules\IsValidCompany;
+use App\Rules\SetBranchToNonMain;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -88,11 +89,12 @@ class BranchRequest extends FormRequest
 
                 return array_merge($rules_store, $nullableArr);
             case 'update':
+                $branch = $this->route('branch');
                 $rules_update = [
                     'company_id' => ['required', new IsValidCompany(), 'bail'],
                     'code' => ['required', 'max:255'],
                     'name' => ['required', 'max:255'],
-                    'is_main' => ['boolean'],
+                    'is_main' => ['boolean', new SetBranchToNonMain($branch)],
                     'status' => [new Enum(RecordStatus::class)],
                 ];
 
