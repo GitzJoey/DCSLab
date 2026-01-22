@@ -7,7 +7,7 @@ import { Collection } from "../types/resources/Collection";
 import { ServiceResponse } from "../types/services/ServiceResponse";
 import { AxiosError, AxiosResponse, isAxiosError } from "axios";
 import ErrorHandlerService from "./ErrorHandlerService";
-import { ReadAnyRequest } from "../types/services/ServiceRequest";
+import { CompanyReadAnyPaginateRequest, CompanyReadAnyGetRequest } from "../types/services/company/CompanyRequest";
 import { StatusCode } from "../types/enums/StatusCode";
 import { client, useForm } from "laravel-precognition-vue";
 
@@ -24,7 +24,7 @@ export default class CompanyService {
     }
 
     public useCompanyCreateForm() {
-        const url = route('api.post.db.company.company.save', undefined, true, this.ziggyRoute);
+        const url = route('api.post.company.save', undefined, true, this.ziggyRoute);
 
         client.axios().defaults.withCredentials = true;
         client.axios().defaults.withXSRFToken = true;
@@ -39,24 +39,73 @@ export default class CompanyService {
         return form;
     }
 
-    public async readAny(args: ReadAnyRequest): Promise<ServiceResponse<Collection<Array<Company>> | Resource<Array<Company>> | null>> {
-        const result: ServiceResponse<Collection<Array<Company>> | Resource<Array<Company>> | null> = {
+    public async readAnyPaginate(args: CompanyReadAnyPaginateRequest): Promise<ServiceResponse<Collection<Array<Company>> | null>> {
+        const result: ServiceResponse<Collection<Array<Company>> | null> = {
             success: false
         }
 
         try {
-            const queryParams: Record<string, string | number | boolean> = {};
-            queryParams['search'] = args.search ? args.search : '';
-            queryParams['refresh'] = args.refresh;
-            queryParams['paginate'] = args.paginate;
-            if (args.page) queryParams['page'] = args.page;
-            if (args.per_page) queryParams['per_page'] = args.per_page;
+            const queryParams: Record<string, any> = {};
+            if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
+            
+            if (args.search) queryParams['search'] = args.search;
+            if (args.status) queryParams['status'] = args.status;
+            if (args.default !== undefined) queryParams['default'] = args.default;
+            if (args.include_id) queryParams['include_id'] = args.include_id;
 
-            const url = route('api.get.db.company.company.read_any', {
+            queryParams['refresh'] = args.refresh;
+            queryParams['paginate'] = {
+                page: args.page,
+                per_page: args.per_page
+            };
+
+            const url = route('api.get.company.read_any', {
                 _query: queryParams
             }, false, this.ziggyRoute);
 
             const response: AxiosResponse<Collection<Array<Company>>> = await axios.get(url);
+
+            if (response.status == StatusCode.OK) {
+                result.success = true;
+                result.data = response.data;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            if (e instanceof Error && e.message.includes('Ziggy error')) {
+                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+            } else if (isAxiosError(e)) {
+                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+            } else {
+                return result;
+            }
+        }
+    }
+
+    public async readAnyGet(args: CompanyReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Company>> | null>> {
+        const result: ServiceResponse<Resource<Array<Company>> | null> = {
+            success: false
+        }
+
+        try {
+            const queryParams: Record<string, any> = {};
+            if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
+            
+            if (args.search) queryParams['search'] = args.search;
+            if (args.status) queryParams['status'] = args.status;
+            if (args.default !== undefined) queryParams['default'] = args.default;
+            if (args.include_id) queryParams['include_id'] = args.include_id;
+
+            queryParams['refresh'] = args.refresh;
+            queryParams['get'] = {
+                limit: args.limit
+            };
+
+            const url = route('api.get.company.read_any', {
+                _query: queryParams
+            }, false, this.ziggyRoute);
+
+            const response: AxiosResponse<Resource<Array<Company>>> = await axios.get(url);
 
             if (response.status == StatusCode.OK) {
                 result.success = true;
@@ -81,9 +130,7 @@ export default class CompanyService {
         }
 
         try {
-            const url = route('api.get.db.company.company.read', {
-                company: ulid
-            }, false, this.ziggyRoute);
+            const url = route('api.get.company.read', {company: ulid}, false, this.ziggyRoute);
 
             const response: AxiosResponse<Resource<Company>> = await axios.get(url);
 
@@ -105,7 +152,7 @@ export default class CompanyService {
     }
 
     public useCompanyEditForm(ulid: string) {
-        const url = route('api.post.db.company.company.edit', ulid, true, this.ziggyRoute);
+        const url = route('api.post.company.edit', ulid, true, this.ziggyRoute);
 
         client.axios().defaults.withCredentials = true;
         client.axios().defaults.withXSRFToken = true;
@@ -126,12 +173,13 @@ export default class CompanyService {
         }
 
         try {
-            const url = route('api.post.db.company.company.delete', ulid, false, this.ziggyRoute);
+            const url = route('api.post.company.delete', { company: ulid }, false, this.ziggyRoute);
 
             const response: AxiosResponse<boolean | null> = await axios.post(url);
 
             if (response.status == StatusCode.OK) {
                 result.success = true;
+                result.data = response.data;
             }
 
             return result;

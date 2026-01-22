@@ -74,13 +74,13 @@ export default class DashboardService {
         }
     }
 
-    public async getStatusDDL(): Promise<Array<DropDownOption> | null> {
-        const ddlName = 'statusDDL';
+    public async getStatusDDL(showDeleted: boolean = true): Promise<Array<DropDownOption> | null> {
+        const ddlName = showDeleted ? 'statusDDL_with_deleted' : 'statusDDL_no_deleted';
         let result: Array<DropDownOption> = [];
 
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.common.ddl.list.statuses', undefined, false, this.ziggyRoute);
+                const url = route('api.get.db.common.ddl.list.statuses', { show_deleted: showDeleted }, false, this.ziggyRoute);
 
                 const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -106,6 +106,56 @@ export default class DashboardService {
         try {
             if (this.cacheService.getCachedDDL(ddlName) == null) {
                 const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
+        }
+    }
+
+    public async getPaymentTermTypesDDL(): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'paymentTermTypesDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.common.ddl.list.payment_term_types', undefined, false, this.ziggyRoute);
+
+                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+
+                this.cacheService.setCachedDDL(ddlName, response.data);
+            }
+
+            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+
+            if (cachedData != null) {
+                result = cachedData as Array<DropDownOption>;
+            }
+
+            return result;
+        } catch (e: unknown) {
+            return result;
+        }
+    }
+
+    public async getRoundingTypesDDL(): Promise<Array<DropDownOption> | null> {
+        const ddlName = 'roundingTypesDDL';
+        let result: Array<DropDownOption> = [];
+
+        try {
+            if (this.cacheService.getCachedDDL(ddlName) == null) {
+                const url = route('api.get.db.common.ddl.list.rounding_types', undefined, false, this.ziggyRoute);
 
                 const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 

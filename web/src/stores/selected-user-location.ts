@@ -102,10 +102,10 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
 
             if (branchUlid)
                 this.selectedUserLocation.branch.ulid = branchUlid;
-            
+
             if (branchCode)
                 this.selectedUserLocation.branch.code = branchCode;
-            
+
             if (branchName)
                 this.selectedUserLocation.branch.name = branchName;
 
@@ -113,6 +113,8 @@ export const useSelectedUserLocationStore = defineStore("selectedUserLocation", 
             sessionStorage.setItem('selectedUserLocation', debug ? JSON.stringify(this.selectedUserLocation) : btoa(JSON.stringify(this.selectedUserLocation)));
 
             this.isUserLocationSelected = true;
+
+            window.location.reload();
         }
     },
 });

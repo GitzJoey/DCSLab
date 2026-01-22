@@ -1,0 +1,41 @@
+{
+    "page_title": "Unit",
+    "table": {
+        "title": "Unit List",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "description": "Description",
+            "type": "Type"
+        }
+    },
+    "actions": {
+        "create": "Create Unit",
+        "edit": "Edit Unit",
+        "show": "Show Unit",
+        "delete": "Delete Unit"
+    },
+    "field_groups": {
+        "company_info": "Company Info",
+        "unit_data": "Unit Data"
+    },
+    "fields": {
+        "company_id": "Company",
+        "code": "Code",
+        "name": "Name",
+        "description": "Description",
+        "type": "Type"
+    },
+    "enums": {
+        "unit_type": {
+            "product": "Product",
+            "service": "Service"
+        }
+    },
+    "alert": {
+        "delete_unit": {
+            "title": "Delete Unit",
+            "content": "Unit Successfully Deleted"
+        }
+    }
+}

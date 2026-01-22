@@ -30,16 +30,16 @@ class BranchActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
 
-        $branchArr = Branch::factory()->make()->toArray();
+        $payload = Branch::factory()->make()->toArray();
 
-        $result = $this->branchActions->update($branch, $branchArr);
+        $result = $this->branchActions->update($branch, $payload);
 
         $this->assertInstanceOf(Branch::class, $result);
         $this->assertDatabaseHas('branches', [
             'id' => $branch->id,
             'company_id' => $branch->company_id,
-            'code' => $branchArr['code'],
-            'name' => $branchArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -55,8 +55,8 @@ class BranchActionsEditTest extends ActionsTestCase
         $branch = $user->companies()->inRandomOrder()->first()
             ->branches()->inRandomOrder()->first();
 
-        $branchArr = [];
+        $payload = [];
 
-        $this->branchActions->update($branch, $branchArr);
+        $this->branchActions->update($branch, $payload);
     }
 }

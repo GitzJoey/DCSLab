@@ -3,8 +3,8 @@
 namespace App\Actions\User;
 
 use App\Actions\Role\RoleActions;
-use App\Enums\RecordStatus;
-use App\Enums\UserRoles;
+use App\Enums\RecordStatusEnum;
+use App\Enums\UserRolesEnum;
 use App\Models\Profile;
 use App\Models\Setting;
 use App\Models\User;
@@ -49,11 +49,11 @@ class UserActions
             'tax_id' => 0,
             'ic_num' => 0,
             'country' => 'Singapore',
-            'status' => RecordStatus::ACTIVE,
+            'status' => RecordStatusEnum::ACTIVE,
         ];
 
         $roleActions = app(RoleActions::class);
-        $roles = [$roleActions->readBy('name', UserRoles::USER->value)->id];
+        $roles = [$roleActions->readBy('name', UserRolesEnum::USER->value)->id];
 
         $usr = $this->create(
             $input,

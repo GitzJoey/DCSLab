@@ -9,7 +9,9 @@ import FormSwitch from "./FormSwitch";
 import InputGroup from "./InputGroup";
 import FormFileUpload from "./FormFileUpload.vue";
 import FormInputCode from "./FormInputCode.vue";
+import FormInputCurrency from "./FormInputCurrency.vue";
 import FormErrorMessages from "./FormErrorMessages.vue";
+import FormTomSelect from "../TomSelect";
 
 export {
   FormCheck,
@@ -22,6 +24,8 @@ export {
   FormSwitch,
   InputGroup,
   FormInputCode,
+  FormInputCurrency,
   FormFileUpload,
   FormErrorMessages,
+  FormTomSelect,
 };

@@ -1,0 +1,60 @@
+{
+    "page_title": "Product Service",
+    "table": {
+        "title": "Product Service List",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "category": "Category",
+            "unit": "Unit",
+            "price": "Price",
+            "point": "Point",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Product Service",
+        "edit": "Edit Product Service",
+        "show": "Show Product Service",
+        "delete": "Delete Product Service"
+    },
+    "field_groups": {
+        "company_info": "Company Info",
+        "product_data": "Product Data",
+        "price_tax_settings": "Price & Tax Settings",
+        "other_settings": "Other Settings"
+    },
+    "fields": {
+        "company_id": "Company",
+        "code": "Code",
+        "name": "Name",
+        "slug": "Slug",
+        "category_id": "Category",
+        "unit_id": "Unit",
+        "price": "Price",
+        "point": "Point",
+        "is_taxable": "Taxable",
+        "vat_rate": "VAT Rate",
+        "is_price_include_vat": "Price Include VAT",
+        "status": "Status",
+        "remarks": "Remarks"
+    },
+    "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+    },
+    "alert": {
+        "create": {
+            "title": "Create Product Service",
+            "message": "Product Service Created Successfully"
+        },
+        "update": {
+            "title": "Update Product Service",
+            "message": "Product Service Updated Successfully"
+        },
+        "delete": {
+            "title": "Delete Product Service",
+            "message": "Product Service Deleted Successfully"
+        }
+    }
+}

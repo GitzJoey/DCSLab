@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { parseColor } from "tailwindcss/lib/util/color";
+import { isAxiosError, AxiosError } from "axios";
 
 dayjs.extend(duration);
 
@@ -35,17 +36,34 @@ const onlyNumber = (string: string) => {
   }
 };
 
-const formatCurrency = (number: number) => {
-  if (number) {
-    const formattedNumber = number.toString().replace(/\D/g, "");
-    const rest = formattedNumber.length % 3;
-    let currency = formattedNumber.substr(0, rest);
-    const thousand = formattedNumber.substr(rest).match(/\d{3}/g);
+const formatCurrency = (number: number | string) => {
+  if (number !== null && number !== undefined && number !== "") {
+    // Convert to string and handle decimals
+    let numStr = number.toString();
+    
+    // Split integer and decimal parts if exists
+    let [integerPart, decimalPart] = numStr.split('.');
+    
+    // Remove non-digit characters from integer part
+    integerPart = integerPart.replace(/\D/g, "");
+    
+    const rest = integerPart.length % 3;
+    let currency = integerPart.substr(0, rest);
+    const thousand = integerPart.substr(rest).match(/\d{3}/g);
     let separator;
 
     if (thousand) {
       separator = rest ? "." : "";
       currency += separator + thousand.join(".");
+    }
+
+    // Add decimal part back if it exists and is not zero
+    if (decimalPart) {
+      // Remove trailing zeros
+      decimalPart = decimalPart.replace(/0+$/, '');
+      if (decimalPart.length > 0) {
+        currency += "," + decimalPart;
+      }
     }
 
     return currency;
@@ -199,6 +217,48 @@ const slideDown = (
   }, duration);
 };
 
+const convertErrorTypeToAlertListType = (error: unknown) => {
+  const record: Record<string, Array<string>> = {};
+
+  const anyError = error as any;
+  const response = isAxiosError(error)
+    ? (error as AxiosError).response
+    : anyError?.response;
+
+  if (response && response.data) {
+    const data = response.data as any;
+
+    if (data.errors && typeof data.errors === "object") {
+      for (const key of Object.keys(data.errors)) {
+        const value = data.errors[key];
+
+        if (Array.isArray(value)) {
+          record[key] = value;
+        } else if (value !== undefined && value !== null) {
+          record[key] = [String(value)];
+        }
+      }
+
+      return record;
+    }
+
+    if (data.message) {
+      record.error = [String(data.message)];
+      return record;
+    }
+  }
+
+  if (error instanceof Error && error.message) {
+    record.error = [error.message];
+  } else if (anyError?.message) {
+    record.error = [String(anyError.message)];
+  } else {
+    record.error = ["Unknown error"];
+  }
+
+  return record;
+};
+
 export {
   cutText,
   formatDate,
@@ -214,4 +274,5 @@ export {
   stringToHTML,
   slideUp,
   slideDown,
+  convertErrorTypeToAlertListType,
 };

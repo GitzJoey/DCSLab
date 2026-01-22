@@ -3,7 +3,7 @@
 namespace Tests\Unit\Actions\UserActions;
 
 use App\Actions\User\UserActions;
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\User;
@@ -31,7 +31,7 @@ class UserActionsEditTest extends ActionsTestCase
         $userArr['password'] = 'test123';
 
         $rolesArr = [];
-        array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($rolesArr, Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first()->id);
 
         $user = $this->userActions->create(
             $userArr,
@@ -47,7 +47,7 @@ class UserActionsEditTest extends ActionsTestCase
         $newUserArr['password'] = 'test123';
 
         $newRolesArr = [];
-        array_push($newRolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($newRolesArr, Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first()->id);
 
         $result = $this->userActions->update(
             $user,
@@ -86,7 +86,7 @@ class UserActionsEditTest extends ActionsTestCase
         $userArr['password'] = 'test123';
 
         $rolesArr = [];
-        array_push($rolesArr, Role::where('name', '=', UserRoles::DEVELOPER->value)->first()->id);
+        array_push($rolesArr, Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first()->id);
 
         $user = $this->userActions->create(
             $userArr,

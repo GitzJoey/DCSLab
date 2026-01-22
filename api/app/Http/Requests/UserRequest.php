@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -103,7 +103,7 @@ class UserRequest extends FormRequest
                 'roles' => ['required'],
                 'tax_id' => ['required'],
                 'ic_num' => ['required'],
-                'status' => [new Enum(RecordStatus::class)],
+                'status' => [new Enum(RecordStatusEnum::class)],
                 'country' => ['required'],
             ];
 
@@ -116,7 +116,7 @@ class UserRequest extends FormRequest
                 'roles' => ['required'],
                 'tax_id' => ['required'],
                 'ic_num' => ['required'],
-                'status' => [new Enum(RecordStatus::class)],
+                'status' => [new Enum(RecordStatusEnum::class)],
                 'country' => ['required'],
 
                 'api_token' => ['nullable', 'boolean'],
@@ -176,7 +176,7 @@ class UserRequest extends FormRequest
                 $this->merge(['roles' => $arr_roles]);
 
                 $this->merge([
-                    'status' => RecordStatus::isValid($this->status) ? RecordStatus::resolveToEnum($this->status)->value : -1,
+                    'status' => RecordStatusEnum::isValid($this->status) ? RecordStatusEnum::resolveToEnum($this->status)->value : -1,
                 ]);
                 break;
             default:

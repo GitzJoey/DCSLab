@@ -1,0 +1,8 @@
+export enum PaymentTermType {
+    PAYMENT_IN_ADVANCE = 'PIA',
+    X_DAYS_AFTER_INVOICE = 'NET',
+    END_OF_MONTH = 'EOM',
+    CASH_ON_DELIVERY = 'COD',
+    CASH_ON_NEXT_DELIVERY = 'CND',
+    CASH_BEFORE_SHIPMENT = 'CBS'
+}

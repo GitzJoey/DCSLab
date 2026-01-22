@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\API\UserAPI;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\User;
@@ -19,13 +19,13 @@ class UserAPICreateTest extends APITestCase
     public function test_user_api_call_store_without_authorization_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $role = Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
             'id' => HashIds::encode($role->id),
             'display_name' => $role->display_name,
@@ -46,7 +46,7 @@ class UserAPICreateTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $role = Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
             'id' => HashIds::encode($role->id),
             'display_name' => $role->display_name,
@@ -70,7 +70,7 @@ class UserAPICreateTest extends APITestCase
     public function test_user_api_call_store_expect_successful()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $this->actingAs($user);
@@ -78,7 +78,7 @@ class UserAPICreateTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $role = Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
             'id' => HashIds::encode($role->id),
             'display_name' => $role->display_name,
@@ -92,7 +92,7 @@ class UserAPICreateTest extends APITestCase
     public function test_user_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $this->actingAs($user);

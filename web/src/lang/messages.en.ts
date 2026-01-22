@@ -19,6 +19,17 @@ import profile from "./en/views/profile.json";
 import user from "./en/views/user.json";
 import company from "./en/views/company.json"
 import branch from "./en/views/branch.json"
+import warehouse from "./en/views/warehouse.json"
+import product_category from "./en/views/product_category.json"
+import brand from "./en/views/brand.json"
+import unit from "./en/views/unit.json"
+import customer_group from "./en/views/customer_group.json"
+import customer from "./en/views/customer.json"
+import investor from "./en/views/investor.json"
+import cash_account from "./en/views/cash_account.json"
+import product_service from "./en/views/product_service.json"
+import product from "./en/views/product.json"
+import stock_adjustment_category from "./en/views/stock_adjustment_category.json"
 import error from "./en/views/error.json"
 
 export default {
@@ -45,6 +56,17 @@ export default {
         "user": user,
         "company": company,
         "branch": branch,
+        "warehouse": warehouse,
+        "product_category": product_category,
+        "brand": brand,
+        "unit": unit,
+        "product_service": product_service,
+        "product": product,
+        "stock_adjustment_category": stock_adjustment_category,
+        "customer_group": customer_group,
+        "customer": customer,
+        "investor": investor,
+        "cash_account": cash_account,
         "error": error,
     }
 }

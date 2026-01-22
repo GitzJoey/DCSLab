@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use App\Models\User;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -23,7 +23,7 @@ class InactiveUser implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($this->user->profile->status == RecordStatus::INACTIVE) {
+        if ($this->user->profile->status == RecordStatusEnum::INACTIVE) {
             $fail('rules.inactive_user')->translate();
         }
     }

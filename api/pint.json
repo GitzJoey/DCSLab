@@ -4,5 +4,8 @@
         "config/laratrust.php",
         "config/laratrust_seeder.php",
         "database/seeders/LaratrustSeeder.php"
-    ]
+    ],
+    "rules": {
+        "control_structure_braces": false
+    }
 }

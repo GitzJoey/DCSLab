@@ -113,14 +113,14 @@ const flattenedRoles = (roles: Array<Role>): string => {
     return roles.map((x: Role) => x.display_name).join(', ');
 };
 
-const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|'pending'|'dark', pTitle: string, pAlertList: Record<string, Array<string>>|null) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
-  };
+const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark', pTitle: string, pAlertList: Record<string, Array<string>> | null) => {
+    let ap: AlertPlaceholderProps = {
+        alertType: pAlertType,
+        title: pTitle,
+        alertList: pAlertList,
+    };
 
-  emits('show-alertplaceholder', ap);
+    emits('show-alertplaceholder', ap);
 };
 // #endregion
 
@@ -159,7 +159,7 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
                             </Table.Td>
                         </Table.Tr>
                     </template>
-                    <template v-for="( item, itemIdx ) in userLists.data" :key="item.ulid">
+                    <template v-for="(item, itemIdx) in userLists.data" :key="item.ulid">
                         <Table.Tr class="intro-x">
                             <Table.Td>{{ item.name }}</Table.Td>
                             <Table.Td>
@@ -168,7 +168,7 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
                                 </a>
                             </Table.Td>
                             <Table.Td>
-                                <span v-for=" r  in  item.roles " :key="r.id">{{ r.display_name }} </span>
+                                <span v-for="r in item.roles" :key="r.id">{{ r.display_name }} </span>
                             </Table.Td>
                             <Table.Td>
                                 <Lucide v-if="item.profile.status === 'ACTIVE'" icon="CheckCircle" />
@@ -180,7 +180,7 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
                                         <Lucide icon="Info" class="w-4 h-4" />
                                     </Button>
                                     <Button variant="outline-secondary" @click="editSelected(itemIdx)">
-                                        <Lucide icon="CheckSquare" class="w-4 h-4" />
+                                        <Lucide icon="Pen" class="w-4 h-4" />
                                     </Button>
                                 </div>
                             </Table.Td>
@@ -199,12 +199,12 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
                                 </div>
                                 <div class="flex flex-row">
                                     <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.first_name')
-                                    }}</div>
+                                        }}</div>
                                     <div class="flex-1">{{ item.profile.first_name }}</div>
                                 </div>
                                 <div class="flex flex-row">
                                     <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.last_name')
-                                    }}</div>
+                                        }}</div>
                                     <div class="flex-1">{{ item.profile.last_name }}</div>
                                 </div>
                                 <div class="flex flex-row">
@@ -219,7 +219,7 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
                                 </div>
                                 <div class="flex flex-row">
                                     <div class="ml-5 w-48 text-right pr-5">{{ t('views.user.fields.postal_code')
-                                    }}</div>
+                                        }}</div>
                                     <div class="flex-1">{{ item.profile.postal_code }}</div>
                                 </div>
                                 <div class="flex flex-row">

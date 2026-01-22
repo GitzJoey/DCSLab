@@ -67,6 +67,21 @@ class User extends Authenticatable
         return $this->belongsToMany(Company::class);
     }
 
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class);
+    }
+
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class);
+    }
+
+    public function suppliers()
+    {
+        return $this->belongsToMany(Supplier::class);
+    }
+
     public static function boot()
     {
         parent::boot();

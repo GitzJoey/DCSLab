@@ -1,0 +1,79 @@
+{
+    "page_title": "Product",
+    "table": {
+        "title": "Product List",
+        "cols": {
+            "code": "Code",
+            "name": "Name",
+            "category": "Category",
+            "brand": "Brand",
+            "unit": "Unit",
+            "price": "Price",
+            "point": "Point",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Create Product",
+        "edit": "Edit Product",
+        "show": "Show Product",
+        "delete": "Delete Product",
+        "add_unit": "Add Unit"
+    },
+    "field_groups": {
+        "company_info": "Company Info",
+        "product_data": "Product Data",
+        "price_tax_settings": "Price & Tax Settings",
+        "unit_settings": "Unit Settings",
+        "other_settings": "Other Settings"
+    },
+    "detail": {
+        "info_title": "Product Information",
+        "settings_title": "Settings & Tax",
+        "units_title": "Product Units"
+    },
+    "fields": {
+        "company_id": "Company",
+        "code": "Code",
+        "name": "Name",
+        "slug": "Slug",
+        "category_id": "Category",
+        "brand_id": "Brand",
+        "unit_id": "Unit",
+        "base_unit": "Base Unit",
+        "base_unit_price": "Price per Base Unit",
+        "other_unit": "Other Unit",
+        "conversion_value": "Conversion Value",
+        "is_base": "Is Base Unit",
+        "is_primary_unit": "Is Primary Unit",
+        "unit_code": "Unit Code",
+        "is_manufacturer_sku": "Manufacture SKU",
+        "price": "Price",
+        "point": "Point",
+        "is_taxable": "Taxable",
+        "vat_rate": "VAT Rate",
+        "is_price_include_vat": "Price Include VAT",
+        "is_use_serial_number": "Use Serial Number",
+        "is_expirable": "Expirable",
+        "status": "Status",
+        "remarks": "Remarks"
+    },
+    "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+    },
+    "alert": {
+        "create": {
+            "title": "Create Product",
+            "message": "Product Created Successfully"
+        },
+        "update": {
+            "title": "Update Product",
+            "message": "Product Updated Successfully"
+        },
+        "delete": {
+            "title": "Delete Product",
+            "message": "Product Deleted Successfully"
+        }
+    }
+}

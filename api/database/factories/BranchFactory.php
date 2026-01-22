@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use App\Models\Branch;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -33,7 +33,7 @@ class BranchFactory extends Factory
             'contact' => fake($locale)->e164PhoneNumber(),
             'is_main' => false,
             'remarks' => fake($locale)->sentence(),
-            'status' => fake()->randomElement(RecordStatus::toArrayEnum()),
+            'status' => fake()->randomElement(RecordStatusEnum::toArrayEnum()),
         ];
     }
 
@@ -41,7 +41,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE,
+                'status' => RecordStatusEnum::ACTIVE,
             ];
         });
     }
@@ -50,7 +50,7 @@ class BranchFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE,
+                'status' => RecordStatusEnum::INACTIVE,
             ];
         });
     }

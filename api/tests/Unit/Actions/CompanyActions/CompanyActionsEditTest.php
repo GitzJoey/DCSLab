@@ -28,7 +28,7 @@ class CompanyActionsEditTest extends ActionsTestCase
         $company = $user->companies->first();
         $companyArr = Company::factory()->make()->toArray();
 
-        $result = $this->companyActions->update($company, $companyArr);
+        $result = $this->companyActions->update($user, $company, $companyArr);
 
         $this->assertInstanceOf(Company::class, $result);
         $this->assertDatabaseHas('companies', [
@@ -49,6 +49,6 @@ class CompanyActionsEditTest extends ActionsTestCase
         $company = $user->companies->first();
         $companyArr = [];
 
-        $this->companyActions->update($company, $companyArr);
+        $this->companyActions->update($user, $company, $companyArr);
     }
 }

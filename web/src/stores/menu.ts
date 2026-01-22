@@ -18,17 +18,10 @@ export const useMenuStore = defineStore("menu", {
   state: (): MenuState => ({
     menuValue: [
       {
-        icon: 'Home',
-        pageName: 'side-menu-dashboard',
-        title: 'Dashboard',
-        subMenu: [
-          {
-            icon: "ChevronRight",
-            pageName: "side-menu-dashboard-maindashboard",
-            title: "Main Dashboard",
-          }
-        ]
-      }
+        icon: "Home",
+        pageName: "side-menu-dashboard-maindashboard",
+        title: "Dashboard",
+      },
     ],
   }),
   getters: {

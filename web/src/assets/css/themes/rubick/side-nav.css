@@ -140,6 +140,17 @@
                 }
             }
             & > li {
+                & > ul {
+                    & > li {
+                        & > ul {
+                            & > li {
+                                & > .side-menu {
+                                    padding-left: theme("spacing.10");
+                                }
+                            }
+                        }
+                    }
+                }
                 & > .side-menu {
                     &.side-menu--active {
                         background-color: theme("colors.slate.100");

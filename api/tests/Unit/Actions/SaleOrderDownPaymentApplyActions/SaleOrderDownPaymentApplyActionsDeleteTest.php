@@ -1,0 +1,39 @@
+<?php
+
+namespace Tests\Unit\Actions\SaleOrderDownPaymentApplyActions;
+
+use App\Actions\SaleOrderDownPaymentApply\SaleOrderDownPaymentApplyActions;
+use App\Models\Company;
+use App\Models\SaleOrderDownPaymentApply;
+use App\Models\User;
+use Tests\ActionsTestCase;
+
+class SaleOrderDownPaymentApplyActionsDeleteTest extends ActionsTestCase
+{
+    private SaleOrderDownPaymentApplyActions $saleOrderDownPaymentApplyActions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->saleOrderDownPaymentApplyActions = new SaleOrderDownPaymentApplyActions();
+    }
+
+    public function test_sale_order_down_payment_apply_actions_call_delete_expect_bool()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(SaleOrderDownPaymentApply::factory())
+            )->create();
+
+        $saleOrderDownPaymentApply = $user->companies()->inRandomOrder()->first()
+            ->saleOrderDownPaymentApplies()->inRandomOrder()->first();
+        $result = $this->saleOrderDownPaymentApplyActions->delete($saleOrderDownPaymentApply);
+
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
+        $this->assertSoftDeleted('sale_order_down_payment_applies', [
+            'id' => $saleOrderDownPaymentApply->id,
+        ]);
+    }
+}

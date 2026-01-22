@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\API\UserAPI;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\Setting;
@@ -20,13 +20,13 @@ class UserAPIEditTest extends APITestCase
     public function test_user_api_call_update_without_authorization_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $user = User::factory()
             ->setCreatedAt()->setUpdatedAt()
             ->has(Profile::factory()->setCreatedAt()->setUpdatedAt())
-            ->hasAttached(Role::where('name', '=', UserRoles::ADMINISTRATOR->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::ADMINISTRATOR->value)->first())
             ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
             ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
             ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
@@ -35,7 +35,7 @@ class UserAPIEditTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $role = Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
             'id' => HashIds::encode($role->id),
             'display_name' => $role->display_name,
@@ -60,7 +60,7 @@ class UserAPIEditTest extends APITestCase
         $user = User::factory()
             ->setCreatedAt()->setUpdatedAt()
             ->has(Profile::factory()->setCreatedAt()->setUpdatedAt())
-            ->hasAttached(Role::where('name', '=', UserRoles::ADMINISTRATOR->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::ADMINISTRATOR->value)->first())
             ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
             ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
             ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
@@ -69,7 +69,7 @@ class UserAPIEditTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $role = Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
             'id' => HashIds::encode($role->id),
             'display_name' => $role->display_name,
@@ -97,7 +97,7 @@ class UserAPIEditTest extends APITestCase
     public function test_user_api_call_update_expect_successful()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $this->actingAs($user);
@@ -105,7 +105,7 @@ class UserAPIEditTest extends APITestCase
         $user = User::factory()
             ->setCreatedAt()->setUpdatedAt()
             ->has(Profile::factory()->setCreatedAt()->setUpdatedAt())
-            ->hasAttached(Role::where('name', '=', UserRoles::ADMINISTRATOR->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::ADMINISTRATOR->value)->first())
             ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
             ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
             ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
@@ -114,7 +114,7 @@ class UserAPIEditTest extends APITestCase
         $userArr = User::factory()->make()->toArray();
         $userArr = array_merge($userArr, Profile::factory()->make()->toArray());
 
-        $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
+        $role = Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
             'id' => HashIds::encode($role->id),
             'display_name' => $role->display_name,

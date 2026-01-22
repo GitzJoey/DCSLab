@@ -28,6 +28,7 @@ export interface TomSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
 export interface TomSelectEmit {
   (e: "update:modelValue", value: string | string[]): void;
   (e: "optionAdd", value: string | number): void;
+  (e: "search", query: string): void;
 }
 
 export type ProvideTomSelect = (el: TomSelectElement) => void;
@@ -100,6 +101,18 @@ const vSelectDirective = {
     )[0] as TomSelectElement;
     const value = props.modelValue;
     updateValue(el, clonedEl, value, props, computedOptions.value, emit);
+  },
+  unmounted(el: TomSelectElement) {
+    const clonedEl = document.querySelectorAll(
+      `[data-id='${el.getAttribute("data-id")}'][data-initial-class]`
+    )[0] as TomSelectElement;
+
+    if (clonedEl) {
+      if (clonedEl.TomSelect) {
+        clonedEl.TomSelect.destroy();
+      }
+      clonedEl.remove();
+    }
   },
 };
 

@@ -2,17 +2,13 @@
 
 namespace App\Actions\Company;
 
-use App\Actions\Randomizer\RandomizerActions;
-use App\Enums\RecordStatus;
+use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\User;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 
 class CompanyActions
 {
@@ -23,46 +19,25 @@ class CompanyActions
     {
     }
 
-    public function create(array $companyArr): Company
+    public function create(User $user, array $data): Company
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $code = $companyArr['code'];
-            $name = $companyArr['name'];
-            $address = $companyArr['address'];
-            $default = $companyArr['default'];
-            $status = $companyArr['status'];
-            $userId = $companyArr['user_id'];
-
-            $usr = User::find($userId);
-            if (! $usr) {
-                return null;
-            }
-
-            if ($usr->companies()->count() == 0) {
-                $default = true;
-                $status = RecordStatus::ACTIVE->value;
-            }
-
             $company = new Company();
-            $company->code = $code;
-            $company->name = $name;
-            $company->address = $address;
-            $company->default = $default;
-            $company->status = $status;
+            $company->code = $this->generateUniqueCode($user, $data['code'], null);
+            $company->name = $data['name'];
+            $company->address = $data['address'];
+            $company->default = $data['default'];
+            $company->status = $data['status'];
             $company->save();
 
-            $usr->companies()->attach([$company->id]);
-
-            DB::commit();
+            $user->companies()->attach([$company->id]);
 
             $this->flushCache();
 
             return $company;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -72,72 +47,106 @@ class CompanyActions
     }
 
     public function readAny(
-        int $userId,
-        string $search = '',
-        bool $paginate = true,
-        int $page = 1,
-        int $perPage = 10,
-        array $with = [],
-        bool $withTrashed = false,
-        bool $useCache = true
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
+        User $user,
+        bool $withTrashed,
 
-        try {
-            $cacheKey = 'readAny_'.$userId.'-'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache) {
-                $cacheResult = $this->readFromCache($cacheKey);
+        ?string $search,
+        ?bool $default,
+        ?int $status,
+        ?int $includeId,
 
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
+        ?ExecuteDTO $execute
+    ) {
+        $query = Company::select('companies.*')
+            ->whereIn('companies.id', $user->companies()->pluck('company_id'))
+            ->withTrashed();
+
+        $query->where(function ($query) use ($withTrashed, $search, $default, $status, $includeId) {
+            $query->where(function ($query) use ($withTrashed, $search, $default, $status) {
+                $query->withoutTrashed();
+                if ($withTrashed) {
+                    $query->withTrashed();
                 }
+
+                if ($search) {
+                    $query->search($search);
+                }
+
+                if ($default !== null) {
+                    $query->where('companies.default', $default);
+                }
+
+                if ($status !== null) {
+                    $query->where('companies.status', $status);
+                }
+            });
+
+            if ($includeId) {
+                $query->orWhere('companies.id', $includeId);
             }
+        });
 
-            $result = null;
-
-            $relationship = ['branches'];
-            $relationship = count($with) > 0 ? $with : $relationship;
-            $query = Company::with($relationship);
-
-            $user = User::find($userId);
-            if (! $user) {
-                return null;
-            }
-            $companyIds = $user->companies()->pluck('company_id');
-            $query = $query->whereIn('id', $companyIds);
-
-            if (! empty($search)) {
-                $query = $query->where('name', 'like', '%'.$search.'%');
-            }
-
-            if ($withTrashed) {
-                $query = $query->withTrashed();
-            }
-
-            $query = $query->latest();
-
-            if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            $this->saveToCache($cacheKey, $result);
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+        if ($includeId) {
+            $query->orderByRaw('FIELD(companies.id, '.$includeId.') desc');
         }
+        $query->orderBy('companies.name', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $user->id,
+                    $withTrashed ? 'true' : 'false',
+                    empty($search) ? '[empty]' : $search,
+                    is_null($default) ? '[null]' : ($default ? 'true' : 'false'),
+                    $status ?? '[null]',
+                    $includeId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'readAny_'.implode('-', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheData = $this->readFromCache($cacheKey);
+                    if ($cacheData !== Config::get('dcslab.ERROR_RETURN_VALUE')) return $cacheData;
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
     }
 
     public function read(Company $company): Company
@@ -145,78 +154,34 @@ class CompanyActions
         return $company->load('branches');
     }
 
-    public function isDefaultCompany(Company $company): bool
+    public function getById(int $companyId): Company
+    {
+        return Company::find($companyId);
+    }
+
+    public function isDefault(Company $company): bool
     {
         $result = $company->default;
 
         return is_null($result) ? false : $result;
     }
 
-    public function getCompanyById(int $companyId): Company
+    public function update(User $user, Company $company, array $data): Company
     {
-        return Company::find($companyId)->first();
-    }
-
-    public function getDefaultCompany(User $user): Company
-    {
-        return $user->companies()->where('default', '=', true)->first();
-    }
-
-    public function getAllActiveCompany(
-        int $userId,
-        ?array $with = []
-    ) {
         $timer_start = microtime(true);
 
         try {
-            $usr = User::find($userId);
-            if (! $usr) {
-                return null;
-            }
-
-            $compIds = $usr->companies()->pluck('company_id');
-
-            $companies = Company::where('status', '=', 1)->whereIn('id', $compIds);
-
-            if (in_array('branches', $with)) {
-                $companies = $companies->with(['branches' => function ($query) {
-                    $query->where('status', '=', 1);
-                }]);
-            }
-
-            return $companies->get();
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    public function update(
-        Company $company,
-        array $companyArr
-    ): Company {
-        DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $company->update([
-                'code' => $companyArr['code'],
-                'name' => $companyArr['name'],
-                'address' => $companyArr['address'],
-                'default' => $companyArr['default'],
-                'status' => $companyArr['status'],
-            ]);
-
-            DB::commit();
+            $company->code = $this->generateUniqueCode($user, $data['code'], $company->id);
+            $company->name = $data['name'];
+            $company->address = $data['address'];
+            $company->default = $data['default'];
+            $company->status = $data['status'];
+            $company->save();
 
             $this->flushCache();
 
             return $company->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -225,22 +190,13 @@ class CompanyActions
         }
     }
 
-    public function resetDefaultCompany(User $user): bool
+    public function resetDefault(User $user)
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $compIds = $user->companies()->pluck('company_id');
-
-            $retval = Company::whereIn('id', $compIds)
-                ->update(['default' => 0]);
-
-            DB::commit();
-
-            return $retval;
+            return $user->companies()->update(['default' => 0]);
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -251,7 +207,6 @@ class CompanyActions
 
     public function delete(Company $company): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -259,13 +214,10 @@ class CompanyActions
         try {
             $retval = $company->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -274,28 +226,41 @@ class CompanyActions
         }
     }
 
-    public function generateUniqueCode(): string
+    public function generateUniqueCode(User $user, string $code, ?int $exceptId): string
     {
-        $rand = app(RandomizerActions::class);
-        $code = $rand->generateAlpha().$rand->generateNumeric();
+        if ($code != config('dcslab.KEYWORDS.AUTO')) return $code;
+
+        $tryCount = 0;
+        do {
+            $count = $user->companies()->withTrashed()->count() + 1 + $tryCount;
+            $code = 'CP'.str_pad($count, 3, '0', STR_PAD_LEFT);
+            $tryCount++;
+        } while (! $this->isUniqueCode($user, $code, $exceptId));
 
         return $code;
     }
 
-    public function isUniqueCode(string $code, int $userId, ?int $exceptId = null): bool
+    public function isUniqueCode(User $user, string $code, ?int $exceptId): bool
     {
-        $user = User::find($userId);
+        if ($user->companies->count() == 0) return true;
 
-        if ($user->companies->count() == 0) {
-            return true;
-        }
-
-        $result = $user->companies()->where('code', '=', $code);
-
+        $query = $user->companies()->where('code', '=', $code);
         if ($exceptId) {
-            $result = $result->get()->where('id', '<>', $exceptId);
+            $query->where('companies.id', '<>', $exceptId);
         }
 
-        return $result->count() == 0 ? true : false;
+        return $query->doesntExist();
+    }
+
+    public function isUniqueName(User $user, string $name, ?int $exceptId): bool
+    {
+        if ($user->companies->count() == 0) return true;
+
+        $query = $user->companies()->where('name', '=', $name);
+        if ($exceptId) {
+            $query->where('companies.id', '<>', $exceptId);
+        }
+
+        return $query->doesntExist();
     }
 }

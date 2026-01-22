@@ -1,0 +1,41 @@
+{
+    "page_title": "Satuan",
+    "table": {
+        "title": "Daftar Satuan",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "description": "Deskripsi",
+            "type": "Tipe"
+        }
+    },
+    "actions": {
+        "create": "Buat Satuan",
+        "edit": "Ubah Satuan",
+        "show": "Lihat Satuan",
+        "delete": "Hapus Satuan"
+    },
+    "field_groups": {
+        "company_info": "Info Perusahaan",
+        "unit_data": "Data Satuan"
+    },
+    "fields": {
+        "company_id": "Perusahaan",
+        "code": "Kode",
+        "name": "Nama",
+        "description": "Deskripsi",
+        "type": "Tipe"
+    },
+    "enums": {
+        "unit_type": {
+            "product": "Produk",
+            "service": "Jasa"
+        }
+    },
+    "alert": {
+        "delete_unit": {
+            "title": "Hapus Satuan",
+            "content": "Satuan Berhasil Dihapus"
+        }
+    }
+}

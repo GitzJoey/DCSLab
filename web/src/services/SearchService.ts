@@ -7,7 +7,7 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchResult } from "@/types/models/SearchResult";
 
-export default class RoleService {
+export default class SearchService {
     private ziggyRoute: Config;
     private ziggyRouteStore = useZiggyRouteStore();
 

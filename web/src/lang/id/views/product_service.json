@@ -1,0 +1,60 @@
+{
+    "page_title": "Produk Jasa",
+    "table": {
+        "title": "Daftar Produk Jasa",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "category": "Kategori",
+            "unit": "Satuan",
+            "price": "Harga",
+            "point": "Poin",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Buat Produk Jasa",
+        "edit": "Ubah Produk Jasa",
+        "show": "Lihat Produk Jasa",
+        "delete": "Hapus Produk Jasa"
+    },
+    "field_groups": {
+        "company_info": "Info Perusahaan",
+        "product_data": "Data Produk",
+        "price_tax_settings": "Pengaturan Harga & Pajak",
+        "other_settings": "Pengaturan Lainnya"
+    },
+    "fields": {
+        "company_id": "Perusahaan",
+        "code": "Kode",
+        "name": "Nama",
+        "slug": "Slug",
+        "category_id": "Kategori",
+        "unit_id": "Satuan",
+        "price": "Harga",
+        "point": "Poin",
+        "is_taxable": "Kena Pajak",
+        "vat_rate": "Tarif PPN",
+        "is_price_include_vat": "Harga Termasuk PPN",
+        "status": "Status",
+        "remarks": "Keterangan"
+    },
+    "status": {
+        "active": "Aktif",
+        "inactive": "Tidak Aktif"
+    },
+    "alert": {
+        "create": {
+            "title": "Buat Produk Jasa",
+            "message": "Produk Jasa Berhasil Dibuat"
+        },
+        "update": {
+            "title": "Ubah Produk Jasa",
+            "message": "Produk Jasa Berhasil Diubah"
+        },
+        "delete": {
+            "title": "Hapus Produk Jasa",
+            "message": "Produk Jasa Berhasil Dihapus"
+        }
+    }
+}

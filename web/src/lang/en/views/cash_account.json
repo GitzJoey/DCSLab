@@ -1,0 +1,38 @@
+{
+    "page_title": "Cash Account",
+    "table": {
+        "title": "Cash Account List",
+        "cols": {
+            "code": "Code",
+            "company": "Company",
+            "name": "Name",
+            "is_bank": "Bank",
+            "is_active": "Is Active",
+            "remarks": "Remarks"
+        }
+    },
+    "actions": {
+        "create": "Create Cash Account",
+        "edit": "Edit Cash Account",
+        "show": "Show Cash Account",
+        "delete": "Delete Cash Account"
+    },
+    "fields": {
+        "code": "Code",
+        "company": "Company",
+        "name": "Name",
+        "is_bank": "Bank",
+        "is_active": "Is Active",
+        "remarks": "Remarks"
+    },
+    "field_groups": {
+        "company_info": "Company Info",
+        "cash_account_data": "Cash Account Data"
+    },
+    "alert": {
+        "delete_cash_account": {
+            "title": "Delete Cash Account",
+            "content": "Cash Account Deleted Successfully"
+        }
+    }
+}

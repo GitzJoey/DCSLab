@@ -3,7 +3,7 @@
 namespace Tests\Unit\Actions\CompanyActions;
 
 use App\Actions\Company\CompanyActions;
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
@@ -30,11 +30,19 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
-            search: '',
+            user: $user,
+            useCache: true,
+            with: [],
+            withTrashed: false,
+
+            search: null,
+            default: null,
+            status: null,
+
             paginate: true,
             page: 1,
-            perPage: 10
+            perPage: 10,
+            limit: null
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -47,9 +55,19 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
-            search: '',
-            paginate: false
+            user: $user,
+            useCache: true,
+            with: [],
+            withTrashed: false,
+
+            search: null,
+            default: null,
+            status: null,
+
+            paginate: false,
+            page: null,
+            perPage: null,
+            limit: null
         );
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -75,11 +93,19 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
+            user: $user,
+            useCache: true,
+            with: [],
+            withTrashed: false,
+
             search: 'testing',
+            default: null,
+            status: null,
+
             paginate: true,
             page: 1,
-            perPage: 10
+            perPage: 10,
+            limit: null
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -92,7 +118,7 @@ class CompanyActionsReadTest extends ActionsTestCase
         $idxDefaultCompany = random_int(0, $companyCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->count($companyCount)
                 ->state(new Sequence(
                     fn (Sequence $sequence) => [
@@ -103,11 +129,19 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
+            user: $user,
+            useCache: true,
+            with: [],
+            withTrashed: false,
+
             search: '',
+            default: null,
+            status: null,
+
             paginate: true,
             page: -1,
-            perPage: 10
+            perPage: 10,
+            limit: null
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -120,7 +154,7 @@ class CompanyActionsReadTest extends ActionsTestCase
         $idxDefaultCompany = random_int(0, $companyCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->count($companyCount)
                 ->state(new Sequence(
                     fn (Sequence $sequence) => [
@@ -131,11 +165,19 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
+            user: $user,
+            useCache: true,
+            with: [],
+            withTrashed: false,
+
             search: '',
+            default: null,
+            status: null,
+
             paginate: true,
             page: 1,
-            perPage: -10
+            perPage: -10,
+            limit: null
         );
 
         $this->assertInstanceOf(Paginator::class, $result);

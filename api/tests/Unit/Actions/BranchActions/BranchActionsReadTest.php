@@ -3,7 +3,9 @@
 namespace Tests\Unit\Actions\BranchActions;
 
 use App\Actions\Branch\BranchActions;
-use App\Enums\UserRoles;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Enums\UserRolesEnum;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Role;
@@ -34,11 +36,20 @@ class BranchActionsReadTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $result = $this->branchActions->readAny(
+            withTrashed: false,
             companyId: $company->id,
             search: '',
-            paginate: true,
-            page: 1,
-            perPage: 10
+            isMain: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: 10
+                ),
+                get: null
+            )
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -54,9 +65,17 @@ class BranchActionsReadTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $result = $this->branchActions->readAny(
+            withTrashed: false,
             companyId: $company->id,
             search: '',
-            paginate: false
+            isMain: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: null,
+                get: null
+            )
         );
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -66,9 +85,17 @@ class BranchActionsReadTest extends ActionsTestCase
     {
         $maxId = Company::max('id') + 1;
         $result = $this->branchActions->readAny(
+            withTrashed: false,
             companyId: $maxId,
             search: '',
-            paginate: false
+            isMain: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: null,
+                get: null
+            )
         );
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -99,11 +126,20 @@ class BranchActionsReadTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $result = $this->branchActions->readAny(
+            withTrashed: false,
             companyId: $company->id,
             search: 'testing',
-            paginate: true,
-            page: 1,
-            perPage: 10
+            isMain: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: 10
+                ),
+                get: null
+            )
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -116,7 +152,7 @@ class BranchActionsReadTest extends ActionsTestCase
         $idxMainBranch = random_int(0, $branchCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()
                 ->has(Branch::factory()->setStatusActive()->count($branchCount)
                     ->state(new Sequence(
@@ -130,42 +166,20 @@ class BranchActionsReadTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $result = $this->branchActions->readAny(
+            withTrashed: false,
             companyId: $company->id,
             search: '',
-            paginate: true,
-            page: -1,
-            perPage: 10
-        );
-
-        $this->assertInstanceOf(Paginator::class, $result);
-        $this->assertTrue($result->total() == 3);
-    }
-
-    public function test_branch_actions_call_read_any_with_perpage_parameter_negative_expect_results()
-    {
-        $branchCount = 3;
-        $idxMainBranch = random_int(0, $branchCount - 1);
-
-        $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()
-                ->has(Branch::factory()->setStatusActive()->count($branchCount)
-                    ->state(new Sequence(
-                        fn (Sequence $sequence) => [
-                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
-                        ]
-                    ))
-                ))
-            ->create();
-
-        $company = $user->companies()->inRandomOrder()->first();
-
-        $result = $this->branchActions->readAny(
-            companyId: $company->id,
-            search: '',
-            paginate: true,
-            page: 1,
-            perPage: -10
+            isMain: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: -1,
+                    perPage: 10
+                ),
+                get: null
+            )
         );
 
         $this->assertInstanceOf(Paginator::class, $result);

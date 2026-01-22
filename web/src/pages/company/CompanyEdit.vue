@@ -2,7 +2,8 @@
 // #region Imports
 import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRoute } from "vue-router";
+import { convertErrorTypeToAlertListType } from "@/utils/helper";
+import { useRoute, useRouter } from "vue-router";
 import CompanyService from "@/services/CompanyService";
 import DashboardService from "@/services/DashboardService";
 import CacheService from "@/services/CacheService";
@@ -25,7 +26,6 @@ import Button from "@/components/Base/Button";
 import { debounce } from "lodash";
 import Lucide from "@/components/Base/Lucide";
 import { Company } from "@/types/models/Company";
-import { useRouter } from "vue-router";
 import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
 // #endregion
 
@@ -72,24 +72,24 @@ onMounted(async () => {
 // #region Methods
 const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    let response: ServiceResponse<Company | null> = await companyServices.read(ulid);
+    let result: ServiceResponse<Company | null> = await companyServices.read(ulid);
 
-    if (response && response.data) {
+    if (result.success && result.data) {
         companyForm.setData({
-            code: response.data.code,
-            name: response.data.name,
-            address: response.data.address,
-            default: response.data.default,
-            status: response.data.status,
+            code: result.data.code,
+            name: result.data.name,
+            address: result.data.address,
+            default: result.data.default,
+            status: result.data.status,
         });
+    } else {
+        router.push({ name: 'side-menu-company-company-list' });
     }
     emits('loading-state', false);
 }
 
-const getDDL = (): void => {
-    dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
-        statusDDL.value = result;
-    });
+const getDDL = async (): Promise<void> => {
+    statusDDL.value = await dashboardServices.getStatusDDL();
 }
 
 const handleExpandCard = (index: number) => {
@@ -115,7 +115,6 @@ const onSubmit = async () => {
 
     emits('loading-state', true);
     await companyForm.submit().then(() => {
-        resetForm();
         emits('update-profile');
         router.push({ name: 'side-menu-company-company-list' });
     }).catch(error => {
@@ -151,13 +150,6 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
   emits('show-alertplaceholder', ap);
 };
 
-const convertErrorTypeToAlertListType = (error: Error) => {
-    const record: Record<string, Array<string>> = {};
-
-    record.error = [error.message];
-
-    return record;
-};
 // #endregion
 
 // #region Watchers
@@ -165,9 +157,6 @@ watch(
     companyForm,
     debounce((newValue): void => {
         cacheServices.setLastEntity('COMPANY_EDIT', newValue.data())
-        if (companyForm.hasErrors) {
-            
-        }
     }, 500),
     { deep: true }
 );

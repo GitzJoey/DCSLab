@@ -10,15 +10,15 @@ import _ from "lodash";
 import { twMerge } from "tailwind-merge";
 
 interface UserLocationProps {
-    visible: boolean,
-    theme?: 'rubick' | 'icewall' | 'enigma' | 'tinker',
-    layout?: "side-menu" | "simple-menu" | "top-menu",
+  visible: boolean,
+  theme?: 'rubick' | 'icewall' | 'enigma' | 'tinker',
+  layout?: "side-menu" | "simple-menu" | "top-menu",
 }
 
 const props = withDefaults(defineProps<UserLocationProps>(), {
-    visible: true,
-    theme: 'rubick',
-    layout: 'side-menu',
+  visible: true,
+  theme: 'rubick',
+  layout: 'side-menu',
 });
 
 const visible = toRef(props, 'visible');
@@ -131,13 +131,16 @@ const setNewUserLocation = (companyId: string, branchId: string) => {
           'overflow-y-auto': true
         }" placement="bottom-start">
           <template v-if="userContext.companies && userContext.companies.length != 0">
-            <template v-for="(c, cIdx) in  userContext.companies" :key="cIdx">
-              <Menu.Item @click="setNewUserLocation(c.id, '')">
+            <template v-for="(c, cIdx) in userContext.companies" :key="cIdx">
+              <Menu.Item @click="setNewUserLocation(c.id, '')" class="relative">
                 <span :class="{ 'text-primary font-bold': true, 'underline': c.default }">{{ c.name }}</span>
               </Menu.Item>
               <Menu.Item v-for="(b, bIdx) in c.branches" :key="bIdx"
-                @click="setNewUserLocation(c.id, b == null ? '' : b.id)">
-                <span v-if="b != null" :class="{ 'text-primary': true, 'underline': b.is_main }">{{ b.name }}</span>
+                @click="setNewUserLocation(c.id, b == null ? '' : b.id)" class="pl-6 relative">
+                <div class="absolute left-3 top-0 h-full w-px bg-gray-200"></div>
+                <div class="absolute left-3 top-1/2 h-px w-3 bg-gray-200"></div>
+                <span v-if="b != null" class="pl-1" :class="{ 'text-primary': true, 'underline': b.is_main }">{{
+                  b.name }}</span>
               </Menu.Item>
               <Menu.Divider v-if="userContext.companies.length - 1 != cIdx" />
             </template>

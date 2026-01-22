@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use App\Models\Profile;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -36,7 +36,7 @@ class ProfileFactory extends Factory
             'tax_id' => fake()->numberBetween(100000000000, 999999999999),
             'ic_num' => fake()->numberBetween(100000000000, 999999999999),
             'img_path' => '',
-            'status' => RecordStatus::INACTIVE,
+            'status' => RecordStatusEnum::INACTIVE,
             'remarks' => fake()->catchPhrase(),
         ];
     }
@@ -72,7 +72,7 @@ class ProfileFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE,
+                'status' => RecordStatusEnum::ACTIVE,
             ];
         });
     }
@@ -81,7 +81,7 @@ class ProfileFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE,
+                'status' => RecordStatusEnum::INACTIVE,
             ];
         });
     }

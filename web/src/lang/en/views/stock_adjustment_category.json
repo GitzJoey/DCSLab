@@ -1,0 +1,32 @@
+{
+    "page_title": "Stock Adjustment Category",
+    "table": {
+        "title": "Stock Adjustment Category List",
+        "cols": {
+            "code": "Code",
+            "name": "Name"
+        }
+    },
+    "actions": {
+        "create": "Create Stock Adjustment Category",
+        "edit": "Edit Stock Adjustment Category",
+        "show": "Show Stock Adjustment Category",
+        "delete": "Delete Stock Adjustment Category"
+    },
+    "field_groups": {
+        "company_info": "Company Information",
+        "stock_adjustment_category_data": "Stock Adjustment Category Data"
+    },
+    "fields": {
+        "company_id": "Company",
+        "code": "Code",
+        "name": "Name"
+    },
+    "alert": {
+        "delete_stock_adjustment_category": {
+            "title": "Delete Stock Adjustment Category",
+            "content": "Stock Adjustment Category Deleted Successfully"
+        }
+    }
+}
+

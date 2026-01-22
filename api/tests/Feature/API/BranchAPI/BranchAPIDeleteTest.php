@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\API\BranchAPI;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Role;
@@ -21,7 +21,7 @@ class BranchAPIDeleteTest extends APITestCase
     public function test_branch_api_call_delete_without_authorization_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setIsDefault()
                 ->has(Branch::factory()))
             ->create();
@@ -29,7 +29,7 @@ class BranchAPIDeleteTest extends APITestCase
         $branch = $user->companies()->inRandomOrder()->first()
             ->branches()->inRandomOrder()->first();
 
-        $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->ulid));
+        $api = $this->json('POST', route('api.post.branch.delete', $branch->ulid));
 
         $api->assertUnauthorized();
     }
@@ -46,7 +46,7 @@ class BranchAPIDeleteTest extends APITestCase
         $branch = $user->companies()->inRandomOrder()->first()
             ->branches()->inRandomOrder()->first();
 
-        $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->ulid));
+        $api = $this->json('POST', route('api.post.branch.delete', $branch->ulid));
 
         $api->assertForbidden();
     }
@@ -54,7 +54,7 @@ class BranchAPIDeleteTest extends APITestCase
     public function test_branch_api_call_delete_expect_successful()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setIsDefault()
                 ->has(Branch::factory()))
             ->create();
@@ -64,7 +64,7 @@ class BranchAPIDeleteTest extends APITestCase
         $branch = $user->companies()->inRandomOrder()->first()
             ->branches()->inRandomOrder()->first();
 
-        $api = $this->json('POST', route('api.post.db.company.branch.delete', $branch->ulid));
+        $api = $this->json('POST', route('api.post.branch.delete', $branch->ulid));
 
         $api->assertSuccessful();
         $this->assertSoftDeleted('branches', [
@@ -79,7 +79,7 @@ class BranchAPIDeleteTest extends APITestCase
         $this->actingAs($user);
         $ulid = Str::ulid()->generate();
 
-        $api = $this->json('POST', route('api.post.db.company.branch.delete', $ulid));
+        $api = $this->json('POST', route('api.post.branch.delete', $ulid));
 
         $api->assertStatus(404);
     }
@@ -90,6 +90,24 @@ class BranchAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        $api = $this->json('POST', route('api.post.db.company.branch.delete', null));
+        $api = $this->json('POST', route('api.post.branch.delete', null));
+    }
+
+    public function test_branch_api_call_delete_main_branch_expect_failed()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setIsDefault()
+                ->has(Branch::factory()->setIsMainBranch(true)))
+            ->create();
+
+        $this->actingAs($user);
+
+        $branch = $user->companies()->first()->branches()->first();
+
+        $api = $this->json('POST', route('api.post.branch.delete', $branch->ulid));
+
+        $api->assertUnprocessable();
+        $api->assertJsonValidationErrors(['' => trans('rules.branch.delete_main_branch')]);
     }
 }

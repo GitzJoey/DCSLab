@@ -28,7 +28,7 @@ class CompanyActionsCreateTest extends ActionsTestCase
                 'user_id' => $user->id,
             ])->toArray();
 
-        $result = $this->companyActions->create($companyArr);
+        $result = $this->companyActions->create($user, $companyArr);
 
         $this->assertDatabaseHas('companies', [
             'id' => $result->id,
@@ -39,7 +39,9 @@ class CompanyActionsCreateTest extends ActionsTestCase
 
     public function test_company_service_call_create_with_empty_array_parameters_expect_exception()
     {
+        $user = User::factory()->create();
+
         $this->expectException(Exception::class);
-        $this->companyActions->create([]);
+        $this->companyActions->create($user, []);
     }
 }

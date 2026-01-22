@@ -223,6 +223,7 @@
                             & > li {
                                 /* Third level */
                                 & > .side-menu {
+                                    padding-left: theme("spacing.10");
                                     &.side-menu--active {
                                         .side-menu__icon {
                                             color: theme("colors.slate.700");

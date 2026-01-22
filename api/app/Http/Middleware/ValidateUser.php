@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Http\Request;
@@ -47,7 +47,7 @@ class ValidateUser
             ], 401);
         }
 
-        if (! $profile->status->value == RecordStatus::ACTIVE->value) {
+        if (! $profile->status->value == RecordStatusEnum::ACTIVE->value) {
             return response()->json([
                 'message' => __('rules.inactive_user'),
             ], 403);

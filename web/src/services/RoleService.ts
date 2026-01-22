@@ -44,7 +44,7 @@ export default class RoleService {
         }
     }
 
-    public async Update(roles: string): Promise<ServiceResponse<Resource<Role> | null>> {
+    public async update(roles: string): Promise<ServiceResponse<Resource<Role> | null>> {
         const result: ServiceResponse<Resource<Role> | null> = {
             success: false
         }

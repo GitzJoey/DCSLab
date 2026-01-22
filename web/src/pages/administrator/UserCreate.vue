@@ -2,6 +2,7 @@
 // #region Imports
 import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { isAxiosError, AxiosError } from "axios";
 import { ServiceResponse } from "@/types/services/ServiceResponse";
 import { Resource } from "@/types/resources/Resource";
 import { Role } from "@/types/models/Role";
@@ -81,20 +82,23 @@ const loadFromCache = () => {
     userForm.setData(data);
 };
 
-const getDDL = (): void => {
-    roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
-        if (result.success && result.data) {
-            rolesDDL.value = result.data.data as Array<Role>;
+const getDDL = async (): Promise<void> => {
+    try {
+        const [roleResult, countriesResult, statusResult] = await Promise.all([
+            roleServices.readAny(),
+            dashboardServices.getCountriesDDL(),
+            dashboardServices.getStatusDDL()
+        ]);
+
+        if (roleResult.success && roleResult.data) {
+            rolesDDL.value = roleResult.data.data as Array<Role>;
         }
-    });
 
-    dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
-        countriesDDL.value = result;
-    });
-
-    dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
-        statusDDL.value = result;
-    });
+        countriesDDL.value = countriesResult;
+        statusDDL.value = statusResult;
+    } catch (error) {
+        console.error(error);
+    }
 };
 
 const handleExpandCard = (index: number) => {
@@ -123,7 +127,7 @@ const onSubmit = async () => {
         resetForm();
         router.push({ name: 'side-menu-administrator-user-list' });
     }).catch(error => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
     }).finally(() => {
         emits('loading-state', false);
@@ -144,15 +148,6 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
 
   emits('show-alertplaceholder', ap);
 };
-
-const convertErrorTypeToAlertListType = (error: Error) => {
-    const record: Record<string, Array<string>> = {};
-
-    record.error = [error.message];
-
-    return record;
-};
-// #endregion
 
 // #region Watchers
 watch(

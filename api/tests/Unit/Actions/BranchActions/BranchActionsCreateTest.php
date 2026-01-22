@@ -28,17 +28,17 @@ class BranchActionsCreateTest extends ActionsTestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
-        $branchArr = Branch::factory()->for($company)
+        $payload = Branch::factory()->for($company)
             ->setStatusActive()->setIsMainBranch()
             ->make()->toArray();
 
-        $result = $this->branchActions->create($branchArr);
+        $result = $this->branchActions->create($payload);
 
         $this->assertDatabaseHas('branches', [
             'id' => $result->id,
-            'company_id' => $branchArr['company_id'],
-            'code' => $branchArr['code'],
-            'name' => $branchArr['name'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 

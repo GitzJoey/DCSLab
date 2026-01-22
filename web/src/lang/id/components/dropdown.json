@@ -1,18 +1,14 @@
 {
     "placeholder": "Silahkan Pilih",
     "values": {
+        "switch": {
+            "on": "Ya",
+            "off": "Tidak"
+        },
         "statusDDL": {
             "active": "Aktif",
             "inactive": "Tidak Aktif",
             "deleted": "Dihapus"
-        },
-        "productGroupCategoryDDL": {
-            "product": "Produk",
-            "service": "Jasa"
-        },
-        "unitCategoryDDL": {
-            "product": "Produk",
-            "service": "Jasa"
         },
         "paymentTermTypeDDL": {
             "pia": "Pembayaran Dimuka",
@@ -22,15 +18,23 @@
             "cnd": "Cash Di Pengiriman Selanjutnya",
             "cbs": "Cash Sebelum Pengiriman"
         },
+        "roundingTypeDDL": {
+            "up": "Keatas",
+            "down": "Kebawah"
+        },
+        "productCategoryDDL": {
+            "product": "Produk",
+            "service": "Jasa"
+        },
+        "unitCategoryDDL": {
+            "product": "Produk",
+            "service": "Jasa"
+        },
         "productTypeDDL": {
             "raw": "Bahan Baku",
             "wip": "Barang Setengah Jadi",
             "fg": "Barang Jadi",
             "svc": "Jasa"
-        },
-        "switch": {
-            "on": "Ya",
-            "off": "Tidak"
         }
     }
 }

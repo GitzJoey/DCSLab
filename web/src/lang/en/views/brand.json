@@ -1,0 +1,31 @@
+{
+    "page_title": "Brand",
+    "table": {
+        "title": "Brand List",
+        "cols": {
+            "code": "Code",
+            "name": "Name"
+        }
+    },
+    "actions": {
+        "create": "Create Brand",
+        "edit": "Edit Brand",
+        "show": "Show Brand",
+        "delete": "Delete Brand"
+    },
+    "field_groups": {
+        "company_info": "Company Info",
+        "brand_data": "Brand Data"
+    },
+    "fields": {
+        "company_id": "Company",
+        "code": "Code",
+        "name": "Name"
+    },
+    "alert": {
+        "delete_brand": {
+            "title": "Delete Brand",
+            "content": "Brand Successfully Deleted"
+        }
+    }
+}

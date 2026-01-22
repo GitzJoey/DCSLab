@@ -2,6 +2,7 @@
 // #region Imports
 import { onMounted, ref, computed, watch } from "vue";
 import { useI18n } from "vue-i18n";
+import { AxiosError, isAxiosError } from "axios";
 import BranchService from "@/services/BranchService";
 import DashboardService from "@/services/DashboardService";
 import CacheService from "@/services/CacheService";
@@ -70,10 +71,10 @@ onMounted(async () => {
         router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
     }
 
-    getDDL();
+    await Promise.all([getDDL()]);
 
-    setCompanyIdData();
     loadFromCache();
+    setCompanyIdData();
 });
 // #endregion
 
@@ -90,10 +91,11 @@ const loadFromCache = () => {
     branchForm.setData(data);
 };
 
-const getDDL = (): void => {
-    dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
+const getDDL = async (): Promise<void> => {
+    const result = await dashboardServices.getStatusDDL();
+    if (result) {
         statusDDL.value = result;
-    });
+    }
 };
 
 const handleExpandCard = (index: number) => {
@@ -123,7 +125,7 @@ const onSubmit = async () => {
         emits('update-profile');
         router.push({ name: 'side-menu-company-branch-list' });
     }).catch(error => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
     }).finally(() => {
         emits('loading-state', false);
@@ -144,21 +146,48 @@ const setCode = () => {
     }
 };
 
-const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|'pending'|'dark', pTitle: string, pAlertList: Record<string, Array<string>>|null) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
-  };
+const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark', pTitle: string, pAlertList: Record<string, Array<string>> | null) => {
+    let ap: AlertPlaceholderProps = {
+        alertType: pAlertType,
+        title: pTitle,
+        alertList: pAlertList,
+    };
 
-  emits('show-alertplaceholder', ap);
+    emits('show-alertplaceholder', ap);
 };
 
-const convertErrorTypeToAlertListType = (error: Error) => {
+const convertErrorTypeToAlertListType = (error: unknown) => {
     const record: Record<string, Array<string>> = {};
 
-    record.error = [error.message];
+    const anyError = error as any;
+    const response = isAxiosError(error)
+        ? (error as AxiosError).response
+        : anyError?.response;
 
+    if (response && response.data) {
+        const data = response.data as any;
+
+        if (data.errors && typeof data.errors === "object") {
+            for (const key of Object.keys(data.errors)) {
+                const value = data.errors[key];
+                if (Array.isArray(value)) {
+                    record[key] = value;
+                } else if (value !== undefined && value !== null) {
+                    record[key] = [String(value)];
+                }
+            }
+            return record;
+        }
+        if (data.message) {
+            record.error = [String(data.message)];
+            return record;
+        }
+    }
+    if (error instanceof Error && error.message) {
+        record.error = [error.message];
+    } else {
+        record.error = ["Unknown error"];
+    }
     return record;
 };
 // #endregion
@@ -195,7 +224,8 @@ watch(
                         </FormLabel>
                         <FormInputCode v-model="branchForm.code" type="text"
                             :class="{ 'border-danger': branchForm.invalid('code') }"
-                            :placeholder="t('views.branch.fields.code')" @set-auto="setCode" @change="branchForm.validate('code')" />
+                            :placeholder="t('views.branch.fields.code')" @set-auto="setCode"
+                            @change="branchForm.validate('code')" />
                         <FormErrorMessages :messages="branchForm.errors.code" />
                     </div>
                     <div class="pb-4">
@@ -218,8 +248,7 @@ watch(
                         <FormLabel>
                             {{ t('views.branch.fields.city') }}
                         </FormLabel>
-                        <FormInput v-model="branchForm.city" type="text"
-                            :placeholder="t('views.branch.fields.city')" />
+                        <FormInput v-model="branchForm.city" type="text" :placeholder="t('views.branch.fields.city')" />
                     </div>
                     <div class="pb-4">
                         <FormLabel>
@@ -229,14 +258,14 @@ watch(
                             :placeholder="t('views.branch.fields.contact')" />
                     </div>
                     <div class="pb-4">
-                        <FormLabel :class="{ 'text-danger': branchForm.invalid('is_main') }"
-                            class="pr-5">
+                        <FormLabel :class="{ 'text-danger': branchForm.invalid('is_main') }" class="pr-5">
                             {{ t('views.branch.fields.is_main') }}
                         </FormLabel>
                         <FormSwitch>
                             <FormSwitch.Input v-model="branchForm.is_main" type="checkbox"
                                 :class="{ 'border-danger': branchForm.invalid('is_main') }"
-                                :placeholder="t('views.branch.fields.is_main')" @change="branchForm.validate('is_main')" />
+                                :placeholder="t('views.branch.fields.is_main')"
+                                @change="branchForm.validate('is_main')" />
                         </FormSwitch>
                         <FormErrorMessages :messages="branchForm.errors.is_main" />
                     </div>

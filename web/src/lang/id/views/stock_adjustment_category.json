@@ -1,0 +1,32 @@
+{
+    "page_title": "Kategori Penyesuaian Stok",
+    "table": {
+        "title": "Daftar Kategori Penyesuaian Stok",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama"
+        }
+    },
+    "actions": {
+        "create": "Tambah Kategori Penyesuaian Stok",
+        "edit": "Ubah Kategori Penyesuaian Stok",
+        "show": "Tampilkan Kategori Penyesuaian Stok",
+        "delete": "Hapus Kategori Penyesuaian Stok"
+    },
+    "field_groups": {
+        "company_info": "Informasi Perusahaan",
+        "stock_adjustment_category_data": "Data Kategori Penyesuaian Stok"
+    },
+    "fields": {
+        "company_id": "Perusahaan",
+        "code": "Kode",
+        "name": "Nama"
+    },
+    "alert": {
+        "delete_stock_adjustment_category": {
+            "title": "Hapus Kategori Penyesuaian Stok",
+            "content": "Kategori Penyesuaian Stok Berhasil Dihapus"
+        }
+    }
+}
+

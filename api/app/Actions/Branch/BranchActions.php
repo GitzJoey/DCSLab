@@ -2,16 +2,14 @@
 
 namespace App\Actions\Branch;
 
-use App\Actions\Randomizer\RandomizerActions;
+use App\Actions\Company\CompanyActions;
+use App\DTOs\ExecuteDTO;
 use App\Models\Branch;
 use App\Models\Company;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 
 class BranchActions
 {
@@ -22,48 +20,28 @@ class BranchActions
     {
     }
 
-    public function create(
-        array $branchArr
-    ): Branch {
-        DB::beginTransaction();
+    public function create(array $data): Branch
+    {
         $timer_start = microtime(true);
 
         try {
-            $company_id = $branchArr['company_id'];
-            $code = $branchArr['code'];
-            $name = $branchArr['name'];
-            $address = $branchArr['address'];
-            $city = $branchArr['city'];
-            $contact = $branchArr['contact'];
-            $is_main = $branchArr['is_main'];
-            $remarks = $branchArr['remarks'];
-            $status = $branchArr['status'];
-
-            $company = Company::find($company_id);
-            if ($company->branches()->count() == 0) {
-                $is_main = true;
-                $status = 1;
-            }
-
             $branch = new Branch();
-            $branch->company_id = $company_id;
-            $branch->code = $code;
-            $branch->name = $name;
-            $branch->address = $address;
-            $branch->city = $city;
-            $branch->contact = $contact;
-            $branch->is_main = $is_main;
-            $branch->remarks = $remarks;
-            $branch->status = $status;
-            $branch->save();
+            $branch->company_id = $data['company_id'];
+            $branch->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $branch->name = $data['name'];
+            $branch->address = $data['address'];
+            $branch->city = $data['city'];
+            $branch->contact = $data['contact'];
+            $branch->is_main = $data['is_main'];
+            $branch->remarks = $data['remarks'];
+            $branch->status = $data['status'];
 
-            DB::commit();
+            $branch->save();
 
             $this->flushCache();
 
             return $branch;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -73,76 +51,106 @@ class BranchActions
     }
 
     public function readAny(
+        bool $withTrashed,
         int $companyId,
-        string $search = '',
-        bool $paginate = true,
-        int $page = 1,
-        int $perPage = 10,
-        array $with = [],
-        bool $withTrashed = false,
-        bool $useCache = true
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
 
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'_'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache) {
-                $cacheResult = $this->readFromCache($cacheKey);
+        ?string $search,
+        ?bool $isMain,
+        ?int $status,
+        ?int $includeId,
 
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
+        ?ExecuteDTO $execute
+    ) {
+        $query = Branch::with('company')->select('branches.*')
+            ->whereCompanyId($companyId)
+            ->withTrashed();
+
+        $query->where(function ($query) use ($withTrashed, $search, $isMain, $status, $includeId) {
+            $query->where(function ($query) use ($withTrashed, $search, $isMain, $status) {
+                $query->withoutTrashed();
+                if ($withTrashed) {
+                    $query->withTrashed();
                 }
+
+                if ($search) {
+                    $query->search($search);
+                }
+
+                if ($isMain !== null) {
+                    $query->where('branches.is_main', '=', $isMain);
+                }
+
+                if ($status !== null) {
+                    $query->where('branches.status', '=', $status);
+                }
+            });
+
+            if ($includeId) {
+                $query->orWhere('branches.id', $includeId);
             }
+        });
 
-            $result = null;
-
-            if (! $companyId) {
-                return null;
-            }
-
-            $relationship = ['company'];
-            $relationship = count($with) > 0 ? $with : $relationship;
-            $query = Branch::with($relationship);
-
-            $query = $query->whereCompanyId($companyId);
-
-            if (! empty($search)) {
-                $query = $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', '%'.$search.'%')
-                        ->orWhere('address', 'like', '%'.$search.'%')
-                        ->orWhere('city', 'like', '%'.$search.'%');
-                });
-            }
-
-            if ($withTrashed) {
-                $query = $query->withTrashed();
-            }
-
-            $query = $query->latest();
-
-            if ($paginate) {
-                $perPage = is_numeric($perPage) ? abs($perPage) : Config::get('dcslab.PAGINATION_LIMIT');
-                $page = is_numeric($page) ? abs($page) : 1;
-
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            $this->saveToCache($cacheKey, $result);
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+        if ($includeId) {
+            $query->orderByRaw('FIELD(branches.id, '.$includeId.') desc');
         }
+        $query->orderBy('branches.name', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    empty($search) ? '[empty]' : $search,
+                    is_null($isMain) ? '[null]' : ($isMain ? 'true' : 'false'),
+                    $status ?? '[null]',
+                    $includeId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'readAny_'.implode('-', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheData = $this->readFromCache($cacheKey);
+                    if ($cacheData !== Config::get('dcslab.ERROR_RETURN_VALUE')) return $cacheData;
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
     }
 
     public function read(Branch $branch): Branch
@@ -150,67 +158,40 @@ class BranchActions
         return $branch->load('company');
     }
 
-    public function getBranchByCompany(int $companyId = 0, ?Company $company = null): Collection
+    public function getById(int $branchId): Branch
     {
-        if (! is_null($company)) {
-            return $company->branches;
-        }
-
-        if ($companyId != 0) {
-            return Branch::where('company_id', '=', $companyId)->where('status', '=', 1)->get();
-        }
-
-        return null;
+        return Branch::find($branchId);
     }
 
-    public function getMainBranchByCompany(int $companyId = 0, ?Company $company = null): Branch
+    public function isMain(Branch $branch): bool
     {
-        if (! is_null($company)) {
-            return $company->branches()->where('is_main', '=', true)->first();
-        }
+        $result = $branch->is_main;
 
-        if ($companyId != 0) {
-            return Branch::where('company_id', '=', $companyId)->where('is_main', '=', true)->first();
-        }
-
-        return null;
+        return is_null($result) ? false : $result;
     }
 
     public function update(
         Branch $branch,
-        array $branchArr,
+        array $data,
     ): Branch {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $code = $branchArr['code'];
-            $name = $branchArr['name'];
-            $address = $branchArr['address'];
-            $city = $branchArr['city'];
-            $contact = $branchArr['contact'];
-            $is_main = $branchArr['is_main'];
-            $remarks = $branchArr['remarks'];
-            $status = $branchArr['status'];
+            $branch->code = $this->generateUniqueCode($branch->company_id, $data['code'], $branch->id);
+            $branch->name = $data['name'];
+            $branch->address = $data['address'];
+            $branch->city = $data['city'];
+            $branch->contact = $data['contact'];
+            $branch->is_main = $data['is_main'];
+            $branch->remarks = $data['remarks'];
+            $branch->status = $data['status'];
 
-            $branch->update([
-                'code' => $code,
-                'name' => $name,
-                'address' => $address,
-                'city' => $city,
-                'contact' => $contact,
-                'is_main' => $is_main,
-                'remarks' => $remarks,
-                'status' => $status,
-            ]);
-
-            DB::commit();
+            $branch->save();
 
             $this->flushCache();
 
             return $branch->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -219,25 +200,15 @@ class BranchActions
         }
     }
 
-    public function resetMainBranch(int $companyId = 0, ?Company $company = null): bool
+    public function resetMainByCompany(int $companyId): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            if ($companyId != 0) {
-                $retval = Branch::where('company_id', '=', $companyId)->update(['is_main' => false]);
-            } elseif (! is_null($company)) {
-                $retval = $company->branches()->update(['is_main' => false]);
-            } else {
-                $retval = 0;
-            }
+            $company = (new CompanyActions())->getById($companyId);
 
-            DB::commit();
-
-            return $retval;
+            return $company->branches()->update(['is_main' => false]);
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -248,20 +219,16 @@ class BranchActions
 
     public function delete(Branch $branch): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
         try {
             $retval = $branch->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -270,22 +237,47 @@ class BranchActions
         }
     }
 
-    public function generateUniqueCode(): string
+    public function generateUniqueCode(int $companyId, string $code, ?int $exceptId): string
     {
-        $rand = app(RandomizerActions::class);
-        $code = $rand->generateAlpha().$rand->generateNumeric();
+        if ($code != config('dcslab.KEYWORDS.AUTO')) return $code;
+
+        $company = Company::find($companyId);
+
+        $tryCount = 0;
+        do {
+            $count = $company->branches()->withTrashed()->count() + 1 + $tryCount;
+            $code = 'BC'.str_pad($count, 3, '0', STR_PAD_LEFT);
+            $tryCount++;
+        } while (! $this->isUniqueCode($companyId, $code, $exceptId));
 
         return $code;
     }
 
-    public function isUniqueCode(string $code, int $companyId, ?int $exceptId = null): bool
+    public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = Branch::whereCompanyId($companyId)->where('code', '=', $code);
+        $company = Company::find($companyId);
 
+        if ($company->branches()->count() == 0) return true;
+
+        $query = $company->branches()->where('code', '=', $code);
         if ($exceptId) {
-            $result = $result->where('id', '<>', $exceptId);
+            $query->where('branches.id', '<>', $exceptId);
         }
 
-        return $result->count() == 0 ? true : false;
+        return $query->doesntExist();
+    }
+
+    public function isUniqueName(int $companyId, string $name, ?int $exceptId): bool
+    {
+        $company = Company::find($companyId);
+
+        if ($company->branches()->count() == 0) return true;
+
+        $query = $company->branches()->where('name', '=', $name);
+        if ($exceptId) {
+            $query->where('branches.id', '<>', $exceptId);
+        }
+
+        return $query->doesntExist();
     }
 }

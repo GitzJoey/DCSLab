@@ -1,0 +1,31 @@
+{
+    "page_title": "Brand",
+    "table": {
+        "title": "Daftar Brand",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama"
+        }
+    },
+    "actions": {
+        "create": "Tambah Brand",
+        "edit": "Ubah Brand",
+        "show": "Tampilkan Brand",
+        "delete": "Hapus Brand"
+    },
+    "field_groups": {
+        "company_info": "Informasi Perusahaan",
+        "brand_data": "Data Brand"
+    },
+    "fields": {
+        "company_id": "Perusahaan",
+        "code": "Kode",
+        "name": "Nama"
+    },
+    "alert": {
+        "delete_brand": {
+            "title": "Hapus Brand",
+            "content": "Brand Berhasil Dihapus"
+        }
+    }
+}

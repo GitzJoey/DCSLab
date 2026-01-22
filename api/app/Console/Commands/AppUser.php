@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Actions\Role\RoleActions;
 use App\Actions\User\UserActions;
-use App\Enums\RecordStatus;
-use App\Enums\UserRoles;
+use App\Enums\RecordStatusEnum;
+use App\Enums\UserRolesEnum;
 use Exception;
 use Illuminate\Console\Command;
 
@@ -39,7 +39,7 @@ class AppUser extends Command
             case 'changerole':
             case 'changeroles':
             case 'changeuserrole':
-            case 'changeuserroles':
+            case 'changeuserrolesEnum':
                 $this->changeUserRoles();
                 break;
             default:
@@ -64,9 +64,9 @@ class AppUser extends Command
 
         do {
             $userType = $this->choice('Select Role: ', [
-                ucfirst(UserRoles::DEVELOPER->value),
-                ucfirst(UserRoles::ADMINISTRATOR->value),
-                ucfirst(UserRoles::USER->value),
+                ucfirst(UserRolesEnum::DEVELOPER->value),
+                ucfirst(UserRolesEnum::ADMINISTRATOR->value),
+                ucfirst(UserRolesEnum::USER->value),
             ]);
             $userName = $this->ask('Name', $userName);
             $userEmail = $this->ask('Email', $userEmail);
@@ -79,7 +79,7 @@ class AppUser extends Command
                 'tax_id' => 0,
                 'ic_num' => 0,
                 'country' => 'Singapore',
-                'status' => RecordStatus::ACTIVE,
+                'status' => RecordStatusEnum::ACTIVE,
             ];
 
             $user = [

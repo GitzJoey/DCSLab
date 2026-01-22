@@ -61,7 +61,7 @@ export default class UserService {
 
         try {
             const queryParams: Record<string, string | number | boolean> = {};
-            queryParams['search'] = args.search ? args.search : '';
+            if (args.search) queryParams['search'] = args.search;
             queryParams['refresh'] = args.refresh;
             queryParams['paginate'] = args.paginate;
             if (args.page) queryParams['page'] = args.page;

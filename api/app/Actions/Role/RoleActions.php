@@ -2,7 +2,7 @@
 
 namespace App\Actions\Role;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Traits\CacheHelper;
@@ -27,7 +27,7 @@ class RoleActions
         }
 
         if ($excludeDevAdminRole) {
-            $role = $role->whereNotIn('name', [UserRoles::DEVELOPER->value, UserRoles::ADMINISTRATOR->value]);
+            $role = $role->whereNotIn('name', [UserRolesEnum::DEVELOPER->value, UserRolesEnum::ADMINISTRATOR->value]);
         }
 
         return $role->get();
@@ -65,5 +65,7 @@ class RoleActions
         if ($role) {
             return $role->permissions()->get();
         }
+
+        return collect([]);
     }
 }

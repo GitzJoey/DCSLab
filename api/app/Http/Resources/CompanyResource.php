@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -33,7 +33,7 @@ class CompanyResource extends JsonResource
     private function setStatus($status, $deleted_at)
     {
         if (! is_null($deleted_at)) {
-            return RecordStatus::DELETED->name;
+            return RecordStatusEnum::DELETED->name;
         } else {
             return $status->name;
         }

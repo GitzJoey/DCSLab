@@ -12,7 +12,7 @@ import { Collection } from "@/types/resources/Collection";
 import { DataListEmittedData } from "@/components/DataList/DataList.vue";
 import { ServiceResponse } from "@/types/services/ServiceResponse";
 import { Resource } from "@/types/resources/Resource";
-import { ReadAnyRequest } from "@/types/services/ServiceRequest";
+import { BranchReadAnyPaginateRequest } from "@/types/services/branch/BranchRequest";
 import { useRouter } from "vue-router";
 import { Dialog } from "@/components/Base/Headless";
 import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
@@ -37,7 +37,6 @@ const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'sho
 // #endregion
 
 // #region Refs
-const datalistErrors = ref<Record<string, Array<string>> | null>(null);
 const deleteUlid = ref<string>('');
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
@@ -74,29 +73,40 @@ onMounted(async () => {
     router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
   }
 
-  await getBranches('', true, true, 1, 10);
+  await getBranches('', true, 1, 10);
 });
 // #endregion
 
 // #region Methods
-const getBranches = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
+const getBranches = async (
+  search: string, 
+
+  refresh: boolean, 
+  page: number, 
+  per_page: number
+) => {
   emits('loading-state', true);
 
   let company_id = selectedUserLocation.value.company.id;
 
-  const searchReq: ReadAnyRequest = {
+  const searchReq: BranchReadAnyPaginateRequest = {
+    with_trashed: false,
+    
     company_id: company_id,
     search: search,
+    is_main: undefined,
+    status: undefined,
+    include_id: undefined,
+
     refresh: refresh,
-    paginate: paginate,
     page: page,
     per_page: per_page
   };
 
-  let result: ServiceResponse<Collection<Array<Branch>> | Resource<Array<Branch>> | null> = await branchServices.readAny(searchReq);
+  let result: ServiceResponse<Collection<Array<Branch>> | null> = await branchServices.readAnyPaginate(searchReq);
 
   if (result.success && result.data) {
-    branchLists.value = result.data as Collection<Array<Branch>>;
+    branchLists.value = result.data;
   } else {
     showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
   }
@@ -105,7 +115,12 @@ const getBranches = async (search: string, refresh: boolean, paginate: boolean, 
 };
 
 const onDataListChanged = async (data: DataListEmittedData) => {
-  await getBranches(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
+  await getBranches(
+    data.search.text, 
+    true, 
+    data.pagination.page, 
+    data.pagination.per_page
+  );
 }
 
 const viewSelected = (idx: number) => {
@@ -140,7 +155,7 @@ const confirmDelete = async () => {
 
   if (result.success) {
     emits('update-profile');
-    await getBranches('', true, true, 1, 10);
+    await getBranches('', true, 1, 10);
     showNotification(t('views.branch.alert.delete_branch.title'), t('views.branch.alert.delete_branch.content'));
   } else {
     showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
@@ -158,7 +173,7 @@ const showNotification = (pTitle: string, pContent: string) => {
   emits('show-notification', n);
 };
 
-const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|'pending'|'dark', pTitle: string, pAlertList: Record<string, Array<string>>|null) => {
+const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark', pTitle: string, pAlertList: Record<string, Array<string>> | null) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,
     title: pTitle,
@@ -174,7 +189,7 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
 </script>
 
 <template>
-  <DataList :title="t('views.company.table.title')" :enable-search="true" :can-print="true" :can-export="true"
+  <DataList :title="t('views.branch.table.title')" :enable-search="true" :can-print="true" :can-export="true"
     :pagination="branchLists ? branchLists.meta : null" @dataListChanged="onDataListChanged">
     <template #content>
       <Table class="mt-5" :hover="true">
@@ -204,7 +219,7 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
               </Table.Td>
             </Table.Tr>
           </template>
-          <template v-for="( item, itemIdx ) in branchLists.data" :key="item.ulid">
+          <template v-for="(item, itemIdx) in branchLists.data" :key="item.ulid">
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.code }}</Table.Td>
               <Table.Td>{{ item.name }}</Table.Td>
@@ -222,7 +237,7 @@ const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
                   <Button variant="outline-secondary" @click="editSelected(itemIdx)">
-                    <Lucide icon="CheckSquare" class="w-4 h-4" />
+                    <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
                   <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />

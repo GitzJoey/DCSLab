@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\API\CompanyAPI;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
@@ -19,15 +19,15 @@ class CompanyAPIEditTest extends APITestCase
     public function test_company_api_call_update_without_authorization_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault())
             ->create();
 
         $company = $user->companies->first();
 
-        $companyArr = Company::factory()->setStatusActive()->make()->toArray();
+        $payload = Company::factory()->setStatusActive()->make()->toArray();
 
-        $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
+        $api = $this->json('POST', route('api.post.company.edit', $company->ulid), $payload);
 
         $api->assertUnauthorized();
     }
@@ -42,9 +42,9 @@ class CompanyAPIEditTest extends APITestCase
 
         $company = $user->companies->first();
 
-        $companyArr = Company::factory()->setStatusActive()->make()->toArray();
+        $payload = Company::factory()->setStatusActive()->make()->toArray();
 
-        $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
+        $api = $this->json('POST', route('api.post.company.edit', $company->ulid), $payload);
 
         $api->assertForbidden();
     }
@@ -62,7 +62,7 @@ class CompanyAPIEditTest extends APITestCase
     public function test_company_api_call_update_expect_successful()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->setIsDefault())
             ->create();
 
@@ -70,18 +70,18 @@ class CompanyAPIEditTest extends APITestCase
 
         $company = $user->companies->first();
 
-        $companyArr = Company::factory()->setStatusActive()->make()->toArray();
+        $payload = Company::factory()->setStatusActive()->setIsDefault()->make()->toArray();
 
-        $api = $this->json('POST', route('api.post.db.company.company.edit', $company->ulid), $companyArr);
+        $api = $this->json('POST', route('api.post.company.edit', $company->ulid), $payload);
 
         $api->assertSuccessful();
         $this->assertDatabaseHas('companies', [
             'id' => $company->id,
-            'code' => $companyArr['code'],
-            'name' => $companyArr['name'],
-            'address' => $companyArr['address'],
-            'default' => $companyArr['default'],
-            'status' => $companyArr['status'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'address' => $payload['address'],
+            'default' => $payload['default'],
+            'status' => $payload['status'],
         ]);
     }
 
@@ -91,7 +91,7 @@ class CompanyAPIEditTest extends APITestCase
         $idxDefaultCompany = random_int(0, $companyCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->count($companyCount)
                 ->state(new Sequence(
                     fn (Sequence $sequence) => [
@@ -107,11 +107,11 @@ class CompanyAPIEditTest extends APITestCase
         $company_1 = $companies[0];
         $company_2 = $companies[1];
 
-        $companyArr = Company::factory()->make([
+        $payload = Company::factory()->make([
             'code' => $company_2->code,
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.company.company.edit', $company_1->ulid), $companyArr);
+        $api = $this->json('POST', route('api.post.company.edit', $company_1->ulid), $payload);
 
         $api->assertUnprocessable();
         $api->assertJsonStructure([

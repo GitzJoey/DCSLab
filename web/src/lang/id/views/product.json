@@ -1,0 +1,77 @@
+{
+    "page_title": "Produk",
+    "table": {
+        "title": "Daftar Produk",
+        "cols": {
+            "code": "Kode",
+            "name": "Nama",
+            "category": "Kategori",
+            "brand": "Merek",
+            "unit": "Satuan",
+            "price": "Harga",
+            "point": "Poin",
+            "status": "Status"
+        }
+    },
+    "actions": {
+        "create": "Buat Produk",
+        "edit": "Ubah Produk",
+        "show": "Lihat Produk",
+        "delete": "Hapus Produk"
+    },
+    "field_groups": {
+        "company_info": "Info Perusahaan",
+        "product_data": "Data Produk",
+        "price_tax_settings": "Pengaturan Harga & Pajak",
+        "unit_settings": "Pengaturan Satuan",
+        "other_settings": "Pengaturan Lainnya"
+    },
+    "detail": {
+        "info_title": "Informasi Produk",
+        "settings_title": "Pengaturan & Pajak",
+        "units_title": "Satuan Produk"
+    },
+    "fields": {
+        "company_id": "Perusahaan",
+        "code": "Kode",
+        "name": "Nama",
+        "slug": "Slug",
+        "category_id": "Kategori",
+        "brand_id": "Merek",
+        "unit_id": "Satuan",
+        "base_unit": "Satuan Dasar",
+        "base_unit_price": "Harga per Satuan Dasar",
+        "other_unit": "Satuan Lain",
+        "conversion_value": "Nilai Konversi",
+        "unit_code": "Kode Satuan",
+        "is_primary_unit": "Satuan Utama",
+        "is_manufacturer_sku": "Manufacture SKU",
+        "price": "Harga",
+        "point": "Poin",
+        "is_taxable": "Kena Pajak",
+        "vat_rate": "Tarif PPN",
+        "is_price_include_vat": "Harga Termasuk PPN",
+        "is_use_serial_number": "Gunakan Nomor Seri",
+        "is_expirable": "Dapat Kedaluwarsa",
+        "status": "Status",
+        "remarks": "Keterangan"
+    },
+    "status": {
+        "active": "Aktif",
+        "inactive": "Tidak Aktif"
+    },
+    "alert": {
+        "create": {
+            "title": "Buat Produk",
+            "message": "Produk Berhasil Dibuat"
+        },
+        "update": {
+            "title": "Ubah Produk",
+            "message": "Produk Berhasil Diubah"
+        },
+        "delete": {
+            "title": "Hapus Produk",
+            "message": "Produk Berhasil Dihapus"
+        }
+    }
+}
