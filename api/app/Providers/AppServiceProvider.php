@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use App\Listeners\LoginEventListener;
-use App\Listeners\LogoutEventListener;
 use Illuminate\Support\Facades\Event;
+use App\Listeners\LogoutEventListener;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
             LoginEventListener::class,
             LogoutEventListener::class,
         );
+
+        Schema::defaultStringLength(191);
     }
 }
