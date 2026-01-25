@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
 import { Config } from "ziggy-js";
+import { getBackendUrl } from "@/utils/config";
 
 export interface ZiggyState {
   ziggyRoute: Config
 }
 
 const getDomain = () => {
-  const domain = (new URL(import.meta.env.VITE_BACKEND_URL));
+  const domain = (new URL(getBackendUrl()));
 
   if (!domain) return 'localhost';
 
@@ -14,7 +15,7 @@ const getDomain = () => {
 }
 
 const getDomainPort = () => {
-  const domain = (new URL(import.meta.env.VITE_BACKEND_URL));
+  const domain = (new URL(getBackendUrl()));
 
   if (!domain) return 8000;
 

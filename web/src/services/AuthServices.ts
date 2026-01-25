@@ -1,5 +1,6 @@
 import { client, useForm } from "laravel-precognition-vue";
 import { authAxiosInstance } from "../axios";
+import { getBackendUrl } from "@/utils/config";
 
 export default class AuthService {
     public async ensureCSRF(): Promise<void> {
@@ -33,7 +34,7 @@ export default class AuthService {
     public useLoginForm() {
         client.axios().defaults.withCredentials = true;
         client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/login', {
+        const form = useForm('post', getBackendUrl() + '/login', {
             email: '',
             password: '',
             remember: false,
@@ -45,7 +46,7 @@ export default class AuthService {
     public useTwoFactorLoginForm() {
         client.axios().defaults.withCredentials = true;
         client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/two-factor-challenge', {
+        const form = useForm('post', getBackendUrl() + '/two-factor-challenge', {
             code: '',
             recovery_code: '',
         });
@@ -56,7 +57,7 @@ export default class AuthService {
     public useRegisterForm() {
         client.axios().defaults.withCredentials = true;
         client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/register', {
+        const form = useForm('post', getBackendUrl() + '/register', {
             name: '',
             email: '',
             password: '',
@@ -70,7 +71,7 @@ export default class AuthService {
     public useRequestResetPasswordForm() {
         client.axios().defaults.withCredentials = true;
         client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/forgot-password', {
+        const form = useForm('post', getBackendUrl() + '/forgot-password', {
             email: '',
         });
 
@@ -80,7 +81,7 @@ export default class AuthService {
     public useResetPasswordForm() {
         client.axios().defaults.withCredentials = true;
         client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/reset-password', {
+        const form = useForm('post', getBackendUrl() + '/reset-password', {
             email: '',
             token: '',
             password: '',
