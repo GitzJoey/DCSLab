@@ -23,11 +23,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
+
         Event::listen(
             LoginEventListener::class,
             LogoutEventListener::class,
         );
-
-        Schema::defaultStringLength(191);
     }
 }
