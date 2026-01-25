@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
 import ProductService from "@/services/ProductService";
 import ProductCategoryService from "@/services/ProductCategoryService";
@@ -88,6 +88,7 @@ const unitDDL = ref<Array<DropDownOption> | null>(null);
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 
 const productForm = productService.useProductPhysicalStoreForm();
+
 // #endregion
 
 // #region Computed
@@ -109,7 +110,8 @@ onMounted(async () => {
         });
     }
 
-    // Initialize one empty unit for the base unit if not exists
+    loadFromCache();
+
     if (productForm.product_units.length === 0) {
         productForm.product_units.push({
             code: '_AUTO_',
@@ -126,7 +128,7 @@ onMounted(async () => {
     }
 
     await Promise.all([getCategoryDDL(), getBrandDDL(), getUnitDDL(), getStatusDDL()]);
-    loadFromCache();
+    
     setCompanyIdData();
 });
 // #endregion
@@ -210,7 +212,7 @@ const loadFromCache = () => {
         unknown
     >;
     if (!data) return;
-    if (!data.slug) data.slug = '_AUTO_';
+    if (!data.code) data.code = '_AUTO_';
     productForm.setData(data);
 };
 
@@ -300,7 +302,7 @@ const addUnit = () => {
         unit_name: "",
         price: 0,
         is_base: false,
-        conversion_value: 1,
+        conversion_value: "",
         is_primary_unit: false,
         point: 0,
         remarks: "",
@@ -316,17 +318,42 @@ const updateUnitName = (index: number, newUnitId?: string) => {
     const unit = unitDDL.value?.find(u => u.code === unitId);
     if (unit) {
         productForm.product_units[index].unit_name = unit.name;
+        productForm.forgetError(`product_units.${index}.unit_id` as any);
     }
 };
 
 const clearUnit = (index: number) => {
     productForm.product_units[index].unit_id = "";
     productForm.product_units[index].unit_name = "";
+    productForm.forgetError(`product_units.${index}.unit_id` as any);
 };
 
 const removeUnit = (index: number) => {
+    const isPrimary = productForm.product_units[index].is_primary_unit;
     productForm.product_units.splice(index, 1);
+
+    // If the removed unit was the primary unit, set the first unit (Base Unit) as primary
+    if (isPrimary && productForm.product_units.length > 0) {
+        productForm.product_units[0].is_primary_unit = true;
+    }
+
+    // Clear errors related to product_units to prevent stale "duplicate" errors
+    // because 'distinct' validation depends on the array content
+    Object.keys(productForm.errors).forEach((key) => {
+        if (key.startsWith("product_units.")) {
+            productForm.forgetError(key as any);
+        }
+    });
 };
+
+watch(
+    () => productForm.errors,
+    (newErrors) => {
+        console.log("Realtime Errors Update:", JSON.parse(JSON.stringify(newErrors)));
+        console.log("Has Errors:", productForm.hasErrors);
+    },
+    { deep: true }
+);
 
 const showAlertPlaceholder = (
     pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
@@ -385,8 +412,10 @@ const convertErrorTypeToAlertListType = (error: unknown) => {
 // #region Watchers
 watch(
     productForm,
-    debounce((newValue): void => {
-        cacheServices.setLastEntity("PRODUCT_CREATE", newValue.data());
+    debounce(() => {
+        cacheServices.setLastEntity("PRODUCT_CREATE", productForm.data());
+        console.log("productForm.errors:", JSON.parse(JSON.stringify(productForm.errors)));
+        console.log("productForm.product_units:", JSON.parse(JSON.stringify(productForm.product_units)));
     }, 500),
     { deep: true }
 );
@@ -561,8 +590,7 @@ watch(
                                 </FormLabel>
                                 <FormInputCode v-model="productForm.product_units[index].code"
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.code` as any) }"
-                                    :placeholder="t('views.product.fields.unit_code')" @set-auto="setUnitCode(index)"
-                                    @change="productForm.validate(`product_units.${index}.code` as any)" />
+                                    :placeholder="t('views.product.fields.unit_code')" @set-auto="setUnitCode(index)" />
                                 <FormErrorMessages
                                     :messages="(productForm.errors as any)[`product_units.${index}.code`]" />
                             </div>
@@ -572,11 +600,15 @@ watch(
                                     :class="{ 'text-danger': productForm.invalid(`product_units.${index}.unit_id` as any) }">
                                     {{ t("views.product.fields.unit_id") }}
                                 </FormLabel>
-                                <div v-if="productForm.product_units[index].unit_id && productForm.product_units[index].unit_name" class="relative">
-                                    <div class="form-control border rounded-md px-3 py-2 bg-slate-50 dark:bg-darkmode-800 text-slate-700 dark:text-slate-300">
+                                <div v-if="productForm.product_units[index].unit_id && productForm.product_units[index].unit_name"
+                                    class="relative">
+                                    <div
+                                        class="form-control border rounded-md px-3 py-2 bg-slate-50 dark:bg-darkmode-800 text-slate-700 dark:text-slate-300">
                                         {{ productForm.product_units[index].unit_name }}
                                     </div>
-                                    <button type="button" class="absolute right-3 top-2.5 text-slate-500 hover:text-danger" @click="clearUnit(index)">
+                                    <button type="button"
+                                        class="absolute right-3 top-2.5 text-slate-500 hover:text-danger"
+                                        @click="clearUnit(index)">
                                         <Lucide icon="X" class="w-4 h-4" />
                                     </button>
                                 </div>
@@ -584,15 +616,13 @@ watch(
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.unit_id` as any) }"
                                     @update:model-value="(val) => {
                                         updateUnitName(index, val as string);
-                                        productForm.validate(`product_units.${index}.unit_id` as any);
-                                    }"
-                                    @search="getUnitDDL" :options="{
-                                    placeholder: t('components.dropdown.placeholder'),
-                                }">
-                                <option v-for="c in unitDDL" :key="c.code" :value="c.code">
-                                    {{ c.name }}
-                                </option>
-                            </FormTomSelect>
+                                    }" @search="getUnitDDL" :options="{
+                                        placeholder: t('components.dropdown.placeholder'),
+                                    }">
+                                    <option v-for="c in unitDDL" :key="c.code" :value="c.code">
+                                        {{ c.name }}
+                                    </option>
+                                </FormTomSelect>
                                 <FormErrorMessages
                                     :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]" />
                             </div>
@@ -605,151 +635,98 @@ watch(
                                 <FormInput type="number" v-model="productForm.product_units[index].conversion_value"
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.conversion_value` as any) }"
                                     :placeholder="t('views.product.fields.conversion_value')"
-                                    @change="productForm.validate(`product_units.${index}.conversion_value` as any)" />
+                                    @input="productForm.forgetError(`product_units.${index}.conversion_value` as any)" />
                                 <FormErrorMessages
                                     :messages="(productForm.errors as any)[`product_units.${index}.conversion_value`]" />
                             </div>
 
-                            <div
-                                class="col-span-12 sm:col-span-6"
-                                v-if="index > 0"
-                            >
+                            <div class="col-span-12 sm:col-span-6" v-if="index > 0">
                                 <FormLabel
                                     :class="{ 'text-danger': productForm.invalid(`product_units.${index}.price` as any) }">
                                     {{ t("views.product.fields.price") }}
                                 </FormLabel>
-                                <FormInputCurrency
-                                    v-model="productForm.product_units[index].price"
+                                <FormInputCurrency v-model="productForm.product_units[index].price"
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.price` as any) }"
-                                    :placeholder="t('views.product.fields.price')"
-                                    @change="productForm.validate(`product_units.${index}.price` as any)"
-                                />
-                                <div
-                                    v-if="!productForm.product_units[index].is_base && productForm.product_units[index].conversion_value > 0 && productForm.product_units[index].price > 0"
-                                    class="text-xs text-slate-500 mt-1 text-right"
-                                >
+                                    :placeholder="t('views.product.fields.price')" />
+                                <div v-if="!productForm.product_units[index].is_base && productForm.product_units[index].conversion_value > 0 && productForm.product_units[index].price > 0"
+                                    class="text-xs text-slate-500 mt-1 text-right">
                                     {{ t("views.product.fields.base_unit_price") }}:
-                                    {{ formatCurrency((productForm.product_units[index].price / productForm.product_units[index].conversion_value).toFixed(2)) }}
+                                    {{ formatCurrency((productForm.product_units[index].price /
+                                        productForm.product_units[index].conversion_value).toFixed(2)) }}
                                 </div>
                                 <FormErrorMessages
-                                    :messages="(productForm.errors as any)[`product_units.${index}.price`]"
-                                />
+                                    :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
                             </div>
 
-                            <div
-                                class="col-span-12 sm:col-span-4"
-                                v-else
-                            >
+                            <div class="col-span-12 sm:col-span-4" v-else>
                                 <FormLabel
                                     :class="{ 'text-danger': productForm.invalid(`product_units.${index}.price` as any) }">
                                     {{ t("views.product.fields.price") }}
                                 </FormLabel>
-                                <FormInputCurrency
-                                    v-model="productForm.product_units[index].price"
+                                <FormInputCurrency v-model="productForm.product_units[index].price"
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.price` as any) }"
-                                    :placeholder="t('views.product.fields.price')"
-                                    @change="productForm.validate(`product_units.${index}.price` as any)"
-                                />
+                                    :placeholder="t('views.product.fields.price')" />
                                 <FormErrorMessages
-                                    :messages="(productForm.errors as any)[`product_units.${index}.price`]"
-                                />
+                                    :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
                             </div>
 
-                            <div
-                                class="col-span-12 sm:col-span-4"
-                                v-if="index === 0"
-                            >
+                            <div class="col-span-12 sm:col-span-4" v-if="index === 0">
                                 <FormLabel
                                     :class="{ 'text-danger': productForm.invalid(`product_units.${index}.point` as any) }">
                                     {{ t("views.product.fields.point") }}
                                 </FormLabel>
-                                <FormInput
-                                    v-model="productForm.product_units[index].point"
-                                    type="number"
-                                    :class="{
-                                        'border-danger': productForm.invalid(`product_units.${index}.point` as any),
-                                    }"
-                                    :placeholder="t('views.product.fields.point')"
-                                    @change="productForm.validate(`product_units.${index}.point` as any)"
-                                />
+                                <FormInput v-model="productForm.product_units[index].point" type="number" :class="{
+                                    'border-danger': productForm.invalid(`product_units.${index}.point` as any),
+                                }" :placeholder="t('views.product.fields.point')" />
                                 <FormErrorMessages
-                                    :messages="(productForm.errors as any)[`product_units.${index}.point`]"
-                                />
+                                    :messages="(productForm.errors as any)[`product_units.${index}.point`]" />
                             </div>
 
-                            <div
-                                class="col-span-12 sm:col-span-4"
-                                v-if="index === 0"
-                            >
+                            <div class="col-span-12 sm:col-span-4" v-if="index === 0">
                                 <FormLabel class="opacity-0 select-none">
                                     {{ t("views.product.fields.is_primary_unit") }}
                                 </FormLabel>
                                 <div class="mt-2 flex items-center">
-                                    <input
-                                        type="radio"
-                                        name="primary_unit"
-                                        class="form-check-input border-slate-300"
+                                    <input type="radio" name="primary_unit" class="form-check-input border-slate-300"
                                         :checked="productForm.product_units[index].is_primary_unit"
-                                        @change="setPrimaryUnit(index)"
-                                    />
-                                    <span
-                                        class="ml-2 text-sm"
-                                        :class="{
-                                            'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
-                                            'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
-                                        }"
-                                    >
+                                        @change="setPrimaryUnit(index)" />
+                                    <span class="ml-2 text-sm" :class="{
+                                        'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
+                                        'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
+                                    }">
                                         {{ t("views.product.fields.is_primary_unit") }}
                                     </span>
                                 </div>
                                 <FormErrorMessages
-                                    :messages="(productForm.errors as any)['product_units.is_primary_unit']"
-                                />
+                                    :messages="(productForm.errors as any)['product_units.is_primary_unit']" />
                             </div>
 
-                            <div
-                                class="col-span-12 sm:col-span-6"
-                                v-if="index > 0"
-                            >
+                            <div class="col-span-12 sm:col-span-6" v-if="index > 0">
                                 <FormLabel
                                     :class="{ 'text-danger': productForm.invalid(`product_units.${index}.point` as any) }">
                                     {{ t("views.product.fields.point") }}
                                 </FormLabel>
                                 <div class="mt-2 flex items-center">
-                                    <FormInput
-                                        v-model="productForm.product_units[index].point"
-                                        type="number"
-                                        :class="{
-                                            'border-danger': productForm.invalid(`product_units.${index}.point` as any),
-                                        }"
-                                        :placeholder="t('views.product.fields.point')"
-                                        @change="productForm.validate(`product_units.${index}.point` as any)"
-                                    />
+                                    <FormInput v-model="productForm.product_units[index].point" type="number" :class="{
+                                        'border-danger': productForm.invalid(`product_units.${index}.point` as any),
+                                    }" :placeholder="t('views.product.fields.point')" />
                                     <div class="ml-4 flex items-center">
-                                        <input
-                                            type="radio"
-                                            name="primary_unit"
+                                        <input type="radio" name="primary_unit"
                                             class="form-check-input border-slate-300"
                                             :checked="productForm.product_units[index].is_primary_unit"
-                                            @change="setPrimaryUnit(index)"
-                                        />
-                                        <span
-                                            class="ml-2 text-sm"
-                                            :class="{
-                                                'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
-                                                'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
-                                            }"
-                                        >
+                                            @change="setPrimaryUnit(index)" />
+                                        <span class="ml-2 text-sm" :class="{
+                                            'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
+                                            'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
+                                        }">
                                             {{ t("views.product.fields.is_primary_unit") }}
                                         </span>
                                     </div>
                                 </div>
                                 <FormErrorMessages
-                                    :messages="(productForm.errors as any)[`product_units.${index}.point`]"
-                                />
+                                    :messages="(productForm.errors as any)[`product_units.${index}.point`]" />
                                 <FormErrorMessages
-                                    :messages="(productForm.errors as any)['product_units.is_primary_unit']"
-                                />
+                                    :messages="(productForm.errors as any)['product_units.is_primary_unit']" />
                             </div>
                         </div>
                     </div>
