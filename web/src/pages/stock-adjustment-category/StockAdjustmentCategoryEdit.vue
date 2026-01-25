@@ -69,10 +69,10 @@ onMounted(async () => {
         });
     }
 
-    await getStockAdjustmentCategory();
+    await loadData();
 });
 
-const getStockAdjustmentCategory = async () => {
+const loadData = async () => {
     emits("loading-state", true);
     const result = await stockAdjustmentCategoryService.read(route.params.ulid.toString());
     emits("loading-state", false);
@@ -125,7 +125,7 @@ const onSubmit = async () => {
 const resetForm = async () => {
     stockAdjustmentCategoryForm.reset();
     stockAdjustmentCategoryForm.setErrors({});
-    await getStockAdjustmentCategory();
+    await loadData();
 };
 
 const setCode = () => {

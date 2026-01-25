@@ -83,7 +83,7 @@ onMounted(async () => {
 // #region Methods
 const loadData = async (ulid: string) => {
 	emits("loading-state", true);
-	let result: ServiceResponse<Investor | null> = await investorServices.read(ulid);
+	const result: ServiceResponse<Investor | null> = await investorServices.read(ulid);
 
 	if (result.success && result.data) {
 		investorForm.setData({
@@ -131,7 +131,7 @@ const onSubmit = async () => {
 			router.push({ name: "side-menu-company-investor-list" });
 		})
 		.catch((error) => {
-			let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+			const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
 			showAlertPlaceholder("danger", "", errorList);
 		})
 		.finally(() => {

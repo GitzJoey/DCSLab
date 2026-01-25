@@ -116,20 +116,19 @@ const loadData = async (ulid: string) => {
 	emits("loading-state", false);
 };
 
-const getDDL = (): void => {
-	roleServices.readAny().then((result: ServiceResponse<Resource<Array<Role>> | null>) => {
-		if (result.success && result.data) {
-			rolesDDL.value = result.data.data as Array<Role>;
-		}
-	});
+const getDDL = async (): Promise<void> => {
+	const [rolesResult, countriesResult, statusResult] = await Promise.all([
+		roleServices.readAny(),
+		dashboardServices.getCountriesDDL(),
+		dashboardServices.getStatusDDL(),
+	]);
 
-	dashboardServices.getCountriesDDL().then((result: Array<DropDownOption> | null) => {
-		countriesDDL.value = result;
-	});
+	if (rolesResult.success && rolesResult.data) {
+		rolesDDL.value = rolesResult.data.data as Array<Role>;
+	}
 
-	dashboardServices.getStatusDDL().then((result: Array<DropDownOption> | null) => {
-		statusDDL.value = result;
-	});
+	countriesDDL.value = countriesResult;
+	statusDDL.value = statusResult;
 };
 
 const handleExpandCard = (index: number) => {

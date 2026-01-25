@@ -2,7 +2,6 @@
 // #region Imports
 import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { isAxiosError, AxiosError } from "axios";
 import { convertErrorTypeToAlertListType } from "@/utils/helper";
 import ProductService from "@/services/ProductService";
 import ProductCategoryService from "@/services/ProductCategoryService";
@@ -103,12 +102,12 @@ onMounted(async () => {
         });
     }
     await Promise.all([getCategoryDDL(), getUnitDDL(), getStatusDDL()]);
-    await getServiceProduct();
+    await loadData();
 });
 // #endregion
 
 // #region Methods
-const getServiceProduct = async () => {
+const loadData = async () => {
     emits("loading-state", true);
     const result = await productService.read(route.params.ulid.toString());
     emits("loading-state", false);
@@ -207,10 +206,10 @@ const onSubmit = async () => {
             router.push({ name: "side-menu-product-product-service-list" }); 
         })
         .catch((error) => {
-            let errorList: Record<
+            const errorList: Record<
                 string,
                 Array<string>
-            > = convertErrorTypeToAlertListType(error as Error);
+            > = convertErrorTypeToAlertListType(error);
             showAlertPlaceholder("danger", "", errorList);
         })
         .finally(() => {
@@ -221,7 +220,7 @@ const onSubmit = async () => {
 const resetForm = async () => {
     productServiceForm.reset();
     productServiceForm.setErrors({});
-    await getServiceProduct(); // Reload data on reset
+    await loadData(); // Reload data on reset
 };
 
 const setCode = () => {

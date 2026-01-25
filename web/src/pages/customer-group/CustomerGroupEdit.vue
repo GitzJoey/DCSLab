@@ -78,7 +78,7 @@ onMounted(async () => {
 // #region Methods
 const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    let response: ServiceResponse<CustomerGroup | null> = await customerGroupServices.read(ulid);
+    const response = await customerGroupServices.read(ulid);
 
     if (response && response.data) {
         customerGroupForm.setData({
@@ -140,7 +140,7 @@ const onSubmit = async () => {
         emits('update-profile');
         router.push({ name: 'side-menu-customer-group-list' });
     }).catch(error => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
     }).finally(() => {
         emits('loading-state', false);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { computed, onMounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import {
     convertErrorTypeToAlertListType
@@ -90,8 +90,10 @@ onMounted(async () => {
             params: { code: ErrorCode.USERLOCATION_REQUIRED },
         });
     }
-    await getDDL();
-    await loadData(route.params.ulid as string);
+    await Promise.all([
+        getDDL(), 
+        loadData(route.params.ulid as string)
+    ]);
 });
 // #endregion
 
@@ -102,7 +104,7 @@ const getDDL = async (): Promise<void> => {
 
 const loadData = async (ulid: string) => {
     emits("loading-state", true);
-    let response: ServiceResponse<ProductCategory | null> =
+    const response: ServiceResponse<ProductCategory | null> =
         await productCategoryService.read(ulid);
 
     if (response && response.data) {
@@ -142,10 +144,10 @@ const onSubmit = async () => {
             router.push({ name: "side-menu-product-product-category-list" });
         })
         .catch((error) => {
-            let errorList: Record<
+            const errorList: Record<
                 string,
                 Array<string>
-            > = convertErrorTypeToAlertListType(error as Error);
+            > = convertErrorTypeToAlertListType(error);
             showAlertPlaceholder("danger", "", errorList);
         })
         .finally(() => {

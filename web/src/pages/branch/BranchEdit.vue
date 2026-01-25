@@ -85,7 +85,7 @@ onMounted(async () => {
 // #region Methods
 const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    let result: ServiceResponse<Branch | null> = await branchServices.read(ulid);
+    const result = await branchServices.read(ulid);
 
     if (result.success && result.data) {
         branchForm.setData({
@@ -135,7 +135,7 @@ const onSubmit = async () => {
         emits('update-profile');
         router.push({ name: 'side-menu-company-branch-list' });
     }).catch(error => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
     }).finally(() => {
         emits('loading-state', false);

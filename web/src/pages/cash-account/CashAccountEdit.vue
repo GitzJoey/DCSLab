@@ -126,7 +126,7 @@ const onSubmit = async () => {
 			router.push({ name: "side-menu-finance-cash-account-list" });
 		})
 		.catch((error) => {
-			let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+			const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
 			showAlertPlaceholder("danger", "", errorList);
 		})
 		.finally(() => {

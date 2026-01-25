@@ -33,7 +33,6 @@ import { Customer } from "@/types/models/Customer";
 import { CustomerGroup } from "@/types/models/CustomerGroup";
 import { ServiceResponse } from "@/types/services/ServiceResponse";
 import { Collection } from "@/types/resources/Collection";
-import { AxiosError, isAxiosError } from "axios";
 // #endregion
 
 // #region Declarations
@@ -103,8 +102,10 @@ onMounted(async () => {
       params: { code: ErrorCode.USERLOCATION_REQUIRED },
     });
   }
-  await getDDL();
-  await loadData(route.params.ulid as string);
+  await Promise.all([
+    getDDL(),
+    loadData(route.params.ulid as string)
+  ]);
   setCompanyIdData();
 });
 // #endregion
@@ -265,14 +266,6 @@ const showAlertPlaceholder = (
 };
 // #endregion
 
-// #region Watchers
-watch(
-  customerForm,
-  debounce((newValue): void => {
-    cacheServices.setLastEntity("CUSTOMER_EDIT", newValue.data());
-  }, 500),
-  { deep: true }
-);
 // #region Watchers
 watch(
   customerForm,

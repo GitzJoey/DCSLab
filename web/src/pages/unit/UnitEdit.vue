@@ -145,10 +145,10 @@ const onSubmit = async () => {
             router.push({ name: "side-menu-product-unit-list" });
         })
         .catch((error) => {
-            let errorList: Record<
+            const errorList: Record<
                 string,
                 Array<string>
-            > = convertErrorTypeToAlertListType(error as Error);
+            > = convertErrorTypeToAlertListType(error);
             showAlertPlaceholder("danger", "", errorList);
         })
         .finally(() => {

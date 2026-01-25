@@ -74,7 +74,7 @@ onMounted(async () => {
 // #region Methods
 const loadData = async (ulid: string) => {
 	emits("loading-state", true);
-	let result: ServiceResponse<Warehouse | null> = await warehouseServices.read(ulid);
+	const result: ServiceResponse<Warehouse | null> = await warehouseServices.read(ulid);
 
 	if (result.success && result.data) {
 		warehouseForm.setData({
@@ -127,7 +127,7 @@ const onSubmit = async () => {
 			router.push({ name: "side-menu-company-warehouse-list" });
 		})
 		.catch((error) => {
-			let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+			const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
 			showAlertPlaceholder("danger", "", errorList);
 		})
 		.finally(() => {
