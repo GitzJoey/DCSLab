@@ -154,6 +154,8 @@ const onSubmit = async () => {
     await form.submit()
         .then(() => {
             resetForm();
+            // Sembunyikan alert error sebelumnya jika ada
+            showAlertPlaceholder("hidden", "", null);
             emits("update-profile");
             router.push({ name: "route-name-list" });
         })
@@ -167,7 +169,32 @@ const onSubmit = async () => {
 };
 ```
 
-## 6. Standard Error Handling Helper
+## 6. Real-time Validation (Precognition)
+
+Gunakan event `@change` untuk memicu validasi Precognition secara real-time pada setiap input. Ini memberikan feedback instan kepada user.
+
+**Single Field:**
+```html
+<FormInput 
+    v-model="form.name" 
+    :class="{ 'border-danger': form.invalid('name') }"
+    @change="form.validate('name')" 
+/>
+<FormErrorMessages :messages="form.errors.name" />
+```
+
+**Array Field:**
+Gunakan template literal untuk path array.
+```html
+<FormInput 
+    v-model="form.items[index].price" 
+    :class="{ 'border-danger': form.invalid(`items.${index}.price` as any) }"
+    @change="form.validate(`items.${index}.price` as any)" 
+/>
+<FormErrorMessages :messages="(form.errors as any)[`items.${index}.price`]" />
+```
+
+## 7. Standard Error Handling Helper
 
 Gunakan fungsi standar ini untuk memparsing error dari Axios response ke format alert list. Fungsi ini menangani `AxiosError` dan `Error` biasa.
 
@@ -212,7 +239,7 @@ const convertErrorTypeToAlertListType = (error: unknown) => {
 };
 ```
 
-## 7. Caching (Auto-Save)
+## 8. Caching (Auto-Save)
 
 Gunakan watcher dengan `debounce` untuk menyimpan draft form ke cache secara otomatis agar data tidak hilang saat refresh.
 
@@ -249,11 +276,29 @@ const loadFromCache = () => {
 };
 ```
 
-## 8. Dynamic Form Arrays (Master-Detail)
+## 9. Dynamic Form Arrays (Master-Detail)
 
 Untuk form yang memiliki list item dinamis (seperti Product Units, Invoice Items), perhatikan hal berikut:
 
-### Hapus Item dengan Cerdas
+### Tambah Item (Add Item)
+Saat menambah item baru, bersihkan error terkait array tersebut untuk mencegah error lama (stale errors) yang mungkin tidak relevan lagi.
+
+```typescript
+const addItem = () => {
+    form.items.push({
+        // ... default properties
+    });
+
+    // Clear errors related to items to prevent stale errors
+    Object.keys(form.errors).forEach((key) => {
+        if (key.startsWith("items.")) {
+            form.forgetError(key as any);
+        }
+    });
+};
+```
+
+### Hapus Item (Remove Item)
 Saat menghapus item, pastikan menangani state global yang mungkin terpengaruh (misal: Primary Item).
 
 ```typescript
@@ -306,7 +351,7 @@ const repopulateDetailNames = () => {
 };
 ```
 
-## 9. Helper UI Functions
+## 10. Helper UI Functions
 
 ### Scroll To Error
 Helper ini digunakan di `onSubmit` untuk scroll otomatis ke field yang error.
@@ -319,7 +364,7 @@ const scrollToError = (id: string): void => {
 };
 ```
 
-## 10. Auto-Generated Codes (_AUTO_)
+## 11. Auto-Generated Codes (_AUTO_)
 Untuk field kode yang bisa digenerate otomatis, gunakan pattern `_AUTO_`.
 
 **Template:**
@@ -344,7 +389,7 @@ const setCode = () => {
 };
 ```
 
-## 11. Reset Form Strategy
+## 12. Reset Form Strategy
 Saat mereset form, pastikan untuk mengembalikan state default yang mungkin tidak dicover oleh `form.reset()` standar, terutama untuk array dinamis.
 
 ```typescript
@@ -364,7 +409,7 @@ const resetForm = () => {
 };
 ```
 
-## 12. Debugging Tips
+## 13. Debugging Tips
 
 Untuk men-debug masalah validasi form secara realtime, gunakan watcher ini:
 

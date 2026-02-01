@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Listeners\LoginEventListener;
-use Illuminate\Support\Facades\Event;
 use App\Listeners\LogoutEventListener;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 

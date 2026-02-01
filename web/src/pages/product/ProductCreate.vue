@@ -239,6 +239,7 @@ const onSubmit = async () => {
         .submit()
         .then(() => {
             resetForm();
+            showAlertPlaceholder("hidden", "", null);
             emits("update-profile");
             router.push({ name: "side-menu-product-product-list" });
         })
@@ -292,6 +293,7 @@ const setPrimaryUnit = (index: number) => {
     productForm.product_units.forEach((u: any, i: number) => {
         u.is_primary_unit = i === index;
     });
+    productForm.validate('product_units.is_primary_unit' as any);
 };
 
 const addUnit = () => {
@@ -307,6 +309,12 @@ const addUnit = () => {
         point: 0,
         remarks: "",
     } as any);
+
+    Object.keys(productForm.errors).forEach((key) => {
+        if (key.startsWith("product_units.")) {
+            productForm.forgetError(key as any);
+        }
+    });
 };
 
 const updateUnitName = (index: number, newUnitId?: string) => {
@@ -590,7 +598,8 @@ watch(
                                 </FormLabel>
                                 <FormInputCode v-model="productForm.product_units[index].code"
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.code` as any) }"
-                                    :placeholder="t('views.product.fields.unit_code')" @set-auto="setUnitCode(index)" />
+                                    :placeholder="t('views.product.fields.unit_code')" @set-auto="setUnitCode(index)"
+                                    @change="productForm.validate(`product_units.${index}.code` as any)" />
                                 <FormErrorMessages
                                     :messages="(productForm.errors as any)[`product_units.${index}.code`]" />
                             </div>
@@ -616,6 +625,7 @@ watch(
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.unit_id` as any) }"
                                     @update:model-value="(val) => {
                                         updateUnitName(index, val as string);
+                                        productForm.validate(`product_units.${index}.unit_id` as any);
                                     }" @search="getUnitDDL" :options="{
                                         placeholder: t('components.dropdown.placeholder'),
                                     }">
@@ -635,7 +645,7 @@ watch(
                                 <FormInput type="number" v-model="productForm.product_units[index].conversion_value"
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.conversion_value` as any) }"
                                     :placeholder="t('views.product.fields.conversion_value')"
-                                    @input="productForm.forgetError(`product_units.${index}.conversion_value` as any)" />
+                                    @change="productForm.validate(`product_units.${index}.conversion_value` as any)" />
                                 <FormErrorMessages
                                     :messages="(productForm.errors as any)[`product_units.${index}.conversion_value`]" />
                             </div>
@@ -647,7 +657,8 @@ watch(
                                 </FormLabel>
                                 <FormInputCurrency v-model="productForm.product_units[index].price"
                                     :class="{ 'border-danger': productForm.invalid(`product_units.${index}.price` as any) }"
-                                    :placeholder="t('views.product.fields.price')" />
+                                    :placeholder="t('views.product.fields.price')"
+                                    @change="productForm.validate(`product_units.${index}.price` as any)" />
                                 <div v-if="!productForm.product_units[index].is_base && productForm.product_units[index].conversion_value > 0 && productForm.product_units[index].price > 0"
                                     class="text-xs text-slate-500 mt-1 text-right">
                                     {{ t("views.product.fields.base_unit_price") }}:
@@ -709,7 +720,8 @@ watch(
                                 <div class="mt-2 flex items-center">
                                     <FormInput v-model="productForm.product_units[index].point" type="number" :class="{
                                         'border-danger': productForm.invalid(`product_units.${index}.point` as any),
-                                    }" :placeholder="t('views.product.fields.point')" />
+                                    }" :placeholder="t('views.product.fields.point')"
+                                        @change="productForm.validate(`product_units.${index}.point` as any)" />
                                     <div class="ml-4 flex items-center">
                                         <input type="radio" name="primary_unit"
                                             class="form-check-input border-slate-300"

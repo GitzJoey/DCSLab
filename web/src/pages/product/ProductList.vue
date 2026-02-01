@@ -100,6 +100,7 @@ const getProducts = async (search: string, refresh: boolean, page: number, per_p
 
 	if (result.success && result.data) {
 		productLists.value = result.data;
+		showAlertPlaceholder("hidden", "", null);
 	} else {
 		showAlertPlaceholder("danger", "", result.errors as Record<string, Array<string>>);
 	}
@@ -146,6 +147,7 @@ const confirmDelete = async () => {
 
 	if (result.success) {
 		await getProducts("", true, 1, 10);
+		showAlertPlaceholder("hidden", "", null);
 		showNotification(t("views.product.alert.delete.title"), t("views.product.alert.delete.message"));
 	} else {
 		showAlertPlaceholder("danger", "", result.errors as Record<string, Array<string>>);

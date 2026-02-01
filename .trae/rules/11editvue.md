@@ -8,8 +8,10 @@ Dokumen ini menjelaskan standar penulisan halaman `[Entity]Edit.vue` di frontend
 
 ## 1. Imports
 
-Sama seperti halaman Create, gunakan `isAxiosError` dan `AxiosError` untuk error handling.
+Sama seperti halaman Create, jangan mengimpor `axios` secara default. Gunakan `isAxiosError` dan `AxiosError` untuk error handling.
 
+**JANGAN:** `import axios from "axios";`
+**LAKUKAN:**
 ```typescript
 import { isAxiosError, AxiosError } from "axios";
 import { useRoute, useRouter } from "vue-router";
@@ -102,7 +104,32 @@ const getCategoryDDL = async (search = ""): Promise<void> => {
 };
 ```
 
-## 6. Form Submission (Update)
+## 6. Real-time Validation (Precognition)
+
+Gunakan event `@change` untuk memicu validasi Precognition secara real-time pada setiap input. Ini memberikan feedback instan kepada user.
+
+**Single Field:**
+```html
+<FormInput 
+    v-model="form.name" 
+    :class="{ 'border-danger': form.invalid('name') }"
+    @change="form.validate('name')" 
+/>
+<FormErrorMessages :messages="form.errors.name" />
+```
+
+**Array Field:**
+Gunakan template literal untuk path array.
+```html
+<FormInput 
+    v-model="form.items[index].price" 
+    :class="{ 'border-danger': form.invalid(`items.${index}.price` as any) }"
+    @change="form.validate(`items.${index}.price` as any)" 
+/>
+<FormErrorMessages :messages="(form.errors as any)[`items.${index}.price`]" />
+```
+
+## 7. Form Submission (Update)
 
 Method `onSubmit` mirip dengan Create, namun biasanya memanggil method update pada service.
 
@@ -116,11 +143,15 @@ const onSubmit = async () => {
     
     await form.submit()
         .then(() => {
+            // Sembunyikan alert error sebelumnya jika ada (PENTING)
+            showAlertPlaceholder("hidden", "", null);
+            
             emits("update-profile");
             router.push({ name: "entity-list-route" });
         })
         .catch((error) => {
-            // ... error handling standard
+            const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
+            showAlertPlaceholder("danger", "", errorList);
         })
         .finally(() => {
             emits("loading-state", false);
@@ -128,7 +159,7 @@ const onSubmit = async () => {
 };
 ```
 
-## 7. Reset Form Strategy
+## 8. Reset Form Strategy
 
 Pada halaman Edit, Reset berarti **Reload Data** dari server, bukan sekedar mengosongkan form.
 
@@ -140,7 +171,7 @@ const resetForm = async () => {
 };
 ```
 
-## 8. Caching (Auto-Save Draft)
+## 9. Caching (Auto-Save Draft)
 
 Halaman Edit **BOLEH** menyimpan draft edit ke cache untuk mencegah kehilangan data saat tidak sengaja refresh/close tab, namun **JANGAN** me-load cache tersebut secara otomatis di `onMounted` (kecuali ada logic restore khusus).
 
@@ -155,9 +186,27 @@ watch(
 );
 ```
 
-## 9. Dynamic Form Arrays (Master-Detail)
+## 10. Dynamic Form Arrays (Master-Detail)
 
-Gunakan logika `removeItem` dan `updateItemName` yang sama dengan halaman Create.
+Gunakan logika `removeItem` dan `updateItemName` yang sama dengan halaman Create, dengan tambahan penanganan ID untuk soft delete.
+
+### Tambah Item (Add Item)
+Saat menambah item baru, bersihkan error terkait array tersebut untuk mencegah error lama (stale errors).
+
+```typescript
+const addItem = () => {
+    form.items.push({
+        // ... default properties
+    });
+
+    // Clear errors related to items to prevent stale errors
+    Object.keys(form.errors).forEach((key) => {
+        if (key.startsWith("items.")) {
+            form.forgetError(key as any);
+        }
+    });
+};
+```
 
 ### Hapus Item (Soft Delete)
 Untuk halaman Edit, item yang dihapus mungkin perlu ditandai untuk dihapus di database (bukan sekedar `splice` array). Cek apakah item memiliki `id` sebelum menandai.
@@ -177,15 +226,32 @@ const removeItem = (index: number) => {
     // Lanjutkan logic hapus array standar
     const isPrimary = form.details[index].is_primary;
     form.details.splice(index, 1);
-    // ... re-assign primary & clear errors
+    
+    // Re-assign primary status jika yang dihapus adalah primary
+    if (isPrimary && form.details.length > 0) {
+        form.details[0].is_primary = true;
+    }
+
+    // Bersihkan error stale yang mungkin tertinggal untuk index tersebut
+    Object.keys(form.errors).forEach((key) => {
+        if (key.startsWith("details.")) {
+            form.forgetError(key as any);
+        }
+    });
 };
 ```
 
-## 10. Helper UI Functions
+## 11. Helper UI Functions
 
 Gunakan helper yang sama: `scrollToError`, `setCode` (untuk `_AUTO_`), dan `updateItemName` dengan UX improvement (`blur` focus).
 
 ```typescript
+const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
 const updateItemName = (index: number, newVal: string) => {
     // ... logic update
     if (found) {
