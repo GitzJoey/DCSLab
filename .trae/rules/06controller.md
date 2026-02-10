@@ -20,19 +20,28 @@ Aturan ini berlaku untuk semua Controller di bawah menu Master Data (e.g., Compa
 ## 2. CRUD Methods Standard
 
 ### A. Method `store(StoreRequest $request)`
-1.  **Validation**: Gunakan dedicated FormRequest class. Ambil data dengan `$request->validated()`.
+1.  **Validation**: Gunakan dedicated FormRequest class (e.g., `StoreSupplierRequest` atau `SupplierStoreRequest`).
+    - **Pemisahan Request**: Wajib memisahkan Request untuk Store dan Update untuk menjaga *Single Responsibility*.
+    - Ambil data dengan `$request->validated()`.
 2.  **Transaction**: Bungkus logika dalam `try-catch` block dengan `DB::beginTransaction()`, `DB::commit()`, dan `DB::rollBack()`.
 3.  **Unique Validation**: Lakukan validasi unik manual (Code/Name) memanggil method Action (`isUniqueCode`/`isUniqueName`).
-    - *Return*: `response()->error(['field' => [trans('rules.unique_...')]], 422)` jika gagal.
+    - **Guard Clause**: Gunakan *One-line Guard Clause* untuk pengecekan validasi.
+    - *Syntax*: `if (! $isUnique) return response()->error(['field' => [trans('rules.unique_...')]], 422);`
 4.  **Action Execution**: Panggil method `create` pada Action Class.
     - *Input*: Kirimkan `array` data (Default).
 5.  **Response**:
     - Success: `response()->success()`
     - Failure: `response()->error($errorMsg)`
+    - **Formatting**: Gunakan ternary operator untuk return response.
+      `return is_null($result) ? response()->error($errorMsg) : response()->success();`
 
 ### B. Method `readAny(Request $request)`
-1.  **Auth & Authorization**: Wajib cek `Auth::check()` dan `$this->authorize('viewAny', Model::class)`.
+1.  **Auth & Authorization**:
+    - **Guard Clause**: Wajib cek `Auth::check()` dengan *One-line Guard Clause*.
+      `if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);`
+    - Lanjutkan dengan `$this->authorize('viewAny', Model::class);`.
 2.  **Input Handling**:
+    - Gunakan `Illuminate\Http\Request` biasa, bukan FormRequest khusus.
     - Decode Hashids (e.g., `company_id`, `include_id`) sebelum validasi.
     - Validasi inline menggunakan `$request->validate([...])`.
     - **Urutan Parameter Validasi Wajib**:
@@ -49,21 +58,40 @@ Aturan ini berlaku untuk semua Controller di bawah menu Master Data (e.g., Compa
 4.  **Pagination/Get Logic**:
     - Gunakan *Immediately Invoked Function Expression (IIFE)* atau closure untuk memisahkan logika `ExecutePaginationDTO` dan `ExecuteGetDTO`.
 5.  **Response**: `Resource::collection($result)`.
+    - Gunakan *Early Return* jika hasil null.
+      ```php
+      if (is_null($result)) {
+          return response()->error($errorMsg);
+      }
+      return Resource::collection($result);
+      ```
 
 ### C. Method `read(Model $model)`
-1.  **Authorization**: `$this->authorize('view', $model)`.
+1.  **Auth & Authorization**:
+    - **Guard Clause**: Wajib cek `Auth::check()` dengan *One-line Guard Clause* (sama seperti `readAny`).
+    - Lanjutkan dengan `$this->authorize('view', $model);`.
 2.  **Execution**: Panggil method `read` pada Action Class.
 3.  **Response**: `new Resource($result)`.
+    - Gunakan *Early Return* jika hasil null (sama seperti `readAny`).
 
 ### D. Method `update(Model $model, UpdateRequest $request)`
-1.  **Flow**: Mirip dengan `store`.
-2.  **Unique Validation**: Sertakan ID model saat ini untuk pengecualian (`ignore current id`).
-3.  **Action Execution**: Panggil method `update` pada Action Class.
+1.  **Validation**: Gunakan dedicated FormRequest class (e.g., `UpdateSupplierRequest` atau `SupplierUpdateRequest`).
+2.  **Flow**: Mirip dengan `store`.
+3.  **Unique Validation**: Sertakan ID model saat ini untuk pengecualian (`ignore current id`).
+    - Gunakan *One-line Guard Clause* untuk pengecekan validasi.
+4.  **Action Execution**: Panggil method `update` pada Action Class.
+5.  **Response**:
+    - Gunakan ternary operator untuk return response (sama seperti `store`).
 
 ### E. Method `delete(Model $model)`
-1.  **Authorization**: `$this->authorize('delete', $model)`.
+1.  **Auth & Authorization**:
+    - **Guard Clause**: Wajib cek `Auth::check()` dengan *One-line Guard Clause*.
+    - Lanjutkan dengan `$this->authorize('delete', $model);`.
 2.  **Transaction**: Wajib menggunakan DB Transaction.
 3.  **Business Rules**: Cek validasi bisnis sebelum delete (e.g., `isDefault`).
+4.  **Response**:
+    - Gunakan ternary operator untuk return response.
+      `return ! $result ? response()->error($errorMsg) : response()->success();`
 
 ## 3. Exceptions & Special Cases
 
@@ -81,3 +109,38 @@ Aturan ini berlaku untuk semua Controller di bawah menu Master Data (e.g., Compa
 
 ### C. Helper Methods
 - Method tambahan seperti `getTypes()` diperbolehkan untuk mengembalikan Enum/Konstanta ke frontend.
+
+## 4. Form Request Standard
+
+### A. Prepare For Validation
+1.  **Use `filled()` over `has()`**:
+    - Saat melakukan merge input di `prepareForValidation`, gunakan method `$this->filled('key')` daripada `$this->has('key')`.
+    - **Alasan**: `filled()` memastikan nilai tidak hanya *exist* tapi juga tidak kosong/null string. Ini mencegah error decoding pada Hashids dan memastikan sanitasi data (string kosong menjadi null).
+    - **Contoh**:
+      ```php
+      protected function prepareForValidation()
+      {
+          $this->merge([
+              // Decode Hashids hanya jika terisi
+              'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
+              // Sanitasi string kosong menjadi null
+              'address' => $this->filled('address') ? $this['address'] : null,
+          ]);
+      }
+      ```
+
+### B. Authorization
+1.  **Check Auth First**: Selalu cek `Auth::check()` terlebih dahulu.
+2.  **Gate Policy**: Gunakan `$user->can()` untuk memanggil Policy yang sesuai.
+    - **Contoh**:
+      ```php
+      public function authorize()
+      {
+          if (! Auth::check()) {
+              return false;
+          }
+          /** @var \App\User */
+          $user = Auth::user();
+          return $user->can('create', Supplier::class);
+      }
+      ```
