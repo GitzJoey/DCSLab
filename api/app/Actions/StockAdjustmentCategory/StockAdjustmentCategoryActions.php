@@ -19,22 +19,6 @@ class StockAdjustmentCategoryActions
     {
     }
 
-    public function isUniqueName(int $companyId, string $name, ?int $exceptId): bool
-    {
-        $company = Company::find($companyId);
-
-        if ($company->stockAdjustmentCategories()->count() == 0) {
-            return true;
-        }
-
-        $query = $company->stockAdjustmentCategories()->where('name', '=', $name);
-        if ($exceptId) {
-            $query->where('stock_adjustment_categories.id', '<>', $exceptId);
-        }
-
-        return $query->doesntExist();
-    }
-
     public function create(array $data): StockAdjustmentCategory
     {
         $timer_start = microtime(true);
@@ -227,6 +211,22 @@ class StockAdjustmentCategoryActions
         } while (! $this->isUniqueCode($companyId, $code, $exceptId));
 
         return $code;
+    }
+
+    public function isUniqueName(int $companyId, string $name, ?int $exceptId): bool
+    {
+        $company = Company::find($companyId);
+
+        if ($company->stockAdjustmentCategories()->count() == 0) {
+            return true;
+        }
+
+        $query = $company->stockAdjustmentCategories()->where('name', '=', $name);
+        if ($exceptId) {
+            $query->where('stock_adjustment_categories.id', '<>', $exceptId);
+        }
+
+        return $query->doesntExist();
     }
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
