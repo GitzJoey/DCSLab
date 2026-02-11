@@ -85,6 +85,12 @@ class AppSeed extends Command
         (new WarehouseSeeder())->run(warehousesPerCompany: 5, companyId: null);
         $progressBar->advance();
 
+        (new InvestorSeeder())->run(investorsPerCompany: 5, companyId: null);
+        $progressBar->advance();
+
+        (new CashAccountSeeder())->run(cashAccountsPerCompany: 5, companyId: null);
+        $progressBar->advance();
+
         (new ProductCategorySeeder())->run(productCategoriesPerCompany: 5, companyId: null);
         $progressBar->advance();
 
@@ -92,15 +98,6 @@ class AppSeed extends Command
         $progressBar->advance();
 
         (new UnitSeeder())->run(unitsPerCompany: 5, companyId: null);
-        $progressBar->advance();
-
-        (new StockAdjustmentCategorySeeder())->run(stockAdjustmentCategoriesPerCompany: 5, companyId: null);
-        $progressBar->advance();
-
-        (new InvestorSeeder())->run(investorsPerCompany: 5, companyId: null);
-        $progressBar->advance();
-
-        (new CashAccountSeeder())->run(cashAccountsPerCompany: 5, companyId: null);
         $progressBar->advance();
 
         // (new ProductSeeder())->run(companyId: null, qtyPerCompany: 5);
@@ -113,6 +110,9 @@ class AppSeed extends Command
         $progressBar->advance();
 
         (new CustomerSeeder())->run(customersPerCompany: 5, companyId: null);
+        $progressBar->advance();
+
+        (new StockAdjustmentCategorySeeder())->run(stockAdjustmentCategoriesPerCompany: 5, companyId: null);
         $progressBar->advance();
 
         $progressBar->finish();

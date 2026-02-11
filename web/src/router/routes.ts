@@ -573,33 +573,33 @@ export default [
             },
             // Stock Adjustment
             {
-                path: "/dashboard/stock-adjustment",
+                path: "/dashboard/stock-adjustment-category",
                 children: [
                     {
-                        path: "/dashboard/stock-adjustment/stock-adjustment-category",
-                        name: "side-menu-stock-adjustment-stock-adjustment-category",
-                        redirect: "/dashboard/stock-adjustment/stock-adjustment-category/list",
+                        path: "/dashboard/stock-adjustment-category",
+                        name: "side-menu-stock-adjustment-category",
+                        redirect: "/dashboard/stock-adjustment-category/list",
                         component: StockAdjustmentCategoryIndex,
                         children: [
                             {
-                                path: "/dashboard/stock-adjustment/stock-adjustment-category/list",
-                                name: "side-menu-stock-adjustment-stock-adjustment-category-list",
+                                path: "/dashboard/stock-adjustment-category/list",
+                                name: "side-menu-stock-adjustment-category-list",
                                 component: StockAdjustmentCategoryList,
                                 meta: {
                                     remember: true,
                                 },
                             },
                             {
-                                path: "/dashboard/stock-adjustment/stock-adjustment-category/create",
-                                name: "side-menu-stock-adjustment-stock-adjustment-category-create",
+                                path: "/dashboard/stock-adjustment-category/create",
+                                name: "side-menu-stock-adjustment-category-create",
                                 component: StockAdjustmentCategoryCreate,
                                 meta: {
                                     remember: true,
                                 },
                             },
                             {
-                                path: "/dashboard/stock-adjustment/stock-adjustment-category/edit/:ulid",
-                                name: "side-menu-stock-adjustment-stock-adjustment-category-edit",
+                                path: "/dashboard/stock-adjustment-category/edit/:ulid",
+                                name: "side-menu-stock-adjustment-category-edit",
                                 component: StockAdjustmentCategoryEdit,
                                 meta: {
                                     remember: true,

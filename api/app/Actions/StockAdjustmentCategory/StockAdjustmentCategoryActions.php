@@ -19,12 +19,17 @@ class StockAdjustmentCategoryActions
     {
     }
 
-    public function isUniqueName(int $companyId, string $name, ?int $exceptId = null): bool
+    public function isUniqueName(int $companyId, string $name, ?int $exceptId): bool
     {
-        $query = StockAdjustmentCategory::whereCompanyId($companyId)->whereName($name);
+        $company = Company::find($companyId);
 
+        if ($company->stockAdjustmentCategories()->count() == 0) {
+            return true;
+        }
+
+        $query = $company->stockAdjustmentCategories()->where('name', '=', $name);
         if ($exceptId) {
-            $query->where('id', '<>', $exceptId);
+            $query->where('stock_adjustment_categories.id', '<>', $exceptId);
         }
 
         return $query->doesntExist();

@@ -18,7 +18,7 @@ class StockAdjustmentCategoryFactory extends Factory
 
         return [
             'code' => strtoupper(fake()->lexify()).fake()->numerify(),
-            'name' => fake()->randomElement($names).Str::random(3),
+            'name' => fake()->randomElement($names).' '.Str::random(3),
         ];
     }
 }

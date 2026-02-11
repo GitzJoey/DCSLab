@@ -112,8 +112,9 @@ const onSubmit = async () => {
         .submit()
         .then(() => {
             resetForm();
+            showAlertPlaceholder("hidden", "", null);
             emits("update-profile");
-            router.push({ name: "side-menu-stock-adjustment-stock-adjustment-category-list" });
+            router.push({ name: "side-menu-stock-adjustment-category-list" });
         })
         .catch((error) => {
             const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);

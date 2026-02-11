@@ -43,14 +43,14 @@ provide("bind[stockAdjustmentCategoryNotification]", (el: NotificationElement) =
 const createNew = () => {
     resetAlertPlaceholder();
     mode.value = ViewMode.FORM_CREATE;
-    router.push({ name: "side-menu-stock-adjustment-stock-adjustment-category-create" });
+    router.push({ name: "side-menu-stock-adjustment-category-create" });
 };
 
 const backToList = async () => {
     resetAlertPlaceholder();
     clearCache(mode.value);
     mode.value = ViewMode.LIST;
-    router.push({ name: "side-menu-stock-adjustment-stock-adjustment-category-list" });
+    router.push({ name: "side-menu-stock-adjustment-category-list" });
 };
 
 const onLoadingStateChanged = (state: boolean) => {

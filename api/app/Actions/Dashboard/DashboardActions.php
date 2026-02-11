@@ -46,7 +46,6 @@ class DashboardActions
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_MasterData($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
-        $menu = $this->createMenu_StockAdjustment($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
         $menu = $this->createMenu_Customer($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
@@ -210,32 +209,13 @@ class DashboardActions
 
         array_push($customerManagement['subMenu'], $customerGroup, $customer);
 
-        array_push($root_array['subMenu'], $companyManagement, $financeManagement, $productManagement, $supplier, $customerManagement);
-        array_push($menu, $root_array);
-
-        return $menu;
-    }
-
-    private function createMenu_StockAdjustment(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
-    {
-        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
-            return $menu;
-        }
-
         $stockAdjustmentCategory = [
-            'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-stock-adjustment-stock-adjustment-category',
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-stock-adjustment-category',
             'title' => 'components.menu.stock-adjustment-category',
         ];
 
-        $root_array = [
-            'icon' => 'RefreshCw',
-            'pageName' => 'side-menu-stock-adjustment',
-            'title' => 'components.menu.stock-adjustment',
-            'subMenu' => [],
-        ];
-
-        array_push($root_array['subMenu'], $stockAdjustmentCategory);
+        array_push($root_array['subMenu'], $companyManagement, $financeManagement, $productManagement, $supplier, $customerManagement, $stockAdjustmentCategory);
         array_push($menu, $root_array);
 
         return $menu;

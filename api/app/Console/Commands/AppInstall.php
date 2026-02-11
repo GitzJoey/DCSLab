@@ -69,8 +69,10 @@ class AppInstall extends Command
         (new ProductCategorySeeder())->run();
         (new BrandSeeder())->run();
         (new UnitSeeder())->run();
+        // (new ProductSeeder())->run();
 
         (new SupplierSeeder())->run();
+
         (new CustomerGroupSeeder())->run();
         (new CustomerSeeder())->run();
 

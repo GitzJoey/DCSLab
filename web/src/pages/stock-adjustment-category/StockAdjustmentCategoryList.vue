@@ -101,6 +101,7 @@ const getStockAdjustmentCategories = async (
 
     if (result.success && result.data) {
         stockAdjustmentCategoryLists.value = result.data;
+        showAlertPlaceholder("hidden", "", null);
     } else {
         showAlertPlaceholder(
             "danger",
@@ -134,7 +135,7 @@ const editSelected = (idx: number) => {
     const ulid = stockAdjustmentCategoryLists.value.data[idx].ulid;
     emits("mode-state", ViewMode.FORM_EDIT);
     router.push({
-        name: "side-menu-stock-adjustment-stock-adjustment-category-edit",
+        name: "side-menu-stock-adjustment-category-edit",
         params: { ulid: ulid },
     });
 };
@@ -155,6 +156,7 @@ const confirmDelete = async () => {
     emits("loading-state", false);
 
     if (result.success) {
+        emits("update-profile");
         await getStockAdjustmentCategories("", true, 1, 10);
         showNotification(
             t("views.stock_adjustment_category.alert.delete_stock_adjustment_category.title"),

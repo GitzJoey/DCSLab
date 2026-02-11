@@ -11,7 +11,7 @@ Saat membuat/mengedit `database/factories/*.php`:
 
 Field:
 - `code`: uppercase + pola rapi (mis. `SUP-####` via lexify/numerify); jangan `word/uuid` mentah.
-- `name`: realistis (Indonesia; “PT/CV …” bila cocok).
+- `name`: realistis (Indonesia; “PT/CV …” bila cocok). Jika menambahkan suffix random (misal `Str::random`), wajib tambahkan spasi sebagai pemisah (contoh: `$name . ' ' . Str::random(3)`).
 - `remarks`: kalimat pendek wajar (boleh `sentence`, bukan lorem noise).
 
 Lokal Indonesia (jika ada): `city` kota Indo; `address` gaya “Jl.”; `phone/mobile` format `+62/08`; `tax_id` angka masuk akal (mis. `##.###.###.#-###.###`).

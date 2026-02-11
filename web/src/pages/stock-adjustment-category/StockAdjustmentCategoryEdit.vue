@@ -84,7 +84,7 @@ const loadData = async () => {
             name: result.data.name,
         } as any);
     } else {
-        router.push({ name: "side-menu-stock-adjustment-stock-adjustment-category-list" });
+        router.push({ name: "side-menu-stock-adjustment-category-list" });
     }
 };
 
@@ -110,8 +110,9 @@ const onSubmit = async () => {
     await stockAdjustmentCategoryForm
         .submit()
         .then(() => {
+            showAlertPlaceholder("hidden", "", null);
             emits("update-profile");
-            router.push({ name: "side-menu-stock-adjustment-stock-adjustment-category-list" });
+            router.push({ name: "side-menu-stock-adjustment-category-list" });
         })
         .catch((error) => {
             const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
