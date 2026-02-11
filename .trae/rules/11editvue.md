@@ -25,26 +25,62 @@ Gunakan `TwoColumnsLayout` dengan definisi `cards` state yang sama.
 ```typescript
 const cards = ref<Array<TwoColumnsLayoutCards>>([
     // ... definisi cards
+    { title: "views.entity.field_groups.group_1", state: CardState.Expanded, id: "group1" },
     { title: "", state: CardState.Hidden, id: "button" },
 ]);
+```
+
+**Note:** Pastikan mengimpor `CardState` dari path yang benar.
+```typescript
+import { CardState } from "@/types/enums/CardState";
+```
+
+### Form Identifier
+
+**WAJIB** memberikan `id` pada tag `<form>` dengan format `[entity]Form`.
+Ini berguna untuk keperluan testing atau styling spesifik jika dibutuhkan.
+
+```html
+<form id="supplierForm" @submit.prevent="onSubmit">
+    <!-- ... -->
+</form>
 ```
 
 ## 3. Lifecycle Hooks (onMounted)
 
 Berbeda dengan Create, halaman Edit **TIDAK** memuat data dari cache saat `onMounted`. Sebaliknya, ia harus memuat data terbaru dari server.
 
+Selain itu, **WAJIB** melakukan validasi apakah user sudah memilih lokasi (`isUserLocationSelected`). Jika belum, redirect ke halaman error.
+
+**Imports yang Diperlukan:**
+```typescript
+import { storeToRefs } from "pinia";
+import { useSelectedUserLocationStore } from "@/stores/useSelectedUserLocationStore";
+import { ErrorCode } from "@/types/enums/ErrorCode";
+```
+
+**Setup Store:**
+```typescript
+const selectedUserLocationStore = useSelectedUserLocationStore();
+const { isUserLocationSelected } = storeToRefs(selectedUserLocationStore);
+```
+
 **Urutan yang Direkomendasikan:**
-1. Emit mode view (`ViewMode.FORM_EDIT`).
-2. Validasi lokasi user.
+1. Validasi lokasi user (`isUserLocationSelected`).
+2. Emit mode view (`ViewMode.FORM_EDIT`).
 3. Load DDL secara paralel.
 4. Load Data Entitas dari server (`loadData()`).
 
 ```typescript
 onMounted(async () => {
+    // 1. Validasi lokasi user
+    if (!isUserLocationSelected.value) {
+        router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
+        return;
+    }
+
     emits("mode-state", ViewMode.FORM_EDIT);
     
-    // 1. Validasi lokasi user...
-
     // 2. Load DDL Paralel
     await Promise.all([
         getCategoryDDL(),
@@ -53,7 +89,7 @@ onMounted(async () => {
     ]);
 
     // 3. Load Data Server
-    await loadData();
+    await loadData(route.params.ulid as string);
 });
 ```
 

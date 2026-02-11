@@ -16,6 +16,7 @@ use Database\Seeders\CustomerSeeder;
 use Database\Seeders\InvestorSeeder;
 use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\StockAdjustmentCategorySeeder;
+use Database\Seeders\SupplierSeeder;
 use Database\Seeders\UnitSeeder;
 use Database\Seeders\WarehouseSeeder;
 use Exception;
@@ -69,6 +70,7 @@ class AppInstall extends Command
         (new BrandSeeder())->run();
         (new UnitSeeder())->run();
 
+        (new SupplierSeeder())->run();
         (new CustomerGroupSeeder())->run();
         (new CustomerSeeder())->run();
 

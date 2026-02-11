@@ -30,7 +30,7 @@ class SupplierAPIReadTest extends APITestCase
 
         Supplier::factory()->for($company)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => '',
@@ -56,7 +56,7 @@ class SupplierAPIReadTest extends APITestCase
 
         Supplier::factory()->for($company)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => '',
@@ -83,7 +83,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $ulid = $supplier->ulid;
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read', $ulid));
+        $api = $this->getJson(route('api.get.supplier.read', $ulid));
 
         $api->assertStatus(401);
     }
@@ -102,7 +102,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $ulid = $supplier->ulid;
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read', $ulid));
+        $api = $this->getJson(route('api.get.supplier.read', $ulid));
 
         $api->assertStatus(403);
     }
@@ -214,7 +214,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $testIdx = random_int(0, count($injections));
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => $injections[$testIdx],
@@ -225,6 +225,10 @@ class SupplierAPIReadTest extends APITestCase
                 'per_page' => 25,
             ],
         ]));
+
+        if ($api->status() === 422) {
+            dump($api->json());
+        }
 
         $api->assertSuccessful();
 
@@ -244,7 +248,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $testIdx = random_int(0, count($injections));
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => $injections[$testIdx],
@@ -276,7 +280,7 @@ class SupplierAPIReadTest extends APITestCase
 
         Supplier::factory()->for($company)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => '',
@@ -299,7 +303,7 @@ class SupplierAPIReadTest extends APITestCase
             ],
         ]);
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => '',
@@ -327,7 +331,7 @@ class SupplierAPIReadTest extends APITestCase
 
         Supplier::factory()->for($company)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => '',
@@ -371,10 +375,12 @@ class SupplierAPIReadTest extends APITestCase
             ->count(2)->create();
 
         Supplier::factory()->for($company)
-            ->insertStringInName('testing')
+            ->state(function (array $attributes) {
+                return ['name' => 'testing '.$attributes['name']];
+            })
             ->count(3)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => 'testing',
@@ -415,7 +421,7 @@ class SupplierAPIReadTest extends APITestCase
 
         Supplier::factory()->for($company)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
         ]));
@@ -436,7 +442,7 @@ class SupplierAPIReadTest extends APITestCase
 
         Supplier::factory()->for($company)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => " !#$%&'()*+,-./:;<=>?@[\\]^_`{|}~",
@@ -473,14 +479,14 @@ class SupplierAPIReadTest extends APITestCase
 
         Supplier::factory()->for($company)->create();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read_any', [
+        $api = $this->getJson(route('api.get.supplier.read_any', [
             'with_trashed' => false,
             'company_id' => Hashids::encode($company->id),
             'search' => '',
             'status' => null,
             'refresh' => false,
             'paginate' => [
-                'page' => 1,
+                'page' => -1,
                 'per_page' => 25,
             ],
         ]));
@@ -503,7 +509,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $ulid = $supplier->ulid;
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read', $ulid));
+        $api = $this->getJson(route('api.get.supplier.read', $ulid));
 
         $api->assertSuccessful();
     }
@@ -518,7 +524,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $this->getJson(route('api.get.db.supplier.supplier.read', null));
+        $this->getJson(route('api.get.supplier.read', null));
     }
 
     public function test_supplier_api_call_read_with_nonexistance_ulid_expect_not_found()
@@ -532,7 +538,7 @@ class SupplierAPIReadTest extends APITestCase
 
         $ulid = Str::ulid()->generate();
 
-        $api = $this->getJson(route('api.get.db.supplier.supplier.read', $ulid));
+        $api = $this->getJson(route('api.get.supplier.read', $ulid));
 
         $api->assertStatus(404);
     }

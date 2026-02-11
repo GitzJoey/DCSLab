@@ -183,6 +183,12 @@ class DashboardActions
 
         array_push($productManagement['subMenu'], $productCategory, $brand, $unit, $product, $productService);
 
+        $supplier = [
+            'icon' => 'Users',
+            'pageName' => 'side-menu-supplier',
+            'title' => 'components.menu.supplier',
+        ];
+
         $customerManagement = [
             'icon' => 'Users',
             'pageName' => 'side-menu-customer',
@@ -204,7 +210,7 @@ class DashboardActions
 
         array_push($customerManagement['subMenu'], $customerGroup, $customer);
 
-        array_push($root_array['subMenu'], $companyManagement, $financeManagement, $productManagement, $customerManagement);
+        array_push($root_array['subMenu'], $companyManagement, $financeManagement, $productManagement, $supplier, $customerManagement);
         array_push($menu, $root_array);
 
         return $menu;

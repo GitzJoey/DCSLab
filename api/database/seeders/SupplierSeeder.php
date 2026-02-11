@@ -8,21 +8,17 @@ use Illuminate\Database\Seeder;
 
 class SupplierSeeder extends Seeder
 {
-    public function run(?int $companyId, ?int $qtyPerCompany)
+    public function run(?int $suppliersPerCompany = null, ?int $companyId = null)
     {
-        $query = Company::query();
-        if ($companyId) {
-            $query->where('id', '=', $companyId);
-        }
-        $companies = $query->get();
+        $suppliersPerCompany = $suppliersPerCompany ?? 5;
 
-        if (! $qtyPerCompany) {
-            $qtyPerCompany = 5;
-        }
+        $companies = $companyId ? Company::where('id', $companyId)->get() : Company::all();
+
         foreach ($companies as $company) {
-            for ($i = 0; $i < $qtyPerCompany; $i++) {
-                $supplierFactory = Supplier::factory()->for($company);
-                $supplierFactory->create();
+            for ($i = 0; $i < $suppliersPerCompany; $i++) {
+                Supplier::factory()
+                    ->for($company)
+                    ->create();
             }
         }
     }

@@ -28,7 +28,7 @@ class SupplierAPIDeleteTest extends APITestCase
         $company = $user->companies()->inRandomOrder()->first();
         $supplier = Supplier::factory()->for($company)->create();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.delete', $supplier->ulid));
+        $api = $this->json('POST', route('api.post.supplier.delete', $supplier->ulid));
 
         $api->assertStatus(401);
     }
@@ -44,7 +44,7 @@ class SupplierAPIDeleteTest extends APITestCase
         $company = $user->companies()->inRandomOrder()->first();
         $supplier = Supplier::factory()->for($company)->create();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.delete', $supplier->ulid));
+        $api = $this->json('POST', route('api.post.supplier.delete', $supplier->ulid));
 
         $api->assertStatus(403);
     }
@@ -61,7 +61,7 @@ class SupplierAPIDeleteTest extends APITestCase
         $company = $user->companies()->inRandomOrder()->first();
         $supplier = Supplier::factory()->for($company)->create();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.delete', $supplier->ulid));
+        $api = $this->json('POST', route('api.post.supplier.delete', $supplier->ulid));
 
         $api->assertSuccessful();
         $this->assertSoftDeleted('suppliers', [
@@ -77,7 +77,7 @@ class SupplierAPIDeleteTest extends APITestCase
 
         $ulid = Str::ulid()->generate();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.delete', $ulid));
+        $api = $this->json('POST', route('api.post.supplier.delete', $ulid));
 
         $api->assertStatus(404);
     }
@@ -88,7 +88,7 @@ class SupplierAPIDeleteTest extends APITestCase
         $user = User::factory()->create();
 
         $this->actingAs($user);
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.delete', null));
+        $api = $this->json('POST', route('api.post.supplier.delete', null));
 
         $api->assertStatus(500);
     }

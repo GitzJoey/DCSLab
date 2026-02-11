@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentTermTypeEnum;
 use App\Enums\RecordStatusEnum;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +31,7 @@ class Supplier extends Model
     ];
 
     protected $casts = [
+        'payment_term_type' => PaymentTermTypeEnum::class,
         'taxable_enterprise' => 'boolean',
         'status' => RecordStatusEnum::class,
     ];
@@ -37,11 +39,6 @@ class Supplier extends Model
     public function company()
     {
         return $this->belongsTo(Company::class)->withTrashed();
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function purchaseOrders()

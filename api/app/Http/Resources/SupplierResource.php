@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\RecordStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -14,7 +15,6 @@ class SupplierResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
-            'user_id' => new UserResource($this->user),
             'code' => $this->code,
             'name' => $this->name,
             'address' => $this->address,
@@ -22,8 +22,17 @@ class SupplierResource extends JsonResource
             'payment_term' => $this->payment_term,
             'taxable_enterprise' => $this->taxable_enterprise,
             'tax_id' => $this->tax_id,
-            'status' => $this->status,
+            'status' => $this->setStatus($this->status, $this->deleted_at),
             'remarks' => $this->remarks,
         ];
+    }
+
+    private function setStatus($status, $deleted_at)
+    {
+        if (! is_null($deleted_at)) {
+            return RecordStatusEnum::DELETED->name;
+        } else {
+            return $status->name;
+        }
     }
 }

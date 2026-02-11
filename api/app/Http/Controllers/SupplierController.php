@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Supplier\SupplierActions;
-use App\Http\Requests\SupplierRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\Supplier\SupplierStoreRequest;
+use App\Http\Requests\Supplier\SupplierUpdateRequest;
 use App\Http\Resources\SupplierResource;
 use App\Models\Supplier;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -21,9 +28,10 @@ class SupplierController extends BaseController
         $this->supplierActions = $supplierActions;
     }
 
-    public function store(SupplierRequest $supplierRequest)
+    public function store(SupplierStoreRequest $request)
     {
-        $request = $supplierRequest->validated();
+        $validatedRequest = $request->validated();
+        $validatedRequest['user_id'] = Auth::id();
 
         $result = null;
         $errorMsg = '';
@@ -31,27 +39,23 @@ class SupplierController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->supplierActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
                     null
                 );
-                if (! $isUniqueCode) {
-                    return response()->error(['code' => [trans('rules.unique_code')]], 422);
-                }
+                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
             $isUniqueName = $this->supplierActions->isUniqueName(
-                $request['company_id'],
-                $request['name'],
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
                 null
             );
-            if (! $isUniqueName) {
-                return response()->error(['name' => [trans('rules.unique_name')]], 422);
-            }
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            $result = $this->supplierActions->create($request);
+            $result = $this->supplierActions->create($validatedRequest);
 
             DB::commit();
         } catch (Exception $e) {
@@ -62,26 +66,66 @@ class SupplierController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function readAny(SupplierRequest $supplierRequest)
+    public function readAny(Request $request)
     {
-        $request = $supplierRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', Supplier::class);
+
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+            'include_id' => $request->filled('include_id') ? HashidsHelper::decodeId($request->include_id) : null,
+        ]);
+
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+
+            'search' => ['nullable', 'string'],
+            'include_id' => ['nullable', 'integer'],
+
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:1'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->supplierActions->readAny(
-                user: Auth::user(),
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
 
-                search: $request['search'],
-                companyId: $request['company_id'],
+                search: $validatedRequest['search'] ?? null,
+                includeId: $validatedRequest['include_id'] ?? null,
 
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: (function () use ($validatedRequest) {
+                        $pagination = null;
+                        if (isset($validatedRequest['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
+                                page: $validatedRequest['paginate']['page'],
+                                perPage: $validatedRequest['paginate']['per_page'],
+                            );
+                        }
+
+                        return $pagination;
+                    })(),
+                    get: (function () use ($validatedRequest) {
+                        $get = null;
+                        if (isset($validatedRequest['get'])) {
+                            $get = new ExecuteGetDTO(
+                                limit: $validatedRequest['get']['limit'],
+                            );
+                        }
+
+                        return $get;
+                    })(),
+                )
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -90,15 +134,14 @@ class SupplierController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = SupplierResource::collection($result);
-
-            return $response;
+            return SupplierResource::collection($result);
         }
     }
 
-    public function read(Supplier $supplier, SupplierRequest $supplierRequest)
+    public function read(Supplier $supplier)
     {
-        $request = $supplierRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $supplier);
 
         $result = null;
         $errorMsg = '';
@@ -111,16 +154,14 @@ class SupplierController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new SupplierResource($result);
-
-            return $response;
         }
+
+        return new SupplierResource($result);
     }
 
-    public function update(Supplier $supplier, SupplierRequest $supplierRequest)
+    public function update(Supplier $supplier, SupplierUpdateRequest $request)
     {
-        $request = $supplierRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
@@ -128,29 +169,25 @@ class SupplierController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->supplierActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
                     $supplier->id
                 );
-                if (! $isUniqueCode) {
-                    return response()->error(['code' => [trans('rules.unique_code')]], 422);
-                }
+                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
             $isUniqueName = $this->supplierActions->isUniqueName(
-                $request['company_id'],
-                $request['name'],
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
                 $supplier->id
             );
-            if (! $isUniqueName) {
-                return response()->error(['name' => [trans('rules.unique_name')]], 422);
-            }
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
             $result = $this->supplierActions->update(
                 supplier: $supplier,
-                data: $request
+                data: $validatedRequest
             );
 
             DB::commit();
@@ -162,8 +199,11 @@ class SupplierController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Supplier $supplier, SupplierRequest $supplierRequest)
+    public function delete(Supplier $supplier)
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $supplier);
+
         $result = false;
         $errorMsg = '';
 

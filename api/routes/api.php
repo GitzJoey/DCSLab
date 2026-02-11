@@ -182,6 +182,19 @@ Route::prefix('product')->middleware('auth:sanctum')->group(function () {
     });
 });
 
+Route::prefix('supplier')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.supplier.')->group(function () {
+        Route::get('read', [SupplierController::class, 'readAny'])->name('read_any');
+        Route::get('read/{supplier:ulid}', [SupplierController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.supplier.')->group(function () {
+        Route::post('save', [SupplierController::class, 'store'])->name('save');
+        Route::post('edit/{supplier:ulid}', [SupplierController::class, 'update'])->name('edit');
+        Route::post('delete/{supplier:ulid}', [SupplierController::class, 'delete'])->name('delete');
+    });
+});
+
 Route::prefix('customer_group')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.customer_group.')->group(function () {
         Route::get('read', [CustomerGroupController::class, 'readAny'])->name('read_any');
@@ -406,12 +419,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
         });
 
-        Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
-            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
-                Route::get('read', [SupplierController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{supplier:ulid}', [SupplierController::class, 'read'])->name('.read');
-            });
-        });
         /* #endregion */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {
@@ -677,13 +684,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
             });
         });
 
-        Route::group(['prefix' => 'supplier', 'middleware' => ['precognitive'], 'as' => '.supplier'], function () {
-            Route::group(['prefix' => 'supplier', 'as' => '.supplier'], function () {
-                Route::post('save', [SupplierController::class, 'store'])->name('.save');
-                Route::post('edit/{supplier:ulid}', [SupplierController::class, 'update'])->name('.edit');
-                Route::post('delete/{supplier:ulid}', [SupplierController::class, 'delete'])->name('.delete');
-            });
-        });
         /* #endregion */
 
         Route::group(['prefix' => 'admin', 'as' => '.admin'], function () {

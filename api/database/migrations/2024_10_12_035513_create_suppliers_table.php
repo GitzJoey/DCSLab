@@ -13,7 +13,6 @@ return new class extends Migration
             $table->ulid();
 
             $table->foreignId('company_id')->references('id')->on('companies');
-            $table->foreignId('user_id')->references('id')->on('users');
             $table->string('code');
             $table->string('name');
             $table->string('address')->nullable();
@@ -21,7 +20,7 @@ return new class extends Migration
             $table->string('payment_term_type');
             $table->integer('payment_term');
             $table->boolean('taxable_enterprise');
-            $table->string('tax_id');
+            $table->string('tax_id')->nullable();
             $table->integer('status');
             $table->string('remarks')->nullable();
 

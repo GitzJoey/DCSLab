@@ -31,7 +31,7 @@ class SupplierAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->ulid), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier->ulid), $supplierArr);
 
         $api->assertStatus(401);
     }
@@ -51,19 +51,67 @@ class SupplierAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->ulid), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier->ulid), $supplierArr);
 
         $api->assertStatus(403);
     }
 
     public function test_supplier_api_call_update_with_script_tags_in_payload_expect_stripped()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $supplier = Supplier::factory()->for($company)->create();
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'name' => '<script>alert("xss")</script> Test Name',
+            'address' => '<script>alert("xss")</script> Address',
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier->ulid), $supplierArr);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('suppliers', [
+            'id' => $supplier->id,
+            'company_id' => $company->id,
+            'name' => 'alert("xss") Test Name',
+            'address' => 'alert("xss") Address',
+        ]);
     }
 
     public function test_supplier_api_call_update_with_script_tags_in_payload_expect_encoded()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $supplier = Supplier::factory()->for($company)->create();
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'name' => '<script>alert("xss")</script> Test Name',
+            'address' => '<script>alert("xss")</script> Address',
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier->ulid), $supplierArr, ['X-Sanitizer-Mode' => 'encode']);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('suppliers', [
+            'id' => $supplier->id,
+            'company_id' => $company->id,
+            'name' => '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; Test Name',
+            'address' => '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; Address',
+        ]);
     }
 
     public function test_supplier_api_call_update_expect_successful()
@@ -82,7 +130,7 @@ class SupplierAPIEditTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier->ulid), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier->ulid), $supplierArr);
 
         $api->assertSuccessful();
         $this->assertDatabaseHas('suppliers', [
@@ -101,9 +149,26 @@ class SupplierAPIEditTest extends APITestCase
         ]);
     }
 
-    public function test_supplier_api_call_update_with_nonexistance_branch_id_expect_failed()
+    public function test_supplier_api_call_update_with_nonexistance_company_id_expect_failed()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $supplier = Supplier::factory()->for($company)->create();
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode(99999999), // Non-existent company ID
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier->ulid), $supplierArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonValidationErrors(['company_id']);
     }
 
     public function test_supplier_api_call_update_and_use_existing_code_in_same_company_expect_failed()
@@ -127,7 +192,7 @@ class SupplierAPIEditTest extends APITestCase
             'code' => $supplier_1->code,
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier_2->ulid), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier_2->ulid), $supplierArr);
 
         $api->assertStatus(422);
         $api->assertJsonStructure([
@@ -162,7 +227,7 @@ class SupplierAPIEditTest extends APITestCase
             'code' => 'test1',
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.edit', $supplier_2->ulid), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.edit', $supplier_2->ulid), $supplierArr);
 
         $api->assertSuccessful();
     }

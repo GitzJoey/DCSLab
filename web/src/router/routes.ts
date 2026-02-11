@@ -67,6 +67,8 @@ import CashAccountIndex from "@/pages/cash-account/CashAccountIndex.vue";
 import CashAccountList from "@/pages/cash-account/CashAccountList.vue";
 import CashAccountCreate from "@/pages/cash-account/CashAccountCreate.vue";
 import CashAccountEdit from "@/pages/cash-account/CashAccountEdit.vue";
+import SupplierIndex from "@/pages/supplier/SupplierIndex.vue";
+import SupplierCreate from "@/pages/supplier/SupplierCreate.vue";
 
 export default [
     {
@@ -123,6 +125,7 @@ export default [
                     remember: true,
                 },
             },
+            // Company
             {
                 path: "/dashboard/company",
                 children: [
@@ -224,6 +227,77 @@ export default [
                     }
                 ]
             },
+            // Finance
+            {
+                path: "/dashboard/finance",
+                children: [
+                    {
+                        path: "/dashboard/finance/investor",
+                        name: "side-menu-company-investor",
+                        redirect: "/dashboard/finance/investor/list",
+                        component: InvestorIndex,
+                        children: [
+                            {
+                                path: "/dashboard/finance/investor/list",
+                                name: "side-menu-company-investor-list",
+                                component: InvestorList,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/finance/investor/create",
+                                name: "side-menu-company-investor-create",
+                                component: InvestorCreate,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/finance/investor/edit/:ulid",
+                                name: "side-menu-company-investor-edit",
+                                component: InvestorEdit,
+                                meta: {
+                                    remember: true,
+                                },
+                            }
+                        ]
+                    },
+                    {
+                        path: "/dashboard/finance/cash-account",
+                        name: "side-menu-finance-cash-account",
+                        redirect: "/dashboard/finance/cash-account/list",
+                        component: CashAccountIndex,
+                        children: [
+                            {
+                                path: "/dashboard/finance/cash-account/list",
+                                name: "side-menu-finance-cash-account-list",
+                                component: CashAccountList,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/finance/cash-account/create",
+                                name: "side-menu-finance-cash-account-create",
+                                component: CashAccountCreate,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/finance/cash-account/edit/:ulid",
+                                name: "side-menu-finance-cash-account-edit",
+                                component: CashAccountEdit,
+                                meta: {
+                                    remember: true,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            },
+            // Product
             {
                 path: "/dashboard/product",
                 children: [
@@ -389,67 +463,36 @@ export default [
                     }
                 ]
             },
+            // Supplier
             {
-                path: "/dashboard/finance",
+                path: "/dashboard/supplier",
                 children: [
                     {
-                        path: "/dashboard/finance/investor",
-                        name: "side-menu-company-investor",
-                        redirect: "/dashboard/finance/investor/list",
-                        component: InvestorIndex,
+                        path: "/dashboard/supplier/supplier",
+                        name: "side-menu-supplier",
+                        redirect: "/dashboard/supplier/supplier/list",
+                        component: () => import("@/pages/supplier/SupplierIndex.vue"),
                         children: [
                             {
-                                path: "/dashboard/finance/investor/list",
-                                name: "side-menu-company-investor-list",
-                                component: InvestorList,
+                                path: "/dashboard/supplier/supplier/list",
+                                name: "side-menu-supplier-supplier-list",
+                                component: () => import("@/pages/supplier/SupplierList.vue"),
                                 meta: {
                                     remember: true,
                                 },
                             },
                             {
-                                path: "/dashboard/finance/investor/create",
-                                name: "side-menu-company-investor-create",
-                                component: InvestorCreate,
+                                path: "/dashboard/supplier/supplier/create",
+                                name: "side-menu-supplier-supplier-create",
+                                component: () => import("@/pages/supplier/SupplierCreate.vue"),
                                 meta: {
                                     remember: true,
                                 },
                             },
                             {
-                                path: "/dashboard/finance/investor/edit/:ulid",
-                                name: "side-menu-company-investor-edit",
-                                component: InvestorEdit,
-                                meta: {
-                                    remember: true,
-                                },
-                            }
-                        ]
-                    },
-                    {
-                        path: "/dashboard/finance/cash-account",
-                        name: "side-menu-finance-cash-account",
-                        redirect: "/dashboard/finance/cash-account/list",
-                        component: CashAccountIndex,
-                        children: [
-                            {
-                                path: "/dashboard/finance/cash-account/list",
-                                name: "side-menu-finance-cash-account-list",
-                                component: CashAccountList,
-                                meta: {
-                                    remember: true,
-                                },
-                            },
-                            {
-                                path: "/dashboard/finance/cash-account/create",
-                                name: "side-menu-finance-cash-account-create",
-                                component: CashAccountCreate,
-                                meta: {
-                                    remember: true,
-                                },
-                            },
-                            {
-                                path: "/dashboard/finance/cash-account/edit/:ulid",
-                                name: "side-menu-finance-cash-account-edit",
-                                component: CashAccountEdit,
+                                path: "/dashboard/supplier/supplier/edit/:ulid",
+                                name: "side-menu-supplier-supplier-edit",
+                                component: () => import("@/pages/supplier/SupplierEdit.vue"),
                                 meta: {
                                     remember: true,
                                 },
@@ -458,45 +501,7 @@ export default [
                     }
                 ]
             },
-            // Stock Adjustment Category
-            {
-                path: "/dashboard/stock-adjustment",
-                children: [
-                    {
-                        path: "/dashboard/stock-adjustment/stock-adjustment-category",
-                        name: "side-menu-stock-adjustment-stock-adjustment-category",
-                        redirect: "/dashboard/stock-adjustment/stock-adjustment-category/list",
-                        component: StockAdjustmentCategoryIndex,
-                        children: [
-                            {
-                                path: "/dashboard/stock-adjustment/stock-adjustment-category/list",
-                                name: "side-menu-stock-adjustment-stock-adjustment-category-list",
-                                component: StockAdjustmentCategoryList,
-                                meta: {
-                                    remember: true,
-                                },
-                            },
-                            {
-                                path: "/dashboard/stock-adjustment/stock-adjustment-category/create",
-                                name: "side-menu-stock-adjustment-stock-adjustment-category-create",
-                                component: StockAdjustmentCategoryCreate,
-                                meta: {
-                                    remember: true,
-                                },
-                            },
-                            {
-                                path: "/dashboard/stock-adjustment/stock-adjustment-category/edit/:ulid",
-                                name: "side-menu-stock-adjustment-stock-adjustment-category-edit",
-                                component: StockAdjustmentCategoryEdit,
-                                meta: {
-                                    remember: true,
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-
+            // Customer
             {
                 path: "/dashboard/customer",
                 children: [
@@ -565,6 +570,44 @@ export default [
                         ]
                     }
                 ]
+            },
+            // Stock Adjustment
+            {
+                path: "/dashboard/stock-adjustment",
+                children: [
+                    {
+                        path: "/dashboard/stock-adjustment/stock-adjustment-category",
+                        name: "side-menu-stock-adjustment-stock-adjustment-category",
+                        redirect: "/dashboard/stock-adjustment/stock-adjustment-category/list",
+                        component: StockAdjustmentCategoryIndex,
+                        children: [
+                            {
+                                path: "/dashboard/stock-adjustment/stock-adjustment-category/list",
+                                name: "side-menu-stock-adjustment-stock-adjustment-category-list",
+                                component: StockAdjustmentCategoryList,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/stock-adjustment/stock-adjustment-category/create",
+                                name: "side-menu-stock-adjustment-stock-adjustment-category-create",
+                                component: StockAdjustmentCategoryCreate,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                            {
+                                path: "/dashboard/stock-adjustment/stock-adjustment-category/edit/:ulid",
+                                name: "side-menu-stock-adjustment-stock-adjustment-category-edit",
+                                component: StockAdjustmentCategoryEdit,
+                                meta: {
+                                    remember: true,
+                                },
+                            },
+                        ],
+                    },
+                ],
             },
 
             {

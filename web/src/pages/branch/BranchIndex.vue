@@ -42,11 +42,11 @@ const mode = ref<ViewMode>(ViewMode.INDEX);
 const loading = ref<boolean>(false);
 const titleView = ref<string>('views.branch.page_title');
 
-const alertType = ref<'danger'|'success'|'warning'|'pending'|'dark'|'hidden'>('hidden');
+const alertType = ref<'danger' | 'success' | 'warning' | 'pending' | 'dark' | 'hidden'>('hidden');
 const title = ref<string>('');
 const alertList = ref<Record<string, Array<string>> | null>(null);
 
-const branchNotification = ref<NotificationElement>();    
+const branchNotification = ref<NotificationElement>();
 
 const notificationTitle = ref<string>('');
 const notificationContent = ref<string>('')
@@ -165,8 +165,11 @@ const resetAlertPlaceholder = () => {
                 </template>
             </TitleLayout>
 
-            <AlertPlaceholder :alert-type="alertType" :title="title" :alert-list="alertList" @dismiss="resetAlertPlaceholder" />
-            <RouterView @loading-state="onLoadingStateChanged" @mode-state="onModeStateChanged" @update-profile="onUpdateProfileTriggered" @show-alertplaceholder="onAlertPlaceholderTriggered" @show-notification="onShowNotificationTriggered" />
+            <AlertPlaceholder :alert-type="alertType" :title="title" :alert-list="alertList"
+                @dismiss="resetAlertPlaceholder" />
+            <RouterView @loading-state="onLoadingStateChanged" @mode-state="onModeStateChanged"
+                @update-profile="onUpdateProfileTriggered" @show-alertplaceholder="onAlertPlaceholderTriggered"
+                @show-notification="onShowNotificationTriggered" />
         </LoadingOverlay>
         <Notification ref-key="branchNotification" :options="{ duration: 3000, }" class="flex">
             <Lucide icon="CheckCircle" class="text-success" />

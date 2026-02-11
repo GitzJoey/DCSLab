@@ -40,6 +40,7 @@ return [
             'brand' => 'c,r,ra,u,d',
             'unit' => 'c,r,ra,u,d',
             'product' => 'c,r,ra,u,d',
+            'supplier' => 'c,r,ra,u,d',
             'customer_group' => 'c,r,ra,u,d',
             'customer_address' => 'c,r,ra,u,d',
             'customer' => 'c,r,ra,u,d',
@@ -52,7 +53,6 @@ return [
             'non_capital_withdrawal' => 'c,r,ra,u,d',
             'stock_adjustment_category' => 'c,r,ra,u,d',
 
-            'supplier' => 'c,r,ra,u,d',
             'purchase_order' => 'c,r,ra,u,d',
             'purchase_order_unit' => 'c,r,ra,u,d',
             'purchase_order_down_payment' => 'c,r,ra,u,d',

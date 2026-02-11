@@ -13,6 +13,7 @@ use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StockAdjustmentCategorySeeder;
+use Database\Seeders\SupplierSeeder;
 use Database\Seeders\UnitSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\WarehouseSeeder;
@@ -63,7 +64,7 @@ class AppSeed extends Command
 
     private function runDefault()
     {
-        $total = 11;
+        $total = 12;
         $this->info('Starting data seeding...');
         $this->info('');
         $progressBar = $this->output->createProgressBar($total);
@@ -96,19 +97,22 @@ class AppSeed extends Command
         (new StockAdjustmentCategorySeeder())->run(stockAdjustmentCategoriesPerCompany: 5, companyId: null);
         $progressBar->advance();
 
+        (new InvestorSeeder())->run(investorsPerCompany: 5, companyId: null);
+        $progressBar->advance();
+
         (new CashAccountSeeder())->run(cashAccountsPerCompany: 5, companyId: null);
         $progressBar->advance();
 
         // (new ProductSeeder())->run(companyId: null, qtyPerCompany: 5);
         // $progressBar->advance();
 
+        (new SupplierSeeder())->run(suppliersPerCompany: 5, companyId: null);
+        $progressBar->advance();
+
         (new CustomerGroupSeeder())->run(customerGroupsPerCompany: 5, companyId: null);
         $progressBar->advance();
 
         (new CustomerSeeder())->run(customersPerCompany: 5, companyId: null);
-        $progressBar->advance();
-
-        (new InvestorSeeder())->run(investorsPerCompany: 5, companyId: null);
         $progressBar->advance();
 
         $progressBar->finish();

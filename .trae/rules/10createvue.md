@@ -23,7 +23,10 @@ Pastikan mengimpor komponen UI standar dan Service yang diperlukan.
 ```typescript
 import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
 import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
+import { CardState } from "@/types/enums/CardState";
 import Button from "@/components/Base/Button";
+import Lucide from "@/components/Base/Lucide";
+import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
 import {
     FormInput,
     FormLabel,
@@ -46,6 +49,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     {
         title: "views.entity.field_groups.group_1",
         state: CardState.Expanded,
+        id: "group1"
     },
     // ... group lainnya
     { title: "", state: CardState.Hidden, id: "button" },
@@ -62,6 +66,17 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
         </TwoColumnsLayout>
     </form>
 </template>
+```
+
+### Form Identifier
+
+**WAJIB** memberikan `id` pada tag `<form>` dengan format `[entity]Form`.
+Ini berguna untuk keperluan testing atau styling spesifik jika dibutuhkan.
+
+```html
+<form id="supplierForm" @submit.prevent="onSubmit">
+    <!-- ... -->
+</form>
 ```
 
 ## 3. Lifecycle Hooks (onMounted)
@@ -352,6 +367,34 @@ const repopulateDetailNames = () => {
 ```
 
 ## 10. Helper UI Functions
+
+### Handle Expand Card
+Helper ini digunakan untuk mengatur state expand/collapse card pada `TwoColumnsLayout`.
+
+```typescript
+const handleExpandCard = (index: number) => {
+    if (cards.value[index].state === CardState.Collapsed) {
+        cards.value[index].state = CardState.Expanded
+    } else if (cards.value[index].state === CardState.Expanded) {
+        cards.value[index].state = CardState.Collapsed
+    }
+};
+```
+
+### Show Alert Placeholder
+Helper ini digunakan untuk menampilkan alert notifikasi (sukses/gagal) menggunakan emit.
+
+```typescript
+const showAlertPlaceholder = (pAlertType: 'hidden'|'danger'|'success'|'warning'|'pending'|'dark', pTitle: string, pAlertList: Record<string, Array<string>>|null) => {
+  let ap: AlertPlaceholderProps = {
+    alertType: pAlertType,
+    title: pTitle,
+    alertList: pAlertList,
+  };
+
+  emits('show-alert-placeholder', ap);
+};
+```
 
 ### Scroll To Error
 Helper ini digunakan di `onSubmit` untuk scroll otomatis ke field yang error.

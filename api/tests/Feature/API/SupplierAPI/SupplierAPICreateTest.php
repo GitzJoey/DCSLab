@@ -30,7 +30,7 @@ class SupplierAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
 
         $api->assertUnauthorized();
     }
@@ -49,19 +49,63 @@ class SupplierAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
 
         $api->assertForbidden();
     }
 
     public function test_supplier_api_call_store_with_script_tags_in_payload_expect_stripped()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'name' => '<script>alert("xss")</script> Test Name',
+            'address' => '<script>alert("xss")</script> Address',
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('suppliers', [
+            'company_id' => $company->id,
+            'name' => 'alert("xss") Test Name',
+            'address' => 'alert("xss") Address',
+        ]);
     }
 
     public function test_supplier_api_call_store_with_script_tags_in_payload_expect_encoded()
     {
-        $this->markTestSkipped('Test under construction');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'name' => '<script>alert("xss")</script> Test Name',
+            'address' => '<script>alert("xss")</script> Address',
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr, ['X-Sanitizer-Mode' => 'encode']);
+
+        $api->assertSuccessful();
+        $this->assertDatabaseHas('suppliers', [
+            'company_id' => $company->id,
+            'name' => '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; Test Name',
+            'address' => '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt; Address',
+        ]);
     }
 
     public function test_supplier_api_call_store_expect_successful()
@@ -79,7 +123,7 @@ class SupplierAPICreateTest extends APITestCase
             'company_id' => Hashids::encode($company->id),
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
 
         $api->assertSuccessful();
         $this->assertDatabaseHas('suppliers', [
@@ -97,9 +141,23 @@ class SupplierAPICreateTest extends APITestCase
         ]);
     }
 
-    public function test_supplier_api_call_store_with_nonexistance_branch_id_expect_failed()
+    public function test_supplier_api_call_store_with_nonexistance_company_id_expect_failed()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $supplierArr = Supplier::factory()->make([
+            'company_id' => Hashids::encode(99999999), // Non-existent company ID
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
+
+        $api->assertStatus(422);
+        $api->assertJsonValidationErrors(['company_id']);
     }
 
     public function test_supplier_api_call_store_with_existing_code_in_same_company_expect_failed()
@@ -123,7 +181,7 @@ class SupplierAPICreateTest extends APITestCase
             'code' => 'test1',
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
 
         $api->assertStatus(422);
         $api->assertJsonStructure([
@@ -156,7 +214,7 @@ class SupplierAPICreateTest extends APITestCase
             'code' => 'test1',
         ])->toArray();
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
 
         $api->assertSuccessful();
         $this->assertDatabaseHas('suppliers', [
@@ -185,7 +243,7 @@ class SupplierAPICreateTest extends APITestCase
 
         $supplierArr = [];
 
-        $api = $this->json('POST', route('api.post.db.supplier.supplier.save'), $supplierArr);
+        $api = $this->json('POST', route('api.post.supplier.save'), $supplierArr);
 
         $api->assertJsonValidationErrors(['company_id', 'code', 'name']);
     }

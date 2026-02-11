@@ -29,6 +29,7 @@ import investor from "./en/views/investor.json"
 import cash_account from "./en/views/cash_account.json"
 import product_service from "./en/views/product_service.json"
 import product from "./en/views/product.json"
+import supplier from "./en/views/supplier.json"
 import stock_adjustment_category from "./en/views/stock_adjustment_category.json"
 import error from "./en/views/error.json"
 
@@ -62,11 +63,12 @@ export default {
         "unit": unit,
         "product_service": product_service,
         "product": product,
-        "stock_adjustment_category": stock_adjustment_category,
+        "supplier": supplier,
         "customer_group": customer_group,
         "customer": customer,
         "investor": investor,
         "cash_account": cash_account,
+        "stock_adjustment_category": stock_adjustment_category,
         "error": error,
     }
 }

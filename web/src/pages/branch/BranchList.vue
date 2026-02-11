@@ -79,10 +79,10 @@ onMounted(async () => {
 
 // #region Methods
 const getBranches = async (
-  search: string, 
+  search: string,
 
-  refresh: boolean, 
-  page: number, 
+  refresh: boolean,
+  page: number,
   per_page: number
 ) => {
   emits('loading-state', true);
@@ -91,7 +91,7 @@ const getBranches = async (
 
   const searchReq: BranchReadAnyPaginateRequest = {
     with_trashed: false,
-    
+
     company_id: company_id,
     search: search,
     is_main: undefined,
@@ -116,9 +116,9 @@ const getBranches = async (
 
 const onDataListChanged = async (data: DataListEmittedData) => {
   await getBranches(
-    data.search.text, 
-    true, 
-    data.pagination.page, 
+    data.search.text,
+    true,
+    data.pagination.page,
     data.pagination.per_page
   );
 }
