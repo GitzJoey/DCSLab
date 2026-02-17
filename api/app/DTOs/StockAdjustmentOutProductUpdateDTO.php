@@ -1,0 +1,14 @@
+<?php
+
+namespace App\DTOs;
+
+final class StockAdjustmentOutProductUpdateDTO
+{
+    public function __construct(
+        public readonly float $qty,
+        public readonly int $productUnitId,
+        public readonly float $productUnitConversionValue,
+        public readonly ?string $remarks,
+    ) {
+    }
+}

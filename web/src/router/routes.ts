@@ -31,6 +31,7 @@ import StockAdjustmentCategoryIndex from "@/pages/stock-adjustment-category/Stoc
 import StockAdjustmentCategoryList from "@/pages/stock-adjustment-category/StockAdjustmentCategoryList.vue";
 import StockAdjustmentCategoryCreate from "@/pages/stock-adjustment-category/StockAdjustmentCategoryCreate.vue";
 import StockAdjustmentCategoryEdit from "@/pages/stock-adjustment-category/StockAdjustmentCategoryEdit.vue";
+import StockAdjustmentCreate from "@/pages/stock-adjustment/StockAdjustmentCreate.vue";
 import ProductCategoryIndex from "@/pages/product-category/ProductCategoryIndex.vue";
 import ProductCategoryList from "@/pages/product-category/ProductCategoryList.vue";
 import ProductCategoryCreate from "@/pages/product-category/ProductCategoryCreate.vue";
@@ -608,6 +609,14 @@ export default [
                         ],
                     },
                 ],
+            },
+            {
+                path: "/dashboard/stock-adjustment",
+                name: "side-menu-stock-adjustment",
+                component: StockAdjustmentCreate,
+                meta: {
+                    remember: true,
+                },
             },
 
             {

@@ -1,0 +1,54 @@
+{
+    "page_title": "Penyesuaian Stok",
+    "table": {
+        "title": "Daftar Penyesuaian Stok",
+        "cols": {
+            "code": "Kode",
+            "date": "Tanggal",
+            "category": "Kategori",
+            "in_warehouse": "Gudang Masuk",
+            "out_warehouse": "Gudang Keluar",
+            "is_posted": "Diposting",
+            "remarks": "Catatan"
+        }
+    },
+    "actions": {
+        "create": "Tambah Penyesuaian Stok",
+        "edit": "Ubah Penyesuaian Stok",
+        "show": "Tampilkan Penyesuaian Stok",
+        "delete": "Hapus Penyesuaian Stok"
+    },
+    "field_groups": {
+        "company_info": "Informasi Perusahaan",
+        "stock_adjustment_data": "Data Penyesuaian Stok",
+        "in_products": "Produk Masuk",
+        "out_products": "Produk Keluar"
+    },
+    "fields": {
+        "company_id": "Perusahaan",
+        "branch_id": "Cabang",
+        "code": "Kode",
+        "date": "Tanggal",
+        "category_id": "Kategori",
+        "in_warehouse_id": "Gudang Masuk",
+        "out_warehouse_id": "Gudang Keluar",
+        "remarks": "Catatan",
+        "is_posted": "Diposting",
+        "in_products": "Produk Masuk",
+        "out_products": "Produk Keluar"
+    },
+    "alert": {
+        "create": {
+            "title": "Tambah Penyesuaian Stok",
+            "message": "Penyesuaian Stok Berhasil Ditambahkan"
+        },
+        "update": {
+            "title": "Ubah Penyesuaian Stok",
+            "message": "Penyesuaian Stok Berhasil Diperbarui"
+        },
+        "delete": {
+            "title": "Hapus Penyesuaian Stok",
+            "message": "Penyesuaian Stok Berhasil Dihapus"
+        }
+    }
+}

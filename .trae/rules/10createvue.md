@@ -209,6 +209,33 @@ Gunakan template literal untuk path array.
 <FormErrorMessages :messages="(form.errors as any)[`items.${index}.price`]" />
 ```
 
+### Nested Array untuk Detail (Contoh: in_products / out_products)
+
+Untuk entity yang memiliki detail nested seperti `in_products` / `out_products` (misalnya Stock Adjustment), gunakan pola berikut agar konsisten dengan Form Request Laravel yang memakai notasi `in_products.*.field_name`:
+
+- Pisahkan detail ke dalam card sendiri di `TwoColumnsLayout` (misal: `views.stock_adjustment.field_groups.in_products`).
+- Gunakan struktur array di form TypeScript yang mengikuti nested request (`StockAdjustmentInProductNestedStoreRequest`, dsb).
+- Selalu gunakan path lengkap saat validasi Precognition:
+
+```html
+<div v-for="(item, index) in form.in_products" :key="index">
+    <FormInput
+        type="number"
+        v-model.number="form.in_products[index].qty"
+        :class="{ 'border-danger': form.invalid(`in_products.${index}.qty` as any) }"
+        @change="form.validate(`in_products.${index}.qty` as any)"
+    />
+    <FormErrorMessages
+        :messages="(form.errors as any)[`in_products.${index}.qty`]"
+    />
+</div>
+```
+
+**Catatan:**
+
+- Nama field di frontend harus selaras dengan rules di Form Request dan `*Rules::mapToFieldNames` agar error message muncul di field yang benar.
+- Untuk field detail lain (`product_unit_id`, `product_unit_conversion_value`, `product_unit_cogs`, `remarks`, dll), gunakan pola path yang sama (`in_products.${index}.field_name`).
+
 ## 7. Standard Error Handling Helper
 
 Gunakan fungsi standar ini untuk memparsing error dari Axios response ke format alert list. Fungsi ini menangani `AxiosError` dan `Error` biasa.

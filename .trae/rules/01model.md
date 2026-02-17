@@ -21,3 +21,45 @@ public function scopeSearch($query, string $search)
             ->orWhere('cash_accounts.remarks', 'like', '%'.$search.'%');
     });
 }
+```
+
+# BelongsTo Relationship Standard
+
+## Rule
+Setiap relasi `belongsTo` WAJIB menggunakan `withTrashed()` jika model yang direlasikan mendukung SoftDeletes.
+
+## Why
+Agar data tidak hilang saat parent (referensi) di-soft delete, sehingga integritas data historis tetap terjaga saat ditampilkan.
+
+## Example (Correct)
+```php
+public function company()
+{
+    return $this->belongsTo(Company::class)->withTrashed();
+}
+```
+
+# Scopeable Traits Standard
+
+## Rule
+1.  **Gunakan Trait Standar**:
+    *   `App\Traits\ScopeableByCompany`: Untuk model yang memiliki `company_id`.
+    *   `App\Traits\ScopeableByBranch`: Untuk model yang memiliki `branch_id`.
+    *   `App\Traits\ScopeableByStatus`: Untuk model yang memiliki `status`.
+2.  **Mandatory Trait**: Jika Action Class atau Controller menggunakan helper `whereCompanyId($id)` atau `whereBranchId($id)`, Model **WAJIB** menggunakan trait terkait secara eksplisit (`use Scopeable...`). Jangan berasumsi helper tersedia secara global.
+
+## Example
+```php
+use App\Traits\ScopeableByCompany;
+use App\Traits\ScopeableByBranch;
+
+class Order extends Model
+{
+    // WAJIB use Trait agar method scope tersedia
+    use ScopeableByCompany, ScopeableByBranch;
+    // ...
+}
+
+// Usage in Action/Controller
+$query->whereCompanyId($companyId)->whereBranchId($branchId);
+```

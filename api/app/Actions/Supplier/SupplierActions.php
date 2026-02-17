@@ -66,9 +66,7 @@ class SupplierActions
         $query->where(function ($query) use ($withTrashed, $search, $includeId) {
             $query->where(function ($query) use ($withTrashed, $search) {
                 $query->withoutTrashed();
-                if ($withTrashed) {
-                    $query->withTrashed();
-                }
+                if ($withTrashed) $query->withTrashed();
 
                 if ($search) {
                     $query->search($search);

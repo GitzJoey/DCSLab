@@ -13,6 +13,7 @@ use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\ProductSeeder;
 use Database\Seeders\RoleSeeder;
 use Database\Seeders\StockAdjustmentCategorySeeder;
+use Database\Seeders\StockAdjustmentSeeder;
 use Database\Seeders\SupplierSeeder;
 use Database\Seeders\UnitSeeder;
 use Database\Seeders\UserSeeder;
@@ -114,6 +115,9 @@ class AppSeed extends Command
 
         (new StockAdjustmentCategorySeeder())->run(stockAdjustmentCategoriesPerCompany: 5, companyId: null);
         $progressBar->advance();
+
+        // (new StockAdjustmentSeeder())->run(qtyPerCompany: 5, companyId: null);
+        // $progressBar->advance();
 
         $progressBar->finish();
         $this->info('');

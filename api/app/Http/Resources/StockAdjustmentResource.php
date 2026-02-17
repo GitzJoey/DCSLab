@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
+
+class StockAdjustmentResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => Hashids::encode($this->id),
+            'ulid' => $this->ulid,
+            'company' => new CompanyResource($this->whenLoaded('company')),
+            'branch' => new BranchResource($this->whenLoaded('branch')),
+            'code' => $this->code,
+            'date' => $this->date,
+            'category' => new StockAdjustmentCategoryResource($this->whenLoaded('category')),
+            'in_warehouse' => new WarehouseResource($this->whenLoaded('inWarehouse')),
+            'out_warehouse' => new WarehouseResource($this->whenLoaded('outWarehouse')),
+            'remarks' => $this->remarks,
+            'is_posted' => $this->is_posted,
+            'total_incoming_product_qty' => $this->total_incoming_product_qty,
+            'total_incoming_product_cogs' => $this->total_incoming_product_cogs,
+            'total_outgoing_product_qty' => $this->total_outgoing_product_qty,
+
+            'in_products' => StockAdjustmentInProductResource::collection($this->whenLoaded('inProducts')),
+            'out_products' => StockAdjustmentOutProductResource::collection($this->whenLoaded('outProducts')),
+        ];
+    }
+}

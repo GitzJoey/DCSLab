@@ -131,6 +131,30 @@ public useExampleCreateForm() {
 }
 ```
 
+### a. Typing `useForm` (Penting)
+Pada beberapa versi type definition `laravel-precognition-vue`, parameter `data` pada `useForm(...)` dibatasi ke `Record<string, unknown>`. Akibatnya, menambahkan generic seperti `useForm<MyRequestType>(...)` atau mengirim object yang ditipkan langsung ke `MyRequestType` bisa memunculkan error:
+`Index signature for type 'string' is missing in type 'MyRequestType'`.
+
+**LAKUKAN:**
+- Panggil `useForm('post', url, { ... })` tanpa generic.
+- Jika ada field array yang butuh typing, gunakan assertion pada field tersebut saja.
+
+```typescript
+import type { MyStoreRequest } from "../types/services/my-entity/MyEntityRequest";
+
+const form = useForm("post", url, {
+    company_id: "",
+    code: "_AUTO_",
+    items: [] as NonNullable<MyStoreRequest["items"]>,
+});
+```
+
+**JANGAN:**
+```typescript
+const initialData: MyStoreRequest = { /* ... */ };
+const form = useForm("post", url, initialData);
+```
+
 ## 7. Import Order
 Urutkan import untuk keterbacaan:
 1. Library eksternal (`axios`, `ziggy-js`, `laravel-precognition-vue`)

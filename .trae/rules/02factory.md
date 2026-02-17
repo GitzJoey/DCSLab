@@ -17,7 +17,12 @@ Field:
 Lokal Indonesia (jika ada): `city` kota Indo; `address` gaya “Jl.”; `phone/mobile` format `+62/08`; `tax_id` angka masuk akal (mis. `##.###.###.#-###.###`).
 
 Relasi/FK:
-- Jangan isi `*_id` di `definition()`. Set di pemanggil via `->for($model)` / `->for(Model::factory())` / state khusus.
+- **STRICT FORBIDDEN**: Jangan pernah mendefinisikan `*_id` (Foreign Key) di dalam method `definition()`.
+- **Why**: 
+    1. Menghindari inkonsistensi data (misal: Child Model dibuatkan Company baru yang beda dengan Parent Model).
+    2. Mencegah spam database (membuat ratusan Company baru yang tidak perlu).
+    3. Memudahkan testing dengan skenario fleksibel.
+- **Solution**: Set relasi di pemanggil (Seeder/Test) menggunakan `->for($model)` atau `->for(Model::factory())`.
 
 Enum/boolean:
 - Enum cast: pakai enum; boolean: `fake()->boolean()` atau default logis + state variasi.

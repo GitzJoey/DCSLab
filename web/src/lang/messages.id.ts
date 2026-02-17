@@ -31,6 +31,9 @@ import product_service from "./id/views/product_service.json"
 import product from "./id/views/product.json"
 import supplier from "./id/views/supplier.json"
 import stock_adjustment_category from "./id/views/stock_adjustment_category.json"
+import stock_adjustment from "./id/views/stock_adjustment.json"
+import stock_adjustment_in_product from "./id/views/stock_adjustment_in_product.json"
+import stock_adjustment_out_product from "./id/views/stock_adjustment_out_product.json"
 import error from "./id/views/error.json"
 
 export default {
@@ -69,6 +72,9 @@ export default {
         "investor": investor,
         "cash_account": cash_account,
         "stock_adjustment_category": stock_adjustment_category,
+        "stock_adjustment": stock_adjustment,
+        "stock_adjustment_in_product": stock_adjustment_in_product,
+        "stock_adjustment_out_product": stock_adjustment_out_product,
         "error": error,
     }
 }

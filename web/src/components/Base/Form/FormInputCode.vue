@@ -11,7 +11,7 @@ import { computed, type InputHTMLAttributes, useAttrs, inject } from "vue";
 import { type ProvideFormInline } from "./FormInline.vue";
 import { type ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 
-interface FormInputCodeProps extends /* @vue-ignore */ InputHTMLAttributes {
+export interface FormInputCodeProps extends /* @vue-ignore */ InputHTMLAttributes {
   value?: InputHTMLAttributes["value"];
   modelValue?: InputHTMLAttributes["value"];
   formInputSize?: "sm" | "lg";
@@ -45,7 +45,7 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
   ])
 );
@@ -65,19 +65,15 @@ const handleClickAutoButton = () => {
 </script>
 
 <template>
-  <div class="block flex gap-2">
-    <input
-      :disabled="disabledInput"
-      :class="computedClass"
-      :type="props.type"
-      v-bind="_.omit(attrs, 'class')"
-      v-model="localValue"
-    />
-    <div 
-      class="border-slate-200 border w-[8%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
-      @click="handleClickAutoButton"
-    >
-      Auto
+  <div class="flex items-center gap-2">
+    <div class="flex-1">
+      <input :disabled="disabledInput" :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')"
+        v-model="localValue" />
     </div>
+    <button type="button"
+      class="px-3 py-2.5 text-xs font-medium border border-slate-200 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap"
+      @click="handleClickAutoButton">
+      Auto
+    </button>
   </div>
 </template>

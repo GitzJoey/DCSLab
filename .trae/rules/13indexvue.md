@@ -11,6 +11,7 @@ Halaman ini menangani:
 2.  Notification Toast
 3.  Loading Overlay
 4.  Cache Clearing Strategy (saat navigasi)
+5.  Integrasi i18n untuk judul halaman (`views.[entity].*`)
 
 ## 1. Imports
 
@@ -186,3 +187,25 @@ Gunakan `LoadingOverlay` sebagai root wrapper, diikuti `TitleLayout` untuk heade
     </div>
 </template>
 ```
+
+## 6. Catatan i18n untuk Entity & Detail (contoh: Stock Adjustment)
+
+- Setiap entity yang punya halaman Index wajib memiliki file terjemahan view:
+  - `web/src/lang/en/views/[entity].json`
+  - `web/src/lang/id/views/[entity].json`
+- File `messages.en.ts` dan `messages.id.ts` **wajib**:
+  - `import [entity] from "./en/views/[entity].json";` (atau `./id/views/...`)
+  - Mendaftarkan ke dalam `views` dengan key: `"entity": entity`
+- Untuk entity yang punya detail terpisah (misal modul Stock Adjustment):
+  - Gunakan key tambahan:
+    - `stock_adjustment_in_product`
+    - `stock_adjustment_out_product`
+  - Sediakan pasangan file:
+    - `web/src/lang/en/views/stock_adjustment_in_product.json`
+    - `web/src/lang/en/views/stock_adjustment_out_product.json`
+    - `web/src/lang/id/views/stock_adjustment_in_product.json`
+    - `web/src/lang/id/views/stock_adjustment_out_product.json`
+  - Daftarkan di `messages.*.ts`:
+    - `"stock_adjustment`: stock_adjustment`
+    - `"stock_adjustment_in_product": stock_adjustment_in_product`
+    - `"stock_adjustment_out_product": stock_adjustment_out_product`

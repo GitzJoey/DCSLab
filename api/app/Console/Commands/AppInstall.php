@@ -16,6 +16,7 @@ use Database\Seeders\CustomerSeeder;
 use Database\Seeders\InvestorSeeder;
 use Database\Seeders\ProductCategorySeeder;
 use Database\Seeders\StockAdjustmentCategorySeeder;
+use Database\Seeders\StockAdjustmentSeeder;
 use Database\Seeders\SupplierSeeder;
 use Database\Seeders\UnitSeeder;
 use Database\Seeders\WarehouseSeeder;
@@ -77,6 +78,7 @@ class AppInstall extends Command
         (new CustomerSeeder())->run();
 
         (new StockAdjustmentCategorySeeder())->run();
+        // (new StockAdjustmentSeeder())->run();
 
         $this->info('Done!');
 

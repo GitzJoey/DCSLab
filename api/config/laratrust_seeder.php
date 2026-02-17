@@ -34,8 +34,8 @@ return [
             'company' => 'c,r,ra,u,d',
             'branch' => 'c,r,ra,u,d',
             'warehouse' => 'c,r,ra,u,d',
-            'cash_account' => 'c,r,ra,u,d',
             'investor' => 'c,r,ra,u,d',
+            'cash_account' => 'c,r,ra,u,d',
             'product_category' => 'c,r,ra,u,d',
             'brand' => 'c,r,ra,u,d',
             'unit' => 'c,r,ra,u,d',
@@ -44,6 +44,11 @@ return [
             'customer_group' => 'c,r,ra,u,d',
             'customer_address' => 'c,r,ra,u,d',
             'customer' => 'c,r,ra,u,d',
+            'stock_adjustment_category' => 'c,r,ra,u,d',
+
+            'stock_adjustment' => 'c,r,ra,u,d',
+            'stock_adjustment_in_product' => 'c,r,ra,u,d',
+            'stock_adjustment_out_product' => 'c,r,ra,u,d',
 
             'capital_addition' => 'c,r,ra,u,d',
             'capital_withdrawal' => 'c,r,ra,u,d',
@@ -51,7 +56,6 @@ return [
             'non_capital_addition' => 'c,r,ra,u,d',
             'non_capital_withdrawal_category' => 'c,r,ra,u,d',
             'non_capital_withdrawal' => 'c,r,ra,u,d',
-            'stock_adjustment_category' => 'c,r,ra,u,d',
 
             'purchase_order' => 'c,r,ra,u,d',
             'purchase_order_unit' => 'c,r,ra,u,d',

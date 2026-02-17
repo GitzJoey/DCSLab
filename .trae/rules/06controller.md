@@ -9,6 +9,10 @@ Aturan ini berlaku untuk semua Controller di bawah menu Master Data (e.g., Compa
 ## 1. General Structure & Dependencies
 - **Inheritance**: Semua controller wajib mewarisi `App\Http\Controllers\BaseController`.
 - **Dependency Injection**: Gunakan Constructor Injection untuk memanggil Action Class.
+- **Penamaan Properti DI**: Nama properti mengikuti nama class Action dalam camelCase, contoh:
+  - `StockAdjustmentActions` → `$stockAdjustmentActions`
+  - `StockAdjustmentInProductActions` → `$stockAdjustmentInProductActions`
+  - `StockAdjustmentOutProductActions` → `$stockAdjustmentOutProductActions`
 - **Common Imports**:
   - `App\DTOs\ExecuteDTO`, `ExecuteGetDTO`, `ExecutePaginationDTO`
   - `App\Helpers\HashidsHelper`
@@ -18,6 +22,15 @@ Aturan ini berlaku untuk semua Controller di bawah menu Master Data (e.g., Compa
   - `Exception`
 
 ## 2. CRUD Methods Standard
+
+### 2.1 Urutan Method Public
+Untuk semua controller CRUD di bawah menu Master Data, urutan method public utama harus menggunakan pola berikut:
+
+1. `readAny`
+2. `read`
+3. `store`
+4. `update`
+5. `delete`
 
 ### A. Method `store(StoreRequest $request)`
 1.  **Validation**: Gunakan dedicated FormRequest class (e.g., `StoreSupplierRequest` atau `SupplierStoreRequest`).
@@ -128,6 +141,34 @@ Aturan ini berlaku untuk semua Controller di bawah menu Master Data (e.g., Compa
           ]);
       }
       ```
+
+### B. Transaksional Dengan Child (Parent + Detail)
+
+- Untuk modul transaksional yang saat simpan/update juga menyimpan child/detail (misal: StockAdjustment dengan in_products/out_products):
+  - Wajib menggunakan FormRequest terpisah untuk `store` dan `update` khusus transaksi tersebut.
+  - Struktur rules untuk child harus dipusatkan di class khusus di namespace `App\Validation\<Domain>\`, lalu dipetakan ke nested field di FormRequest.
+    - Contoh format di FormRequest:
+      ```php
+      $rules['in_products'] = ['nullable', 'array'];
+      $rules += StockAdjustmentInProductRules::mapToFieldNames($this->company_id ?? 0,
+          'in_products.*.qty',
+          'in_products.*.product_unit_id',
+          'in_products.*.product_unit_conversion_value',
+          'in_products.*.product_unit_cogs',
+          'in_products.*.remarks',
+      );
+
+      $rules['out_products'] = ['nullable', 'array'];
+      $rules += StockAdjustmentOutProductRules::mapToFieldNames($this->company_id ?? 0,
+          'out_products.*.qty',
+          'out_products.*.product_unit_id',
+          'out_products.*.product_unit_conversion_value',
+          'out_products.*.remarks',
+      );
+      ```
+  - Pola di atas memastikan:
+    - Satu sumber kebenaran untuk rules child.
+    - Jika aturan field child berubah, FormRequest akan ikut terdampak (mencegah duplikasi rules tersebar di banyak tempat).
 
 ### B. Authorization
 1.  **Check Auth First**: Selalu cek `Auth::check()` terlebih dahulu.
