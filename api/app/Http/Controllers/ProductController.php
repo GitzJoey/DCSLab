@@ -49,6 +49,116 @@ class ProductController extends BaseController
         $this->productServiceActions = $productServiceActions;
     }
 
+    public function readAny(Request $request)
+    {
+        if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
+        $this->authorize('viewAny', Product::class);
+
+        if ($request->filled('company_id')) $request->merge(['company_id' => HashidsHelper::decodeId($request->company_id)]);
+        if ($request->filled('include_id')) $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
+        if ($request->filled('category_id')) $request->merge(['category_id' => HashidsHelper::decodeId($request->category_id)]);
+        if ($request->filled('brand_id')) $request->merge(['brand_id' => HashidsHelper::decodeId($request->brand_id)]);
+
+        $validatedRequest = $request->validate([
+            'refresh' => ['required', 'boolean'],
+            'with_trashed' => ['required', 'boolean'],
+
+            'search' => ['nullable', 'string'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'category_id' => ['nullable', 'integer', new ExistsForCompany('product_categories', $request->company_id)],
+            'brand_id' => ['nullable', 'integer', new ExistsForCompany('brands', $request->company_id)],
+            'is_taxable' => ['nullable', 'boolean'],
+            'vat_rate' => ['nullable', 'numeric', 'min:0'],
+            'is_price_include_vat' => ['nullable', 'boolean'],
+            'is_use_serial_number' => ['nullable', 'boolean'],
+            'is_expirable' => ['nullable', 'boolean'],
+            'type' => ['nullable', 'integer', new Enum(ProductTypeEnum::class)],
+            'status' => ['nullable', 'integer', new Enum(RecordStatusEnum::class)],
+            'include_id' => ['nullable', 'integer', new ExistsForCompany('products', $request->company_id)],
+
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:10'],
+        ]);
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productActions->readAny(
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                search: $validatedRequest['search'] ?? null,
+                categoryId: $validatedRequest['category_id'] ?? null,
+                brandId: $validatedRequest['brand_id'] ?? null,
+                isTaxable: $validatedRequest['is_taxable'] ?? null,
+                vatRate: $validatedRequest['vat_rate'] ?? null,
+                isPriceIncludeVat: $validatedRequest['is_price_include_vat'] ?? null,
+                isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? null,
+                isExpirable: $validatedRequest['is_expirable'] ?? null,
+                type: $validatedRequest['type'] ?? null,
+                status: $validatedRequest['status'] ?? null,
+                includeId: $validatedRequest['include_id'] ?? null,
+
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: (function () use ($validatedRequest) {
+                        $pagination = null;
+                        if (isset($validatedRequest['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
+                                page: $validatedRequest['paginate']['page'],
+                                perPage: $validatedRequest['paginate']['per_page'],
+                            );
+                        }
+
+                        return $pagination;
+                    })(),
+                    get: (function () use ($validatedRequest) {
+                        $get = null;
+                        if (isset($validatedRequest['get'])) {
+                            $get = new ExecuteGetDTO(
+                                limit: $validatedRequest['get']['limit'],
+                            );
+                        }
+
+                        return $get;
+                    })()
+                )
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return ProductResource::collection($result);
+        }
+    }
+
+    public function read(Product $product)
+    {
+        if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
+        $this->authorize('view', $product);
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->productActions->read($product);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return new ProductResource($result);
+        }
+    }
+
     public function storePhysical(ProductPhysicalStoreRequest $request)
     {
         $validatedRequest = $request->validated();
@@ -207,116 +317,6 @@ class ProductController extends BaseController
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(Request $request)
-    {
-        if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
-        $this->authorize('viewAny', Product::class);
-
-        if ($request->filled('company_id')) $request->merge(['company_id' => HashidsHelper::decodeId($request->company_id)]);
-        if ($request->filled('include_id')) $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
-        if ($request->filled('category_id')) $request->merge(['category_id' => HashidsHelper::decodeId($request->category_id)]);
-        if ($request->filled('brand_id')) $request->merge(['brand_id' => HashidsHelper::decodeId($request->brand_id)]);
-
-        $validatedRequest = $request->validate([
-            'refresh' => ['required', 'boolean'],
-            'with_trashed' => ['required', 'boolean'],
-
-            'search' => ['nullable', 'string'],
-            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
-            'category_id' => ['nullable', 'integer', new ExistsForCompany('product_categories', $request->company_id)],
-            'brand_id' => ['nullable', 'integer', new ExistsForCompany('brands', $request->company_id)],
-            'is_taxable' => ['nullable', 'boolean'],
-            'vat_rate' => ['nullable', 'numeric', 'min:0'],
-            'is_price_include_vat' => ['nullable', 'boolean'],
-            'is_use_serial_number' => ['nullable', 'boolean'],
-            'is_expirable' => ['nullable', 'boolean'],
-            'type' => ['nullable', 'integer', new Enum(ProductTypeEnum::class)],
-            'status' => ['nullable', 'integer', new Enum(RecordStatusEnum::class)],
-            'include_id' => ['nullable', 'integer', new ExistsForCompany('products', $request->company_id)],
-
-            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
-            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
-            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
-            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
-            'get.limit' => ['required_with:get', 'integer', 'min:10'],
-        ]);
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->productActions->readAny(
-                withTrashed: $validatedRequest['with_trashed'],
-                companyId: $validatedRequest['company_id'],
-                search: $validatedRequest['search'] ?? null,
-                categoryId: $validatedRequest['category_id'] ?? null,
-                brandId: $validatedRequest['brand_id'] ?? null,
-                isTaxable: $validatedRequest['is_taxable'] ?? null,
-                vatRate: $validatedRequest['vat_rate'] ?? null,
-                isPriceIncludeVat: $validatedRequest['is_price_include_vat'] ?? null,
-                isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? null,
-                isExpirable: $validatedRequest['is_expirable'] ?? null,
-                type: $validatedRequest['type'] ?? null,
-                status: $validatedRequest['status'] ?? null,
-                includeId: $validatedRequest['include_id'] ?? null,
-
-                execute: new ExecuteDTO(
-                    useCache: ! $validatedRequest['refresh'],
-                    pagination: (function () use ($validatedRequest) {
-                        $pagination = null;
-                        if (isset($validatedRequest['paginate'])) {
-                            $pagination = new ExecutePaginationDTO(
-                                page: $validatedRequest['paginate']['page'],
-                                perPage: $validatedRequest['paginate']['per_page'],
-                            );
-                        }
-
-                        return $pagination;
-                    })(),
-                    get: (function () use ($validatedRequest) {
-                        $get = null;
-                        if (isset($validatedRequest['get'])) {
-                            $get = new ExecuteGetDTO(
-                                limit: $validatedRequest['get']['limit'],
-                            );
-                        }
-
-                        return $get;
-                    })()
-                )
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return ProductResource::collection($result);
-        }
-    }
-
-    public function read(Product $product)
-    {
-        if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
-        $this->authorize('view', $product);
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->productActions->read($product);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return new ProductResource($result);
-        }
     }
 
     public function updatePhysical(Product $product, ProductPhysicalUpdateRequest $request)
