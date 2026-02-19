@@ -13,12 +13,20 @@ class SalePaymentResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
-            'sale' => new SaleResource($this->sale),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('sale'), [
+                'sale' => new SaleResource($this->whenLoaded('sale')),
+            ]),
             'code' => $this->code,
             'date' => $this->date,
-            'cash_account' => new CashAccountResource($this->cashAccount),
+            $this->mergeWhen($this->relationLoaded('cashAccount'), [
+                'cash_account' => new CashAccountResource($this->whenLoaded('cashAccount')),
+            ]),
             'amount' => $this->amount,
             'remarks' => $this->remarks,
         ];

@@ -13,13 +13,21 @@ class SaleResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch_id' => new BranchResource($this->branch),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch_id' => new BranchResource($this->whenLoaded('branch')),
+            ]),
             'code' => $this->code,
             'date' => $this->date,
             'due_days' => $this->due_days,
-            'warehouse_id' => new WarehouseResource($this->warehouse),
-            'customer_id' => new CustomerResource($this->customer),
+            $this->mergeWhen($this->relationLoaded('warehouse'), [
+                'warehouse_id' => new WarehouseResource($this->whenLoaded('warehouse')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('customer'), [
+                'customer_id' => new CustomerResource($this->whenLoaded('customer')),
+            ]),
             'delivery_note_reference' => $this->delivery_note_reference,
 
             'tax_invoice_number' => $this->tax_invoice_number,

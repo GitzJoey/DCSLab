@@ -34,7 +34,14 @@ class ProductActions
         ?int $includeId,
         ?ExecuteDTO $execute
     ) {
-        $query = Product::with(['company', 'category', 'brand', 'productUnits.unit'])->select('products.*')
+        $query = Product::with([
+            'company',
+            'category',
+            'brand',
+            'productUnits.unit',
+        ]);
+
+        $query->select('products.*')
             ->whereCompanyId($companyId)
             ->withTrashed();
 

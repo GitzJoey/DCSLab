@@ -13,14 +13,26 @@ class SaleProductUnitResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch_id' => new BranchResource($this->branch),
-            'sale_id' => new SaleResource($this->sale),
-            'warehouse_id' => new WarehouseResource($this->warehouse),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch_id' => new BranchResource($this->whenLoaded('branch')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('sale'), [
+                'sale_id' => new SaleResource($this->whenLoaded('sale')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('warehouse'), [
+                'warehouse_id' => new WarehouseResource($this->whenLoaded('warehouse')),
+            ]),
 
             'qty' => $this->qty,
-            'product_id' => new ProductResource($this->product),
-            'product_unit_id' => new ProductUnitResource($this->product_unit),
+            $this->mergeWhen($this->relationLoaded('product'), [
+                'product_id' => new ProductResource($this->whenLoaded('product')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('product_unit'), [
+                'product_unit_id' => new ProductUnitResource($this->whenLoaded('product_unit')),
+            ]),
             'product_unit_amount_per_unit' => $this->product_unit_amount_per_unit,
             'product_unit_amount_total' => $this->product_unit_amount_total,
             'product_unit_initial_price' => $this->product_unit_initial_price,

@@ -20,10 +20,10 @@ class WarehouseResource extends JsonResource
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
-                'company' => new CompanyResource($this->company),
+                'company' => new CompanyResource($this->whenLoaded('company')),
             ]),
             $this->mergeWhen($this->relationLoaded('branch'), [
-                'branch' => new BranchResource($this->branch),
+                'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
             'code' => $this->code,
             'name' => $this->name,

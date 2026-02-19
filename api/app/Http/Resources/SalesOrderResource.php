@@ -13,12 +13,20 @@ class SalesOrderResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
             'code' => $this->code,
             'date' => $this->date,
-            'customer' => new CustomerResource($this->customer),
-            'customer_address' => new CustomerAddressResource($this->customerAddress),
+            $this->mergeWhen($this->relationLoaded('customer'), [
+                'customer' => new CustomerResource($this->whenLoaded('customer')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('customerAddress'), [
+                'customer_address' => new CustomerAddressResource($this->whenLoaded('customerAddress')),
+            ]),
             'remarks' => $this->remarks,
         ];
     }

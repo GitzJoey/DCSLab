@@ -14,10 +14,16 @@ class ProductResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
             'code' => $this->code,
-            'category' => new ProductCategoryResource($this->category),
-            'brand' => new BrandResource($this->brand),
+            $this->mergeWhen($this->relationLoaded('category'), [
+                'category' => new ProductCategoryResource($this->whenLoaded('category')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('brand'), [
+                'brand' => new BrandResource($this->whenLoaded('brand')),
+            ]),
             'name' => $this->name,
             'slug' => $this->slug,
             'is_taxable' => $this->is_taxable,
@@ -28,7 +34,9 @@ class ProductResource extends JsonResource
             'remarks' => $this->remarks,
             'type' => $this->type,
             'status' => $this->setStatus($this->status, $this->deleted_at),
-            'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits')),
+            $this->mergeWhen($this->relationLoaded('productUnits'), [
+                'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits')),
+            ]),
         ];
     }
 

@@ -13,11 +13,19 @@ class SaleReceiptResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
             'code' => $this->code,
-            'sale' => new SaleResource($this->sale),
-            'warehouse' => new WarehouseResource($this->warehouse),
+            $this->mergeWhen($this->relationLoaded('sale'), [
+                'sale' => new SaleResource($this->whenLoaded('sale')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('warehouse'), [
+                'warehouse' => new WarehouseResource($this->whenLoaded('warehouse')),
+            ]),
         ];
     }
 }

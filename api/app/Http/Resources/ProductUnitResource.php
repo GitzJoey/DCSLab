@@ -13,11 +13,17 @@ class ProductUnitResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'product' => new ProductResource($this->whenLoaded('product')),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('product'), [
+                'product' => new ProductResource($this->whenLoaded('product')),
+            ]),
             'code' => $this->code,
             'is_manufacturer_sku' => $this->is_manufacturer_sku,
-            'unit' => new UnitResource($this->unit),
+            $this->mergeWhen($this->relationLoaded('unit'), [
+                'unit' => new UnitResource($this->whenLoaded('unit')),
+            ]),
             'price' => $this->price,
             'is_base' => $this->is_base,
             'conversion_value' => $this->conversion_value,
