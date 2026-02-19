@@ -16,5 +16,7 @@
     "register": "Register",
     "create_new": "Tambah Baru",
     "retry": "Coba Kembali",
-    "reload": "Memuat Ulang"
+    "reload": "Memuat Ulang",
+    "search": "Cari",
+    "select": "Pilih"
 }

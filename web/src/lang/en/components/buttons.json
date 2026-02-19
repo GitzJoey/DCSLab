@@ -16,5 +16,7 @@
     "register": "Register",
     "create_new": "Create New",
     "retry": "Retry",
-    "reload": "Reload"
+    "reload": "Reload",
+    "search": "Search",
+    "select": "Select"
 }

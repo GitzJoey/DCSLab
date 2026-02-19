@@ -104,16 +104,29 @@ const toggleSideTab = (show: boolean | undefined) => {
             'intro-y',
             { 'border': card.state === CardState.Expanded },
             'rounded',
-            'col-span-12', '2xl:col-span-12']">
-            <div v-if="card.title" :id="`${index}`"
-              :class="['cursor-pointer', 'flex', 'px-5', 'py-5', 'sm:py-3', 'border-b', { 'border': card.state !== CardState.Expanded }, { 'rounded': card.state !== CardState.Expanded }, 'border-slate-200/60', 'dark:border-darkmode-400']">
-              <div class="w-1/2 flex justify-start" @click="onCardTitleClicked(index)">
+            'col-span-12',
+            '2xl:col-span-12'
+          ]">
+            <div v-if="card.title" :id="`${index}`" :class="[
+              'cursor-pointer',
+              'flex',
+              'px-5',
+              'py-5',
+              'sm:py-3',
+              'border-b',
+              { 'border': card.state !== CardState.Expanded },
+              { 'rounded': card.state !== CardState.Expanded },
+              'border-slate-200/60',
+              'dark:border-darkmode-400'
+            ]" @click="onCardTitleClicked(index)">
+              <div class="w-1/2 flex justify-start">
                 <h2 class="font-medium text-base mr-auto">{{ t(card.title) }}</h2>
               </div>
               <div v-if="card.state !== CardState.Hidden" class="w-1/2 flex justify-end">
-                <div
-                  :class="{ 'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true, 'transform rotate-180': card.state === CardState.Expanded }"
-                  @click="onCardTitleClicked(index)">
+                <div :class="{
+                  'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true,
+                  'transform rotate-180': card.state === CardState.Expanded
+                }">
                   <Lucide class="w-6 h-6" icon="ChevronDown" />
                 </div>
               </div>

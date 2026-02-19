@@ -43,10 +43,12 @@ private function setStatus($status, $deleted_at)
 ```
 
 ## 4. Handling Relationships (Eager Loading)
-Untuk mencegah N+1 Query problem, jangan akses relationship secara langsung. Gunakan `whenLoaded`.
+Untuk mencegah N+1 Query problem, **WAJIB**:
+- Tidak mengakses relationship secara langsung (`$this->company`, `$this->warehouse`, dll).
+- Selalu menggunakan `whenLoaded` untuk semua relasi pada Resource.
 
 ### Single Relation (BelongsTo/HasOne)
-Gunakan `new Resource(...)`.
+Gunakan `new Resource(...)` dengan `whenLoaded` dan opsional `mergeWhen`.
 ```php
 'company' => new CompanyResource($this->whenLoaded('company')),
 // Atau jika ingin di-merge ke root level:

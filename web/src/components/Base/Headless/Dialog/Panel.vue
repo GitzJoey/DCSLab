@@ -32,7 +32,7 @@ const computedClass = computed(() =>
     dialog?.size == "md" && "sm:w-[460px]",
     dialog?.size == "sm" && "sm:w-[300px]",
     dialog?.size == "lg" && "sm:w-[600px]",
-    dialog?.size == "xl" && "sm:w-[600px] lg:w-[900px]",
+    dialog?.size == "xl" && "sm:w-[600px] lg:w-[900px] xl:w-[1100px]",
     dialog?.zoom.value && "scale-105",
     typeof attrs.class === "string" && attrs.class,
   ])
