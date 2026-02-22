@@ -6,7 +6,7 @@
             "product": "Product",
             "qty": "Qty",
             "product_unit": "Product Unit",
-            "product_unit_conversion_value": "Conversion Value",
+            "product_unit_conversion_value": "C. Val",
             "product_unit_cogs": "Unit COGS",
             "product_unit_total_cogs": "Total COGS",
             "remarks": "Remarks"
@@ -24,7 +24,7 @@
         "stock_adjustment_id": "Stock Adjustment",
         "qty": "Qty",
         "product_unit_id": "Product Unit",
-        "product_unit_conversion_value": "Conversion Value",
+        "product_unit_conversion_value": "C. Val",
         "product_unit_cogs": "Unit COGS",
         "product_unit_total_cogs": "Total COGS",
         "remarks": "Remarks"

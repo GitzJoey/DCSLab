@@ -6,7 +6,7 @@
             "product": "Product",
             "qty": "Qty",
             "product_unit": "Product Unit",
-            "product_unit_conversion_value": "Conversion Value",
+            "product_unit_conversion_value": "C. Value",
             "remarks": "Remarks"
         }
     },
@@ -23,7 +23,7 @@
         "qty": "Qty",
         "product_id": "Product",
         "product_unit_id": "Product Unit",
-        "product_unit_conversion_value": "Conversion Value",
+        "product_unit_conversion_value": "C. Value",
         "remarks": "Remarks"
     }
 }

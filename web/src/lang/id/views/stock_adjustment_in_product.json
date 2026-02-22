@@ -6,7 +6,7 @@
             "product": "Produk",
             "qty": "Qty",
             "product_unit": "Satuan Produk",
-            "product_unit_conversion_value": "Nilai Konversi",
+            "product_unit_conversion_value": "Isi",
             "product_unit_cogs": "HPP Satuan",
             "product_unit_total_cogs": "Total HPP",
             "remarks": "Catatan"
@@ -24,7 +24,7 @@
         "stock_adjustment_id": "Penyesuaian Stok",
         "qty": "Qty",
         "product_unit_id": "Satuan Produk",
-        "product_unit_conversion_value": "Nilai Konversi",
+        "product_unit_conversion_value": "Isi",
         "product_unit_cogs": "HPP Satuan",
         "product_unit_total_cogs": "Total HPP",
         "remarks": "Catatan"

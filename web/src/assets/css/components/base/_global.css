@@ -2,6 +2,7 @@ html {
     &.dark {
         body {
             color: theme("colors.slate.300");
+
             *,
             ::before,
             ::after {
@@ -9,6 +10,7 @@ html {
             }
         }
     }
+
     body {
         letter-spacing: theme("letterSpacing.wide");
         font-size: theme("fontSize.sm");
@@ -18,4 +20,14 @@ html {
         color: theme("colors.slate.600");
         line-height: theme("lineHeight.5");
     }
+}
+
+input[type="number"].no-spinner::-webkit-outer-spin-button,
+input[type="number"].no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"].no-spinner {
+    -moz-appearance: textfield;
 }

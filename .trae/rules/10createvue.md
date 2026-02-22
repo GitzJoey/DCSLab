@@ -68,6 +68,48 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
 </template>
 ```
 
+### Struktur Script Setup (Region)
+
+Untuk halaman Create dengan `<script setup>`, gunakan komentar region untuk
+memisahkan blok kode berdasarkan tanggung jawab. Hindari nested region; semua
+region harus berdiri sejajar (flat).
+
+Pola yang direkomendasikan:
+
+```typescript
+// #region Imports
+// import ...
+// #endregion
+
+// #region Declarations
+// type, const ref/computed, service, state form, cards, dll.
+// #endregion
+
+// #region Vue Core
+// handleExpandCard
+// watcher (misal hitung total dari detail)
+// watcher lain
+// onMounted (validasi lokasi user, set default value, load DDL)
+// #endregion
+
+// #region Methods - [Entity]
+// method khusus entitas/form utama (setCode, handleDateTimeChange, load*DDL, clear*)
+// #endregion
+
+// #region Methods - [Detail]
+// method untuk nested array/detail (misal: in_products, out_products)
+// #endregion
+
+// #region Actions
+// helper terkait submit (scrollToError, resetForm, onSubmit)
+// #endregion
+```
+
+Manfaat:
+- Mudah collapse/expand per bagian di editor.
+- Mudah mencari method karena dikelompokkan by responsibility.
+- Konsisten antar halaman Create yang kompleks (terutama yang punya nested detail).
+
 ### Form Identifier
 
 **WAJIB** memberikan `id` pada tag `<form>` dengan format `[entity]Form`.
@@ -77,6 +119,38 @@ Ini berguna untuk keperluan testing atau styling spesifik jika dibutuhkan.
 <form id="supplierForm" @submit.prevent="onSubmit">
     <!-- ... -->
 </form>
+```
+
+### Seksi Company & Branch (Context Lokasi User)
+
+Untuk halaman yang selalu terikat ke `selectedUserLocation`, tampilkan informasi company dan branch di card pertama dalam bentuk read-only, dan simpan `company_id` serta `branch_id` ke form sebagai hidden input.
+
+```vue
+<template #card-items-0>
+    <div class="p-5">
+        <div class="grid grid-cols-12 gap-4 gap-y-3">
+            <!-- company -->
+            <div class="col-span-12 lg:col-span-4 md:col-span-6">
+                <FormLabel>
+                    {{ selectedUserLocation.company.code }}
+                    <br />
+                    {{ selectedUserLocation.company.name }}
+                </FormLabel>
+                <FormInput type="hidden" v-model="form.company_id" />
+            </div>
+
+            <!-- branch -->
+            <div class="col-span-12 lg:col-span-4 md:col-span-6">
+                <FormLabel>
+                    {{ selectedUserLocation.branch.code }}
+                    <br />
+                    {{ selectedUserLocation.branch.name }}
+                </FormLabel>
+                <FormInput type="hidden" v-model="form.branch_id" />
+            </div>
+        </div>
+    </div>
+</template>
 ```
 
 ## 3. Lifecycle Hooks (onMounted)
@@ -460,22 +534,25 @@ const setCode = () => {
 ```
 
 ## 12. Reset Form Strategy
-Saat mereset form, pastikan untuk mengembalikan state default yang mungkin tidak dicover oleh `form.reset()` standar, terutama untuk array dinamis.
+Saat mereset form, pastikan untuk mengembalikan state default yang mungkin tidak dicover oleh `form.reset()` standar, terutama untuk array dinamis dan state lokal di luar form.
 
 ```typescript
 const resetForm = () => {
     form.reset();
     form.setErrors({});
-    
+
     // Re-initialize default values for arrays or complex objects
     form.setData({
         details: [{
             ...defaultItem,
-            // Pastikan properti default diset ulang dengan benar
             code: '_AUTO_',
             is_primary: true
         }]
     });
+
+    // Reset state lokal yang terkait UI tetapi bukan bagian dari form
+    dateTimeDisplay.value = "";
+    expandedRemarks.value = [];
 };
 ```
 

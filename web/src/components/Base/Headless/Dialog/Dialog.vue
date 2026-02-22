@@ -18,7 +18,7 @@ export type ProvideDialog = {
   size?: Size;
 };
 
-interface DialogProps
+export interface DialogProps
   extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialog> {
   size?: Size;
   open: boolean;
@@ -42,7 +42,12 @@ const computedClass = computed(() =>
 const zoom = ref(false);
 const emit = defineEmits<{
   (e: "close", value: boolean): void;
+  (e: "after-leave"): void;
 }>();
+
+const emitAfterLeave = () => {
+  emit("after-leave");
+};
 
 const handleClose = (value: boolean) => {
   if (!staticBackdrop) {
@@ -64,17 +69,12 @@ provide<ProvideDialog>("dialog", {
 </script>
 
 <template>
-  <TransitionRoot appear as="template" :show="open">
-    <HeadlessDialog
-      :as="as"
-      @close="
-        (value) => {
-          handleClose(value);
-        }
-      "
-      :class="computedClass"
-      v-bind="_.omit(attrs, 'class', 'onClose')"
-    >
+  <TransitionRoot appear as="template" :show="open" @after-leave="emitAfterLeave">
+    <HeadlessDialog :as="as" @close="
+      (value) => {
+        handleClose(value);
+      }
+    " :class="computedClass" v-bind="_.omit(attrs, 'class', 'onClose')">
       <slot></slot>
     </HeadlessDialog>
   </TransitionRoot>

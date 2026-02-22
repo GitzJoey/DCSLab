@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+// #region Imports
+import { computed, ref, onMounted, nextTick, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
@@ -11,19 +12,41 @@ import {
     FormLabel,
     FormErrorMessages,
     FormInputCode,
+    FormInputCurrency,
     FormTextarea,
     FormTomSelect,
     FormSwitch,
 } from "@/components/Base/Form";
 import WarehouseService from "@/services/WarehouseService";
+import ProductService from "@/services/ProductService";
 import Button from "@/components/Base/Button";
 import Lucide from "@/components/Base/Lucide";
-import { formatDate } from "@/utils/helper";
+import { Dialog } from "@/components/Base/Headless";
+import { formatDate, formatCurrency } from "@/utils/helper";
 import StockAdjustmentService from "@/services/StockAdjustmentService";
 import StockAdjustmentCategoryService from "@/services/StockAdjustmentCategoryService";
 import { ErrorCode } from "@/types/enums/ErrorCode";
 import { type DropDownOption } from "@/types/models/DropDownOption";
-import { type StockAdjustmentInProductNestedStoreRequest } from "@/types/services/stock-adjustment/StockAdjustmentRequest";
+import {
+    type StockAdjustmentInProductNestedStoreRequest,
+    type StockAdjustmentInProductFormItem,
+} from "@/types/services/stock-adjustment/StockAdjustmentRequest";
+// #endregion
+
+// #region Declarations
+type ProductUnitOption = {
+    product_id: string;
+    product_code: string;
+    product_name: string;
+    product_unit_id: string;
+    product_unit_code: string;
+    unit_name: string;
+    base_unit_name: string;
+    conversion_value: number;
+    cogs: number;
+};
+
+const inProductsRemarksExpanded = ref<boolean[]>([]);
 
 const { t } = useI18n();
 const router = useRouter();
@@ -38,13 +61,21 @@ const selectedUserLocation = computed(
 
 const stockAdjustmentService = new StockAdjustmentService();
 const stockAdjustmentForm = stockAdjustmentService.useStockAdjustmentCreateForm();
-const warehouseService = new WarehouseService();
 const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
+const warehouseService = new WarehouseService();
+const productService = new ProductService();
 
 const dateTimeDisplay = ref<string>("");
 const inWarehouseDDL = ref<Array<DropDownOption> | null>(null);
 const outWarehouseDDL = ref<Array<DropDownOption> | null>(null);
 const categoryDDL = ref<Array<DropDownOption> | null>(null);
+
+const showProductUnitModal = ref<boolean>(false);
+const productSearchText = ref<string>("");
+const isSearchingProductUnit = ref<boolean>(false);
+const productUnitOptions = ref<Array<ProductUnitOption>>([]);
+const editingInProductIndex = ref<number | null>(null);
+const inProductQtyToFocus = ref<number | null>(null);
 
 const cards = ref<Array<TwoColumnsLayoutCards>>([
     {
@@ -62,6 +93,12 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     { title: "", state: CardState.Hidden, id: "button" },
 ]);
 
+const inProductsForm = computed<StockAdjustmentInProductFormItem[]>(() =>
+    stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[]
+);
+// #endregion
+
+// #region Vue Core
 const handleExpandCard = (index: number) => {
     if (cards.value[index].state === CardState.Collapsed) {
         cards.value[index].state = CardState.Expanded;
@@ -70,20 +107,31 @@ const handleExpandCard = (index: number) => {
     }
 };
 
-const setCode = () => {
-    stockAdjustmentForm.forgetError("code");
-    if (stockAdjustmentForm.code === "_AUTO_") {
-        stockAdjustmentForm.setData({ code: "" });
-    } else {
-        stockAdjustmentForm.setData({ code: "_AUTO_" });
-    }
-};
+watch(
+    () => stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[],
+    (items: StockAdjustmentInProductFormItem[]) => {
+        if (!items) return;
+        items.forEach((item: StockAdjustmentInProductFormItem) => {
+            const qty = Number(item.qty ?? 0);
+            const cogs = Number(item.product_unit_cogs ?? 0);
+            item.product_unit_total_cogs = qty * cogs;
+        });
+    },
+    { deep: true }
+);
 
-const scrollToError = (id: string): void => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
-};
+watch(
+    showProductUnitModal,
+    (open) => {
+        if (!open) return;
+        nextTick(() => {
+            const el = document.getElementById(
+                "product-unit-search-input"
+            ) as HTMLInputElement | null;
+            el?.focus();
+        });
+    }
+);
 
 onMounted(() => {
     if (!isUserLocationSelected.value) {
@@ -106,6 +154,17 @@ onMounted(() => {
     loadInWarehouseDDL();
     loadOutWarehouseDDL();
 });
+// #endregion
+
+// #region Methods - Stock Adjustment
+const setCode = () => {
+    stockAdjustmentForm.forgetError("code");
+    if (stockAdjustmentForm.code === "_AUTO_") {
+        stockAdjustmentForm.setData({ code: "" });
+    } else {
+        stockAdjustmentForm.setData({ code: "_AUTO_" });
+    }
+};
 
 const handleDateTimeChange = () => {
     const value = dateTimeDisplay.value;
@@ -206,27 +265,153 @@ const clearOutWarehouse = () => {
     stockAdjustmentForm.forgetError("out_warehouse_id");
     stockAdjustmentForm.validate("out_warehouse_id");
 };
+// #endregion
+
+// #region Methods - In Products
+const selectProductUnitForIn = (option: ProductUnitOption) => {
+    const baseData: Partial<StockAdjustmentInProductFormItem> = {
+        product_unit_id: option.product_unit_id,
+        product_unit_product_code: option.product_unit_code,
+        product_unit_product_name: option.product_name,
+        product_unit_unit_name: option.unit_name,
+        product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : "",
+        product_unit_conversion_value: option.conversion_value,
+        product_unit_cogs: option.cogs,
+    };
+
+    let targetIndex: number;
+
+    if (editingInProductIndex.value === null) {
+        const item: StockAdjustmentInProductFormItem = {
+            qty: 0,
+            remarks: "",
+            ...baseData,
+        } as StockAdjustmentInProductFormItem;
+
+        stockAdjustmentForm.in_products.push(item);
+        inProductsRemarksExpanded.value.push(false);
+        targetIndex = stockAdjustmentForm.in_products.length - 1;
+    } else {
+        const index = editingInProductIndex.value;
+        const current = stockAdjustmentForm.in_products[index] as StockAdjustmentInProductFormItem;
+        stockAdjustmentForm.in_products[index] = {
+            ...current,
+            ...baseData,
+        };
+        targetIndex = index;
+    }
+
+    showProductUnitModal.value = false;
+    editingInProductIndex.value = null;
+    inProductQtyToFocus.value = targetIndex;
+};
+
+const handleProductUnitModalAfterLeave = () => {
+    if (inProductQtyToFocus.value === null) return;
+    const index = inProductQtyToFocus.value;
+    inProductQtyToFocus.value = null;
+    nextTick(() => {
+        const el = document.getElementById(
+            `in-product-qty-${index}`
+        ) as HTMLInputElement | null;
+        el?.scrollIntoView({ behavior: "smooth", block: "center" });
+        el?.focus();
+        el?.select();
+    });
+};
+
+const searchProductUnits = async () => {
+    if (!selectedUserLocation.value) return;
+
+    isSearchingProductUnit.value = true;
+
+    const result = await productService.readAnyGet({
+        with_trashed: false,
+        company_id: selectedUserLocation.value.company.id,
+        search: productSearchText.value,
+        category_id: undefined,
+        brand_id: undefined,
+        is_taxable: undefined,
+        vat_rate: undefined,
+        is_price_include_vat: undefined,
+        is_use_serial_number: undefined,
+        is_expirable: undefined,
+        type: undefined,
+        status: undefined,
+        include_id: undefined,
+        refresh: false,
+        limit: 20,
+    });
+
+    isSearchingProductUnit.value = false;
+
+    if (result.success && result.data) {
+        const products = result.data.data as any[];
+        productUnitOptions.value = products.flatMap((p: any) => {
+            const units: any[] = p.product_units || [];
+
+            let baseUnit = units.find((u: any) => u.is_base);
+            if (!baseUnit) baseUnit = units.find((u: any) => Number(u.conversion_value) === 1);
+            if (!baseUnit) baseUnit = units.find((u: any) => u.is_primary_unit);
+            if (!baseUnit && units.length > 0) baseUnit = units[0];
+            const baseUnitName = baseUnit && baseUnit.unit ? baseUnit.unit.name : "";
+
+            return units.map((u: any) => ({
+                product_id: p.id,
+                product_code: p.code,
+                product_name: p.name,
+                product_unit_id: u.id,
+                product_unit_code: u.code,
+                unit_name: u.unit ? u.unit.name : "",
+                base_unit_name: baseUnitName,
+                conversion_value: Number(u.conversion_value),
+                cogs: Number(u.price),
+            }));
+        });
+    } else {
+        productUnitOptions.value = [];
+    }
+};
+
+const addInProduct = () => {
+    productSearchText.value = "";
+    productUnitOptions.value = [];
+    isSearchingProductUnit.value = false;
+    editingInProductIndex.value = null;
+    showProductUnitModal.value = true;
+};
+
+const changeInProductProductUnit = (index: number) => {
+    productSearchText.value = "";
+    productUnitOptions.value = [];
+    isSearchingProductUnit.value = false;
+    editingInProductIndex.value = index;
+    showProductUnitModal.value = true;
+};
+
+const toggleInProductRemarks = (index: number) => {
+    const current = inProductsRemarksExpanded.value[index] ?? false;
+    inProductsRemarksExpanded.value[index] = !current;
+};
+
+const removeInProduct = (index: number) => {
+    stockAdjustmentForm.in_products.splice(index, 1);
+    inProductsRemarksExpanded.value.splice(index, 1);
+};
+// #endregion
+
+// #region Actions
+const scrollToError = (id: string): void => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+};
 
 const resetForm = () => {
     stockAdjustmentForm.reset();
     stockAdjustmentForm.setErrors({});
     dateTimeDisplay.value = "";
-};
-
-const addInProduct = () => {
-    const item: StockAdjustmentInProductNestedStoreRequest = {
-        qty: 0,
-        product_unit_id: "",
-        product_unit_conversion_value: 1,
-        product_unit_cogs: 0,
-        remarks: "",
-    };
-
-    stockAdjustmentForm.in_products.push(item);
-};
-
-const removeInProduct = (index: number) => {
-    stockAdjustmentForm.in_products.splice(index, 1);
+    inProductsRemarksExpanded.value = [];
 };
 
 const onSubmit = async () => {
@@ -238,35 +423,65 @@ const onSubmit = async () => {
         return;
     }
 
+    const originalInProducts = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+    const cleanedInProducts: StockAdjustmentInProductNestedStoreRequest[] =
+        originalInProducts.map(
+            ({
+                product_unit_product_code,
+                product_unit_product_name,
+                product_unit_unit_name,
+                product_unit_base_unit_name,
+                product_unit_total_cogs,
+                ...rest
+            }: StockAdjustmentInProductFormItem) => rest
+        );
+
+    const backupInProducts = [...originalInProducts];
+
+    stockAdjustmentForm.in_products = cleanedInProducts as any;
+
     try {
         await stockAdjustmentForm.submit();
         resetForm();
     } catch (error) {
+        stockAdjustmentForm.in_products = backupInProducts as any;
         console.error(error);
     }
 };
+// #endregion
 </script>
 
 <template>
     <form id="stockAdjustmentForm" @submit.prevent="onSubmit">
         <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
+            <!-- company & branch -->
             <template #card-items-0>
                 <div class="p-5">
-                    <FormLabel>
-                        {{ selectedUserLocation.company.code }}
-                        <br />
-                        {{ selectedUserLocation.company.name }}
-                    </FormLabel>
-                    <FormInput type="hidden" v-model="stockAdjustmentForm.company_id" />
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                        <!-- company -->
+                        <div class="col-span-12 lg:col-span-4 md:col-span-6">
+                            <FormLabel>
+                                {{ selectedUserLocation.company.code }}
+                                <br />
+                                {{ selectedUserLocation.company.name }}
+                            </FormLabel>
+                            <FormInput type="hidden" v-model="stockAdjustmentForm.company_id" />
+                        </div>
 
-                    <FormLabel class="mt-5">
-                        {{ selectedUserLocation.branch.code }}
-                        <br />
-                        {{ selectedUserLocation.branch.name }}
-                    </FormLabel>
-                    <FormInput type="hidden" v-model="stockAdjustmentForm.branch_id" />
+                        <!-- branch -->
+                        <div class="col-span-12 lg:col-span-4 md:col-span-6">
+                            <FormLabel>
+                                {{ selectedUserLocation.branch.code }}
+                                <br />
+                                {{ selectedUserLocation.branch.name }}
+                            </FormLabel>
+                            <FormInput type="hidden" v-model="stockAdjustmentForm.branch_id" />
+                        </div>
+                    </div>
                 </div>
             </template>
+
+            <!-- stock_adjustment -->
             <template #card-items-1>
                 <div class="p-5">
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
@@ -385,94 +600,144 @@ const onSubmit = async () => {
                     </div>
                 </div>
             </template>
+
+            <!-- in_product -->
             <template #card-items-2>
                 <div class="p-5">
-                    <div class="flex items-center justify-between mb-4">
-                        <FormLabel>
-                            {{ t("views.stock_adjustment.field_groups.in_products") }}
-                        </FormLabel>
-                        <Button type="button" variant="primary" class="shadow-md" @click="addInProduct">
-                            {{ t("views.stock_adjustment_in_product.actions.create") }}
-                        </Button>
-                    </div>
-
                     <div v-if="stockAdjustmentForm.in_products.length === 0" class="text-slate-500 text-sm">
                         {{ t("components.data-list.data_not_found") }}
                     </div>
 
+                    <!-- in_product list -->
                     <div v-else class="space-y-5">
-                        <div v-for="(item, index) in stockAdjustmentForm.in_products" :key="index"
+                        <div v-for="(item, index) in inProductsForm" :key="index"
                             class="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-4">
+                            <!-- in_product actions -->
                             <div class="flex items-center justify-between mb-3">
                                 <div class="font-medium text-sm">
                                     {{ t("views.stock_adjustment_in_product.page_title") }} #{{ index + 1 }}
                                 </div>
-                                <Button type="button" variant="outline-secondary" class="px-2 py-1"
-                                    @click="removeInProduct(index)">
-                                    <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                                </Button>
+                                <div class="flex items-center gap-2">
+                                    <Button type="button" class="text-xs text-slate-500 hover:text-primary"
+                                        @click="toggleInProductRemarks(index)">
+                                        {{ inProductsRemarksExpanded[index] ? '▲' : '▼' }}
+                                    </Button>
+                                    <Button type="button" variant="outline-secondary" @click="removeInProduct(index)">
+                                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                                    </Button>
+                                </div>
                             </div>
 
+                            <!-- in_product fields -->
                             <div class="grid grid-cols-12 gap-4 gap-y-3">
-                                <div class="col-span-12 lg:col-span-3">
+                                <!-- qty -->
+                                <div class="col-span-12 lg:col-span-2">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any) }">
                                         {{ t("views.stock_adjustment_in_product.fields.qty") }}
                                     </FormLabel>
-                                    <FormInput type="number" min="0"
-                                        v-model.number="stockAdjustmentForm.in_products[index].qty"
-                                        :class="{ 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any) }"
-                                        @change="stockAdjustmentForm.validate(`in_products.${index}.qty` as any)" />
+                                    <FormInputCurrency :id="`in-product-qty-${index}`" v-model="item.qty"
+                                        @change="stockAdjustmentForm.validate(`in_products.${index}.qty` as any)"
+                                        :class="[
+                                            'text-right',
+                                            { 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any) },
+                                        ]" />
                                     <FormErrorMessages
                                         :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.qty`]" />
+                                    <div class="text-sm text-slate-500 text-right font-bold mt-1">
+                                        {{ item.product_unit_unit_name }}
+                                    </div>
                                 </div>
 
-                                <div class="col-span-12 lg:col-span-3">
+                                <!-- product description (name + code) -->
+                                <div class="col-span-12 lg:col-span-5">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_id` as any) }">
-                                        {{ t("views.stock_adjustment_in_product.fields.product_unit_id") }}
+                                        {{ t("views.stock_adjustment_in_product.table.cols.product") }}
                                     </FormLabel>
-                                    <FormInput
-                                        v-model="stockAdjustmentForm.in_products[index].product_unit_id"
-                                        :class="{ 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_id` as any) }"
-                                        @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_id` as any)" />
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex-1">
+                                            <div
+                                                class="form-control border rounded-md px-3 py-2 bg-slate-50 dark:bg-darkmode-800 text-slate-700 dark:text-slate-300">
+                                                {{ item.product_unit_product_name || '-' }}
+                                            </div>
+                                        </div>
+                                        <Button type="button" variant="outline-secondary" tabindex="-1"
+                                            class="flex items-center justify-center border-slate-500 text-slate-500 hover:text-primary hover:border-primary"
+                                            @click="changeInProductProductUnit(index)">
+                                            <Lucide icon="Search" class="w-4 h-4" />
+                                        </Button>
+                                    </div>
                                     <FormErrorMessages
                                         :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_id`]" />
+                                    <div class="text-sm text-slate-500 font-bold mt-1">
+                                        {{ item.product_unit_product_code }}
+                                    </div>
                                 </div>
 
-                                <div class="col-span-12 lg:col-span-3">
+                                <!-- product_unit_conversion_value -->
+                                <div class="col-span-12 lg:col-span-1">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_conversion_value` as any) }">
-                                        {{ t("views.stock_adjustment_in_product.fields.product_unit_conversion_value") }}
+                                        {{ t("views.stock_adjustment_in_product.fields.product_unit_conversion_value")
+                                        }}
                                     </FormLabel>
-                                    <FormInput type="number" min="0" step="0.0001"
-                                        v-model.number="stockAdjustmentForm.in_products[index].product_unit_conversion_value"
-                                        :class="{ 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_conversion_value` as any) }"
-                                        @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_conversion_value` as any)" />
+                                    <FormInputCurrency v-model="item.product_unit_conversion_value" tabindex="-1"
+                                        @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_conversion_value` as any)"
+                                        :class="[
+                                            'text-right',
+                                            { 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_conversion_value` as any) },
+                                        ]" />
                                     <FormErrorMessages
                                         :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_conversion_value`]" />
+                                    <div class="text-sm text-slate-500 text-right font-bold mt-1">
+                                        {{ item.product_unit_base_unit_name }}
+                                    </div>
                                 </div>
 
-                                <div class="col-span-12 lg:col-span-3">
+                                <!-- product_unit_cogs -->
+                                <div class="col-span-12 lg:col-span-2">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_cogs` as any) }">
                                         {{ t("views.stock_adjustment_in_product.fields.product_unit_cogs") }}
                                     </FormLabel>
-                                    <FormInput type="number" min="0" step="0.01"
-                                        v-model.number="stockAdjustmentForm.in_products[index].product_unit_cogs"
-                                        :class="{ 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_cogs` as any) }"
-                                        @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_cogs` as any)" />
+                                    <FormInputCurrency v-model="item.product_unit_cogs"
+                                        @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_cogs` as any)"
+                                        :class="[
+                                            'text-right',
+                                            { 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_cogs` as any) },
+                                        ]" />
                                     <FormErrorMessages
                                         :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_cogs`]" />
+                                    <div v-if="item.product_unit_conversion_value > 1 && item.product_unit_cogs && item.product_unit_base_unit_name"
+                                        class="text-sm text-slate-500 text-right font-bold mt-1">
+                                        {{
+                                            formatCurrency(
+                                                (
+                                                    item.product_unit_cogs /
+                                                    item.product_unit_conversion_value
+                                                ).toFixed(2)
+                                            )
+                                        }} / {{ item.product_unit_base_unit_name }}
+                                    </div>
                                 </div>
 
-                                <div class="col-span-12">
+                                <!-- product_unit_total_cogs -->
+                                <div class="col-span-12 lg:col-span-2">
+                                    <FormLabel>
+                                        {{ t("views.stock_adjustment_in_product.fields.product_unit_total_cogs") }}
+                                    </FormLabel>
+                                    <FormInputCurrency :model-value="item.product_unit_total_cogs ?? 0" readonly
+                                        tabindex="-1" class="text-right" />
+                                </div>
+
+                                <!-- product_unit_remarks -->
+                                <div v-if="inProductsRemarksExpanded[index]" class="col-span-12">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any) }">
                                         {{ t("views.stock_adjustment_in_product.fields.remarks") }}
                                     </FormLabel>
-                                    <FormTextarea rows="2"
-                                        v-model="stockAdjustmentForm.in_products[index].remarks"
+                                    <FormTextarea rows="2" v-model="stockAdjustmentForm.in_products[index].remarks"
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any) }"
                                         @change="stockAdjustmentForm.validate(`in_products.${index}.remarks` as any)" />
                                     <FormErrorMessages
@@ -481,9 +746,20 @@ const onSubmit = async () => {
                             </div>
                         </div>
                     </div>
+
+                    <!-- in_product actions -->
+                    <div class="flex items-center justify-between mt-4">
+                        <FormLabel>
+                            <!-- {{ t("views.stock_adjustment.field_groups.in_products") }} -->
+                        </FormLabel>
+                        <Button type="button" variant="primary" class="shadow-md" @click="addInProduct">
+                            {{ t("views.stock_adjustment_in_product.actions.create") }}
+                        </Button>
+                    </div>
                 </div>
             </template>
 
+            <!-- stock_adjustment actions -->
             <template #card-items-button>
                 <div class="flex gap-4 p-5">
                     <Button type="submit" href="#" variant="primary" class="w-28 shadow-md"
@@ -499,5 +775,94 @@ const onSubmit = async () => {
                 </div>
             </template>
         </TwoColumnsLayout>
+        <Dialog size="xl" :open="showProductUnitModal" @close="() => { showProductUnitModal = false; }"
+            @after-leave="handleProductUnitModalAfterLeave">
+            <Dialog.Panel>
+                <div class="p-5">
+                    <!-- title -->
+                    <div class="flex items-center justify-between mb-4">
+                        <FormLabel>
+                            {{ t("views.stock_adjustment_in_product.table.title") }}
+                        </FormLabel>
+                        <button type="button" class="text-slate-500 hover:text-danger"
+                            @click="showProductUnitModal = false">
+                            <Lucide icon="X" class="w-4 h-4" />
+                        </button>
+                    </div>
+
+                    <!-- search box -->
+                    <div class="flex items-center gap-2 mb-4">
+                        <FormInput id="product-unit-search-input" v-model="productSearchText" type="text"
+                            :placeholder="t('components.search-box.placeholder.search')"
+                            @keyup.enter="searchProductUnits" />
+                        <Button type="button" variant="primary" class="shadow-md" @click="searchProductUnits"
+                            tabindex="-1" :disabled="isSearchingProductUnit">
+                            <template v-if="isSearchingProductUnit">
+                                <Lucide icon="Loader" class="w-4 h-4 animate-spin" />
+                            </template>
+                            <template v-else>
+                                {{ t("components.buttons.search") }}
+                            </template>
+                        </Button>
+                    </div>
+
+                    <!-- product unit table -->
+                    <div class="max-h-80 overflow-auto border border-slate-200/60 dark:border-darkmode-400 rounded-md">
+                        <table class="min-w-full text-sm">
+                            <thead class="bg-slate-100 dark:bg-darkmode-600">
+                                <tr>
+                                    <th class="px-3 py-2 text-left">
+                                        {{ t("views.stock_adjustment_in_product.table.cols.product") }}
+                                    </th>
+                                    <th class="px-3 py-2 text-left">
+                                        {{ t("views.product.table.cols.unit") }}
+                                    </th>
+                                    <th class="px-3 py-2 text-right">
+                                        {{ t("views.product.fields.conversion_value") }}
+                                    </th>
+                                    <th class="px-3 py-2 text-right">
+                                        {{ t("views.stock_adjustment_in_product.table.cols.product_unit_cogs") }}
+                                    </th>
+                                    <th class="px-3 py-2"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="productUnitOptions.length === 0">
+                                    <td colspan="5" class="px-3 py-4 text-center text-slate-500">
+                                        {{ t("components.data-list.data_not_found") }}
+                                    </td>
+                                </tr>
+                                <tr v-for="(opt, idx) in productUnitOptions" :key="idx"
+                                    class="border-t border-slate-200/60 dark:border-darkmode-400">
+                                    <!-- product -->
+                                    <td class="px-3 py-2">
+                                        [{{ opt.product_code }}] {{ opt.product_name }}
+                                    </td>
+                                    <!-- unit -->
+                                    <td class="px-3 py-2">
+                                        {{ opt.unit_name }}
+                                    </td>
+                                    <!-- conversion_value -->
+                                    <td class="px-3 py-2 text-right">
+                                        {{ formatCurrency(opt.conversion_value) }}
+                                    </td>
+                                    <!-- product_unit_cogs -->
+                                    <td class="px-3 py-2 text-right">
+                                        {{ formatCurrency(opt.cogs) }}
+                                    </td>
+                                    <!-- select button -->
+                                    <td class="px-3 py-2 text-right">
+                                        <Button type="button" variant="primary" size="sm"
+                                            @click="selectProductUnitForIn(opt)">
+                                            {{ t("components.buttons.select") }}
+                                        </Button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </Dialog.Panel>
+        </Dialog>
     </form>
 </template>
