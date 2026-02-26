@@ -1,3 +1,3 @@
-import SidebarPop from "./SidebarPop.vue";
+import SidebarPop from './SidebarPop.vue';
 
 export default SidebarPop;

@@ -1,3 +1,3 @@
-import MobileMenu from "./MobileMenu.vue";
+import MobileMenu from './MobileMenu.vue';
 
 export default MobileMenu;

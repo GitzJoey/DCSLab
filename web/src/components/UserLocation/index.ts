@@ -1,3 +1,3 @@
-import UserLocation from "./UserLocation.vue";
+import UserLocation from './UserLocation.vue';
 
 export default UserLocation;

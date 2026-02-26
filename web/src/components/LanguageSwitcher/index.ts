@@ -1,3 +1,3 @@
-import LanguageSwitcher from "./LanguageSwitcher.vue";
+import LanguageSwitcher from './LanguageSwitcher.vue';
 
 export default LanguageSwitcher;

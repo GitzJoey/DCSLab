@@ -2,7 +2,12 @@
     "name": "gitzjoey/dcslab",
     "type": "project",
     "description": "DCSLab - Laravel Always Updated ERP System.",
-    "keywords": ["ERP", "framework", "laravel", "gitzjoey"],
+    "keywords": [
+        "ERP",
+        "framework",
+        "laravel",
+        "gitzjoey"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",

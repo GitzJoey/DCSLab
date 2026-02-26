@@ -1,23 +1,19 @@
-import { AxiosError, AxiosResponse } from "axios";
-import { ServiceResponse } from "../types/services/ServiceResponse";
+import { AxiosError, AxiosResponse } from 'axios';
+import { ServiceResponse } from '../types/services/ServiceResponse';
 
 export default class ErrorHandlerService {
-  public generateZiggyUrlErrorServiceResponse(
-    message?: string,
-  ): ServiceResponse<null> {
+  public generateZiggyUrlErrorServiceResponse(message?: string): ServiceResponse<null> {
     const result: ServiceResponse<null> = {
       success: false,
       errors: {
-        ziggy: [message ? message : "Ziggy error: unknown"],
+        ziggy: [message ? message : 'Ziggy error: unknown'],
       },
     };
 
     return result;
   }
 
-  public generateAxiosValidationErrorServiceResponse(
-    axiosErr: AxiosError,
-  ): ServiceResponse<null> {
+  public generateAxiosValidationErrorServiceResponse(axiosErr: AxiosError): ServiceResponse<null> {
     const result: ServiceResponse<null> = {
       success: false,
     };
@@ -36,21 +32,14 @@ export default class ErrorHandlerService {
     return result;
   }
 
-  public generateAxiosErrorServiceResponse(
-    axiosErr: AxiosError,
-  ): ServiceResponse<null> {
+  public generateAxiosErrorServiceResponse(axiosErr: AxiosError): ServiceResponse<null> {
     const axiosResp = axiosErr.response as AxiosResponse;
 
     const result: ServiceResponse<null> = {
       success: false,
       errors: {
         axios: [
-          axiosResp.data.message +
-            " (" +
-            axiosResp.status +
-            ":" +
-            axiosResp.statusText +
-            ")",
+          axiosResp.data.message + ' (' + axiosResp.status + ':' + axiosResp.statusText + ')',
         ],
       },
     };

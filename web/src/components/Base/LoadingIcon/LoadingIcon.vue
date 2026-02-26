@@ -1,34 +1,34 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useDarkModeStore } from "@/stores/dark-mode";
+  import { computed } from 'vue';
+  import { useDarkModeStore } from '@/stores/dark-mode';
 
-const props = withDefaults(
-  defineProps<{
-    icon:
-      | "audio"
-      | "ball-triangle"
-      | "bars"
-      | "circles"
-      | "grid"
-      | "hearts"
-      | "oval"
-      | "puff"
-      | "rings"
-      | "spinning-circles"
-      | "tail-spin"
-      | "three-dots";
-    color?: string;
-  }>(),
-  {
-    color: "#2d3748",
-  },
-);
+  const props = withDefaults(
+    defineProps<{
+      icon:
+        | 'audio'
+        | 'ball-triangle'
+        | 'bars'
+        | 'circles'
+        | 'grid'
+        | 'hearts'
+        | 'oval'
+        | 'puff'
+        | 'rings'
+        | 'spinning-circles'
+        | 'tail-spin'
+        | 'three-dots';
+      color?: string;
+    }>(),
+    {
+      color: '#2d3748',
+    },
+  );
 
-const darkMode = computed(() => useDarkModeStore().darkMode);
-const iconColor = computed(() => {
-  return !darkMode.value ? props.color : "#ffffff";
-});
-const { icon } = props;
+  const darkMode = computed(() => useDarkModeStore().darkMode);
+  const iconColor = computed(() => {
+    return !darkMode.value ? props.color : '#ffffff';
+  });
+  const { icon } = props;
 </script>
 
 <template>
@@ -512,12 +512,7 @@ const { icon } = props;
       :stroke="iconColor"
       class="w-full h-full"
     >
-      <g
-        fill="none"
-        fill-rule="evenodd"
-        transform="translate(1 1)"
-        stroke-width="3"
-      >
+      <g fill="none" fill-rule="evenodd" transform="translate(1 1)" stroke-width="3">
         <circle cx="22" cy="22" r="6" stroke-opacity="0">
           <animate
             attributeName="r"
@@ -591,13 +586,7 @@ const { icon } = props;
     >
       <g fill="none" fill-rule="evenodd">
         <g transform="translate(2 1)" :stroke="iconColor" stroke-width="1.5">
-          <circle
-            cx="42.601"
-            cy="11.462"
-            r="5"
-            fill-opacity="1"
-            :fill="iconColor"
-          >
+          <circle cx="42.601" cy="11.462" r="5" fill-opacity="1" :fill="iconColor">
             <animate
               attributeName="fill-opacity"
               begin="0s"
@@ -607,13 +596,7 @@ const { icon } = props;
               repeatCount="indefinite"
             />
           </circle>
-          <circle
-            cx="49.063"
-            cy="27.063"
-            r="5"
-            fill-opacity="0"
-            :fill="iconColor"
-          >
+          <circle cx="49.063" cy="27.063" r="5" fill-opacity="0" :fill="iconColor">
             <animate
               attributeName="fill-opacity"
               begin="0s"
@@ -623,13 +606,7 @@ const { icon } = props;
               repeatCount="indefinite"
             />
           </circle>
-          <circle
-            cx="42.601"
-            cy="42.663"
-            r="5"
-            fill-opacity="0"
-            :fill="iconColor"
-          >
+          <circle cx="42.601" cy="42.663" r="5" fill-opacity="0" :fill="iconColor">
             <animate
               attributeName="fill-opacity"
               begin="0s"
@@ -649,13 +626,7 @@ const { icon } = props;
               repeatCount="indefinite"
             />
           </circle>
-          <circle
-            cx="11.399"
-            cy="42.663"
-            r="5"
-            fill-opacity="0"
-            :fill="iconColor"
-          >
+          <circle cx="11.399" cy="42.663" r="5" fill-opacity="0" :fill="iconColor">
             <animate
               attributeName="fill-opacity"
               begin="0s"
@@ -665,13 +636,7 @@ const { icon } = props;
               repeatCount="indefinite"
             />
           </circle>
-          <circle
-            cx="4.938"
-            cy="27.063"
-            r="5"
-            fill-opacity="0"
-            :fill="iconColor"
-          >
+          <circle cx="4.938" cy="27.063" r="5" fill-opacity="0" :fill="iconColor">
             <animate
               attributeName="fill-opacity"
               begin="0s"
@@ -681,13 +646,7 @@ const { icon } = props;
               repeatCount="indefinite"
             />
           </circle>
-          <circle
-            cx="11.399"
-            cy="11.462"
-            r="5"
-            fill-opacity="0"
-            :fill="iconColor"
-          >
+          <circle cx="11.399" cy="11.462" r="5" fill-opacity="0" :fill="iconColor">
             <animate
               attributeName="fill-opacity"
               begin="0s"
@@ -726,12 +685,7 @@ const { icon } = props;
       </defs>
       <g fill="none" fill-rule="evenodd">
         <g transform="translate(1 1)">
-          <path
-            id="Oval-2"
-            d="M36 18c0-9.94-8.06-18-18-18"
-            stroke="url(#a)"
-            stroke-width="3"
-          >
+          <path id="Oval-2" d="M36 18c0-9.94-8.06-18-18-18" stroke="url(#a)" stroke-width="3">
             <animateTransform
               attributeName="transform"
               type="rotate"

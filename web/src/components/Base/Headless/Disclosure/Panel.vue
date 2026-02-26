@@ -1,35 +1,30 @@
 <script lang="ts">
-export default {
-  inheritAttrs: false,
-};
+  export default {
+    inheritAttrs: false,
+  };
 </script>
 
 <script setup lang="ts">
-import _ from "lodash";
-import { twMerge } from "tailwind-merge";
-import {
-  DisclosurePanel as HeadlessDisclosurePanel,
-  TransitionRoot,
-} from "@headlessui/vue";
-import { useAttrs, computed } from "vue";
+  import _ from 'lodash';
+  import { twMerge } from 'tailwind-merge';
+  import { DisclosurePanel as HeadlessDisclosurePanel, TransitionRoot } from '@headlessui/vue';
+  import { useAttrs, computed } from 'vue';
 
-interface PanelProps extends /* @vue-ignore */ ExtractProps<
-  typeof HeadlessDisclosurePanel
-> {
-  as?: string | object;
-}
+  interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosurePanel> {
+    as?: string | object;
+  }
 
-const { as } = withDefaults(defineProps<PanelProps>(), {
-  as: "div",
-});
+  const { as } = withDefaults(defineProps<PanelProps>(), {
+    as: 'div',
+  });
 
-const attrs = useAttrs();
-const computedClass = computed(() =>
-  twMerge([
-    "mt-3 text-slate-700 leading-relaxed dark:text-slate-400",
-    typeof attrs.class === "string" && attrs.class,
-  ]),
-);
+  const attrs = useAttrs();
+  const computedClass = computed(() =>
+    twMerge([
+      'mt-3 text-slate-700 leading-relaxed dark:text-slate-400',
+      typeof attrs.class === 'string' && attrs.class,
+    ]),
+  );
 </script>
 
 <template>
@@ -44,11 +39,7 @@ const computedClass = computed(() =>
     leaveTo="mt-0 max-h-0 invisible opacity-0"
   >
     <HeadlessDisclosurePanel as="template">
-      <component
-        :is="as"
-        :class="computedClass"
-        v-bind="_.omit(attrs, 'class')"
-      >
+      <component :is="as" :class="computedClass" v-bind="_.omit(attrs, 'class')">
         <slot></slot>
       </component>
     </HeadlessDisclosurePanel>

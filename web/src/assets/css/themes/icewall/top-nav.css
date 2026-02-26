@@ -1,8 +1,8 @@
-@import "@left4code/tw-starter/dist/css/mixins/_media.css";
+@import '@left4code/tw-starter/dist/css/mixins/_media.css';
 
 .icewall {
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -29,32 +29,32 @@
       height: 55px;
       display: flex;
       align-items: center;
-      padding-left: theme("spacing.5");
-      padding-right: theme("spacing.5");
-      margin-right: theme("spacing.1");
+      padding-left: theme('spacing.5');
+      padding-right: theme('spacing.5');
+      margin-right: theme('spacing.1');
       color: white;
       position: relative;
-      border-radius: theme("borderRadius.full");
+      border-radius: theme('borderRadius.full');
       @media screen(xl) {
         height: 47px;
-        border-radius: theme("borderRadius.lg");
+        border-radius: theme('borderRadius.lg');
       }
       .top-menu__icon {
         z-index: 10;
       }
       .top-menu__title {
         width: 100%;
-        margin-left: theme("spacing.3");
+        margin-left: theme('spacing.3');
         display: flex;
         align-items: center;
         white-space: nowrap;
         z-index: 10;
         .top-menu__sub-icon {
-          transition-property: theme("transitionProperty.DEFAULT");
-          transition-timing-function: theme("transitionTimingFunction.in");
-          transition-duration: theme("transitionDuration.100");
-          width: theme("spacing.4");
-          height: theme("spacing.4");
+          transition-property: theme('transitionProperty.DEFAULT');
+          transition-timing-function: theme('transitionTimingFunction.in');
+          transition-duration: theme('transitionDuration.100');
+          width: theme('spacing.4');
+          height: theme('spacing.4');
           display: none;
           @media screen(xl) {
             display: block;
@@ -81,21 +81,21 @@
         &:hover {
           position: relative;
           & > .top-menu {
-            background: theme("colors.theme.1"/ 60%);
+            background: theme('colors.theme.1'/ 60%);
             &:before {
-              content: "";
+              content: '';
               display: block;
               top: 0;
               left: 0;
               right: 0;
               bottom: 0;
-              background-color: theme("colors.white" / 4%);
-              border-radius: theme("borderRadius.full");
+              background-color: theme('colors.white' / 4%);
+              border-radius: theme('borderRadius.full');
               position: absolute;
               z-index: -1;
               @media screen(xl) {
-                background-color: theme("colors.white" / 10%);
-                border-radius: theme("borderRadius.lg");
+                background-color: theme('colors.white' / 10%);
+                border-radius: theme('borderRadius.lg');
               }
             }
             .top-menu__title {
@@ -111,27 +111,27 @@
         & > .top-menu {
           margin-top: 3px;
           &.top-menu--active {
-            background-color: theme("colors.slate.100");
+            background-color: theme('colors.slate.100');
             @media screen(xl) {
-              background-color: theme("colors.theme.1");
+              background-color: theme('colors.theme.1');
             }
             &:before {
-              content: "";
+              content: '';
               display: none;
               top: 0;
               left: 0;
               right: 0;
               bottom: 0;
-              background-color: theme("colors.white" / 8%);
-              border-radius: theme("borderRadius.lg");
+              background-color: theme('colors.white' / 8%);
+              border-radius: theme('borderRadius.lg');
               position: absolute;
-              border-bottom: 3px solid theme("colors.black" / 10%);
+              border-bottom: 3px solid theme('colors.black' / 10%);
               @media screen(xl) {
                 display: block;
               }
             }
             &:after {
-              content: "";
+              content: '';
               animation: 0.3s ease-in-out 1s active-top-menu-chevron;
               animation-fill-mode: forwards;
               display: none;
@@ -154,14 +154,14 @@
               }
             }
             .top-menu__icon {
-              color: theme("colors.theme.1");
+              color: theme('colors.theme.1');
               @media screen(xl) {
                 color: white;
               }
             }
             .top-menu__title {
-              font-weight: theme("fontWeight.medium");
-              color: theme("colors.slate.800");
+              font-weight: theme('fontWeight.medium');
+              color: theme('colors.slate.800');
               @media screen(xl) {
                 color: white;
               }
@@ -173,49 +173,49 @@
           .top-menu__title {
             margin-top: -3px;
             .top-menu__sub-icon {
-              margin-left: theme("spacing.2");
+              margin-left: theme('spacing.2');
             }
           }
         }
         & > ul {
           box-shadow: 0px 3px 20px #0000000b;
-          background-color: theme("colors.theme.1");
+          background-color: theme('colors.theme.1');
           display: none;
-          width: theme("spacing.56");
+          width: theme('spacing.56');
           position: absolute;
-          border-radius: theme("borderRadius.md");
+          border-radius: theme('borderRadius.md');
           z-index: 20;
           padding-left: 0;
           padding-right: 0;
-          margin-top: theme("spacing.1");
+          margin-top: theme('spacing.1');
           &:before {
-            content: "";
+            content: '';
             display: block;
             position: absolute;
             width: 100%;
             height: 100%;
-            background-color: theme("colors.white" / 4%);
+            background-color: theme('colors.white' / 4%);
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            border-radius: theme("borderRadius.md");
+            border-radius: theme('borderRadius.md');
             z-index: -1;
           }
           &:after {
-            content: "";
+            content: '';
             width: 100%;
-            height: theme("spacing.1");
+            height: theme('spacing.1');
             position: absolute;
             top: 0;
             left: 0;
-            margin-top: calc(theme("spacing.1") * -1);
+            margin-top: calc(theme('spacing.1') * -1);
             cursor: pointer;
           }
           & > li {
             /* Second level */
-            padding-left: theme("spacing.5");
-            padding-right: theme("spacing.5");
+            padding-left: theme('spacing.5');
+            padding-right: theme('spacing.5');
             position: relative;
             &:hover {
               position: relative;
@@ -244,35 +244,35 @@
             & > ul {
               box-shadow: 0px 3px 20px #0000000b;
               left: 100%;
-              background-color: theme("colors.theme.1");
+              background-color: theme('colors.theme.1');
               display: none;
-              border-radius: theme("borderRadius.md");
+              border-radius: theme('borderRadius.md');
               margin-top: 0;
               margin-left: 0;
               top: 0;
-              width: theme("spacing.56");
+              width: theme('spacing.56');
               position: absolute;
               z-index: 20;
               padding-left: 0;
               padding-right: 0;
               &:before {
-                content: "";
+                content: '';
                 display: block;
                 position: absolute;
                 width: 100%;
                 height: 100%;
-                background-color: theme("colors.white" / 4%);
+                background-color: theme('colors.white' / 4%);
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                border-radius: theme("borderRadius.md");
+                border-radius: theme('borderRadius.md');
                 z-index: -1;
               }
               & > li {
                 /* Third level */
-                padding-left: theme("spacing.5");
-                padding-right: theme("spacing.5");
+                padding-left: theme('spacing.5');
+                padding-right: theme('spacing.5');
                 & > .top-menu {
                   padding-left: 0;
                   padding-right: 0;
@@ -329,10 +329,10 @@
     .top-nav {
       .top-menu {
         .top-menu__icon {
-          color: theme("colors.slate.400");
+          color: theme('colors.slate.400');
         }
         .top-menu__title {
-          color: theme("colors.slate.400");
+          color: theme('colors.slate.400');
         }
       }
       & > ul {
@@ -343,41 +343,41 @@
               &:not(.top-menu--active) {
                 background-color: transparent;
                 &:before {
-                  background-color: theme("colors.darkmode.700");
+                  background-color: theme('colors.darkmode.700');
                 }
               }
             }
           }
           & > .top-menu {
             &.top-menu--active {
-              background-color: theme("colors.darkmode.700");
+              background-color: theme('colors.darkmode.700');
               &:before {
-                background-color: theme("colors.darkmode.700");
+                background-color: theme('colors.darkmode.700');
               }
               &:after {
                 background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='80' viewBox='0 0 20 122.1'%3E%3Cpath data-name='Union 1' d='M16.038 122H16v-2.213a95.805 95.805 0 00-2.886-20.735 94.894 94.894 0 00-7.783-20.434A39.039 39.039 0 010 61.051a39.035 39.035 0 015.331-17.567 94.9 94.9 0 007.783-20.435A95.746 95.746 0 0016 2.314V0h4v122h-3.961v.1l-.001-.1z' fill='%23232e45'/%3E%3C/svg%3E");
               }
               .top-menu__icon {
-                color: theme("colors.white");
+                color: theme('colors.white');
               }
               .top-menu__title {
-                color: theme("colors.white");
+                color: theme('colors.white');
               }
             }
           }
           & > ul {
-            background-color: theme("colors.darkmode.600");
+            background-color: theme('colors.darkmode.600');
             box-shadow: 0px 3px 7px #0000001c;
             &:before {
-              background-color: theme("colors.black" / 10%);
+              background-color: theme('colors.black' / 10%);
             }
             & > li {
               /* Second level */
               & > ul {
-                background-color: theme("colors.darkmode.600");
+                background-color: theme('colors.darkmode.600');
                 box-shadow: 0px 3px 7px #0000001c;
                 &:before {
-                  background-color: theme("colors.black" / 10%);
+                  background-color: theme('colors.black' / 10%);
                 }
               }
             }

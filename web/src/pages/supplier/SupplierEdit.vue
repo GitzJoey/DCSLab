@@ -1,249 +1,241 @@
 <script setup lang="ts">
-// #region Imports
-import { onMounted, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import { convertErrorTypeToAlertListType } from "@/utils/helper";
-import { useRoute, useRouter } from "vue-router";
-import SupplierService from "@/services/SupplierService";
-import DashboardService from "@/services/DashboardService";
-import CacheService from "@/services/CacheService";
-import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
-import {
-  FormInput,
-  FormLabel,
-  FormTextarea,
-  FormSelect,
-  FormSwitch,
-  FormInputCode,
-  FormErrorMessages,
-  FormCheck,
-} from "@/components/Base/Form";
-import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
-import { CardState } from "@/types/enums/CardState";
-import { DropDownOption } from "@/types/models/DropDownOption";
-import { ServiceResponse } from "@/types/services/ServiceResponse";
-import { ViewMode } from "@/types/enums/ViewMode";
-import Button from "@/components/Base/Button";
-import { debounce } from "lodash";
-import Lucide from "@/components/Base/Lucide";
-import { Supplier } from "@/types/models/Supplier";
-import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
-import { storeToRefs } from "pinia";
-import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
-import { ErrorCode } from "@/types/enums/ErrorCode";
-// #endregion
+  // #region Imports
+  import { onMounted, ref, watch } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { convertErrorTypeToAlertListType } from '@/utils/helper';
+  import { useRoute, useRouter } from 'vue-router';
+  import SupplierService from '@/services/SupplierService';
+  import DashboardService from '@/services/DashboardService';
+  import CacheService from '@/services/CacheService';
+  import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
+  import {
+    FormInput,
+    FormLabel,
+    FormTextarea,
+    FormSelect,
+    FormSwitch,
+    FormInputCode,
+    FormErrorMessages,
+    FormCheck,
+  } from '@/components/Base/Form';
+  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
+  import { CardState } from '@/types/enums/CardState';
+  import { DropDownOption } from '@/types/models/DropDownOption';
+  import { ServiceResponse } from '@/types/services/ServiceResponse';
+  import { ViewMode } from '@/types/enums/ViewMode';
+  import Button from '@/components/Base/Button';
+  import { debounce } from 'lodash';
+  import Lucide from '@/components/Base/Lucide';
+  import { Supplier } from '@/types/models/Supplier';
+  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  import { storeToRefs } from 'pinia';
+  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
+  import { ErrorCode } from '@/types/enums/ErrorCode';
+  // #endregion
 
-// #region Declarations
-const { t } = useI18n();
-const route = useRoute();
-const router = useRouter();
+  // #region Declarations
+  const { t } = useI18n();
+  const route = useRoute();
+  const router = useRouter();
 
-const supplierServices = new SupplierService();
-const dashboardServices = new DashboardService();
-const cacheServices = new CacheService();
+  const supplierServices = new SupplierService();
+  const dashboardServices = new DashboardService();
+  const cacheServices = new CacheService();
 
-const selectedUserLocationStore = useSelectedUserLocationStore();
-const { isUserLocationSelected } = storeToRefs(selectedUserLocationStore);
+  const selectedUserLocationStore = useSelectedUserLocationStore();
+  const { isUserLocationSelected } = storeToRefs(selectedUserLocationStore);
 
-const form = supplierServices.useSupplierEditForm(route.params.ulid as string);
-// #endregion
+  const form = supplierServices.useSupplierEditForm(route.params.ulid as string);
+  // #endregion
 
-// #region Props, Emits
-const emits = defineEmits([
-  "mode-state",
-  "loading-state",
-  "update-profile",
-  "show-alert-placeholder",
-]);
-// #endregion
+  // #region Props, Emits
+  const emits = defineEmits([
+    'mode-state',
+    'loading-state',
+    'update-profile',
+    'show-alert-placeholder',
+  ]);
+  // #endregion
 
-// #region Refs
-const cards = ref<Array<TwoColumnsLayoutCards>>([
-  {
-    title: "views.supplier.field_groups.general",
-    state: CardState.Expanded,
-    id: "general",
-  },
-  {
-    title: "views.supplier.field_groups.finance",
-    state: CardState.Expanded,
-    id: "finance",
-  },
-  {
-    title: "",
-    state: CardState.Hidden,
-    id: "button",
-  },
-]);
+  // #region Refs
+  const cards = ref<Array<TwoColumnsLayoutCards>>([
+    {
+      title: 'views.supplier.field_groups.general',
+      state: CardState.Expanded,
+      id: 'general',
+    },
+    {
+      title: 'views.supplier.field_groups.finance',
+      state: CardState.Expanded,
+      id: 'finance',
+    },
+    {
+      title: '',
+      state: CardState.Hidden,
+      id: 'button',
+    },
+  ]);
 
-const statusDDL = ref<Array<DropDownOption> | null>(null);
-const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
-const isDDLLoading = ref<boolean>(false);
-// #endregion
+  const statusDDL = ref<Array<DropDownOption> | null>(null);
+  const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
+  const isDDLLoading = ref<boolean>(false);
+  // #endregion
 
-// #region Computed
-// #endregion
+  // #region Computed
+  // #endregion
 
-// #region Methods
-const loadData = async (ulid: string) => {
-  emits("loading-state", true);
-  let result: ServiceResponse<Supplier | null> =
-    await supplierServices.read(ulid);
+  // #region Methods
+  const loadData = async (ulid: string) => {
+    emits('loading-state', true);
+    let result: ServiceResponse<Supplier | null> = await supplierServices.read(ulid);
 
-  if (result.success && result.data) {
-    form.setData({
-      company_id: result.data.company.id,
-      code: result.data.code,
-      name: result.data.name,
-      address: result.data.address,
-      city: result.data.city,
-      payment_term_type: result.data.payment_term_type,
-      payment_term: result.data.payment_term,
-      taxable_enterprise: result.data.taxable_enterprise,
-      tax_id: result.data.tax_id,
-      status: result.data.status,
-      remarks: result.data.remarks,
-    });
-  } else {
-    router.push({ name: "side-menu-supplier" });
-  }
-  emits("loading-state", false);
-};
-
-const getDDL = async (): Promise<void> => {
-  isDDLLoading.value = true;
-  try {
-    await Promise.all([
-      (async () => {
-        const result = await dashboardServices.getStatusDDL(false);
-        statusDDL.value = result;
-      })(),
-      (async () => {
-        const result = await dashboardServices.getPaymentTermTypesDDL();
-        paymentTermTypeDDL.value = result;
-      })(),
-    ]);
-  } catch (error) {
-    console.error("Error loading DDLs:", error);
-  } finally {
-    isDDLLoading.value = false;
-  }
-};
-
-const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.Collapsed) {
-    cards.value[index].state = CardState.Expanded;
-  } else if (cards.value[index].state === CardState.Expanded) {
-    cards.value[index].state = CardState.Collapsed;
-  }
-};
-
-const scrollToError = (id: string): void => {
-  let el = document.getElementById(id);
-
-  if (!el) return;
-
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-};
-
-const onSubmit = async () => {
-  if (form.hasErrors) {
-    scrollToError(Object.keys(form.errors)[0]);
-  }
-
-  emits("loading-state", true);
-  await form
-    .submit()
-    .then(() => {
-      showAlertPlaceholder("hidden", "", null);
-      emits("update-profile");
-      router.push({ name: "side-menu-supplier" });
-    })
-    .catch((error) => {
-      let errorList: Record<
-        string,
-        Array<string>
-      > = convertErrorTypeToAlertListType(error);
-      showAlertPlaceholder("danger", "", errorList);
-    })
-    .finally(() => {
-      emits("loading-state", false);
-    });
-};
-
-const resetForm = async () => {
-  form.reset();
-  form.setErrors({});
-  await loadData(route.params.ulid as string);
-};
-
-const setCode = () => {
-  form.forgetError("code");
-  if (form.code == "_AUTO_") {
-    form.setData({ code: "" });
-  } else {
-    form.setData({ code: "_AUTO_" });
-  }
-};
-
-const showAlertPlaceholder = (
-  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
-  pTitle: string,
-  pAlertList: Record<string, Array<string>> | null,
-) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
+    if (result.success && result.data) {
+      form.setData({
+        company_id: result.data.company.id,
+        code: result.data.code,
+        name: result.data.name,
+        address: result.data.address,
+        city: result.data.city,
+        payment_term_type: result.data.payment_term_type,
+        payment_term: result.data.payment_term,
+        taxable_enterprise: result.data.taxable_enterprise,
+        tax_id: result.data.tax_id,
+        status: result.data.status,
+        remarks: result.data.remarks,
+      });
+    } else {
+      router.push({ name: 'side-menu-supplier' });
+    }
+    emits('loading-state', false);
   };
 
-  emits("show-alert-placeholder", ap);
-};
-// #endregion
+  const getDDL = async (): Promise<void> => {
+    isDDLLoading.value = true;
+    try {
+      await Promise.all([
+        (async () => {
+          const result = await dashboardServices.getStatusDDL(false);
+          statusDDL.value = result;
+        })(),
+        (async () => {
+          const result = await dashboardServices.getPaymentTermTypesDDL();
+          paymentTermTypeDDL.value = result;
+        })(),
+      ]);
+    } catch (error) {
+      console.error('Error loading DDLs:', error);
+    } finally {
+      isDDLLoading.value = false;
+    }
+  };
 
-// #region Lifecycle Hooks
-onMounted(async () => {
-  if (!isUserLocationSelected.value) {
-    router.push({
-      name: "side-menu-error-code",
-      params: { code: ErrorCode.USERLOCATION_REQUIRED },
-    });
-    return;
-  }
+  const handleExpandCard = (index: number) => {
+    if (cards.value[index].state === CardState.Collapsed) {
+      cards.value[index].state = CardState.Expanded;
+    } else if (cards.value[index].state === CardState.Expanded) {
+      cards.value[index].state = CardState.Collapsed;
+    }
+  };
 
-  emits("mode-state", ViewMode.FORM_EDIT);
-  await getDDL();
+  const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
 
-  await loadData(route.params.ulid as string);
-});
-// #endregion
+    if (!el) return;
 
-// #region Watchers
-watch(
-  form,
-  debounce((newValue): void => {
-    cacheServices.setLastEntity("SUPPLIER_EDIT", newValue.data());
-  }, 500),
-  { deep: true },
-);
-// #endregion
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const onSubmit = async () => {
+    if (form.hasErrors) {
+      scrollToError(Object.keys(form.errors)[0]);
+    }
+
+    emits('loading-state', true);
+    await form
+      .submit()
+      .then(() => {
+        showAlertPlaceholder('hidden', '', null);
+        emits('update-profile');
+        router.push({ name: 'side-menu-supplier' });
+      })
+      .catch((error) => {
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
+        showAlertPlaceholder('danger', '', errorList);
+      })
+      .finally(() => {
+        emits('loading-state', false);
+      });
+  };
+
+  const resetForm = async () => {
+    form.reset();
+    form.setErrors({});
+    await loadData(route.params.ulid as string);
+  };
+
+  const setCode = () => {
+    form.forgetError('code');
+    if (form.code == '_AUTO_') {
+      form.setData({ code: '' });
+    } else {
+      form.setData({ code: '_AUTO_' });
+    }
+  };
+
+  const showAlertPlaceholder = (
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
+    pTitle: string,
+    pAlertList: Record<string, Array<string>> | null,
+  ) => {
+    let ap: AlertPlaceholderProps = {
+      alertType: pAlertType,
+      title: pTitle,
+      alertList: pAlertList,
+    };
+
+    emits('show-alert-placeholder', ap);
+  };
+  // #endregion
+
+  // #region Lifecycle Hooks
+  onMounted(async () => {
+    if (!isUserLocationSelected.value) {
+      router.push({
+        name: 'side-menu-error-code',
+        params: { code: ErrorCode.USERLOCATION_REQUIRED },
+      });
+      return;
+    }
+
+    emits('mode-state', ViewMode.FORM_EDIT);
+    await getDDL();
+
+    await loadData(route.params.ulid as string);
+  });
+  // #endregion
+
+  // #region Watchers
+  watch(
+    form,
+    debounce((newValue): void => {
+      cacheServices.setLastEntity('SUPPLIER_EDIT', newValue.data());
+    }, 500),
+    { deep: true },
+  );
+  // #endregion
 </script>
 
 <template>
   <form id="supplierForm" @submit.prevent="onSubmit">
     <!-- Kita panggil Layout 2 Kolom -->
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <!-- Slot untuk Card General -->
       <template #card-items-general>
         <div class="p-5">
           <!-- Code -->
           <div class="mt-3">
             <FormLabel htmlFor="code">
-              {{ t("views.supplier.fields.code") }}
+              {{ t('views.supplier.fields.code') }}
               <span class="text-danger">*</span>
             </FormLabel>
             <FormInputCode
@@ -260,7 +252,7 @@ watch(
           <!-- Name -->
           <div class="mt-3">
             <FormLabel htmlFor="name">
-              {{ t("views.supplier.fields.name") }}
+              {{ t('views.supplier.fields.name') }}
               <span class="text-danger">*</span>
             </FormLabel>
             <FormInput
@@ -277,7 +269,7 @@ watch(
           <!-- Address -->
           <div class="mt-3">
             <FormLabel htmlFor="address">
-              {{ t("views.supplier.fields.address") }}
+              {{ t('views.supplier.fields.address') }}
             </FormLabel>
             <FormTextarea
               id="address"
@@ -292,7 +284,7 @@ watch(
           <!-- City -->
           <div class="mt-3">
             <FormLabel htmlFor="city">
-              {{ t("views.supplier.fields.city") }}
+              {{ t('views.supplier.fields.city') }}
             </FormLabel>
             <FormInput
               id="city"
@@ -308,7 +300,7 @@ watch(
           <!-- Status -->
           <div class="mt-3">
             <FormLabel htmlFor="status">
-              {{ t("views.supplier.fields.status") }}
+              {{ t('views.supplier.fields.status') }}
               <span class="text-danger">*</span>
             </FormLabel>
             <FormSelect
@@ -318,7 +310,7 @@ watch(
               @change="form.validate('status')"
             >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
               <option v-for="c in statusDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
@@ -330,7 +322,7 @@ watch(
           <!-- Remarks -->
           <div class="mt-3">
             <FormLabel htmlFor="remarks">
-              {{ t("views.supplier.fields.remarks") }}
+              {{ t('views.supplier.fields.remarks') }}
             </FormLabel>
             <FormTextarea
               id="remarks"
@@ -350,7 +342,7 @@ watch(
           <!-- Payment Term Type -->
           <div class="mt-3">
             <FormLabel htmlFor="payment_term_type">
-              {{ t("views.supplier.fields.payment_term_type") }}
+              {{ t('views.supplier.fields.payment_term_type') }}
             </FormLabel>
             <FormSelect
               id="payment_term_type"
@@ -359,13 +351,9 @@ watch(
               @change="form.validate('payment_term_type')"
             >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
-              <option
-                v-for="c in paymentTermTypeDDL"
-                :key="c.code"
-                :value="c.code"
-              >
+              <option v-for="c in paymentTermTypeDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
               </option>
             </FormSelect>
@@ -375,7 +363,7 @@ watch(
           <!-- Payment Term -->
           <div class="mt-3">
             <FormLabel htmlFor="payment_term">
-              {{ t("views.supplier.fields.payment_term") }}
+              {{ t('views.supplier.fields.payment_term') }}
             </FormLabel>
             <FormInput
               id="payment_term"
@@ -391,7 +379,7 @@ watch(
           <!-- Taxable Enterprise -->
           <div class="mt-3">
             <FormLabel htmlFor="taxable_enterprise">
-              {{ t("views.supplier.fields.taxable_enterprise") }}
+              {{ t('views.supplier.fields.taxable_enterprise') }}
             </FormLabel>
             <FormSwitch class="mt-2">
               <FormSwitch.Input
@@ -407,7 +395,7 @@ watch(
           <!-- Tax ID (NPWP) -->
           <div class="mt-3">
             <FormLabel htmlFor="tax_id">
-              {{ t("views.supplier.fields.tax_id") }}
+              {{ t('views.supplier.fields.tax_id') }}
             </FormLabel>
             <FormInput
               id="tax_id"
@@ -434,7 +422,7 @@ watch(
           >
             <Lucide v-if="form.validating" icon="Loader" class="animate-spin" />
             <template v-else>
-              {{ t("components.buttons.submit") }}
+              {{ t('components.buttons.submit') }}
             </template>
           </Button>
           <Button
@@ -444,7 +432,7 @@ watch(
             class="w-28 shadow-md"
             @click="resetForm"
           >
-            {{ t("components.buttons.reset") }}
+            {{ t('components.buttons.reset') }}
           </Button>
         </div>
       </template>

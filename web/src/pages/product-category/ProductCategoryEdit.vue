@@ -1,203 +1,192 @@
 <script setup lang="ts">
-// #region Imports
-import { computed, onMounted, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import { convertErrorTypeToAlertListType } from "@/utils/helper";
-import { useRoute, useRouter } from "vue-router";
-import ProductCategoryService from "@/services/ProductCategoryService";
-import DashboardService from "@/services/DashboardService";
-import CacheService from "@/services/CacheService";
-import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
-import {
-  FormInput,
-  FormLabel,
-  FormSelect,
-  FormInputCode,
-  FormErrorMessages,
-} from "@/components/Base/Form";
-import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
-import { CardState } from "@/types/enums/CardState";
-import { ServiceResponse } from "@/types/services/ServiceResponse";
-import { ViewMode } from "@/types/enums/ViewMode";
-import Button from "@/components/Base/Button";
-import { debounce } from "lodash";
-import Lucide from "@/components/Base/Lucide";
-import { ProductCategory } from "@/types/models/ProductCategory";
-import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
-import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
-import { ErrorCode } from "@/types/enums/ErrorCode";
-import { DropDownOption } from "@/types/models/DropDownOption";
-// #endregion
+  // #region Imports
+  import { computed, onMounted, ref, watch } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { convertErrorTypeToAlertListType } from '@/utils/helper';
+  import { useRoute, useRouter } from 'vue-router';
+  import ProductCategoryService from '@/services/ProductCategoryService';
+  import DashboardService from '@/services/DashboardService';
+  import CacheService from '@/services/CacheService';
+  import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
+  import {
+    FormInput,
+    FormLabel,
+    FormSelect,
+    FormInputCode,
+    FormErrorMessages,
+  } from '@/components/Base/Form';
+  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
+  import { CardState } from '@/types/enums/CardState';
+  import { ServiceResponse } from '@/types/services/ServiceResponse';
+  import { ViewMode } from '@/types/enums/ViewMode';
+  import Button from '@/components/Base/Button';
+  import { debounce } from 'lodash';
+  import Lucide from '@/components/Base/Lucide';
+  import { ProductCategory } from '@/types/models/ProductCategory';
+  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
+  import { ErrorCode } from '@/types/enums/ErrorCode';
+  import { DropDownOption } from '@/types/models/DropDownOption';
+  // #endregion
 
-// #region Interfaces
-// #endregion
+  // #region Interfaces
+  // #endregion
 
-// #region Declarations
-const { t } = useI18n();
-const route = useRoute();
-const router = useRouter();
-const selectedUserLocationStore = useSelectedUserLocationStore();
+  // #region Declarations
+  const { t } = useI18n();
+  const route = useRoute();
+  const router = useRouter();
+  const selectedUserLocationStore = useSelectedUserLocationStore();
 
-const productCategoryService = new ProductCategoryService();
-const dashboardServices = new DashboardService();
-const cacheServices = new CacheService();
-// #endregion
+  const productCategoryService = new ProductCategoryService();
+  const dashboardServices = new DashboardService();
+  const cacheServices = new CacheService();
+  // #endregion
 
-// #region Props, Emits
-const emits = defineEmits([
-  "mode-state",
-  "loading-state",
-  "update-profile",
-  "show-alertplaceholder",
-]);
-// #endregion
+  // #region Props, Emits
+  const emits = defineEmits([
+    'mode-state',
+    'loading-state',
+    'update-profile',
+    'show-alertplaceholder',
+  ]);
+  // #endregion
 
-// #region Refs
-const cards = ref<Array<TwoColumnsLayoutCards>>([
-  {
-    title: "views.product_category.field_groups.company_info",
-    state: CardState.Expanded,
-  },
-  {
-    title: "views.product_category.field_groups.product_category_data",
-    state: CardState.Expanded,
-  },
-  { title: "", state: CardState.Hidden, id: "button" },
-]);
+  // #region Refs
+  const cards = ref<Array<TwoColumnsLayoutCards>>([
+    {
+      title: 'views.product_category.field_groups.company_info',
+      state: CardState.Expanded,
+    },
+    {
+      title: 'views.product_category.field_groups.product_category_data',
+      state: CardState.Expanded,
+    },
+    { title: '', state: CardState.Hidden, id: 'button' },
+  ]);
 
-const typeDDL = ref<Array<DropDownOption> | null>(null);
+  const typeDDL = ref<Array<DropDownOption> | null>(null);
 
-const productCategoryForm = productCategoryService.useProductCategoryEditForm(
-  route.params.ulid as string,
-);
-// #endregion
+  const productCategoryForm = productCategoryService.useProductCategoryEditForm(
+    route.params.ulid as string,
+  );
+  // #endregion
 
-// #region Computed
-const isUserLocationSelected = computed(
-  () => selectedUserLocationStore.isUserLocationSelected,
-);
-const selectedUserLocation = computed(
-  () => selectedUserLocationStore.selectedUserLocation,
-);
-// #endregion
+  // #region Computed
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
+  // #endregion
 
-// #region Lifecycle Hooks
-onMounted(async () => {
-  emits("mode-state", ViewMode.FORM_EDIT);
-  if (!isUserLocationSelected.value) {
-    router.push({
-      name: "side-menu-error-code",
-      params: { code: ErrorCode.USERLOCATION_REQUIRED },
-    });
-  }
-  await Promise.all([getDDL(), loadData(route.params.ulid as string)]);
-});
-// #endregion
+  // #region Lifecycle Hooks
+  onMounted(async () => {
+    emits('mode-state', ViewMode.FORM_EDIT);
+    if (!isUserLocationSelected.value) {
+      router.push({
+        name: 'side-menu-error-code',
+        params: { code: ErrorCode.USERLOCATION_REQUIRED },
+      });
+    }
+    await Promise.all([getDDL(), loadData(route.params.ulid as string)]);
+  });
+  // #endregion
 
-// #region Methods
-const getDDL = async (): Promise<void> => {
-  typeDDL.value = await productCategoryService.getTypes();
-};
-
-const loadData = async (ulid: string) => {
-  emits("loading-state", true);
-  const response: ServiceResponse<ProductCategory | null> =
-    await productCategoryService.read(ulid);
-
-  if (response && response.data) {
-    productCategoryForm.setData({
-      company_id: response.data.company.id,
-      code: response.data.code,
-      name: response.data.name,
-      type: response.data.type,
-    });
-  }
-  emits("loading-state", false);
-};
-
-const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.Collapsed) {
-    cards.value[index].state = CardState.Expanded;
-  } else if (cards.value[index].state === CardState.Expanded) {
-    cards.value[index].state = CardState.Collapsed;
-  }
-};
-
-const scrollToError = (id: string): void => {
-  let el = document.getElementById(id);
-  if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-};
-
-const onSubmit = async () => {
-  if (productCategoryForm.hasErrors) {
-    scrollToError(Object.keys(productCategoryForm.errors)[0]);
-  }
-  emits("loading-state", true);
-  await productCategoryForm
-    .submit()
-    .then(() => {
-      emits("update-profile");
-      router.push({ name: "side-menu-product-product-category-list" });
-    })
-    .catch((error) => {
-      const errorList: Record<
-        string,
-        Array<string>
-      > = convertErrorTypeToAlertListType(error);
-      showAlertPlaceholder("danger", "", errorList);
-    })
-    .finally(() => {
-      emits("loading-state", false);
-    });
-};
-
-const resetForm = async () => {
-  productCategoryForm.reset();
-  productCategoryForm.setErrors({});
-  await loadData(route.params.ulid as string);
-};
-
-const setCode = () => {
-  productCategoryForm.forgetError("code");
-  if (productCategoryForm.code == "_AUTO_") {
-    productCategoryForm.setData({ code: "" });
-  } else {
-    productCategoryForm.setData({ code: "_AUTO_" });
-  }
-};
-
-const showAlertPlaceholder = (
-  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
-  pTitle: string,
-  pAlertList: Record<string, Array<string>> | null,
-) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
+  // #region Methods
+  const getDDL = async (): Promise<void> => {
+    typeDDL.value = await productCategoryService.getTypes();
   };
-  emits("show-alertplaceholder", ap);
-};
 
-// #region Watchers
-watch(
-  productCategoryForm,
-  debounce((newValue): void => {
-    cacheServices.setLastEntity("PRODUCT_CATEGORY_EDIT", newValue.data());
-  }, 500),
-  { deep: true },
-);
-// #endregion
+  const loadData = async (ulid: string) => {
+    emits('loading-state', true);
+    const response: ServiceResponse<ProductCategory | null> =
+      await productCategoryService.read(ulid);
+
+    if (response && response.data) {
+      productCategoryForm.setData({
+        company_id: response.data.company.id,
+        code: response.data.code,
+        name: response.data.name,
+        type: response.data.type,
+      });
+    }
+    emits('loading-state', false);
+  };
+
+  const handleExpandCard = (index: number) => {
+    if (cards.value[index].state === CardState.Collapsed) {
+      cards.value[index].state = CardState.Expanded;
+    } else if (cards.value[index].state === CardState.Expanded) {
+      cards.value[index].state = CardState.Collapsed;
+    }
+  };
+
+  const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const onSubmit = async () => {
+    if (productCategoryForm.hasErrors) {
+      scrollToError(Object.keys(productCategoryForm.errors)[0]);
+    }
+    emits('loading-state', true);
+    await productCategoryForm
+      .submit()
+      .then(() => {
+        emits('update-profile');
+        router.push({ name: 'side-menu-product-product-category-list' });
+      })
+      .catch((error) => {
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
+        showAlertPlaceholder('danger', '', errorList);
+      })
+      .finally(() => {
+        emits('loading-state', false);
+      });
+  };
+
+  const resetForm = async () => {
+    productCategoryForm.reset();
+    productCategoryForm.setErrors({});
+    await loadData(route.params.ulid as string);
+  };
+
+  const setCode = () => {
+    productCategoryForm.forgetError('code');
+    if (productCategoryForm.code == '_AUTO_') {
+      productCategoryForm.setData({ code: '' });
+    } else {
+      productCategoryForm.setData({ code: '_AUTO_' });
+    }
+  };
+
+  const showAlertPlaceholder = (
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
+    pTitle: string,
+    pAlertList: Record<string, Array<string>> | null,
+  ) => {
+    let ap: AlertPlaceholderProps = {
+      alertType: pAlertType,
+      title: pTitle,
+      alertList: pAlertList,
+    };
+    emits('show-alertplaceholder', ap);
+  };
+
+  // #region Watchers
+  watch(
+    productCategoryForm,
+    debounce((newValue): void => {
+      cacheServices.setLastEntity('PRODUCT_CATEGORY_EDIT', newValue.data());
+    }, 500),
+    { deep: true },
+  );
+  // #endregion
 </script>
 
 <template>
   <form id="productCategoryForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -211,10 +200,8 @@ watch(
       <template #card-items-1>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productCategoryForm.invalid('code') }"
-            >
-              {{ t("views.product_category.fields.code") }}
+            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('code') }">
+              {{ t('views.product_category.fields.code') }}
             </FormLabel>
             <FormInputCode
               v-model="productCategoryForm.code"
@@ -226,10 +213,8 @@ watch(
             <FormErrorMessages :messages="productCategoryForm.errors.code" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productCategoryForm.invalid('name') }"
-            >
-              {{ t("views.product_category.fields.name") }}
+            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('name') }">
+              {{ t('views.product_category.fields.name') }}
             </FormLabel>
             <FormInput
               v-model="productCategoryForm.name"
@@ -241,10 +226,8 @@ watch(
             <FormErrorMessages :messages="productCategoryForm.errors.name" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productCategoryForm.invalid('type') }"
-            >
-              {{ t("views.product_category.fields.type") }}
+            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('type') }">
+              {{ t('views.product_category.fields.type') }}
             </FormLabel>
             <FormSelect
               v-model="productCategoryForm.type"
@@ -252,7 +235,7 @@ watch(
               @change="productCategoryForm.validate('type')"
             >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
               <option v-for="c in typeDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
@@ -270,17 +253,11 @@ watch(
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              productCategoryForm.validating || productCategoryForm.hasErrors
-            "
+            :disabled="productCategoryForm.validating || productCategoryForm.hasErrors"
           >
-            <Lucide
-              v-if="productCategoryForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="productCategoryForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
-              {{ t("components.buttons.submit") }}
+              {{ t('components.buttons.submit') }}
             </template>
           </Button>
           <Button
@@ -290,7 +267,7 @@ watch(
             class="w-28 shadow-md"
             @click="resetForm"
           >
-            {{ t("components.buttons.reset") }}
+            {{ t('components.buttons.reset') }}
           </Button>
         </div>
       </template>

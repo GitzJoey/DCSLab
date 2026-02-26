@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useUserContextStore } from "../../stores/user-context";
-import _ from "lodash";
+  import { computed } from 'vue';
+  import { useUserContextStore } from '../../stores/user-context';
+  import _ from 'lodash';
 
-const userContextStore = useUserContextStore();
-const userContext = computed(() => userContextStore.userContext);
+  const userContextStore = useUserContextStore();
+  const userContext = computed(() => userContextStore.userContext);
 
-const welcomeName = computed(() => userContext.value.profile.first_name);
+  const welcomeName = computed(() => userContext.value.profile.first_name);
 </script>
 
 <template>
   <div class="col-span-12 mt-8">
     <div class="flex items-center h-10 intro-y">
-      <h2 class="mr-5 text-lg font-medium truncate">
-        Welcome, {{ welcomeName }}
-      </h2>
+      <h2 class="mr-5 text-lg font-medium truncate">Welcome, {{ welcomeName }}</h2>
       <a href="" class="flex items-center ml-auto text-primary">
         <Lucide icon="RefreshCcw" class="w-4 h-4 mr-3" />
       </a>
@@ -29,10 +27,7 @@ const welcomeName = computed(() => userContext.value.profile.first_name);
         >
           <div class="p-5 box">
             <div class="flex">
-              <Lucide
-                icon="ShoppingCart"
-                class="w-[28px] h-[28px] text-primary"
-              />
+              <Lucide icon="ShoppingCart" class="w-[28px] h-[28px] text-primary" />
               <div class="ml-auto">
                 <Tippy
                   as="div"
@@ -58,10 +53,7 @@ const welcomeName = computed(() => userContext.value.profile.first_name);
         >
           <div class="p-5 box">
             <div class="flex">
-              <Lucide
-                icon="CreditCard"
-                class="w-[28px] h-[28px] text-pending"
-              />
+              <Lucide icon="CreditCard" class="w-[28px] h-[28px] text-pending" />
               <div class="ml-auto">
                 <Tippy
                   as="div"

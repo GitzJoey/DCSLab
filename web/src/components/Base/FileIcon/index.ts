@@ -1,3 +1,3 @@
-import FileIcon from "./FileIcon.vue";
+import FileIcon from './FileIcon.vue';
 
 export default FileIcon;

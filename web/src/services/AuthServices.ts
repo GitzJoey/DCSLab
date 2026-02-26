@@ -1,10 +1,10 @@
-import { client, useForm } from "laravel-precognition-vue";
-import { authAxiosInstance } from "../axios";
-import { getBackendUrl } from "@/utils/config";
+import { client, useForm } from 'laravel-precognition-vue';
+import { authAxiosInstance } from '../axios';
+import { getBackendUrl } from '@/utils/config';
 
 export default class AuthService {
   public async ensureCSRF(): Promise<void> {
-    let resultXSRF = await this.checkCookieExists("XSRF-TOKEN");
+    let resultXSRF = await this.checkCookieExists('XSRF-TOKEN');
 
     if (resultXSRF) return;
 
@@ -13,10 +13,10 @@ export default class AuthService {
 
   private checkCookieExists = (cookieName: string): Promise<boolean> => {
     return new Promise<boolean>((resolve) => {
-      const cookies = document.cookie.split("; ");
+      const cookies = document.cookie.split('; ');
 
       for (const cookie of cookies) {
-        const [name] = cookie.split("=");
+        const [name] = cookie.split('=');
         if (name === cookieName) {
           resolve(true);
           return;
@@ -28,15 +28,15 @@ export default class AuthService {
   };
 
   public async generateCSRF(): Promise<void> {
-    await authAxiosInstance.get("/sanctum/csrf-cookie");
+    await authAxiosInstance.get('/sanctum/csrf-cookie');
   }
 
   public useLoginForm() {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm("post", getBackendUrl() + "/login", {
-      email: "",
-      password: "",
+    const form = useForm('post', getBackendUrl() + '/login', {
+      email: '',
+      password: '',
       remember: false,
     });
 
@@ -46,9 +46,9 @@ export default class AuthService {
   public useTwoFactorLoginForm() {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm("post", getBackendUrl() + "/two-factor-challenge", {
-      code: "",
-      recovery_code: "",
+    const form = useForm('post', getBackendUrl() + '/two-factor-challenge', {
+      code: '',
+      recovery_code: '',
     });
 
     return form;
@@ -57,11 +57,11 @@ export default class AuthService {
   public useRegisterForm() {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm("post", getBackendUrl() + "/register", {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
+    const form = useForm('post', getBackendUrl() + '/register', {
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
       terms: false,
     });
 
@@ -71,8 +71,8 @@ export default class AuthService {
   public useRequestResetPasswordForm() {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm("post", getBackendUrl() + "/forgot-password", {
-      email: "",
+    const form = useForm('post', getBackendUrl() + '/forgot-password', {
+      email: '',
     });
 
     return form;
@@ -81,11 +81,11 @@ export default class AuthService {
   public useResetPasswordForm() {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm("post", getBackendUrl() + "/reset-password", {
-      email: "",
-      token: "",
-      password: "",
-      password_confirmation: "",
+    const form = useForm('post', getBackendUrl() + '/reset-password', {
+      email: '',
+      token: '',
+      password: '',
+      password_confirmation: '',
     });
 
     return form;

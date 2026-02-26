@@ -1,97 +1,95 @@
 <script setup lang="ts">
-import "@/assets/css/themes/enigma/side-nav.css";
-import { useRoute, useRouter } from "vue-router";
-import Tippy from "@/components/Base/Tippy";
-import Lucide from "@/components/Base/Lucide";
-import TopBar from "@/components/Themes/Enigma/TopBar";
-import MobileMenu from "@/components/MobileMenu";
-import { useMenuStore, Menu as sMenu } from "@/stores/menu";
-import {
-  type ProvideForceActiveMenu,
-  forceActiveMenu,
-  type Route,
-  type FormattedMenu,
-  nestedMenu,
-  linkTo,
-  enter,
-  leave,
-} from "./side-menu";
-import { watch, reactive, ref, computed, onMounted, provide } from "vue";
-import ScrollToTop from "@/components/Base/ScrollToTop";
-import LoadingOverlay from "@/components/LoadingOverlay";
-import { EmailVerificationAlert } from "@/components/AlertPlaceholder";
-import { useDashboardStore } from "@/stores/dashboard";
-import DashboardService from "@/services/DashboardService";
-import { useZiggyRouteStore } from "@/stores/ziggy-route";
-import { Config } from "ziggy-js";
-import { useI18n } from "vue-i18n";
+  import '@/assets/css/themes/enigma/side-nav.css';
+  import { useRoute, useRouter } from 'vue-router';
+  import Tippy from '@/components/Base/Tippy';
+  import Lucide from '@/components/Base/Lucide';
+  import TopBar from '@/components/Themes/Enigma/TopBar';
+  import MobileMenu from '@/components/MobileMenu';
+  import { useMenuStore, Menu as sMenu } from '@/stores/menu';
+  import {
+    type ProvideForceActiveMenu,
+    forceActiveMenu,
+    type Route,
+    type FormattedMenu,
+    nestedMenu,
+    linkTo,
+    enter,
+    leave,
+  } from './side-menu';
+  import { watch, reactive, ref, computed, onMounted, provide } from 'vue';
+  import ScrollToTop from '@/components/Base/ScrollToTop';
+  import LoadingOverlay from '@/components/LoadingOverlay';
+  import { EmailVerificationAlert } from '@/components/AlertPlaceholder';
+  import { useDashboardStore } from '@/stores/dashboard';
+  import DashboardService from '@/services/DashboardService';
+  import { useZiggyRouteStore } from '@/stores/ziggy-route';
+  import { Config } from 'ziggy-js';
+  import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+  const { t } = useI18n();
 
-const dashboardServices = new DashboardService();
+  const dashboardServices = new DashboardService();
 
-const route: Route = useRoute();
-const router = useRouter();
-let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
-const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "divider">,
-) => {
-  Object.assign(formattedMenu, computedFormattedMenu);
-};
-const menuStore = useMenuStore();
-const menu = computed(() => nestedMenu(menuStore.menu("side-menu"), route));
-const windowWidth = ref(window.innerWidth);
+  const route: Route = useRoute();
+  const router = useRouter();
+  let formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
+  const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
+    Object.assign(formattedMenu, computedFormattedMenu);
+  };
+  const menuStore = useMenuStore();
+  const menu = computed(() => nestedMenu(menuStore.menu('side-menu'), route));
+  const windowWidth = ref(window.innerWidth);
 
-const dashboardStore = useDashboardStore();
-const screenMask = computed(() => dashboardStore.screenMaskValue);
+  const dashboardStore = useDashboardStore();
+  const screenMask = computed(() => dashboardStore.screenMaskValue);
 
-const ziggyRouteStore = useZiggyRouteStore();
+  const ziggyRouteStore = useZiggyRouteStore();
 
-const showBackToTop = ref<boolean>(false);
+  const showBackToTop = ref<boolean>(false);
 
-const handlescroll = () => {
-  if (window.scrollY > 100) {
-    showBackToTop.value = true;
-  } else {
-    showBackToTop.value = false;
-  }
-};
+  const handlescroll = () => {
+    if (window.scrollY > 100) {
+      showBackToTop.value = true;
+    } else {
+      showBackToTop.value = false;
+    }
+  };
 
-window.addEventListener("scroll", handlescroll);
+  window.addEventListener('scroll', handlescroll);
 
-provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
-  forceActiveMenu(route, pageName);
-  setFormattedMenu(menu.value);
-});
-
-watch(menu, () => {
-  setFormattedMenu(menu.value);
-});
-
-watch(
-  computed(() => route.path),
-  () => {
-    delete route.forceActiveMenu;
-  },
-);
-
-onMounted(async () => {
-  await updateMenu();
-
-  setFormattedMenu(menu.value);
-
-  window.addEventListener("resize", () => {
-    windowWidth.value = window.innerWidth;
+  provide<ProvideForceActiveMenu>('forceActiveMenu', (pageName: string) => {
+    forceActiveMenu(route, pageName);
+    setFormattedMenu(menu.value);
   });
-});
 
-const updateMenu = async () => {
-  let menuResult = await dashboardServices.readUserMenu();
-  menuStore.setMenu(menuResult.data as Array<sMenu>);
+  watch(menu, () => {
+    setFormattedMenu(menu.value);
+  });
 
-  let apiResult = await dashboardServices.readUserApi();
-  ziggyRouteStore.setZiggy(apiResult.data as Config);
-};
+  watch(
+    computed(() => route.path),
+    () => {
+      delete route.forceActiveMenu;
+    },
+  );
+
+  onMounted(async () => {
+    await updateMenu();
+
+    setFormattedMenu(menu.value);
+
+    window.addEventListener('resize', () => {
+      windowWidth.value = window.innerWidth;
+    });
+  });
+
+  const updateMenu = async () => {
+    let menuResult = await dashboardServices.readUserMenu();
+    menuStore.setMenu(menuResult.data as Array<sMenu>);
+
+    let apiResult = await dashboardServices.readUserApi();
+    ziggyRouteStore.setZiggy(apiResult.data as Config);
+  };
 </script>
 
 <template>
@@ -145,9 +143,7 @@ const updateMenu = async () => {
                         setFormattedMenu([...formattedMenu]);
                       }
                     "
-                    :class="[
-                      menu.active ? 'side-menu side-menu--active' : 'side-menu',
-                    ]"
+                    :class="[menu.active ? 'side-menu side-menu--active' : 'side-menu']"
                   >
                     <div class="side-menu__icon">
                       <Lucide :icon="menu.icon" />
@@ -170,10 +166,7 @@ const updateMenu = async () => {
                       v-if="menu.subMenu && menu.activeDropdown"
                       :class="{ 'side-menu__sub-open': menu.activeDropdown }"
                     >
-                      <li
-                        v-for="(subMenu, subMenuKey) in menu.subMenu"
-                        :key="subMenuKey"
-                      >
+                      <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                         <Tippy
                           as="a"
                           :content="t(subMenu.title)"
@@ -194,11 +187,7 @@ const updateMenu = async () => {
                                   }
                                 })(subMenu.pageName)
                           "
-                          :class="[
-                            subMenu.active
-                              ? 'side-menu side-menu--active'
-                              : 'side-menu',
-                          ]"
+                          :class="[subMenu.active ? 'side-menu side-menu--active' : 'side-menu']"
                           @click="
                             (event: MouseEvent) => {
                               event.preventDefault();
@@ -217,8 +206,7 @@ const updateMenu = async () => {
                               :class="[
                                 'side-menu__sub-icon',
                                 {
-                                  'transform rotate-180':
-                                    subMenu.activeDropdown,
+                                  'transform rotate-180': subMenu.activeDropdown,
                                 },
                               ]"
                             >
@@ -226,11 +214,7 @@ const updateMenu = async () => {
                             </div>
                           </div>
                         </Tippy>
-                        <Transition
-                          @enter="enter"
-                          @leave="leave"
-                          v-if="subMenu.subMenu"
-                        >
+                        <Transition @enter="enter" @leave="leave" v-if="subMenu.subMenu">
                           <ul
                             v-if="subMenu.subMenu && subMenu.activeDropdown"
                             :class="{
@@ -238,9 +222,7 @@ const updateMenu = async () => {
                             }"
                           >
                             <li
-                              v-for="(
-                                lastSubMenu, lastSubMenuKey
-                              ) in subMenu.subMenu"
+                              v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
                               :key="lastSubMenuKey"
                             >
                               <Tippy
@@ -264,9 +246,7 @@ const updateMenu = async () => {
                                       })(lastSubMenu.pageName)
                                 "
                                 :class="[
-                                  lastSubMenu.active
-                                    ? 'side-menu side-menu--active'
-                                    : 'side-menu',
+                                  lastSubMenu.active ? 'side-menu side-menu--active' : 'side-menu',
                                 ]"
                                 @click="
                                   (event: MouseEvent) => {

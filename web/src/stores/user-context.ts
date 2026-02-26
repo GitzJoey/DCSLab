@@ -1,5 +1,5 @@
-import { defineStore } from "pinia";
-import { UserProfile } from "../types/models/UserProfile";
+import { defineStore } from 'pinia';
+import { UserProfile } from '../types/models/UserProfile';
 
 export interface UserContextState {
   isLoaded: boolean;
@@ -7,35 +7,35 @@ export interface UserContextState {
   userContext: UserProfile;
 }
 
-export const useUserContextStore = defineStore("userContext", {
+export const useUserContextStore = defineStore('userContext', {
   state: (): UserContextState => ({
     isLoaded: false,
     isAuthenticated: false,
     userContext: {
-      id: "",
-      ulid: "",
-      name: "",
-      email: "",
+      id: '',
+      ulid: '',
+      name: '',
+      email: '',
       email_verified: false,
       profile: {
-        first_name: "",
-        last_name: "",
-        address: "",
-        city: "",
-        postal_code: "",
-        country: "",
-        status: "",
+        first_name: '',
+        last_name: '',
+        address: '',
+        city: '',
+        postal_code: '',
+        country: '',
+        status: '',
         tax_id: 0,
         ic_num: 0,
-        img_path: "",
-        remarks: "",
+        img_path: '',
+        remarks: '',
       },
       roles: [],
       companies: [],
       settings: {
-        theme: "",
-        date_format: "",
-        time_format: "",
+        theme: '',
+        date_format: '',
+        time_format: '',
       },
       two_factor: false,
       personal_access_tokens: 0,

@@ -1,18 +1,18 @@
-import axios from "../axios";
-import { useZiggyRouteStore } from "../stores/ziggy-route";
-import { route, type Config } from "ziggy-js";
-import { StockAdjustmentInProduct } from "../types/models/StockAdjustmentInProduct";
-import { type Resource } from "../types/resources/Resource";
-import { type Collection } from "../types/resources/Collection";
-import { type ServiceResponse } from "../types/services/ServiceResponse";
-import { type AxiosError, type AxiosResponse, isAxiosError } from "axios";
-import ErrorHandlerService from "./ErrorHandlerService";
+import axios from '../axios';
+import { useZiggyRouteStore } from '../stores/ziggy-route';
+import { route, type Config } from 'ziggy-js';
+import { StockAdjustmentInProduct } from '../types/models/StockAdjustmentInProduct';
+import { type Resource } from '../types/resources/Resource';
+import { type Collection } from '../types/resources/Collection';
+import { type ServiceResponse } from '../types/services/ServiceResponse';
+import { type AxiosError, type AxiosResponse, isAxiosError } from 'axios';
+import ErrorHandlerService from './ErrorHandlerService';
 import {
   type StockAdjustmentInProductReadAnyGetRequest,
   type StockAdjustmentInProductReadAnyPaginateRequest,
-} from "../types/services/stock-adjustment-in-product/StockAdjustmentInProductRequest";
-import { StatusCode } from "../types/enums/StatusCode";
-import { client, useForm } from "laravel-precognition-vue";
+} from '../types/services/stock-adjustment-in-product/StockAdjustmentInProductRequest';
+import { StatusCode } from '../types/enums/StatusCode';
+import { client, useForm } from 'laravel-precognition-vue';
 
 export default class StockAdjustmentInProductService {
   private ziggyRoute: Config;
@@ -28,7 +28,7 @@ export default class StockAdjustmentInProductService {
 
   public useStockAdjustmentInProductCreateForm() {
     const url = route(
-      "api.post.stock_adjustment_in_product.save",
+      'api.post.stock_adjustment_in_product.save',
       undefined,
       true,
       this.ziggyRoute,
@@ -37,15 +37,15 @@ export default class StockAdjustmentInProductService {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
 
-    const form = useForm("post", url, {
-      company_id: "",
-      branch_id: "",
-      stock_adjustment_id: "",
+    const form = useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      stock_adjustment_id: '',
       qty: 0,
-      product_unit_id: "",
+      product_unit_id: '',
       product_unit_conversion_value: 1,
       product_unit_cogs: 0,
-      remarks: "",
+      remarks: '',
     });
 
     return form;
@@ -53,7 +53,7 @@ export default class StockAdjustmentInProductService {
 
   public useStockAdjustmentInProductEditForm(ulid: string) {
     const url = route(
-      "api.post.stock_adjustment_in_product.edit",
+      'api.post.stock_adjustment_in_product.edit',
       {
         stock_adjustment_in_product: ulid,
       },
@@ -64,15 +64,15 @@ export default class StockAdjustmentInProductService {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
 
-    const form = useForm("post", url, {
-      company_id: "",
-      branch_id: "",
-      stock_adjustment_id: "",
+    const form = useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      stock_adjustment_id: '',
       qty: 0,
-      product_unit_id: "",
+      product_unit_id: '',
       product_unit_conversion_value: 1,
       product_unit_cogs: 0,
-      remarks: "",
+      remarks: '',
     });
 
     return form;
@@ -80,34 +80,28 @@ export default class StockAdjustmentInProductService {
 
   public async readAnyPaginate(
     args: StockAdjustmentInProductReadAnyPaginateRequest,
-  ): Promise<
-    ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null>
-  > {
-    const result: ServiceResponse<Collection<
-      Array<StockAdjustmentInProduct>
-    > | null> = {
+  ): Promise<ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null>> {
+    const result: ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams["with_trashed"] = args.with_trashed;
-      queryParams["company_id"] = args.company_id;
-      if (args.branch_id) queryParams["branch_id"] = args.branch_id;
-      if (args.stock_adjustment_id)
-        queryParams["stock_adjustment_id"] = args.stock_adjustment_id;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
+      queryParams['company_id'] = args.company_id;
+      if (args.branch_id) queryParams['branch_id'] = args.branch_id;
+      if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
 
-      if (args.search) queryParams["search"] = args.search;
+      if (args.search) queryParams['search'] = args.search;
 
-      queryParams["refresh"] = args.refresh;
-      queryParams["paginate"] = {
+      queryParams['refresh'] = args.refresh;
+      queryParams['paginate'] = {
         page: args.page,
         per_page: args.per_page,
       };
 
       const url = route(
-        "api.get.stock_adjustment_in_product.read_any",
+        'api.get.stock_adjustment_in_product.read_any',
         {
           _query: queryParams,
         },
@@ -115,9 +109,8 @@ export default class StockAdjustmentInProductService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<
-        Collection<Array<StockAdjustmentInProduct>>
-      > = await axios.get(url);
+      const response: AxiosResponse<Collection<Array<StockAdjustmentInProduct>>> =
+        await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -126,14 +119,10 @@ export default class StockAdjustmentInProductService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes("Ziggy error")) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message,
-        );
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError,
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -142,32 +131,27 @@ export default class StockAdjustmentInProductService {
 
   public async readAnyGet(
     args: StockAdjustmentInProductReadAnyGetRequest,
-  ): Promise<
-    ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null>
-  > {
-    const result: ServiceResponse<Resource<
-      Array<StockAdjustmentInProduct>
-    > | null> = {
+  ): Promise<ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null>> {
+    const result: ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      queryParams["with_trashed"] = args.with_trashed;
-      queryParams["company_id"] = args.company_id;
-      if (args.branch_id) queryParams["branch_id"] = args.branch_id;
-      if (args.stock_adjustment_id)
-        queryParams["stock_adjustment_id"] = args.stock_adjustment_id;
+      queryParams['with_trashed'] = args.with_trashed;
+      queryParams['company_id'] = args.company_id;
+      if (args.branch_id) queryParams['branch_id'] = args.branch_id;
+      if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
 
-      if (args.search) queryParams["search"] = args.search;
+      if (args.search) queryParams['search'] = args.search;
 
-      queryParams["refresh"] = args.refresh;
-      queryParams["get"] = {
+      queryParams['refresh'] = args.refresh;
+      queryParams['get'] = {
         limit: args.limit,
       };
 
       const url = route(
-        "api.get.stock_adjustment_in_product.read_any",
+        'api.get.stock_adjustment_in_product.read_any',
         {
           _query: queryParams,
         },
@@ -185,30 +169,24 @@ export default class StockAdjustmentInProductService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes("Ziggy error")) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message,
-        );
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError,
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async read(
-    ulid: string,
-  ): Promise<ServiceResponse<StockAdjustmentInProduct | null>> {
+  public async read(ulid: string): Promise<ServiceResponse<StockAdjustmentInProduct | null>> {
     const result: ServiceResponse<StockAdjustmentInProduct | null> = {
       success: false,
     };
 
     try {
       const url = route(
-        "api.get.stock_adjustment_in_product.read",
+        'api.get.stock_adjustment_in_product.read',
         {
           stock_adjustment_in_product: ulid,
         },
@@ -216,8 +194,7 @@ export default class StockAdjustmentInProductService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<StockAdjustmentInProduct>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<StockAdjustmentInProduct>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -226,14 +203,10 @@ export default class StockAdjustmentInProductService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes("Ziggy error")) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message,
-        );
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError,
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -247,7 +220,7 @@ export default class StockAdjustmentInProductService {
 
     try {
       const url = route(
-        "api.post.stock_adjustment_in_product.delete",
+        'api.post.stock_adjustment_in_product.delete',
         {
           stock_adjustment_in_product: ulid,
         },
@@ -263,14 +236,10 @@ export default class StockAdjustmentInProductService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes("Ziggy error")) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message,
-        );
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError,
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

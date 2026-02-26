@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import HomeLogo from "@/components/HomeLogo/HomeLogo.vue";
-import UserLocation from "@/components/UserLocation/UserLocation.vue";
-import SearchBox from "@/components/SearchBox/SearchBox.vue";
-import SidebarPop from "@/components/SidebarPop/SidebarPop.vue";
-import LanguageSwitcher from "@/components/LanguageSwitcher/LanguageSwitcher.vue";
-import ProfileMenu from "@/components/ProfileMenu/ProfileMenu.vue";
+  import HomeLogo from '@/components/HomeLogo/HomeLogo.vue';
+  import UserLocation from '@/components/UserLocation/UserLocation.vue';
+  import SearchBox from '@/components/SearchBox/SearchBox.vue';
+  import SidebarPop from '@/components/SidebarPop/SidebarPop.vue';
+  import LanguageSwitcher from '@/components/LanguageSwitcher/LanguageSwitcher.vue';
+  import ProfileMenu from '@/components/ProfileMenu/ProfileMenu.vue';
 </script>
 
 <template>

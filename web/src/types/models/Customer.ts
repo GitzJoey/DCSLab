@@ -1,6 +1,6 @@
-import { Company } from "./Company";
-import { CustomerGroup } from "./CustomerGroup";
-import { User } from "./User";
+import { Company } from './Company';
+import { CustomerGroup } from './CustomerGroup';
+import { User } from './User';
 
 export interface Customer {
   id: string;

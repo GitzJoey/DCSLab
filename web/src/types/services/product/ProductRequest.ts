@@ -1,7 +1,7 @@
 import {
   ProductUnitStoreRequest,
   ProductUnitUpdateRequest,
-} from "../product-unit/ProductUnitRequest";
+} from '../product-unit/ProductUnitRequest';
 
 export interface ProductReadAnyPaginateRequest {
   with_trashed: boolean;

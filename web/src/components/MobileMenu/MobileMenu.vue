@@ -1,57 +1,47 @@
 <script setup lang="ts">
-import "@/assets/css/vendors/simplebar.css";
-import "@/assets/css/components/mobile-menu.css";
-import { useRoute, useRouter } from "vue-router";
-import { twMerge } from "tailwind-merge";
-import logoUrl from "@/assets/images/logo.svg";
-import Lucide from "@/components/Base/Lucide";
-import { useMenuStore } from "@/stores/menu";
-import { useThemeStore } from "@/stores/theme";
-import {
-  type FormattedMenu,
-  nestedMenu,
-  linkTo,
-  enter,
-  leave,
-} from "./mobile-menu";
-import { watch, reactive, computed, onMounted, ref } from "vue";
-import SimpleBar from "simplebar";
-import { useI18n } from "vue-i18n";
+  import '@/assets/css/vendors/simplebar.css';
+  import '@/assets/css/components/mobile-menu.css';
+  import { useRoute, useRouter } from 'vue-router';
+  import { twMerge } from 'tailwind-merge';
+  import logoUrl from '@/assets/images/logo.svg';
+  import Lucide from '@/components/Base/Lucide';
+  import { useMenuStore } from '@/stores/menu';
+  import { useThemeStore } from '@/stores/theme';
+  import { type FormattedMenu, nestedMenu, linkTo, enter, leave } from './mobile-menu';
+  import { watch, reactive, computed, onMounted, ref } from 'vue';
+  import SimpleBar from 'simplebar';
+  import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+  const { t } = useI18n();
 
-const route = useRoute();
-const router = useRouter();
-let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
-const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "divider">,
-) => {
-  Object.assign(formattedMenu, computedFormattedMenu);
-};
-const themeStore = useThemeStore();
-const menuStore = useMenuStore();
-const menu = computed(() =>
-  nestedMenu(menuStore.menu(themeStore.theme.layout), route),
-);
+  const route = useRoute();
+  const router = useRouter();
+  let formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
+  const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
+    Object.assign(formattedMenu, computedFormattedMenu);
+  };
+  const themeStore = useThemeStore();
+  const menuStore = useMenuStore();
+  const menu = computed(() => nestedMenu(menuStore.menu(themeStore.theme.layout), route));
 
-const activeMobileMenu = ref(false);
-const setActiveMobileMenu = (active: boolean) => {
-  activeMobileMenu.value = active;
-};
+  const activeMobileMenu = ref(false);
+  const setActiveMobileMenu = (active: boolean) => {
+    activeMobileMenu.value = active;
+  };
 
-const scrollableRef = ref<HTMLDivElement>();
+  const scrollableRef = ref<HTMLDivElement>();
 
-watch(menu, () => {
-  setFormattedMenu(menu.value);
-});
+  watch(menu, () => {
+    setFormattedMenu(menu.value);
+  });
 
-onMounted(() => {
-  if (scrollableRef.value) {
-    new SimpleBar(scrollableRef.value);
-  }
+  onMounted(() => {
+    if (scrollableRef.value) {
+      new SimpleBar(scrollableRef.value);
+    }
 
-  setFormattedMenu(menu.value);
-});
+    setFormattedMenu(menu.value);
+  });
 </script>
 
 <template>
@@ -144,10 +134,7 @@ onMounted(() => {
                 {{ t(menu.title) }}
                 <div
                   v-if="menu.subMenu"
-                  :class="[
-                    'menu__sub-icon',
-                    menu.activeDropdown && 'transform rotate-180',
-                  ]"
+                  :class="['menu__sub-icon', menu.activeDropdown && 'transform rotate-180']"
                 >
                   <Lucide icon="ChevronDown" />
                 </div>
@@ -158,10 +145,7 @@ onMounted(() => {
                 v-if="menu.subMenu && menu.activeDropdown"
                 :class="{ 'menu__sub-open': menu.activeDropdown }"
               >
-                <li
-                  v-for="(subMenu, subMenuKey) in menu.subMenu"
-                  :key="subMenuKey"
-                >
+                <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                   <a
                     :href="
                       subMenu.subMenu
@@ -231,9 +215,7 @@ onMounted(() => {
                               setFormattedMenu([...formattedMenu]);
                             }
                           "
-                          :class="[
-                            lastSubMenu.active ? 'menu menu--active' : 'menu',
-                          ]"
+                          :class="[lastSubMenu.active ? 'menu menu--active' : 'menu']"
                         >
                           <div class="menu__icon">
                             <Lucide :icon="lastSubMenu.icon" />

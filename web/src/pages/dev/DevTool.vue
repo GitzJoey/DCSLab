@@ -1,33 +1,33 @@
 <script setup lang="ts">
-// #region Imports
-// #endregion
+  // #region Imports
+  // #endregion
 
-// #region Interfaces
-// #endregion
+  // #region Interfaces
+  // #endregion
 
-// #region Declarations
-// #endregion
+  // #region Declarations
+  // #endregion
 
-// #region Props, Emits
-// #endregion
+  // #region Props, Emits
+  // #endregion
 
-// #region Refs
-// #endregion
+  // #region Refs
+  // #endregion
 
-// #region Provide/Inject
-// #endregion
+  // #region Provide/Inject
+  // #endregion
 
-// #region Computed
-// #endregion
+  // #region Computed
+  // #endregion
 
-// #region Lifecycle Hooks
-// #endregion
+  // #region Lifecycle Hooks
+  // #endregion
 
-// #region Methods
-// #endregion
+  // #region Methods
+  // #endregion
 
-// #region Watchers
-// #endregion
+  // #region Watchers
+  // #endregion
 </script>
 
 <template>

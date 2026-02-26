@@ -1,3 +1,3 @@
-import SimpleMenu from "./SimpleMenu.vue";
+import SimpleMenu from './SimpleMenu.vue';
 
 export default SimpleMenu;

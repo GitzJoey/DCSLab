@@ -1,241 +1,232 @@
 <script setup lang="ts">
-// #region Imports
-import { onMounted, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from "vue-router";
-import { convertErrorTypeToAlertListType } from "@/utils/helper";
-import { Role } from "@/types/models/Role";
-import UserService from "@/services/UserService";
-import RoleService from "@/services/RoleService";
-import DashboardService from "@/services/DashboardService";
-import CacheService from "@/services/CacheService";
-import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
-import {
-  FormInput,
-  FormLabel,
-  FormTextarea,
-  FormSelect,
-  FormSwitch,
-  FormFileUpload,
-  FormErrorMessages,
-} from "@/components/Base/Form";
-import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
-import { CardState } from "@/types/enums/CardState";
-import { DropDownOption } from "@/types/models/DropDownOption";
-import { ServiceResponse } from "@/types/services/ServiceResponse";
-import { Resource } from "@/types/resources/Resource";
-import { ViewMode } from "@/types/enums/ViewMode";
-import { User } from "@/types/models/User";
-import Button from "@/components/Base/Button";
-import { debounce } from "lodash";
-import Lucide from "@/components/Base/Lucide";
-import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
-// #endregion
+  // #region Imports
+  import { onMounted, ref, watch } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useRoute, useRouter } from 'vue-router';
+  import { convertErrorTypeToAlertListType } from '@/utils/helper';
+  import { Role } from '@/types/models/Role';
+  import UserService from '@/services/UserService';
+  import RoleService from '@/services/RoleService';
+  import DashboardService from '@/services/DashboardService';
+  import CacheService from '@/services/CacheService';
+  import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
+  import {
+    FormInput,
+    FormLabel,
+    FormTextarea,
+    FormSelect,
+    FormSwitch,
+    FormFileUpload,
+    FormErrorMessages,
+  } from '@/components/Base/Form';
+  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
+  import { CardState } from '@/types/enums/CardState';
+  import { DropDownOption } from '@/types/models/DropDownOption';
+  import { ServiceResponse } from '@/types/services/ServiceResponse';
+  import { Resource } from '@/types/resources/Resource';
+  import { ViewMode } from '@/types/enums/ViewMode';
+  import { User } from '@/types/models/User';
+  import Button from '@/components/Base/Button';
+  import { debounce } from 'lodash';
+  import Lucide from '@/components/Base/Lucide';
+  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  // #endregion
 
-// #region Interfaces
-// #endregion
+  // #region Interfaces
+  // #endregion
 
-// #region Declarations
-const { t } = useI18n();
-const router = useRouter();
-const route = useRoute();
-const userServices = new UserService();
-const roleServices = new RoleService();
-const dashboardServices = new DashboardService();
-const cacheServices = new CacheService();
-// #endregion
+  // #region Declarations
+  const { t } = useI18n();
+  const router = useRouter();
+  const route = useRoute();
+  const userServices = new UserService();
+  const roleServices = new RoleService();
+  const dashboardServices = new DashboardService();
+  const cacheServices = new CacheService();
+  // #endregion
 
-// #region Props, Emits
-const emits = defineEmits([
-  "mode-state",
-  "loading-state",
-  "show-alertplaceholder",
-]);
-// #endregion
+  // #region Props, Emits
+  const emits = defineEmits(['mode-state', 'loading-state', 'show-alertplaceholder']);
+  // #endregion
 
-// #region Refs
-const cards = ref<Array<TwoColumnsLayoutCards>>([
-  { title: "views.user.field_groups.user_info", state: CardState.Expanded },
-  { title: "views.user.field_groups.user_profile", state: CardState.Expanded },
-  { title: "views.user.field_groups.roles", state: CardState.Expanded },
-  { title: "views.user.field_groups.settings", state: CardState.Expanded },
-  {
-    title: "views.user.field_groups.tokens_management",
-    state: CardState.Expanded,
-  },
-  {
-    title: "views.user.field_groups.password_management",
-    state: CardState.Expanded,
-  },
-  {
-    title: "views.user.field_groups.two_factor_auth",
-    state: CardState.Expanded,
-  },
-  { title: "", state: CardState.Hidden, id: "button" },
-]);
-
-const rolesDDL = ref<Array<Role> | null>(null);
-const statusDDL = ref<Array<DropDownOption> | null>(null);
-const countriesDDL = ref<Array<DropDownOption> | null>(null);
-
-const userForm = userServices.useUserEditForm(route.params.ulid as string);
-// #endregion
-
-// #region Computed
-// #endregion
-
-// #region Lifecycle Hooks
-onMounted(async () => {
-  emits("mode-state", ViewMode.FORM_EDIT);
-  await getDDL();
-
-  await loadData(route.params.ulid as string);
-});
-// #endregion
-
-// #region Methods
-const loadData = async (ulid: string) => {
-  emits("loading-state", true);
-  let response: ServiceResponse<User | null> = await userServices.read(ulid);
-
-  if (response && response.data) {
-    let rolesArr: Array<Role> = [];
-    response.data.roles.forEach((r) => {
-      rolesArr.push({
-        id: r.id,
-        display_name: r.display_name,
-      });
-    });
-
-    userForm.setData({
-      name: response.data.name,
-      email: response.data.email,
-
-      first_name: response.data.profile.first_name,
-      last_name: response.data.profile.last_name,
-      address: response.data.profile.address,
-      city: response.data.profile.city,
-      postal_code: response.data.profile.postal_code,
-      country: response.data.profile.country,
-      img_path: response.data.profile.img_path,
-      tax_id: response.data.profile.tax_id,
-      ic_num: response.data.profile.ic_num,
-      status: response.data.profile.status,
-      remarks: response.data.profile.remarks,
-
-      roles: rolesArr,
-
-      theme: response.data.settings.theme,
-      date_format: response.data.settings.date_format,
-      time_format: response.data.settings.time_format,
-
-      tokens_reset: false,
-      reset_password: false,
-      reset_2fa: false,
-    });
-  }
-  emits("loading-state", false);
-};
-
-const getDDL = async (): Promise<void> => {
-  const [rolesResult, countriesResult, statusResult] = await Promise.all([
-    roleServices.readAny(),
-    dashboardServices.getCountriesDDL(),
-    dashboardServices.getStatusDDL(),
+  // #region Refs
+  const cards = ref<Array<TwoColumnsLayoutCards>>([
+    { title: 'views.user.field_groups.user_info', state: CardState.Expanded },
+    { title: 'views.user.field_groups.user_profile', state: CardState.Expanded },
+    { title: 'views.user.field_groups.roles', state: CardState.Expanded },
+    { title: 'views.user.field_groups.settings', state: CardState.Expanded },
+    {
+      title: 'views.user.field_groups.tokens_management',
+      state: CardState.Expanded,
+    },
+    {
+      title: 'views.user.field_groups.password_management',
+      state: CardState.Expanded,
+    },
+    {
+      title: 'views.user.field_groups.two_factor_auth',
+      state: CardState.Expanded,
+    },
+    { title: '', state: CardState.Hidden, id: 'button' },
   ]);
 
-  if (rolesResult.success && rolesResult.data) {
-    rolesDDL.value = rolesResult.data.data as Array<Role>;
-  }
+  const rolesDDL = ref<Array<Role> | null>(null);
+  const statusDDL = ref<Array<DropDownOption> | null>(null);
+  const countriesDDL = ref<Array<DropDownOption> | null>(null);
 
-  countriesDDL.value = countriesResult;
-  statusDDL.value = statusResult;
-};
+  const userForm = userServices.useUserEditForm(route.params.ulid as string);
+  // #endregion
 
-const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.Collapsed) {
-    cards.value[index].state = CardState.Expanded;
-  } else if (cards.value[index].state === CardState.Expanded) {
-    cards.value[index].state = CardState.Collapsed;
-  }
-};
+  // #region Computed
+  // #endregion
 
-const scrollToError = (id: string): void => {
-  let el = document.getElementById(id);
+  // #region Lifecycle Hooks
+  onMounted(async () => {
+    emits('mode-state', ViewMode.FORM_EDIT);
+    await getDDL();
 
-  if (!el) return;
+    await loadData(route.params.ulid as string);
+  });
+  // #endregion
 
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-};
+  // #region Methods
+  const loadData = async (ulid: string) => {
+    emits('loading-state', true);
+    let response: ServiceResponse<User | null> = await userServices.read(ulid);
 
-const onSubmit = async () => {
-  if (userForm.hasErrors) {
-    scrollToError(Object.keys(userForm.errors)[0]);
-  }
+    if (response && response.data) {
+      let rolesArr: Array<Role> = [];
+      response.data.roles.forEach((r) => {
+        rolesArr.push({
+          id: r.id,
+          display_name: r.display_name,
+        });
+      });
 
-  emits("loading-state", true);
-  await userForm
-    .submit()
-    .then(() => {
-      router.push({ name: "side-menu-administrator-user-list" });
-    })
-    .catch((error) => {
-      let errorList: Record<
-        string,
-        Array<string>
-      > = convertErrorTypeToAlertListType(error as Error);
-      showAlertPlaceholder("danger", "", errorList);
-    })
-    .finally(() => {
-      emits("loading-state", false);
-    });
-};
+      userForm.setData({
+        name: response.data.name,
+        email: response.data.email,
 
-const resetForm = async () => {
-  userForm.reset();
-  userForm.setErrors({});
-  await loadData(route.params.ulid as string);
-};
+        first_name: response.data.profile.first_name,
+        last_name: response.data.profile.last_name,
+        address: response.data.profile.address,
+        city: response.data.profile.city,
+        postal_code: response.data.profile.postal_code,
+        country: response.data.profile.country,
+        img_path: response.data.profile.img_path,
+        tax_id: response.data.profile.tax_id,
+        ic_num: response.data.profile.ic_num,
+        status: response.data.profile.status,
+        remarks: response.data.profile.remarks,
 
-const showAlertPlaceholder = (
-  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
-  pTitle: string,
-  pAlertList: Record<string, Array<string>> | null,
-) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
+        roles: rolesArr,
+
+        theme: response.data.settings.theme,
+        date_format: response.data.settings.date_format,
+        time_format: response.data.settings.time_format,
+
+        tokens_reset: false,
+        reset_password: false,
+        reset_2fa: false,
+      });
+    }
+    emits('loading-state', false);
   };
 
-  emits("show-alertplaceholder", ap);
-};
+  const getDDL = async (): Promise<void> => {
+    const [rolesResult, countriesResult, statusResult] = await Promise.all([
+      roleServices.readAny(),
+      dashboardServices.getCountriesDDL(),
+      dashboardServices.getStatusDDL(),
+    ]);
 
-// #endregion
+    if (rolesResult.success && rolesResult.data) {
+      rolesDDL.value = rolesResult.data.data as Array<Role>;
+    }
 
-// #region Watchers
-watch(
-  userForm,
-  debounce((newValue): void => {
-    cacheServices.setLastEntity("USER_EDIT", newValue.data());
-  }, 500),
-  { deep: true },
-);
-// #endregion
+    countriesDDL.value = countriesResult;
+    statusDDL.value = statusResult;
+  };
+
+  const handleExpandCard = (index: number) => {
+    if (cards.value[index].state === CardState.Collapsed) {
+      cards.value[index].state = CardState.Expanded;
+    } else if (cards.value[index].state === CardState.Expanded) {
+      cards.value[index].state = CardState.Collapsed;
+    }
+  };
+
+  const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
+
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const onSubmit = async () => {
+    if (userForm.hasErrors) {
+      scrollToError(Object.keys(userForm.errors)[0]);
+    }
+
+    emits('loading-state', true);
+    await userForm
+      .submit()
+      .then(() => {
+        router.push({ name: 'side-menu-administrator-user-list' });
+      })
+      .catch((error) => {
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
+          error as Error,
+        );
+        showAlertPlaceholder('danger', '', errorList);
+      })
+      .finally(() => {
+        emits('loading-state', false);
+      });
+  };
+
+  const resetForm = async () => {
+    userForm.reset();
+    userForm.setErrors({});
+    await loadData(route.params.ulid as string);
+  };
+
+  const showAlertPlaceholder = (
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
+    pTitle: string,
+    pAlertList: Record<string, Array<string>> | null,
+  ) => {
+    let ap: AlertPlaceholderProps = {
+      alertType: pAlertType,
+      title: pTitle,
+      alertList: pAlertList,
+    };
+
+    emits('show-alertplaceholder', ap);
+  };
+
+  // #endregion
+
+  // #region Watchers
+  watch(
+    userForm,
+    debounce((newValue): void => {
+      cacheServices.setLastEntity('USER_EDIT', newValue.data());
+    }, 500),
+    { deep: true },
+  );
+  // #endregion
 </script>
 
 <template>
   <form id="userForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('name') }">
-              {{ t("views.user.fields.name") }}
+              {{ t('views.user.fields.name') }}
             </FormLabel>
             <FormInput
               v-model="userForm.name"
@@ -248,7 +239,7 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.email") }}
+              {{ t('views.user.fields.email') }}
             </FormLabel>
             <FormInput v-model="userForm.email" type="text" disabled />
           </div>
@@ -257,7 +248,7 @@ watch(
       <template #card-items-1>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel>{{ t("views.user.fields.first_name") }}</FormLabel>
+            <FormLabel>{{ t('views.user.fields.first_name') }}</FormLabel>
             <FormInput
               v-model="userForm.first_name"
               type="text"
@@ -266,7 +257,7 @@ watch(
             />
           </div>
           <div class="pb-4">
-            <FormLabel>{{ t("views.user.fields.last_name") }}</FormLabel>
+            <FormLabel>{{ t('views.user.fields.last_name') }}</FormLabel>
             <FormInput
               v-model="userForm.last_name"
               type="text"
@@ -274,9 +265,7 @@ watch(
             />
           </div>
           <div class="pb-4">
-            <FormLabel class="form-label"
-              >{{ t("views.user.fields.address") }}
-            </FormLabel>
+            <FormLabel class="form-label">{{ t('views.user.fields.address') }}</FormLabel>
             <FormInput
               v-model="userForm.address"
               type="text"
@@ -284,7 +273,7 @@ watch(
             />
           </div>
           <div class="pb-4">
-            <FormLabel>{{ t("views.user.fields.city") }}</FormLabel>
+            <FormLabel>{{ t('views.user.fields.city') }}</FormLabel>
             <FormInput
               v-model="userForm.city"
               type="text"
@@ -293,7 +282,7 @@ watch(
             />
           </div>
           <div class="pb-4">
-            <FormLabel>{{ t("views.user.fields.postal_code") }} </FormLabel>
+            <FormLabel>{{ t('views.user.fields.postal_code') }}</FormLabel>
             <FormInput
               v-model="userForm.postal_code"
               type="text"
@@ -302,7 +291,7 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('country') }">
-              {{ t("views.user.fields.country") }}
+              {{ t('views.user.fields.country') }}
             </FormLabel>
             <FormSelect
               v-model="userForm.country"
@@ -311,7 +300,7 @@ watch(
               @change="userForm.validate('country')"
             >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
               <option v-for="c in countriesDDL" :key="c.name" :value="c.name">
                 {{ c.name }}
@@ -321,7 +310,7 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': false }">
-              {{ t("views.user.fields.picture") }}
+              {{ t('views.user.fields.picture') }}
             </FormLabel>
             <FormFileUpload
               v-model="userForm.img_path"
@@ -331,7 +320,7 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('tax_id') }">
-              {{ t("views.user.fields.tax_id") }}
+              {{ t('views.user.fields.tax_id') }}
             </FormLabel>
             <FormInput
               v-model="userForm.tax_id"
@@ -343,7 +332,7 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('ic_num') }">
-              {{ t("views.user.fields.ic_num") }}
+              {{ t('views.user.fields.ic_num') }}
             </FormLabel>
             <FormInput
               v-model="userForm.ic_num"
@@ -355,7 +344,7 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('status') }">
-              {{ t("views.user.fields.status") }}
+              {{ t('views.user.fields.status') }}
             </FormLabel>
             <FormSelect
               v-model="userForm.status"
@@ -363,7 +352,7 @@ watch(
               @change="userForm.validate('status')"
             >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
               <option v-for="c in statusDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
@@ -373,7 +362,7 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.remarks") }}
+              {{ t('views.user.fields.remarks') }}
             </FormLabel>
             <FormTextarea
               v-model="userForm.remarks"
@@ -388,7 +377,7 @@ watch(
         <div class="p-5">
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('roles') }">
-              {{ t("views.user.fields.roles") }}
+              {{ t('views.user.fields.roles') }}
             </FormLabel>
             <FormSelect
               v-model="userForm.roles"
@@ -409,7 +398,7 @@ watch(
         <div class="p-5">
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.settings.theme") }}
+              {{ t('views.user.fields.settings.theme') }}
             </FormLabel>
             <FormSelect v-model="userForm.theme">
               <option value="side-menu-light-full">Menu Light</option>
@@ -420,20 +409,20 @@ watch(
           </div>
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.settings.date_format") }}
+              {{ t('views.user.fields.settings.date_format') }}
             </FormLabel>
             <FormSelect v-model="userForm.date_format">
-              <option value="yyyy_MM_dd">{{ "YYYY-MM-DD" }}</option>
-              <option value="dd_MMM_yyyy">{{ "DD-MMM-YYYY" }}</option>
+              <option value="yyyy_MM_dd">{{ 'YYYY-MM-DD' }}</option>
+              <option value="dd_MMM_yyyy">{{ 'DD-MMM-YYYY' }}</option>
             </FormSelect>
           </div>
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.settings.time_format") }}
+              {{ t('views.user.fields.settings.time_format') }}
             </FormLabel>
             <FormSelect v-model="userForm.time_format">
-              <option value="hh_mm_ss">{{ "HH:mm:ss" }}</option>
-              <option value="h_m_A">{{ "H:m A" }}</option>
+              <option value="hh_mm_ss">{{ 'HH:mm:ss' }}</option>
+              <option value="h_m_A">{{ 'H:m A' }}</option>
             </FormSelect>
           </div>
         </div>
@@ -442,13 +431,10 @@ watch(
         <div class="p-5">
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.tokens.reset") }}
+              {{ t('views.user.fields.tokens.reset') }}
             </FormLabel>
             <FormSwitch>
-              <FormSwitch.Input
-                type="checkbox"
-                v-model="userForm.tokens_reset"
-              />
+              <FormSwitch.Input type="checkbox" v-model="userForm.tokens_reset" />
             </FormSwitch>
           </div>
         </div>
@@ -457,13 +443,10 @@ watch(
         <div class="p-5">
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.reset_password") }}
+              {{ t('views.user.fields.reset_password') }}
             </FormLabel>
             <FormSwitch>
-              <FormSwitch.Input
-                type="checkbox"
-                v-model="userForm.reset_password"
-              />
+              <FormSwitch.Input type="checkbox" v-model="userForm.reset_password" />
             </FormSwitch>
           </div>
         </div>
@@ -472,7 +455,7 @@ watch(
         <div class="p-5">
           <div class="pb-4">
             <FormLabel>
-              {{ t("views.user.fields.reset_2fa") }}
+              {{ t('views.user.fields.reset_2fa') }}
             </FormLabel>
             <FormSwitch>
               <FormSwitch.Input type="checkbox" v-model="userForm.reset_2fa" />
@@ -489,13 +472,9 @@ watch(
             class="w-28 shadow-md"
             :disabled="userForm.validating || userForm.hasErrors"
           >
-            <Lucide
-              v-if="userForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="userForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
-              {{ t("components.buttons.submit") }}
+              {{ t('components.buttons.submit') }}
             </template>
           </Button>
           <Button
@@ -505,7 +484,7 @@ watch(
             class="w-28 shadow-md"
             @click="resetForm"
           >
-            {{ t("components.buttons.reset") }}
+            {{ t('components.buttons.reset') }}
           </Button>
         </div>
       </template>

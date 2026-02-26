@@ -1,15 +1,15 @@
 .litepicker {
   background-color: white;
-  border-radius: theme("borderRadius.lg");
-  font-size: theme("fontSize.sm");
+  border-radius: theme('borderRadius.lg');
+  font-size: theme('fontSize.sm');
   z-index: 999999 !important;
   margin-top: 7px;
   box-shadow: 0px 3px 20px #00000014;
-  border: 1px solid theme("colors.slate.200");
-  @media (max-width: calc(theme("screens.lg") - 1px)) {
+  border: 1px solid theme('colors.slate.200');
+  @media (max-width: calc(theme('screens.lg') - 1px)) {
     width: 310px;
   }
-  @media (max-width: calc(theme("screens.sm") - 1px)) {
+  @media (max-width: calc(theme('screens.sm') - 1px)) {
     left: 0px !important;
     right: 0px;
     margin-left: auto;
@@ -22,24 +22,24 @@
     padding-top: 0;
   }
   .container__footer {
-    border-top: 1px solid theme("colors.slate.200" / 60%);
+    border-top: 1px solid theme('colors.slate.200' / 60%);
     margin: 0;
-    padding: theme("spacing.3");
-    @media (max-width: calc(theme("screens.lg") - 1px)) {
+    padding: theme('spacing.3');
+    @media (max-width: calc(theme('screens.lg') - 1px)) {
       display: flex;
       flex-direction: column-reverse;
       text-align: center;
     }
     .preview-date-range {
-      @media (max-width: calc(theme("screens.lg") - 1px)) {
+      @media (max-width: calc(theme('screens.lg') - 1px)) {
         width: 100%;
         display: block;
         order: 1;
-        margin-bottom: theme("spacing.[1.5]");
+        margin-bottom: theme('spacing.[1.5]');
       }
     }
     .button-cancel {
-      @media (max-width: calc(theme("screens.lg") - 1px)) {
+      @media (max-width: calc(theme('screens.lg') - 1px)) {
         width: 100% !important;
         margin-left: 0px !important;
         padding-top: 0.375rem !important;
@@ -47,70 +47,70 @@
       }
     }
     .button-apply {
-      @media (max-width: calc(theme("screens.lg") - 1px)) {
+      @media (max-width: calc(theme('screens.lg') - 1px)) {
         width: 100% !important;
         margin-left: 0px !important;
         padding-top: 0.375rem !important;
         padding-bottom: 0.375rem !important;
-        margin-bottom: theme("spacing.[1.5]");
+        margin-bottom: theme('spacing.[1.5]');
       }
     }
     .button-apply,
     .button-cancel {
-      width: theme("spacing.20");
-      padding: theme("spacing.1") theme("spacing.2");
-      border-radius: theme("borderRadius.md");
-      font-weight: theme("fontWeight.medium");
-      margin-left: theme("spacing.1");
+      width: theme('spacing.20');
+      padding: theme('spacing.1') theme('spacing.2');
+      border-radius: theme('borderRadius.md');
+      font-weight: theme('fontWeight.medium');
+      margin-left: theme('spacing.1');
       margin-right: 0;
     }
     .button-apply {
-      background-color: theme("colors.slate.700");
+      background-color: theme('colors.slate.700');
       color: white;
     }
     .button-cancel {
-      background-color: theme("colors.slate.200" / 70%);
-      color: theme("colors.slate.500");
+      background-color: theme('colors.slate.200' / 70%);
+      color: theme('colors.slate.500');
     }
   }
   .container__months {
-    padding-left: theme("spacing.1");
-    padding-right: theme("spacing.1");
+    padding-left: theme('spacing.1');
+    padding-right: theme('spacing.1');
     .month-item-weekdays-row {
-      color: theme("colors.slate.400");
-      margin-top: theme("spacing.3");
+      color: theme('colors.slate.400');
+      margin-top: theme('spacing.3');
     }
     .month-item-header {
       padding-left: 0;
       padding-right: 0;
       padding-bottom: 0;
-      padding-top: theme("spacing.2");
+      padding-top: theme('spacing.2');
       .button-previous-month {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: theme("spacing.8");
-        height: theme("spacing.8");
+        width: theme('spacing.8');
+        height: theme('spacing.8');
         &:hover {
-          background-color: theme("colors.slate.100");
+          background-color: theme('colors.slate.100');
         }
         svg {
           transform: rotate(135deg);
-          margin-right: calc(theme("spacing.1") * -1);
+          margin-right: calc(theme('spacing.1') * -1);
         }
       }
       .button-next-month {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: theme("spacing.8");
-        height: theme("spacing.8");
+        width: theme('spacing.8');
+        height: theme('spacing.8');
         &:hover {
-          background-color: theme("colors.slate.100");
+          background-color: theme('colors.slate.100');
         }
         svg {
           transform: rotate(-45deg);
-          margin-left: calc(theme("spacing.1") * -1);
+          margin-left: calc(theme('spacing.1') * -1);
         }
       }
       .button-previous-month:hover svg,
@@ -123,8 +123,8 @@
         border-radius: 0;
         display: inline-block;
         border-color: #4a5568;
-        width: theme("spacing.2");
-        height: theme("spacing.2");
+        width: theme('spacing.2');
+        height: theme('spacing.2');
         display: block;
       }
       div > .month-item-name,
@@ -133,20 +133,20 @@
         background-size: 15px;
         background-position: center right 0.6rem;
         background-color: transparent;
-        font-size: theme("fontSize.sm");
+        font-size: theme('fontSize.sm');
         border-width: 1px;
         border-style: solid;
         background-repeat: no-repeat;
-        padding-top: theme("spacing.1");
-        padding-bottom: theme("spacing.1");
-        padding-left: theme("spacing.2");
-        padding-right: theme("spacing.8");
-        border-radius: theme("borderRadius.md");
-        border-color: theme("colors.slate.200");
-        font-weight: theme("fontWeight.normal");
+        padding-top: theme('spacing.1');
+        padding-bottom: theme('spacing.1');
+        padding-left: theme('spacing.2');
+        padding-right: theme('spacing.8');
+        border-radius: theme('borderRadius.md');
+        border-color: theme('colors.slate.200');
+        font-weight: theme('fontWeight.normal');
         &:focus {
           outline: none;
-          border-color: theme("colors.slate.200");
+          border-color: theme('colors.slate.200');
           --tw-ring-color: transparent;
         }
       }
@@ -154,35 +154,35 @@
   }
   .container__days {
     .day-item {
-      color: theme("colors.slate.800");
+      color: theme('colors.slate.800');
       &:hover {
         box-shadow: none;
-        background-color: theme("colors.slate.100");
-        color: theme("colors.slate.800");
+        background-color: theme('colors.slate.100');
+        color: theme('colors.slate.800');
       }
       &.is-today,
       &.is-today:hover {
-        font-weight: theme("fontWeight.medium");
-        color: theme("colors.slate.700");
+        font-weight: theme('fontWeight.medium');
+        color: theme('colors.slate.700');
       }
       &.is-start-date,
       &.is-start-date:hover,
       &.is-end-date,
       &.is-end-date:hover {
-        background-color: theme("colors.slate.700");
+        background-color: theme('colors.slate.700');
         color: white;
       }
       &.is-in-range,
       &.is-in-range:hover {
-        background-color: theme("colors.slate.100");
+        background-color: theme('colors.slate.100');
       }
     }
     .week-number {
-      color: theme("colors.slate.400");
+      color: theme('colors.slate.400');
     }
   }
 }
-@media (max-width: calc(theme("screens.lg") - 1px)) {
+@media (max-width: calc(theme('screens.lg') - 1px)) {
   :root {
     --litepicker-day-width: 35px;
   }
@@ -190,72 +190,72 @@
 
 .dark {
   .litepicker {
-    background-color: theme("colors.darkmode.600");
+    background-color: theme('colors.darkmode.600');
     &:before,
     &:after {
       border-right-color: transparent;
       border-left-color: transparent;
-      border-bottom-color: theme("colors.darkmode.600");
+      border-bottom-color: theme('colors.darkmode.600');
     }
     .container__months {
       .button-previous-month:hover {
-        background-color: theme("colors.darkmode.400");
+        background-color: theme('colors.darkmode.400');
       }
       .button-next-month:hover {
-        background-color: theme("colors.darkmode.400");
+        background-color: theme('colors.darkmode.400');
       }
       .month-item-header {
         .button-previous-month:hover svg,
         .button-previous-month svg,
         .button-next-month:hover svg,
         .button-next-month svg {
-          border-color: theme("colors.slate.200");
+          border-color: theme('colors.slate.200');
         }
         div > .month-item-name,
         div > .month-item-year {
-          color: theme("colors.slate.200");
+          color: theme('colors.slate.200');
         }
         div > .month-item-name,
         div > .month-item-year {
-          border-color: theme("colors.darkmode.400");
+          border-color: theme('colors.darkmode.400');
         }
       }
     }
     .container__days {
       .day-item {
-        color: theme("colors.slate.200");
+        color: theme('colors.slate.200');
         &:hover {
-          background-color: theme("colors.darkmode.400");
+          background-color: theme('colors.darkmode.400');
         }
         &.is-start-date,
         &.is-start-date:hover,
         &.is-end-date,
         &.is-end-date:hover {
-          background-color: theme("colors.slate.700");
-          color: theme("colors.slate.200");
+          background-color: theme('colors.slate.700');
+          color: theme('colors.slate.200');
         }
         &.is-in-range,
         &.is-in-range:hover {
-          background-color: theme("colors.darkmode.400");
+          background-color: theme('colors.darkmode.400');
         }
         &.is-today,
         &.is-today:hover {
-          color: theme("colors.slate.200");
+          color: theme('colors.slate.200');
         }
       }
     }
     .container__footer {
-      border-color: theme("colors.darkmode.400");
+      border-color: theme('colors.darkmode.400');
       .button-cancel {
-        background-color: theme("colors.darkmode.400");
-        color: theme("colors.slate.300");
+        background-color: theme('colors.darkmode.400');
+        color: theme('colors.slate.300');
       }
     }
     .container__tooltip {
-      background-color: theme("colors.darkmode.400");
+      background-color: theme('colors.darkmode.400');
       &:before,
       &:after {
-        border-top-color: theme("colors.darkmode.600");
+        border-top-color: theme('colors.darkmode.600');
       }
     }
   }

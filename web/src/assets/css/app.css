@@ -10,7 +10,7 @@
  | https://tailwindcss.com/docs/theme
  |
  */
-@import "./fonts/_roboto.css";
+@import './fonts/_roboto.css';
 
 /*
  |--------------------------------------------------------------------------
@@ -20,16 +20,16 @@
  | Import CSS components.
  |
  */
-@import "./components/base/_box.css";
-@import "./components/base/_global.css";
-@import "./components/base/_image-fit.css";
-@import "./components/base/_scrollbar-hidden.css";
-@import "./components/base/_typing-dots.css";
-@import "./components/base/_zoom-in.css";
-@import "./components/base/_intro.css";
+@import './components/base/_box.css';
+@import './components/base/_global.css';
+@import './components/base/_image-fit.css';
+@import './components/base/_scrollbar-hidden.css';
+@import './components/base/_typing-dots.css';
+@import './components/base/_zoom-in.css';
+@import './components/base/_intro.css';
 
-@import "./customs/_loading-overlay.css";
-@import "./customs/_loading-line.css";
+@import './customs/_loading-overlay.css';
+@import './customs/_loading-line.css';
 
 /*
  |--------------------------------------------------------------------------

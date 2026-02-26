@@ -1,3 +1,3 @@
-import ScrollToTop from "./ScrollToTop.vue";
+import ScrollToTop from './ScrollToTop.vue';
 
 export default ScrollToTop;
