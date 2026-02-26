@@ -514,14 +514,7 @@
     >
       <g fill="none" fill-rule="evenodd" transform="translate(1 1)" stroke-width="3">
         <circle cx="22" cy="22" r="6" stroke-opacity="0">
-          <animate
-            attributeName="r"
-            begin="1.5s"
-            dur="3s"
-            values="6;22"
-            calcMode="linear"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="r" begin="1.5s" dur="3s" values="6;22" calcMode="linear" repeatCount="indefinite" />
           <animate
             attributeName="stroke-opacity"
             begin="1.5s"
@@ -540,14 +533,7 @@
           />
         </circle>
         <circle cx="22" cy="22" r="6" stroke-opacity="0">
-          <animate
-            attributeName="r"
-            begin="3s"
-            dur="3s"
-            values="6;22"
-            calcMode="linear"
-            repeatCount="indefinite"
-          />
+          <animate attributeName="r" begin="3s" dur="3s" values="6;22" calcMode="linear" repeatCount="indefinite" />
           <animate
             attributeName="stroke-opacity"
             begin="3s"

@@ -43,12 +43,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -214,11 +209,7 @@
             <FormLabel>
               {{ t('views.company.fields.address') }}
             </FormLabel>
-            <FormTextarea
-              v-model="companyForm.address"
-              type="text"
-              :placeholder="t('views.company.fields.address')"
-            />
+            <FormTextarea v-model="companyForm.address" type="text" :placeholder="t('views.company.fields.address')" />
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': companyForm.invalid('default') }">
@@ -268,13 +259,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

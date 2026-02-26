@@ -7,10 +7,7 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  BrandReadAnyPaginateRequest,
-  BrandReadAnyGetRequest,
-} from '../types/services/brand/BrandRequest';
+import { BrandReadAnyPaginateRequest, BrandReadAnyGetRequest } from '../types/services/brand/BrandRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 
@@ -89,9 +86,7 @@ export default class BrandService {
     }
   }
 
-  public async readAnyGet(
-    args: BrandReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<Brand>> | null>> {
+  public async readAnyGet(args: BrandReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Brand>> | null>> {
     const result: ServiceResponse<Resource<Array<Brand>> | null> = {
       success: false,
     };

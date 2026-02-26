@@ -87,12 +87,7 @@
   // #endregion
 
   // #region Methods
-  const getProductCategories = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number,
-  ) => {
+  const getProductCategories = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     let company_id = selectedUserLocation.value.company.id;
@@ -123,12 +118,7 @@
   };
 
   const onDataListChanged = async (data: DataListEmittedData) => {
-    await getProductCategories(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page,
-    );
+    await getProductCategories(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -162,9 +152,7 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    let result: ServiceResponse<boolean | null> = await productCategoryServices.delete(
-      deleteUlid.value,
-    );
+    let result: ServiceResponse<boolean | null> = await productCategoryServices.delete(deleteUlid.value);
 
     if (result.success) {
       emits('update-profile');
@@ -204,9 +192,7 @@
   };
 
   const getTypeLabel = (type: number): string => {
-    return type === 1
-      ? t('views.product_category.type.product')
-      : t('views.product_category.type.service');
+    return type === 1 ? t('views.product_category.type.product') : t('views.product_category.type.service');
   };
   // #endregion
 

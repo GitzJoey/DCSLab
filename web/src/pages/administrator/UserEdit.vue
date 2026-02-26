@@ -176,9 +176,7 @@
         router.push({ name: 'side-menu-administrator-user-list' });
       })
       .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -258,19 +256,11 @@
           </div>
           <div class="pb-4">
             <FormLabel>{{ t('views.user.fields.last_name') }}</FormLabel>
-            <FormInput
-              v-model="userForm.last_name"
-              type="text"
-              :placeholder="t('views.user.fields.last_name')"
-            />
+            <FormInput v-model="userForm.last_name" type="text" :placeholder="t('views.user.fields.last_name')" />
           </div>
           <div class="pb-4">
             <FormLabel class="form-label">{{ t('views.user.fields.address') }}</FormLabel>
-            <FormInput
-              v-model="userForm.address"
-              type="text"
-              :placeholder="t('views.user.fields.address')"
-            />
+            <FormInput v-model="userForm.address" type="text" :placeholder="t('views.user.fields.address')" />
           </div>
           <div class="pb-4">
             <FormLabel>{{ t('views.user.fields.city') }}</FormLabel>
@@ -283,11 +273,7 @@
           </div>
           <div class="pb-4">
             <FormLabel>{{ t('views.user.fields.postal_code') }}</FormLabel>
-            <FormInput
-              v-model="userForm.postal_code"
-              type="text"
-              :placeholder="t('views.user.fields.postal_code')"
-            />
+            <FormInput v-model="userForm.postal_code" type="text" :placeholder="t('views.user.fields.postal_code')" />
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('country') }">
@@ -477,13 +463,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

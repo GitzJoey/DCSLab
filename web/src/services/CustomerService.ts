@@ -9,10 +9,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
-import {
-  CustomerReadAnyPaginateRequest,
-  CustomerReadAnyGetRequest,
-} from '../types/services/customer/CustomerRequest';
+import { CustomerReadAnyPaginateRequest, CustomerReadAnyGetRequest } from '../types/services/customer/CustomerRequest';
 
 export default class CustomerService {
   private ziggyRoute: Config;
@@ -100,9 +97,7 @@ export default class CustomerService {
     }
   }
 
-  public async readAnyGet(
-    args: CustomerReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<Customer>> | null>> {
+  public async readAnyGet(args: CustomerReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Customer>> | null>> {
     const result: ServiceResponse<Resource<Array<Customer>> | null> = {
       success: false,
     };

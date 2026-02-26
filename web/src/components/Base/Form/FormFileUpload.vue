@@ -44,8 +44,7 @@
       props.formInputSize == 'lg' && 'text-lg py-1.5 px-4',
       props.rounded && 'rounded-full',
       formInline && 'flex-1',
-      inputGroup &&
-        'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
+      inputGroup && 'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
       typeof attrs.class === 'string' && attrs.class,
     ]),
   );
@@ -72,9 +71,7 @@
       let filename: string = files[0].name;
       fileReader.readAsDataURL(files[0]);
       localValue.value = filename;
-      let uploadResponse: ServiceResponse<FileUpload | null> = await dashboardService.uploadFile(
-        files[0],
-      );
+      let uploadResponse: ServiceResponse<FileUpload | null> = await dashboardService.uploadFile(files[0]);
 
       if (uploadResponse && uploadResponse.data) {
         imageUrl.value = uploadResponse.data.url;

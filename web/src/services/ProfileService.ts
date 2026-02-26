@@ -5,11 +5,7 @@ import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosResponse, isAxiosError, AxiosError } from 'axios';
 import axios from '../axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  TwoFactorResponse,
-  QRCode,
-  SecretKeyResponse,
-} from '../types/models/TwoFactorAuthentication';
+import { TwoFactorResponse, QRCode, SecretKeyResponse } from '../types/models/TwoFactorAuthentication';
 import { ConfirmPasswordStatusResponse } from '../types/models/ConfirmPassword';
 import { StatusCode } from '../types/enums/StatusCode';
 import { UserProfile } from '../types/models/UserProfile';
@@ -52,12 +48,7 @@ export default class ProfileService {
   }
 
   public useUpdateUserProfileForm() {
-    const url = route(
-      'api.post.db.module.profile.update.user_profile',
-      undefined,
-      true,
-      this.ziggyRoute,
-    );
+    const url = route('api.post.db.module.profile.update.user_profile', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -69,12 +60,7 @@ export default class ProfileService {
   }
 
   public useUpdatePersonalInfoForm() {
-    const url = route(
-      'api.post.db.module.profile.update.personal_info',
-      undefined,
-      true,
-      this.ziggyRoute,
-    );
+    const url = route('api.post.db.module.profile.update.personal_info', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -101,12 +87,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route(
-        'api.post.db.module.profile.send.email_verification',
-        undefined,
-        false,
-        this.ziggyRoute,
-      );
+      const url = route('api.post.db.module.profile.send.email_verification', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<null> = await axios.post(url);
 
@@ -127,12 +108,7 @@ export default class ProfileService {
   }
 
   public useUpdateAccountSettingsForm() {
-    const url = route(
-      'api.post.db.module.profile.update.account_settings',
-      undefined,
-      true,
-      this.ziggyRoute,
-    );
+    const url = route('api.post.db.module.profile.update.account_settings', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -158,12 +134,7 @@ export default class ProfileService {
   }
 
   public useUpdatePasswordForm() {
-    const url = route(
-      'api.post.db.module.profile.update.password',
-      undefined,
-      true,
-      this.ziggyRoute,
-    );
+    const url = route('api.post.db.module.profile.update.password', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -248,9 +219,7 @@ export default class ProfileService {
     }
   }
 
-  public async confirmPassword(
-    password: string,
-  ): Promise<ServiceResponse<TwoFactorResponse | null>> {
+  public async confirmPassword(password: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
     const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
     };
@@ -281,9 +250,7 @@ export default class ProfileService {
     }
   }
 
-  public async confirmPasswordStatus(): Promise<
-    ServiceResponse<ConfirmPasswordStatusResponse | null>
-  > {
+  public async confirmPasswordStatus(): Promise<ServiceResponse<ConfirmPasswordStatusResponse | null>> {
     const result: ServiceResponse<ConfirmPasswordStatusResponse | null> = {
       success: false,
     };
@@ -308,9 +275,7 @@ export default class ProfileService {
     }
   }
 
-  public async TwoFactorAuthenticationConfirmed(
-    code: string,
-  ): Promise<ServiceResponse<TwoFactorResponse | null>> {
+  public async TwoFactorAuthenticationConfirmed(code: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
     const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
     };

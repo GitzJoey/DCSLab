@@ -14,10 +14,7 @@
 </script>
 
 <template>
-  <div
-    v-if="userContextIsLoaded && userContextIsAuth && userContext.email_verified == false"
-    class="mt-8"
-  >
+  <div v-if="userContextIsLoaded && userContextIsAuth && userContext.email_verified == false" class="mt-8">
     <Alert variant="secondary" class="flex items-center mb-2" v-slot="{ dismiss }">
       {{ t('components.alert-placeholder.email_verification.message') }}
       <Alert.DismissButton type="button" class="text-white" aria-label="Close" @click="dismiss">

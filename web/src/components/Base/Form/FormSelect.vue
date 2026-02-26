@@ -45,9 +45,7 @@
         const firstOption = selectRef.value?.querySelectorAll('option')[0];
         return (
           firstOption !== undefined &&
-          (firstOption.getAttribute('value') !== null
-            ? firstOption.getAttribute('value')
-            : firstOption.text)
+          (firstOption.getAttribute('value') !== null ? firstOption.getAttribute('value') : firstOption.text)
         );
       }
 
@@ -60,12 +58,7 @@
 </script>
 
 <template>
-  <select
-    ref="selectRef"
-    :class="computedClass"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  >
+  <select ref="selectRef" :class="computedClass" v-bind="_.omit(attrs, 'class')" v-model="localValue">
     <slot></slot>
   </select>
 </template>

@@ -50,10 +50,5 @@
 </script>
 
 <template>
-  <FormCheck.Input
-    :type="props.type"
-    :class="computedClass"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  />
+  <FormCheck.Input :type="props.type" :class="computedClass" v-bind="_.omit(attrs, 'class')" v-model="localValue" />
 </template>

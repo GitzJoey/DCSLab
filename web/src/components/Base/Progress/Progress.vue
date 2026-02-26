@@ -6,10 +6,7 @@
   const attrs = useAttrs();
 
   const computedClass = computed(() =>
-    twMerge([
-      'w-full h-2 bg-slate-200 rounded dark:bg-black/20',
-      typeof attrs.class === 'string' && attrs.class,
-    ]),
+    twMerge(['w-full h-2 bg-slate-200 rounded dark:bg-black/20', typeof attrs.class === 'string' && attrs.class]),
   );
 </script>
 

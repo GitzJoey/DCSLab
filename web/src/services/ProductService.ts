@@ -7,14 +7,8 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  ProductReadAnyPaginateRequest,
-  ProductReadAnyGetRequest,
-} from '../types/services/product/ProductRequest';
-import {
-  ProductUnitStoreRequest,
-  ProductUnitUpdateRequest,
-} from '../types/services/product-unit/ProductUnitRequest';
+import { ProductReadAnyPaginateRequest, ProductReadAnyGetRequest } from '../types/services/product/ProductRequest';
+import { ProductUnitStoreRequest, ProductUnitUpdateRequest } from '../types/services/product-unit/ProductUnitRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 import CacheService from './CacheService';
@@ -164,10 +158,8 @@ export default class ProductService {
       if (args.search) queryParams['search'] = args.search;
       if (args.category_id) queryParams['category_id'] = args.category_id;
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
-      if (args.is_taxable !== undefined && args.is_taxable !== null)
-        queryParams['is_taxable'] = args.is_taxable;
-      if (args.vat_rate !== undefined && args.vat_rate !== null)
-        queryParams['vat_rate'] = args.vat_rate;
+      if (args.is_taxable !== undefined && args.is_taxable !== null) queryParams['is_taxable'] = args.is_taxable;
+      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
       if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat;
       if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
@@ -212,9 +204,7 @@ export default class ProductService {
     }
   }
 
-  public async readAnyGet(
-    args: ProductReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<Product>> | null>> {
+  public async readAnyGet(args: ProductReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Product>> | null>> {
     const result: ServiceResponse<Resource<Array<Product>> | null> = {
       success: false,
     };
@@ -229,8 +219,7 @@ export default class ProductService {
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
       if (args.is_taxable !== undefined && args.is_taxable !== null)
         queryParams['is_taxable'] = args.is_taxable ? 1 : 0;
-      if (args.vat_rate !== undefined && args.vat_rate !== null)
-        queryParams['vat_rate'] = args.vat_rate;
+      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
       if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat ? 1 : 0;
       if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)

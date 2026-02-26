@@ -27,12 +27,7 @@ export default class StockAdjustmentInProductService {
   }
 
   public useStockAdjustmentInProductCreateForm() {
-    const url = route(
-      'api.post.stock_adjustment_in_product.save',
-      undefined,
-      true,
-      this.ziggyRoute,
-    );
+    const url = route('api.post.stock_adjustment_in_product.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -109,8 +104,7 @@ export default class StockAdjustmentInProductService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<StockAdjustmentInProduct>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<StockAdjustmentInProduct>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -159,8 +153,7 @@ export default class StockAdjustmentInProductService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<StockAdjustmentInProduct>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<StockAdjustmentInProduct>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;

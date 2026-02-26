@@ -102,8 +102,7 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Product>> | null> =
-      await productServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Product>> | null> = await productServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       productLists.value = result.data;
@@ -153,10 +152,7 @@
 
     if (result.success) {
       await getProducts('', true, 1, 10);
-      showNotification(
-        t('views.product_service.alert.delete.title'),
-        t('views.product_service.alert.delete.message'),
-      );
+      showNotification(t('views.product_service.alert.delete.title'), t('views.product_service.alert.delete.message'));
     } else {
       showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
@@ -256,11 +252,7 @@
                     {{ item.product_units[0].unit.name }}
                   </Table.Td>
                   <Table.Td>
-                    <Lucide
-                      v-if="item.status == 'ACTIVE'"
-                      icon="CheckCircle"
-                      class="text-success"
-                    />
+                    <Lucide v-if="item.status == 'ACTIVE'" icon="CheckCircle" class="text-success" />
                     <Lucide v-if="item.status == 'INACTIVE'" icon="X" class="text-danger" />
                   </Table.Td>
                   <Table.Td>

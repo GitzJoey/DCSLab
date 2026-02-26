@@ -7,10 +7,7 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  UnitReadAnyPaginateRequest,
-  UnitReadAnyGetRequest,
-} from '../types/services/unit/UnitRequest';
+import { UnitReadAnyPaginateRequest, UnitReadAnyGetRequest } from '../types/services/unit/UnitRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 import CacheService from './CacheService';
@@ -95,9 +92,7 @@ export default class UnitService {
     }
   }
 
-  public async readAnyGet(
-    args: UnitReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<Unit>> | null>> {
+  public async readAnyGet(args: UnitReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Unit>> | null>> {
     const result: ServiceResponse<Resource<Array<Unit>> | null> = {
       success: false,
     };

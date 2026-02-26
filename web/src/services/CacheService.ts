@@ -28,9 +28,7 @@ export default class CacheService {
       dcslabSystems = JSON.stringify(new Object());
     }
 
-    const new_dcslabSystems = this.debugMode
-      ? JSON.parse(dcslabSystems)
-      : JSON.parse(atob(dcslabSystems));
+    const new_dcslabSystems = this.debugMode ? JSON.parse(dcslabSystems) : JSON.parse(atob(dcslabSystems));
 
     new_dcslabSystems[ddlname] = value;
 
@@ -45,9 +43,7 @@ export default class CacheService {
     const dcslabLastEntity = sessionStorage.getItem(this.DCSLAB_LAST_ENTITY_KEY);
     if (dcslabLastEntity == null) return null;
 
-    const entity = this.debugMode
-      ? JSON.parse(dcslabLastEntity)
-      : JSON.parse(atob(dcslabLastEntity));
+    const entity = this.debugMode ? JSON.parse(dcslabLastEntity) : JSON.parse(atob(dcslabLastEntity));
     if (entity == null) return null;
 
     key = key.toUpperCase();
@@ -76,9 +72,7 @@ export default class CacheService {
     const dcslabLastEntity = sessionStorage.getItem(this.DCSLAB_LAST_ENTITY_KEY);
     if (dcslabLastEntity == null) return;
 
-    const entity = this.debugMode
-      ? JSON.parse(dcslabLastEntity)
-      : JSON.parse(atob(dcslabLastEntity));
+    const entity = this.debugMode ? JSON.parse(dcslabLastEntity) : JSON.parse(atob(dcslabLastEntity));
     if (entity == null) return;
 
     key = key.toUpperCase();
@@ -99,9 +93,7 @@ export default class CacheService {
     const dcslabLastEntity = sessionStorage.getItem(this.DCSLAB_LAST_ENTITY_KEY);
     if (dcslabLastEntity == null) return false;
 
-    const entity = this.debugMode
-      ? JSON.parse(dcslabLastEntity)
-      : JSON.parse(atob(dcslabLastEntity));
+    const entity = this.debugMode ? JSON.parse(dcslabLastEntity) : JSON.parse(atob(dcslabLastEntity));
     if (entity == null) return false;
 
     key = key.toUpperCase();

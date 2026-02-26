@@ -163,21 +163,11 @@
                       </div>
                       <div class="top-menu__title">
                         {{ t(subMenu.title) }}
-                        <Lucide
-                          v-if="subMenu.subMenu"
-                          class="top-menu__sub-icon"
-                          icon="ChevronDown"
-                        />
+                        <Lucide v-if="subMenu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                       </div>
                     </a>
-                    <ul
-                      v-if="subMenu.subMenu"
-                      :class="{ 'side-menu__sub-open': subMenu.activeDropdown }"
-                    >
-                      <li
-                        v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                        :key="lastSubMenuKey"
-                      >
+                    <ul v-if="subMenu.subMenu" :class="{ 'side-menu__sub-open': subMenu.activeDropdown }">
+                      <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                         <a
                           :href="
                             lastSubMenu.subMenu

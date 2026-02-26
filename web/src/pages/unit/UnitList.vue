@@ -118,8 +118,7 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Unit>> | null> =
-      await unitServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Unit>> | null> = await unitServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       unitLists.value = result.data;
@@ -167,10 +166,7 @@
     if (result.success) {
       emits('update-profile');
       await getUnits('', true, 1, 10);
-      showNotification(
-        t('views.unit.alert.delete_unit.title'),
-        t('views.unit.alert.delete_unit.content'),
-      );
+      showNotification(t('views.unit.alert.delete_unit.title'), t('views.unit.alert.delete_unit.content'));
     } else {
       showAlertPlaceholder(
         'danger',

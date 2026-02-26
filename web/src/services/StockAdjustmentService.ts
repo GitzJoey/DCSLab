@@ -74,13 +74,9 @@ export default class StockAdjustmentService {
       out_warehouse_id: '',
       remarks: '',
       is_posted: false,
-      delete_in_product_ids: [] as NonNullable<
-        StockAdjustmentUpdateRequest['delete_in_product_ids']
-      >,
+      delete_in_product_ids: [] as NonNullable<StockAdjustmentUpdateRequest['delete_in_product_ids']>,
       in_products: [] as NonNullable<StockAdjustmentUpdateRequest['in_products']>,
-      delete_out_product_ids: [] as NonNullable<
-        StockAdjustmentUpdateRequest['delete_out_product_ids']
-      >,
+      delete_out_product_ids: [] as NonNullable<StockAdjustmentUpdateRequest['delete_out_product_ids']>,
       out_products: [] as NonNullable<StockAdjustmentUpdateRequest['out_products']>,
     });
 

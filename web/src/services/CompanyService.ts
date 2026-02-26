@@ -7,10 +7,7 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  CompanyReadAnyPaginateRequest,
-  CompanyReadAnyGetRequest,
-} from '../types/services/company/CompanyRequest';
+import { CompanyReadAnyPaginateRequest, CompanyReadAnyGetRequest } from '../types/services/company/CompanyRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 
@@ -92,9 +89,7 @@ export default class CompanyService {
     }
   }
 
-  public async readAnyGet(
-    args: CompanyReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<Company>> | null>> {
+  public async readAnyGet(args: CompanyReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Company>> | null>> {
     const result: ServiceResponse<Resource<Array<Company>> | null> = {
       success: false,
     };

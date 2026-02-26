@@ -7,10 +7,7 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  BranchReadAnyPaginateRequest,
-  BranchReadAnyGetRequest,
-} from '../types/services/branch/BranchRequest';
+import { BranchReadAnyPaginateRequest, BranchReadAnyGetRequest } from '../types/services/branch/BranchRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 
@@ -98,9 +95,7 @@ export default class BranchService {
     }
   }
 
-  public async readAnyGet(
-    args: BranchReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<Branch>> | null>> {
+  public async readAnyGet(args: BranchReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Branch>> | null>> {
     const result: ServiceResponse<Resource<Array<Branch>> | null> = {
       success: false,
     };

@@ -73,12 +73,7 @@
     await getStockAdjustments('', true, 1, 10);
   });
 
-  const getStockAdjustments = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number,
-  ) => {
+  const getStockAdjustments = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     const request: StockAdjustmentReadAnyPaginateRequest = {
@@ -105,12 +100,7 @@
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getStockAdjustments(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page,
-    );
+    await getStockAdjustments(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -284,11 +274,7 @@
                   <!-- is posted -->
                   <Table.Td>
                     <div class="flex items-center">
-                      <Lucide
-                        v-if="item.is_posted"
-                        icon="CheckCircle"
-                        class="w-4 h-4 text-success"
-                      />
+                      <Lucide v-if="item.is_posted" icon="CheckCircle" class="w-4 h-4 text-success" />
                       <Lucide v-else icon="X" class="w-4 h-4 text-danger" />
                     </div>
                   </Table.Td>
@@ -381,11 +367,7 @@
                             </div>
                             <div class="flex-1 font-medium">
                               <div class="flex items-center">
-                                <Lucide
-                                  v-if="item.is_posted"
-                                  icon="CheckCircle"
-                                  class="w-4 h-4 text-success"
-                                />
+                                <Lucide v-if="item.is_posted" icon="CheckCircle" class="w-4 h-4 text-success" />
                                 <Lucide v-else icon="X" class="w-4 h-4 text-danger" />
                               </div>
                             </div>
@@ -405,18 +387,11 @@
                             <div class="font-medium text-sm mb-2">
                               {{ t('views.stock_adjustment.field_groups.in_products') }}
                             </div>
-                            <div
-                              v-if="item.in_products.length === 0"
-                              class="text-slate-500 text-sm"
-                            >
+                            <div v-if="item.in_products.length === 0" class="text-slate-500 text-sm">
                               {{ t('components.data-list.data_not_found') }}
                             </div>
                             <div v-else class="space-y-2 text-xs sm:text-sm">
-                              <div
-                                v-for="(p, index) in item.in_products"
-                                :key="p.ulid"
-                                class="flex gap-3"
-                              >
+                              <div v-for="(p, index) in item.in_products" :key="p.ulid" class="flex gap-3">
                                 <div class="w-6 text-right text-slate-500">{{ index + 1 }}.</div>
                                 <div class="flex-1">
                                   <div class="font-medium truncate">
@@ -440,18 +415,11 @@
                             <div class="font-medium text-sm mb-2">
                               {{ t('views.stock_adjustment.field_groups.out_products') }}
                             </div>
-                            <div
-                              v-if="item.out_products.length === 0"
-                              class="text-slate-500 text-sm"
-                            >
+                            <div v-if="item.out_products.length === 0" class="text-slate-500 text-sm">
                               {{ t('components.data-list.data_not_found') }}
                             </div>
                             <div v-else class="space-y-2 text-xs sm:text-sm">
-                              <div
-                                v-for="(p, index) in item.out_products"
-                                :key="p.ulid"
-                                class="flex gap-3"
-                              >
+                              <div v-for="(p, index) in item.out_products" :key="p.ulid" class="flex gap-3">
                                 <div class="w-6 text-right text-slate-500">{{ index + 1 }}.</div>
                                 <div class="flex-1">
                                   <div class="font-medium truncate">

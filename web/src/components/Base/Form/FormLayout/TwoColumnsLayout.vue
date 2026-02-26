@@ -156,16 +156,9 @@
               </div>
             </div>
             <div
-              :class="[
-                { block: card.state === CardState.Expanded },
-                { hidden: card.state === CardState.Collapsed },
-              ]"
+              :class="[{ block: card.state === CardState.Expanded }, { hidden: card.state === CardState.Collapsed }]"
             >
-              <slot
-                :name="`card-items-${card.id ? card.id : index}`"
-                :card="card"
-                :index="index"
-              ></slot>
+              <slot :name="`card-items-${card.id ? card.id : index}`" :card="card" :index="index"></slot>
             </div>
           </div>
         </div>

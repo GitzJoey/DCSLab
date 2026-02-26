@@ -38,9 +38,7 @@ export default class ErrorHandlerService {
     const result: ServiceResponse<null> = {
       success: false,
       errors: {
-        axios: [
-          axiosResp.data.message + ' (' + axiosResp.status + ':' + axiosResp.statusText + ')',
-        ],
+        axios: [axiosResp.data.message + ' (' + axiosResp.status + ':' + axiosResp.statusText + ')'],
       },
     };
 

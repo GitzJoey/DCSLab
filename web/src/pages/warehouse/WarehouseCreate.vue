@@ -44,12 +44,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -248,21 +243,13 @@
             <FormLabel>
               {{ t('views.warehouse.fields.city') }}
             </FormLabel>
-            <FormInput
-              v-model="warehouseForm.city"
-              type="text"
-              :placeholder="t('views.warehouse.fields.city')"
-            />
+            <FormInput v-model="warehouseForm.city" type="text" :placeholder="t('views.warehouse.fields.city')" />
           </div>
           <div class="pb-4">
             <FormLabel>
               {{ t('views.warehouse.fields.contact') }}
             </FormLabel>
-            <FormInput
-              v-model="warehouseForm.contact"
-              type="text"
-              :placeholder="t('views.warehouse.fields.contact')"
-            />
+            <FormInput v-model="warehouseForm.contact" type="text" :placeholder="t('views.warehouse.fields.contact')" />
           </div>
           <div class="pb-4">
             <FormLabel>
@@ -309,13 +296,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

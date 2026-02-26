@@ -103,8 +103,7 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Brand>> | null> =
-      await brandServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Brand>> | null> = await brandServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       brandLists.value = result.data;
@@ -152,10 +151,7 @@
     if (result.success) {
       emits('update-profile');
       await getBrands('', true, 1, 10);
-      showNotification(
-        t('views.brand.alert.delete_brand.title'),
-        t('views.brand.alert.delete_brand.content'),
-      );
+      showNotification(t('views.brand.alert.delete_brand.title'), t('views.brand.alert.delete_brand.content'));
     } else {
       showAlertPlaceholder(
         'danger',

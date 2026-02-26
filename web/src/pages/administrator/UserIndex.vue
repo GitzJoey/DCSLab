@@ -138,14 +138,7 @@
         </template>
         <template #optional>
           <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-            <Button
-              v-if="mode == ViewMode.LIST"
-              as="a"
-              href="#"
-              variant="primary"
-              class="shadow-md"
-              @click="createNew"
-            >
+            <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
               <Lucide icon="Plus" class="w-4 h-4" />
               &nbsp;{{ t('components.buttons.create_new') }}
             </Button>

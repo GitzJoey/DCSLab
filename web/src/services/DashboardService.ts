@@ -80,12 +80,7 @@ export default class DashboardService {
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route(
-          'api.get.db.common.ddl.list.statuses',
-          { show_deleted: showDeleted },
-          false,
-          this.ziggyRoute,
-        );
+        const url = route('api.get.db.common.ddl.list.statuses', { show_deleted: showDeleted }, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -110,12 +105,7 @@ export default class DashboardService {
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route(
-          'api.get.db.common.ddl.list.countries',
-          undefined,
-          false,
-          this.ziggyRoute,
-        );
+        const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -140,12 +130,7 @@ export default class DashboardService {
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route(
-          'api.get.db.common.ddl.list.payment_term_types',
-          undefined,
-          false,
-          this.ziggyRoute,
-        );
+        const url = route('api.get.db.common.ddl.list.payment_term_types', undefined, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -170,12 +155,7 @@ export default class DashboardService {
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route(
-          'api.get.db.common.ddl.list.rounding_types',
-          undefined,
-          false,
-          this.ziggyRoute,
-        );
+        const url = route('api.get.db.common.ddl.list.rounding_types', undefined, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 

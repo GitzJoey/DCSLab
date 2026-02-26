@@ -26,11 +26,7 @@
   import { formatDate } from '@/utils/helper';
   import ProfileService from '@/services/ProfileService';
   import DashboardService from '@/services/DashboardService';
-  import {
-    TwoFactorResponse,
-    QRCode,
-    SecretKeyResponse,
-  } from '@/types/models/TwoFactorAuthentication';
+  import { TwoFactorResponse, QRCode, SecretKeyResponse } from '@/types/models/TwoFactorAuthentication';
   import { ConfirmPasswordStatusResponse } from '@/types/models/ConfirmPassword';
   import { UserProfile } from '@/types/models/UserProfile';
   import { ServiceResponse } from '@/types/services/ServiceResponse';
@@ -331,8 +327,7 @@
   };
 
   const showRecoveryCodes = async () => {
-    let response: ServiceResponse<Array<string> | null> =
-      await profileServices.twoFactorRecoveryCodes();
+    let response: ServiceResponse<Array<string> | null> = await profileServices.twoFactorRecoveryCodes();
 
     if (response.success && response.data) {
       twoFactorRecoveryCodes.value = response.data;
@@ -341,8 +336,7 @@
   };
 
   const showSecretKey = async () => {
-    let response: ServiceResponse<SecretKeyResponse | null> =
-      await profileServices.twoFactorSecretKey();
+    let response: ServiceResponse<SecretKeyResponse | null> = await profileServices.twoFactorSecretKey();
 
     if (response.success) {
       if (response.data) {
@@ -353,8 +347,7 @@
   };
 
   const checkConfirmPasswordStatus = async () => {
-    let response: ServiceResponse<ConfirmPasswordStatusResponse | null> =
-      await profileServices.confirmPasswordStatus();
+    let response: ServiceResponse<ConfirmPasswordStatusResponse | null> = await profileServices.confirmPasswordStatus();
 
     if (response.success && response.data) {
       confirmPasswordStatus.value = response.data;
@@ -437,9 +430,7 @@
         await updateUserProfile();
       })
       .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -456,9 +447,7 @@
         await updateUserProfile();
       })
       .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -475,9 +464,7 @@
         await updateUserProfile();
       })
       .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -495,9 +482,7 @@
         await updateUserMenu();
       })
       .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -515,9 +500,7 @@
         updatePasswordForm.reset();
       })
       .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -535,9 +518,7 @@
         updateTokensForm.reset();
       })
       .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -649,11 +630,7 @@
                   class="w-28 shadow-md"
                   :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -679,11 +656,7 @@
                 {{ t('components.buttons.send_verification_email') }}
               </Button>
             </div>
-            <Notification
-              ref-key="sendVerificationEmailNotification"
-              :options="{ duration: 3000 }"
-              class="flex"
-            >
+            <Notification ref-key="sendVerificationEmailNotification" :options="{ duration: 3000 }" class="flex">
               <Lucide icon="CheckCircle" class="text-success" />
               <div class="ml-4 mr-4">
                 <div class="font-medium">
@@ -831,11 +804,7 @@
                   class="w-28 shadow-md"
                   :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -893,11 +862,7 @@
                   class="w-28 shadow-md"
                   :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -911,11 +876,7 @@
             <form id="updateUserRolesForm" @submit.prevent="onSubmitUpdateUserRoles">
               <div class="pb-4">
                 <div class="grid grid-cols-3 gap-2 place-items center">
-                  <div
-                    v-for="(item, index) in roleSelection"
-                    :key="index"
-                    class="flex flex-col items-center"
-                  >
+                  <div v-for="(item, index) in roleSelection" :key="index" class="flex flex-col items-center">
                     <div
                       :class="{
                         'cursor-pointer': item.state == 'selectable',
@@ -924,10 +885,7 @@
                       @click="handleChangeRole(index)"
                     >
                       <img alt="" :src="item.images" width="100" height="100" />
-                      <div
-                        v-if="item.state == 'checked'"
-                        class="grid grid-cols-1 place-items-center"
-                      >
+                      <div v-if="item.state == 'checked'" class="grid grid-cols-1 place-items-center">
                         <Lucide icon="Check" class="text-success" />
                       </div>
                       <Button
@@ -1006,11 +964,7 @@
                   class="w-28 shadow-md"
                   :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -1055,11 +1009,7 @@
                 {{ t('views.profile.fields.2fa.status') }}
               </FormLabel>
               <FormSwitch>
-                <FormSwitch.Input
-                  type="checkbox"
-                  @change="setTwoFactor"
-                  v-model="twoFactorAuthStatus"
-                />
+                <FormSwitch.Input type="checkbox" @change="setTwoFactor" v-model="twoFactorAuthStatus" />
               </FormSwitch>
             </div>
             <div v-if="showQRCodeField" class="pb-4">
@@ -1080,10 +1030,7 @@
                 {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
               </FormLabel>
               <FormInput v-model="twoFactorCode" />
-              <FormErrorMessages
-                v-if="twoFactorCodeErrorText != ''"
-                :messages="twoFactorCodeErrorText"
-              />
+              <FormErrorMessages v-if="twoFactorCodeErrorText != ''" :messages="twoFactorCodeErrorText" />
               <br />
               <Button
                 type="button"
@@ -1147,10 +1094,7 @@
                       type="password"
                       :placeholder="t('views.profile.fields.2fa.confirm_password')"
                     />
-                    <FormErrorMessages
-                      v-if="confirmPasswordErrorText != ''"
-                      :messages="confirmPasswordErrorText"
-                    />
+                    <FormErrorMessages v-if="confirmPasswordErrorText != ''" :messages="confirmPasswordErrorText" />
                   </div>
                   <div class="flex gap-2 justify-center items-center">
                     <Button

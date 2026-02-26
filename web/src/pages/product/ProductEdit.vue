@@ -49,12 +49,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -622,9 +617,7 @@
                   @set-auto="setUnitCode(index)"
                   @change="productForm.validate(`product_units.${index}.code` as any)"
                 />
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)[`product_units.${index}.code`]"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.code`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-6">
@@ -643,9 +636,7 @@
                       :options="unitOptions"
                       :placeholder="t('components.dropdown.placeholder')"
                       :class="{
-                        'border-danger': productForm.invalid(
-                          `product_units.${index}.unit_id` as any,
-                        ),
+                        'border-danger': productForm.invalid(`product_units.${index}.unit_id` as any),
                       }"
                       @change="
                         () => {
@@ -665,17 +656,13 @@
                     <Lucide icon="X" class="w-4 h-4" />
                   </button>
                 </div>
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-6" v-if="index > 0">
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.conversion_value` as any,
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.conversion_value` as any),
                   }"
                 >
                   {{ t('views.product.fields.conversion_value') }}
@@ -684,16 +671,12 @@
                   type="number"
                   v-model="productForm.product_units[index].conversion_value"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      `product_units.${index}.conversion_value` as any,
-                    ),
+                    'border-danger': productForm.invalid(`product_units.${index}.conversion_value` as any),
                   }"
                   :placeholder="t('views.product.fields.conversion_value')"
                   @change="productForm.validate(`product_units.${index}.conversion_value` as any)"
                 />
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)[`product_units.${index}.conversion_value`]"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.conversion_value`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-6" v-if="index > 0">
@@ -724,15 +707,12 @@
                   {{
                     formatCurrency(
                       (
-                        productForm.product_units[index].price /
-                        productForm.product_units[index].conversion_value
+                        productForm.product_units[index].price / productForm.product_units[index].conversion_value
                       ).toFixed(2),
                     )
                   }}
                 </div>
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)[`product_units.${index}.price`]"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-4" v-else>
@@ -751,9 +731,7 @@
                   :placeholder="t('views.product.fields.price')"
                   @change="productForm.validate(`product_units.${index}.price` as any)"
                 />
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)[`product_units.${index}.price`]"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-4" v-if="index === 0">
@@ -773,9 +751,7 @@
                   :placeholder="t('views.product.fields.point')"
                   @change="productForm.validate(`product_units.${index}.point` as any)"
                 />
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)[`product_units.${index}.point`]"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.point`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-4" v-if="index === 0">
@@ -794,17 +770,13 @@
                     class="ml-2 text-sm"
                     :class="{
                       'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
-                      'text-slate-700': !(productForm.errors as any)[
-                        'product_units.is_primary_unit'
-                      ],
+                      'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
                     }"
                   >
                     {{ t('views.product.fields.is_primary_unit') }}
                   </span>
                 </div>
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)['product_units.is_primary_unit']"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)['product_units.is_primary_unit']" />
               </div>
 
               <div class="col-span-12 sm:col-span-6" v-if="index > 0">
@@ -837,21 +809,15 @@
                       class="ml-2 text-sm"
                       :class="{
                         'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
-                        'text-slate-700': !(productForm.errors as any)[
-                          'product_units.is_primary_unit'
-                        ],
+                        'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
                       }"
                     >
                       {{ t('views.product.fields.is_primary_unit') }}
                     </span>
                   </div>
                 </div>
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)[`product_units.${index}.point`]"
-                />
-                <FormErrorMessages
-                  :messages="(productForm.errors as any)['product_units.is_primary_unit']"
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.point`]" />
+                <FormErrorMessages :messages="(productForm.errors as any)['product_units.is_primary_unit']" />
               </div>
             </div>
           </div>
@@ -905,25 +871,13 @@
       <!-- Buttons -->
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="productForm.validating"
-          >
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="productForm.validating">
             <Lucide v-if="productForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

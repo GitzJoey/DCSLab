@@ -105,9 +105,7 @@
       >
         <MobileMenu />
         <div class="flex mt-[4.7rem] md:mt-0 overflow-hidden">
-          <nav
-            class="side-nav hidden md:block md:w-[100px] xl:w-[250px] px-5 pb-16 overflow-x-hidden z-10"
-          >
+          <nav class="side-nav hidden md:block md:w-[100px] xl:w-[250px] px-5 pb-16 overflow-x-hidden z-10">
             <RouterLink
               :to="{ name: 'side-menu-dashboard-maindashboard' }"
               class="flex items-center pt-4 pl-5 mt-3 intro-x"
@@ -120,12 +118,7 @@
             <div class="my-6 side-nav__divider"></div>
             <ul>
               <template v-for="(menu, menuKey) in formattedMenu">
-                <li
-                  v-if="menu == 'divider'"
-                  type="li"
-                  class="my-6 side-nav__divider"
-                  :key="'divider-' + menuKey"
-                ></li>
+                <li v-if="menu == 'divider'" type="li" class="my-6 side-nav__divider" :key="'divider-' + menuKey"></li>
                 <li v-else :key="menuKey">
                   <Tippy
                     as="a"
@@ -163,10 +156,7 @@
                       {{ t(menu.title) }}
                       <div
                         v-if="menu.subMenu"
-                        :class="[
-                          'side-menu__sub-icon',
-                          { 'transform rotate-180': menu.activeDropdown },
-                        ]"
+                        :class="['side-menu__sub-icon', { 'transform rotate-180': menu.activeDropdown }]"
                       >
                         <Lucide icon="ChevronDown" />
                       </div>
@@ -232,10 +222,7 @@
                               'side-menu__sub-open': subMenu.activeDropdown,
                             }"
                           >
-                            <li
-                              v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                              :key="lastSubMenuKey"
-                            >
+                            <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                               <Tippy
                                 as="a"
                                 :content="t(lastSubMenu.title)"
@@ -256,9 +243,7 @@
                                         }
                                       })(lastSubMenu.pageName)
                                 "
-                                :class="[
-                                  lastSubMenu.active ? 'side-menu side-menu--active' : 'side-menu',
-                                ]"
+                                :class="[lastSubMenu.active ? 'side-menu side-menu--active' : 'side-menu']"
                                 @click="
                                   (event: MouseEvent) => {
                                     event.preventDefault();

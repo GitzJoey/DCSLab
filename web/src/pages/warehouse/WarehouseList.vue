@@ -87,12 +87,7 @@
   // #endregion
 
   // #region Methods
-  const getWarehouses = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number,
-  ) => {
+  const getWarehouses = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     let company_id = selectedUserLocation.value.company.id;

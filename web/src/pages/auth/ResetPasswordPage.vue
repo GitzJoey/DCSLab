@@ -133,11 +133,7 @@
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <template v-if="status != 'finishResetting'">
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
-                    >
+                    <Button type="submit" variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
                       {{ t('components.buttons.submit') }}
                     </Button>
                     <Button

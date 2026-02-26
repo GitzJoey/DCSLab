@@ -48,12 +48,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -449,10 +444,7 @@
               >
                 {{ t('views.customer_group.fields.payment_term_type') }}
               </FormLabel>
-              <FormSelect
-                v-model="customerForm.payment_term_type"
-                @change="customerForm.validate('payment_term_type')"
-              >
+              <FormSelect v-model="customerForm.payment_term_type" @change="customerForm.validate('payment_term_type')">
                 <option value="">
                   {{ t('components.dropdown.placeholder') }}
                 </option>
@@ -536,25 +528,13 @@
 
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="customerForm.validating"
-          >
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="customerForm.validating">
             <Lucide v-if="customerForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

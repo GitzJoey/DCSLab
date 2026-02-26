@@ -18,9 +18,7 @@
   });
 
   const attrs = useAttrs();
-  const computedClass = computed(() =>
-    twMerge(['p-2 font-medium', typeof attrs.class === 'string' && attrs.class]),
-  );
+  const computedClass = computed(() => twMerge(['p-2 font-medium', typeof attrs.class === 'string' && attrs.class]));
 </script>
 
 <template>

@@ -34,9 +34,7 @@
   const open = computed(() => props.open);
 
   const attrs = useAttrs();
-  const computedClass = computed(() =>
-    twMerge(['relative z-[60]', typeof attrs.class === 'string' && attrs.class]),
-  );
+  const computedClass = computed(() => twMerge(['relative z-[60]', typeof attrs.class === 'string' && attrs.class]));
 
   const zoom = ref(false);
   const emit = defineEmits<{

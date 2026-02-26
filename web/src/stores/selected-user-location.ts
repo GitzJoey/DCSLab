@@ -133,9 +133,7 @@ export const useSelectedUserLocationStore = defineStore('selectedUserLocation', 
       const debug = import.meta.env.VITE_APP_DEBUG === 'true';
       sessionStorage.setItem(
         'selectedUserLocation',
-        debug
-          ? JSON.stringify(this.selectedUserLocation)
-          : btoa(JSON.stringify(this.selectedUserLocation)),
+        debug ? JSON.stringify(this.selectedUserLocation) : btoa(JSON.stringify(this.selectedUserLocation)),
       );
 
       this.isUserLocationSelected = true;

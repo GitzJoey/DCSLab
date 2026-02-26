@@ -108,9 +108,7 @@
       >
         <MobileMenu />
 
-        <div
-          class="border-b border-white/[0.08] mt-[2.2rem] md:-mt-5 -mx-3 sm:-mx-8 px-3 sm:px-8 pt-3 md:pt-0 mb-10"
-        >
+        <div class="border-b border-white/[0.08] mt-[2.2rem] md:-mt-5 -mx-3 sm:-mx-8 px-3 sm:px-8 pt-3 md:pt-0 mb-10">
           <div class="flex items-center h-[70px] z-[51] relative">
             <HomeLogo layout="top-menu" />
             <UserLocation theme="rubick" layout="top-menu" />
@@ -183,21 +181,11 @@
                       </div>
                       <div class="top-menu__title">
                         {{ t(subMenu.title) }}
-                        <Lucide
-                          v-if="subMenu.subMenu"
-                          class="top-menu__sub-icon"
-                          icon="ChevronDown"
-                        />
+                        <Lucide v-if="subMenu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                       </div>
                     </a>
-                    <ul
-                      v-if="subMenu.subMenu"
-                      :class="{ 'side-menu__sub-open': subMenu.activeDropdown }"
-                    >
-                      <li
-                        v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                        :key="lastSubMenuKey"
-                      >
+                    <ul v-if="subMenu.subMenu" :class="{ 'side-menu__sub-open': subMenu.activeDropdown }">
+                      <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                         <a
                           :href="
                             lastSubMenu.subMenu

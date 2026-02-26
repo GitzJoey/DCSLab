@@ -48,9 +48,7 @@
 
       // Link tabs
       list?.variant == 'link-tabs' && 'border-b-2 border-transparent dark:border-transparent',
-      list?.variant == 'link-tabs' &&
-        tab?.selected.value &&
-        'border-b-primary font-medium dark:border-b-primary',
+      list?.variant == 'link-tabs' && tab?.selected.value && 'border-b-primary font-medium dark:border-b-primary',
 
       typeof attrs.class === 'string' && attrs.class,
     ]),

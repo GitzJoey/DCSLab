@@ -132,19 +132,13 @@
               </div>
               <div class="menu__title">
                 {{ t(menu.title) }}
-                <div
-                  v-if="menu.subMenu"
-                  :class="['menu__sub-icon', menu.activeDropdown && 'transform rotate-180']"
-                >
+                <div v-if="menu.subMenu" :class="['menu__sub-icon', menu.activeDropdown && 'transform rotate-180']">
                   <Lucide icon="ChevronDown" />
                 </div>
               </div>
             </a>
             <Transition @enter="enter" @leave="leave">
-              <ul
-                v-if="menu.subMenu && menu.activeDropdown"
-                :class="{ 'menu__sub-open': menu.activeDropdown }"
-              >
+              <ul v-if="menu.subMenu && menu.activeDropdown" :class="{ 'menu__sub-open': menu.activeDropdown }">
                 <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                   <a
                     :href="
@@ -176,10 +170,7 @@
                       {{ t(subMenu.title) }}
                       <div
                         v-if="subMenu.subMenu"
-                        :class="[
-                          'menu__sub-icon',
-                          subMenu.activeDropdown && 'transform rotate-180',
-                        ]"
+                        :class="['menu__sub-icon', subMenu.activeDropdown && 'transform rotate-180']"
                       >
                         <Lucide icon="ChevronDown" />
                       </div>
@@ -190,10 +181,7 @@
                       v-if="subMenu.subMenu && subMenu.activeDropdown"
                       :class="{ 'menu__sub-open': subMenu.activeDropdown }"
                     >
-                      <li
-                        v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                        :key="lastSubMenuKey"
-                      >
+                      <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                         <a
                           :href="
                             lastSubMenu.subMenu

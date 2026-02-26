@@ -57,9 +57,7 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
 
         // Nested menu
         const subMenu: Array<FormattedMenu> = [];
-        nestedMenu(menuItem.subMenu, route).map(
-          (menu) => typeof menu !== 'string' && subMenu.push(menu),
-        );
+        nestedMenu(menuItem.subMenu, route).map((menu) => typeof menu !== 'string' && subMenu.push(menu));
         menuItem.subMenu = subMenu;
       }
 

@@ -114,9 +114,7 @@
               'before:block before:absolute before:inset-0 before:bg-black/[0.15] before:rounded-[1.3rem] before:z-[-1]',
             ]"
           >
-            <nav
-              class="side-nav hidden md:block w-[100px] xl:w-[250px] px-5 pt-8 pb-16 overflow-x-hidden"
-            >
+            <nav class="side-nav hidden md:block w-[100px] xl:w-[250px] px-5 pt-8 pb-16 overflow-x-hidden">
               <ul>
                 <template v-for="(menu, menuKey) in formattedMenu">
                   <li
@@ -162,10 +160,7 @@
                         {{ t(menu.title) }}
                         <div
                           v-if="menu.subMenu"
-                          :class="[
-                            'side-menu__sub-icon',
-                            { 'transform rotate-180': menu.activeDropdown },
-                          ]"
+                          :class="['side-menu__sub-icon', { 'transform rotate-180': menu.activeDropdown }]"
                         >
                           <Lucide icon="ChevronDown" />
                         </div>
@@ -231,10 +226,7 @@
                                 'side-menu__sub-open': subMenu.activeDropdown,
                               }"
                             >
-                              <li
-                                v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                                :key="lastSubMenuKey"
-                              >
+                              <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                                 <Tippy
                                   as="a"
                                   :content="t(lastSubMenu.title)"
@@ -255,11 +247,7 @@
                                           }
                                         })(lastSubMenu.pageName)
                                   "
-                                  :class="[
-                                    lastSubMenu.active
-                                      ? 'side-menu side-menu--active'
-                                      : 'side-menu',
-                                  ]"
+                                  :class="[lastSubMenu.active ? 'side-menu side-menu--active' : 'side-menu']"
                                   @click="
                                     (event: MouseEvent) => {
                                       event.preventDefault();

@@ -9,10 +9,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
-import {
-  InvestorReadAnyGetRequest,
-  InvestorReadAnyPaginateRequest,
-} from '../types/services/investor/InvestorRequest';
+import { InvestorReadAnyGetRequest, InvestorReadAnyPaginateRequest } from '../types/services/investor/InvestorRequest';
 
 export default class InvestorService {
   private ziggyRoute: Config;
@@ -89,9 +86,7 @@ export default class InvestorService {
     }
   }
 
-  public async readAnyGet(
-    args: InvestorReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<Investor>> | null>> {
+  public async readAnyGet(args: InvestorReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Investor>> | null>> {
     const result: ServiceResponse<Resource<Array<Investor>> | null> = {
       success: false,
     };

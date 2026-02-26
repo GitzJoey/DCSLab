@@ -70,12 +70,7 @@
     await getStockAdjustmentCategories('', true, 1, 10);
   });
 
-  const getStockAdjustmentCategories = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number,
-  ) => {
+  const getStockAdjustmentCategories = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     const company_id = selectedUserLocation.value.company.id;
@@ -106,12 +101,7 @@
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getStockAdjustmentCategories(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page,
-    );
+    await getStockAdjustmentCategories(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -217,10 +207,7 @@
                   </Table.Td>
                 </Table.Tr>
               </template>
-              <template
-                v-for="(item, itemIdx) in stockAdjustmentCategoryLists.data"
-                :key="item.ulid"
-              >
+              <template v-for="(item, itemIdx) in stockAdjustmentCategoryLists.data" :key="item.ulid">
                 <Table.Tr class="intro-x">
                   <Table.Td>
                     <div class="font-medium whitespace-nowrap">

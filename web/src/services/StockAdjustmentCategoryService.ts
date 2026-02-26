@@ -70,8 +70,7 @@ export default class StockAdjustmentCategoryService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<StockAdjustmentCategory>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<StockAdjustmentCategory>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -119,8 +118,7 @@ export default class StockAdjustmentCategoryService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<StockAdjustmentCategory>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<StockAdjustmentCategory>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;

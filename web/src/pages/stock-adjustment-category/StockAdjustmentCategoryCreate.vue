@@ -6,13 +6,7 @@
   import StockAdjustmentCategoryService from '@/services/StockAdjustmentCategoryService';
   import CacheService from '@/services/CacheService';
   import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormErrorMessages,
-    FormTextarea,
-    FormInputCode,
-  } from '@/components/Base/Form';
+  import { FormInput, FormLabel, FormErrorMessages, FormTextarea, FormInputCode } from '@/components/Base/Form';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import { CardState } from '@/types/enums/CardState';
   import Button from '@/components/Base/Button';
@@ -31,12 +25,7 @@
   const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
   const cacheServices = new CacheService();
 
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
 
   const cards = ref<Array<TwoColumnsLayoutCards>>([
     {
@@ -50,8 +39,7 @@
     { title: '', state: CardState.Hidden, id: 'button' },
   ]);
 
-  const stockAdjustmentCategoryForm =
-    stockAdjustmentCategoryService.useStockAdjustmentCategoryCreateForm();
+  const stockAdjustmentCategoryForm = stockAdjustmentCategoryService.useStockAdjustmentCategoryCreateForm();
 
   const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
   const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
@@ -76,10 +64,7 @@
   };
 
   const loadFromCache = () => {
-    const data = cacheServices.getLastEntity('STOCK_ADJUSTMENT_CATEGORY_CREATE') as Record<
-      string,
-      unknown
-    >;
+    const data = cacheServices.getLastEntity('STOCK_ADJUSTMENT_CATEGORY_CREATE') as Record<string, unknown>;
     if (!data) return;
     stockAdjustmentCategoryForm.setData(data);
   };
@@ -223,26 +208,14 @@
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              stockAdjustmentCategoryForm.validating || stockAdjustmentCategoryForm.hasErrors
-            "
+            :disabled="stockAdjustmentCategoryForm.validating || stockAdjustmentCategoryForm.hasErrors"
           >
-            <Lucide
-              v-if="stockAdjustmentCategoryForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="stockAdjustmentCategoryForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

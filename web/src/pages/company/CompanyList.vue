@@ -94,8 +94,7 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Company>> | null> =
-      await companyServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Company>> | null> = await companyServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       companyLists.value = result.data as Collection<Array<Company>>;
@@ -146,10 +145,7 @@
     if (result.success) {
       emits('update-profile');
       await getCompanies('', true, 1, 10);
-      showNotification(
-        t('views.company.alert.delete_company.title'),
-        t('views.company.alert.delete_company.content'),
-      );
+      showNotification(t('views.company.alert.delete_company.title'), t('views.company.alert.delete_company.content'));
     } else {
       showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }

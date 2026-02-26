@@ -43,12 +43,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -266,31 +261,19 @@
             <FormLabel>
               {{ t('views.branch.fields.address') }}
             </FormLabel>
-            <FormTextarea
-              v-model="branchForm.address"
-              type="text"
-              :placeholder="t('views.branch.fields.address')"
-            />
+            <FormTextarea v-model="branchForm.address" type="text" :placeholder="t('views.branch.fields.address')" />
           </div>
           <div class="pb-4">
             <FormLabel>
               {{ t('views.branch.fields.city') }}
             </FormLabel>
-            <FormInput
-              v-model="branchForm.city"
-              type="text"
-              :placeholder="t('views.branch.fields.city')"
-            />
+            <FormInput v-model="branchForm.city" type="text" :placeholder="t('views.branch.fields.city')" />
           </div>
           <div class="pb-4">
             <FormLabel>
               {{ t('views.branch.fields.contact') }}
             </FormLabel>
-            <FormInput
-              v-model="branchForm.contact"
-              type="text"
-              :placeholder="t('views.branch.fields.contact')"
-            />
+            <FormInput v-model="branchForm.contact" type="text" :placeholder="t('views.branch.fields.contact')" />
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': branchForm.invalid('is_main') }" class="pr-5">
@@ -352,13 +335,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

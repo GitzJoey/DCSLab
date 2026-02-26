@@ -67,13 +67,7 @@
   // #endregion
 
   // #region Methods
-  const getUsers = async (
-    search: string,
-    refresh: boolean,
-    paginate: boolean,
-    page: number,
-    per_page: number,
-  ) => {
+  const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     const searchReq: ReadAnyRequest = {

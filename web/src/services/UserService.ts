@@ -71,12 +71,7 @@ export default class UserService {
 
       //ZiggyRouteNotFoundException
       //const url = route('invalid.route', undefined, false, this.ziggyRoute);
-      const url = route(
-        'api.get.db.admin.user.read_any',
-        { _query: queryParams },
-        false,
-        this.ziggyRoute,
-      );
+      const url = route('api.get.db.admin.user.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
       const response: AxiosResponse<Collection<Array<User>>> = await axios.get(url);
 
@@ -101,9 +96,7 @@ export default class UserService {
         if (e.response) {
           switch (e.response.status) {
             case StatusCode.UnprocessableEntity:
-              return this.errorHandlerService.generateAxiosValidationErrorServiceResponse(
-                e as AxiosError,
-              );
+              return this.errorHandlerService.generateAxiosValidationErrorServiceResponse(e as AxiosError);
             default:
               return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
           }

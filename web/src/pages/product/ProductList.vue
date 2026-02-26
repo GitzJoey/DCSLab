@@ -102,8 +102,7 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Product>> | null> =
-      await productServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Product>> | null> = await productServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       productLists.value = result.data;
@@ -155,10 +154,7 @@
     if (result.success) {
       await getProducts('', true, 1, 10);
       showAlertPlaceholder('hidden', '', null);
-      showNotification(
-        t('views.product.alert.delete.title'),
-        t('views.product.alert.delete.message'),
-      );
+      showNotification(t('views.product.alert.delete.title'), t('views.product.alert.delete.message'));
     } else {
       showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
@@ -243,10 +239,7 @@
                       </template>
                     </div>
                     <div class="mt-1">
-                      <div
-                        v-if="item.status == 'ACTIVE'"
-                        class="flex items-center text-success text-xs"
-                      >
+                      <div v-if="item.status == 'ACTIVE'" class="flex items-center text-success text-xs">
                         <Lucide icon="CheckCircle" class="w-3 h-3 mr-1" />
                         {{ t('views.product.status.active') }}
                       </div>
@@ -274,10 +267,7 @@
                         {{ unit.unit.name
                         }}{{
                           unit.conversion_value > 1
-                            ? ': ' +
-                              formatCurrency(unit.conversion_value) +
-                              ' ' +
-                              item.product_units[0].unit.name
+                            ? ': ' + formatCurrency(unit.conversion_value) + ' ' + item.product_units[0].unit.name
                             : ''
                         }}
                       </div>
@@ -407,9 +397,7 @@
                             <div class="w-48 text-slate-500">
                               {{ t('views.product.fields.vat_rate') }}
                             </div>
-                            <div class="flex-1 font-medium">
-                              {{ formatCurrency(item.vat_rate) }}%
-                            </div>
+                            <div class="flex-1 font-medium">{{ formatCurrency(item.vat_rate) }}%</div>
                           </div>
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
@@ -479,10 +467,7 @@
                               <Table.Td>
                                 <div class="flex flex-col">
                                   <span>{{ formatCurrency(unit.conversion_value) }}</span>
-                                  <span
-                                    v-if="unit.conversion_value > 1"
-                                    class="text-xs text-slate-500"
-                                  >
+                                  <span v-if="unit.conversion_value > 1" class="text-xs text-slate-500">
                                     1 {{ unit.unit.name }} =
                                     {{ formatCurrency(unit.conversion_value) }}
                                     {{ item.product_units[0].unit.name }}
@@ -500,11 +485,7 @@
                                     class="text-xs text-slate-500 whitespace-nowrap"
                                   >
                                     {{ t('views.product.fields.base_unit_price') }}:
-                                    {{
-                                      formatCurrency(
-                                        (unit.price / unit.conversion_value).toFixed(2),
-                                      )
-                                    }}
+                                    {{ formatCurrency((unit.price / unit.conversion_value).toFixed(2)) }}
                                   </span>
                                 </div>
                               </Table.Td>

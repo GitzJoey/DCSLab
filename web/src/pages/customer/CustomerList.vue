@@ -155,10 +155,7 @@
     if (result.success) {
       emits('update-profile');
       await getCustomers('', true, 1, 10);
-      showNotification(
-        t('views.customer.alert.delete.title'),
-        t('views.customer.alert.delete.message'),
-      ); // Changed translation path
+      showNotification(t('views.customer.alert.delete.title'), t('views.customer.alert.delete.message')); // Changed translation path
     } else {
       showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }

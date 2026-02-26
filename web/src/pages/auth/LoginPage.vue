@@ -103,11 +103,7 @@
                 {{ t('views.login.title') }}
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">&nbsp;</div>
-              <Alert
-                v-if="status != 'onLoad'"
-                :variant="status == 'success' ? 'success' : 'danger'"
-                class="mt-2"
-              >
+              <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">
                 {{ alertMessage }}
               </Alert>
               <form v-if="!requireTwoFactor" id="loginForm" @submit.prevent="onSubmit">
@@ -131,15 +127,9 @@
                   />
                   <FormErrorMessages :messages="loginForm.errors.password" />
                 </div>
-                <div
-                  class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-                >
+                <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
-                    <FormCheck.Input
-                      v-model="loginForm.remember"
-                      type="checkbox"
-                      class="mr-2 border"
-                    />
+                    <FormCheck.Input v-model="loginForm.remember" type="checkbox" class="mr-2 border" />
                     <label class="cursor-pointer select-none" htmlFor="remember-me">
                       {{ t('views.login.fields.remember_me') }}
                     </label>
@@ -194,9 +184,7 @@
                   />
                   <FormErrorMessages :messages="twoFactorLoginForm.errors.code" />
                 </div>
-                <div
-                  class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-                >
+                <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
                     <FormCheck>
                       <FormCheck.Input v-model="twoFactorRecoveryCodesMode" type="checkbox" />
@@ -212,9 +200,7 @@
                   </Button>
                 </div>
               </form>
-              <div
-                class="mt-10 text-center intro-x xl:mt-24 text-slate-600 dark:text-slate-500 xl:text-left"
-              >
+              <div class="mt-10 text-center intro-x xl:mt-24 text-slate-600 dark:text-slate-500 xl:text-left">
                 By signin up, you agree to our
                 <a class="text-primary dark:text-slate-200" href="">Terms and Conditions</a>
                 &

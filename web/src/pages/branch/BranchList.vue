@@ -112,8 +112,7 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Branch>> | null> =
-      await branchServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Branch>> | null> = await branchServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       branchLists.value = result.data;
@@ -164,10 +163,7 @@
     if (result.success) {
       emits('update-profile');
       await getBranches('', true, 1, 10);
-      showNotification(
-        t('views.branch.alert.delete_branch.title'),
-        t('views.branch.alert.delete_branch.content'),
-      );
+      showNotification(t('views.branch.alert.delete_branch.title'), t('views.branch.alert.delete_branch.content'));
     } else {
       showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }

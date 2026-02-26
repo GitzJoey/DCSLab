@@ -8,13 +8,7 @@
   import DashboardService from '@/services/DashboardService';
   import CacheService from '@/services/CacheService';
   import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormSelect,
-    FormInputCode,
-    FormErrorMessages,
-  } from '@/components/Base/Form';
+  import { FormInput, FormLabel, FormSelect, FormInputCode, FormErrorMessages } from '@/components/Base/Form';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import { CardState } from '@/types/enums/CardState';
   import { ServiceResponse } from '@/types/services/ServiceResponse';
@@ -44,12 +38,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -67,9 +56,7 @@
 
   const typeDDL = ref<Array<DropDownOption> | null>(null);
 
-  const productCategoryForm = productCategoryService.useProductCategoryEditForm(
-    route.params.ulid as string,
-  );
+  const productCategoryForm = productCategoryService.useProductCategoryEditForm(route.params.ulid as string);
   // #endregion
 
   // #region Computed
@@ -97,8 +84,7 @@
 
   const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    const response: ServiceResponse<ProductCategory | null> =
-      await productCategoryService.read(ulid);
+    const response: ServiceResponse<ProductCategory | null> = await productCategoryService.read(ulid);
 
     if (response && response.data) {
       productCategoryForm.setData({
@@ -260,13 +246,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

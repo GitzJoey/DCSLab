@@ -82,11 +82,7 @@
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">&nbsp;</div>
               <form id="forgotPasswordForm" @submit.prevent="onSubmit">
-                <Alert
-                  v-if="status != 'onLoad'"
-                  :variant="status == 'success' ? 'success' : 'danger'"
-                  class="mt-2"
-                >
+                <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">
                   {{ alertMessage }}
                 </Alert>
                 <div class="mt-8 intro-x">

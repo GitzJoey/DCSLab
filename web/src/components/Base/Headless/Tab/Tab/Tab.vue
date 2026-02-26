@@ -17,13 +17,7 @@
 
 <template>
   <HeadlessTab as="template" v-slot="{ selected }">
-    <li
-      :class="[
-        'focus-visible:outline-none',
-        { 'flex-1': fullWidth },
-        { '-mb-px': list && list.variant == 'tabs' },
-      ]"
-    >
+    <li :class="['focus-visible:outline-none', { 'flex-1': fullWidth }, { '-mb-px': list && list.variant == 'tabs' }]">
       <Provider :selected="selected">
         <slot :selected="selected"></slot>
       </Provider>

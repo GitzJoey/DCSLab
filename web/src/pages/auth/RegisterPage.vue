@@ -82,15 +82,9 @@
               <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
                 {{ t('views.register.title') }}
               </h2>
-              <div class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden">
-                &nbsp;
-              </div>
+              <div class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden">&nbsp;</div>
               <form id="registerForm" @submit.prevent="onSubmit">
-                <Alert
-                  v-if="status != 'onLoad'"
-                  :variant="status == 'success' ? 'success' : 'danger'"
-                  class="mt-2"
-                >
+                <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">
                   {{ alertMessage }}
                 </Alert>
                 <div class="mt-8 intro-x">

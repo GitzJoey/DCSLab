@@ -25,12 +25,7 @@
   const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
   const cacheServices = new CacheService();
 
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
 
   const cards = ref<Array<TwoColumnsLayoutCards>>([
     {
@@ -44,8 +39,9 @@
     { title: '', state: CardState.Hidden, id: 'button' },
   ]);
 
-  const stockAdjustmentCategoryForm =
-    stockAdjustmentCategoryService.useStockAdjustmentCategoryEditForm(route.params.ulid.toString());
+  const stockAdjustmentCategoryForm = stockAdjustmentCategoryService.useStockAdjustmentCategoryEditForm(
+    route.params.ulid.toString(),
+  );
 
   const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
   const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
@@ -105,9 +101,7 @@
         router.push({ name: 'side-menu-stock-adjustment-category-list' });
       })
       .catch((error) => {
-        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(
-          error as Error,
-        );
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -219,26 +213,14 @@
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              stockAdjustmentCategoryForm.validating || stockAdjustmentCategoryForm.hasErrors
-            "
+            :disabled="stockAdjustmentCategoryForm.validating || stockAdjustmentCategoryForm.hasErrors"
           >
-            <Lucide
-              v-if="stockAdjustmentCategoryForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="stockAdjustmentCategoryForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

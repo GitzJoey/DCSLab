@@ -75,12 +75,7 @@
   // #endregion
 
   // #region Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alert-placeholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alert-placeholder']);
   // #endregion
 
   // #region Methods
@@ -438,13 +433,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="onReset"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="onReset">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

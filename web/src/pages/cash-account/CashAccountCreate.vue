@@ -42,12 +42,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -214,11 +209,7 @@
 
 <template>
   <form id="cashAccountForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :title="t('views.cash_account.page_title')"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :title="t('views.cash_account.page_title')" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -288,10 +279,7 @@
 
           <!-- Is Active -->
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': cashAccountForm.invalid('is_active') }"
-              class="pr-5"
-            >
+            <FormLabel :class="{ 'text-danger': cashAccountForm.invalid('is_active') }" class="pr-5">
               {{ t('views.cash_account.fields.is_active') }}
             </FormLabel>
             <FormSwitch>
@@ -336,13 +324,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

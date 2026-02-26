@@ -122,13 +122,7 @@
   };
 
   const onDataListChanged = async (data: DataListEmittedData) => {
-    await getCustomerGroups(
-      data.search.text,
-      false,
-      true,
-      data.pagination.page,
-      data.pagination.per_page,
-    );
+    await getCustomerGroups(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -162,9 +156,7 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    let result: ServiceResponse<boolean | null> = await customerGroupServices.delete(
-      deleteUlid.value,
-    ); // Diubah dari companyServices
+    let result: ServiceResponse<boolean | null> = await customerGroupServices.delete(deleteUlid.value); // Diubah dari companyServices
 
     if (result.success) {
       emits('update-profile');

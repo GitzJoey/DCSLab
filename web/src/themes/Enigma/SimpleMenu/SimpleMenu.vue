@@ -157,10 +157,7 @@
                       {{ t(menu.title) }}
                       <div
                         v-if="menu.subMenu"
-                        :class="[
-                          'side-menu__sub-icon',
-                          { 'transform rotate-180': menu.activeDropdown },
-                        ]"
+                        :class="['side-menu__sub-icon', { 'transform rotate-180': menu.activeDropdown }]"
                       >
                         <Lucide icon="ChevronDown" />
                       </div>
@@ -232,10 +229,7 @@
                               'side-menu__sub-open': subMenu.activeDropdown,
                             }"
                           >
-                            <li
-                              v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                              :key="lastSubMenuKey"
-                            >
+                            <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                               <Tippy
                                 as="a"
                                 :content="t(lastSubMenu.title)"

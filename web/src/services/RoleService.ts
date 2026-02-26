@@ -49,12 +49,7 @@ export default class RoleService {
       success: false,
     };
     try {
-      const url = route(
-        'api.post.db.module.profile.update.roles',
-        undefined,
-        false,
-        this.ziggyRoute,
-      );
+      const url = route('api.post.db.module.profile.update.roles', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<Resource<Role>> = await axios.post(url, {
         roles: roles,

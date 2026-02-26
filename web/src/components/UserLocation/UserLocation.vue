@@ -68,11 +68,9 @@
         layout.value == 'top-menu' &&
         'h-full md:ml-10 md:pl-10 md:border-l border-white/[0.08] mr-auto -intro-x',
 
-      theme.value == 'icewall' &&
-        'h-full md:ml-10 md:pl-10 md:border-l border-white/[0.08] mr-auto -intro-x',
+      theme.value == 'icewall' && 'h-full md:ml-10 md:pl-10 md:border-l border-white/[0.08] mr-auto -intro-x',
 
-      theme.value == 'enigma' &&
-        'h-full md:ml-10 md:pl-10 md:border-l border-white/[0.08] mr-auto -intro-x',
+      theme.value == 'enigma' && 'h-full md:ml-10 md:pl-10 md:border-l border-white/[0.08] mr-auto -intro-x',
 
       theme.value == 'tinker' &&
         (layout.value == 'side-menu' || layout.value == 'simple-menu') &&
@@ -85,8 +83,7 @@
 
   const computedLight = computed(() => {
     switch (true) {
-      case theme.value == 'rubick' &&
-        (layout.value == 'side-menu' || layout.value == 'simple-menu'):
+      case theme.value == 'rubick' && (layout.value == 'side-menu' || layout.value == 'simple-menu'):
         return false;
       case theme.value == 'rubick' && layout.value == 'top-menu':
         return true;
@@ -97,8 +94,7 @@
       case theme.value == 'enigma':
         return true;
 
-      case theme.value == 'tinker' &&
-        (layout.value == 'side-menu' || layout.value == 'simple-menu'):
+      case theme.value == 'tinker' && (layout.value == 'side-menu' || layout.value == 'simple-menu'):
         return false;
       case theme.value == 'tinker' && layout.value == 'top-menu':
         return true;
@@ -118,9 +114,7 @@
     if (!company) return;
 
     let branch =
-      branchId == ''
-        ? _.find(company.branches, { is_main: true })
-        : _.find(company.branches, { id: branchId });
+      branchId == '' ? _.find(company.branches, { is_main: true }) : _.find(company.branches, { id: branchId });
 
     if (branch) {
       selectedUserLocationStore.clearSelectedUserLocation();
@@ -136,12 +130,7 @@
       );
     } else {
       selectedUserLocationStore.clearSelectedUserLocation();
-      selectedUserLocationStore.setSelectedUserLocation(
-        company.id,
-        company.ulid,
-        company.code,
-        company.name,
-      );
+      selectedUserLocationStore.setSelectedUserLocation(company.id, company.ulid, company.code, company.name);
     }
   };
 </script>
@@ -182,11 +171,7 @@
               >
                 <div class="absolute left-3 top-0 h-full w-px bg-gray-200"></div>
                 <div class="absolute left-3 top-1/2 h-px w-3 bg-gray-200"></div>
-                <span
-                  v-if="b != null"
-                  class="pl-1"
-                  :class="{ 'text-primary': true, underline: b.is_main }"
-                >
+                <span v-if="b != null" class="pl-1" :class="{ 'text-primary': true, underline: b.is_main }">
                   {{ b.name }}
                 </span>
               </Menu.Item>

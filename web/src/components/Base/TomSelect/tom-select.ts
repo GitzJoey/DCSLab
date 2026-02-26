@@ -92,9 +92,7 @@ const updateValue = (
     'class',
     [
       ...Array.from(originalEl.classList),
-      ...Array.from(clonedEl.classList).filter(
-        (className) => initialClassNames?.indexOf(className) == -1,
-      ),
+      ...Array.from(clonedEl.classList).filter((className) => initialClassNames?.indexOf(className) == -1),
     ].join(' '),
   );
   clonedEl.TomSelect.wrapper.setAttribute(

@@ -155,9 +155,7 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    let result: ServiceResponse<boolean | null> = await cashAccountServices.delete(
-      deleteUlid.value,
-    );
+    let result: ServiceResponse<boolean | null> = await cashAccountServices.delete(deleteUlid.value);
 
     if (result.success) {
       emits('update-profile');

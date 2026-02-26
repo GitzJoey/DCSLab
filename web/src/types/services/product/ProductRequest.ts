@@ -1,7 +1,4 @@
-import {
-  ProductUnitStoreRequest,
-  ProductUnitUpdateRequest,
-} from '../product-unit/ProductUnitRequest';
+import { ProductUnitStoreRequest, ProductUnitUpdateRequest } from '../product-unit/ProductUnitRequest';
 
 export interface ProductReadAnyPaginateRequest {
   with_trashed: boolean;
