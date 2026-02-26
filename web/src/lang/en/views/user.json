@@ -1,57 +1,57 @@
 {
-    "page_title": "Users",
-    "table": {
-        "title": "User Lists",
-        "cols": {
-            "name": "Name",
-            "email": "Email",
-            "roles": "Roles",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Create User",
-        "edit": "Edit User",
-        "show": "Show User"
-    },
-    "field_groups": {
-        "user_info": "User Information",
-        "user_profile": "User Profile",
-        "roles": "Roles",
-        "settings": "Settings",
-        "tokens_management": "Tokens Management",
-        "password_management": "Password Management",
-        "two_factor_auth": "Two Factor Authentication"
-    },
-    "fields": {
-        "name": "Name",
-        "email": "Email",
-        "roles": "Roles",
-        "picture": "Picture",
-        "first_name": "First Name",
-        "last_name": "Last Name",
-        "address": "Address",
-        "ic_num": "IC Number",
-        "country": "Country",
-        "remarks": "Remarks",
-        "status": "Status",
-        "tax_id": "Tax ID",
-        "postal_code": "Postal Code",
-        "city": "City",
-        "settings": {
-            "settings": "Settings",
-            "theme": "Themes",
-            "date_format": "Date Format",
-            "time_format": "Time Format",
-            "api_token": "API Token"
-        },
-        "tokens": {
-            "tokens": "Tokens",
-            "count": "Total Tokens",
-            "reset": "Reset Tokens"
-        },
-        "reset_password": "Reset Password",
-        "email_reset_password": "Send Email",
-        "reset_2fa": "Reset Two Factor Authentication"
+  "page_title": "Users",
+  "table": {
+    "title": "User Lists",
+    "cols": {
+      "name": "Name",
+      "email": "Email",
+      "roles": "Roles",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Create User",
+    "edit": "Edit User",
+    "show": "Show User"
+  },
+  "field_groups": {
+    "user_info": "User Information",
+    "user_profile": "User Profile",
+    "roles": "Roles",
+    "settings": "Settings",
+    "tokens_management": "Tokens Management",
+    "password_management": "Password Management",
+    "two_factor_auth": "Two Factor Authentication"
+  },
+  "fields": {
+    "name": "Name",
+    "email": "Email",
+    "roles": "Roles",
+    "picture": "Picture",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "address": "Address",
+    "ic_num": "IC Number",
+    "country": "Country",
+    "remarks": "Remarks",
+    "status": "Status",
+    "tax_id": "Tax ID",
+    "postal_code": "Postal Code",
+    "city": "City",
+    "settings": {
+      "settings": "Settings",
+      "theme": "Themes",
+      "date_format": "Date Format",
+      "time_format": "Time Format",
+      "api_token": "API Token"
+    },
+    "tokens": {
+      "tokens": "Tokens",
+      "count": "Total Tokens",
+      "reset": "Reset Tokens"
+    },
+    "reset_password": "Reset Password",
+    "email_reset_password": "Send Email",
+    "reset_2fa": "Reset Two Factor Authentication"
+  }
 }

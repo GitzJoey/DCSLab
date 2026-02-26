@@ -58,7 +58,7 @@ const computedOptions = computed(() => {
             ? "Are you sure you want to remove these " +
                 values.length +
                 " items?"
-            : 'Are you sure you want to remove "' + values[0] + '"?'
+            : 'Are you sure you want to remove "' + values[0] + '"?',
         );
       },
       ...options,
@@ -96,7 +96,7 @@ const vSelectDirective = {
   },
   updated(el: TomSelectElement) {
     const clonedEl = document.querySelectorAll(
-      `[data-id='${el.getAttribute("data-id")}'][data-initial-class]`
+      `[data-id='${el.getAttribute("data-id")}'][data-initial-class]`,
     )[0] as TomSelectElement;
     const value = props.modelValue;
     updateValue(el, clonedEl, value, props, computedOptions.value, emit);

@@ -1,66 +1,66 @@
 {
-    "page_title": "Grup Pelanggan",
-    "table": {
-        "title": "Daftar Grup Pelanggan",
-        "cols": {
-            "code": "Kode",
-            "name": "Nama",
-            "max_open_invoice": "Maks. Faktur Terbuka",
-            "max_outstanding_invoice": "Maks. Faktur Belum Lunas",
-            "max_invoice_age": "Maks. Umur Faktur",
-            "payment_term_type": "Jenis Termin Pembayaran",
-            "payment_term": "Termin Pembayaran",
-            "selling_point": "Poin Penjualan",
-            "selling_point_multiple": "Kelipatan Poin Penjualan",
-            "sell_at_cost": "Jual Sesuai Modal",
-            "price_markup_percent": "Markup Harga (%)",
-            "price_markup_nominal": "Markup Harga (Nominal)",
-            "price_markdown_percent": "Markdown Harga (%)",
-            "price_markdown_nominal": "Markdown Harga (Nominal)",
-            "round_on": "Pembulatan Pada",
-            "round_digit": "Digit Pembulatan",
-            "remarks": "Catatan",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Buat Grup Pelanggan",
-        "edit": "Ubah Grup Pelanggan",
-        "show": "Tampilkan Grup Pelanggan",
-        "delete": "Hapus Grup Pelanggan"
-    },
-    "field_groups": {
-        "general_information": "Informasi Umum",
-        "credit_limit": "Batas Kredit",
-        "pricing_and_points": "Harga dan Poin",
-        "rounding_rules": "Aturan Pembulatan"
-    },
-    "fields": {
-        "code": "Kode",
-        "name": "Nama",
-        "max_open_invoice": "Maks. Faktur Terbuka",
-        "max_outstanding_invoice": "Maks. Faktur Belum Lunas",
-        "max_invoice_age": "Maks. Umur Faktur",
-        "payment_term_type": "Jenis Termin Pembayaran",
-        "payment_term": "Termin Pembayaran",
-        "selling_point": "Poin Penjualan",
-        "selling_point_multiple": "Kelipatan Poin Penjualan",
-        "sell_at_cost": "Jual Sesuai Modal",
-        "price_markup_percent": "Markup Harga (%)",
-        "price_markup_nominal": "Markup Harga (Nominal)",
-        "price_markdown_percent": "Markdown Harga (%)",
-        "price_markdown_nominal": "Markdown Harga (Nominal)",
-        "rounding_type": "Tipe Pembulatan",
-        "rounding_digit": "Digit Pembulatan",
-        "round_on": "Pembulatan Pada",
-        "round_digit": "Digit Pembulatan",
-        "remarks": "Catatan",
-        "status": "Status"
-    },
-    "alert": {
-        "delete_customer_group": {
-            "title": "Hapus Grup Pelanggan",
-            "content": "Grup Pelanggan Berhasil Dihapus"
-        }
+  "page_title": "Grup Pelanggan",
+  "table": {
+    "title": "Daftar Grup Pelanggan",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama",
+      "max_open_invoice": "Maks. Faktur Terbuka",
+      "max_outstanding_invoice": "Maks. Faktur Belum Lunas",
+      "max_invoice_age": "Maks. Umur Faktur",
+      "payment_term_type": "Jenis Termin Pembayaran",
+      "payment_term": "Termin Pembayaran",
+      "selling_point": "Poin Penjualan",
+      "selling_point_multiple": "Kelipatan Poin Penjualan",
+      "sell_at_cost": "Jual Sesuai Modal",
+      "price_markup_percent": "Markup Harga (%)",
+      "price_markup_nominal": "Markup Harga (Nominal)",
+      "price_markdown_percent": "Markdown Harga (%)",
+      "price_markdown_nominal": "Markdown Harga (Nominal)",
+      "round_on": "Pembulatan Pada",
+      "round_digit": "Digit Pembulatan",
+      "remarks": "Catatan",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Buat Grup Pelanggan",
+    "edit": "Ubah Grup Pelanggan",
+    "show": "Tampilkan Grup Pelanggan",
+    "delete": "Hapus Grup Pelanggan"
+  },
+  "field_groups": {
+    "general_information": "Informasi Umum",
+    "credit_limit": "Batas Kredit",
+    "pricing_and_points": "Harga dan Poin",
+    "rounding_rules": "Aturan Pembulatan"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "max_open_invoice": "Maks. Faktur Terbuka",
+    "max_outstanding_invoice": "Maks. Faktur Belum Lunas",
+    "max_invoice_age": "Maks. Umur Faktur",
+    "payment_term_type": "Jenis Termin Pembayaran",
+    "payment_term": "Termin Pembayaran",
+    "selling_point": "Poin Penjualan",
+    "selling_point_multiple": "Kelipatan Poin Penjualan",
+    "sell_at_cost": "Jual Sesuai Modal",
+    "price_markup_percent": "Markup Harga (%)",
+    "price_markup_nominal": "Markup Harga (Nominal)",
+    "price_markdown_percent": "Markdown Harga (%)",
+    "price_markdown_nominal": "Markdown Harga (Nominal)",
+    "rounding_type": "Tipe Pembulatan",
+    "rounding_digit": "Digit Pembulatan",
+    "round_on": "Pembulatan Pada",
+    "round_digit": "Digit Pembulatan",
+    "remarks": "Catatan",
+    "status": "Status"
+  },
+  "alert": {
+    "delete_customer_group": {
+      "title": "Hapus Grup Pelanggan",
+      "content": "Grup Pelanggan Berhasil Dihapus"
+    }
+  }
 }

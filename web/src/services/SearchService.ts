@@ -8,39 +8,51 @@ import ErrorHandlerService from "./ErrorHandlerService";
 import { SearchResult } from "@/types/models/SearchResult";
 
 export default class SearchService {
-    private ziggyRoute: Config;
-    private ziggyRouteStore = useZiggyRouteStore();
+  private ziggyRoute: Config;
+  private ziggyRouteStore = useZiggyRouteStore();
 
-    private errorHandlerService;
+  private errorHandlerService;
 
-    constructor() {
-        this.ziggyRoute = this.ziggyRouteStore.getZiggy;
+  constructor() {
+    this.ziggyRoute = this.ziggyRouteStore.getZiggy;
 
-        this.errorHandlerService = new ErrorHandlerService();
+    this.errorHandlerService = new ErrorHandlerService();
+  }
+
+  public async search(): Promise<
+    ServiceResponse<Resource<Array<SearchResult>> | null>
+  > {
+    const result: ServiceResponse<Resource<Array<SearchResult>> | null> = {
+      success: false,
+    };
+
+    try {
+      const url = route(
+        "api.get.db.core.search",
+        undefined,
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Resource<Array<SearchResult>>> =
+        await axios.get(url);
+
+      result.success = true;
+      result.data = response.data;
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
-
-    public async search(): Promise<ServiceResponse<Resource<Array<SearchResult>> | null>> {
-        const result: ServiceResponse<Resource<Array<SearchResult>> | null> = {
-            success: false,
-        };
-
-        try {
-            const url = route('api.get.db.core.search', undefined, false, this.ziggyRoute);
-
-            const response: AxiosResponse<Resource<Array<SearchResult>>> = await axios.get(url);
-
-            result.success = true;
-            result.data = response.data;
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
+  }
 }

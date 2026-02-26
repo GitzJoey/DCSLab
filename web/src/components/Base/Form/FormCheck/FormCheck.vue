@@ -11,7 +11,10 @@ import { computed, useAttrs } from "vue";
 
 const attrs = useAttrs();
 const computedClass = computed(() =>
-  twMerge(["flex items-center", typeof attrs.class === "string" && attrs.class])
+  twMerge([
+    "flex items-center",
+    typeof attrs.class === "string" && attrs.class,
+  ]),
 );
 </script>
 

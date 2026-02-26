@@ -27,7 +27,7 @@ provide<ProvideDisclosure>(
       close: props.close,
       index: props.index,
     };
-  })
+  }),
 );
 </script>
 

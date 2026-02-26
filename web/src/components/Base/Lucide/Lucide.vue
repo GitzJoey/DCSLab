@@ -18,7 +18,7 @@ const computedClass = computed(() =>
   twMerge([
     "stroke-1.5 w-5 h-5",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

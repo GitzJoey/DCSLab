@@ -2,7 +2,11 @@
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import logoUrl from "@/assets/images/logo.svg";
 import illustrationUrl from "@/assets/images/illustration.svg";
-import { FormInput, FormCheck, FormErrorMessages } from "@/components/Base/Form";
+import {
+  FormInput,
+  FormCheck,
+  FormErrorMessages,
+} from "@/components/Base/Form";
 import Button from "@/components/Base/Button";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
@@ -18,8 +22,8 @@ const authService = new AuthService();
 
 const appName = import.meta.env.VITE_APP_NAME;
 const loading = ref<boolean>(false);
-const status = ref<'onLoad' | 'success' | 'error'>('onLoad');
-const alertMessage = ref<string>('');
+const status = ref<"onLoad" | "success" | "error">("onLoad");
+const alertMessage = ref<string>("");
 const requireTwoFactor = ref<boolean>(false);
 const twoFactorRecoveryCodesMode = ref<boolean>(false);
 
@@ -33,33 +37,41 @@ onMounted(async () => {
 const onSubmit = async () => {
   loading.value = true;
 
-  loginForm.submit().then((response: unknown) => {
-    let loginResp = response as LoginResponse;
-    if (loginResp.data.two_factor) {
-      requireTwoFactor.value = true;
-    } else {
-      router.push({ name: 'side-menu-dashboard-maindashboard' });
-    }
-  }).catch(error => {
-    status.value = 'error';
-    alertMessage.value = error.response.data.message;
-  }).finally(() => {
-    loading.value = false;
-  });
+  loginForm
+    .submit()
+    .then((response: unknown) => {
+      let loginResp = response as LoginResponse;
+      if (loginResp.data.two_factor) {
+        requireTwoFactor.value = true;
+      } else {
+        router.push({ name: "side-menu-dashboard-maindashboard" });
+      }
+    })
+    .catch((error) => {
+      status.value = "error";
+      alertMessage.value = error.response.data.message;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 
 const onTwoFactorLoginSubmit = async () => {
   loading.value = true;
 
-  twoFactorLoginForm.submit().then(() => {
-    router.push({ name: 'side-menu-dashboard-maindashboard' });
-  }).catch(error => {
-    status.value = 'error';
-    alertMessage.value = error.response.data.message;
-  }).finally(() => {
-    loading.value = false;
-  });
-}
+  twoFactorLoginForm
+    .submit()
+    .then(() => {
+      router.push({ name: "side-menu-dashboard-maindashboard" });
+    })
+    .catch((error) => {
+      status.value = "error";
+      alertMessage.value = error.response.data.message;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
 </script>
 
 <template>
@@ -75,11 +87,7 @@ const onTwoFactorLoginSubmit = async () => {
       <div class="block grid-cols-2 gap-4 xl:grid">
         <div class="flex-col hidden min-h-screen xl:flex">
           <a href="" class="flex items-center pt-5 -intro-x">
-            <img
-              alt="DCSLab"
-              class="w-6"
-              :src="logoUrl"
-            />
+            <img alt="DCSLab" class="w-6" :src="logoUrl" />
             <span class="ml-3 text-lg text-white"> {{ appName }} </span>
           </a>
           <div class="my-auto">
@@ -95,8 +103,7 @@ const onTwoFactorLoginSubmit = async () => {
             </div>
             <div
               class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
-            >              
-            </div>
+            ></div>
           </div>
         </div>
         <div class="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
@@ -104,14 +111,25 @@ const onTwoFactorLoginSubmit = async () => {
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
           >
             <LoadingOverlay :visible="loading" :transparent="true">
-              <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
-              {{ t("views.login.title") }}
+              <h2
+                class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
+              >
+                {{ t("views.login.title") }}
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
                 &nbsp;
               </div>
-              <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">{{ alertMessage }}</Alert>
-              <form v-if="!requireTwoFactor" id="loginForm" @submit.prevent="onSubmit">
+              <Alert
+                v-if="status != 'onLoad'"
+                :variant="status == 'success' ? 'success' : 'danger'"
+                class="mt-2"
+                >{{ alertMessage }}</Alert
+              >
+              <form
+                v-if="!requireTwoFactor"
+                id="loginForm"
+                @submit.prevent="onSubmit"
+              >
                 <div class="mt-8 intro-x">
                   <FormInput
                     v-model="loginForm.email"
@@ -141,7 +159,10 @@ const onTwoFactorLoginSubmit = async () => {
                       type="checkbox"
                       class="mr-2 border"
                     />
-                    <label class="cursor-pointer select-none" htmlFor="remember-me">
+                    <label
+                      class="cursor-pointer select-none"
+                      htmlFor="remember-me"
+                    >
                       {{ t("views.login.fields.remember_me") }}
                     </label>
                   </div>
@@ -165,40 +186,68 @@ const onTwoFactorLoginSubmit = async () => {
                   </Button>
                 </div>
               </form>
-              <form v-else id="twoFactorLoginForm" @submit.prevent="onTwoFactorLoginSubmit">
+              <form
+                v-else
+                id="twoFactorLoginForm"
+                @submit.prevent="onTwoFactorLoginSubmit"
+              >
                 <div v-if="twoFactorRecoveryCodesMode" class="mt-8 intro-x">
                   <FormLabel>
-                    {{ t('views.login.fields.2fa.recovery_code') }}
+                    {{ t("views.login.fields.2fa.recovery_code") }}
                   </FormLabel>
-                  <FormInput v-model="twoFactorLoginForm.recovery_code" type="text"
-                            class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
-                            :class="{ 'border-danger': twoFactorLoginForm.invalid('recovery_code') }"
-                            :placeholder="t('views.login.fields.2fa.recovery_code')"
-                            @focus="twoFactorLoginForm.forgetError('recovery_code')" />
-                  <FormErrorMessages :messages="twoFactorLoginForm.errors.recovery_code" />
+                  <FormInput
+                    v-model="twoFactorLoginForm.recovery_code"
+                    type="text"
+                    class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
+                    :class="{
+                      'border-danger':
+                        twoFactorLoginForm.invalid('recovery_code'),
+                    }"
+                    :placeholder="t('views.login.fields.2fa.recovery_code')"
+                    @focus="twoFactorLoginForm.forgetError('recovery_code')"
+                  />
+                  <FormErrorMessages
+                    :messages="twoFactorLoginForm.errors.recovery_code"
+                  />
                 </div>
                 <div v-else class="mt-8 intro-x">
                   <FormLabel>
-                    {{ t('views.login.fields.2fa.label') }}
+                    {{ t("views.login.fields.2fa.label") }}
                   </FormLabel>
-                  <FormInput v-model="twoFactorLoginForm.code" type="text"
+                  <FormInput
+                    v-model="twoFactorLoginForm.code"
+                    type="text"
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
-                    :class="{ 'border-danger': twoFactorLoginForm.invalid('code') }"
-                    :placeholder="t('views.login.fields.2fa.code')" @focus="twoFactorLoginForm.forgetError('code')" />
-                  <FormErrorMessages :messages="twoFactorLoginForm.errors.code" />
+                    :class="{
+                      'border-danger': twoFactorLoginForm.invalid('code'),
+                    }"
+                    :placeholder="t('views.login.fields.2fa.code')"
+                    @focus="twoFactorLoginForm.forgetError('code')"
+                  />
+                  <FormErrorMessages
+                    :messages="twoFactorLoginForm.errors.code"
+                  />
                 </div>
-                <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
+                <div
+                  class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
+                >
                   <div class="flex items-center mr-auto">
                     <FormCheck>
-                      <FormCheck.Input v-model="twoFactorRecoveryCodesMode" type="checkbox" />
+                      <FormCheck.Input
+                        v-model="twoFactorRecoveryCodesMode"
+                        type="checkbox"
+                      />
                       <FormCheck.Label>
-                        {{ t('views.login.fields.2fa.use_recovery_codes') }}
+                        {{ t("views.login.fields.2fa.use_recovery_codes") }}
                       </FormCheck.Label>
                     </FormCheck>
                   </div>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
+                  <Button
+                    variant="primary"
+                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
+                  >
                     {{ t("components.buttons.login") }}
                   </Button>
                 </div>

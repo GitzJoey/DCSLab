@@ -33,7 +33,7 @@ const route: Route = useRoute();
 const router = useRouter();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
 const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "divider">
+  computedFormattedMenu: Array<FormattedMenu | "divider">,
 ) => {
   Object.assign(formattedMenu, computedFormattedMenu);
 };
@@ -54,9 +54,9 @@ const handlescroll = () => {
   } else {
     showBackToTop.value = false;
   }
-}
+};
 
-window.addEventListener('scroll', handlescroll);
+window.addEventListener("scroll", handlescroll);
 
 provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
   forceActiveMenu(route, pageName);
@@ -71,7 +71,7 @@ watch(
   computed(() => route.path),
   () => {
     delete route.forceActiveMenu;
-  }
+  },
 );
 
 onMounted(async () => {
@@ -136,25 +136,29 @@ const updateMenu = async () => {
                       }"
                       :disable="windowWidth > 1260"
                       :href="
-                      menu.subMenu
-                        ? '#'
-                        : ((pageName: string | undefined) => {
-                            try {
-                              return router.resolve({
-                                name: pageName,
-                              }).fullPath;
-                            } catch (err) {
-                              return '';
-                            }
-                          })(menu.pageName)
-                    "
-                      @click="(event: MouseEvent) => {
-                      event.preventDefault();
-                      linkTo(menu, router);
-                      setFormattedMenu([...formattedMenu]);
-                    }"
+                        menu.subMenu
+                          ? '#'
+                          : ((pageName: string | undefined) => {
+                              try {
+                                return router.resolve({
+                                  name: pageName,
+                                }).fullPath;
+                              } catch (err) {
+                                return '';
+                              }
+                            })(menu.pageName)
+                      "
+                      @click="
+                        (event: MouseEvent) => {
+                          event.preventDefault();
+                          linkTo(menu, router);
+                          setFormattedMenu([...formattedMenu]);
+                        }
+                      "
                       :class="[
-                        menu.active ? 'side-menu side-menu--active' : 'side-menu',
+                        menu.active
+                          ? 'side-menu side-menu--active'
+                          : 'side-menu',
                       ]"
                     >
                       <div class="side-menu__icon">
@@ -190,28 +194,30 @@ const updateMenu = async () => {
                             }"
                             :disable="windowWidth > 1260"
                             :href="
-                            subMenu.subMenu
-                              ? '#'
-                              : ((pageName: string | undefined) => {
-                                  try {
-                                    return router.resolve({
-                                      name: pageName,
-                                    }).fullPath;
-                                  } catch (err) {
-                                    return '';
-                                  }
-                                })(subMenu.pageName)
-                          "
+                              subMenu.subMenu
+                                ? '#'
+                                : ((pageName: string | undefined) => {
+                                    try {
+                                      return router.resolve({
+                                        name: pageName,
+                                      }).fullPath;
+                                    } catch (err) {
+                                      return '';
+                                    }
+                                  })(subMenu.pageName)
+                            "
                             :class="[
                               subMenu.active
                                 ? 'side-menu side-menu--active'
                                 : 'side-menu',
                             ]"
-                            @click="(event: MouseEvent) => {
-                            event.preventDefault();
-                            linkTo(subMenu, router);
-                            setFormattedMenu([...formattedMenu]);
-                          }"
+                            @click="
+                              (event: MouseEvent) => {
+                                event.preventDefault();
+                                linkTo(subMenu, router);
+                                setFormattedMenu([...formattedMenu]);
+                              }
+                            "
                           >
                             <div class="side-menu__icon">
                               <Lucide :icon="subMenu.icon" />
@@ -223,7 +229,8 @@ const updateMenu = async () => {
                                 :class="[
                                   'side-menu__sub-icon',
                                   {
-                                    'transform rotate-180': subMenu.activeDropdown,
+                                    'transform rotate-180':
+                                      subMenu.activeDropdown,
                                   },
                                 ]"
                               >
@@ -256,28 +263,30 @@ const updateMenu = async () => {
                                   }"
                                   :disable="windowWidth > 1260"
                                   :href="
-                                  lastSubMenu.subMenu
-                                    ? '#'
-                                    : ((pageName: string | undefined) => {
-                                        try {
-                                          return router.resolve({
-                                            name: pageName,
-                                          }).fullPath;
-                                        } catch (err) {
-                                          return '';
-                                        }
-                                      })(lastSubMenu.pageName)
-                                "
+                                    lastSubMenu.subMenu
+                                      ? '#'
+                                      : ((pageName: string | undefined) => {
+                                          try {
+                                            return router.resolve({
+                                              name: pageName,
+                                            }).fullPath;
+                                          } catch (err) {
+                                            return '';
+                                          }
+                                        })(lastSubMenu.pageName)
+                                  "
                                   :class="[
                                     lastSubMenu.active
                                       ? 'side-menu side-menu--active'
                                       : 'side-menu',
                                   ]"
-                                  @click="(event: MouseEvent) => {
-                                  event.preventDefault();
-                                  linkTo(lastSubMenu, router);
-                                  setFormattedMenu([...formattedMenu]);
-                                }"
+                                  @click="
+                                    (event: MouseEvent) => {
+                                      event.preventDefault();
+                                      linkTo(lastSubMenu, router);
+                                      setFormattedMenu([...formattedMenu]);
+                                    }
+                                  "
                                 >
                                   <div class="side-menu__icon">
                                     <Lucide :icon="lastSubMenu.icon" />

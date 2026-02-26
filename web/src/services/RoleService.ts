@@ -8,62 +8,86 @@ import { ServiceResponse } from "../types/services/ServiceResponse";
 import ErrorHandlerService from "./ErrorHandlerService";
 
 export default class RoleService {
-    private ziggyRoute: Config;
-    private ziggyRouteStore = useZiggyRouteStore();
+  private ziggyRoute: Config;
+  private ziggyRouteStore = useZiggyRouteStore();
 
-    private errorHandlerService;
+  private errorHandlerService;
 
-    constructor() {
-        this.ziggyRoute = this.ziggyRouteStore.getZiggy;
+  constructor() {
+    this.ziggyRoute = this.ziggyRouteStore.getZiggy;
 
-        this.errorHandlerService = new ErrorHandlerService();
+    this.errorHandlerService = new ErrorHandlerService();
+  }
+
+  public async readAny(): Promise<
+    ServiceResponse<Resource<Array<Role>> | null>
+  > {
+    const result: ServiceResponse<Resource<Array<Role>> | null> = {
+      success: false,
+    };
+
+    try {
+      const url = route(
+        "api.get.db.admin.role.read_any",
+        undefined,
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Resource<Array<Role>>> =
+        await axios.get(url);
+
+      result.success = true;
+      result.data = response.data;
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
+  }
 
-    public async readAny(): Promise<ServiceResponse<Resource<Array<Role>> | null>> {
-        const result: ServiceResponse<Resource<Array<Role>> | null> = {
-            success: false,
-        };
+  public async update(
+    roles: string,
+  ): Promise<ServiceResponse<Resource<Role> | null>> {
+    const result: ServiceResponse<Resource<Role> | null> = {
+      success: false,
+    };
+    try {
+      const url = route(
+        "api.post.db.module.profile.update.roles",
+        undefined,
+        false,
+        this.ziggyRoute,
+      );
 
-        try {
-            const url = route('api.get.db.admin.role.read_any', undefined, false, this.ziggyRoute);
-
-            const response: AxiosResponse<Resource<Array<Role>>> = await axios.get(url);
-
-            result.success = true;
-            result.data = response.data;
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+      const response: AxiosResponse<Resource<Role>> = await axios.post(url, {
+        roles: roles,
+      });
+      result.success = true;
+      result.data = response.data;
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
-
-    public async update(roles: string): Promise<ServiceResponse<Resource<Role> | null>> {
-        const result: ServiceResponse<Resource<Role> | null> = {
-            success: false
-        }
-        try {
-            const url = route('api.post.db.module.profile.update.roles', undefined, false, this.ziggyRoute);
-
-            const response: AxiosResponse<Resource<Role>> = await axios.post(url, { 'roles': roles })
-            result.success = true
-            result.data = response.data
-            return result
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
-
+  }
 }

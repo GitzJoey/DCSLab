@@ -59,31 +59,39 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 const selectedOption = computed<FormSelectSearchOption | null>(() => {
-  if (!props.options || props.modelValue === undefined || props.modelValue === null) {
+  if (
+    !props.options ||
+    props.modelValue === undefined ||
+    props.modelValue === null
+  ) {
     return null;
   }
 
-  return props.options.find((option) => option.value === props.modelValue) ?? null;
+  return (
+    props.options.find((option) => option.value === props.modelValue) ?? null
+  );
 });
 
 const displayedOptions = computed<FormSelectSearchOption[]>(
-  () => props.options ?? []
+  () => props.options ?? [],
 );
 
 watch(
   () => [props.modelValue, props.options],
   () => {
     if (!isFocused.value) {
-      displayValue.value = selectedOption.value ? selectedOption.value.label : "";
+      displayValue.value = selectedOption.value
+        ? selectedOption.value.label
+        : "";
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const emitSearchDebounced = _.debounce((value: string) => {
@@ -108,7 +116,9 @@ const handleFocus = () => {
 const handleBlur = () => {
   isFocused.value = false;
   isOpen.value = false;
-  displayValue.value = selectedOption.value ? selectedOption.value.label : displayValue.value;
+  displayValue.value = selectedOption.value
+    ? selectedOption.value.label
+    : displayValue.value;
 };
 
 const handleSelect = (option: FormSelectSearchOption) => {
@@ -122,13 +132,26 @@ const handleSelect = (option: FormSelectSearchOption) => {
 
 <template>
   <div class="relative">
-    <input ref="inputRef" :class="computedClass" type="text" v-bind="_.omit(attrs, 'class')" v-model="displayValue"
-      @focus="handleFocus" @blur="handleBlur" @input="handleInput" />
-    <ul v-if="isOpen && displayedOptions.length > 0"
-      class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white text-sm shadow-lg dark:border-slate-600 dark:bg-darkmode-800">
-      <li v-for="option in displayedOptions" :key="option.value"
+    <input
+      ref="inputRef"
+      :class="computedClass"
+      type="text"
+      v-bind="_.omit(attrs, 'class')"
+      v-model="displayValue"
+      @focus="handleFocus"
+      @blur="handleBlur"
+      @input="handleInput"
+    />
+    <ul
+      v-if="isOpen && displayedOptions.length > 0"
+      class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white text-sm shadow-lg dark:border-slate-600 dark:bg-darkmode-800"
+    >
+      <li
+        v-for="option in displayedOptions"
+        :key="option.value"
         class="cursor-pointer px-3 py-2 hover:bg-slate-100 dark:hover:bg-darkmode-700"
-        @mousedown.prevent="handleSelect(option)">
+        @mousedown.prevent="handleSelect(option)"
+      >
         {{ option.label }}
       </li>
     </ul>

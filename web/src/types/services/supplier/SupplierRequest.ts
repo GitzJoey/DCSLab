@@ -1,20 +1,20 @@
 export interface SupplierReadAnyPaginateRequest {
-    with_trashed: boolean;
-    company_id: string;
-    search?: string | null;
-    status?: string | number;
-    include_id?: string;
-    refresh: boolean;
-    page: number;
-    per_page: number;
+  with_trashed: boolean;
+  company_id: string;
+  search?: string | null;
+  status?: string | number;
+  include_id?: string;
+  refresh: boolean;
+  page: number;
+  per_page: number;
 }
 
 export interface SupplierReadAnyGetRequest {
-    with_trashed: boolean;
-    company_id: string;
-    search?: string | null;
-    status?: string | number;
-    include_id?: string;
-    refresh: boolean;
-    limit: number;
+  with_trashed: boolean;
+  company_id: string;
+  search?: string | null;
+  status?: string | number;
+  include_id?: string;
+  refresh: boolean;
+  limit: number;
 }

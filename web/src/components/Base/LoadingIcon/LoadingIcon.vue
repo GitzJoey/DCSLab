@@ -21,7 +21,7 @@ const props = withDefaults(
   }>(),
   {
     color: "#2d3748",
-  }
+  },
 );
 
 const darkMode = computed(() => useDarkModeStore().darkMode);

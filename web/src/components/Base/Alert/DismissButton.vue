@@ -23,7 +23,7 @@ const computedClass = computed(() =>
   twMerge([
     "text-slate-800 py-2 px-3 absolute right-0 my-auto mr-2",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

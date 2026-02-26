@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { TabGroup as HeadlessTabGroup } from "@headlessui/vue";
 
-interface GroupProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessTabGroup> {}
+interface GroupProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessTabGroup
+> {}
 
 defineProps<GroupProps>();
 </script>

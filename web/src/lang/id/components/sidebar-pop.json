@@ -1,11 +1,11 @@
 {
-    "slide_over": {
-        "footer": {
-            "copyright": "Hak Cipta",
-            "copyright_name": "GitzJoey",
-            "contributors": "Kontributor",
-            "rights": "Seluruh hak cipta dilindungi.",
-            "powered_by": "Powered By Coffee & Curiosity."
-        }
+  "slide_over": {
+    "footer": {
+      "copyright": "Hak Cipta",
+      "copyright_name": "GitzJoey",
+      "contributors": "Kontributor",
+      "rights": "Seluruh hak cipta dilindungi.",
+      "powered_by": "Powered By Coffee & Curiosity."
     }
+  }
 }

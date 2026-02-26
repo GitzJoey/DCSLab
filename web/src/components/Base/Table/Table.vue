@@ -33,7 +33,7 @@ const { dark, bordered, hover, striped, sm } = withDefaults(
     hover: false,
     striped: false,
     sm: false,
-  }
+  },
 );
 
 const attrs = useAttrs();
@@ -43,7 +43,7 @@ const computedClass = computed(() =>
     "w-full text-left",
     dark && "bg-dark text-white dark:bg-black/30",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 provide<ProvideTable>("table", {

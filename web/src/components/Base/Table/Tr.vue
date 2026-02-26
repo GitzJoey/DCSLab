@@ -27,7 +27,7 @@ const computedClass = computed(() =>
     table?.striped &&
       "[&:nth-of-type(odd)_td]:bg-slate-100 [&:nth-of-type(odd)_td]:dark:bg-darkmode-300 [&:nth-of-type(odd)_td]:dark:bg-opacity-50",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

@@ -1,9 +1,9 @@
-import { Company } from "./Company"
+import { Company } from "./Company";
 
 export interface Brand {
-    id: string,
-    ulid: string,
-    company: Company,
-    code: string,
-    name: string,
+  id: string;
+  ulid: string;
+  company: Company;
+  code: string;
+  name: string;
 }

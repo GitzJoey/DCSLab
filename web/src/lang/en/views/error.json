@@ -1,9 +1,9 @@
 {
-    "title": "Error",
-    "code": {
-        "401": "Unauthenticated",
-        "403": "Forbidden",
-        "500": "Internal Error",
-        "10000": "Please Choose User Location"
-    }
+  "title": "Error",
+  "code": {
+    "401": "Unauthenticated",
+    "403": "Forbidden",
+    "500": "Internal Error",
+    "10000": "Please Choose User Location"
+  }
 }

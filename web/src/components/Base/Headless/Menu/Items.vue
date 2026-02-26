@@ -13,8 +13,9 @@ import {
 } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface ItemsProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenuItems> {
+interface ItemsProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessMenuItems
+> {
   as?: string | object;
   placement?:
     | "top-start"
@@ -41,7 +42,7 @@ const computedClass = computed(() =>
   twMerge([
     "p-2 shadow-[0px_3px_10px_#00000017] bg-white border-transparent rounded-md dark:bg-darkmode-600 dark:border-transparent",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

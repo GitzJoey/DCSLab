@@ -64,10 +64,10 @@ const supplierLists = ref<Collection<Array<Supplier>> | null>({
 
 // #region Computed
 const isUserLocationSelected = computed(
-  () => selectedUserLocationStore.isUserLocationSelected
+  () => selectedUserLocationStore.isUserLocationSelected,
 );
 const selectedUserLocation = computed(
-  () => selectedUserLocationStore.selectedUserLocation
+  () => selectedUserLocationStore.selectedUserLocation,
 );
 // #endregion
 
@@ -77,7 +77,7 @@ const getSuppliers = async (
 
   refresh: boolean,
   page: number,
-  per_page: number
+  per_page: number,
 ) => {
   emits("loading-state", true);
 
@@ -116,7 +116,7 @@ const handleDataListChange = async (data: DataListEmittedData) => {
     data.search.text,
     false,
     data.pagination.page,
-    data.pagination.per_page
+    data.pagination.per_page,
   );
 };
 
@@ -131,7 +131,10 @@ const viewSelected = (idx: number) => {
 const editSelected = (idx: number) => {
   if (!supplierLists.value) return;
   const ulid = supplierLists.value.data[idx].ulid;
-  router.push({ name: "side-menu-supplier-supplier-edit", params: { ulid: ulid } });
+  router.push({
+    name: "side-menu-supplier-supplier-edit",
+    params: { ulid: ulid },
+  });
 };
 
 const deleteSelected = (idx: number) => {
@@ -145,7 +148,7 @@ const confirmDelete = async () => {
   emits("loading-state", true);
 
   const result: ServiceResponse<boolean | null> = await supplierServices.delete(
-    deleteUlid.value
+    deleteUlid.value,
   );
 
   if (result.success) {
@@ -188,8 +191,15 @@ onMounted(async () => {
 </script>
 
 <template>
-  <DataList :title="t('views.supplier.table.title')" :data="supplierLists" :enable-search="true" :can-print="true"
-    :can-export="true" :pagination="supplierLists ? supplierLists.meta : null" @dataListChanged="handleDataListChange">
+  <DataList
+    :title="t('views.supplier.table.title')"
+    :data="supplierLists"
+    :enable-search="true"
+    :can-print="true"
+    :can-export="true"
+    :pagination="supplierLists ? supplierLists.meta : null"
+    @dataListChanged="handleDataListChange"
+  >
     <template #content>
       <Table class="mt-5" :hover="true">
         <Table.Thead variant="light">
@@ -214,7 +224,10 @@ onMounted(async () => {
               </Table.Td>
             </Table.Tr>
           </template>
-          <template v-for="(item, itemIdx) in supplierLists.data" :key="item.ulid">
+          <template
+            v-for="(item, itemIdx) in supplierLists.data"
+            :key="item.ulid"
+          >
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.code }}</Table.Td>
               <Table.Td>{{ item.name }}</Table.Td>
@@ -224,49 +237,75 @@ onMounted(async () => {
               </Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="viewSelected(itemIdx)"
+                  >
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="editSelected(itemIdx)"
+                  >
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
-                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="deleteSelected(itemIdx)"
+                  >
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
               </Table.Td>
             </Table.Tr>
-            <Table.Tr :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
+            <Table.Tr
+              :class="{
+                'intro-x': true,
+                'hidden transition-all': expandDetail !== itemIdx,
+              }"
+            >
               <Table.Td colspan="4">
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.code') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.supplier.fields.code") }}
+                  </div>
                   <div class="flex-1">{{ item.code }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.name') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.supplier.fields.name") }}
+                  </div>
                   <div class="flex-1">{{ item.name }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.address') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.supplier.fields.address") }}
+                  </div>
                   <div class="flex-1">{{ item.address }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.tax_id') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.supplier.fields.tax_id") }}
+                  </div>
                   <div class="flex-1">{{ item.tax_id }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.status') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.supplier.fields.status") }}
+                  </div>
                   <div class="flex-1">
                     <span v-if="item.status === 'ACTIVE'">
-                      {{ t('components.dropdown.values.statusDDL.active') }}
+                      {{ t("components.dropdown.values.statusDDL.active") }}
                     </span>
                     <span v-if="item.status === 'INACTIVE'">
-                      {{ t('components.dropdown.values.statusDDL.inactive') }}
+                      {{ t("components.dropdown.values.statusDDL.inactive") }}
                     </span>
                   </div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.supplier.fields.remarks') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.supplier.fields.remarks") }}
+                  </div>
                   <div class="flex-1">{{ item.remarks }}</div>
                 </div>
               </Table.Td>
@@ -274,24 +313,46 @@ onMounted(async () => {
           </template>
         </Table.Tbody>
       </Table>
-      <Dialog :open="deleteModalShow" @close="() => { deleteModalShow = false; }">
+      <Dialog
+        :open="deleteModalShow"
+        @close="
+          () => {
+            deleteModalShow = false;
+          }
+        "
+      >
         <Dialog.Panel>
           <div class="p-5 text-center">
             <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
-            <div class="mt-5 text-3xl">{{ t('components.delete-modal.title') }}</div>
+            <div class="mt-5 text-3xl">
+              {{ t("components.delete-modal.title") }}
+            </div>
             <div class="mt-2 text-slate-500">
-              {{ t('components.delete-modal.desc_1') }}
+              {{ t("components.delete-modal.desc_1") }}
               <br />
-              {{ t('components.delete-modal.desc_2') }}
+              {{ t("components.delete-modal.desc_2") }}
             </div>
           </div>
           <div class="px-5 pb-8 text-center">
-            <Button type="button" variant="outline-secondary" class="w-24 mr-1"
-              @click="() => { deleteModalShow = false; }">
-              {{ t('components.buttons.cancel') }}
+            <Button
+              type="button"
+              variant="outline-secondary"
+              class="w-24 mr-1"
+              @click="
+                () => {
+                  deleteModalShow = false;
+                }
+              "
+            >
+              {{ t("components.buttons.cancel") }}
             </Button>
-            <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
-              {{ t('components.buttons.delete') }}
+            <Button
+              type="button"
+              variant="danger"
+              class="w-24"
+              @click="confirmDelete"
+            >
+              {{ t("components.buttons.delete") }}
             </Button>
           </div>
         </Dialog.Panel>

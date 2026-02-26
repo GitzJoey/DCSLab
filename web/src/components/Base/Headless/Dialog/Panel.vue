@@ -14,8 +14,9 @@ import { twMerge } from "tailwind-merge";
 import { type ProvideDialog } from "./Dialog.vue";
 import { inject, useAttrs, computed } from "vue";
 
-interface PanelProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogPanel> {
+interface PanelProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessDialogPanel
+> {
   as?: string | object;
 }
 
@@ -35,7 +36,7 @@ const computedClass = computed(() =>
     dialog?.size == "xl" && "sm:w-[600px] lg:w-[900px] xl:w-[1100px]",
     dialog?.zoom.value && "scale-105",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

@@ -1,43 +1,43 @@
 {
-    "page_title": "Warehouse",
-    "table": {
-        "title": "Warehouse List",
-        "cols": {
-            "code": "Code",
-            "name": "Name",
-            "address": "Address",
-            "city": "City",
-            "contact": "Contact",
-            "is_main": "Main Warehouse",
-            "remarks": "Remarks",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Create Warehouse",
-        "edit": "Edit Warehouse",
-        "show": "Show Warehouse",
-        "delete": "Delete Warehouse"
-    },
-    "field_groups": {
-        "company_info": "Company Information",
-        "warehouse_data": "Warehouse Data"
-    },
-    "fields": {
-        "company_id": "Company",
-        "code": "Code",
-        "name": "Name",
-        "address": "Address",
-        "city": "City",
-        "contact": "Contact",
-        "is_main": "Main Warehouse",
-        "remarks": "Remarks",
-        "status": "Status"
-    },
-    "alert": {
-        "delete_warehouse": {
-            "title": "Delete Warehouse",
-            "content": "Warehouse Deleted Successfully"
-        }
+  "page_title": "Warehouse",
+  "table": {
+    "title": "Warehouse List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "address": "Address",
+      "city": "City",
+      "contact": "Contact",
+      "is_main": "Main Warehouse",
+      "remarks": "Remarks",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Create Warehouse",
+    "edit": "Edit Warehouse",
+    "show": "Show Warehouse",
+    "delete": "Delete Warehouse"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "warehouse_data": "Warehouse Data"
+  },
+  "fields": {
+    "company_id": "Company",
+    "code": "Code",
+    "name": "Name",
+    "address": "Address",
+    "city": "City",
+    "contact": "Contact",
+    "is_main": "Main Warehouse",
+    "remarks": "Remarks",
+    "status": "Status"
+  },
+  "alert": {
+    "delete_warehouse": {
+      "title": "Delete Warehouse",
+      "content": "Warehouse Deleted Successfully"
+    }
+  }
 }

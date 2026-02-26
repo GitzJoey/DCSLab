@@ -1,43 +1,43 @@
 {
-    "page_title": "Branch",
-    "table": {
-        "title": "Branch List",
-        "cols": {
-            "code": "Code",
-            "name": "Name",
-            "address": "Address",
-            "city": "City",
-            "contact": "Contact",
-            "is_main": "Main Branch",
-            "remarks": "Remarks",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Create Branch",
-        "edit": "Edit Branch",
-        "show": "Show Branch",
-        "delete": "Delete Branch"
-    },
-    "field_groups": {
-        "company_info": "Company Information",
-        "branch_data": "Branch Data"
-    },
-    "fields": {
-        "company_id": "Company",
-        "code": "Code",
-        "name": "Name",
-        "address": "Address",
-        "city": "City",
-        "contact": "Contact",
-        "is_main": "Main Branch",
-        "remarks": "Remarks",
-        "status": "Status"
-    },
-    "alert": {
-        "delete_branch": {
-            "title": "Delete Branch",
-            "content": "Branch Deleted Successfully"
-        }
+  "page_title": "Branch",
+  "table": {
+    "title": "Branch List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "address": "Address",
+      "city": "City",
+      "contact": "Contact",
+      "is_main": "Main Branch",
+      "remarks": "Remarks",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Create Branch",
+    "edit": "Edit Branch",
+    "show": "Show Branch",
+    "delete": "Delete Branch"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "branch_data": "Branch Data"
+  },
+  "fields": {
+    "company_id": "Company",
+    "code": "Code",
+    "name": "Name",
+    "address": "Address",
+    "city": "City",
+    "contact": "Contact",
+    "is_main": "Main Branch",
+    "remarks": "Remarks",
+    "status": "Status"
+  },
+  "alert": {
+    "delete_branch": {
+      "title": "Delete Branch",
+      "content": "Branch Deleted Successfully"
+    }
+  }
 }

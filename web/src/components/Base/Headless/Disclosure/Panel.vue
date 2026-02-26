@@ -13,8 +13,9 @@ import {
 } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface PanelProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosurePanel> {
+interface PanelProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessDisclosurePanel
+> {
   as?: string | object;
 }
 
@@ -27,7 +28,7 @@ const computedClass = computed(() =>
   twMerge([
     "mt-3 text-slate-700 leading-relaxed dark:text-slate-400",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

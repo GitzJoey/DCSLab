@@ -67,10 +67,10 @@ const customerLists = ref<Collection<Array<Customer>> | null>({
 
 // #region Computed
 const isUserLocationSelected = computed(
-  () => selectedUserLocationStore.isUserLocationSelected
+  () => selectedUserLocationStore.isUserLocationSelected,
 );
 const selectedUserLocation = computed(
-  () => selectedUserLocationStore.selectedUserLocation
+  () => selectedUserLocationStore.selectedUserLocation,
 );
 // #endregion
 
@@ -94,7 +94,7 @@ const getCustomers = async (
   search: string,
   refresh: boolean,
   page: number,
-  per_page: number
+  per_page: number,
 ) => {
   emits("loading-state", true);
 
@@ -111,7 +111,8 @@ const getCustomers = async (
     per_page: per_page,
   };
 
-  const result: ServiceResponse<Collection<Array<Customer>> | null> = await customerService.readAnyPaginate(searchReq);
+  const result: ServiceResponse<Collection<Array<Customer>> | null> =
+    await customerService.readAnyPaginate(searchReq);
 
   if (result.success && result.data) {
     customerLists.value = result.data;
@@ -119,7 +120,7 @@ const getCustomers = async (
     showAlertPlaceholder(
       "danger",
       "",
-      result.errors as Record<string, Array<string>>
+      result.errors as Record<string, Array<string>>,
     );
   }
 
@@ -127,12 +128,12 @@ const getCustomers = async (
 };
 
 const onDataListChanged = async (data: DataListEmittedData) => {
-    await getCustomers(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+  await getCustomers(
+    data.search.text,
+    false,
+    data.pagination.page,
+    data.pagination.per_page,
+  );
 };
 
 const viewSelected = (idx: number) => {
@@ -168,7 +169,7 @@ const confirmDelete = async () => {
   emits("loading-state", true);
 
   let result: ServiceResponse<boolean | null> = await customerService.delete(
-    deleteUlid.value
+    deleteUlid.value,
   ); // Changed to customerService
 
   if (result.success) {
@@ -176,13 +177,13 @@ const confirmDelete = async () => {
     await getCustomers("", true, 1, 10);
     showNotification(
       t("views.customer.alert.delete.title"),
-      t("views.customer.alert.delete.message")
+      t("views.customer.alert.delete.message"),
     ); // Changed translation path
   } else {
     showAlertPlaceholder(
       "danger",
       "",
-      result.errors as Record<string, Array<string>>
+      result.errors as Record<string, Array<string>>,
     );
   }
 
@@ -201,7 +202,7 @@ const showNotification = (pTitle: string, pContent: string) => {
 const showAlertPlaceholder = (
   pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
   pTitle: string,
-  pAlertList: Record<string, Array<string>> | null
+  pAlertList: Record<string, Array<string>> | null,
 ) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,

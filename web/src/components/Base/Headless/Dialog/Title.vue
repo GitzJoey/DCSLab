@@ -10,8 +10,9 @@ import { twMerge } from "tailwind-merge";
 import { DialogTitle as HeadlessDialogTitle } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface TitleProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogTitle> {
+interface TitleProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessDialogTitle
+> {
   as?: string | object;
 }
 
@@ -24,7 +25,7 @@ const computedClass = computed(() =>
   twMerge([
     "flex items-center px-5 py-3 border-b border-slate-200/60 dark:border-darkmode-400",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

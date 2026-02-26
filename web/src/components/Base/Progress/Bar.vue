@@ -9,7 +9,7 @@ const computedClass = computed(() =>
   twMerge([
     "bg-primary h-full rounded text-xs text-white flex justify-center items-center",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

@@ -60,7 +60,7 @@ const computedClass = computed(() =>
       "border-b-primary font-medium dark:border-b-primary",
 
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

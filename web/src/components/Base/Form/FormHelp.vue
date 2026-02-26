@@ -14,7 +14,7 @@ const computedClass = computed(() =>
   twMerge([
     "text-xs text-slate-500 mt-2",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

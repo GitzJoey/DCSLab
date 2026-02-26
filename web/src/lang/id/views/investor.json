@@ -1,34 +1,34 @@
 {
-    "page_title": "Investor",
-    "table": {
-        "title": "Daftar Investor",
-        "cols": {
-            "code": "Kode",
-            "company": "Perusahaan",
-            "name": "Nama",
-            "remarks": "Keterangan"
-        }
-    },
-    "actions": {
-        "create": "Buat Investor",
-        "edit": "Edit Investor",
-        "show": "Lihat Investor",
-        "delete": "Hapus Investor"
-    },
-    "field_groups": {
-        "company_info": "Informasi Perusahaan",
-        "investor_data": "Data Investor"
-    },
-    "fields": {
-        "code": "Kode",
-        "company": "Perusahaan",
-        "name": "Nama",
-        "remarks": "Keterangan"
-    },
-    "alert": {
-        "delete_investor": {
-            "title": "Hapus Investor",
-            "content": "Investor berhasil dihapus"
-        }
+  "page_title": "Investor",
+  "table": {
+    "title": "Daftar Investor",
+    "cols": {
+      "code": "Kode",
+      "company": "Perusahaan",
+      "name": "Nama",
+      "remarks": "Keterangan"
     }
+  },
+  "actions": {
+    "create": "Buat Investor",
+    "edit": "Edit Investor",
+    "show": "Lihat Investor",
+    "delete": "Hapus Investor"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "investor_data": "Data Investor"
+  },
+  "fields": {
+    "code": "Kode",
+    "company": "Perusahaan",
+    "name": "Nama",
+    "remarks": "Keterangan"
+  },
+  "alert": {
+    "delete_investor": {
+      "title": "Hapus Investor",
+      "content": "Investor berhasil dihapus"
+    }
+  }
 }

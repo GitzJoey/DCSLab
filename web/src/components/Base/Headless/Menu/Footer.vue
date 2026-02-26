@@ -19,7 +19,7 @@ const { as } = withDefaults(defineProps<FooterProps>(), {
 
 const attrs = useAttrs();
 const computedClass = computed(() =>
-  twMerge(["flex p-1", typeof attrs.class === "string" && attrs.class])
+  twMerge(["flex p-1", typeof attrs.class === "string" && attrs.class]),
 );
 </script>
 

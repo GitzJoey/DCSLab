@@ -16,8 +16,8 @@ const router = useRouter();
 
 const authService = new AuthService();
 
-const status = ref<'onLoad' | 'success' | 'error'>('onLoad');
-const alertMessage = ref<string>('');
+const status = ref<"onLoad" | "success" | "error">("onLoad");
+const alertMessage = ref<string>("");
 const loading = ref<boolean>(false);
 
 const registerForm = authService.useRegisterForm();
@@ -29,14 +29,18 @@ onMounted(async () => {
 const onSubmit = async () => {
   loading.value = true;
 
-  registerForm.submit().then(() => {
-    router.push({ name: 'side-menu-dashboard-maindashboard' });
-  }).catch(error => {
-    status.value = 'error';
-    alertMessage.value = error.response.data.message;
-  }).finally(() => {
-    loading.value = false;
-  });
+  registerForm
+    .submit()
+    .then(() => {
+      router.push({ name: "side-menu-dashboard-maindashboard" });
+    })
+    .catch((error) => {
+      status.value = "error";
+      alertMessage.value = error.response.data.message;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 </script>
 
@@ -59,65 +63,133 @@ const onSubmit = async () => {
             </span>
           </a>
           <div class="my-auto">
-            <img alt="DCSLab" class="w-1/2 -mt-16 -intro-x" :src="illustrationUrl" />
-            <div class="mt-10 text-4xl font-medium leading-tight text-white -intro-x">
+            <img
+              alt="DCSLab"
+              class="w-1/2 -mt-16 -intro-x"
+              :src="illustrationUrl"
+            />
+            <div
+              class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
+            >
               <span class="hidden">&nbsp;</span><br />
               <span class="hidden">&nbsp;</span>
             </div>
-            <div class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400">
+            <div
+              class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
+            >
               <span class="hidden">&nbsp;</span>
             </div>
           </div>
         </div>
         <div class="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
           <div
-            class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto">
+            class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
+          >
             <LoadingOverlay :visible="loading" :transparent="true">
-              <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
+              <h2
+                class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
+              >
                 {{ t("views.register.title") }}
               </h2>
-              <div class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden">
+              <div
+                class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden"
+              >
                 &nbsp;
               </div>
               <form id="registerForm" @submit.prevent="onSubmit">
-                <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">{{ alertMessage }}</Alert>
+                <Alert
+                  v-if="status != 'onLoad'"
+                  :variant="status == 'success' ? 'success' : 'danger'"
+                  class="mt-2"
+                  >{{ alertMessage }}</Alert
+                >
                 <div class="mt-8 intro-x">
-                  <FormInput v-model="registerForm.name" type="text"
-                    :class="{ 'block px-4 py-3 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('name') }"
-                    :placeholder="t('views.register.fields.name')" @focus="registerForm.forgetError('name')" />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.name }}</span>
-                  <FormInput v-model="registerForm.email" type="text"
-                    :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('email') }"
-                    :placeholder="t('views.register.fields.email')" @focus="registerForm.forgetError('email')" />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.email }}</span>
-                  <FormInput v-model="registerForm.password" type="password"
-                    :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('password') }"
-                    :placeholder="t('views.register.fields.password')" @focus="registerForm.forgetError('password')" />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
-                  <FormInput v-model="registerForm.password_confirmation" type="password"
-                    :class="{ 'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true, 'border-danger': registerForm.invalid('password') }"
-                    :placeholder="t('views.register.fields.password_confirmation')"
-                    @focus="registerForm.forgetError('password_confirmation')" />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
+                  <FormInput
+                    v-model="registerForm.name"
+                    type="text"
+                    :class="{
+                      'block px-4 py-3 intro-x min-w-full xl:min-w-[350px]': true,
+                      'border-danger': registerForm.invalid('name'),
+                    }"
+                    :placeholder="t('views.register.fields.name')"
+                    @focus="registerForm.forgetError('name')"
+                  />
+                  <span class="ml-1 text-danger">{{
+                    registerForm.errors.name
+                  }}</span>
+                  <FormInput
+                    v-model="registerForm.email"
+                    type="text"
+                    :class="{
+                      'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true,
+                      'border-danger': registerForm.invalid('email'),
+                    }"
+                    :placeholder="t('views.register.fields.email')"
+                    @focus="registerForm.forgetError('email')"
+                  />
+                  <span class="ml-1 text-danger">{{
+                    registerForm.errors.email
+                  }}</span>
+                  <FormInput
+                    v-model="registerForm.password"
+                    type="password"
+                    :class="{
+                      'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true,
+                      'border-danger': registerForm.invalid('password'),
+                    }"
+                    :placeholder="t('views.register.fields.password')"
+                    @focus="registerForm.forgetError('password')"
+                  />
+                  <span class="ml-1 text-danger">{{
+                    registerForm.errors.password
+                  }}</span>
+                  <FormInput
+                    v-model="registerForm.password_confirmation"
+                    type="password"
+                    :class="{
+                      'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true,
+                      'border-danger': registerForm.invalid('password'),
+                    }"
+                    :placeholder="
+                      t('views.register.fields.password_confirmation')
+                    "
+                    @focus="registerForm.forgetError('password_confirmation')"
+                  />
+                  <span class="ml-1 text-danger">{{
+                    registerForm.errors.password
+                  }}</span>
                 </div>
-                <div class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
+                <div
+                  class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
+                >
                   <FormCheck>
-                    <FormCheck.Input v-model="registerForm.terms" type="checkbox"
+                    <FormCheck.Input
+                      v-model="registerForm.terms"
+                      type="checkbox"
                       :class="{ 'border-danger': registerForm.errors.terms }"
-                      @focus="registerForm.forgetError('terms')" />
+                      @focus="registerForm.forgetError('terms')"
+                    />
                     <FormCheck.Label class="cursor-pointer select-none">
                       I agree to the
                       {{ t("views.register.fields.terms_and_cond") }}
                     </FormCheck.Label>
                   </FormCheck>
-                  <span class="ml-1 text-danger">{{ registerForm.errors.terms }}</span>
+                  <span class="ml-1 text-danger">{{
+                    registerForm.errors.terms
+                  }}</span>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
+                  <Button
+                    variant="primary"
+                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
+                  >
                     {{ t("components.buttons.register") }}
                   </Button>
-                  <Button variant="outline-secondary" class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
-                    @click="router.push({ name: 'login' })">
+                  <Button
+                    variant="outline-secondary"
+                    class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
+                    @click="router.push({ name: 'login' })"
+                  >
                     {{ t("components.buttons.login") }}
                   </Button>
                 </div>

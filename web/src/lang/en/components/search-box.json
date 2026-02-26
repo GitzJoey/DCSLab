@@ -1,10 +1,10 @@
 {
-    "placeholder": {
-        "search": "Search..."
-    },
-    "search_group": {
-        "user": "Users",
-        "company": "Companies",
-        "branch": "Branches"
-    }
+  "placeholder": {
+    "search": "Search..."
+  },
+  "search_group": {
+    "user": "Users",
+    "company": "Companies",
+    "branch": "Branches"
+  }
 }

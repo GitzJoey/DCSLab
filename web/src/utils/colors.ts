@@ -50,7 +50,7 @@ const getColor = (colorKey: DotNestedKeys<Colors>, opacity: number = 1) => {
       flattenColors[colorKey].split("--color-")[1].split(")")[0]
     }`;
     return `rgb(${getComputedStyle(document.body).getPropertyValue(
-      cssVariableName
+      cssVariableName,
     )} / ${opacity})`;
   }
 };

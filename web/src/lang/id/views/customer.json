@@ -1,55 +1,55 @@
 {
-    "page_title": "Pelanggan",
-    "table": {
-        "title": "Daftar Pelanggan",
-        "cols": {
-            "code": "Kode",
-            "name": "Nama",
-            "is_member": "Anggota",
-            "group": "Grup",
-            "zone": "Zona",
-            "max_open_invoice": "Maks Faktur Terbuka",
-            "max_outstanding_invoice": "Maks Faktur Belum Lunas",
-            "max_invoice_age": "Maks Umur Faktur",
-            "payment_term_type": "Tipe Syarat Pembayaran",
-            "payment_term": "Syarat Pembayaran",
-            "taxable_enterprise": "Pengusaha Kena Pajak",
-            "tax_id": "NPWP",
-            "remarks": "Catatan",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Buat Pelanggan",
-        "edit": "Ubah Pelanggan",
-        "show": "Lihat Pelanggan",
-        "delete": "Hapus Pelanggan"
-    },
-    "field_groups": {
-        "general_information": "Informasi Umum",
-        "credit_limit": "Batas Kredit",
-        "tax_information": "Informasi Pajak"
-    },
-    "fields": {
-        "code": "Kode",
-        "name": "Nama",
-        "is_member": "Anggota",
-        "group": "Grup",
-        "zone": "Zona",
-        "max_open_invoice": "Maks Faktur Terbuka",
-        "max_outstanding_invoice": "Maks Faktur Belum Lunas",
-        "max_invoice_age": "Maks Umur Faktur",
-        "payment_term_type": "Tipe Syarat Pembayaran",
-        "payment_term": "Syarat Pembayaran",
-        "taxable_enterprise": "Pengusaha Kena Pajak",
-        "tax_id": "NPWP",
-        "remarks": "Catatan",
-        "status": "Status"
-    },
-    "alert": {
-        "delete": {
-            "title": "Hapus Pelanggan",
-            "message": "Pelanggan Berhasil Dihapus"
-        }
+  "page_title": "Pelanggan",
+  "table": {
+    "title": "Daftar Pelanggan",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama",
+      "is_member": "Anggota",
+      "group": "Grup",
+      "zone": "Zona",
+      "max_open_invoice": "Maks Faktur Terbuka",
+      "max_outstanding_invoice": "Maks Faktur Belum Lunas",
+      "max_invoice_age": "Maks Umur Faktur",
+      "payment_term_type": "Tipe Syarat Pembayaran",
+      "payment_term": "Syarat Pembayaran",
+      "taxable_enterprise": "Pengusaha Kena Pajak",
+      "tax_id": "NPWP",
+      "remarks": "Catatan",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Buat Pelanggan",
+    "edit": "Ubah Pelanggan",
+    "show": "Lihat Pelanggan",
+    "delete": "Hapus Pelanggan"
+  },
+  "field_groups": {
+    "general_information": "Informasi Umum",
+    "credit_limit": "Batas Kredit",
+    "tax_information": "Informasi Pajak"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "is_member": "Anggota",
+    "group": "Grup",
+    "zone": "Zona",
+    "max_open_invoice": "Maks Faktur Terbuka",
+    "max_outstanding_invoice": "Maks Faktur Belum Lunas",
+    "max_invoice_age": "Maks Umur Faktur",
+    "payment_term_type": "Tipe Syarat Pembayaran",
+    "payment_term": "Syarat Pembayaran",
+    "taxable_enterprise": "Pengusaha Kena Pajak",
+    "tax_id": "NPWP",
+    "remarks": "Catatan",
+    "status": "Status"
+  },
+  "alert": {
+    "delete": {
+      "title": "Hapus Pelanggan",
+      "message": "Pelanggan Berhasil Dihapus"
+    }
+  }
 }

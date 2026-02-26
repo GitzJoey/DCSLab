@@ -79,7 +79,7 @@ const customerGroupOptions = computed(() =>
   (customerGroupDDL.value ?? []).map((item) => ({
     value: item.code,
     label: item.name,
-  }))
+  })),
 );
 
 const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
@@ -92,10 +92,10 @@ const customerForm = customerService.useCustomerCreateForm();
 
 // #region Computed
 const isUserLocationSelected = computed(
-  () => selectedUserLocationStore.isUserLocationSelected
+  () => selectedUserLocationStore.isUserLocationSelected,
 );
 const selectedUserLocation = computed(
-  () => selectedUserLocationStore.selectedUserLocation
+  () => selectedUserLocationStore.selectedUserLocation,
 );
 // #endregion
 
@@ -205,8 +205,10 @@ const onSubmit = async () => {
       router.push({ name: "side-menu-customer-list" });
     })
     .catch((error) => {
-      const errorList: Record<string, Array<string>> =
-        convertErrorTypeToAlertListType(error);
+      const errorList: Record<
+        string,
+        Array<string>
+      > = convertErrorTypeToAlertListType(error);
       showAlertPlaceholder("danger", "", errorList);
     })
     .finally(() => {
@@ -231,7 +233,7 @@ const setCode = () => {
 const showAlertPlaceholder = (
   pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
   pTitle: string,
-  pAlertList: Record<string, Array<string>> | null
+  pAlertList: Record<string, Array<string>> | null,
 ) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,
@@ -288,82 +290,129 @@ watch(
   debounce((newValue): void => {
     cacheServices.setLastEntity("CUSTOMER_CREATE", newValue.data());
   }, 500),
-  { deep: true }
+  { deep: true },
 );
 // #endregion
 </script>
 
 <template>
   <form id="customerForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
+    <TwoColumnsLayout
+      :cards="cards"
+      :using-side-tab="false"
+      @handle-expand-card="handleExpandCard"
+    >
       <template #card-items-0>
         <div class="p-5">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('code') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('code') }"
+              >
                 {{ t("views.customer.fields.code") }}
               </FormLabel>
-              <FormInputCode v-model="customerForm.code" :class="{ 'border-danger': customerForm.invalid('code') }"
-                :placeholder="t('views.customer.fields.code')" @set-auto="setCode"
-                @change="customerForm.validate('code')" />
+              <FormInputCode
+                v-model="customerForm.code"
+                :class="{ 'border-danger': customerForm.invalid('code') }"
+                :placeholder="t('views.customer.fields.code')"
+                @set-auto="setCode"
+                @change="customerForm.validate('code')"
+              />
               <FormErrorMessages :messages="customerForm.errors.code" />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('name') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('name') }"
+              >
                 {{ t("views.customer.fields.name") }}
               </FormLabel>
-              <FormInput v-model="customerForm.name" type="text"
+              <FormInput
+                v-model="customerForm.name"
+                type="text"
                 :class="{ 'border-danger': customerForm.invalid('name') }"
-                :placeholder="t('views.customer.fields.name')" @change="customerForm.validate('name')" />
+                :placeholder="t('views.customer.fields.name')"
+                @change="customerForm.validate('name')"
+              />
               <FormErrorMessages :messages="customerForm.errors.name" />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{
-                'text-danger': customerForm.invalid('group_id'),
-              }">
+              <FormLabel
+                :class="{
+                  'text-danger': customerForm.invalid('group_id'),
+                }"
+              >
                 {{ t("views.customer.fields.group") }}
               </FormLabel>
               <div class="flex items-center gap-2">
                 <div class="flex-1">
-                  <FormSelectSearch v-model="customerForm.group_id" v-model:search="customerGroupSearch"
-                    :options="customerGroupOptions" :placeholder="t('components.dropdown.placeholder')" :class="{
+                  <FormSelectSearch
+                    v-model="customerForm.group_id"
+                    v-model:search="customerGroupSearch"
+                    :options="customerGroupOptions"
+                    :placeholder="t('components.dropdown.placeholder')"
+                    :class="{
                       'border-danger': customerForm.invalid('group_id'),
-                    }" @change="customerForm.validate('group_id')" @search="getCustomerGroupDDL" />
+                    }"
+                    @change="customerForm.validate('group_id')"
+                    @search="getCustomerGroupDDL"
+                  />
                 </div>
-                <button v-if="customerForm.group_id" type="button" class="text-slate-500 hover:text-danger"
-                  @click="clearGroup">
+                <button
+                  v-if="customerForm.group_id"
+                  type="button"
+                  class="text-slate-500 hover:text-danger"
+                  @click="clearGroup"
+                >
                   <Lucide icon="X" class="w-4 h-4" />
                 </button>
               </div>
               <FormErrorMessages :messages="customerForm.errors.group_id" />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('is_member') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('is_member') }"
+              >
                 {{ t("views.customer.fields.is_member") }}
               </FormLabel>
               <FormSwitch>
-                <FormSwitch.Input v-model="customerForm.is_member" type="checkbox" :class="{
-                  'border-danger': customerForm.invalid('is_member'),
-                }" :placeholder="t('views.customer.fields.is_member')"
-                  @change="customerForm.validate('is_member')" />
+                <FormSwitch.Input
+                  v-model="customerForm.is_member"
+                  type="checkbox"
+                  :class="{
+                    'border-danger': customerForm.invalid('is_member'),
+                  }"
+                  :placeholder="t('views.customer.fields.is_member')"
+                  @change="customerForm.validate('is_member')"
+                />
               </FormSwitch>
               <FormErrorMessages :messages="customerForm.errors.is_member" />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('zone') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('zone') }"
+              >
                 {{ t("views.customer.fields.zone") }}
               </FormLabel>
-              <FormInput v-model="customerForm.zone" type="text"
+              <FormInput
+                v-model="customerForm.zone"
+                type="text"
                 :class="{ 'border-danger': customerForm.invalid('zone') }"
-                :placeholder="t('views.customer.fields.zone')" @change="customerForm.validate('zone')" />
+                :placeholder="t('views.customer.fields.zone')"
+                @change="customerForm.validate('zone')"
+              />
               <FormErrorMessages :messages="customerForm.errors.zone" />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('status') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('status') }"
+              >
                 {{ t("views.customer.fields.status") }}
               </FormLabel>
-              <FormSelect v-model="customerForm.status" :class="{ 'border-danger': customerForm.invalid('status') }"
-                @change="customerForm.validate('status')">
+              <FormSelect
+                v-model="customerForm.status"
+                :class="{ 'border-danger': customerForm.invalid('status') }"
+                @change="customerForm.validate('status')"
+              >
                 <option value="0" disabled>
                   {{ t("components.dropdown.placeholder") }}
                 </option>
@@ -381,72 +430,120 @@ watch(
         <div class="p-5">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
             <div class="pb-4">
-              <FormLabel :class="{
-                'text-danger': customerForm.invalid('max_open_invoice'),
-              }">
+              <FormLabel
+                :class="{
+                  'text-danger': customerForm.invalid('max_open_invoice'),
+                }"
+              >
                 {{ t("views.customer.fields.max_open_invoice") }}
               </FormLabel>
-              <FormInput v-model="customerForm.max_open_invoice" type="number" :class="{
-                'border-danger': customerForm.invalid('max_open_invoice'),
-              }" :placeholder="t('views.customer.fields.max_open_invoice')"
-                @change="customerForm.validate('max_open_invoice')" />
-              <FormErrorMessages :messages="customerForm.errors.max_open_invoice" />
+              <FormInput
+                v-model="customerForm.max_open_invoice"
+                type="number"
+                :class="{
+                  'border-danger': customerForm.invalid('max_open_invoice'),
+                }"
+                :placeholder="t('views.customer.fields.max_open_invoice')"
+                @change="customerForm.validate('max_open_invoice')"
+              />
+              <FormErrorMessages
+                :messages="customerForm.errors.max_open_invoice"
+              />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{
-                'text-danger': customerForm.invalid(
-                  'max_outstanding_invoice'
-                ),
-              }">
+              <FormLabel
+                :class="{
+                  'text-danger': customerForm.invalid(
+                    'max_outstanding_invoice',
+                  ),
+                }"
+              >
                 {{ t("views.customer.fields.max_outstanding_invoice") }}
               </FormLabel>
-              <FormInput v-model="customerForm.max_outstanding_invoice" type="number" :class="{
-                'border-danger': customerForm.invalid(
-                  'max_outstanding_invoice'
-                ),
-              }" :placeholder="t('views.customer.fields.max_outstanding_invoice')
-                  " @change="customerForm.validate('max_outstanding_invoice')" />
-              <FormErrorMessages :messages="customerForm.errors.max_outstanding_invoice" />
+              <FormInput
+                v-model="customerForm.max_outstanding_invoice"
+                type="number"
+                :class="{
+                  'border-danger': customerForm.invalid(
+                    'max_outstanding_invoice',
+                  ),
+                }"
+                :placeholder="
+                  t('views.customer.fields.max_outstanding_invoice')
+                "
+                @change="customerForm.validate('max_outstanding_invoice')"
+              />
+              <FormErrorMessages
+                :messages="customerForm.errors.max_outstanding_invoice"
+              />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{
-                'text-danger': customerForm.invalid('max_invoice_age'),
-              }">
+              <FormLabel
+                :class="{
+                  'text-danger': customerForm.invalid('max_invoice_age'),
+                }"
+              >
                 {{ t("views.customer.fields.max_invoice_age") }}
               </FormLabel>
-              <FormInput v-model="customerForm.max_invoice_age" type="number" :class="{
-                'border-danger': customerForm.invalid('max_invoice_age'),
-              }" :placeholder="t('views.customer.fields.max_invoice_age')"
-                @change="customerForm.validate('max_invoice_age')" />
-              <FormErrorMessages :messages="customerForm.errors.max_invoice_age" />
+              <FormInput
+                v-model="customerForm.max_invoice_age"
+                type="number"
+                :class="{
+                  'border-danger': customerForm.invalid('max_invoice_age'),
+                }"
+                :placeholder="t('views.customer.fields.max_invoice_age')"
+                @change="customerForm.validate('max_invoice_age')"
+              />
+              <FormErrorMessages
+                :messages="customerForm.errors.max_invoice_age"
+              />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{
-                'text-danger': customerForm.invalid('payment_term_type'),
-              }">
+              <FormLabel
+                :class="{
+                  'text-danger': customerForm.invalid('payment_term_type'),
+                }"
+              >
                 {{ t("views.customer.fields.payment_term_type") }}
               </FormLabel>
-              <FormSelect v-model="customerForm.payment_term_type" :class="{
-                'border-danger': customerForm.invalid('payment_term_type'),
-              }" :placeholder="t('views.customer.fields.payment_term_type')"
-                @change="customerForm.validate('payment_term_type')">
+              <FormSelect
+                v-model="customerForm.payment_term_type"
+                :class="{
+                  'border-danger': customerForm.invalid('payment_term_type'),
+                }"
+                :placeholder="t('views.customer.fields.payment_term_type')"
+                @change="customerForm.validate('payment_term_type')"
+              >
                 <option value="0" disabled>
                   {{ t("components.dropdown.placeholder") }}
                 </option>
-                <option v-for="s in paymentTermTypeDDL" :key="s.code" :value="s.code">
+                <option
+                  v-for="s in paymentTermTypeDDL"
+                  :key="s.code"
+                  :value="s.code"
+                >
                   {{ t(s.name) }}
                 </option>
               </FormSelect>
-              <FormErrorMessages :messages="customerForm.errors.payment_term_type" />
+              <FormErrorMessages
+                :messages="customerForm.errors.payment_term_type"
+              />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('payment_term') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('payment_term') }"
+              >
                 {{ t("views.customer.fields.payment_term") }}
               </FormLabel>
-              <FormInput v-model="customerForm.payment_term" type="number" :class="{
-                'border-danger': customerForm.invalid('payment_term'),
-              }" :placeholder="t('views.customer.fields.payment_term')"
-                @change="customerForm.validate('payment_term')" />
+              <FormInput
+                v-model="customerForm.payment_term"
+                type="number"
+                :class="{
+                  'border-danger': customerForm.invalid('payment_term'),
+                }"
+                :placeholder="t('views.customer.fields.payment_term')"
+                @change="customerForm.validate('payment_term')"
+              />
               <FormErrorMessages :messages="customerForm.errors.payment_term" />
             </div>
           </div>
@@ -457,34 +554,55 @@ watch(
         <div class="p-5">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
             <div class="pb-4">
-              <FormLabel :class="{
-                'text-danger': customerForm.invalid('taxable_enterprise'),
-              }">
+              <FormLabel
+                :class="{
+                  'text-danger': customerForm.invalid('taxable_enterprise'),
+                }"
+              >
                 {{ t("views.customer.fields.taxable_enterprise") }}
               </FormLabel>
               <FormSwitch>
-                <FormSwitch.Input v-model="customerForm.taxable_enterprise" type="checkbox" :class="{
-                  'border-danger': customerForm.invalid('taxable_enterprise'),
-                }" :placeholder="t('views.customer.fields.taxable_enterprise')"
-                  @change="customerForm.validate('taxable_enterprise')" />
+                <FormSwitch.Input
+                  v-model="customerForm.taxable_enterprise"
+                  type="checkbox"
+                  :class="{
+                    'border-danger': customerForm.invalid('taxable_enterprise'),
+                  }"
+                  :placeholder="t('views.customer.fields.taxable_enterprise')"
+                  @change="customerForm.validate('taxable_enterprise')"
+                />
               </FormSwitch>
-              <FormErrorMessages :messages="customerForm.errors.taxable_enterprise" />
+              <FormErrorMessages
+                :messages="customerForm.errors.taxable_enterprise"
+              />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('tax_id') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('tax_id') }"
+              >
                 {{ t("views.customer.fields.tax_id") }}
               </FormLabel>
-              <FormInput v-model="customerForm.tax_id" type="text"
+              <FormInput
+                v-model="customerForm.tax_id"
+                type="text"
                 :class="{ 'border-danger': customerForm.invalid('tax_id') }"
-                :placeholder="t('views.customer.fields.tax_id')" @change="customerForm.validate('tax_id')" />
+                :placeholder="t('views.customer.fields.tax_id')"
+                @change="customerForm.validate('tax_id')"
+              />
               <FormErrorMessages :messages="customerForm.errors.tax_id" />
             </div>
             <div class="pb-4">
-              <FormLabel :class="{ 'text-danger': customerForm.invalid('remarks') }">
+              <FormLabel
+                :class="{ 'text-danger': customerForm.invalid('remarks') }"
+              >
                 {{ t("views.customer.fields.remarks") }}
               </FormLabel>
-              <FormTextarea v-model="customerForm.remarks" :class="{ 'border-danger': customerForm.invalid('remarks') }"
-                :placeholder="t('views.customer.fields.remarks')" @change="customerForm.validate('remarks')" />
+              <FormTextarea
+                v-model="customerForm.remarks"
+                :class="{ 'border-danger': customerForm.invalid('remarks') }"
+                :placeholder="t('views.customer.fields.remarks')"
+                @change="customerForm.validate('remarks')"
+              />
               <FormErrorMessages :messages="customerForm.errors.remarks" />
             </div>
           </div>
@@ -493,14 +611,29 @@ watch(
 
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md"
-            :disabled="customerForm.validating || customerForm.hasErrors">
-            <Lucide v-if="customerForm.validating" icon="Loader" class="animate-spin" />
+          <Button
+            type="submit"
+            href="#"
+            variant="primary"
+            class="w-28 shadow-md"
+            :disabled="customerForm.validating || customerForm.hasErrors"
+          >
+            <Lucide
+              v-if="customerForm.validating"
+              icon="Loader"
+              class="animate-spin"
+            />
             <template v-else>
               {{ t("components.buttons.submit") }}
             </template>
           </Button>
-          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
+          <Button
+            type="button"
+            href="#"
+            variant="soft-secondary"
+            class="w-28 shadow-md"
+            @click="resetForm"
+          >
             {{ t("components.buttons.reset") }}
           </Button>
         </div>

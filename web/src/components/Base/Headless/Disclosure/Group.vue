@@ -38,7 +38,7 @@ provide<ProvideGroup>(
       setSelectedIndex: setActive,
       variant: variant,
     };
-  })
+  }),
 );
 </script>
 

@@ -69,9 +69,11 @@ onMounted(() => {
     ref="litepickerRef"
     type="text"
     :value="props.modelValue"
-    @change="(event: Event) => {
-      emit('update:modelValue', (event.target as HTMLInputElement).value);
-    }"
+    @change="
+      (event: Event) => {
+        emit('update:modelValue', (event.target as HTMLInputElement).value);
+      }
+    "
     v-litepicker-directive
   />
 </template>

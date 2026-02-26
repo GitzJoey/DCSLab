@@ -52,7 +52,7 @@ const { as, size, variant, elevated, rounded } = withDefaults(
   defineProps<ButtonProps>(),
   {
     as: "button",
-  }
+  },
 );
 
 const attrs = useAttrs();
@@ -230,7 +230,7 @@ const computedClass = computed(() =>
     rounded && "rounded-full",
     elevated && "shadow-md",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

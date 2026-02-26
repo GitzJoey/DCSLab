@@ -46,7 +46,7 @@ const computedClass = computed(() =>
     "[&:disabled:checked]:opacity-70 [&:disabled:checked]:cursor-not-allowed [&:disabled:checked]:dark:bg-darkmode-800/50",
 
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 const emit = defineEmits<InputEmit>();

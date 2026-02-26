@@ -14,7 +14,7 @@ const computedClass = computed(() =>
   twMerge([
     "cursor-pointer ml-2",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

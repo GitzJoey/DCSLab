@@ -1,3 +1,3 @@
 export interface ForgotPassword {
-    message: string,
+  message: string;
 }

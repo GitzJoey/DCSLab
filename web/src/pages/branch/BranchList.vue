@@ -33,11 +33,17 @@ const selectedUserLocationStore = useSelectedUserLocationStore();
 // #endregion
 
 // #region Props, Emits
-const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder', 'show-notification']);
+const emits = defineEmits([
+  "mode-state",
+  "loading-state",
+  "update-profile",
+  "show-alertplaceholder",
+  "show-notification",
+]);
 // #endregion
 
 // #region Refs
-const deleteUlid = ref<string>('');
+const deleteUlid = ref<string>("");
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<number | null>(null);
 const branchLists = ref<Collection<Array<Branch>> | null>({
@@ -46,34 +52,41 @@ const branchLists = ref<Collection<Array<Branch>> | null>({
     current_page: 0,
     from: null,
     last_page: 0,
-    path: '',
+    path: "",
     per_page: 0,
     to: null,
     total: 0,
   },
   links: {
-    first: '',
-    last: '',
+    first: "",
+    last: "",
     prev: null,
     next: null,
-  }
+  },
 });
 // #endregion
 
 // #region Computed
-const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
-const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
+const isUserLocationSelected = computed(
+  () => selectedUserLocationStore.isUserLocationSelected,
+);
+const selectedUserLocation = computed(
+  () => selectedUserLocationStore.selectedUserLocation,
+);
 // #endregion
 
 // #region Lifecycle Hooks
 onMounted(async () => {
-  emits('mode-state', ViewMode.LIST);
+  emits("mode-state", ViewMode.LIST);
 
   if (!isUserLocationSelected.value) {
-    router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
+    router.push({
+      name: "side-menu-error-code",
+      params: { code: ErrorCode.USERLOCATION_REQUIRED },
+    });
   }
 
-  await getBranches('', true, 1, 10);
+  await getBranches("", true, 1, 10);
 });
 // #endregion
 
@@ -83,9 +96,9 @@ const getBranches = async (
 
   refresh: boolean,
   page: number,
-  per_page: number
+  per_page: number,
 ) => {
-  emits('loading-state', true);
+  emits("loading-state", true);
 
   let company_id = selectedUserLocation.value.company.id;
 
@@ -100,18 +113,23 @@ const getBranches = async (
 
     refresh: refresh,
     page: page,
-    per_page: per_page
+    per_page: per_page,
   };
 
-  let result: ServiceResponse<Collection<Array<Branch>> | null> = await branchServices.readAnyPaginate(searchReq);
+  let result: ServiceResponse<Collection<Array<Branch>> | null> =
+    await branchServices.readAnyPaginate(searchReq);
 
   if (result.success && result.data) {
     branchLists.value = result.data;
   } else {
-    showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
+    showAlertPlaceholder(
+      "danger",
+      "",
+      result.errors as Record<string, Array<string>>,
+    );
   }
 
-  emits('loading-state', false);
+  emits("loading-state", false);
 };
 
 const onDataListChanged = async (data: DataListEmittedData) => {
@@ -119,9 +137,9 @@ const onDataListChanged = async (data: DataListEmittedData) => {
     data.search.text,
     true,
     data.pagination.page,
-    data.pagination.per_page
+    data.pagination.per_page,
   );
-}
+};
 
 const viewSelected = (idx: number) => {
   if (expandDetail.value === idx) {
@@ -135,7 +153,10 @@ const editSelected = (itemIdx: number) => {
   if (!branchLists.value) return;
 
   let ulid = branchLists.value.data[itemIdx].ulid;
-  router.push({ name: 'side-menu-company-branch-edit', params: { ulid: ulid } });
+  router.push({
+    name: "side-menu-company-branch-edit",
+    params: { ulid: ulid },
+  });
 };
 
 const deleteSelected = (itemIdx: number) => {
@@ -149,38 +170,51 @@ const deleteSelected = (itemIdx: number) => {
 
 const confirmDelete = async () => {
   deleteModalShow.value = false;
-  emits('loading-state', true);
+  emits("loading-state", true);
 
-  let result: ServiceResponse<boolean | null> = await branchServices.delete(deleteUlid.value);
+  let result: ServiceResponse<boolean | null> = await branchServices.delete(
+    deleteUlid.value,
+  );
 
   if (result.success) {
-    emits('update-profile');
-    await getBranches('', true, 1, 10);
-    showNotification(t('views.branch.alert.delete_branch.title'), t('views.branch.alert.delete_branch.content'));
+    emits("update-profile");
+    await getBranches("", true, 1, 10);
+    showNotification(
+      t("views.branch.alert.delete_branch.title"),
+      t("views.branch.alert.delete_branch.content"),
+    );
   } else {
-    showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
+    showAlertPlaceholder(
+      "danger",
+      "",
+      result.errors as Record<string, Array<string>>,
+    );
   }
 
-  emits('loading-state', false);
+  emits("loading-state", false);
 };
 
 const showNotification = (pTitle: string, pContent: string) => {
   let n: NotificationData = {
     title: pTitle,
-    content: pContent
+    content: pContent,
   };
 
-  emits('show-notification', n);
+  emits("show-notification", n);
 };
 
-const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark', pTitle: string, pAlertList: Record<string, Array<string>> | null) => {
+const showAlertPlaceholder = (
+  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
+  pTitle: string,
+  pAlertList: Record<string, Array<string>> | null,
+) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,
     title: pTitle,
     alertList: pAlertList,
   };
 
-  emits('show-alertplaceholder', ap);
+  emits("show-alertplaceholder", ap);
 };
 // #endregion
 
@@ -189,8 +223,14 @@ const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'war
 </script>
 
 <template>
-  <DataList :title="t('views.branch.table.title')" :enable-search="true" :can-print="true" :can-export="true"
-    :pagination="branchLists ? branchLists.meta : null" @dataListChanged="onDataListChanged">
+  <DataList
+    :title="t('views.branch.table.title')"
+    :enable-search="true"
+    :can-print="true"
+    :can-export="true"
+    :pagination="branchLists ? branchLists.meta : null"
+    @dataListChanged="onDataListChanged"
+  >
     <template #content>
       <Table class="mt-5" :hover="true">
         <Table.Thead variant="light">
@@ -214,12 +254,16 @@ const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'war
           <template v-if="branchLists.data.length == 0">
             <Table.Tr class="intro-x">
               <Table.Td colspan="5">
-                <div class="flex justify-center italic">{{
-                  t('components.data-list.data_not_found') }}</div>
+                <div class="flex justify-center italic">
+                  {{ t("components.data-list.data_not_found") }}
+                </div>
               </Table.Td>
             </Table.Tr>
           </template>
-          <template v-for="(item, itemIdx) in branchLists.data" :key="item.ulid">
+          <template
+            v-for="(item, itemIdx) in branchLists.data"
+            :key="item.ulid"
+          >
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.code }}</Table.Td>
               <Table.Td>{{ item.name }}</Table.Td>
@@ -233,59 +277,93 @@ const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'war
               </Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="viewSelected(itemIdx)"
+                  >
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="editSelected(itemIdx)"
+                  >
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
-                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="deleteSelected(itemIdx)"
+                  >
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
               </Table.Td>
             </Table.Tr>
-            <Table.Tr :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
+            <Table.Tr
+              :class="{
+                'intro-x': true,
+                'hidden transition-all': expandDetail !== itemIdx,
+              }"
+            >
               <Table.Td colspan="5">
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.code') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.code") }}
+                  </div>
                   <div class="flex-1">{{ item.code }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.name') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.name") }}
+                  </div>
                   <div class="flex-1">{{ item.name }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.address') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.address") }}
+                  </div>
                   <div class="flex-1">{{ item.address }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.city') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.city") }}
+                  </div>
                   <div class="flex-1">{{ item.city }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.contact') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.contact") }}
+                  </div>
                   <div class="flex-1">{{ item.contact }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.is_main') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.is_main") }}
+                  </div>
                   <div class="flex-1">
-                    <span v-if="item.is_main">{{ t('components.dropdown.values.switch.on') }}</span>
-                    <span v-else>{{ t('components.dropdown.values.switch.off') }}</span>
+                    <span v-if="item.is_main">{{
+                      t("components.dropdown.values.switch.on")
+                    }}</span>
+                    <span v-else>{{
+                      t("components.dropdown.values.switch.off")
+                    }}</span>
                   </div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.remarks') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.remarks") }}
+                  </div>
                   <div class="flex-1">{{ item.remarks }}</div>
                 </div>
                 <div class="flex flex-row">
-                  <div class="ml-5 w-48 text-right pr-5">{{ t('views.branch.fields.status') }}</div>
+                  <div class="ml-5 w-48 text-right pr-5">
+                    {{ t("views.branch.fields.status") }}
+                  </div>
                   <div class="flex-1">
                     <span v-if="item.status === 'ACTIVE'">
-                      {{ t('components.dropdown.values.statusDDL.active') }}
+                      {{ t("components.dropdown.values.statusDDL.active") }}
                     </span>
                     <span v-if="item.status === 'INACTIVE'">
-                      {{ t('components.dropdown.values.statusDDL.inactive') }}
+                      {{ t("components.dropdown.values.statusDDL.inactive") }}
                     </span>
                   </div>
                 </div>
@@ -294,24 +372,46 @@ const showAlertPlaceholder = (pAlertType: 'hidden' | 'danger' | 'success' | 'war
           </template>
         </Table.Tbody>
       </Table>
-      <Dialog :open="deleteModalShow" @close="() => { deleteModalShow = false; }">
+      <Dialog
+        :open="deleteModalShow"
+        @close="
+          () => {
+            deleteModalShow = false;
+          }
+        "
+      >
         <Dialog.Panel>
           <div class="p-5 text-center">
             <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
-            <div class="mt-5 text-3xl">{{ t('components.delete-modal.title') }}</div>
+            <div class="mt-5 text-3xl">
+              {{ t("components.delete-modal.title") }}
+            </div>
             <div class="mt-2 text-slate-500">
-              {{ t('components.delete-modal.desc_1') }}
+              {{ t("components.delete-modal.desc_1") }}
               <br />
-              {{ t('components.delete-modal.desc_2') }}
+              {{ t("components.delete-modal.desc_2") }}
             </div>
           </div>
           <div class="px-5 pb-8 text-center">
-            <Button type="button" variant="outline-secondary" class="w-24 mr-1"
-              @click="() => { deleteModalShow = false; }">
-              {{ t('components.buttons.cancel') }}
+            <Button
+              type="button"
+              variant="outline-secondary"
+              class="w-24 mr-1"
+              @click="
+                () => {
+                  deleteModalShow = false;
+                }
+              "
+            >
+              {{ t("components.buttons.cancel") }}
             </Button>
-            <Button type="button" variant="danger" class="w-24" @click="(confirmDelete)">
-              {{ t('components.buttons.delete') }}
+            <Button
+              type="button"
+              variant="danger"
+              class="w-24"
+              @click="confirmDelete"
+            >
+              {{ t("components.buttons.delete") }}
             </Button>
           </div>
         </Dialog.Panel>

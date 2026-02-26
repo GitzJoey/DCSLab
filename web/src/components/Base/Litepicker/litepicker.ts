@@ -25,7 +25,7 @@ const setValue = (props: LitepickerProps, emit: LitepickerEmit) => {
 const init = (
   el: LitepickerElement,
   props: LitepickerProps,
-  emit: LitepickerEmit
+  emit: LitepickerEmit,
 ) => {
   const format = getDateFormat(props.options.format);
   el.litePickerInstance = new Litepicker({
@@ -50,7 +50,7 @@ const init = (
 const reInit = (
   el: LitepickerElement,
   props: LitepickerProps,
-  emit: LitepickerEmit
+  emit: LitepickerEmit,
 ) => {
   el.litePickerInstance.destroy();
   init(el, props, emit);

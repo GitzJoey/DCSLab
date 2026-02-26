@@ -16,8 +16,9 @@ export type ProvideList = {
   variant?: Variant;
 };
 
-interface ListProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessTabList> {
+interface ListProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessTabList
+> {
   variant?: Variant;
 }
 
@@ -31,7 +32,7 @@ const computedClass = computed(() =>
     variant == "tabs" && "border-b border-slate-200 dark:border-darkmode-400",
     "w-full flex",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 provide<ProvideList>("list", {

@@ -10,213 +10,253 @@ import ErrorHandlerService from "./ErrorHandlerService";
 import { StatusCode } from "../types/enums/StatusCode";
 import { client, useForm } from "laravel-precognition-vue";
 import {
-    SupplierReadAnyPaginateRequest,
-    SupplierReadAnyGetRequest,
+  SupplierReadAnyPaginateRequest,
+  SupplierReadAnyGetRequest,
 } from "../types/services/supplier/SupplierRequest";
 
 export default class SupplierService {
-    private ziggyRoute: Config;
-    private ziggyRouteStore = useZiggyRouteStore();
+  private ziggyRoute: Config;
+  private ziggyRouteStore = useZiggyRouteStore();
 
-    private errorHandlerService;
+  private errorHandlerService;
 
-    constructor() {
-        this.ziggyRoute = this.ziggyRouteStore.getZiggy;
-        this.errorHandlerService = new ErrorHandlerService();
+  constructor() {
+    this.ziggyRoute = this.ziggyRouteStore.getZiggy;
+    this.errorHandlerService = new ErrorHandlerService();
+  }
+
+  public useSupplierCreateForm() {
+    const url = route(
+      "api.post.supplier.save",
+      undefined,
+      true,
+      this.ziggyRoute,
+    );
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+    const form = useForm("post", url, {
+      company_id: "",
+      code: "_AUTO_",
+      name: "",
+      address: "",
+      city: "",
+      payment_term_type: "",
+      payment_term: 0,
+      taxable_enterprise: false,
+      tax_id: "",
+      status: "",
+      remarks: "",
+    });
+
+    return form;
+  }
+
+  public async readAnyPaginate(
+    args: SupplierReadAnyPaginateRequest,
+  ): Promise<ServiceResponse<Collection<Array<Supplier>> | null>> {
+    const result: ServiceResponse<Collection<Array<Supplier>> | null> = {
+      success: false,
+    };
+
+    try {
+      const queryParams: Record<string, any> = {};
+      queryParams["with_trashed"] = args.with_trashed ? 1 : 0;
+      queryParams["company_id"] = args.company_id;
+      queryParams["search"] = args.search ? args.search : "";
+      if (args.status !== undefined && args.status !== null)
+        queryParams["status"] = args.status;
+      if (args.include_id) queryParams["include_id"] = args.include_id;
+
+      queryParams["refresh"] = args.refresh;
+      queryParams["paginate"] = {
+        page: args.page,
+        per_page: args.per_page,
+      };
+
+      const url = route(
+        "api.get.supplier.read_any",
+        {
+          _query: queryParams,
+        },
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Collection<Array<Supplier>>> =
+        await axios.get(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
+  }
 
-    public useSupplierCreateForm() {
-        const url = route('api.post.supplier.save', undefined, true, this.ziggyRoute);
+  public async readAnyGet(
+    args: SupplierReadAnyGetRequest,
+  ): Promise<ServiceResponse<Resource<Array<Supplier>> | null>> {
+    const result: ServiceResponse<Resource<Array<Supplier>> | null> = {
+      success: false,
+    };
 
-        client.axios().defaults.withCredentials = true;
-        client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', url, {
-            company_id: '',
-            code: '_AUTO_',
-            name: '',
-            address: '',
-            city: '',
-            payment_term_type: '',
-            payment_term: 0,
-            taxable_enterprise: false,
-            tax_id: '',
-            status: '',
-            remarks: '',
-        });
+    try {
+      const queryParams: Record<string, any> = {};
+      if (args.with_trashed !== undefined)
+        queryParams["with_trashed"] = args.with_trashed;
+      if (args.company_id) queryParams["company_id"] = args.company_id;
+      if (args.search) queryParams["search"] = args.search;
+      if (args.status !== undefined && args.status !== null)
+        queryParams["status"] = args.status;
+      if (args.include_id) queryParams["include_id"] = args.include_id;
 
-        return form;
+      queryParams["refresh"] = args.refresh;
+      queryParams["get"] = {
+        limit: args.limit,
+      };
+
+      const url = route(
+        "api.get.supplier.read_any",
+        {
+          _query: queryParams,
+        },
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Resource<Array<Supplier>>> =
+        await axios.get(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
+  }
 
-    public async readAnyPaginate(args: SupplierReadAnyPaginateRequest): Promise<ServiceResponse<Collection<Array<Supplier>> | null>> {
-        const result: ServiceResponse<Collection<Array<Supplier>> | null> = {
-            success: false,
-        };
+  public async read(ulid: string): Promise<ServiceResponse<Supplier | null>> {
+    const result: ServiceResponse<Supplier | null> = {
+      success: false,
+    };
 
-        try {
-            const queryParams: Record<string, any> = {};
-            queryParams["with_trashed"] = args.with_trashed ? 1 : 0;
-            queryParams["company_id"] = args.company_id;
-            queryParams["search"] = args.search ? args.search : "";
-            if (args.status !== undefined && args.status !== null) queryParams["status"] = args.status;
-            if (args.include_id) queryParams["include_id"] = args.include_id;
+    try {
+      const url = route(
+        "api.get.supplier.read",
+        {
+          supplier: ulid,
+        },
+        false,
+        this.ziggyRoute,
+      );
 
-            queryParams["refresh"] = args.refresh;
-            queryParams["paginate"] = {
-                page: args.page,
-                per_page: args.per_page,
-            };
+      const response: AxiosResponse<Resource<Supplier>> = await axios.get(url);
 
-            const url = route(
-                "api.get.supplier.read_any",
-                {
-                    _query: queryParams,
-                },
-                false,
-                this.ziggyRoute,
-            );
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data.data;
+      }
 
-            const response: AxiosResponse<Collection<Array<Supplier>>> = await axios.get(url);
-
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data;
-            }
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes("Ziggy error")) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
+  }
 
-    public async readAnyGet(args: SupplierReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Supplier>> | null>> {
-        const result: ServiceResponse<Resource<Array<Supplier>> | null> = {
-            success: false,
-        };
+  public useSupplierEditForm(ulid: string) {
+    const url = route("api.post.supplier.edit", ulid, true, this.ziggyRoute);
 
-        try {
-            const queryParams: Record<string, any> = {};
-            if (args.with_trashed !== undefined) queryParams["with_trashed"] = args.with_trashed;
-            if (args.company_id) queryParams["company_id"] = args.company_id;
-            if (args.search) queryParams["search"] = args.search;
-            if (args.status !== undefined && args.status !== null) queryParams["status"] = args.status;
-            if (args.include_id) queryParams["include_id"] = args.include_id;
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+    const form = useForm("post", url, {
+      company_id: "",
+      code: "_AUTO_",
+      name: "",
+      address: "",
+      city: "",
+      payment_term_type: "",
+      payment_term: 0,
+      taxable_enterprise: false,
+      tax_id: "",
+      status: "",
+      remarks: "",
+    });
 
-            queryParams["refresh"] = args.refresh;
-            queryParams["get"] = {
-                limit: args.limit,
-            };
+    return form;
+  }
 
-            const url = route(
-                "api.get.supplier.read_any",
-                {
-                    _query: queryParams,
-                },
-                false,
-                this.ziggyRoute,
-            );
+  public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
+    const result: ServiceResponse<boolean | null> = {
+      success: false,
+    };
 
-            const response: AxiosResponse<Resource<Array<Supplier>>> = await axios.get(url);
+    try {
+      const url = route(
+        "api.post.supplier.delete",
+        {
+          supplier: ulid,
+        },
+        false,
+        this.ziggyRoute,
+      );
 
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data;
-            }
+      const response: AxiosResponse<boolean | null> = await axios.post(url);
 
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes("Ziggy error")) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
-
-    public async read(ulid: string): Promise<ServiceResponse<Supplier | null>> {
-        const result: ServiceResponse<Supplier | null> = {
-            success: false
-        }
-
-        try {
-            const url = route('api.get.supplier.read', {
-                supplier: ulid
-            }, false, this.ziggyRoute);
-
-            const response: AxiosResponse<Resource<Supplier>> = await axios.get(url);
-
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data.data;
-            }
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
-
-    public useSupplierEditForm(ulid: string) {
-        const url = route('api.post.supplier.edit', ulid, true, this.ziggyRoute);
-
-        client.axios().defaults.withCredentials = true;
-        client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', url, {
-            company_id: '',
-            code: '_AUTO_',
-            name: '',
-            address: '',
-            city: '',
-            payment_term_type: '',
-            payment_term: 0,
-            taxable_enterprise: false,
-            tax_id: '',
-            status: '',
-            remarks: '',
-        });
-
-        return form;
-    }
-
-    public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
-        const result: ServiceResponse<boolean | null> = {
-            success: false,
-        }
-
-        try {
-            const url = route('api.post.supplier.delete', {
-                supplier: ulid
-            }, false, this.ziggyRoute);
-
-            const response: AxiosResponse<boolean | null> = await axios.post(url);
-
-            if (response.status == StatusCode.OK) {
-                result.success = true;
-                result.data = response.data;
-            }
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
+  }
 }

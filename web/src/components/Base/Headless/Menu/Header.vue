@@ -19,7 +19,7 @@ const { as } = withDefaults(defineProps<HeaderProps>(), {
 
 const attrs = useAttrs();
 const computedClass = computed(() =>
-  twMerge(["p-2 font-medium", typeof attrs.class === "string" && attrs.class])
+  twMerge(["p-2 font-medium", typeof attrs.class === "string" && attrs.class]),
 );
 </script>
 

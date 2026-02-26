@@ -40,13 +40,13 @@ const formatCurrency = (number: number | string) => {
   if (number !== null && number !== undefined && number !== "") {
     // Convert to string and handle decimals
     let numStr = number.toString();
-    
+
     // Split integer and decimal parts if exists
-    let [integerPart, decimalPart] = numStr.split('.');
-    
+    let [integerPart, decimalPart] = numStr.split(".");
+
     // Remove non-digit characters from integer part
     integerPart = integerPart.replace(/\D/g, "");
-    
+
     const rest = integerPart.length % 3;
     let currency = integerPart.substr(0, rest);
     const thousand = integerPart.substr(rest).match(/\d{3}/g);
@@ -60,7 +60,7 @@ const formatCurrency = (number: number | string) => {
     // Add decimal part back if it exists and is not zero
     if (decimalPart) {
       // Remove trailing zeros
-      decimalPart = decimalPart.replace(/0+$/, '');
+      decimalPart = decimalPart.replace(/0+$/, "");
       if (decimalPart.length > 0) {
         currency += "," + decimalPart;
       }
@@ -105,7 +105,7 @@ const diffTimeByNow = (time: string) => {
   const hours = Math.round((milliseconds % 86400000) / 3600000);
   let minutes = Math.round(((milliseconds % 86400000) % 3600000) / 60000);
   const seconds = Math.round(
-    (((milliseconds % 86400000) % 3600000) % 60000) / 1000
+    (((milliseconds % 86400000) % 3600000) % 60000) / 1000,
   );
 
   if (seconds < 30 && seconds >= 0) {
@@ -158,7 +158,7 @@ const stringToHTML = (arg: string) => {
 const slideUp = (
   el: HTMLElement,
   duration = 300,
-  callback = (el: HTMLElement) => {}
+  callback = (el: HTMLElement) => {},
 ) => {
   el.style.transitionProperty = "height, margin, padding";
   el.style.transitionDuration = duration + "ms";
@@ -187,7 +187,7 @@ const slideUp = (
 const slideDown = (
   el: HTMLElement,
   duration = 300,
-  callback = (el: HTMLElement) => {}
+  callback = (el: HTMLElement) => {},
 ) => {
   el.style.removeProperty("display");
   let display = window.getComputedStyle(el).display;

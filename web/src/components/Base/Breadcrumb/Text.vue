@@ -36,6 +36,6 @@ const computedClass = computed(() => [
 
 <template>
   <li :class="computedClass">
-      <slot></slot>
+    <slot></slot>
   </li>
 </template>

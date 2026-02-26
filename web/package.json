@@ -9,7 +9,8 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "vue-tsc --build --force",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.16",

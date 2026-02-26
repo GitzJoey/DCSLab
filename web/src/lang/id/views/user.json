@@ -1,56 +1,56 @@
 {
-    "page_title": "Pengguna",
-    "table": {
-        "title": "Daftar Pengguna",
-        "cols": {
-            "name": "Nama",
-            "email": "Email",
-            "roles": "Peran",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Tambah Pengguna",
-        "edit": "Ubah Pengguna",
-        "show": "Tampilkan Pengguna"
-    },
-    "field_groups": {
-        "user_info": "Informasi Pengguna",
-        "user_profile": "Profil Pengguna",
-        "roles": "Roles",
-        "settings": "Settings",
-        "tokens_management": "Tokens Management",
-        "password_management": "Password Management",
-        "two_factor_auth": "Verifikasi Dua Langkah"
-    },
-    "fields": {
-        "name": "Nama",
-        "email": "Email",
-        "roles": "Peran",
-        "picture": "Foto",
-        "first_name": "Nama Depan",
-        "last_name": "Nama Belakang",
-        "address": "Alamat",
-        "ic_num": "Nomor KTP",
-        "country": "Negara",
-        "remarks": "Deskripsi",
-        "status": "Status",
-        "tax_id": "No NPWP",
-        "postal_code": "Kode Pos",
-        "city": "Kota",
-        "settings": {
-            "settings": "Pengaturan",
-            "theme": "Tema",
-            "date_format": "Format Tanggal",
-            "time_format": "Format Waktu"
-        },
-        "tokens": {
-            "tokens": "Tokens",
-            "count": "Jumlah Tokens",
-            "reset": "Reset"
-        },
-        "reset_password": "Reset Password",
-        "email_reset_password": "Kirim Email",
-        "reset_2fa": "Reset Verifikasi Dua Langkah"
+  "page_title": "Pengguna",
+  "table": {
+    "title": "Daftar Pengguna",
+    "cols": {
+      "name": "Nama",
+      "email": "Email",
+      "roles": "Peran",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Tambah Pengguna",
+    "edit": "Ubah Pengguna",
+    "show": "Tampilkan Pengguna"
+  },
+  "field_groups": {
+    "user_info": "Informasi Pengguna",
+    "user_profile": "Profil Pengguna",
+    "roles": "Roles",
+    "settings": "Settings",
+    "tokens_management": "Tokens Management",
+    "password_management": "Password Management",
+    "two_factor_auth": "Verifikasi Dua Langkah"
+  },
+  "fields": {
+    "name": "Nama",
+    "email": "Email",
+    "roles": "Peran",
+    "picture": "Foto",
+    "first_name": "Nama Depan",
+    "last_name": "Nama Belakang",
+    "address": "Alamat",
+    "ic_num": "Nomor KTP",
+    "country": "Negara",
+    "remarks": "Deskripsi",
+    "status": "Status",
+    "tax_id": "No NPWP",
+    "postal_code": "Kode Pos",
+    "city": "Kota",
+    "settings": {
+      "settings": "Pengaturan",
+      "theme": "Tema",
+      "date_format": "Format Tanggal",
+      "time_format": "Format Waktu"
+    },
+    "tokens": {
+      "tokens": "Tokens",
+      "count": "Jumlah Tokens",
+      "reset": "Reset"
+    },
+    "reset_password": "Reset Password",
+    "email_reset_password": "Kirim Email",
+    "reset_2fa": "Reset Verifikasi Dua Langkah"
+  }
 }

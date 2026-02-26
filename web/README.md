@@ -6,10 +6,10 @@ DCSLab - Vue Web
 
 Run the installation scripts
 
->`$ npm install`
+> `$ npm install`
 
 ## Run Dev Server
 
 Use vite for dev Server
 
->`$ npm run dev`
+> `$ npm run dev`

@@ -10,8 +10,9 @@ import { twMerge } from "tailwind-merge";
 import { PopoverButton as HeadlessPopoverButton } from "@headlessui/vue";
 import { useAttrs, computed } from "vue";
 
-interface ButtonProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessPopoverButton> {
+interface ButtonProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessPopoverButton
+> {
   as?: string | object;
 }
 
@@ -21,7 +22,7 @@ const { as } = withDefaults(defineProps<ButtonProps>(), {
 
 const attrs = useAttrs();
 const computedClass = computed(() =>
-  twMerge(["cursor-pointer", typeof attrs.class === "string" && attrs.class])
+  twMerge(["cursor-pointer", typeof attrs.class === "string" && attrs.class]),
 );
 </script>
 

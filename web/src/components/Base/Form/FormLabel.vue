@@ -19,7 +19,7 @@ const computedClass = computed(() =>
     "inline-block mb-2",
     formInline && "mb-2 sm:mb-0 sm:mr-5 sm:text-right",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

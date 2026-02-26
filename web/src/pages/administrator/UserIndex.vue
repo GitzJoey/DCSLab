@@ -32,21 +32,23 @@ const cacheService = new CacheService();
 // #region Refs
 const mode = ref<ViewMode>(ViewMode.INDEX);
 const loading = ref<boolean>(false);
-const titleView = ref<string>('views.user.page_title');
+const titleView = ref<string>("views.user.page_title");
 
-const alertType = ref<'danger'|'success'|'warning'|'pending'|'dark'|'hidden'>('hidden');
-const title = ref<string>('');
+const alertType = ref<
+  "danger" | "success" | "warning" | "pending" | "dark" | "hidden"
+>("hidden");
+const title = ref<string>("");
 const alertList = ref<Record<string, Array<string>> | null>(null);
 
 const userNotification = ref<NotificationElement>();
 
-const notificationTitle = ref<string>('');
-const notificationContent = ref<string>('')
+const notificationTitle = ref<string>("");
+const notificationContent = ref<string>("");
 // #endregion
 
 // #region Provide/Inject
 provide("bind[userNotification]", (el: NotificationElement) => {
-    userNotification.value = el;
+  userNotification.value = el;
 });
 // #endregion
 
@@ -58,71 +60,70 @@ provide("bind[userNotification]", (el: NotificationElement) => {
 
 // #region Methods
 const createNew = () => {
-    resetAlertPlaceholder();
-    mode.value = ViewMode.FORM_CREATE;
-    router.push({ name: 'side-menu-administrator-user-create' });
+  resetAlertPlaceholder();
+  mode.value = ViewMode.FORM_CREATE;
+  router.push({ name: "side-menu-administrator-user-create" });
 };
 
 const backToList = async () => {
-    resetAlertPlaceholder();
-    clearCache(mode.value);
-    mode.value = ViewMode.LIST;
-    router.push({ name: 'side-menu-administrator-user-list' });
+  resetAlertPlaceholder();
+  clearCache(mode.value);
+  mode.value = ViewMode.LIST;
+  router.push({ name: "side-menu-administrator-user-list" });
 };
 
 const onLoadingStateChanged = (state: boolean) => {
-    loading.value = state;
+  loading.value = state;
 };
 
 const onModeStateChanged = (state: ViewMode) => {
-    mode.value = state;
+  mode.value = state;
 
-    switch (state) {
-        case ViewMode.FORM_CREATE:
-            titleView.value = 'views.user.actions.create';
-            break;
-        case ViewMode.FORM_EDIT:
-            titleView.value = 'views.user.actions.edit';
-            break;
-        case ViewMode.INDEX:
-        case ViewMode.LIST:
-        default:
-            titleView.value = 'views.user.page_title';
-            break;
-    }
+  switch (state) {
+    case ViewMode.FORM_CREATE:
+      titleView.value = "views.user.actions.create";
+      break;
+    case ViewMode.FORM_EDIT:
+      titleView.value = "views.user.actions.edit";
+      break;
+    case ViewMode.INDEX:
+    case ViewMode.LIST:
+    default:
+      titleView.value = "views.user.page_title";
+      break;
+  }
 };
 
 const clearCache = (mode: ViewMode) => {
-    switch (mode) {
-        case ViewMode.FORM_CREATE:
-            cacheService.removeLastEntity('USER_CREATE');
-            break;
-        case ViewMode.FORM_EDIT:
-            cacheService.removeLastEntity('USER_EDIT');
-            break;
-        default:
-            break;
-    }
+  switch (mode) {
+    case ViewMode.FORM_CREATE:
+      cacheService.removeLastEntity("USER_CREATE");
+      break;
+    case ViewMode.FORM_EDIT:
+      cacheService.removeLastEntity("USER_EDIT");
+      break;
+    default:
+      break;
+  }
 };
 
 const onAlertPlaceholderTriggered = (apProps: AlertPlaceholderProps) => {
-    alertType.value = apProps.alertType;
-    title.value = apProps.title;
-    alertList.value = apProps.alertList;
+  alertType.value = apProps.alertType;
+  title.value = apProps.title;
+  alertList.value = apProps.alertList;
 };
 
 const onShowNotificationTriggered = (notification: NotificationData) => {
-    notificationTitle.value = notification.title;
-    notificationContent.value = notification.content;
+  notificationTitle.value = notification.title;
+  notificationContent.value = notification.content;
 
-    if (userNotification.value)
-        userNotification.value.showToast();
+  if (userNotification.value) userNotification.value.showToast();
 };
 
 const resetAlertPlaceholder = () => {
-    title.value = '';
-    alertList.value = null;
-    alertType.value = 'hidden';
+  title.value = "";
+  alertList.value = null;
+  alertType.value = "hidden";
 };
 // #endregion
 
@@ -131,36 +132,67 @@ const resetAlertPlaceholder = () => {
 </script>
 
 <template>
-    <div class="mt-8">
-        <LoadingOverlay :visible="loading">
-            <TitleLayout>
-                <template #title>
-                    {{ t(titleView) }}
-                </template>
-                <template #optional>
-                    <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-                        <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md"
-                            @click="createNew">
-                            <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{ t("components.buttons.create_new") }}
-                        </Button>
-                        <Button v-else as="a" href="#" variant="primary" class="shadow-md" @click="backToList">
-                            <Lucide icon="ArrowLeft" class="w-4 h-4" />&nbsp;{{ t("components.buttons.back") }}
-                        </Button>
-                    </div>
-                </template>
-            </TitleLayout>
+  <div class="mt-8">
+    <LoadingOverlay :visible="loading">
+      <TitleLayout>
+        <template #title>
+          {{ t(titleView) }}
+        </template>
+        <template #optional>
+          <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
+            <Button
+              v-if="mode == ViewMode.LIST"
+              as="a"
+              href="#"
+              variant="primary"
+              class="shadow-md"
+              @click="createNew"
+            >
+              <Lucide icon="Plus" class="w-4 h-4" />&nbsp;{{
+                t("components.buttons.create_new")
+              }}
+            </Button>
+            <Button
+              v-else
+              as="a"
+              href="#"
+              variant="primary"
+              class="shadow-md"
+              @click="backToList"
+            >
+              <Lucide icon="ArrowLeft" class="w-4 h-4" />&nbsp;{{
+                t("components.buttons.back")
+              }}
+            </Button>
+          </div>
+        </template>
+      </TitleLayout>
 
-            <AlertPlaceholder :alert-type="alertType" :title="title" :alert-list="alertList" @dismiss="resetAlertPlaceholder" />
-            <RouterView @loading-state="onLoadingStateChanged" @mode-state="onModeStateChanged" @show-alertplaceholder="onAlertPlaceholderTriggered" @show-notification="onShowNotificationTriggered" />
-        </LoadingOverlay>
-        <Notification ref-key="userNotification" :options="{ duration: 3000, }" class="flex">
-            <Lucide icon="CheckCircle" class="text-success" />
-            <div class="ml-4 mr-4">
-                <div class="font-medium">{{ notificationTitle }}</div>
-                <div class="mt-1 text-slate-500">
-                    {{ notificationContent }}
-                </div>
-            </div>
-        </Notification>
-    </div>
+      <AlertPlaceholder
+        :alert-type="alertType"
+        :title="title"
+        :alert-list="alertList"
+        @dismiss="resetAlertPlaceholder"
+      />
+      <RouterView
+        @loading-state="onLoadingStateChanged"
+        @mode-state="onModeStateChanged"
+        @show-alertplaceholder="onAlertPlaceholderTriggered"
+        @show-notification="onShowNotificationTriggered"
+      />
+    </LoadingOverlay>
+    <Notification
+      ref-key="userNotification"
+      :options="{ duration: 3000 }"
+      class="flex"
+    >
+      <Lucide icon="CheckCircle" class="text-success" />
+      <div class="ml-4 mr-4">
+        <div class="font-medium">{{ notificationTitle }}</div>
+        <div class="mt-1 text-slate-500">
+          {{ notificationContent }}
+        </div>
+      </div>
+    </Notification>
+  </div>
 </template>

@@ -1,3 +1,3 @@
 export interface FileUpload {
-    url: string,
+  url: string;
 }

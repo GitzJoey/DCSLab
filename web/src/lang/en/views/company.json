@@ -1,35 +1,35 @@
 {
-    "page_title": "Company",
-    "table": {
-        "title": "Company List",
-        "cols": {
-            "code": "Code",
-            "name": "Name",
-            "address": "Address",
-            "default": "Default",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Create Company",
-        "edit": "Edit Company",
-        "show": "Show Company",
-        "delete": "Delete Company"
-    },
-    "field_groups": {
-        "company_data": "Company Data"
-    },
-    "fields": {
-        "code": "Code",
-        "name": "Name",
-        "address": "Address",
-        "default": "Default",
-        "status": "Status"
-    },
-    "alert": {
-        "delete_company": {
-            "title": "Delete Company",
-            "content": "Company Deleted Successfully"
-        }
+  "page_title": "Company",
+  "table": {
+    "title": "Company List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "address": "Address",
+      "default": "Default",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Create Company",
+    "edit": "Edit Company",
+    "show": "Show Company",
+    "delete": "Delete Company"
+  },
+  "field_groups": {
+    "company_data": "Company Data"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name",
+    "address": "Address",
+    "default": "Default",
+    "status": "Status"
+  },
+  "alert": {
+    "delete_company": {
+      "title": "Delete Company",
+      "content": "Company Deleted Successfully"
+    }
+  }
 }

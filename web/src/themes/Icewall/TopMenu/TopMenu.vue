@@ -31,7 +31,7 @@ const route: Route = useRoute();
 const router = useRouter();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
 const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "divider">
+  computedFormattedMenu: Array<FormattedMenu | "divider">,
 ) => {
   Object.assign(formattedMenu, computedFormattedMenu);
 };
@@ -51,9 +51,9 @@ const handlescroll = () => {
   } else {
     showBackToTop.value = false;
   }
-}
+};
 
-window.addEventListener('scroll', handlescroll);
+window.addEventListener("scroll", handlescroll);
 
 provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
   forceActiveMenu(route, pageName);
@@ -68,7 +68,7 @@ watch(
   computed(() => route.path),
   () => {
     delete route.forceActiveMenu;
-  }
+  },
 );
 
 onMounted(async () => {
@@ -105,23 +105,27 @@ const updateMenu = async () => {
               <template v-if="menu != 'divider'">
                 <a
                   :href="
-                  menu.subMenu
-                    ? '#'
-                    : ((pageName: string | undefined) => {
-                        try {
-                          return router.resolve({
-                            name: pageName,
-                          }).fullPath;
-                        } catch (err) {
-                          return '';
-                        }
-                      })(menu.pageName)
-                "
-                  :class="[menu.active ? 'top-menu top-menu--active' : 'top-menu']"
-                  @click="(event: MouseEvent) => {
-                  event.preventDefault();
-                  linkTo(menu, router);
-                }"
+                    menu.subMenu
+                      ? '#'
+                      : ((pageName: string | undefined) => {
+                          try {
+                            return router.resolve({
+                              name: pageName,
+                            }).fullPath;
+                          } catch (err) {
+                            return '';
+                          }
+                        })(menu.pageName)
+                  "
+                  :class="[
+                    menu.active ? 'top-menu top-menu--active' : 'top-menu',
+                  ]"
+                  @click="
+                    (event: MouseEvent) => {
+                      event.preventDefault();
+                      linkTo(menu, router);
+                    }
+                  "
                 >
                   <div class="top-menu__icon">
                     <Lucide :icon="menu.icon" />
@@ -145,23 +149,25 @@ const updateMenu = async () => {
                   >
                     <a
                       :href="
-                      subMenu.subMenu
-                        ? '#'
-                        : ((pageName: string | undefined) => {
-                            try {
-                              return router.resolve({
-                                name: pageName,
-                              }).fullPath;
-                            } catch (err) {
-                              return '';
-                            }
-                          })(subMenu.pageName)
-                    "
+                        subMenu.subMenu
+                          ? '#'
+                          : ((pageName: string | undefined) => {
+                              try {
+                                return router.resolve({
+                                  name: pageName,
+                                }).fullPath;
+                              } catch (err) {
+                                return '';
+                              }
+                            })(subMenu.pageName)
+                      "
                       class="top-menu"
-                      @click="(event: MouseEvent) => {
-                      event.preventDefault();
-                      linkTo(subMenu, router);
-                    }"
+                      @click="
+                        (event: MouseEvent) => {
+                          event.preventDefault();
+                          linkTo(subMenu, router);
+                        }
+                      "
                     >
                       <div class="top-menu__icon">
                         <Lucide :icon="subMenu.icon" />
@@ -185,23 +191,25 @@ const updateMenu = async () => {
                       >
                         <a
                           :href="
-                          lastSubMenu.subMenu
-                            ? '#'
-                            : ((pageName: string | undefined) => {
-                                try {
-                                  return router.resolve({
-                                    name: pageName,
-                                  }).fullPath;
-                                } catch (err) {
-                                  return '';
-                                }
-                              })(lastSubMenu.pageName)
-                        "
+                            lastSubMenu.subMenu
+                              ? '#'
+                              : ((pageName: string | undefined) => {
+                                  try {
+                                    return router.resolve({
+                                      name: pageName,
+                                    }).fullPath;
+                                  } catch (err) {
+                                    return '';
+                                  }
+                                })(lastSubMenu.pageName)
+                          "
                           class="top-menu"
-                          @click="(event: MouseEvent) => {
-                          event.preventDefault();
-                          linkTo(lastSubMenu, router);
-                        }"
+                          @click="
+                            (event: MouseEvent) => {
+                              event.preventDefault();
+                              linkTo(lastSubMenu, router);
+                            }
+                          "
                         >
                           <div class="top-menu__icon">
                             <Lucide :icon="lastSubMenu.icon" />

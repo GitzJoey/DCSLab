@@ -40,11 +40,7 @@ const { variant, type, src } = defineProps<FileIconProps>();
         v-if="variant == 'image'"
         class="absolute top-0 left-0 w-full h-full image-fit"
       >
-        <img
-          class="rounded-md"
-          alt="DCSLab"
-          :src="src"
-        />
+        <img class="rounded-md" alt="DCSLab" :src="src" />
       </div>
     </div>
   </div>

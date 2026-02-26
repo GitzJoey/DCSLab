@@ -7,7 +7,14 @@ export default {
 <script setup lang="ts">
 import _ from "lodash";
 import { twMerge } from "tailwind-merge";
-import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from "vue";
+import {
+  computed,
+  InputHTMLAttributes,
+  useAttrs,
+  inject,
+  ref,
+  onMounted,
+} from "vue";
 import { ProvideFormInline } from "./FormInline.vue";
 import { ProvideInputGroup } from "./InputGroup/InputGroup.vue";
 import DashboardService from "@/services/DashboardService";
@@ -32,7 +39,7 @@ const props = defineProps<FormInputProps>();
 const attrs = useAttrs();
 const formInline = inject<ProvideFormInline>("formInline", false);
 const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
-const imageUrl = ref<string | undefined>('');
+const imageUrl = ref<string | undefined>("");
 const dashboardService = new DashboardService();
 
 const computedClass = computed(() =>
@@ -45,19 +52,18 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: string): void,
+  (e: "update:modelValue", value: string): void;
 }>();
 
 const localValue = computed({
   get() {
     return props.modelValue === undefined ? props.value : props.modelValue;
-
   },
   set(newValue) {
     emit("update:modelValue", newValue);
@@ -72,14 +78,15 @@ const handleUpload = async (event: Event) => {
   if (files) {
     let filename: string = files[0].name;
     fileReader.readAsDataURL(files[0]);
-    localValue.value = filename
-    let uploadResponse: ServiceResponse<FileUpload | null> = await dashboardService.uploadFile(files[0])
+    localValue.value = filename;
+    let uploadResponse: ServiceResponse<FileUpload | null> =
+      await dashboardService.uploadFile(files[0]);
 
     if (uploadResponse && uploadResponse.data) {
       imageUrl.value = uploadResponse.data.url;
     }
   }
-}
+};
 
 onMounted(() => {
   if (!imageUrl.value) {
@@ -89,14 +96,37 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="imageUrl"
-    :class="['flex', 'justify-center', 'mt-2', 'w-full', 'align-center', { 'bg-slate-100': imageUrl }, 'rounded', 'p-4']">
-    <img class="rounded aspect-auto" :src="imageUrl ? imageUrl : ''" alt="Image Preview">
+  <div
+    v-if="imageUrl"
+    :class="[
+      'flex',
+      'justify-center',
+      'mt-2',
+      'w-full',
+      'align-center',
+      { 'bg-slate-100': imageUrl },
+      'rounded',
+      'p-4',
+    ]"
+  >
+    <img
+      class="rounded aspect-auto"
+      :src="imageUrl ? imageUrl : ''"
+      alt="Image Preview"
+    />
   </div>
   <div class="flex gap-2 mt-4">
-    <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" />
+    <input
+      disabled
+      :class="computedClass"
+      :type="props.type"
+      v-bind="_.omit(attrs, 'class')"
+    />
     <input id="upload" type="file" hidden @change="(e) => handleUpload(e)" />
-    <label class="border-slate-200 border w-[15%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
-      for="upload">{{ t('components.file-upload.browse') }}</label>
+    <label
+      class="border-slate-200 border w-[15%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"
+      for="upload"
+      >{{ t("components.file-upload.browse") }}</label
+    >
   </div>
 </template>

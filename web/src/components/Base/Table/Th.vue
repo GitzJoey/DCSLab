@@ -33,7 +33,7 @@ const computedClass = computed(() =>
     table?.bordered && "border-l border-r border-t",
     table?.sm && "px-4 py-2",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

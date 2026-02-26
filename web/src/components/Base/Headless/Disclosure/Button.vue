@@ -12,8 +12,9 @@ import { useAttrs, computed, inject, watch } from "vue";
 import { type ProvideDisclosure } from "./Disclosure/Provider.vue";
 import { type ProvideGroup } from "./Group.vue";
 
-interface ButtonProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosureButton> {
+interface ButtonProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessDisclosureButton
+> {
   as?: string | object;
 }
 
@@ -37,7 +38,7 @@ const computedClass = computed(() =>
     "outline-none py-4 -my-4 font-medium w-full text-left dark:text-slate-400",
     disclosure?.value.open && "text-primary dark:text-slate-300",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

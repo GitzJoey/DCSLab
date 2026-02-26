@@ -67,10 +67,10 @@ const cashAccountLists = ref<Collection<Array<CashAccount>> | null>({
 
 // #region Computed
 const isUserLocationSelected = computed(
-  () => selectedUserLocationStore.isUserLocationSelected
+  () => selectedUserLocationStore.isUserLocationSelected,
 );
 const selectedUserLocation = computed(
-  () => selectedUserLocationStore.selectedUserLocation
+  () => selectedUserLocationStore.selectedUserLocation,
 );
 // #endregion
 
@@ -95,7 +95,7 @@ const getCashAccounts = async (
 
   refresh: boolean,
   page: number,
-  per_page: number
+  per_page: number,
 ) => {
   emits("loading-state", true);
 
@@ -121,7 +121,7 @@ const getCashAccounts = async (
     showAlertPlaceholder(
       "danger",
       "",
-      result.errors as Record<string, Array<string>>
+      result.errors as Record<string, Array<string>>,
     );
   }
 
@@ -133,7 +133,7 @@ const onDataListChanged = async (data: DataListEmittedData) => {
     data.search.text,
     true,
     data.pagination.page,
-    data.pagination.per_page
+    data.pagination.per_page,
   );
 };
 
@@ -176,13 +176,13 @@ const confirmDelete = async () => {
     await getCashAccounts("", true, 1, 10);
     showNotification(
       t("views.cash_account.alert.delete_cash_account.title"),
-      t("views.cash_account.alert.delete_cash_account.content")
+      t("views.cash_account.alert.delete_cash_account.content"),
     );
   } else {
     showAlertPlaceholder(
       "danger",
       "",
-      result.errors as Record<string, Array<string>>
+      result.errors as Record<string, Array<string>>,
     );
   }
 
@@ -201,7 +201,7 @@ const showNotification = (pTitle: string, pContent: string) => {
 const showAlertPlaceholder = (
   pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
   pTitle: string,
-  pAlertList: Record<string, Array<string>> | null
+  pAlertList: Record<string, Array<string>> | null,
 ) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,
@@ -349,7 +349,14 @@ const showAlertPlaceholder = (
           </template>
         </Table.Tbody>
       </Table>
-      <Dialog :open="deleteModalShow" @close="() => { deleteModalShow = false; }">
+      <Dialog
+        :open="deleteModalShow"
+        @close="
+          () => {
+            deleteModalShow = false;
+          }
+        "
+      >
         <Dialog.Panel>
           <div class="p-5 text-center">
             <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />

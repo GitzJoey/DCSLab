@@ -18,8 +18,9 @@ export type ProvideSlideover = {
   size?: Size;
 };
 
-interface SlideoverProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialog> {
+interface SlideoverProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessDialog
+> {
   size?: Size;
   open: boolean;
   staticBackdrop?: boolean;
@@ -36,7 +37,7 @@ const open = computed(() => props.open);
 
 const attrs = useAttrs();
 const computedClass = computed(() =>
-  twMerge(["relative z-[60]", typeof attrs.class === "string" && attrs.class])
+  twMerge(["relative z-[60]", typeof attrs.class === "string" && attrs.class]),
 );
 
 const zoom = ref(false);

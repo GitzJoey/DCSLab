@@ -47,7 +47,7 @@ const { as, dismissible, variant, ...props } = withDefaults(
   defineProps<AlertProps>(),
   {
     as: "div",
-  }
+  },
 );
 
 const attrs = useAttrs();
@@ -169,7 +169,7 @@ const computedClass = computed(() =>
     variant == "soft-dark" && softDark,
     dismissible && "pl-5 pr-16",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

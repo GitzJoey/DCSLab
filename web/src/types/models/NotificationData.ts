@@ -1,4 +1,4 @@
 export interface NotificationData {
-    title: string,
-    content: string,
+  title: string;
+  content: string;
 }

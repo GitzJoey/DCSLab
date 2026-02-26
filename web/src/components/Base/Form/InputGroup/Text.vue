@@ -20,7 +20,7 @@ const computedClass = computed(() =>
     inputGroup &&
       "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

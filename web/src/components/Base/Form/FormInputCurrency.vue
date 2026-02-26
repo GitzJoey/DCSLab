@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch, type InputHTMLAttributes, useAttrs, inject } from "vue";
+import {
+  computed,
+  ref,
+  watch,
+  type InputHTMLAttributes,
+  useAttrs,
+  inject,
+} from "vue";
 import { twMerge } from "tailwind-merge";
 import _ from "lodash";
 import { formatCurrency } from "@/utils/helper";
@@ -38,43 +45,47 @@ const computedClass = computed(() =>
     inputGroup &&
       "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
-    "text-right" // Currency usually right aligned
-  ])
+    "text-right", // Currency usually right aligned
+  ]),
 );
 
 const displayValue = ref("");
 
 // Watch modelValue to update displayValue when not focused
-watch(() => props.modelValue, (newVal) => {
-  if (!isFocused.value) {
-    displayValue.value = formatCurrency(newVal ?? "");
-  }
-}, { immediate: true });
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (!isFocused.value) {
+      displayValue.value = formatCurrency(newVal ?? "");
+    }
+  },
+  { immediate: true },
+);
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   let val = target.value;
-  
+
   // Remove non-digits and non-comma
   // Assuming Indonesian locale: Dot for thousand, Comma for decimal
-  
+
   // Simple parsing:
   // 1. Remove dots (thousands separator)
   // 2. Replace comma with dot (decimal separator for parsing)
-  
+
   const rawValue = val.replace(/\./g, "").replace(",", ".");
   const numberValue = parseFloat(rawValue);
-  
+
   if (!isNaN(numberValue)) {
     emit("update:modelValue", numberValue);
   } else {
     // Handle empty or invalid input
     if (val === "" || val === "-") {
-         // Maybe emit 0 or keep it as is?
-         // If we emit 0, model becomes 0.
-         // If we emit null?
-         // Let's emit 0 for now as per previous behavior
-         emit("update:modelValue", 0);
+      // Maybe emit 0 or keep it as is?
+      // If we emit 0, model becomes 0.
+      // If we emit null?
+      // Let's emit 0 for now as per previous behavior
+      emit("update:modelValue", 0);
     }
   }
 };
@@ -83,8 +94,8 @@ const handleFocus = () => {
   isFocused.value = true;
   // Unformat: show raw number (with comma if needed)
   if (props.modelValue !== undefined && props.modelValue !== null) {
-      // Convert number to string with comma for decimal
-      displayValue.value = props.modelValue.toString().replace(".", ",");
+    // Convert number to string with comma for decimal
+    displayValue.value = props.modelValue.toString().replace(".", ",");
   }
 };
 
@@ -95,10 +106,9 @@ const handleBlur = () => {
   const rawValue = displayValue.value.replace(/\./g, "").replace(",", ".");
   const numberValue = parseFloat(rawValue);
   if (!isNaN(numberValue)) {
-      emit("change", numberValue);
+    emit("change", numberValue);
   }
 };
-
 </script>
 
 <template>

@@ -24,14 +24,14 @@ const route = useRoute();
 const router = useRouter();
 let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
 const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "divider">
+  computedFormattedMenu: Array<FormattedMenu | "divider">,
 ) => {
   Object.assign(formattedMenu, computedFormattedMenu);
 };
 const themeStore = useThemeStore();
 const menuStore = useMenuStore();
 const menu = computed(() =>
-  nestedMenu(menuStore.menu(themeStore.theme.layout), route)
+  nestedMenu(menuStore.menu(themeStore.theme.layout), route),
 );
 
 const activeMobileMenu = ref(false);
@@ -66,11 +66,7 @@ onMounted(() => {
   >
     <div class="h-[70px] px-3 sm:px-8 flex items-center">
       <a href="" class="flex mr-auto">
-        <img
-          alt="DCSLab"
-          class="w-6"
-          :src="logoUrl"
-        />
+        <img alt="DCSLab" class="w-6" :src="logoUrl" />
       </a>
       <a href="#" @click="(e) => e.preventDefault()">
         <Lucide
@@ -120,8 +116,8 @@ onMounted(() => {
           <li v-else>
             <a
               :href="
-                menu.subMenu 
-                  ? '#' 
+                menu.subMenu
+                  ? '#'
                   : ((pageName: string | undefined) => {
                       try {
                         return router.resolve({
@@ -168,8 +164,8 @@ onMounted(() => {
                 >
                   <a
                     :href="
-                      subMenu.subMenu 
-                        ? '#' 
+                      subMenu.subMenu
+                        ? '#'
                         : ((pageName: string | undefined) => {
                             try {
                               return router.resolve({
@@ -216,8 +212,8 @@ onMounted(() => {
                       >
                         <a
                           :href="
-                            lastSubMenu.subMenu 
-                              ? '#' 
+                            lastSubMenu.subMenu
+                              ? '#'
                               : ((pageName: string | undefined) => {
                                   try {
                                     return router.resolve({
@@ -242,7 +238,9 @@ onMounted(() => {
                           <div class="menu__icon">
                             <Lucide :icon="lastSubMenu.icon" />
                           </div>
-                          <div class="menu__title">{{ t(lastSubMenu.title) }}</div>
+                          <div class="menu__title">
+                            {{ t(lastSubMenu.title) }}
+                          </div>
                         </a>
                       </li>
                     </ul>

@@ -11,196 +11,260 @@ import { DropDownOption } from "../types/models/DropDownOption";
 import { FileUpload } from "../types/models/FileUpload";
 
 export default class DashboardService {
-    private ziggyRoute: Config;
-    private ziggyRouteStore = useZiggyRouteStore();
+  private ziggyRoute: Config;
+  private ziggyRouteStore = useZiggyRouteStore();
 
-    private cacheService;
-    private errorHandlerService;
+  private cacheService;
+  private errorHandlerService;
 
-    constructor() {
-        this.ziggyRoute = this.ziggyRouteStore.getZiggy;
+  constructor() {
+    this.ziggyRoute = this.ziggyRouteStore.getZiggy;
 
-        this.cacheService = new CacheService();
-        this.errorHandlerService = new ErrorHandlerService();
+    this.cacheService = new CacheService();
+    this.errorHandlerService = new ErrorHandlerService();
+  }
+
+  public async readUserMenu(): Promise<ServiceResponse<Array<sMenu> | null>> {
+    const result: ServiceResponse<Array<sMenu>> | null = {
+      success: false,
+    };
+
+    try {
+      const url = route(
+        "api.get.db.core.user.menu",
+        undefined,
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Array<sMenu>> = await axios.get(url);
+
+      result.success = true;
+      result.data = response.data;
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
+  }
 
-    public async readUserMenu(): Promise<ServiceResponse<Array<sMenu> | null>> {
-        const result: ServiceResponse<Array<sMenu>> | null = {
-            success: false,
-        };
+  public async readUserApi(): Promise<ServiceResponse<Config | null>> {
+    const result: ServiceResponse<Config> | null = {
+      success: false,
+    };
 
-        try {
-            const url = route('api.get.db.core.user.menu', undefined, false, this.ziggyRoute);
+    try {
+      const url = route(
+        "api.get.db.core.user.api",
+        undefined,
+        false,
+        this.ziggyRoute,
+      );
 
-            const response: AxiosResponse<Array<sMenu>> = await axios.get(url);
+      const response: AxiosResponse<Config> = await axios.get(url);
 
-            result.success = true;
-            result.data = response.data;
+      result.success = true;
+      result.data = response.data;
 
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
+  }
 
-    public async readUserApi(): Promise<ServiceResponse<Config | null>> {
-        const result: ServiceResponse<Config> | null = {
-            success: false,
-        };
+  public async getStatusDDL(
+    showDeleted: boolean = true,
+  ): Promise<Array<DropDownOption> | null> {
+    const ddlName = showDeleted
+      ? "statusDDL_with_deleted"
+      : "statusDDL_no_deleted";
+    let result: Array<DropDownOption> = [];
 
-        try {
-            const url = route('api.get.db.core.user.api', undefined, false, this.ziggyRoute);
+    try {
+      if (this.cacheService.getCachedDDL(ddlName) == null) {
+        const url = route(
+          "api.get.db.common.ddl.list.statuses",
+          { show_deleted: showDeleted },
+          false,
+          this.ziggyRoute,
+        );
 
-            const response: AxiosResponse<Config> = await axios.get(url);
+        const response: AxiosResponse<Array<DropDownOption> | null> =
+          await axios.get(url);
 
-            result.success = true;
-            result.data = response.data;
+        this.cacheService.setCachedDDL(ddlName, response.data);
+      }
 
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
+      const cachedData: Array<DropDownOption> | null =
+        this.cacheService.getCachedDDL(ddlName);
+
+      if (cachedData != null) {
+        result = cachedData as Array<DropDownOption>;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      return result;
     }
+  }
 
-    public async getStatusDDL(showDeleted: boolean = true): Promise<Array<DropDownOption> | null> {
-        const ddlName = showDeleted ? 'statusDDL_with_deleted' : 'statusDDL_no_deleted';
-        let result: Array<DropDownOption> = [];
+  public async getCountriesDDL(): Promise<Array<DropDownOption> | null> {
+    const ddlName = "countriesDDL";
+    let result: Array<DropDownOption> = [];
 
-        try {
-            if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.common.ddl.list.statuses', { show_deleted: showDeleted }, false, this.ziggyRoute);
+    try {
+      if (this.cacheService.getCachedDDL(ddlName) == null) {
+        const url = route(
+          "api.get.db.common.ddl.list.countries",
+          undefined,
+          false,
+          this.ziggyRoute,
+        );
 
-                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+        const response: AxiosResponse<Array<DropDownOption> | null> =
+          await axios.get(url);
 
-                this.cacheService.setCachedDDL(ddlName, response.data);
-            }
+        this.cacheService.setCachedDDL(ddlName, response.data);
+      }
 
-            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+      const cachedData: Array<DropDownOption> | null =
+        this.cacheService.getCachedDDL(ddlName);
 
-            if (cachedData != null) {
-                result = cachedData as Array<DropDownOption>;
-            }
+      if (cachedData != null) {
+        result = cachedData as Array<DropDownOption>;
+      }
 
-            return result;
-        } catch (e: unknown) {
-            return result;
-        }
+      return result;
+    } catch (e: unknown) {
+      return result;
     }
+  }
 
-    public async getCountriesDDL(): Promise<Array<DropDownOption> | null> {
-        const ddlName = 'countriesDDL';
-        let result: Array<DropDownOption> = [];
+  public async getPaymentTermTypesDDL(): Promise<Array<DropDownOption> | null> {
+    const ddlName = "paymentTermTypesDDL";
+    let result: Array<DropDownOption> = [];
 
-        try {
-            if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
+    try {
+      if (this.cacheService.getCachedDDL(ddlName) == null) {
+        const url = route(
+          "api.get.db.common.ddl.list.payment_term_types",
+          undefined,
+          false,
+          this.ziggyRoute,
+        );
 
-                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+        const response: AxiosResponse<Array<DropDownOption> | null> =
+          await axios.get(url);
 
-                this.cacheService.setCachedDDL(ddlName, response.data);
-            }
+        this.cacheService.setCachedDDL(ddlName, response.data);
+      }
 
-            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+      const cachedData: Array<DropDownOption> | null =
+        this.cacheService.getCachedDDL(ddlName);
 
-            if (cachedData != null) {
-                result = cachedData as Array<DropDownOption>;
-            }
+      if (cachedData != null) {
+        result = cachedData as Array<DropDownOption>;
+      }
 
-            return result;
-        } catch (e: unknown) {
-            return result;
-        }
+      return result;
+    } catch (e: unknown) {
+      return result;
     }
+  }
 
-    public async getPaymentTermTypesDDL(): Promise<Array<DropDownOption> | null> {
-        const ddlName = 'paymentTermTypesDDL';
-        let result: Array<DropDownOption> = [];
+  public async getRoundingTypesDDL(): Promise<Array<DropDownOption> | null> {
+    const ddlName = "roundingTypesDDL";
+    let result: Array<DropDownOption> = [];
 
-        try {
-            if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.common.ddl.list.payment_term_types', undefined, false, this.ziggyRoute);
+    try {
+      if (this.cacheService.getCachedDDL(ddlName) == null) {
+        const url = route(
+          "api.get.db.common.ddl.list.rounding_types",
+          undefined,
+          false,
+          this.ziggyRoute,
+        );
 
-                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+        const response: AxiosResponse<Array<DropDownOption> | null> =
+          await axios.get(url);
 
-                this.cacheService.setCachedDDL(ddlName, response.data);
-            }
+        this.cacheService.setCachedDDL(ddlName, response.data);
+      }
 
-            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+      const cachedData: Array<DropDownOption> | null =
+        this.cacheService.getCachedDDL(ddlName);
 
-            if (cachedData != null) {
-                result = cachedData as Array<DropDownOption>;
-            }
+      if (cachedData != null) {
+        result = cachedData as Array<DropDownOption>;
+      }
 
-            return result;
-        } catch (e: unknown) {
-            return result;
-        }
+      return result;
+    } catch (e: unknown) {
+      return result;
     }
+  }
 
-    public async getRoundingTypesDDL(): Promise<Array<DropDownOption> | null> {
-        const ddlName = 'roundingTypesDDL';
-        let result: Array<DropDownOption> = [];
+  public async uploadFile(
+    file: File,
+  ): Promise<ServiceResponse<FileUpload | null>> {
+    const result: ServiceResponse<FileUpload | null> = {
+      success: false,
+    };
 
-        try {
-            if (this.cacheService.getCachedDDL(ddlName) == null) {
-                const url = route('api.get.db.common.ddl.list.rounding_types', undefined, false, this.ziggyRoute);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
 
-                const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
+      const url = route(
+        "api.post.db.core.user.upload",
+        undefined,
+        false,
+        this.ziggyRoute,
+      );
 
-                this.cacheService.setCachedDDL(ddlName, response.data);
-            }
+      axios.defaults.headers.common["Content-Type"] = "multipart/form-data";
 
-            const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
+      const response: AxiosResponse<Resource<FileUpload>> = await axios.post(
+        url,
+        formData,
+      );
 
-            if (cachedData != null) {
-                result = cachedData as Array<DropDownOption>;
-            }
+      result.success = true;
+      result.data = response.data.data;
 
-            return result;
-        } catch (e: unknown) {
-            return result;
-        }
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
+          e.message,
+        );
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(
+          e as AxiosError,
+        );
+      } else {
+        return result;
+      }
     }
-
-    public async uploadFile(file: File): Promise<ServiceResponse<FileUpload | null>> {
-        const result: ServiceResponse<FileUpload | null> = {
-            success: false
-        }
-
-        try {
-            const formData = new FormData()
-            formData.append('file', file)
-
-            const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute)
-
-            axios.defaults.headers.common['Content-Type'] = "multipart/form-data"
-
-            const response: AxiosResponse<Resource<FileUpload>> = await axios.post(url, formData);
-
-            result.success = true;
-            result.data = response.data.data;
-
-            return result;
-        } catch (e: unknown) {
-            if (e instanceof Error && e.message.includes('Ziggy error')) {
-                return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-            } else if (isAxiosError(e)) {
-                return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-            } else {
-                return result;
-            }
-        }
-    }
+  }
 }

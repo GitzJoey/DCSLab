@@ -75,10 +75,10 @@ onMounted(async () => {
 // #region Methods
 const getCompanies = async (
   search: string,
-    
+
   refresh: boolean,
   page: number,
-  per_page: number
+  per_page: number,
 ) => {
   emits("loading-state", true);
 
@@ -103,7 +103,7 @@ const getCompanies = async (
     showAlertPlaceholder(
       "danger",
       "",
-      result.errors as Record<string, Array<string>>
+      result.errors as Record<string, Array<string>>,
     );
   }
 
@@ -115,7 +115,7 @@ const onDataListChanged = async (data: DataListEmittedData) => {
     data.search.text,
     false,
     data.pagination.page,
-    data.pagination.per_page
+    data.pagination.per_page,
   );
 };
 
@@ -151,7 +151,7 @@ const confirmDelete = async () => {
   emits("loading-state", true);
 
   let result: ServiceResponse<boolean | null> = await companyServices.delete(
-    deleteUlid.value
+    deleteUlid.value,
   );
 
   if (result.success) {
@@ -159,13 +159,13 @@ const confirmDelete = async () => {
     await getCompanies("", true, 1, 10);
     showNotification(
       t("views.company.alert.delete_company.title"),
-      t("views.company.alert.delete_company.content")
+      t("views.company.alert.delete_company.content"),
     );
   } else {
     showAlertPlaceholder(
       "danger",
       "",
-      result.errors as Record<string, Array<string>>
+      result.errors as Record<string, Array<string>>,
     );
   }
 
@@ -184,7 +184,7 @@ const showNotification = (pTitle: string, pContent: string) => {
 const showAlertPlaceholder = (
   pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
   pTitle: string,
-  pAlertList: Record<string, Array<string>> | null
+  pAlertList: Record<string, Array<string>> | null,
 ) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,

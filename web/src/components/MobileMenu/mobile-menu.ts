@@ -56,7 +56,7 @@ const nestedMenu = (menu: Array<Menu | "divider">, route: Route) => {
         // Nested menu
         const subMenu: Array<FormattedMenu> = [];
         nestedMenu(menuItem.subMenu, route).map(
-          (menu) => typeof menu !== "string" && subMenu.push(menu)
+          (menu) => typeof menu !== "string" && subMenu.push(menu),
         );
         menuItem.subMenu = subMenu;
       }
@@ -73,7 +73,7 @@ const nestedMenu = (menu: Array<Menu | "divider">, route: Route) => {
 const linkTo = (
   menu: FormattedMenu,
   router: Router,
-  setActiveMobileMenu: (active: boolean) => void
+  setActiveMobileMenu: (active: boolean) => void,
 ) => {
   if (menu.subMenu) {
     menu.activeDropdown = !menu.activeDropdown;

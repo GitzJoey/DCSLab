@@ -5,7 +5,7 @@ const routes = r;
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
 router.beforeEach(async (to, from, next) => {
@@ -13,8 +13,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 router.afterEach((to, from) => {
-  if (to.matched.some(r => r.meta.remember)) {
-    sessionStorage.setItem('DCSLAB_LAST_ROUTE', to.name as string);
+  if (to.matched.some((r) => r.meta.remember)) {
+    sessionStorage.setItem("DCSLAB_LAST_ROUTE", to.name as string);
   }
 });
 

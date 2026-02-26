@@ -1,35 +1,35 @@
 {
-    "page_title": "Perusahaan",
-    "table": {
-        "title": "Daftar Perusahaan",
-        "cols": {
-            "code": "Kode",
-            "name": "Nama",
-            "address": "Alamat",
-            "default": "Default",
-            "status": "Status"
-        }
-    },
-    "actions": {
-        "create": "Tambah Perusahaan",
-        "edit": "Ubah Perusahaan",
-        "show": "Tampilkan Perusahaan",
-        "delete": "Hapus Perusahaan"
-    },
-    "field_groups": {
-        "company_data": "Data Perusahaan"
-    },
-    "fields": {
-        "code": "Kode",
-        "name": "Nama",
-        "address": "Alamat",
-        "default": "Default",
-        "status": "Status"
-    },
-    "alert": {
-        "delete_company": {
-            "title": "Hapus Perusahaan",
-            "content": "Perusahaan Berhasil Dihapus"
-        }
+  "page_title": "Perusahaan",
+  "table": {
+    "title": "Daftar Perusahaan",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama",
+      "address": "Alamat",
+      "default": "Default",
+      "status": "Status"
     }
+  },
+  "actions": {
+    "create": "Tambah Perusahaan",
+    "edit": "Ubah Perusahaan",
+    "show": "Tampilkan Perusahaan",
+    "delete": "Hapus Perusahaan"
+  },
+  "field_groups": {
+    "company_data": "Data Perusahaan"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "address": "Alamat",
+    "default": "Default",
+    "status": "Status"
+  },
+  "alert": {
+    "delete_company": {
+      "title": "Hapus Perusahaan",
+      "content": "Perusahaan Berhasil Dihapus"
+    }
+  }
 }

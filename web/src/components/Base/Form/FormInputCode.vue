@@ -31,7 +31,7 @@ const inputGroup = inject<ProvideInputGroup>("inputGroup", false);
 const emit = defineEmits<FormInputCodeEmit>();
 
 const disabledInput = computed(() => {
-  if (props.modelValue == '_AUTO_') return true;
+  if (props.modelValue == "_AUTO_") return true;
   else return false;
 });
 
@@ -45,9 +45,9 @@ const computedClass = computed(() =>
     props.rounded && "rounded-full",
     formInline && "flex-1",
     inputGroup &&
-    "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
+      "rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 const localValue = computed({
@@ -60,19 +60,26 @@ const localValue = computed({
 });
 
 const handleClickAutoButton = () => {
-  emit('setAuto');
+  emit("setAuto");
 };
 </script>
 
 <template>
   <div class="flex items-center gap-2">
     <div class="flex-1">
-      <input :disabled="disabledInput" :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')"
-        v-model="localValue" />
+      <input
+        :disabled="disabledInput"
+        :class="computedClass"
+        :type="props.type"
+        v-bind="_.omit(attrs, 'class')"
+        v-model="localValue"
+      />
     </div>
-    <button type="button"
+    <button
+      type="button"
       class="px-3 py-2.5 text-xs font-medium border border-slate-200 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap"
-      @click="handleClickAutoButton">
+      @click="handleClickAutoButton"
+    >
       Auto
     </button>
   </div>

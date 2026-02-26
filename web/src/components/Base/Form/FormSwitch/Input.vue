@@ -34,7 +34,7 @@ const computedClass = computed(() =>
     "before:checked:ml-[14px] before:checked:bg-white",
 
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 const emit = defineEmits<InputEmit>();

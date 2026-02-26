@@ -40,6 +40,6 @@ export const useMenuStore = defineStore("menu", {
   actions: {
     setMenu(menu: Array<Menu>) {
       this.menuValue = menu;
-    }
-  }
+    },
+  },
 });

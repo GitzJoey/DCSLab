@@ -83,10 +83,10 @@ const customerGroupForm = customerGroupService.useCustomerGroupCreateForm();
 
 // #region Computed
 const isUserLocationSelected = computed(
-  () => selectedUserLocationStore.isUserLocationSelected
+  () => selectedUserLocationStore.isUserLocationSelected,
 );
 const selectedUserLocation = computed(
-  () => selectedUserLocationStore.selectedUserLocation
+  () => selectedUserLocationStore.selectedUserLocation,
 );
 // #endregion
 
@@ -192,7 +192,7 @@ const setCode = () => {
 const showAlertPlaceholder = (
   pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
   pTitle: string,
-  pAlertList: Record<string, Array<string>> | null
+  pAlertList: Record<string, Array<string>> | null,
 ) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,
@@ -210,7 +210,7 @@ watch(
     if (customerGroupForm.hasErrors) {
     }
   }, 500),
-  { deep: true }
+  { deep: true },
 );
 // #endregion
 </script>
@@ -294,7 +294,7 @@ watch(
             <FormLabel
               :class="{
                 'text-danger': customerGroupForm.invalid(
-                  'max_outstanding_invoice'
+                  'max_outstanding_invoice',
                 ),
               }"
             >
@@ -305,7 +305,7 @@ watch(
               type="number"
               :class="{
                 'border-danger': customerGroupForm.invalid(
-                  'max_outstanding_invoice'
+                  'max_outstanding_invoice',
                 ),
               }"
               @change="customerGroupForm.validate('max_outstanding_invoice')"
@@ -414,7 +414,7 @@ watch(
               <FormLabel
                 :class="{
                   'text-danger': customerGroupForm.invalid(
-                    'selling_point_multiple'
+                    'selling_point_multiple',
                   ),
                 }"
               >
@@ -425,7 +425,7 @@ watch(
                 type="number"
                 :class="{
                   'border-danger': customerGroupForm.invalid(
-                    'selling_point_multiple'
+                    'selling_point_multiple',
                   ),
                 }"
                 @change="customerGroupForm.validate('selling_point_multiple')"
@@ -451,7 +451,7 @@ watch(
               <FormLabel
                 :class="{
                   'text-danger': customerGroupForm.invalid(
-                    'price_markup_percent'
+                    'price_markup_percent',
                   ),
                 }"
               >
@@ -462,7 +462,7 @@ watch(
                 type="number"
                 :class="{
                   'border-danger': customerGroupForm.invalid(
-                    'price_markup_percent'
+                    'price_markup_percent',
                   ),
                 }"
                 @change="customerGroupForm.validate('price_markup_percent')"
@@ -475,7 +475,7 @@ watch(
               <FormLabel
                 :class="{
                   'text-danger': customerGroupForm.invalid(
-                    'price_markup_nominal'
+                    'price_markup_nominal',
                   ),
                 }"
               >
@@ -486,7 +486,7 @@ watch(
                 type="number"
                 :class="{
                   'border-danger': customerGroupForm.invalid(
-                    'price_markup_nominal'
+                    'price_markup_nominal',
                   ),
                 }"
                 @change="customerGroupForm.validate('price_markup_nominal')"
@@ -499,7 +499,7 @@ watch(
               <FormLabel
                 :class="{
                   'text-danger': customerGroupForm.invalid(
-                    'price_markdown_percent'
+                    'price_markdown_percent',
                   ),
                 }"
               >
@@ -510,7 +510,7 @@ watch(
                 type="number"
                 :class="{
                   'border-danger': customerGroupForm.invalid(
-                    'price_markdown_percent'
+                    'price_markdown_percent',
                   ),
                 }"
                 @change="customerGroupForm.validate('price_markdown_percent')"
@@ -523,7 +523,7 @@ watch(
               <FormLabel
                 :class="{
                   'text-danger': customerGroupForm.invalid(
-                    'price_markdown_nominal'
+                    'price_markdown_nominal',
                   ),
                 }"
               >
@@ -534,7 +534,7 @@ watch(
                 type="number"
                 :class="{
                   'border-danger': customerGroupForm.invalid(
-                    'price_markdown_nominal'
+                    'price_markdown_nominal',
                   ),
                 }"
                 @change="customerGroupForm.validate('price_markdown_nominal')"

@@ -16,7 +16,7 @@ const computedClass = computed(() =>
   twMerge([
     "block sm:flex items-center",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 
 provide<ProvideFormInline>("formInline", true);

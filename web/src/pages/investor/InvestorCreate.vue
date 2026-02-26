@@ -71,10 +71,10 @@ const investorForm = investorServices.useInvestorCreateForm();
 
 // #region Computed
 const isUserLocationSelected = computed(
-  () => selectedUserLocationStore.isUserLocationSelected
+  () => selectedUserLocationStore.isUserLocationSelected,
 );
 const selectedUserLocation = computed(
-  () => selectedUserLocationStore.selectedUserLocation
+  () => selectedUserLocationStore.selectedUserLocation,
 );
 // #endregion
 
@@ -113,10 +113,10 @@ const loadFromCache = () => {
 };
 
 const getDDL = async (): Promise<void> => {
-    const result = await dashboardServices.getStatusDDL();
-    if (result) {
-        statusDDL.value = result;
-    }
+  const result = await dashboardServices.getStatusDDL();
+  if (result) {
+    statusDDL.value = result;
+  }
 };
 
 const handleExpandCard = (index: number) => {
@@ -177,7 +177,7 @@ const setCode = () => {
 const showAlertPlaceholder = (
   pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
   pTitle: string,
-  pAlertList: Record<string, Array<string>> | null
+  pAlertList: Record<string, Array<string>> | null,
 ) => {
   let ap: AlertPlaceholderProps = {
     alertType: pAlertType,
@@ -230,7 +230,7 @@ watch(
   debounce((newValue): void => {
     cacheServices.setLastEntity("INVESTOR_CREATE", newValue.data());
   }, 500),
-  { deep: true }
+  { deep: true },
 );
 // #endregion
 </script>

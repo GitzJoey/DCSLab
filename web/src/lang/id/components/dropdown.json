@@ -1,40 +1,40 @@
 {
-    "placeholder": "Silahkan Pilih",
-    "values": {
-        "switch": {
-            "on": "Ya",
-            "off": "Tidak"
-        },
-        "statusDDL": {
-            "active": "Aktif",
-            "inactive": "Tidak Aktif",
-            "deleted": "Dihapus"
-        },
-        "paymentTermTypeDDL": {
-            "pia": "Pembayaran Dimuka",
-            "net": "Pembayaran X Hari Setelah Tgl Invoice",
-            "eom": "Akhir Bulan",
-            "cod": "Cash On Delivery",
-            "cnd": "Cash Di Pengiriman Selanjutnya",
-            "cbs": "Cash Sebelum Pengiriman"
-        },
-        "roundingTypeDDL": {
-            "up": "Keatas",
-            "down": "Kebawah"
-        },
-        "productCategoryDDL": {
-            "product": "Produk",
-            "service": "Jasa"
-        },
-        "unitCategoryDDL": {
-            "product": "Produk",
-            "service": "Jasa"
-        },
-        "productTypeDDL": {
-            "raw": "Bahan Baku",
-            "wip": "Barang Setengah Jadi",
-            "fg": "Barang Jadi",
-            "svc": "Jasa"
-        }
+  "placeholder": "Silahkan Pilih",
+  "values": {
+    "switch": {
+      "on": "Ya",
+      "off": "Tidak"
+    },
+    "statusDDL": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "deleted": "Dihapus"
+    },
+    "paymentTermTypeDDL": {
+      "pia": "Pembayaran Dimuka",
+      "net": "Pembayaran X Hari Setelah Tgl Invoice",
+      "eom": "Akhir Bulan",
+      "cod": "Cash On Delivery",
+      "cnd": "Cash Di Pengiriman Selanjutnya",
+      "cbs": "Cash Sebelum Pengiriman"
+    },
+    "roundingTypeDDL": {
+      "up": "Keatas",
+      "down": "Kebawah"
+    },
+    "productCategoryDDL": {
+      "product": "Produk",
+      "service": "Jasa"
+    },
+    "unitCategoryDDL": {
+      "product": "Produk",
+      "service": "Jasa"
+    },
+    "productTypeDDL": {
+      "raw": "Bahan Baku",
+      "wip": "Barang Setengah Jadi",
+      "fg": "Barang Jadi",
+      "svc": "Jasa"
     }
+  }
 }

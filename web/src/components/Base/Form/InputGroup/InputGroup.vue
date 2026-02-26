@@ -13,7 +13,7 @@ export type ProvideInputGroup = boolean;
 
 const attrs = useAttrs();
 const computedClass = computed(() =>
-  twMerge(["flex", typeof attrs.class === "string" && attrs.class])
+  twMerge(["flex", typeof attrs.class === "string" && attrs.class]),
 );
 
 provide<ProvideInputGroup>("inputGroup", true);

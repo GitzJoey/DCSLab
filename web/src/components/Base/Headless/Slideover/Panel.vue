@@ -14,8 +14,9 @@ import { twMerge } from "tailwind-merge";
 import { type ProvideSlideover } from "./Slideover.vue";
 import { inject, useAttrs, computed } from "vue";
 
-interface PanelProps
-  extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogPanel> {
+interface PanelProps extends /* @vue-ignore */ ExtractProps<
+  typeof HeadlessDialogPanel
+> {
   as?: string | object;
 }
 
@@ -35,7 +36,7 @@ const computedClass = computed(() =>
     slideover?.size == "xl" && "sm:w-[600px] lg:w-[900px]",
     slideover?.zoom.value && "scale-105",
     typeof attrs.class === "string" && attrs.class,
-  ])
+  ]),
 );
 </script>
 

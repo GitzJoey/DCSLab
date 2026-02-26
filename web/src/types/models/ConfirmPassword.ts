@@ -1,8 +1,8 @@
 export interface ConfirmPasswordStatusResponse {
-    confirmed: boolean
+  confirmed: boolean;
 }
 
 export interface ConfirmPasswordResponse {
-    message: string,
-    error?: Record<string, Array<string>>
+  message: string;
+  error?: Record<string, Array<string>>;
 }
