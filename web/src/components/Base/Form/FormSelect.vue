@@ -16,13 +16,13 @@ import {
 } from "vue";
 import { type ProvideFormInline } from "./FormInline.vue";
 
-interface FormSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
+export interface FormSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
   value?: SelectHTMLAttributes["value"];
   modelValue?: SelectHTMLAttributes["value"];
   formSelectSize?: "sm" | "lg";
 }
 
-interface FormSelectEmit {
+export interface FormSelectEmit {
   (e: "update:modelValue", value: string): void;
 }
 
@@ -66,12 +66,7 @@ const localValue = computed({
 </script>
 
 <template>
-  <select
-    ref="selectRef"
-    :class="computedClass"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  >
+  <select ref="selectRef" :class="computedClass" v-bind="_.omit(attrs, 'class')" v-model="localValue">
     <slot></slot>
   </select>
 </template>
