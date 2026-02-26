@@ -18,7 +18,7 @@ import {
     FormErrorMessages,
     FormSwitch,
     FormTextarea,
-    FormTomSelect,
+    FormSelectSearch,
 } from "@/components/Base/Form";
 import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "@/types/enums/CardState";
@@ -76,7 +76,23 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
 ]);
 
 const categoryDDL = ref<Array<DropDownOption> | null>(null);
+const categorySearch = ref<string>("");
+const categoryOptions = computed(() =>
+    (categoryDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
 const unitDDL = ref<Array<DropDownOption> | null>(null);
+const unitSearch = ref<string>("");
+const unitOptions = computed(() =>
+    (unitDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 
 const productServiceForm = productService.useProductServiceStoreForm();
@@ -124,7 +140,7 @@ const getCategoryDDL = async (search = ""): Promise<void> => {
         refresh: false,
         limit: 10
     });
-    
+
     if (result.success && result.data) {
         categoryDDL.value = result.data.data.map((item: any) => ({
             code: item.id,
@@ -139,7 +155,7 @@ const getUnitDDL = async (search = ""): Promise<void> => {
 
         search: search,
         company_id: selectedUserLocation.value.company.id,
-        
+
         refresh: false,
         limit: 10
     });
@@ -248,11 +264,7 @@ watch(
 
 <template>
     <form id="productServiceForm" @submit.prevent="onSubmit">
-        <TwoColumnsLayout
-            :cards="cards"
-            :using-side-tab="false"
-            @handle-expand-card="handleExpandCard"
-        >
+        <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
             <!-- Card 1: Company Info -->
             <template #card-items-0>
                 <div class="p-5">
@@ -269,78 +281,46 @@ watch(
             <template #card-items-1>
                 <div class="p-5">
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('code') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('code') }">
                             {{ t("views.product_service.fields.code") }}
                         </FormLabel>
-                        <FormInputCode
-                            v-model="productServiceForm.code"
+                        <FormInputCode v-model="productServiceForm.code"
                             :class="{ 'border-danger': productServiceForm.invalid('code') }"
-                            :placeholder="t('views.product_service.fields.code')"
-                            @set-auto="setCode"
-                            @change="productServiceForm.validate('code')"
-                        />
+                            :placeholder="t('views.product_service.fields.code')" @set-auto="setCode"
+                            @change="productServiceForm.validate('code')" />
                         <FormErrorMessages :messages="productServiceForm.errors.code" />
                     </div>
 
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('category_id') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('category_id') }">
                             {{ t("views.product_service.fields.category_id") }}
                         </FormLabel>
-                        <FormTomSelect
-                            v-model="productServiceForm.category_id"
+                        <FormSelectSearch v-model="productServiceForm.category_id" v-model:search="categorySearch"
+                            :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')"
                             :class="{ 'border-danger': productServiceForm.invalid('category_id') }"
-                            @change="productServiceForm.validate('category_id')"
-                            @search="getCategoryDDL"
-                            :options="{
-                                placeholder: t('components.dropdown.placeholder'),
-                            }"
-                        >
-                            <option v-for="c in categoryDDL" :key="c.code" :value="c.code">
-                                {{ c.name }}
-                            </option>
-                        </FormTomSelect>
+                            @change="productServiceForm.validate('category_id')" @search="getCategoryDDL" />
                         <FormErrorMessages :messages="productServiceForm.errors.category_id" />
                     </div>
 
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('name') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('name') }">
                             {{ t("views.product_service.fields.name") }}
                         </FormLabel>
-                        <FormInput
-                            v-model="productServiceForm.name"
-                            type="text"
+                        <FormInput v-model="productServiceForm.name" type="text"
                             :class="{ 'border-danger': productServiceForm.invalid('name') }"
                             :placeholder="t('views.product_service.fields.name')"
-                            @change="productServiceForm.validate('name')"
-                        />
+                            @change="productServiceForm.validate('name')" />
                         <FormErrorMessages :messages="productServiceForm.errors.name" />
                     </div>
 
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('unit_id') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('unit_id') }">
                             {{ t("views.product_service.fields.unit_id") }}
                         </FormLabel>
-                        <FormTomSelect
-                            v-model="productServiceForm.unit_id"
+                        <FormSelectSearch v-model="productServiceForm.unit_id" v-model:search="unitSearch"
+                            :options="unitOptions" :placeholder="t('components.dropdown.placeholder')"
                             :class="{ 'border-danger': productServiceForm.invalid('unit_id') }"
-                            @change="productServiceForm.validate('unit_id')"
-                            @search="getUnitDDL"
-                            :options="{
-                                placeholder: t('components.dropdown.placeholder'),
-                            }"
-                        >
-                            <option v-for="c in unitDDL" :key="c.code" :value="c.code">
-                                {{ c.name }}
-                            </option>
-                        </FormTomSelect>
+                            @change="productServiceForm.validate('unit_id')" @search="getUnitDDL" />
                         <FormErrorMessages :messages="productServiceForm.errors.unit_id" />
                     </div>
                 </div>
@@ -350,33 +330,24 @@ watch(
             <template #card-items-2>
                 <div class="p-5">
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('price') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('price') }">
                             {{ t("views.product_service.fields.price") }}
                         </FormLabel>
-                        <FormInputCurrency
-                            v-model="productServiceForm.price"
+                        <FormInputCurrency v-model="productServiceForm.price"
                             :class="{ 'border-danger': productServiceForm.invalid('price') }"
                             :placeholder="t('views.product_service.fields.price')"
-                            @change="productServiceForm.validate('price')"
-                        />
+                            @change="productServiceForm.validate('price')" />
                         <FormErrorMessages :messages="productServiceForm.errors.price" />
                     </div>
 
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('point') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('point') }">
                             {{ t("views.product_service.fields.point") }}
                         </FormLabel>
-                        <FormInput
-                            v-model="productServiceForm.point"
-                            type="number"
+                        <FormInput v-model="productServiceForm.point" type="number"
                             :class="{ 'border-danger': productServiceForm.invalid('point') }"
                             :placeholder="t('views.product_service.fields.point')"
-                            @change="productServiceForm.validate('point')"
-                        />
+                            @change="productServiceForm.validate('point')" />
                         <FormErrorMessages :messages="productServiceForm.errors.point" />
                     </div>
 
@@ -385,54 +356,38 @@ watch(
                             {{ t("views.product_service.fields.is_taxable") }}
                         </FormLabel>
                         <FormSwitch class="mt-2">
-                            <FormSwitch.Input
-                                v-model="productServiceForm.is_taxable"
-                                type="checkbox"
+                            <FormSwitch.Input v-model="productServiceForm.is_taxable" type="checkbox"
                                 :class="{ 'border-danger': productServiceForm.invalid('is_taxable') }"
-                                @change="productServiceForm.validate('is_taxable')"
-                            />
+                                @change="productServiceForm.validate('is_taxable')" />
                         </FormSwitch>
                         <FormErrorMessages :messages="productServiceForm.errors.is_taxable" />
                     </div>
 
                     <div class="pb-4" v-if="productServiceForm.is_taxable">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('vat_rate') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('vat_rate') }">
                             {{ t("views.product_service.fields.vat_rate") }}
                         </FormLabel>
-                        <FormInputCurrency
-                            v-model="productServiceForm.vat_rate"
+                        <FormInputCurrency v-model="productServiceForm.vat_rate"
                             :class="{ 'border-danger': productServiceForm.invalid('vat_rate') }"
                             :placeholder="t('views.product_service.fields.vat_rate')"
-                            @change="productServiceForm.validate('vat_rate')"
-                        />
+                            @change="productServiceForm.validate('vat_rate')" />
                         <FormErrorMessages :messages="productServiceForm.errors.vat_rate" />
                     </div>
 
                     <div class="pb-4" v-if="productServiceForm.is_taxable">
-                        <FormLabel
-                            :class="{
-                                'text-danger': productServiceForm.invalid('is_price_include_vat'),
-                            }"
-                        >
+                        <FormLabel :class="{
+                            'text-danger': productServiceForm.invalid('is_price_include_vat'),
+                        }">
                             {{ t("views.product_service.fields.is_price_include_vat") }}
                         </FormLabel>
                         <FormSwitch class="mt-2">
-                            <FormSwitch.Input
-                                v-model="productServiceForm.is_price_include_vat"
-                                type="checkbox"
-                                :class="{
-                                    'border-danger': productServiceForm.invalid(
-                                        'is_price_include_vat'
-                                    ),
-                                }"
-                                @change="productServiceForm.validate('is_price_include_vat')"
-                            />
+                            <FormSwitch.Input v-model="productServiceForm.is_price_include_vat" type="checkbox" :class="{
+                                'border-danger': productServiceForm.invalid(
+                                    'is_price_include_vat'
+                                ),
+                            }" @change="productServiceForm.validate('is_price_include_vat')" />
                         </FormSwitch>
-                        <FormErrorMessages
-                            :messages="productServiceForm.errors.is_price_include_vat"
-                        />
+                        <FormErrorMessages :messages="productServiceForm.errors.is_price_include_vat" />
                     </div>
                 </div>
             </template>
@@ -441,16 +396,12 @@ watch(
             <template #card-items-3>
                 <div class="p-5">
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('status') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('status') }">
                             {{ t("views.product_service.fields.status") }}
                         </FormLabel>
-                        <FormSelect
-                            v-model="productServiceForm.status"
+                        <FormSelect v-model="productServiceForm.status"
                             :class="{ 'border-danger': productServiceForm.invalid('status') }"
-                            @change="productServiceForm.validate('status')"
-                        >
+                            @change="productServiceForm.validate('status')">
                             <option value="">{{ t("components.dropdown.placeholder") }}</option>
                             <option v-for="s in statusDDL" :key="s.code" :value="s.code">
                                 {{ t(s.name) }}
@@ -460,17 +411,13 @@ watch(
                     </div>
 
                     <div class="pb-4">
-                        <FormLabel
-                            :class="{ 'text-danger': productServiceForm.invalid('remarks') }"
-                        >
+                        <FormLabel :class="{ 'text-danger': productServiceForm.invalid('remarks') }">
                             {{ t("views.product_service.fields.remarks") }}
                         </FormLabel>
-                        <FormTextarea
-                            v-model="productServiceForm.remarks"
+                        <FormTextarea v-model="productServiceForm.remarks"
                             :class="{ 'border-danger': productServiceForm.invalid('remarks') }"
                             :placeholder="t('views.product_service.fields.remarks')"
-                            @change="productServiceForm.validate('remarks')"
-                        />
+                            @change="productServiceForm.validate('remarks')" />
                         <FormErrorMessages :messages="productServiceForm.errors.remarks" />
                     </div>
                 </div>
@@ -479,29 +426,14 @@ watch(
             <!-- Buttons -->
             <template #card-items-button>
                 <div class="flex gap-4">
-                    <Button
-                        type="submit"
-                        href="#"
-                        variant="primary"
-                        class="w-28 shadow-md"
-                        :disabled="productServiceForm.validating || productServiceForm.hasErrors"
-                    >
-                        <Lucide
-                            v-if="productServiceForm.validating"
-                            icon="Loader"
-                            class="animate-spin"
-                        />
+                    <Button type="submit" href="#" variant="primary" class="w-28 shadow-md"
+                        :disabled="productServiceForm.validating || productServiceForm.hasErrors">
+                        <Lucide v-if="productServiceForm.validating" icon="Loader" class="animate-spin" />
                         <template v-else>
                             {{ t("components.buttons.submit") }}
                         </template>
                     </Button>
-                    <Button
-                        type="button"
-                        href="#"
-                        variant="soft-secondary"
-                        class="w-28 shadow-md"
-                        @click="resetForm"
-                    >
+                    <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
                         {{ t("components.buttons.reset") }}
                     </Button>
                 </div>

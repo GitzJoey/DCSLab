@@ -18,7 +18,7 @@ import {
     FormErrorMessages,
     FormSwitch,
     FormTextarea,
-    FormTomSelect,
+    FormSelectSearch,
 } from "@/components/Base/Form";
 import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "@/types/enums/CardState";
@@ -83,8 +83,32 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
 ]);
 
 const categoryDDL = ref<Array<DropDownOption> | null>(null);
+const categorySearch = ref<string>("");
+const categoryOptions = computed(() =>
+    (categoryDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
 const brandDDL = ref<Array<DropDownOption> | null>(null);
+const brandSearch = ref<string>("");
+const brandOptions = computed(() =>
+    (brandDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
 const unitDDL = ref<Array<DropDownOption> | null>(null);
+const unitSearch = ref<string[]>([]);
+const unitOptions = computed(() =>
+    (unitDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 
 const productForm = productService.useProductPhysicalStoreForm();
@@ -128,7 +152,7 @@ onMounted(async () => {
     }
 
     await Promise.all([getCategoryDDL(), getBrandDDL(), getUnitDDL(), getStatusDDL()]);
-    
+
     setCompanyIdData();
 });
 // #endregion
@@ -464,15 +488,10 @@ watch(
                             <FormLabel :class="{ 'text-danger': productForm.invalid('category_id') }">
                                 {{ t("views.product.fields.category_id") }}
                             </FormLabel>
-                            <FormTomSelect v-model="productForm.category_id"
+                            <FormSelectSearch v-model="productForm.category_id" v-model:search="categorySearch"
+                                :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')"
                                 :class="{ 'border-danger': productForm.invalid('category_id') }"
-                                @change="productForm.validate('category_id')" @search="getCategoryDDL" :options="{
-                                    placeholder: t('components.dropdown.placeholder'),
-                                }">
-                                <option v-for="c in categoryDDL" :key="c.code" :value="c.code">
-                                    {{ c.name }}
-                                </option>
-                            </FormTomSelect>
+                                @change="productForm.validate('category_id')" @search="getCategoryDDL" />
                             <FormErrorMessages :messages="productForm.errors.category_id" />
                         </div>
 
@@ -480,15 +499,10 @@ watch(
                             <FormLabel :class="{ 'text-danger': productForm.invalid('brand_id') }">
                                 {{ t("views.product.fields.brand_id") }}
                             </FormLabel>
-                            <FormTomSelect v-model="productForm.brand_id"
+                            <FormSelectSearch v-model="productForm.brand_id" v-model:search="brandSearch"
+                                :options="brandOptions" :placeholder="t('components.dropdown.placeholder')"
                                 :class="{ 'border-danger': productForm.invalid('brand_id') }"
-                                @change="productForm.validate('brand_id')" @search="getBrandDDL" :options="{
-                                    placeholder: t('components.dropdown.placeholder'),
-                                }">
-                                <option v-for="c in brandDDL" :key="c.code" :value="c.code">
-                                    {{ c.name }}
-                                </option>
-                            </FormTomSelect>
+                                @change="productForm.validate('brand_id')" @search="getBrandDDL" />
                             <FormErrorMessages :messages="productForm.errors.brand_id" />
                         </div>
 
@@ -609,30 +623,22 @@ watch(
                                     :class="{ 'text-danger': productForm.invalid(`product_units.${index}.unit_id` as any) }">
                                     {{ t("views.product.fields.unit_id") }}
                                 </FormLabel>
-                                <div v-if="productForm.product_units[index].unit_id && productForm.product_units[index].unit_name"
-                                    class="relative">
-                                    <div
-                                        class="form-control border rounded-md px-3 py-2 bg-slate-50 dark:bg-darkmode-800 text-slate-700 dark:text-slate-300">
-                                        {{ productForm.product_units[index].unit_name }}
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1">
+                                        <FormSelectSearch v-model="productForm.product_units[index].unit_id"
+                                            v-model:search="unitSearch[index]" :options="unitOptions"
+                                            :placeholder="t('components.dropdown.placeholder')"
+                                            :class="{ 'border-danger': productForm.invalid(`product_units.${index}.unit_id` as any) }"
+                                            @change="() => {
+                                                updateUnitName(index);
+                                                productForm.validate(`product_units.${index}.unit_id` as any);
+                                            }" @search="getUnitDDL" />
                                     </div>
-                                    <button type="button"
-                                        class="absolute right-3 top-2.5 text-slate-500 hover:text-danger"
-                                        @click="clearUnit(index)">
+                                    <button v-if="productForm.product_units[index].unit_id" type="button"
+                                        class="text-slate-500 hover:text-danger" @click="clearUnit(index)">
                                         <Lucide icon="X" class="w-4 h-4" />
                                     </button>
                                 </div>
-                                <FormTomSelect v-else v-model="productForm.product_units[index].unit_id"
-                                    :class="{ 'border-danger': productForm.invalid(`product_units.${index}.unit_id` as any) }"
-                                    @update:model-value="(val) => {
-                                        updateUnitName(index, val as string);
-                                        productForm.validate(`product_units.${index}.unit_id` as any);
-                                    }" @search="getUnitDDL" :options="{
-                                        placeholder: t('components.dropdown.placeholder'),
-                                    }">
-                                    <option v-for="c in unitDDL" :key="c.code" :value="c.code">
-                                        {{ c.name }}
-                                    </option>
-                                </FormTomSelect>
                                 <FormErrorMessages
                                     :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]" />
                             </div>
