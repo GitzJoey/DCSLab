@@ -45,7 +45,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
         $rules['delete_in_product_ids'] = ['nullable', 'array'];
         $rules['delete_in_product_ids.*'] = ['required', 'integer', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)];
 
-        $rules['in_products'] = ['nullable', 'array'];
+        $rules['in_products'] = ['array', 'required_with:in_warehouse_id'];
         $rules['in_products.*.id'] = ['nullable', 'integer', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)];
         $rules += StockAdjustmentInProductRules::mapToFieldNames($this->company_id ?? 0,
             'in_products.*.qty',
@@ -58,7 +58,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
         $rules['delete_out_product_ids'] = ['nullable', 'array'];
         $rules['delete_out_product_ids.*'] = ['required', 'integer', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)];
 
-        $rules['out_products'] = ['nullable', 'array'];
+        $rules['out_products'] = ['array', 'required_with:out_warehouse_id'];
         $rules['out_products.*.id'] = ['nullable', 'integer', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)];
         $rules += StockAdjustmentOutProductRules::mapToFieldNames($this->company_id ?? 0,
             'out_products.*.qty',

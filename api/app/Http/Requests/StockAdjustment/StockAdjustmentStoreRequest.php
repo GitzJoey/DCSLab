@@ -41,7 +41,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'is_posted' => ['required', 'boolean'],
         ];
 
-        $rules['in_products'] = ['nullable', 'array'];
+        $rules['in_products'] = ['array', 'required_with:in_warehouse_id'];
         $rules += StockAdjustmentInProductRules::mapToFieldNames($this->company_id ?? 0,
             'in_products.*.qty',
             'in_products.*.product_unit_id',
@@ -50,7 +50,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'in_products.*.remarks',
         );
 
-        $rules['out_products'] = ['nullable', 'array'];
+        $rules['out_products'] = ['array', 'required_with:out_warehouse_id'];
         $rules += StockAdjustmentOutProductRules::mapToFieldNames($this->company_id ?? 0,
             'out_products.*.qty',
             'out_products.*.product_unit_id',

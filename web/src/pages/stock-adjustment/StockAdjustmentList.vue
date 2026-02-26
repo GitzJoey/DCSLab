@@ -453,7 +453,7 @@ const showAlertPlaceholder = (
                                                                     <div class="mt-0.5 text-slate-500">
                                                                         {{ t("views.stock_adjustment_in_product.fields.qty") }}:
                                                                         <span class="font-medium">
-                                                                            {{ formatCurrency(p.qty) }}
+                                                                            {{ formatCurrency(p.qty) }} {{ p.product_unit.unit.name }}
                                                                         </span>
                                                                     </div>
                                                                 </div>

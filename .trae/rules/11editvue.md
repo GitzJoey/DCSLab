@@ -12,7 +12,7 @@ Contoh konkret yang dijadikan referensi adalah `web/src/pages/stock-adjustment/S
 
 - Gunakan Composition API (`ref`, `computed`, `onMounted`, `watch`, `nextTick`).
 - Gunakan `useRoute`, `useRouter` dari `vue-router`.
-- Gunakan form dan layout dari base components (`TwoColumnsLayout`, `FormInput`, `FormLabel`, `FormErrorMessages`, `FormInputCode`, `FormInputCurrency`, `FormTextarea`, `FormTomSelect`, `FormSwitch`).
+- Gunakan form dan layout dari base components (`TwoColumnsLayout`, `FormInput`, `FormLabel`, `FormErrorMessages`, `FormInputCode`, `FormInputCurrency`, `FormTextarea`, `FormSelectSearch`, `FormTomSelect`, `FormSwitch`).
 - Gunakan service khusus entity (misalnya `StockAdjustmentService`, `StockAdjustmentCategoryService`, `WarehouseService`, `ProductService`).
 - Gunakan helper utilitas (`formatDate`, `formatCurrency`).
 - Gunakan store lokasi user (`useSelectedUserLocationStore`) dan enum `ErrorCode` untuk redirect jika lokasi belum dipilih.
@@ -168,29 +168,60 @@ const loadData = async () => {
 
 - DDL (dropdown) di-load dengan function async per jenis data (kategori, gudang, dst).
 - Hasil API di-map ke `DropDownOption` (`{ code, name }`).
-- Di template, gunakan `FormTomSelect` dengan:
+- Untuk halaman Edit, **WAJIB** simpan hasil `read` awal ke state terpisah (misalnya `const stockAdjustmentData = ref<StockAdjustment | null>(null);`) di dalam `loadData`, lalu gunakan state ini sebagai sumber kebenaran nilai awal.
+- Saat memanggil API `readAny*` untuk DDL yang punya parameter `include_id`, **WAJIB** gunakan ID dari data awal (misalnya `stockAdjustmentData.value?.category?.id`) dan **JANGAN** menggunakan nilai reactive di form (`stockAdjustmentForm.category_id`). Tujuannya agar opsi awal tetap ikut di hasil DDL walaupun user mengubah nilai form.
+- Di template, untuk select yang bisa di-search, gunakan `FormSelectSearch` dengan:
   - `v-model` ke field form.
+  - `v-model:search` ke ref string lokal untuk query.
+  - `:options` berupa array `{ value, label }` hasil map dari `DropDownOption`.
   - Event `@change` untuk memicu `form.validate(field)`.
-  - Event `@search` memanggil loader DDL.
-  - `:options` berisi konfigurasi TomSelect (misalnya placeholder), **bukan** data DDL.
+  - Event `@search` memanggil loader DDL (API akan dipanggil dengan query search).
+- `FormTomSelect` boleh tetap digunakan untuk kasus khusus yang belum dimigrasi, namun standar baru untuk select searchable adalah `FormSelectSearch`.
 
-Contoh:
+Contoh standar DDL dengan `FormSelectSearch`:
+
+```typescript
+const stockAdjustmentData = ref<StockAdjustment | null>(null);
+const categoryDDL = ref<Array<DropDownOption> | null>(null);
+const categorySearch = ref<string>("");
+const categoryOptions = computed(() =>
+    (categoryDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
+const loadCategoryDDL = async (search = "") => {
+    if (!selectedUserLocation.value) return;
+
+    const result = await stockAdjustmentCategoryService.readAnyGet({
+        with_trashed: false,
+        company_id: selectedUserLocation.value.company.id,
+        search,
+        include_id: stockAdjustmentData.value?.category?.id as string | undefined,
+        refresh: false,
+        limit: 20,
+    });
+
+    if (result.success && result.data) {
+        categoryDDL.value = result.data.data.map((item: any) => ({
+            code: item.id,
+            name: item.name,
+        }));
+    }
+};
+```
 
 ```html
-<FormTomSelect
+<FormSelectSearch
     v-model="stockAdjustmentForm.category_id"
+    v-model:search="categorySearch"
+    :options="categoryOptions"
+    :placeholder="t('components.dropdown.placeholder')"
     :class="{ 'border-danger': stockAdjustmentForm.invalid('category_id') }"
     @change="stockAdjustmentForm.validate('category_id')"
     @search="loadCategoryDDL"
-    :options="{ placeholder: t('components.dropdown.placeholder') }"
->
-    <option value="">
-        {{ t("components.select.select_placeholder") }}
-    </option>
-    <option v-for="c in categoryDDL" :key="c.code" :value="c.code">
-        {{ c.name }}
-    </option>
-</FormTomSelect>
+/>
 ```
 
 ## 6. Real-time Validation (Precognition)

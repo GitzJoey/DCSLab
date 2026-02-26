@@ -5,6 +5,7 @@ import FormHelp from "./FormHelp.vue";
 import FormInline from "./FormInline.vue";
 import FormLabel from "./FormLabel.vue";
 import FormSelect from "./FormSelect.vue";
+import FormSelectSearch from "./FormSelectSearch.vue";
 import FormSwitch from "./FormSwitch";
 import InputGroup from "./InputGroup";
 import FormFileUpload from "./FormFileUpload.vue";
@@ -21,6 +22,7 @@ export {
   FormInline,
   FormLabel,
   FormSelect,
+  FormSelectSearch,
   FormSwitch,
   InputGroup,
   FormInputCode,

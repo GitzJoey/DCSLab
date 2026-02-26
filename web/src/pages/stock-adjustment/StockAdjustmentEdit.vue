@@ -15,7 +15,7 @@ import {
     FormInputCode,
     FormInputCurrency,
     FormTextarea,
-    FormTomSelect,
+    FormSelectSearch,
     FormSwitch,
 } from "@/components/Base/Form";
 import WarehouseService from "@/services/WarehouseService";
@@ -33,11 +33,14 @@ import {
     type StockAdjustmentInProductNestedUpdateRequest,
     type StockAdjustmentOutProductNestedUpdateRequest,
 } from "@/types/services/stock-adjustment/StockAdjustmentRequest";
+import type { StockAdjustment } from "@/types/models/StockAdjustment";
 import { debounce } from "lodash";
 import type { AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
 // #endregion
 
 // #region Declarations
+const stockAdjustmentData = ref<StockAdjustment | null>(null);
+
 type StockAdjustmentInProductFormItem = {
     id?: StockAdjustmentInProductNestedUpdateRequest["id"];
     qty: StockAdjustmentInProductNestedUpdateRequest["qty"];
@@ -108,9 +111,32 @@ const productService = new ProductService();
 const cacheServices = new CacheService();
 
 const dateTimeDisplay = ref<string>("");
-const inWarehouseDDL = ref<Array<DropDownOption> | null>(null);
-const outWarehouseDDL = ref<Array<DropDownOption> | null>(null);
 const categoryDDL = ref<Array<DropDownOption> | null>(null);
+const categorySearch = ref<string>("");
+const categoryOptions = computed(() =>
+    (categoryDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
+const inWarehouseDDL = ref<Array<DropDownOption> | null>(null);
+const inWarehouseSearch = ref<string>("");
+const inWarehouseOptions = computed(() =>
+    (inWarehouseDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
+const outWarehouseDDL = ref<Array<DropDownOption> | null>(null);
+const outWarehouseSearch = ref<string>("");
+const outWarehouseOptions = computed(() =>
+    (outWarehouseDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
 
 const showProductUnitModal = ref<boolean>(false);
 const productSearchText = ref<string>("");
@@ -226,7 +252,9 @@ const loadData = async () => {
     const result = await stockAdjustmentService.read(ulid);
 
     if (result.success && result.data) {
-        const data = result.data;
+        const data = result.data as StockAdjustment;
+
+        stockAdjustmentData.value = data;
 
         dateTimeDisplay.value = formatDate(data.date, "YYYY-MM-DDTHH:mm");
 
@@ -344,7 +372,7 @@ const loadCategoryDDL = async (search = "") => {
         with_trashed: false,
         company_id: selectedUserLocation.value.company.id,
         search,
-        include_id: stockAdjustmentForm.category_id as string | undefined,
+        include_id: stockAdjustmentData.value?.category?.id as string | undefined,
         refresh: false,
         limit: 20,
     });
@@ -372,7 +400,7 @@ const loadInWarehouseDDL = async (search = "") => {
         company_id: selectedUserLocation.value.company.id,
         branch_id: selectedUserLocation.value.branch.id,
         search,
-        include_id: stockAdjustmentForm.in_warehouse_id as string | undefined,
+        include_id: stockAdjustmentData.value?.in_warehouse?.id as string | undefined,
         status: undefined,
         refresh: false,
         limit: 20,
@@ -401,7 +429,7 @@ const loadOutWarehouseDDL = async (search = "") => {
         company_id: selectedUserLocation.value.company.id,
         branch_id: selectedUserLocation.value.branch.id,
         search,
-        include_id: stockAdjustmentForm.out_warehouse_id as string | undefined,
+        include_id: stockAdjustmentData.value?.out_warehouse?.id as string | undefined,
         status: undefined,
         refresh: false,
         limit: 20,
@@ -549,7 +577,7 @@ const handleProductUnitModalAfterLeave = () => {
 
 const searchProductUnits = async () => {
     if (!selectedUserLocation.value) return;
-    
+
     isSearchingProductUnit.value = true;
 
     const result = await productService.readAnyGet({
@@ -834,17 +862,12 @@ const onSubmit = async () => {
                             </FormLabel>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1">
-                                    <FormTomSelect v-model="stockAdjustmentForm.category_id"
+                                    <FormSelectSearch v-model="stockAdjustmentForm.category_id"
+                                        v-model:search="categorySearch" :options="categoryOptions"
+                                        :placeholder="t('components.dropdown.placeholder')"
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid('category_id') }"
-                                        @change="stockAdjustmentForm.validate('category_id')" @search="loadCategoryDDL"
-                                        :options="{ placeholder: t('components.dropdown.placeholder') }">
-                                        <option value="">
-                                            {{ t("components.select.select_placeholder") }}
-                                        </option>
-                                        <option v-for="c in categoryDDL" :key="c.code" :value="c.code">
-                                            {{ c.name }}
-                                        </option>
-                                    </FormTomSelect>
+                                        @change="stockAdjustmentForm.validate('category_id')"
+                                        @search="loadCategoryDDL" />
                                 </div>
                                 <button v-if="stockAdjustmentForm.category_id" type="button"
                                     class="text-slate-500 hover:text-danger" @click="clearCategory">
@@ -859,18 +882,12 @@ const onSubmit = async () => {
                             </FormLabel>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1">
-                                    <FormTomSelect v-model="stockAdjustmentForm.in_warehouse_id"
+                                    <FormSelectSearch v-model="stockAdjustmentForm.in_warehouse_id"
+                                        v-model:search="inWarehouseSearch" :options="inWarehouseOptions"
+                                        :placeholder="t('components.dropdown.placeholder')"
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid('in_warehouse_id') }"
                                         @change="stockAdjustmentForm.validate('in_warehouse_id')"
-                                        @search="loadInWarehouseDDL"
-                                        :options="{ placeholder: t('components.dropdown.placeholder') }">
-                                        <option value="">
-                                            {{ t("components.select.select_placeholder") }}
-                                        </option>
-                                        <option v-for="w in inWarehouseDDL" :key="w.code" :value="w.code">
-                                            {{ w.name }}
-                                        </option>
-                                    </FormTomSelect>
+                                        @search="loadInWarehouseDDL" />
                                 </div>
                                 <button v-if="stockAdjustmentForm.in_warehouse_id" type="button"
                                     class="text-slate-500 hover:text-danger" @click="clearInWarehouse">
@@ -885,18 +902,12 @@ const onSubmit = async () => {
                             </FormLabel>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1">
-                                    <FormTomSelect v-model="stockAdjustmentForm.out_warehouse_id"
+                                    <FormSelectSearch v-model="stockAdjustmentForm.out_warehouse_id"
+                                        v-model:search="outWarehouseSearch" :options="outWarehouseOptions"
+                                        :placeholder="t('components.dropdown.placeholder')"
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid('out_warehouse_id') }"
                                         @change="stockAdjustmentForm.validate('out_warehouse_id')"
-                                        @search="loadOutWarehouseDDL"
-                                        :options="{ placeholder: t('components.dropdown.placeholder') }">
-                                        <option value="">
-                                            {{ t("components.select.select_placeholder") }}
-                                        </option>
-                                        <option v-for="w in outWarehouseDDL" :key="w.code" :value="w.code">
-                                            {{ w.name }}
-                                        </option>
-                                    </FormTomSelect>
+                                        @search="loadOutWarehouseDDL" />
                                 </div>
                                 <button v-if="stockAdjustmentForm.out_warehouse_id" type="button"
                                     class="text-slate-500 hover:text-danger" @click="clearOutWarehouse">

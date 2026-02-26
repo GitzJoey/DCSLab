@@ -15,7 +15,7 @@ import {
     FormInputCode,
     FormInputCurrency,
     FormTextarea,
-    FormTomSelect,
+    FormSelectSearch,
     FormSwitch,
 } from "@/components/Base/Form";
 import WarehouseService from "@/services/WarehouseService";
@@ -103,9 +103,32 @@ const productService = new ProductService();
 const cacheServices = new CacheService();
 
 const dateTimeDisplay = ref<string>("");
-const inWarehouseDDL = ref<Array<DropDownOption> | null>(null);
-const outWarehouseDDL = ref<Array<DropDownOption> | null>(null);
+
 const categoryDDL = ref<Array<DropDownOption> | null>(null);
+const categorySearch = ref<string>("");
+const categoryOptions = computed(() =>
+    (categoryDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+
+const inWarehouseDDL = ref<Array<DropDownOption> | null>(null);
+const inWarehouseSearch = ref<string>("");
+const inWarehouseOptions = computed(() =>
+    (inWarehouseDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
+const outWarehouseDDL = ref<Array<DropDownOption> | null>(null);
+const outWarehouseSearch = ref<string>("");
+const outWarehouseOptions = computed(() =>
+    (outWarehouseDDL.value ?? []).map((item) => ({
+        value: item.code,
+        label: item.name,
+    }))
+);
 
 const showProductUnitModal = ref<boolean>(false);
 const productSearchText = ref<string>("");
@@ -729,14 +752,12 @@ const onSubmit = async () => {
                             </FormLabel>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1">
-                                    <FormTomSelect v-model="stockAdjustmentForm.category_id"
+                                    <FormSelectSearch v-model="stockAdjustmentForm.category_id"
+                                        v-model:search="categorySearch" :options="categoryOptions"
+                                        :placeholder="t('components.dropdown.placeholder')"
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid('category_id') }"
-                                        @change="stockAdjustmentForm.validate('category_id')" @search="loadCategoryDDL"
-                                        :options="{ placeholder: t('components.dropdown.placeholder') }">
-                                        <option v-for="c in categoryDDL" :key="c.code" :value="c.code">
-                                            {{ c.name }}
-                                        </option>
-                                    </FormTomSelect>
+                                        @change="stockAdjustmentForm.validate('category_id')"
+                                        @search="loadCategoryDDL" />
                                 </div>
                                 <button v-if="stockAdjustmentForm.category_id" type="button"
                                     class="text-slate-500 hover:text-danger" @click="clearCategory">
@@ -752,15 +773,12 @@ const onSubmit = async () => {
                             </FormLabel>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1">
-                                    <FormTomSelect v-model="stockAdjustmentForm.in_warehouse_id"
+                                    <FormSelectSearch v-model="stockAdjustmentForm.in_warehouse_id"
+                                        v-model:search="inWarehouseSearch" :options="inWarehouseOptions"
+                                        :placeholder="t('components.dropdown.placeholder')"
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid('in_warehouse_id') }"
                                         @change="stockAdjustmentForm.validate('in_warehouse_id')"
-                                        @search="loadInWarehouseDDL"
-                                        :options="{ placeholder: t('components.dropdown.placeholder') }">
-                                        <option v-for="w in inWarehouseDDL" :key="w.code" :value="w.code">
-                                            {{ w.name }}
-                                        </option>
-                                    </FormTomSelect>
+                                        @search="loadInWarehouseDDL" />
                                 </div>
                                 <button v-if="stockAdjustmentForm.in_warehouse_id" type="button"
                                     class="text-slate-500 hover:text-danger" @click="clearInWarehouse">
@@ -776,15 +794,12 @@ const onSubmit = async () => {
                             </FormLabel>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1">
-                                    <FormTomSelect v-model="stockAdjustmentForm.out_warehouse_id"
+                                    <FormSelectSearch v-model="stockAdjustmentForm.out_warehouse_id"
+                                        v-model:search="outWarehouseSearch" :options="outWarehouseOptions"
+                                        :placeholder="t('components.dropdown.placeholder')"
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid('out_warehouse_id') }"
                                         @change="stockAdjustmentForm.validate('out_warehouse_id')"
-                                        @search="loadOutWarehouseDDL"
-                                        :options="{ placeholder: t('components.dropdown.placeholder') }">
-                                        <option v-for="w in outWarehouseDDL" :key="w.code" :value="w.code">
-                                            {{ w.name }}
-                                        </option>
-                                    </FormTomSelect>
+                                        @search="loadOutWarehouseDDL" />
                                 </div>
                                 <button v-if="stockAdjustmentForm.out_warehouse_id" type="button"
                                     class="text-slate-500 hover:text-danger" @click="clearOutWarehouse">
