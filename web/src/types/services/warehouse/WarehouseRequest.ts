@@ -4,6 +4,7 @@ export interface WarehouseReadAnyPaginateRequest {
     search?: string | null;
     branch_id?: string | null;
     status?: string | number;
+    include_id?: string | null;
     refresh: boolean;
     page: number;
     per_page: number;
@@ -15,6 +16,7 @@ export interface WarehouseReadAnyGetRequest {
     search?: string | null;
     branch_id?: string | null;
     status?: string | number;
+    include_id?: string | null;
     refresh: boolean;
     limit: number;
 }

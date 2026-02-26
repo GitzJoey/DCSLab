@@ -75,11 +75,8 @@ class WarehouseController extends BaseController
         $this->authorize('viewAny', Warehouse::class);
 
         if ($request->filled('company_id')) $request->merge(['company_id' => HashidsHelper::decodeId($request->company_id)]);
-
         if ($request->filled('branch_id')) $request->merge(['branch_id' => HashidsHelper::decodeId($request->branch_id)]);
-
         if ($request->filled('include_id')) $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
-
         if ($request->filled('status')) {
             $request->merge(['status' => RecordStatusEnum::isValid($request->status) ? RecordStatusEnum::resolveToEnum($request->status)->value : -1]);
         }

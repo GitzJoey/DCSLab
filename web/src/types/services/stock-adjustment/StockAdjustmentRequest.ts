@@ -25,15 +25,6 @@ export interface StockAdjustmentInProductNestedStoreRequest {
     remarks?: string | null;
 }
 
-export type StockAdjustmentInProductFormItem =
-    StockAdjustmentInProductNestedStoreRequest & {
-        product_unit_product_code?: string | null;
-        product_unit_product_name?: string | null;
-        product_unit_unit_name?: string | null;
-        product_unit_base_unit_name?: string | null;
-        product_unit_total_cogs?: number | null;
-    };
-
 export interface StockAdjustmentOutProductNestedStoreRequest {
     qty: number;
     product_unit_id: string;

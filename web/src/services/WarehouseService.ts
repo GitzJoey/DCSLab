@@ -57,6 +57,7 @@ export default class WarehouseService {
             if (args.branch_id) queryParams['branch_id'] = args.branch_id;
             if (args.search) queryParams['search'] = args.search;
             if (args.status) queryParams['status'] = args.status;
+            if (args.include_id) queryParams['include_id'] = args.include_id;
             
             queryParams['refresh'] = args.refresh;            
             queryParams['paginate'] = {
@@ -100,6 +101,7 @@ export default class WarehouseService {
             if (args.branch_id) queryParams['branch_id'] = args.branch_id;
             if (args.search) queryParams['search'] = args.search;
             if (args.status) queryParams['status'] = args.status;
+            if (args.include_id) queryParams['include_id'] = args.include_id;
             
             queryParams['refresh'] = args.refresh;            
             queryParams['get'] = {

@@ -4,296 +4,335 @@ description: Standarisasi penulisan halaman Edit (EntityEdit.vue) di Frontend
 ---
 # Standarisasi Halaman Edit (EntityEdit.vue)
 
-Dokumen ini menjelaskan standar penulisan halaman `[Entity]Edit.vue` di frontend (`web/src/pages/[entity]/[Entity]Edit.vue`). Standar ini mirip dengan `EntityCreate.vue` namun dengan perbedaan kunci pada **Data Loading** dan **Caching Strategy**.
+Dokumen ini menjelaskan standar penulisan halaman `[Entity]Edit.vue` di frontend (`web/src/pages/[entity]/[Entity]Edit.vue`). Standar ini mirip dengan `EntityCreate.vue` namun dengan perbedaan kunci pada **Data Loading** dan **Reset Strategy**.
+
+Contoh konkret yang dijadikan referensi adalah `web/src/pages/stock-adjustment/StockAdjustmentEdit.vue`.
 
 ## 1. Imports
 
-Sama seperti halaman Create, jangan mengimpor `axios` secara default. Gunakan `isAxiosError` dan `AxiosError` untuk error handling.
+- Gunakan Composition API (`ref`, `computed`, `onMounted`, `watch`, `nextTick`).
+- Gunakan `useRoute`, `useRouter` dari `vue-router`.
+- Gunakan form dan layout dari base components (`TwoColumnsLayout`, `FormInput`, `FormLabel`, `FormErrorMessages`, `FormInputCode`, `FormInputCurrency`, `FormTextarea`, `FormTomSelect`, `FormSwitch`).
+- Gunakan service khusus entity (misalnya `StockAdjustmentService`, `StockAdjustmentCategoryService`, `WarehouseService`, `ProductService`).
+- Gunakan helper utilitas (`formatDate`, `formatCurrency`).
+- Gunakan store lokasi user (`useSelectedUserLocationStore`) dan enum `ErrorCode` untuk redirect jika lokasi belum dipilih.
 
-**JANGAN:** `import axios from "axios";`
-**LAKUKAN:**
+Contoh (disederhanakan):
+
 ```typescript
-import { isAxiosError, AxiosError } from "axios";
+import { computed, ref, onMounted, nextTick, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-// ... imports lainnya
+import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
+import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
+import { CardState } from "@/types/enums/CardState";
+import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
+import {
+    FormInput,
+    FormLabel,
+    FormErrorMessages,
+    FormInputCode,
+    FormInputCurrency,
+    FormTextarea,
+    FormTomSelect,
+    FormSwitch,
+} from "@/components/Base/Form";
+import { ErrorCode } from "@/types/enums/ErrorCode";
 ```
 
 ## 2. Struktur & Layout
 
-Gunakan `TwoColumnsLayout` dengan definisi `cards` state yang sama.
+- Gunakan `TwoColumnsLayout` dengan `cards` yang eksplisit berisi:
+  - Group company/branch (`views.[entity].field_groups.company_info`).
+  - Group data utama entity (`views.[entity].field_groups.[entity]_data`).
+  - Group untuk array detail (misalnya `in_products`, `out_products`).
+  - Card khusus tombol aksi dengan `id: "button"`.
+
+Contoh pola:
 
 ```typescript
 const cards = ref<Array<TwoColumnsLayoutCards>>([
-    // ... definisi cards
-    { title: "views.entity.field_groups.group_1", state: CardState.Expanded, id: "group1" },
+    {
+        title: "views.stock_adjustment.field_groups.company_info",
+        state: CardState.Expanded,
+    },
+    {
+        title: "views.stock_adjustment.field_groups.stock_adjustment_data",
+        state: CardState.Expanded,
+    },
+    {
+        title: "views.stock_adjustment.field_groups.in_products",
+        state: CardState.Collapsed,
+    },
+    {
+        title: "views.stock_adjustment.field_groups.out_products",
+        state: CardState.Collapsed,
+    },
     { title: "", state: CardState.Hidden, id: "button" },
 ]);
 ```
 
-**Note:** Pastikan mengimpor `CardState` dari path yang benar.
-```typescript
-import { CardState } from "@/types/enums/CardState";
-```
-
-### Form Identifier
-
-**WAJIB** memberikan `id` pada tag `<form>` dengan format `[entity]Form`.
-Ini berguna untuk keperluan testing atau styling spesifik jika dibutuhkan.
+Form **WAJIB** diberi `id` dengan format `[entity]Form`.
 
 ```html
-<form id="supplierForm" @submit.prevent="onSubmit">
+<form id="stockAdjustmentForm" @submit.prevent="onSubmit">
     <!-- ... -->
 </form>
 ```
 
 ## 3. Lifecycle Hooks (onMounted)
 
-Berbeda dengan Create, halaman Edit **TIDAK** memuat data dari cache saat `onMounted`. Sebaliknya, ia harus memuat data terbaru dari server.
+- Halaman Edit **tidak** memuat data dari cache; data harus selalu diambil dari server.
+- **WAJIB** validasi lokasi user (`isUserLocationSelected`); jika belum pilih, redirect ke halaman error.
+- Setelah valid, load DDL paralel, kemudian load data entity berdasarkan `route.params.ulid`.
 
-Selain itu, **WAJIB** melakukan validasi apakah user sudah memilih lokasi (`isUserLocationSelected`). Jika belum, redirect ke halaman error.
-
-**Imports yang Diperlukan:**
-```typescript
-import { storeToRefs } from "pinia";
-import { useSelectedUserLocationStore } from "@/stores/useSelectedUserLocationStore";
-import { ErrorCode } from "@/types/enums/ErrorCode";
-```
-
-**Setup Store:**
-```typescript
-const selectedUserLocationStore = useSelectedUserLocationStore();
-const { isUserLocationSelected } = storeToRefs(selectedUserLocationStore);
-```
-
-**Urutan yang Direkomendasikan:**
-1. Validasi lokasi user (`isUserLocationSelected`).
-2. Emit mode view (`ViewMode.FORM_EDIT`).
-3. Load DDL secara paralel.
-4. Load Data Entitas dari server (`loadData()`).
+Contoh pola:
 
 ```typescript
 onMounted(async () => {
-    // 1. Validasi lokasi user
     if (!isUserLocationSelected.value) {
-        router.push({ name: 'side-menu-error-code', params: { code: ErrorCode.USERLOCATION_REQUIRED } });
+        router.push({
+            name: "side-menu-error-code",
+            params: { code: ErrorCode.USERLOCATION_REQUIRED },
+        });
         return;
     }
 
-    emits("mode-state", ViewMode.FORM_EDIT);
-    
-    // 2. Load DDL Paralel
     await Promise.all([
-        getCategoryDDL(),
-        getUnitDDL(),
-        getStatusDDL()
+        loadCategoryDDL(),
+        loadInWarehouseDDL(),
+        loadOutWarehouseDDL(),
     ]);
 
-    // 3. Load Data Server
-    await loadData(route.params.ulid as string);
+    await loadData();
 });
 ```
 
 ## 4. Data Loading Strategy
 
-Method `loadData` bertanggung jawab mengambil data dari API dan mengisi form.
+- `loadData` bertanggung jawab mengambil data dari API dan mengisi form.
+- Gunakan `route.params.ulid` sebagai key data.
+- Mapping dari model API ke struktur form dilakukan secara eksplisit, termasuk array detail.
+- Untuk kasus master–detail, di form digunakan struktur khusus (FormItem) yang menambahkan field tampilan seperti `product_unit_product_name`, `product_unit_unit_name`, dsb. Field tampilan ini **tidak** dikirim ke backend.
 
-**Penting:**
-- Gunakan `route.params.ulid` atau parameter ID yang sesuai.
-- Handle kasus 404/Not Found dengan redirect.
-- Pastikan array dinamis terisi minimal satu item default jika kosong (opsional, tergantung bisnis logic).
+Contoh mapping master–detail (disederhanakan):
 
 ```typescript
 const loadData = async () => {
-    emits("loading-state", true);
-    const result = await entityService.read(route.params.ulid.toString());
-    emits("loading-state", false);
+    const result = await stockAdjustmentService.read(route.params.ulid as string);
 
     if (result.success && result.data) {
-        form.setData({
-            // Mapping data server ke form structure
-            code: result.data.code,
-            name: result.data.name,
-            details: result.data.details.map((d: any) => ({
-                id: d.id,
-                // ... map detail fields
-            })),
+        const data = result.data;
+
+        const inProducts = (data.in_products || []).map((item: any) => {
+            const productUnit = item.product_unit;
+            const unit = productUnit?.unit;
+            const product = (productUnit as any)?.product;
+
+            return {
+                id: item.id,
+                qty: item.qty,
+                product_unit_id: productUnit?.id ?? "",
+                product_unit_product_code: productUnit?.code ?? "",
+                product_unit_product_name: product?.name ?? "",
+                product_unit_unit_name: unit?.name ?? "",
+                product_unit_base_unit_name: "",
+                product_unit_conversion_value: item.product_unit_conversion_value,
+                product_unit_cogs: item.product_unit_cogs,
+                product_unit_total_cogs: item.product_unit_total_cogs,
+                remarks: item.remarks ?? "",
+            };
         });
 
-        // Optional: Ensure at least one detail exists
-        if (form.details.length === 0) {
-            form.details.push({ ...defaultItem });
-        }
-    } else {
-        // Redirect jika data tidak ditemukan
-        router.push({ name: "entity-list-route" });
+        // mapping outProducts serupa
+
+        stockAdjustmentForm.setData({
+            company_id: data.company.id,
+            branch_id: data.branch.id,
+            code: data.code,
+            date: data.date,
+            category_id: data.category?.id ?? "",
+            in_warehouse_id: data.in_warehouse?.id ?? "",
+            out_warehouse_id: data.out_warehouse?.id ?? "",
+            remarks: data.remarks ?? "",
+            is_posted: data.is_posted,
+            delete_in_product_ids: [],
+            in_products: inProducts as any,
+            delete_out_product_ids: [],
+            out_products: outProducts as any,
+        } as any);
     }
 };
 ```
 
 ## 5. DDL Loading
 
-Sama seperti halaman Create, gunakan `async` function.
+- DDL (dropdown) di-load dengan function async per jenis data (kategori, gudang, dst).
+- Hasil API di-map ke `DropDownOption` (`{ code, name }`).
+- Di template, gunakan `FormTomSelect` dengan:
+  - `v-model` ke field form.
+  - Event `@change` untuk memicu `form.validate(field)`.
+  - Event `@search` memanggil loader DDL.
+  - `:options` berisi konfigurasi TomSelect (misalnya placeholder), **bukan** data DDL.
 
-```typescript
-const getCategoryDDL = async (search = ""): Promise<void> => {
-    // ... logic load DDL
-};
+Contoh:
+
+```html
+<FormTomSelect
+    v-model="stockAdjustmentForm.category_id"
+    :class="{ 'border-danger': stockAdjustmentForm.invalid('category_id') }"
+    @change="stockAdjustmentForm.validate('category_id')"
+    @search="loadCategoryDDL"
+    :options="{ placeholder: t('components.dropdown.placeholder') }"
+>
+    <option value="">
+        {{ t("components.select.select_placeholder") }}
+    </option>
+    <option v-for="c in categoryDDL" :key="c.code" :value="c.code">
+        {{ c.name }}
+    </option>
+</FormTomSelect>
 ```
 
 ## 6. Real-time Validation (Precognition)
 
-Gunakan event `@change` untuk memicu validasi Precognition secara real-time pada setiap input. Ini memberikan feedback instan kepada user.
+- Untuk field biasa gunakan:
 
-**Single Field:**
 ```html
-<FormInput 
-    v-model="form.name" 
-    :class="{ 'border-danger': form.invalid('name') }"
-    @change="form.validate('name')" 
+<FormInput
+    v-model="stockAdjustmentForm.code"
+    :class="{ 'border-danger': stockAdjustmentForm.invalid('code') }"
+    @change="stockAdjustmentForm.validate('code')"
 />
-<FormErrorMessages :messages="form.errors.name" />
+<FormErrorMessages :messages="stockAdjustmentForm.errors.code" />
 ```
 
-**Array Field:**
-Gunakan template literal untuk path array.
+- Untuk field array pakai path template literal:
+
 ```html
-<FormInput 
-    v-model="form.items[index].price" 
-    :class="{ 'border-danger': form.invalid(`items.${index}.price` as any) }"
-    @change="form.validate(`items.${index}.price` as any)" 
+<FormInputCurrency
+    v-model="item.qty"
+    :class="{
+        'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any),
+    }"
+    @change="stockAdjustmentForm.validate(`in_products.${index}.qty` as any)"
 />
-<FormErrorMessages :messages="(form.errors as any)[`items.${index}.price`]" />
+<FormErrorMessages
+    :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.qty`]"
+/>
 ```
 
 ## 7. Form Submission (Update)
 
-Method `onSubmit` mirip dengan Create, namun biasanya memanggil method update pada service.
+- Sebelum submit, bersihkan field tampilan dari array detail sehingga hanya field yang diharapkan backend yang terkirim.
+- Simpan backup array detail, set form ke versi "bersih", jalankan `submit()`, dan kembalikan backup jika terjadi error.
+
+Contoh:
 
 ```typescript
 const onSubmit = async () => {
-    if (form.hasErrors) {
-        scrollToError(Object.keys(form.errors)[0]);
+    if (stockAdjustmentForm.hasErrors) {
+        const firstErrorKey = Object.keys(stockAdjustmentForm.errors)[0];
+        if (firstErrorKey) {
+            scrollToError(firstErrorKey);
+        }
+        return;
     }
-    
-    emits("loading-state", true);
-    
-    await form.submit()
-        .then(() => {
-            // Sembunyikan alert error sebelumnya jika ada (PENTING)
-            showAlertPlaceholder("hidden", "", null);
-            
-            emits("update-profile");
-            router.push({ name: "entity-list-route" });
-        })
-        .catch((error) => {
-            const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
-            showAlertPlaceholder("danger", "", errorList);
-        })
-        .finally(() => {
-            emits("loading-state", false);
-        });
+
+    const originalInProducts = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+    const cleanedInProducts: StockAdjustmentInProductNestedUpdateRequest[] =
+        originalInProducts.map(({ product_unit_product_code, product_unit_product_name, product_unit_unit_name, product_unit_base_unit_name, product_unit_total_cogs, ...rest }) => rest);
+
+    const originalOutProducts = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+    const cleanedOutProducts: StockAdjustmentOutProductNestedUpdateRequest[] =
+        originalOutProducts.map(({ product_unit_product_code, product_unit_product_name, product_unit_unit_name, product_unit_base_unit_name, ...rest }) => rest);
+
+    const backupInProducts = [...originalInProducts];
+    const backupOutProducts = [...originalOutProducts];
+
+    stockAdjustmentForm.in_products = cleanedInProducts as any;
+    stockAdjustmentForm.out_products = cleanedOutProducts as any;
+
+    try {
+        await stockAdjustmentForm.submit();
+    } catch (error) {
+        stockAdjustmentForm.in_products = backupInProducts as any;
+        stockAdjustmentForm.out_products = backupOutProducts as any;
+        console.error(error);
+    }
 };
 ```
 
 ## 8. Reset Form Strategy
 
-Pada halaman Edit, Reset berarti **Reload Data** dari server, bukan sekedar mengosongkan form.
+- Pada halaman Edit, `reset` berarti **reload data original dari server**, bukan mengosongkan field.
+- Selain reset data, juga reset error dan state tambahan (misalnya ekspansi remarks).
+
+Contoh:
 
 ```typescript
 const resetForm = async () => {
-    form.reset();
-    form.setErrors({});
-    await loadData(); // Reload original data from server
+    stockAdjustmentForm.reset();
+    stockAdjustmentForm.setErrors({});
+    dateTimeDisplay.value = "";
+    inProductsRemarksExpanded.value = [];
+    outProductsRemarksExpanded.value = [];
+    await loadData();
 };
 ```
 
-## 9. Caching (Auto-Save Draft)
+## 9. Dynamic Form Arrays (Master-Detail + Soft Delete)
 
-Halaman Edit **BOLEH** menyimpan draft edit ke cache untuk mencegah kehilangan data saat tidak sengaja refresh/close tab, namun **JANGAN** me-load cache tersebut secara otomatis di `onMounted` (kecuali ada logic restore khusus).
+- Tambah item detail:
+  - Dorong item baru ke array.
+  - Bersihkan error yang berkaitan dengan prefix path array (misalnya `in_products.`).
+- Hapus item detail:
+  - Jika item punya `id`, dorong ke `delete_*_ids` di form untuk diproses backend.
+  - Splice array dan bersihkan error array terkait.
 
-```typescript
-watch(
-    form,
-    debounce((newValue): void => {
-        // Gunakan key unik untuk EDIT, misal: ENTITY_EDIT
-        cacheServices.setLastEntity("ENTITY_EDIT", newValue.data());
-    }, 500),
-    { deep: true }
-);
-```
-
-## 10. Dynamic Form Arrays (Master-Detail)
-
-Gunakan logika `removeItem` dan `updateItemName` yang sama dengan halaman Create, dengan tambahan penanganan ID untuk soft delete.
-
-### Tambah Item (Add Item)
-Saat menambah item baru, bersihkan error terkait array tersebut untuk mencegah error lama (stale errors).
+Contoh tambah dan hapus in_product:
 
 ```typescript
-const addItem = () => {
-    form.items.push({
-        // ... default properties
-    });
+const removeInProduct = (index: number) => {
+    const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+    const item = items[index];
 
-    // Clear errors related to items to prevent stale errors
-    Object.keys(form.errors).forEach((key) => {
-        if (key.startsWith("items.")) {
-            form.forgetError(key as any);
-        }
-    });
-};
-```
-
-### Hapus Item (Soft Delete)
-Untuk halaman Edit, item yang dihapus mungkin perlu ditandai untuk dihapus di database (bukan sekedar `splice` array). Cek apakah item memiliki `id` sebelum menandai.
-
-```typescript
-const removeItem = (index: number) => {
-    const item = form.details[index];
-    
-    // Jika item sudah ada di database (punya ID), masukkan ke list delete
-    if (item.id) {
-        if (!form.delete_detail_ids) {
-            form.delete_detail_ids = [];
-        }
-        form.delete_detail_ids.push(item.id);
+    if (item && item.id) {
+        stockAdjustmentForm.delete_in_product_ids.push(item.id);
     }
 
-    // Lanjutkan logic hapus array standar
-    const isPrimary = form.details[index].is_primary;
-    form.details.splice(index, 1);
-    
-    // Re-assign primary status jika yang dihapus adalah primary
-    if (isPrimary && form.details.length > 0) {
-        form.details[0].is_primary = true;
-    }
+    items.splice(index, 1);
+    inProductsRemarksExpanded.value.splice(index, 1);
 
-    // Bersihkan error stale yang mungkin tertinggal untuk index tersebut
-    Object.keys(form.errors).forEach((key) => {
-        if (key.startsWith("details.")) {
-            form.forgetError(key as any);
+    Object.keys(stockAdjustmentForm.errors).forEach((key) => {
+        if (key.startsWith("in_products.")) {
+            stockAdjustmentForm.forgetError(key as any);
         }
     });
 };
 ```
 
-## 11. Helper UI Functions
+Pola serupa diterapkan untuk `out_products` dengan `delete_out_product_ids`.
 
-Gunakan helper yang sama: `scrollToError`, `setCode` (untuk `_AUTO_`), dan `updateItemName` dengan UX improvement (`blur` focus).
+## 10. Helper UI Functions
+
+- `scrollToError` untuk scroll ke field yang pertama error.
+- `setCode` untuk toggle `_AUTO_` pada field `code`.
+- Menggunakan watcher untuk menghitung field turunan (misalnya total COGS).
+- Menggunakan `nextTick` untuk mengatur fokus setelah modal pemilihan item/produk ditutup.
+
+Contoh:
 
 ```typescript
 const scrollToError = (id: string): void => {
-    let el = document.getElementById(id);
+    const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
 };
-
-const updateItemName = (index: number, newVal: string) => {
-    // ... logic update
-    if (found) {
-        // ...
-        (document.activeElement as HTMLElement)?.blur();
-        form.forgetError(`details.${index}.item_id` as any);
-    }
-};
 ```
+
+Dengan mengikuti pola di atas, halaman `[Entity]Edit.vue` (contoh: `StockAdjustmentEdit.vue`) akan konsisten dengan kaidah yang sudah digunakan pada halaman Create, terutama untuk:
+
+- Struktur layout dan grouping card.
+- Penggunaan Precognition untuk validasi real-time.
+- Penanganan master–detail dengan soft delete.
+- Reset yang selalu mengembalikan data ke state server terbaru.

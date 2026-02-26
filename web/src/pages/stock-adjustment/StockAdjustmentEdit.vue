@@ -2,7 +2,7 @@
 // #region Imports
 import { computed, ref, onMounted, nextTick, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
 import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
 import { CardState } from "@/types/enums/CardState";
@@ -30,8 +30,8 @@ import CacheService from "@/services/CacheService";
 import { ErrorCode } from "@/types/enums/ErrorCode";
 import { type DropDownOption } from "@/types/models/DropDownOption";
 import {
-    type StockAdjustmentInProductNestedStoreRequest,
-    type StockAdjustmentOutProductNestedStoreRequest,
+    type StockAdjustmentInProductNestedUpdateRequest,
+    type StockAdjustmentOutProductNestedUpdateRequest,
 } from "@/types/services/stock-adjustment/StockAdjustmentRequest";
 import { debounce } from "lodash";
 import type { AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
@@ -39,27 +39,29 @@ import type { AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertP
 
 // #region Declarations
 type StockAdjustmentInProductFormItem = {
-    qty: StockAdjustmentInProductNestedStoreRequest["qty"];
-    product_unit_id: StockAdjustmentInProductNestedStoreRequest["product_unit_id"];
+    id?: StockAdjustmentInProductNestedUpdateRequest["id"];
+    qty: StockAdjustmentInProductNestedUpdateRequest["qty"];
+    product_unit_id: StockAdjustmentInProductNestedUpdateRequest["product_unit_id"];
     product_unit_product_code?: string | null;
     product_unit_product_name?: string | null;
     product_unit_unit_name?: string | null;
     product_unit_base_unit_name?: string | null;
-    product_unit_conversion_value: StockAdjustmentInProductNestedStoreRequest["product_unit_conversion_value"];
-    product_unit_cogs: StockAdjustmentInProductNestedStoreRequest["product_unit_cogs"];
+    product_unit_conversion_value: StockAdjustmentInProductNestedUpdateRequest["product_unit_conversion_value"];
+    product_unit_cogs: StockAdjustmentInProductNestedUpdateRequest["product_unit_cogs"];
     product_unit_total_cogs?: number | null;
-    remarks?: StockAdjustmentInProductNestedStoreRequest["remarks"];
+    remarks?: StockAdjustmentInProductNestedUpdateRequest["remarks"];
 };
 
 type StockAdjustmentOutProductFormItem = {
-    qty: StockAdjustmentOutProductNestedStoreRequest["qty"];
-    product_unit_id: StockAdjustmentOutProductNestedStoreRequest["product_unit_id"];
+    id?: StockAdjustmentOutProductNestedUpdateRequest["id"];
+    qty: StockAdjustmentOutProductNestedUpdateRequest["qty"];
+    product_unit_id: StockAdjustmentOutProductNestedUpdateRequest["product_unit_id"];
     product_unit_product_code?: string | null;
     product_unit_product_name?: string | null;
     product_unit_unit_name?: string | null;
     product_unit_base_unit_name?: string | null;
-    product_unit_conversion_value: StockAdjustmentOutProductNestedStoreRequest["product_unit_conversion_value"];
-    remarks?: StockAdjustmentOutProductNestedStoreRequest["remarks"];
+    product_unit_conversion_value: StockAdjustmentOutProductNestedUpdateRequest["product_unit_conversion_value"];
+    remarks?: StockAdjustmentOutProductNestedUpdateRequest["remarks"];
 };
 
 type ProductUnitOption = {
@@ -79,6 +81,7 @@ const outProductsRemarksExpanded = ref<boolean[]>([]);
 
 const { t } = useI18n();
 const router = useRouter();
+const route = useRoute();
 const selectedUserLocationStore = useSelectedUserLocationStore();
 
 const emits = defineEmits([
@@ -96,7 +99,9 @@ const selectedUserLocation = computed(
 );
 
 const stockAdjustmentService = new StockAdjustmentService();
-const stockAdjustmentForm = stockAdjustmentService.useStockAdjustmentCreateForm();
+const stockAdjustmentForm = stockAdjustmentService.useStockAdjustmentEditForm(
+    route.params.ulid as string
+);
 const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
 const warehouseService = new WarehouseService();
 const productService = new ProductService();
@@ -183,13 +188,13 @@ watch(
 watch(
     stockAdjustmentForm,
     debounce((newValue): void => {
-        cacheServices.setLastEntity("STOCK_ADJUSTMENT_CREATE", newValue.data());
+        cacheServices.setLastEntity("STOCK_ADJUSTMENT_EDIT", newValue.data());
     }, 500),
     { deep: true }
 );
 
-onMounted(() => {
-    emits("mode-state", ViewMode.FORM_CREATE);
+onMounted(async () => {
+    emits("mode-state", ViewMode.FORM_EDIT);
 
     if (!isUserLocationSelected.value) {
         router.push({
@@ -199,30 +204,110 @@ onMounted(() => {
         return;
     }
 
-    loadFromCache();
+    emits("loading-state", true);
 
-    stockAdjustmentForm.setData({
-        company_id: selectedUserLocation.value.company.id,
-        branch_id: selectedUserLocation.value.branch.id,
-    });
+    try {
+        await loadData();
 
-    if (stockAdjustmentForm.date) {
-        dateTimeDisplay.value = formatDate(
-            stockAdjustmentForm.date as string,
-            "YYYY-MM-DDTHH:mm"
-        );
-    } else {
-        const now = new Date().toString();
-        dateTimeDisplay.value = formatDate(now, "YYYY-MM-DDTHH:mm");
-        stockAdjustmentForm.setData({
-            date: formatDate(now, "YYYY-MM-DD HH:mm:ss"),
-        });
+        await Promise.all([
+            loadCategoryDDL(),
+            loadInWarehouseDDL(),
+            loadOutWarehouseDDL(),
+        ]);
+    } finally {
+        emits("loading-state", false);
     }
-
-    loadCategoryDDL();
-    loadInWarehouseDDL();
-    loadOutWarehouseDDL();
 });
+
+const loadData = async () => {
+    const ulid = route.params.ulid as string | undefined;
+    if (!ulid) return;
+
+    const result = await stockAdjustmentService.read(ulid);
+
+    if (result.success && result.data) {
+        const data = result.data;
+
+        dateTimeDisplay.value = formatDate(data.date, "YYYY-MM-DDTHH:mm");
+
+        const inProducts: StockAdjustmentInProductFormItem[] = (data.in_products || []).map(
+            (item: any) => {
+                const productUnit = item.product_unit;
+                const unit = productUnit?.unit;
+                const product = (productUnit as any)?.product;
+
+                return {
+                    id: item.id,
+                    qty: item.qty,
+                    product_unit_id: productUnit?.id ?? "",
+                    product_unit_product_code: productUnit?.code ?? "",
+                    product_unit_product_name: product?.name ?? "",
+                    product_unit_unit_name: unit?.name ?? "",
+                    product_unit_base_unit_name: "",
+                    product_unit_conversion_value: item.product_unit_conversion_value,
+                    product_unit_cogs: item.product_unit_cogs,
+                    product_unit_total_cogs: item.product_unit_total_cogs,
+                    remarks: item.remarks ?? "",
+                };
+            }
+        );
+
+        const outProducts: StockAdjustmentOutProductFormItem[] = (data.out_products || []).map(
+            (item: any) => {
+                const productUnit = item.product_unit;
+                const unit = productUnit?.unit;
+                const product = (productUnit as any)?.product;
+
+                return {
+                    id: item.id,
+                    qty: item.qty,
+                    product_unit_id: productUnit?.id ?? "",
+                    product_unit_product_code: productUnit?.code ?? "",
+                    product_unit_product_name: product?.name ?? "",
+                    product_unit_unit_name: unit?.name ?? "",
+                    product_unit_base_unit_name: "",
+                    product_unit_conversion_value: item.product_unit_conversion_value,
+                    remarks: item.remarks ?? "",
+                };
+            }
+        );
+
+        stockAdjustmentForm.setData({
+            company_id: data.company.id,
+            branch_id: data.branch.id,
+            code: data.code,
+            date: formatDate(data.date, "YYYY-MM-DD HH:mm:ss"),
+            category_id: data.category?.id ?? "",
+            in_warehouse_id: data.in_warehouse?.id ?? "",
+            out_warehouse_id: data.out_warehouse?.id ?? "",
+            remarks: data.remarks ?? "",
+            is_posted: data.is_posted,
+            delete_in_product_ids: [],
+            in_products: inProducts as any,
+            delete_out_product_ids: [],
+            out_products: outProducts as any,
+        } as any);
+
+        inProductsRemarksExpanded.value = inProducts.map(() => false);
+        outProductsRemarksExpanded.value = outProducts.map(() => false);
+
+        if (inProducts.length > 0) {
+            cards.value = cards.value.map((card) =>
+                card.title === "views.stock_adjustment.field_groups.in_products"
+                    ? { ...card, state: CardState.Expanded }
+                    : card
+            );
+        }
+
+        if (outProducts.length > 0) {
+            cards.value = cards.value.map((card) =>
+                card.title === "views.stock_adjustment.field_groups.out_products"
+                    ? { ...card, state: CardState.Expanded }
+                    : card
+            );
+        }
+    }
+};
 // #endregion
 
 // #region Methods - Stock Adjustment
@@ -252,48 +337,6 @@ const handleDateTimeChange = () => {
     stockAdjustmentForm.validate("date");
 };
 
-const loadInWarehouseDDL = async (search = "") => {
-    if (!selectedUserLocation.value) return;
-
-    const result = await warehouseService.readAnyGet({
-        with_trashed: false,
-        company_id: selectedUserLocation.value.company.id,
-        branch_id: selectedUserLocation.value.branch.id,
-        search,
-        status: undefined,
-        refresh: false,
-        limit: 20,
-    });
-
-    if (result.success && result.data) {
-        inWarehouseDDL.value = result.data.data.map((item: any) => ({
-            code: item.id,
-            name: item.name,
-        }));
-    }
-};
-
-const loadOutWarehouseDDL = async (search = "") => {
-    if (!selectedUserLocation.value) return;
-
-    const result = await warehouseService.readAnyGet({
-        with_trashed: false,
-        company_id: selectedUserLocation.value.company.id,
-        branch_id: selectedUserLocation.value.branch.id,
-        search,
-        status: undefined,
-        refresh: false,
-        limit: 20,
-    });
-
-    if (result.success && result.data) {
-        outWarehouseDDL.value = result.data.data.map((item: any) => ({
-            code: item.id,
-            name: item.name,
-        }));
-    }
-};
-
 const loadCategoryDDL = async (search = "") => {
     if (!selectedUserLocation.value) return;
 
@@ -301,7 +344,7 @@ const loadCategoryDDL = async (search = "") => {
         with_trashed: false,
         company_id: selectedUserLocation.value.company.id,
         search,
-        include_id: undefined,
+        include_id: stockAdjustmentForm.category_id as string | undefined,
         refresh: false,
         limit: 20,
     });
@@ -321,6 +364,28 @@ const clearCategory = () => {
     stockAdjustmentForm.validate("category_id");
 };
 
+const loadInWarehouseDDL = async (search = "") => {
+    if (!selectedUserLocation.value) return;
+
+    const result = await warehouseService.readAnyGet({
+        with_trashed: false,
+        company_id: selectedUserLocation.value.company.id,
+        branch_id: selectedUserLocation.value.branch.id,
+        search,
+        include_id: stockAdjustmentForm.in_warehouse_id as string | undefined,
+        status: undefined,
+        refresh: false,
+        limit: 20,
+    });
+
+    if (result.success && result.data) {
+        inWarehouseDDL.value = result.data.data.map((item: any) => ({
+            code: item.id,
+            name: item.name,
+        }));
+    }
+};
+
 const clearInWarehouse = () => {
     stockAdjustmentForm.setData({ in_warehouse_id: "" });
     loadInWarehouseDDL("");
@@ -328,24 +393,33 @@ const clearInWarehouse = () => {
     stockAdjustmentForm.validate("in_warehouse_id");
 };
 
+const loadOutWarehouseDDL = async (search = "") => {
+    if (!selectedUserLocation.value) return;
+
+    const result = await warehouseService.readAnyGet({
+        with_trashed: false,
+        company_id: selectedUserLocation.value.company.id,
+        branch_id: selectedUserLocation.value.branch.id,
+        search,
+        include_id: stockAdjustmentForm.out_warehouse_id as string | undefined,
+        status: undefined,
+        refresh: false,
+        limit: 20,
+    });
+
+    if (result.success && result.data) {
+        outWarehouseDDL.value = result.data.data.map((item: any) => ({
+            code: item.id,
+            name: item.name,
+        }));
+    }
+};
+
 const clearOutWarehouse = () => {
     stockAdjustmentForm.setData({ out_warehouse_id: "" });
     loadOutWarehouseDDL("");
     stockAdjustmentForm.forgetError("out_warehouse_id");
     stockAdjustmentForm.validate("out_warehouse_id");
-};
-
-const loadFromCache = () => {
-    const data = cacheServices.getLastEntity("STOCK_ADJUSTMENT_CREATE") as Record<
-        string,
-        unknown
-    >;
-    if (!data) return;
-    stockAdjustmentForm.setData(data);
-    const cachedDate = (data as any).date as string | undefined;
-    if (cachedDate) {
-        dateTimeDisplay.value = formatDate(cachedDate, "YYYY-MM-DDTHH:mm");
-    }
 };
 // #endregion
 
@@ -386,6 +460,12 @@ const selectProductUnitForIn = (option: ProductUnitOption) => {
     showProductUnitModal.value = false;
     editingInProductIndex.value = null;
     inProductQtyToFocus.value = targetIndex;
+
+    Object.keys(stockAdjustmentForm.errors).forEach((key) => {
+        if (key.startsWith("in_products.")) {
+            stockAdjustmentForm.forgetError(key as any);
+        }
+    });
 };
 
 const selectProductUnitForOut = (option: ProductUnitOption) => {
@@ -423,6 +503,12 @@ const selectProductUnitForOut = (option: ProductUnitOption) => {
     showProductUnitModal.value = false;
     editingOutProductIndex.value = null;
     outProductQtyToFocus.value = targetIndex;
+
+    Object.keys(stockAdjustmentForm.errors).forEach((key) => {
+        if (key.startsWith("out_products.")) {
+            stockAdjustmentForm.forgetError(key as any);
+        }
+    });
 };
 
 const selectProductUnit = (option: ProductUnitOption) => {
@@ -463,7 +549,7 @@ const handleProductUnitModalAfterLeave = () => {
 
 const searchProductUnits = async () => {
     if (!selectedUserLocation.value) return;
-
+    
     isSearchingProductUnit.value = true;
 
     const result = await productService.readAnyGet({
@@ -538,8 +624,21 @@ const toggleInProductRemarks = (index: number) => {
 };
 
 const removeInProduct = (index: number) => {
-    stockAdjustmentForm.in_products.splice(index, 1);
+    const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+    const item = items[index];
+
+    if (item && item.id) {
+        stockAdjustmentForm.delete_in_product_ids.push(item.id);
+    }
+
+    items.splice(index, 1);
     inProductsRemarksExpanded.value.splice(index, 1);
+
+    Object.keys(stockAdjustmentForm.errors).forEach((key) => {
+        if (key.startsWith("in_products.")) {
+            stockAdjustmentForm.forgetError(key as any);
+        }
+    });
 };
 // #endregion
 
@@ -572,8 +671,21 @@ const toggleOutProductRemarks = (index: number) => {
 };
 
 const removeOutProduct = (index: number) => {
-    stockAdjustmentForm.out_products.splice(index, 1);
+    const items = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+    const item = items[index];
+
+    if (item && item.id) {
+        stockAdjustmentForm.delete_out_product_ids.push(item.id);
+    }
+
+    items.splice(index, 1);
     outProductsRemarksExpanded.value.splice(index, 1);
+
+    Object.keys(stockAdjustmentForm.errors).forEach((key) => {
+        if (key.startsWith("out_products.")) {
+            stockAdjustmentForm.forgetError(key as any);
+        }
+    });
 };
 // #endregion
 
@@ -582,6 +694,15 @@ const scrollToError = (id: string): void => {
     const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
+const resetForm = async () => {
+    stockAdjustmentForm.reset();
+    stockAdjustmentForm.setErrors({});
+    dateTimeDisplay.value = "";
+    inProductsRemarksExpanded.value = [];
+    outProductsRemarksExpanded.value = [];
+    await loadData();
 };
 
 const showAlertPlaceholder = (
@@ -597,14 +718,6 @@ const showAlertPlaceholder = (
     emits("show-alertplaceholder", ap);
 };
 
-const resetForm = () => {
-    stockAdjustmentForm.reset();
-    stockAdjustmentForm.setErrors({});
-    dateTimeDisplay.value = "";
-    inProductsRemarksExpanded.value = [];
-    outProductsRemarksExpanded.value = [];
-};
-
 const onSubmit = async () => {
     if (stockAdjustmentForm.hasErrors) {
         const firstErrorKey = Object.keys(stockAdjustmentForm.errors)[0];
@@ -615,7 +728,7 @@ const onSubmit = async () => {
     }
 
     const originalInProducts = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
-    const cleanedInProducts: StockAdjustmentInProductNestedStoreRequest[] =
+    const cleanedInProducts: StockAdjustmentInProductNestedUpdateRequest[] =
         originalInProducts.map(
             ({
                 product_unit_product_code,
@@ -628,7 +741,7 @@ const onSubmit = async () => {
         );
 
     const originalOutProducts = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
-    const cleanedOutProducts: StockAdjustmentOutProductNestedStoreRequest[] =
+    const cleanedOutProducts: StockAdjustmentOutProductNestedUpdateRequest[] =
         originalOutProducts.map(
             ({
                 product_unit_product_code,
@@ -649,7 +762,6 @@ const onSubmit = async () => {
 
     try {
         await stockAdjustmentForm.submit();
-        resetForm();
         showAlertPlaceholder("hidden", "", null);
         emits("update-profile");
         router.push({ name: "side-menu-stock-adjustment-list" });
@@ -670,11 +782,9 @@ const onSubmit = async () => {
 <template>
     <form id="stockAdjustmentForm" @submit.prevent="onSubmit">
         <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
-            <!-- company & branch -->
             <template #card-items-0>
                 <div class="p-5">
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
-                        <!-- company -->
                         <div class="col-span-12 lg:col-span-4 md:col-span-6">
                             <FormLabel>
                                 {{ selectedUserLocation.company.code }}
@@ -684,7 +794,6 @@ const onSubmit = async () => {
                             <FormInput type="hidden" v-model="stockAdjustmentForm.company_id" />
                         </div>
 
-                        <!-- branch -->
                         <div class="col-span-12 lg:col-span-4 md:col-span-6">
                             <FormLabel>
                                 {{ selectedUserLocation.branch.code }}
@@ -697,11 +806,9 @@ const onSubmit = async () => {
                 </div>
             </template>
 
-            <!-- stock_adjustment -->
             <template #card-items-1>
                 <div class="p-5">
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
-                        <!-- code -->
                         <div class="col-span-12 lg:col-span-4 md:col-span-6">
                             <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('code') }">
                                 {{ t("views.stock_adjustment.fields.code") }}
@@ -712,7 +819,6 @@ const onSubmit = async () => {
                                 @change="stockAdjustmentForm.validate('code')" />
                             <FormErrorMessages :messages="stockAdjustmentForm.errors.code" />
                         </div>
-                        <!-- date -->
                         <div class="col-span-12 lg:col-span-4 md:col-span-6">
                             <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('date') }">
                                 {{ t("views.stock_adjustment.fields.date") }}
@@ -722,7 +828,6 @@ const onSubmit = async () => {
                                 :placeholder="t('views.stock_adjustment.fields.date')" @change="handleDateTimeChange" />
                             <FormErrorMessages :messages="stockAdjustmentForm.errors.date" />
                         </div>
-                        <!-- category -->
                         <div class="col-span-12 lg:col-span-4">
                             <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('category_id') }">
                                 {{ t("views.stock_adjustment.fields.category_id") }}
@@ -733,6 +838,9 @@ const onSubmit = async () => {
                                         :class="{ 'border-danger': stockAdjustmentForm.invalid('category_id') }"
                                         @change="stockAdjustmentForm.validate('category_id')" @search="loadCategoryDDL"
                                         :options="{ placeholder: t('components.dropdown.placeholder') }">
+                                        <option value="">
+                                            {{ t("components.select.select_placeholder") }}
+                                        </option>
                                         <option v-for="c in categoryDDL" :key="c.code" :value="c.code">
                                             {{ c.name }}
                                         </option>
@@ -745,7 +853,6 @@ const onSubmit = async () => {
                             </div>
                             <FormErrorMessages :messages="stockAdjustmentForm.errors.category_id" />
                         </div>
-                        <!-- in_warehouse -->
                         <div class="col-span-12 lg:col-span-6">
                             <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('in_warehouse_id') }">
                                 {{ t("views.stock_adjustment.fields.in_warehouse_id") }}
@@ -757,6 +864,9 @@ const onSubmit = async () => {
                                         @change="stockAdjustmentForm.validate('in_warehouse_id')"
                                         @search="loadInWarehouseDDL"
                                         :options="{ placeholder: t('components.dropdown.placeholder') }">
+                                        <option value="">
+                                            {{ t("components.select.select_placeholder") }}
+                                        </option>
                                         <option v-for="w in inWarehouseDDL" :key="w.code" :value="w.code">
                                             {{ w.name }}
                                         </option>
@@ -769,7 +879,6 @@ const onSubmit = async () => {
                             </div>
                             <FormErrorMessages :messages="stockAdjustmentForm.errors.in_warehouse_id" />
                         </div>
-                        <!-- out_warehouse -->
                         <div class="col-span-12 lg:col-span-6">
                             <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('out_warehouse_id') }">
                                 {{ t("views.stock_adjustment.fields.out_warehouse_id") }}
@@ -781,6 +890,9 @@ const onSubmit = async () => {
                                         @change="stockAdjustmentForm.validate('out_warehouse_id')"
                                         @search="loadOutWarehouseDDL"
                                         :options="{ placeholder: t('components.dropdown.placeholder') }">
+                                        <option value="">
+                                            {{ t("components.select.select_placeholder") }}
+                                        </option>
                                         <option v-for="w in outWarehouseDDL" :key="w.code" :value="w.code">
                                             {{ w.name }}
                                         </option>
@@ -793,7 +905,6 @@ const onSubmit = async () => {
                             </div>
                             <FormErrorMessages :messages="stockAdjustmentForm.errors.out_warehouse_id" />
                         </div>
-                        <!-- remarks -->
                         <div class="col-span-12">
                             <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('remarks') }">
                                 {{ t("views.stock_adjustment.fields.remarks") }}
@@ -804,7 +915,6 @@ const onSubmit = async () => {
                                 @change="stockAdjustmentForm.validate('remarks')" />
                             <FormErrorMessages :messages="stockAdjustmentForm.errors.remarks" />
                         </div>
-                        <!-- is_posted -->
                         <div class="col-span-12">
                             <FormLabel class="pr-5">
                                 {{ t("views.stock_adjustment.fields.is_posted") }}
@@ -891,7 +1001,7 @@ const onSubmit = async () => {
                                     </div>
                                 </div>
 
-                                <!-- product_unit_conversion_value -->
+                                <!-- product unit conversion value -->
                                 <div class="col-span-12 lg:col-span-1">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_conversion_value` as any) }">
@@ -966,7 +1076,6 @@ const onSubmit = async () => {
                     <!-- in_product actions -->
                     <div class="flex items-center justify-between mt-4">
                         <FormLabel>
-                            <!-- {{ t("views.stock_adjustment.field_groups.in_products") }} -->
                         </FormLabel>
                         <Button type="button" variant="primary" class="shadow-md" @click="addInProduct">
                             {{ t("views.stock_adjustment_in_product.actions.create") }}
@@ -986,7 +1095,6 @@ const onSubmit = async () => {
                     <div v-else class="space-y-5">
                         <div v-for="(item, index) in outProductsForm" :key="index"
                             class="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-4">
-                            <!-- out_product actions -->
                             <div class="flex items-center justify-between mb-3">
                                 <div class="font-medium text-sm">
                                     {{ t("views.stock_adjustment_out_product.page_title") }} #{{ index + 1 }}
@@ -1004,7 +1112,6 @@ const onSubmit = async () => {
 
                             <!-- out_product fields -->
                             <div class="grid grid-cols-12 gap-4 gap-y-3">
-                                <!-- qty -->
                                 <div class="col-span-12 lg:col-span-2">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.qty` as any) }">
@@ -1023,8 +1130,7 @@ const onSubmit = async () => {
                                     </div>
                                 </div>
 
-                                <!-- product description (name + code) -->
-                                <div class="col-span-12 lg:col-span-8">
+                                <div class="col-span-12 lg:col-span-5">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.product_unit_id` as any) }">
                                         {{ t("views.stock_adjustment_out_product.table.cols.product") }}
@@ -1049,8 +1155,7 @@ const onSubmit = async () => {
                                     </div>
                                 </div>
 
-                                <!-- product_unit_conversion_value -->
-                                <div class="col-span-12 lg:col-span-2">
+                                <div class="col-span-12 lg:col-span-3">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.product_unit_conversion_value` as any) }">
                                         {{ t("views.stock_adjustment_out_product.fields.product_unit_conversion_value")
@@ -1069,7 +1174,6 @@ const onSubmit = async () => {
                                     </div>
                                 </div>
 
-                                <!-- remarks -->
                                 <div v-if="outProductsRemarksExpanded[index]" class="col-span-12">
                                     <FormLabel
                                         :class="{ 'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any) }">
@@ -1088,7 +1192,6 @@ const onSubmit = async () => {
                     <!-- out_product actions -->
                     <div class="flex items-center justify-between mt-4">
                         <FormLabel>
-                            <!-- {{ t("views.stock_adjustment.field_groups.out_products") }} -->
                         </FormLabel>
                         <Button type="button" variant="primary" class="shadow-md" @click="addOutProduct">
                             {{ t("views.stock_adjustment_out_product.actions.create") }}
@@ -1097,7 +1200,6 @@ const onSubmit = async () => {
                 </div>
             </template>
 
-            <!-- stock_adjustment actions -->
             <template #card-items-button>
                 <div class="flex gap-4 p-5">
                     <Button type="submit" href="#" variant="primary" class="w-28 shadow-md"

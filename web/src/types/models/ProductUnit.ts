@@ -1,10 +1,12 @@
 import { Company } from "./Company";
+import { Product } from "./Product";
 import { Unit } from "./Unit";
 
 export interface ProductUnit {
     id: string;
     ulid: string;
     company: Company;
+    product: Product;
     code: string;
     is_manufacturer_sku: boolean;
     unit: Unit;

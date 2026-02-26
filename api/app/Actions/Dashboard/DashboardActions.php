@@ -46,7 +46,8 @@ class DashboardActions
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_MasterData($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
-        $menu = $this->createMenu_Customer($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
+        $menu = $this->createMenu_Transaction($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
+
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 
@@ -221,8 +222,29 @@ class DashboardActions
         return $menu;
     }
 
-    private function createMenu_Customer(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
+    private function createMenu_Transaction(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
     {
+        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
+            return $menu;
+        }
+
+        $root_array = [
+            'icon' => 'Cpu',
+            'pageName' => 'side-menu-transaction',
+            'title' => 'components.menu.transaction',
+            'subMenu' => [],
+        ];
+
+        $stockAdjustment = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-stock-adjustment',
+            'title' => 'components.menu.stock-adjustment',
+        ];
+
+        array_push($root_array['subMenu'], $stockAdjustment);
+
+        array_push($menu, $root_array);
+
         return $menu;
     }
 

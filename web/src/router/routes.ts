@@ -15,6 +15,7 @@ import UserIndex from "../pages/administrator/UserIndex.vue";
 import UserList from "../pages/administrator/UserList.vue";
 import UserCreate from "../pages/administrator/UserCreate.vue";
 import UserEdit from "../pages/administrator/UserEdit.vue";
+
 import CompanyIndex from "../pages/company/CompanyIndex.vue";
 import CompanyList from "../pages/company/CompanyList.vue";
 import CompanyCreate from "../pages/company/CompanyCreate.vue";
@@ -27,39 +28,6 @@ import WarehouseIndex from "@/pages/warehouse/WarehouseIndex.vue";
 import WarehouseList from "@/pages/warehouse/WarehouseList.vue";
 import WarehouseCreate from "@/pages/warehouse/WarehouseCreate.vue";
 import WarehouseEdit from "@/pages/warehouse/WarehouseEdit.vue";
-import StockAdjustmentCategoryIndex from "@/pages/stock-adjustment-category/StockAdjustmentCategoryIndex.vue";
-import StockAdjustmentCategoryList from "@/pages/stock-adjustment-category/StockAdjustmentCategoryList.vue";
-import StockAdjustmentCategoryCreate from "@/pages/stock-adjustment-category/StockAdjustmentCategoryCreate.vue";
-import StockAdjustmentCategoryEdit from "@/pages/stock-adjustment-category/StockAdjustmentCategoryEdit.vue";
-import StockAdjustmentCreate from "@/pages/stock-adjustment/StockAdjustmentCreate.vue";
-import ProductCategoryIndex from "@/pages/product-category/ProductCategoryIndex.vue";
-import ProductCategoryList from "@/pages/product-category/ProductCategoryList.vue";
-import ProductCategoryCreate from "@/pages/product-category/ProductCategoryCreate.vue";
-import ProductCategoryEdit from "@/pages/product-category/ProductCategoryEdit.vue";
-import ProductServiceIndex from "@/pages/product-service/ProductServiceIndex.vue";
-import ProductServiceList from "@/pages/product-service/ProductServiceList.vue";
-import ProductServiceCreate from "@/pages/product-service/ProductServiceCreate.vue";
-import ProductServiceEdit from "@/pages/product-service/ProductServiceEdit.vue";
-import ProductIndex from "@/pages/product/ProductIndex.vue";
-import ProductList from "@/pages/product/ProductList.vue";
-import ProductCreate from "@/pages/product/ProductCreate.vue";
-import ProductEdit from "@/pages/product/ProductEdit.vue";
-import BrandIndex from "@/pages/brand/BrandIndex.vue";
-import BrandList from "@/pages/brand/BrandList.vue";
-import BrandCreate from "@/pages/brand/BrandCreate.vue";
-import BrandEdit from "@/pages/brand/BrandEdit.vue";
-import UnitIndex from "@/pages/unit/UnitIndex.vue";
-import UnitList from "@/pages/unit/UnitList.vue";
-import UnitCreate from "@/pages/unit/UnitCreate.vue";
-import UnitEdit from "@/pages/unit/UnitEdit.vue";
-import CustomerGroupIndex from "@/pages/customer-group/CustomerGroupIndex.vue";
-import CustomerGroupList from "@/pages/customer-group/CustomerGroupList.vue";
-import CustomerGroupCreate from "@/pages/customer-group/CustomerGroupCreate.vue";
-import CustomerGroupEdit from "@/pages/customer-group/CustomerGroupEdit.vue";
-import CustomerIndex from "@/pages/customer/CustomerIndex.vue";
-import CustomerList from "@/pages/customer/CustomerList.vue";
-import CustomerCreate from "@/pages/customer/CustomerCreate.vue";
-import CustomerEdit from "@/pages/customer/CustomerEdit.vue";
 import InvestorIndex from "@/pages/investor/InvestorIndex.vue";
 import InvestorList from "@/pages/investor/InvestorList.vue";
 import InvestorCreate from "@/pages/investor/InvestorCreate.vue";
@@ -68,18 +36,59 @@ import CashAccountIndex from "@/pages/cash-account/CashAccountIndex.vue";
 import CashAccountList from "@/pages/cash-account/CashAccountList.vue";
 import CashAccountCreate from "@/pages/cash-account/CashAccountCreate.vue";
 import CashAccountEdit from "@/pages/cash-account/CashAccountEdit.vue";
+import ProductCategoryIndex from "@/pages/product-category/ProductCategoryIndex.vue";
+import ProductCategoryList from "@/pages/product-category/ProductCategoryList.vue";
+import ProductCategoryCreate from "@/pages/product-category/ProductCategoryCreate.vue";
+import ProductCategoryEdit from "@/pages/product-category/ProductCategoryEdit.vue";
+import BrandIndex from "@/pages/brand/BrandIndex.vue";
+import BrandList from "@/pages/brand/BrandList.vue";
+import BrandCreate from "@/pages/brand/BrandCreate.vue";
+import BrandEdit from "@/pages/brand/BrandEdit.vue";
+import UnitIndex from "@/pages/unit/UnitIndex.vue";
+import UnitList from "@/pages/unit/UnitList.vue";
+import UnitCreate from "@/pages/unit/UnitCreate.vue";
+import UnitEdit from "@/pages/unit/UnitEdit.vue";
+import ProductIndex from "@/pages/product/ProductIndex.vue";
+import ProductList from "@/pages/product/ProductList.vue";
+import ProductCreate from "@/pages/product/ProductCreate.vue";
+import ProductEdit from "@/pages/product/ProductEdit.vue";
+import ProductServiceIndex from "@/pages/product-service/ProductServiceIndex.vue";
+import ProductServiceList from "@/pages/product-service/ProductServiceList.vue";
+import ProductServiceCreate from "@/pages/product-service/ProductServiceCreate.vue";
+import ProductServiceEdit from "@/pages/product-service/ProductServiceEdit.vue";
 import SupplierIndex from "@/pages/supplier/SupplierIndex.vue";
+import SupplierList from "@/pages/supplier/SupplierList.vue";
 import SupplierCreate from "@/pages/supplier/SupplierCreate.vue";
+import SupplierEdit from "@/pages/supplier/SupplierEdit.vue";
+import CustomerGroupIndex from "@/pages/customer-group/CustomerGroupIndex.vue";
+import CustomerGroupList from "@/pages/customer-group/CustomerGroupList.vue";
+import CustomerGroupCreate from "@/pages/customer-group/CustomerGroupCreate.vue";
+import CustomerGroupEdit from "@/pages/customer-group/CustomerGroupEdit.vue";
+import CustomerIndex from "@/pages/customer/CustomerIndex.vue";
+import CustomerList from "@/pages/customer/CustomerList.vue";
+import CustomerCreate from "@/pages/customer/CustomerCreate.vue";
+import CustomerEdit from "@/pages/customer/CustomerEdit.vue";
+import StockAdjustmentCategoryIndex from "@/pages/stock-adjustment-category/StockAdjustmentCategoryIndex.vue";
+import StockAdjustmentCategoryList from "@/pages/stock-adjustment-category/StockAdjustmentCategoryList.vue";
+import StockAdjustmentCategoryCreate from "@/pages/stock-adjustment-category/StockAdjustmentCategoryCreate.vue";
+import StockAdjustmentCategoryEdit from "@/pages/stock-adjustment-category/StockAdjustmentCategoryEdit.vue";
+import StockAdjustmentIndex from "@/pages/stock-adjustment/StockAdjustmentIndex.vue";
+import StockAdjustmentList from "@/pages/stock-adjustment/StockAdjustmentList.vue";
+import StockAdjustmentCreate from "@/pages/stock-adjustment/StockAdjustmentCreate.vue";
+import StockAdjustmentEdit from "@/pages/stock-adjustment/StockAdjustmentEdit.vue";
 
 export default [
+    // login
     {
         path: "/",
         redirect: "/auth/login",
     },
+    // home
     {
         path: "/home",
         redirect: "/dashboard/main",
     },
+    // auth
     {
         path: "/auth",
         children: [
@@ -88,7 +97,6 @@ export default [
                 name: "login",
                 component: LoginPage,
             },
-
             {
                 path: "/auth/register",
                 name: 'register',
@@ -106,10 +114,12 @@ export default [
             },
         ]
     },
+    // menu
     {
         path: "/dashboard",
         component: Layout,
         children: [
+            // dashboard
             {
                 path: "/dashboard/main",
                 name: "side-menu-dashboard-maindashboard",
@@ -118,6 +128,7 @@ export default [
                     remember: true,
                 },
             },
+            // profile
             {
                 path: "/dashboard/profile",
                 name: "side-menu-dashboard-profile",
@@ -126,10 +137,12 @@ export default [
                     remember: true,
                 },
             },
-            // Company
+
+            // Company Management
             {
                 path: "/dashboard/company",
                 children: [
+                    // Company
                     {
                         path: "/dashboard/company/company",
                         name: "side-menu-company-company",
@@ -162,6 +175,7 @@ export default [
                             }
                         ]
                     },
+                    // Branch
                     {
                         path: "/dashboard/company/branch",
                         name: "side-menu-company-branch",
@@ -194,6 +208,7 @@ export default [
                             }
                         ]
                     },
+                    // Warehouse
                     {
                         path: "/dashboard/company/warehouse",
                         name: "side-menu-company-warehouse",
@@ -228,10 +243,11 @@ export default [
                     }
                 ]
             },
-            // Finance
+            // Finance Management
             {
                 path: "/dashboard/finance",
                 children: [
+                    // Investor
                     {
                         path: "/dashboard/finance/investor",
                         name: "side-menu-company-investor",
@@ -264,6 +280,7 @@ export default [
                             }
                         ]
                     },
+                    // Cash Account
                     {
                         path: "/dashboard/finance/cash-account",
                         name: "side-menu-finance-cash-account",
@@ -298,7 +315,7 @@ export default [
                     }
                 ]
             },
-            // Product
+            // Product Management
             {
                 path: "/dashboard/product",
                 children: [
@@ -472,12 +489,12 @@ export default [
                         path: "/dashboard/supplier/supplier",
                         name: "side-menu-supplier",
                         redirect: "/dashboard/supplier/supplier/list",
-                        component: () => import("@/pages/supplier/SupplierIndex.vue"),
+                        component: SupplierIndex,
                         children: [
                             {
                                 path: "/dashboard/supplier/supplier/list",
                                 name: "side-menu-supplier-supplier-list",
-                                component: () => import("@/pages/supplier/SupplierList.vue"),
+                                component: SupplierList,
                                 meta: {
                                     remember: true,
                                 },
@@ -485,7 +502,7 @@ export default [
                             {
                                 path: "/dashboard/supplier/supplier/create",
                                 name: "side-menu-supplier-supplier-create",
-                                component: () => import("@/pages/supplier/SupplierCreate.vue"),
+                                component: SupplierCreate,
                                 meta: {
                                     remember: true,
                                 },
@@ -493,7 +510,7 @@ export default [
                             {
                                 path: "/dashboard/supplier/supplier/edit/:ulid",
                                 name: "side-menu-supplier-supplier-edit",
-                                component: () => import("@/pages/supplier/SupplierEdit.vue"),
+                                component: SupplierEdit,
                                 meta: {
                                     remember: true,
                                 },
@@ -502,10 +519,11 @@ export default [
                     }
                 ]
             },
-            // Customer
+            // Customer Management
             {
                 path: "/dashboard/customer",
                 children: [
+                    // Customer Group
                     {
                         path: "/dashboard/customer/customer-group",
                         name: "side-menu-customer-group",
@@ -538,6 +556,7 @@ export default [
                             }
                         ]
                     },
+                    // Customer
                     {
                         path: "/dashboard/customer/customer",
                         name: "side-menu-customer",
@@ -572,7 +591,7 @@ export default [
                     }
                 ]
             },
-            // Stock Adjustment
+            // Stock Adjustment Category
             {
                 path: "/dashboard/stock-adjustment-category",
                 children: [
@@ -610,15 +629,41 @@ export default [
                     },
                 ],
             },
+            // Stock Adjustment
             {
                 path: "/dashboard/stock-adjustment",
                 name: "side-menu-stock-adjustment",
-                component: StockAdjustmentCreate,
-                meta: {
-                    remember: true,
-                },
+                redirect: "/dashboard/stock-adjustment/list",
+                component: StockAdjustmentIndex,
+                children: [
+                    {
+                        path: "/dashboard/stock-adjustment/list",
+                        name: "side-menu-stock-adjustment-list",
+                        component: StockAdjustmentList,
+                        meta: {
+                            remember: true,
+                        },
+                    },
+                    {
+                        path: "/dashboard/stock-adjustment/create",
+                        name: "side-menu-stock-adjustment-create",
+                        component: StockAdjustmentCreate,
+                        meta: {
+                            remember: true,
+                        },
+                    },
+                    {
+                        path: "/dashboard/stock-adjustment/edit/:ulid",
+                        name: "side-menu-stock-adjustment-edit",
+                        component: StockAdjustmentEdit,
+                        meta: {
+                            remember: true,
+                        },
+                    },
+                ],
             },
 
+            // user
             {
                 path: "/dashboard/administrator",
                 name: "side-menu-administrator",
@@ -658,6 +703,7 @@ export default [
 
                 ]
             },
+            // devtool
             {
                 path: "/dashboard/devtool",
                 name: "side-menu-devtool",
@@ -694,6 +740,7 @@ export default [
                     }
                 ]
             },
+            // error
             {
                 path: "/dashboard/error" + "/:code",
                 name: "side-menu-error-code",
@@ -704,6 +751,7 @@ export default [
             }
         ],
     },
+    // not found
     {
         path: "/:pathMatch(.*)*",
         component: ErrorPage,
@@ -711,6 +759,7 @@ export default [
             remember: false,
         },
     },
+    // error page
     {
         path: "/error-page",
         name: "error-page",

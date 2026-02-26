@@ -310,7 +310,55 @@ Untuk entity yang memiliki detail nested seperti `in_products` / `out_products` 
 - Nama field di frontend harus selaras dengan rules di Form Request dan `*Rules::mapToFieldNames` agar error message muncul di field yang benar.
 - Untuk field detail lain (`product_unit_id`, `product_unit_conversion_value`, `product_unit_cogs`, `remarks`, dll), gunakan pola path yang sama (`in_products.${index}.field_name`).
 
-## 7. Standard Error Handling Helper
+## 7. FormItem Types vs NestedStoreRequest
+
+Untuk detail array seperti `in_products` / `out_products`, biasanya ada perbedaan antara:
+
+- Tipe request ke backend (`*NestedStoreRequest`), dan
+- Tipe yang dipakai di halaman Vue (punya field tambahan untuk tampilan).
+
+Pola yang direkomendasikan:
+
+- Simpan `*NestedStoreRequest` di file `types/services/...Request.ts` (hanya field yang benar-benar dikirim ke backend).
+- Di file Vue (`[Entity]Create.vue`), buat `FormItem` type lokal yang:
+  - Menggunakan indexed access untuk field request agar selalu sinkron,
+  - Menambahkan field-field tambahan untuk UI / tampilan.
+
+Contoh (berdasarkan `StockAdjustmentInProductNestedStoreRequest`):
+
+```ts
+type StockAdjustmentInProductFormItem = {
+    qty: StockAdjustmentInProductNestedStoreRequest["qty"];
+    product_unit_id: StockAdjustmentInProductNestedStoreRequest["product_unit_id"];
+    product_unit_product_code?: string | null;
+    product_unit_product_name?: string | null;
+    product_unit_unit_name?: string | null;
+    product_unit_base_unit_name?: string | null;
+    product_unit_conversion_value: StockAdjustmentInProductNestedStoreRequest["product_unit_conversion_value"];
+    product_unit_cogs: StockAdjustmentInProductNestedStoreRequest["product_unit_cogs"];
+    product_unit_total_cogs?: number | null;
+    remarks?: StockAdjustmentInProductNestedStoreRequest["remarks"];
+};
+```
+
+Saat submit, bersihkan field UI sebelum mengirim ke backend:
+
+```ts
+const originalInProducts = form.in_products as StockAdjustmentInProductFormItem[];
+const cleanedInProducts: StockAdjustmentInProductNestedStoreRequest[] =
+    originalInProducts.map(
+        ({
+            product_unit_product_code,
+            product_unit_product_name,
+            product_unit_unit_name,
+            product_unit_base_unit_name,
+            product_unit_total_cogs,
+            ...rest
+        }: StockAdjustmentInProductFormItem) => rest
+    );
+```
+
+## 8. Standard Error Handling Helper
 
 Gunakan fungsi standar ini untuk memparsing error dari Axios response ke format alert list. Fungsi ini menangani `AxiosError` dan `Error` biasa.
 

@@ -21,6 +21,7 @@
     "service": "Layanan",
     "supplier": "Pemasok",
     "finance": "Manajemen Keuangan",
+    "transaction": "Transaksi",
     "stock-adjustment": "Penyesuaian Stok",
     "stock-adjustment-category": "Kategori Penyesuaian Stok",
     "purchase-management": "Manajement Pembelian",

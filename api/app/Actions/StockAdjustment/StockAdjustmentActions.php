@@ -46,6 +46,14 @@ class StockAdjustmentActions
     ) {
         $query = StockAdjustment::select('stock_adjustments.*')
             ->with(['company', 'branch', 'category', 'inWarehouse', 'outWarehouse'])
+            ->when($execute?->pagination, function ($query) {
+                $query->with([
+                    'inProducts.productUnit.product',
+                    'inProducts.productUnit.unit',
+                    'outProducts.productUnit.product',
+                    'outProducts.productUnit.unit',
+                ]);
+            })
             ->join('companies', 'companies.id', '=', 'stock_adjustments.company_id')
             ->whereCompanyId($companyId)
             ->whereBranchId($branchId)
@@ -128,8 +136,8 @@ class StockAdjustmentActions
             'category',
             'inWarehouse',
             'outWarehouse',
-            'inProducts.productUnit',
-            'outProducts.productUnit',
+            'inProducts.productUnit.product',
+            'outProducts.productUnit.product',
         ]);
     }
 

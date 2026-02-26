@@ -26,31 +26,31 @@ const profileService = new ProfileService();
 
 const mode = ref<ViewMode>(ViewMode.INDEX);
 const loading = ref<boolean>(false);
-const titleView = ref<string>("views.stock_adjustment_category.page_title");
+const titleView = ref<string>("views.stock_adjustment.page_title");
 
 const alertType = ref<"danger" | "success" | "warning" | "pending" | "dark" | "hidden">("hidden");
 const title = ref<string>("");
 const alertList = ref<Record<string, Array<string>> | null>(null);
 
-const stockAdjustmentCategoryNotification = ref<NotificationElement>();
+const stockAdjustmentNotification = ref<NotificationElement>();
 const notificationTitle = ref<string>("");
 const notificationContent = ref<string>("");
 
-provide("bind[stockAdjustmentCategoryNotification]", (el: NotificationElement) => {
-    stockAdjustmentCategoryNotification.value = el;
+provide("bind[stockAdjustmentNotification]", (el: NotificationElement) => {
+    stockAdjustmentNotification.value = el;
 });
 
 const createNew = () => {
     resetAlertPlaceholder();
     mode.value = ViewMode.FORM_CREATE;
-    router.push({ name: "side-menu-stock-adjustment-category-create" });
+    router.push({ name: "side-menu-stock-adjustment-create" });
 };
 
 const backToList = async () => {
     resetAlertPlaceholder();
     clearCache(mode.value);
     mode.value = ViewMode.LIST;
-    router.push({ name: "side-menu-stock-adjustment-category-list" });
+    router.push({ name: "side-menu-stock-adjustment-list" });
 };
 
 const onLoadingStateChanged = (state: boolean) => {
@@ -62,15 +62,15 @@ const onModeStateChanged = (state: ViewMode) => {
 
     switch (state) {
         case ViewMode.FORM_CREATE:
-            titleView.value = "views.stock_adjustment_category.actions.create";
+            titleView.value = "views.stock_adjustment.actions.create";
             break;
         case ViewMode.FORM_EDIT:
-            titleView.value = "views.stock_adjustment_category.actions.edit";
+            titleView.value = "views.stock_adjustment.actions.edit";
             break;
         case ViewMode.INDEX:
         case ViewMode.LIST:
         default:
-            titleView.value = "views.stock_adjustment_category.page_title";
+            titleView.value = "views.stock_adjustment.page_title";
             break;
     }
 };
@@ -92,18 +92,18 @@ const onShowNotificationTriggered = (notification: NotificationData) => {
     notificationTitle.value = notification.title;
     notificationContent.value = notification.content;
 
-    if (stockAdjustmentCategoryNotification.value) {
-        stockAdjustmentCategoryNotification.value.showToast();
+    if (stockAdjustmentNotification.value) {
+        stockAdjustmentNotification.value.showToast();
     }
 };
 
 const clearCache = (currentMode: ViewMode) => {
     switch (currentMode) {
         case ViewMode.FORM_CREATE:
-            cacheService.removeLastEntity("STOCK_ADJUSTMENT_CATEGORY_CREATE");
+            cacheService.removeLastEntity("STOCK_ADJUSTMENT_CREATE");
             break;
         case ViewMode.FORM_EDIT:
-            cacheService.removeLastEntity("STOCK_ADJUSTMENT_CATEGORY_EDIT");
+            cacheService.removeLastEntity("STOCK_ADJUSTMENT_EDIT");
             break;
         default:
             break;
@@ -139,11 +139,13 @@ const resetAlertPlaceholder = () => {
 
             <AlertPlaceholder :alert-type="alertType" :title="title" :alert-list="alertList"
                 @dismiss="resetAlertPlaceholder" />
+
             <RouterView @loading-state="onLoadingStateChanged" @mode-state="onModeStateChanged"
                 @update-profile="onUpdateProfileTriggered" @show-alertplaceholder="onAlertPlaceholderTriggered"
                 @show-notification="onShowNotificationTriggered" />
         </LoadingOverlay>
-        <Notification ref-key="stockAdjustmentCategoryNotification" :options="{ duration: 3000 }" class="flex">
+
+        <Notification ref-key="stockAdjustmentNotification" :options="{ duration: 3000 }" class="flex">
             <Lucide icon="CheckCircle" class="text-success" />
             <div class="ml-4 mr-4">
                 <div class="font-medium">{{ notificationTitle }}</div>
