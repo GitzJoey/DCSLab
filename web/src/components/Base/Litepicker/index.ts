@@ -1,3 +1,3 @@
-import Litepicker from "./Litepicker.vue";
+import Litepicker from './Litepicker.vue';
 
 export default Litepicker;

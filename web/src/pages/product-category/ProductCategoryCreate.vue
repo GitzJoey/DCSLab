@@ -1,182 +1,214 @@
 <script setup lang="ts">
-// #region Imports
-import { computed, onMounted, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
-import ProductCategoryService from "@/services/ProductCategoryService";
-import DashboardService from "@/services/DashboardService";
-import CacheService from "@/services/CacheService";
-import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
-import { FormInput, FormLabel, FormSelect, FormInputCode, FormErrorMessages } from "@/components/Base/Form";
-import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
-import { CardState } from "@/types/enums/CardState";
-import Button from "@/components/Base/Button";
-import { ViewMode } from "@/types/enums/ViewMode";
-import { debounce } from "lodash";
-import Lucide from "@/components/Base/Lucide";
-import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
-import { useRouter } from "vue-router";
-import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
-import { ErrorCode } from "@/types/enums/ErrorCode";
-import { DropDownOption } from "@/types/models/DropDownOption";
-import { convertErrorTypeToAlertListType } from "@/utils/helper";
-import { AxiosError, isAxiosError } from "axios";
-// #endregion
+  // #region Imports
+  import { computed, onMounted, ref, watch } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import ProductCategoryService from '@/services/ProductCategoryService';
+  import DashboardService from '@/services/DashboardService';
+  import CacheService from '@/services/CacheService';
+  import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
+  import {
+    FormInput,
+    FormLabel,
+    FormSelect,
+    FormInputCode,
+    FormErrorMessages,
+  } from '@/components/Base/Form';
+  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
+  import { CardState } from '@/types/enums/CardState';
+  import Button from '@/components/Base/Button';
+  import { ViewMode } from '@/types/enums/ViewMode';
+  import { debounce } from 'lodash';
+  import Lucide from '@/components/Base/Lucide';
+  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
+  import { useRouter } from 'vue-router';
+  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  import { ErrorCode } from '@/types/enums/ErrorCode';
+  import { DropDownOption } from '@/types/models/DropDownOption';
+  import { convertErrorTypeToAlertListType } from '@/utils/helper';
+  import { AxiosError, isAxiosError } from 'axios';
+  // #endregion
 
-// #region Interfaces
-// #endregion
+  // #region Interfaces
+  // #endregion
 
-// #region Declarations
-const { t } = useI18n();
-const router = useRouter();
-const selectedUserLocationStore = useSelectedUserLocationStore();
+  // #region Declarations
+  const { t } = useI18n();
+  const router = useRouter();
+  const selectedUserLocationStore = useSelectedUserLocationStore();
 
-const productCategoryService = new ProductCategoryService();
-const dashboardServices = new DashboardService();
-const cacheServices = new CacheService();
-// #endregion
+  const productCategoryService = new ProductCategoryService();
+  const dashboardServices = new DashboardService();
+  const cacheServices = new CacheService();
+  // #endregion
 
-// #region Props, Emits
-const emits = defineEmits(["mode-state", "loading-state", "update-profile", "show-alertplaceholder"]);
-// #endregion
+  // #region Props, Emits
+  const emits = defineEmits([
+    'mode-state',
+    'loading-state',
+    'update-profile',
+    'show-alertplaceholder',
+  ]);
+  // #endregion
 
-// #region Refs
-const cards = ref<Array<TwoColumnsLayoutCards>>([
-  {
-    title: "views.product_category.field_groups.company_info",
-    state: CardState.Expanded,
-  },
-  {
-    title: "views.product_category.field_groups.product_category_data",
-    state: CardState.Expanded,
-  },
-  { title: "", state: CardState.Hidden, id: "button" },
-]);
+  // #region Refs
+  const cards = ref<Array<TwoColumnsLayoutCards>>([
+    {
+      title: 'views.product_category.field_groups.company_info',
+      state: CardState.Expanded,
+    },
+    {
+      title: 'views.product_category.field_groups.product_category_data',
+      state: CardState.Expanded,
+    },
+    { title: '', state: CardState.Hidden, id: 'button' },
+  ]);
 
-const typeDDL = ref<Array<DropDownOption> | null>(null);
+  const typeDDL = ref<Array<DropDownOption> | null>(null);
 
-const productCategoryForm = productCategoryService.useProductCategoryCreateForm();
-// #endregion
+  const productCategoryForm =
+    productCategoryService.useProductCategoryCreateForm();
+  // #endregion
 
-// #region Computed
-const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
-const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
-// #endregion
+  // #region Computed
+  const isUserLocationSelected = computed(
+    () => selectedUserLocationStore.isUserLocationSelected
+  );
+  const selectedUserLocation = computed(
+    () => selectedUserLocationStore.selectedUserLocation
+  );
+  // #endregion
 
-// #region Lifecycle Hooks
-onMounted(async () => {
-  emits("mode-state", ViewMode.FORM_CREATE);
-  loadFromCache();
-  if (!isUserLocationSelected.value) {
-    router.push({
-      name: "side-menu-error-code",
-      params: { code: ErrorCode.USERLOCATION_REQUIRED },
-    });
-  }
-  getDDL();
-  setCompanyIdData();
-});
-// #endregion
-
-// #region Methods
-const getDDL = async (): Promise<void> => {
-  const result = await productCategoryService.getTypes();
-  if (result) {
-    typeDDL.value = result;
-  }
-};
-
-const setCompanyIdData = () => {
-  productCategoryForm.setData({
-    company_id: selectedUserLocation.value.company.id,
-  });
-};
-
-const loadFromCache = () => {
-  let data = cacheServices.getLastEntity("PRODUCT_CATEGORY_CREATE") as Record<string, unknown>;
-  if (!data) return;
-  productCategoryForm.setData(data);
-};
-
-const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.Collapsed) {
-    cards.value[index].state = CardState.Expanded;
-  } else if (cards.value[index].state === CardState.Expanded) {
-    cards.value[index].state = CardState.Collapsed;
-  }
-};
-
-const scrollToError = (id: string): void => {
-  let el = document.getElementById(id);
-  if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-};
-
-const onSubmit = async () => {
-  if (productCategoryForm.hasErrors) {
-    scrollToError(Object.keys(productCategoryForm.errors)[0]);
-  }
-  emits("loading-state", true);
-  await productCategoryForm
-    .submit()
-    .then(() => {
-      resetForm();
-      emits("update-profile");
-      router.push({ name: "side-menu-product-product-category-list" });
-    })
-    .catch((error) => {
-      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
-      showAlertPlaceholder("danger", "", errorList);
-    })
-    .finally(() => {
-      emits("loading-state", false);
-    });
-};
-
-const resetForm = () => {
-  productCategoryForm.reset();
-  productCategoryForm.setErrors({});
-};
-
-const setCode = () => {
-  productCategoryForm.forgetError("code");
-  if (productCategoryForm.code == "_AUTO_") {
-    productCategoryForm.setData({ code: "" });
-  } else {
-    productCategoryForm.setData({ code: "_AUTO_" });
-  }
-};
-
-const showAlertPlaceholder = (
-  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
-  pTitle: string,
-  pAlertList: Record<string, Array<string>> | null,
-) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
-  };
-  emits("show-alertplaceholder", ap);
-};
-
-// #endregion
-
-// #region Watchers
-watch(
-  productCategoryForm,
-  debounce((newValue): void => {
-    cacheServices.setLastEntity("PRODUCT_CATEGORY_CREATE", newValue.data());
-    if (productCategoryForm.hasErrors) {
+  // #region Lifecycle Hooks
+  onMounted(async () => {
+    emits('mode-state', ViewMode.FORM_CREATE);
+    loadFromCache();
+    if (!isUserLocationSelected.value) {
+      router.push({
+        name: 'side-menu-error-code',
+        params: { code: ErrorCode.USERLOCATION_REQUIRED },
+      });
     }
-  }, 500),
-  { deep: true },
-);
-// #endregion
+    getDDL();
+    setCompanyIdData();
+  });
+  // #endregion
+
+  // #region Methods
+  const getDDL = async (): Promise<void> => {
+    const result = await productCategoryService.getTypes();
+    if (result) {
+      typeDDL.value = result;
+    }
+  };
+
+  const setCompanyIdData = () => {
+    productCategoryForm.setData({
+      company_id: selectedUserLocation.value.company.id,
+    });
+  };
+
+  const loadFromCache = () => {
+    let data = cacheServices.getLastEntity('PRODUCT_CATEGORY_CREATE') as Record<
+      string,
+      unknown
+    >;
+    if (!data) return;
+    productCategoryForm.setData(data);
+  };
+
+  const handleExpandCard = (index: number) => {
+    if (cards.value[index].state === CardState.Collapsed) {
+      cards.value[index].state = CardState.Expanded;
+    } else if (cards.value[index].state === CardState.Expanded) {
+      cards.value[index].state = CardState.Collapsed;
+    }
+  };
+
+  const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const onSubmit = async () => {
+    if (productCategoryForm.hasErrors) {
+      scrollToError(Object.keys(productCategoryForm.errors)[0]);
+    }
+    emits('loading-state', true);
+    await productCategoryForm
+      .submit()
+      .then(() => {
+        resetForm();
+        emits('update-profile');
+        router.push({ name: 'side-menu-product-product-category-list' });
+      })
+      .catch((error) => {
+        let errorList: Record<
+          string,
+          Array<string>
+        > = convertErrorTypeToAlertListType(error);
+        showAlertPlaceholder('danger', '', errorList);
+      })
+      .finally(() => {
+        emits('loading-state', false);
+      });
+  };
+
+  const resetForm = () => {
+    productCategoryForm.reset();
+    productCategoryForm.setErrors({});
+  };
+
+  const setCode = () => {
+    productCategoryForm.forgetError('code');
+    if (productCategoryForm.code == '_AUTO_') {
+      productCategoryForm.setData({ code: '' });
+    } else {
+      productCategoryForm.setData({ code: '_AUTO_' });
+    }
+  };
+
+  const showAlertPlaceholder = (
+    pAlertType:
+      | 'hidden'
+      | 'danger'
+      | 'success'
+      | 'warning'
+      | 'pending'
+      | 'dark',
+    pTitle: string,
+    pAlertList: Record<string, Array<string>> | null
+  ) => {
+    let ap: AlertPlaceholderProps = {
+      alertType: pAlertType,
+      title: pTitle,
+      alertList: pAlertList,
+    };
+    emits('show-alertplaceholder', ap);
+  };
+
+  // #endregion
+
+  // #region Watchers
+  watch(
+    productCategoryForm,
+    debounce((newValue): void => {
+      cacheServices.setLastEntity('PRODUCT_CATEGORY_CREATE', newValue.data());
+      if (productCategoryForm.hasErrors) {
+      }
+    }, 500),
+    { deep: true }
+  );
+  // #endregion
 </script>
 
 <template>
   <form id="productCategoryForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
+    <TwoColumnsLayout
+      :cards="cards"
+      :using-side-tab="false"
+      @handle-expand-card="handleExpandCard"
+    >
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -190,8 +222,10 @@ watch(
       <template #card-items-1>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('code') }">
-              {{ t("views.product_category.fields.code") }}
+            <FormLabel
+              :class="{ 'text-danger': productCategoryForm.invalid('code') }"
+            >
+              {{ t('views.product_category.fields.code') }}
             </FormLabel>
             <FormInputCode
               v-model="productCategoryForm.code"
@@ -203,8 +237,10 @@ watch(
             <FormErrorMessages :messages="productCategoryForm.errors.code" />
           </div>
           <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('name') }">
-              {{ t("views.product_category.fields.name") }}
+            <FormLabel
+              :class="{ 'text-danger': productCategoryForm.invalid('name') }"
+            >
+              {{ t('views.product_category.fields.name') }}
             </FormLabel>
             <FormInput
               v-model="productCategoryForm.name"
@@ -216,8 +252,10 @@ watch(
             <FormErrorMessages :messages="productCategoryForm.errors.name" />
           </div>
           <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('type') }">
-              {{ t("views.product_category.fields.type") }}
+            <FormLabel
+              :class="{ 'text-danger': productCategoryForm.invalid('type') }"
+            >
+              {{ t('views.product_category.fields.type') }}
             </FormLabel>
             <FormSelect
               v-model="productCategoryForm.type"
@@ -225,7 +263,7 @@ watch(
               @change="productCategoryForm.validate('type')"
             >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
               <option v-for="c in typeDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
@@ -238,14 +276,32 @@ watch(
 
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="productCategoryForm.validating || productCategoryForm.hasErrors">
-            <Lucide v-if="productCategoryForm.validating" icon="Loader" class="animate-spin" />
+          <Button
+            type="submit"
+            href="#"
+            variant="primary"
+            class="w-28 shadow-md"
+            :disabled="
+              productCategoryForm.validating || productCategoryForm.hasErrors
+            "
+          >
+            <Lucide
+              v-if="productCategoryForm.validating"
+              icon="Loader"
+              class="animate-spin"
+            />
             <template v-else>
-              {{ t("components.buttons.submit") }}
+              {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
-            {{ t("components.buttons.reset") }}
+          <Button
+            type="button"
+            href="#"
+            variant="soft-secondary"
+            class="w-28 shadow-md"
+            @click="resetForm"
+          >
+            {{ t('components.buttons.reset') }}
           </Button>
         </div>
       </template>

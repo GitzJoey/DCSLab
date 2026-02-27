@@ -1,68 +1,74 @@
 <script setup lang="ts">
-import { onMounted, ref, toRef } from "vue";
-import Lucide from "@/components/Base/Lucide";
-import { useI18n } from "vue-i18n";
-import { CardState } from "@/types/enums/CardState";
+  import { onMounted, ref, toRef } from 'vue';
+  import Lucide from '@/components/Base/Lucide';
+  import { useI18n } from 'vue-i18n';
+  import { CardState } from '@/types/enums/CardState';
 
-export interface TwoColumnsLayoutCards {
-  id?: string | number;
-  title: string;
-  state: CardState;
-}
-
-export interface TwoColumnsLayoutProps {
-  cards: Array<TwoColumnsLayoutCards>;
-  showSideTab?: boolean;
-  usingSideTab?: boolean;
-}
-
-const { t } = useI18n();
-
-const props = withDefaults(defineProps<TwoColumnsLayoutProps>(), {
-  cards: (): Array<TwoColumnsLayoutCards> => [],
-  showSideTab: false,
-  usingSideTab: false,
-});
-
-const showSideTab = toRef(props, "showSideTab");
-const usingSideTab = toRef(props, "usingSideTab");
-const isShowSideTab = ref<boolean>(false);
-
-const emits = defineEmits<{
-  (e: "handleExpandCard", index: number): void;
-}>();
-
-onMounted(() => {
-  isShowSideTab.value = showSideTab.value;
-});
-
-const onLinkClicked = (index: number): void => {
-  emits("handleExpandCard", index);
-};
-
-const onCardTitleClicked = (index: number): void => {
-  emits("handleExpandCard", index);
-};
-
-const toggleSideTab = (show: boolean | undefined) => {
-  if (show != undefined) {
-    isShowSideTab.value = show;
-  } else {
-    isShowSideTab.value = !isShowSideTab.value;
+  export interface TwoColumnsLayoutCards {
+    id?: string | number;
+    title: string;
+    state: CardState;
   }
-};
+
+  export interface TwoColumnsLayoutProps {
+    cards: Array<TwoColumnsLayoutCards>;
+    showSideTab?: boolean;
+    usingSideTab?: boolean;
+  }
+
+  const { t } = useI18n();
+
+  const props = withDefaults(defineProps<TwoColumnsLayoutProps>(), {
+    cards: (): Array<TwoColumnsLayoutCards> => [],
+    showSideTab: false,
+    usingSideTab: false,
+  });
+
+  const showSideTab = toRef(props, 'showSideTab');
+  const usingSideTab = toRef(props, 'usingSideTab');
+  const isShowSideTab = ref<boolean>(false);
+
+  const emits = defineEmits<{
+    (e: 'handleExpandCard', index: number): void;
+  }>();
+
+  onMounted(() => {
+    isShowSideTab.value = showSideTab.value;
+  });
+
+  const onLinkClicked = (index: number): void => {
+    emits('handleExpandCard', index);
+  };
+
+  const onCardTitleClicked = (index: number): void => {
+    emits('handleExpandCard', index);
+  };
+
+  const toggleSideTab = (show: boolean | undefined) => {
+    if (show != undefined) {
+      isShowSideTab.value = show;
+    } else {
+      isShowSideTab.value = !isShowSideTab.value;
+    }
+  };
 </script>
 
 <template>
   <div class="grid grid-cols-12 gap-6 mt-5">
-    <div v-if="isShowSideTab && usingSideTab" class="col-span-12 lg:col-span-4 2xl:col-span-4 flex lg:block flex-col-reverse transition ease-in duration-100">
+    <div
+      v-if="isShowSideTab && usingSideTab"
+      class="col-span-12 lg:col-span-4 2xl:col-span-4 flex lg:block flex-col-reverse transition ease-in duration-100"
+    >
       <div class="intro-y box mt-5 lg:mt-0">
         <div class="relative flex items-center p-5">
           <div class="ml-4 mr-auto flex items-center justify-between w-full">
             <div class="font-medium text-base">
               <slot name="side-menu-title"></slot>
             </div>
-            <div class="transition ease-in duration-100 ml-auto mr-5 xl:block lg:block cursor-pointer" @click="toggleSideTab(false)">
+            <div
+              class="transition ease-in duration-100 ml-auto mr-5 xl:block lg:block cursor-pointer"
+              @click="toggleSideTab(false)"
+            >
               <Lucide class="w-4 h-4" icon="ChevronsLeft" />
             </div>
           </div>
@@ -79,7 +85,11 @@ const toggleSideTab = (show: boolean | undefined) => {
                 }"
                 @click="onLinkClicked(index)"
               >
-                <Lucide v-if="link.state === 'EXPANDED'" class="w-4 h-4" icon="Minus" />
+                <Lucide
+                  v-if="link.state === 'EXPANDED'"
+                  class="w-4 h-4"
+                  icon="Minus"
+                />
                 <Lucide v-else-if="link.state" class="w-4 h-4" icon="Plus" />
               </div>
             </a>
@@ -88,7 +98,10 @@ const toggleSideTab = (show: boolean | undefined) => {
       </div>
     </div>
     <div v-else-if="usingSideTab">
-      <div class="transition ease-in duration-100 ml-auto mr-5 xl:block lg:block cursor-pointer" @click="toggleSideTab(true)">
+      <div
+        class="transition ease-in duration-100 ml-auto mr-5 xl:block lg:block cursor-pointer"
+        @click="toggleSideTab(true)"
+      >
         <Lucide class="w-4 h-4" icon="ChevronsRight" />
       </div>
     </div>
@@ -105,7 +118,13 @@ const toggleSideTab = (show: boolean | undefined) => {
           <div
             v-for="(card, index) in cards"
             :key="index"
-            :class="['intro-y', { border: card.state === CardState.Expanded }, 'rounded', 'col-span-12', '2xl:col-span-12']"
+            :class="[
+              'intro-y',
+              { border: card.state === CardState.Expanded },
+              'rounded',
+              'col-span-12',
+              '2xl:col-span-12',
+            ]"
           >
             <div
               v-if="card.title"
@@ -129,7 +148,10 @@ const toggleSideTab = (show: boolean | undefined) => {
                   {{ t(card.title) }}
                 </h2>
               </div>
-              <div v-if="card.state !== CardState.Hidden" class="w-1/2 flex justify-end">
+              <div
+                v-if="card.state !== CardState.Hidden"
+                class="w-1/2 flex justify-end"
+              >
                 <div
                   :class="{
                     'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true,
@@ -140,8 +162,17 @@ const toggleSideTab = (show: boolean | undefined) => {
                 </div>
               </div>
             </div>
-            <div :class="[{ block: card.state === CardState.Expanded }, { hidden: card.state === CardState.Collapsed }]">
-              <slot :name="`card-items-${card.id ? card.id : index}`" :card="card" :index="index"></slot>
+            <div
+              :class="[
+                { block: card.state === CardState.Expanded },
+                { hidden: card.state === CardState.Collapsed },
+              ]"
+            >
+              <slot
+                :name="`card-items-${card.id ? card.id : index}`"
+                :card="card"
+                :index="index"
+              ></slot>
             </div>
           </div>
         </div>

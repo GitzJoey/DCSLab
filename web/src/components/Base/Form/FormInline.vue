@@ -1,20 +1,25 @@
 <script lang="ts">
-export default {
-  inheritAttrs: false,
-};
+  export default {
+    inheritAttrs: false,
+  };
 </script>
 
 <script setup lang="ts">
-import _ from "lodash";
-import { twMerge } from "tailwind-merge";
-import { computed, useAttrs, provide } from "vue";
+  import _ from 'lodash';
+  import { twMerge } from 'tailwind-merge';
+  import { computed, useAttrs, provide } from 'vue';
 
-export type ProvideFormInline = boolean;
+  export type ProvideFormInline = boolean;
 
-const attrs = useAttrs();
-const computedClass = computed(() => twMerge(["block sm:flex items-center", typeof attrs.class === "string" && attrs.class]));
+  const attrs = useAttrs();
+  const computedClass = computed(() =>
+    twMerge([
+      'block sm:flex items-center',
+      typeof attrs.class === 'string' && attrs.class,
+    ])
+  );
 
-provide<ProvideFormInline>("formInline", true);
+  provide<ProvideFormInline>('formInline', true);
 </script>
 
 <template>

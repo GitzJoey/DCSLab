@@ -1,25 +1,29 @@
 <script lang="ts">
-export default {
-  inheritAttrs: false,
-};
+  export default {
+    inheritAttrs: false,
+  };
 </script>
 
 <script setup lang="ts">
-import _ from "lodash";
-import { twMerge } from "tailwind-merge";
-import { Menu as HeadlessMenu } from "@headlessui/vue";
-import { useAttrs, computed } from "vue";
+  import _ from 'lodash';
+  import { twMerge } from 'tailwind-merge';
+  import { Menu as HeadlessMenu } from '@headlessui/vue';
+  import { useAttrs, computed } from 'vue';
 
-interface MenuProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenu> {
-  as?: string | object;
-}
+  interface MenuProps extends /* @vue-ignore */ ExtractProps<
+    typeof HeadlessMenu
+  > {
+    as?: string | object;
+  }
 
-const { as } = withDefaults(defineProps<MenuProps>(), {
-  as: "div",
-});
+  const { as } = withDefaults(defineProps<MenuProps>(), {
+    as: 'div',
+  });
 
-const attrs = useAttrs();
-const computedClass = computed(() => twMerge(["relative", typeof attrs.class === "string" && attrs.class]));
+  const attrs = useAttrs();
+  const computedClass = computed(() =>
+    twMerge(['relative', typeof attrs.class === 'string' && attrs.class])
+  );
 </script>
 
 <template>

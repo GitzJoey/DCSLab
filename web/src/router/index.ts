@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from "vue-router";
-import r from "./routes";
+import { createRouter, createWebHistory } from 'vue-router';
+import r from './routes';
 
 const routes = r;
 
@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
 
 router.afterEach((to, from) => {
   if (to.matched.some((r) => r.meta.remember)) {
-    sessionStorage.setItem("DCSLAB_LAST_ROUTE", to.name as string);
+    sessionStorage.setItem('DCSLAB_LAST_ROUTE', to.name as string);
   }
 });
 

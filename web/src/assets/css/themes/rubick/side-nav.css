@@ -1,10 +1,10 @@
-@import "@left4code/tw-starter/dist/css/mixins/_media.css";
+@import '@left4code/tw-starter/dist/css/mixins/_media.css';
 
 .rubick {
   .side-nav {
     width: 230px;
-    padding-right: theme("spacing.5");
-    padding-bottom: theme("spacing.16");
+    padding-right: theme('spacing.5');
+    padding-bottom: theme('spacing.16');
     overflow-x: hidden;
     @include media-breakpoint-down(xl) {
       width: 85px;
@@ -29,7 +29,7 @@
     .side-nav__divider {
       width: 100%;
       height: 1px;
-      background: theme("colors.white" / 8%);
+      background: theme('colors.white' / 8%);
       z-index: 10;
       position: relative;
     }
@@ -37,25 +37,25 @@
       height: 50px;
       display: flex;
       align-items: center;
-      padding-left: theme("spacing.5");
+      padding-left: theme('spacing.5');
       color: white;
-      margin-bottom: theme("spacing.1");
+      margin-bottom: theme('spacing.1');
       position: relative;
-      border-radius: theme("borderRadius.full");
+      border-radius: theme('borderRadius.full');
       .side-menu__title {
         width: 100%;
-        margin-left: theme("spacing.3");
+        margin-left: theme('spacing.3');
         display: flex;
         align-items: center;
         .side-menu__sub-icon {
           margin-left: auto;
-          margin-right: theme("spacing.5");
-          transition-property: theme("transitionProperty.DEFAULT");
-          transition-timing-function: theme("transitionTimingFunction.in");
-          transition-duration: theme("transitionDelay.100");
+          margin-right: theme('spacing.5');
+          transition-property: theme('transitionProperty.DEFAULT');
+          transition-timing-function: theme('transitionTimingFunction.in');
+          transition-duration: theme('transitionDelay.100');
           svg {
-            width: theme("spacing.4");
-            height: theme("spacing.4");
+            width: theme('spacing.4');
+            height: theme('spacing.4');
           }
           @include media-breakpoint-down(xl) {
             display: none;
@@ -103,8 +103,8 @@
           }
         }
         display: none;
-        background-color: theme("colors.black" / 10%);
-        border-radius: theme("borderRadius.lg");
+        background-color: theme('colors.black' / 10%);
+        border-radius: theme('borderRadius.lg');
         &.side-menu__sub-open {
           display: block;
         }
@@ -113,16 +113,16 @@
         }
         li a {
           &:not(.side-menu--active) {
-            color: theme("colors.white" / 70%);
+            color: theme('colors.white' / 70%);
           }
           &.side-menu--active .side-menu__title {
-            font-weight: theme("fontWeight.medium");
+            font-weight: theme('fontWeight.medium');
           }
         }
         ul {
           display: none;
-          background: theme("colors.black" / 10%);
-          border-radius: theme("borderRadius.lg");
+          background: theme('colors.black' / 10%);
+          border-radius: theme('borderRadius.lg');
         }
       }
       & > li {
@@ -131,7 +131,7 @@
             & > ul {
               & > li {
                 & > .side-menu {
-                  padding-left: theme("spacing.10");
+                  padding-left: theme('spacing.10');
                 }
               }
             }
@@ -139,9 +139,9 @@
         }
         & > .side-menu {
           &.side-menu--active {
-            background-color: theme("colors.slate.100");
+            background-color: theme('colors.slate.100');
             &:before {
-              content: "";
+              content: '';
               width: 30px;
               height: 30px;
               margin-top: -30px;
@@ -151,10 +151,10 @@
               position: absolute;
               top: 0;
               right: 0;
-              margin-right: calc(theme("spacing.5") * -1);
+              margin-right: calc(theme('spacing.5') * -1);
             }
             &:after {
-              content: "";
+              content: '';
               width: 30px;
               height: 30px;
               margin-top: 50px;
@@ -164,46 +164,47 @@
               position: absolute;
               top: 0;
               right: 0;
-              margin-right: calc(theme("spacing.5") * -1);
+              margin-right: calc(theme('spacing.5') * -1);
             }
             .side-menu__icon {
-              color: theme("colors.theme.1");
+              color: theme('colors.theme.1');
               &:before {
-                content: "";
+                content: '';
                 z-index: -1;
                 position: absolute;
                 top: 0;
                 right: 0;
-                margin-right: calc(theme("spacing.5") * -1);
-                width: theme("spacing.12");
+                margin-right: calc(theme('spacing.5') * -1);
+                width: theme('spacing.12');
                 height: 100%;
-                background-color: theme("colors.slate.100");
+                background-color: theme('colors.slate.100');
               }
             }
             .side-menu__title {
-              color: theme("colors.slate.800");
-              font-weight: theme("fontWeight.medium");
+              color: theme('colors.slate.800');
+              font-weight: theme('fontWeight.medium');
             }
           }
           &:not(.side-menu--active) .side-menu__icon:before {
-            content: "";
+            content: '';
             z-index: -1;
             width: 230px;
             position: absolute;
             top: 0;
             left: 0;
             height: 100%;
-            border-top-left-radius: theme("borderRadius.full");
-            border-bottom-left-radius: theme("borderRadius.full");
-            transition-property: theme("transitionProperty.DEFAULT");
-            transition-timing-function: theme("transitionTimingFunction.in");
-            transition-duration: theme("transitionDelay.100");
+            border-top-left-radius: theme('borderRadius.full');
+            border-bottom-left-radius: theme('borderRadius.full');
+            transition-property: theme('transitionProperty.DEFAULT');
+            transition-timing-function: theme('transitionTimingFunction.in');
+            transition-duration: theme('transitionDelay.100');
             @include media-breakpoint-down(xl) {
               display: none;
             }
           }
-          &:hover:not(.side-menu--active):not(.side-menu--open) .side-menu__icon:before {
-            background-color: theme("colors.white" / 5%);
+          &:hover:not(.side-menu--active):not(.side-menu--open)
+            .side-menu__icon:before {
+            background-color: theme('colors.white' / 5%);
           }
         }
       }
@@ -241,45 +242,46 @@
   .rubick {
     .side-nav {
       .side-nav__divider {
-        background-color: theme("colors.white" / 7%);
+        background-color: theme('colors.white' / 7%);
       }
       .side-menu {
-        color: theme("colors.slate.300");
+        color: theme('colors.slate.300');
       }
       > ul {
         ul {
-          background-color: theme("colors.darkmode.900" / 30%);
+          background-color: theme('colors.darkmode.900' / 30%);
           li a {
             &:not(.side-menu--active) {
-              color: theme("colors.slate.400");
+              color: theme('colors.slate.400');
             }
           }
           ul {
-            background: theme("colors.darkmode.900" / 30%);
+            background: theme('colors.darkmode.900' / 30%);
           }
         }
         & > li {
           & > .side-menu {
             &.side-menu--active {
-              background-color: theme("colors.darkmode.700");
+              background-color: theme('colors.darkmode.700');
               .side-menu__icon {
-                color: theme("colors.slate.300");
+                color: theme('colors.slate.300');
                 &:before {
-                  background-color: theme("colors.darkmode.700");
+                  background-color: theme('colors.darkmode.700');
                 }
               }
               .side-menu__title {
-                color: theme("colors.slate.300");
+                color: theme('colors.slate.300');
               }
             }
             .side-menu__icon {
-              color: theme("colors.slate.400");
+              color: theme('colors.slate.400');
             }
             .side-menu__title {
-              color: theme("colors.slate.400");
+              color: theme('colors.slate.400');
             }
-            &:hover:not(.side-menu--active):not(.side-menu--open) .side-menu__icon:before {
-              background-color: theme("colors.darkmode.500" / 70%);
+            &:hover:not(.side-menu--active):not(.side-menu--open)
+              .side-menu__icon:before {
+              background-color: theme('colors.darkmode.500' / 70%);
             }
           }
         }

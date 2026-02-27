@@ -1,5 +1,5 @@
-import { Company } from "./Company";
-import { Branch } from "./Branch";
+import { Company } from './Company';
+import { Branch } from './Branch';
 
 export interface CashAccount {
   id: string;

@@ -1,193 +1,236 @@
 <script setup lang="ts">
-// #region Imports
-import { computed, onMounted, ref } from "vue";
-import DataList from "@/components/DataList";
-import { useI18n } from "vue-i18n";
-import Button from "@/components/Base/Button";
-import Lucide from "@/components/Base/Lucide";
-import Table from "@/components/Base/Table";
-import ProductCategoryService from "@/services/ProductCategoryService";
-import { ProductCategory } from "@/types/models/ProductCategory";
-import { Collection } from "@/types/resources/Collection";
-import { DataListEmittedData } from "@/components/DataList/DataList.vue";
-import { ServiceResponse } from "@/types/services/ServiceResponse";
-import { Resource } from "@/types/resources/Resource";
-import { ProductCategoryReadAnyPaginateRequest } from "@/types/services/product-category/ProductCategoryRequest";
-import { useRouter } from "vue-router";
-import { Dialog } from "@/components/Base/Headless";
-import { ViewMode } from "@/types/enums/ViewMode";
-import { NotificationData } from "@/types/models/NotificationData";
-import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
-import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
-import { ErrorCode } from "@/types/enums/ErrorCode";
-// #endregion
+  // #region Imports
+  import { computed, onMounted, ref } from 'vue';
+  import DataList from '@/components/DataList';
+  import { useI18n } from 'vue-i18n';
+  import Button from '@/components/Base/Button';
+  import Lucide from '@/components/Base/Lucide';
+  import Table from '@/components/Base/Table';
+  import ProductCategoryService from '@/services/ProductCategoryService';
+  import { ProductCategory } from '@/types/models/ProductCategory';
+  import { Collection } from '@/types/resources/Collection';
+  import { DataListEmittedData } from '@/components/DataList/DataList.vue';
+  import { ServiceResponse } from '@/types/services/ServiceResponse';
+  import { Resource } from '@/types/resources/Resource';
+  import { ProductCategoryReadAnyPaginateRequest } from '@/types/services/product-category/ProductCategoryRequest';
+  import { useRouter } from 'vue-router';
+  import { Dialog } from '@/components/Base/Headless';
+  import { ViewMode } from '@/types/enums/ViewMode';
+  import { NotificationData } from '@/types/models/NotificationData';
+  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
+  import { ErrorCode } from '@/types/enums/ErrorCode';
+  // #endregion
 
-// #region Interfaces
-// #endregion
+  // #region Interfaces
+  // #endregion
 
-// #region Declarations
-const { t } = useI18n();
-const router = useRouter();
-const productCategoryServices = new ProductCategoryService();
-const selectedUserLocationStore = useSelectedUserLocationStore();
-// #endregion
+  // #region Declarations
+  const { t } = useI18n();
+  const router = useRouter();
+  const productCategoryServices = new ProductCategoryService();
+  const selectedUserLocationStore = useSelectedUserLocationStore();
+  // #endregion
 
-// #region Props, Emits
-const emits = defineEmits(["mode-state", "loading-state", "update-profile", "show-alertplaceholder", "show-notification"]);
-// #endregion
+  // #region Props, Emits
+  const emits = defineEmits([
+    'mode-state',
+    'loading-state',
+    'update-profile',
+    'show-alertplaceholder',
+    'show-notification',
+  ]);
+  // #endregion
 
-// #region Refs
-const deleteUlid = ref<string>("");
-const deleteModalShow = ref<boolean>(false);
-const expandDetail = ref<number | null>(null);
-const productCategoryLists = ref<Collection<Array<ProductCategory>> | null>({
-  data: [],
-  meta: {
-    current_page: 0,
-    from: null,
-    last_page: 0,
-    path: "",
-    per_page: 0,
-    to: null,
-    total: 0,
-  },
-  links: {
-    first: "",
-    last: "",
-    prev: null,
-    next: null,
-  },
-});
-// #endregion
-
-// #region Computed
-const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
-const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
-// #endregion
-
-// #region Lifecycle Hooks
-onMounted(async () => {
-  emits("mode-state", ViewMode.LIST);
-
-  if (!isUserLocationSelected.value) {
-    router.push({
-      name: "side-menu-error-code",
-      params: { code: ErrorCode.USERLOCATION_REQUIRED },
-    });
-  }
-
-  await getProductCategories("", true, 1, 10);
-});
-// #endregion
-
-// #region Methods
-const getProductCategories = async (search: string, refresh: boolean, page: number, per_page: number) => {
-  emits("loading-state", true);
-
-  let company_id = selectedUserLocation.value.company.id;
-
-  const searchReq: ProductCategoryReadAnyPaginateRequest = {
-    with_trashed: false,
-
-    company_id: company_id,
-    search: search,
-    type: undefined,
-    include_id: undefined,
-
-    refresh: refresh,
-    page: page,
-    per_page: per_page,
-  };
-
-  let result: ServiceResponse<Collection<Array<ProductCategory>> | null> = await productCategoryServices.readAnyPaginate(searchReq);
-
-  if (result.success && result.data) {
-    productCategoryLists.value = result.data as Collection<Array<ProductCategory>>;
-  } else {
-    showAlertPlaceholder("danger", "", result.errors as Record<string, Array<string>>);
-  }
-
-  emits("loading-state", false);
-};
-
-const onDataListChanged = async (data: DataListEmittedData) => {
-  await getProductCategories(data.search.text, false, data.pagination.page, data.pagination.per_page);
-};
-
-const viewSelected = (idx: number) => {
-  if (expandDetail.value === idx) {
-    expandDetail.value = null;
-  } else {
-    expandDetail.value = idx;
-  }
-};
-
-const editSelected = (itemIdx: number) => {
-  if (!productCategoryLists.value) return;
-
-  let ulid = productCategoryLists.value.data[itemIdx].ulid;
-  router.push({
-    name: "side-menu-product-product-category-edit",
-    params: { ulid: ulid },
+  // #region Refs
+  const deleteUlid = ref<string>('');
+  const deleteModalShow = ref<boolean>(false);
+  const expandDetail = ref<number | null>(null);
+  const productCategoryLists = ref<Collection<Array<ProductCategory>> | null>({
+    data: [],
+    meta: {
+      current_page: 0,
+      from: null,
+      last_page: 0,
+      path: '',
+      per_page: 0,
+      to: null,
+      total: 0,
+    },
+    links: {
+      first: '',
+      last: '',
+      prev: null,
+      next: null,
+    },
   });
-};
+  // #endregion
 
-const deleteSelected = (itemIdx: number) => {
-  if (!productCategoryLists.value) return;
+  // #region Computed
+  const isUserLocationSelected = computed(
+    () => selectedUserLocationStore.isUserLocationSelected
+  );
+  const selectedUserLocation = computed(
+    () => selectedUserLocationStore.selectedUserLocation
+  );
+  // #endregion
 
-  let itemUlid = productCategoryLists.value.data[itemIdx].ulid;
+  // #region Lifecycle Hooks
+  onMounted(async () => {
+    emits('mode-state', ViewMode.LIST);
 
-  deleteUlid.value = itemUlid;
-  deleteModalShow.value = true;
-};
+    if (!isUserLocationSelected.value) {
+      router.push({
+        name: 'side-menu-error-code',
+        params: { code: ErrorCode.USERLOCATION_REQUIRED },
+      });
+    }
 
-const confirmDelete = async () => {
-  deleteModalShow.value = false;
-  emits("loading-state", true);
+    await getProductCategories('', true, 1, 10);
+  });
+  // #endregion
 
-  let result: ServiceResponse<boolean | null> = await productCategoryServices.delete(deleteUlid.value);
+  // #region Methods
+  const getProductCategories = async (
+    search: string,
+    refresh: boolean,
+    page: number,
+    per_page: number
+  ) => {
+    emits('loading-state', true);
 
-  if (result.success) {
-    emits("update-profile");
-    await getProductCategories("", true, 1, 10);
-    showNotification(t("views.product_category.alert.delete_product_category.title"), t("views.product_category.alert.delete_product_category.content"));
-  } else {
-    showAlertPlaceholder("danger", "", result.errors as Record<string, Array<string>>);
-  }
+    let company_id = selectedUserLocation.value.company.id;
 
-  emits("loading-state", false);
-};
+    const searchReq: ProductCategoryReadAnyPaginateRequest = {
+      with_trashed: false,
 
-const showNotification = (pTitle: string, pContent: string) => {
-  let n: NotificationData = {
-    title: pTitle,
-    content: pContent,
+      company_id: company_id,
+      search: search,
+      type: undefined,
+      include_id: undefined,
+
+      refresh: refresh,
+      page: page,
+      per_page: per_page,
+    };
+
+    let result: ServiceResponse<Collection<Array<ProductCategory>> | null> =
+      await productCategoryServices.readAnyPaginate(searchReq);
+
+    if (result.success && result.data) {
+      productCategoryLists.value = result.data as Collection<
+        Array<ProductCategory>
+      >;
+    } else {
+      showAlertPlaceholder(
+        'danger',
+        '',
+        result.errors as Record<string, Array<string>>
+      );
+    }
+
+    emits('loading-state', false);
   };
 
-  emits("show-notification", n);
-};
-
-const showAlertPlaceholder = (
-  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
-  pTitle: string,
-  pAlertList: Record<string, Array<string>> | null,
-) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
+  const onDataListChanged = async (data: DataListEmittedData) => {
+    await getProductCategories(
+      data.search.text,
+      false,
+      data.pagination.page,
+      data.pagination.per_page
+    );
   };
 
-  emits("show-alertplaceholder", ap);
-};
+  const viewSelected = (idx: number) => {
+    if (expandDetail.value === idx) {
+      expandDetail.value = null;
+    } else {
+      expandDetail.value = idx;
+    }
+  };
 
-const getTypeLabel = (type: number): string => {
-  return type === 1 ? t("views.product_category.type.product") : t("views.product_category.type.service");
-};
-// #endregion
+  const editSelected = (itemIdx: number) => {
+    if (!productCategoryLists.value) return;
 
-// #region Watchers
-// #endregion
+    let ulid = productCategoryLists.value.data[itemIdx].ulid;
+    router.push({
+      name: 'side-menu-product-product-category-edit',
+      params: { ulid: ulid },
+    });
+  };
+
+  const deleteSelected = (itemIdx: number) => {
+    if (!productCategoryLists.value) return;
+
+    let itemUlid = productCategoryLists.value.data[itemIdx].ulid;
+
+    deleteUlid.value = itemUlid;
+    deleteModalShow.value = true;
+  };
+
+  const confirmDelete = async () => {
+    deleteModalShow.value = false;
+    emits('loading-state', true);
+
+    let result: ServiceResponse<boolean | null> =
+      await productCategoryServices.delete(deleteUlid.value);
+
+    if (result.success) {
+      emits('update-profile');
+      await getProductCategories('', true, 1, 10);
+      showNotification(
+        t('views.product_category.alert.delete_product_category.title'),
+        t('views.product_category.alert.delete_product_category.content')
+      );
+    } else {
+      showAlertPlaceholder(
+        'danger',
+        '',
+        result.errors as Record<string, Array<string>>
+      );
+    }
+
+    emits('loading-state', false);
+  };
+
+  const showNotification = (pTitle: string, pContent: string) => {
+    let n: NotificationData = {
+      title: pTitle,
+      content: pContent,
+    };
+
+    emits('show-notification', n);
+  };
+
+  const showAlertPlaceholder = (
+    pAlertType:
+      | 'hidden'
+      | 'danger'
+      | 'success'
+      | 'warning'
+      | 'pending'
+      | 'dark',
+    pTitle: string,
+    pAlertList: Record<string, Array<string>> | null
+  ) => {
+    let ap: AlertPlaceholderProps = {
+      alertType: pAlertType,
+      title: pTitle,
+      alertList: pAlertList,
+    };
+
+    emits('show-alertplaceholder', ap);
+  };
+
+  const getTypeLabel = (type: number): string => {
+    return type === 1
+      ? t('views.product_category.type.product')
+      : t('views.product_category.type.service');
+  };
+  // #endregion
+
+  // #region Watchers
+  // #endregion
 </script>
 
 <template>
@@ -204,13 +247,13 @@ const getTypeLabel = (type: number): string => {
         <Table.Thead variant="light">
           <Table.Tr>
             <Table.Th class="whitespace-nowrap">
-              {{ t("views.product_category.table.cols.code") }}
+              {{ t('views.product_category.table.cols.code') }}
             </Table.Th>
             <Table.Th class="whitespace-nowrap">
-              {{ t("views.product_category.table.cols.name") }}
+              {{ t('views.product_category.table.cols.name') }}
             </Table.Th>
             <Table.Th class="whitespace-nowrap">
-              {{ t("views.product_category.table.cols.type") }}
+              {{ t('views.product_category.table.cols.type') }}
             </Table.Th>
             <Table.Th class="whitespace-nowrap"></Table.Th>
           </Table.Tr>
@@ -220,25 +263,37 @@ const getTypeLabel = (type: number): string => {
             <Table.Tr class="intro-x">
               <Table.Td colspan="4">
                 <div class="flex justify-center italic">
-                  {{ t("components.data-list.data_not_found") }}
+                  {{ t('components.data-list.data_not_found') }}
                 </div>
               </Table.Td>
             </Table.Tr>
           </template>
-          <template v-for="(item, itemIdx) in productCategoryLists.data" :key="item.ulid">
+          <template
+            v-for="(item, itemIdx) in productCategoryLists.data"
+            :key="item.ulid"
+          >
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.code }}</Table.Td>
               <Table.Td>{{ item.name }}</Table.Td>
               <Table.Td>{{ getTypeLabel(item.type) }}</Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="viewSelected(itemIdx)"
+                  >
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="editSelected(itemIdx)"
+                  >
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
-                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="deleteSelected(itemIdx)"
+                  >
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
@@ -253,19 +308,19 @@ const getTypeLabel = (type: number): string => {
               <Table.Td colspan="4">
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5 font-medium">
-                    {{ t("views.product_category.fields.code") }}
+                    {{ t('views.product_category.fields.code') }}
                   </div>
                   <div class="flex-1">{{ item.code }}</div>
                 </div>
                 <div class="flex flex-row mt-1">
                   <div class="ml-5 w-48 text-right pr-5 font-medium">
-                    {{ t("views.product_category.fields.name") }}
+                    {{ t('views.product_category.fields.name') }}
                   </div>
                   <div class="flex-1">{{ item.name }}</div>
                 </div>
                 <div class="flex flex-row mt-1">
                   <div class="ml-5 w-48 text-right pr-5 font-medium">
-                    {{ t("views.product_category.fields.type") }}
+                    {{ t('views.product_category.fields.type') }}
                   </div>
                   <div class="flex-1">{{ getTypeLabel(item.type) }}</div>
                 </div>
@@ -286,12 +341,12 @@ const getTypeLabel = (type: number): string => {
           <div class="p-5 text-center">
             <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
             <div class="mt-5 text-3xl">
-              {{ t("components.delete-modal.title") }}
+              {{ t('components.delete-modal.title') }}
             </div>
             <div class="mt-2 text-slate-500">
-              {{ t("components.delete-modal.desc_1") }}
+              {{ t('components.delete-modal.desc_1') }}
               <br />
-              {{ t("components.delete-modal.desc_2") }}
+              {{ t('components.delete-modal.desc_2') }}
             </div>
           </div>
           <div class="px-5 pb-8 text-center">
@@ -305,10 +360,15 @@ const getTypeLabel = (type: number): string => {
                 }
               "
             >
-              {{ t("components.buttons.cancel") }}
+              {{ t('components.buttons.cancel') }}
             </Button>
-            <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
-              {{ t("components.buttons.delete") }}
+            <Button
+              type="button"
+              variant="danger"
+              class="w-24"
+              @click="confirmDelete"
+            >
+              {{ t('components.buttons.delete') }}
             </Button>
           </div>
         </Dialog.Panel>

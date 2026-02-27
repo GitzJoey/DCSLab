@@ -1,240 +1,276 @@
 <script setup lang="ts">
-// #region Imports
-import { onMounted, ref, watch, computed } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-import { debounce } from "lodash";
-import { DropDownOption } from "@/types/models/DropDownOption";
-import { AxiosError, isAxiosError } from "axios";
-import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
-import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
+  // #region Imports
+  import { onMounted, ref, watch, computed } from 'vue';
+  import { useI18n } from 'vue-i18n';
+  import { useRouter } from 'vue-router';
+  import { debounce } from 'lodash';
+  import { DropDownOption } from '@/types/models/DropDownOption';
+  import { AxiosError, isAxiosError } from 'axios';
+  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
 
-import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
-import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
-import { CardState } from "@/types/enums/CardState";
+  import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
+  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
+  import { CardState } from '@/types/enums/CardState';
 
-import { FormInput, FormLabel, FormSelect, FormErrorMessages, FormInputCode, FormCheck, FormTextarea, FormSwitch } from "@/components/Base/Form";
-import Button from "@/components/Base/Button";
-import Lucide from "@/components/Base/Lucide";
+  import {
+    FormInput,
+    FormLabel,
+    FormSelect,
+    FormErrorMessages,
+    FormInputCode,
+    FormCheck,
+    FormTextarea,
+    FormSwitch,
+  } from '@/components/Base/Form';
+  import Button from '@/components/Base/Button';
+  import Lucide from '@/components/Base/Lucide';
 
-import SupplierService from "@/services/SupplierService";
-import DashboardService from "@/services/DashboardService";
-import CacheService from "@/services/CacheService";
+  import SupplierService from '@/services/SupplierService';
+  import DashboardService from '@/services/DashboardService';
+  import CacheService from '@/services/CacheService';
 
-import { ViewMode } from "@/types/enums/ViewMode";
-// #endregion
+  import { ViewMode } from '@/types/enums/ViewMode';
+  // #endregion
 
-// #region Declarations
-const { t } = useI18n();
-const router = useRouter();
-const selectedUserLocationStore = useSelectedUserLocationStore();
+  // #region Declarations
+  const { t } = useI18n();
+  const router = useRouter();
+  const selectedUserLocationStore = useSelectedUserLocationStore();
 
-const supplierServices = new SupplierService();
-const dashboardServices = new DashboardService();
-const cacheServices = new CacheService();
+  const supplierServices = new SupplierService();
+  const dashboardServices = new DashboardService();
+  const cacheServices = new CacheService();
 
-const form = supplierServices.useSupplierCreateForm();
-// #endregion
+  const form = supplierServices.useSupplierCreateForm();
+  // #endregion
 
-// #region Refs
-const statusDDL = ref<Array<DropDownOption> | null>(null);
-const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
-const isDDLLoading = ref<boolean>(false);
+  // #region Refs
+  const statusDDL = ref<Array<DropDownOption> | null>(null);
+  const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
+  const isDDLLoading = ref<boolean>(false);
 
-const cards = ref<Array<TwoColumnsLayoutCards>>([
-  {
-    title: "views.supplier.field_groups.general",
-    state: CardState.Expanded,
-    id: "general",
-  },
-  {
-    title: "views.supplier.field_groups.finance",
-    state: CardState.Expanded,
-    id: "finance",
-  },
-  {
-    title: "",
-    state: CardState.Hidden,
-    id: "button",
-  },
-]);
-// #endregion
+  const cards = ref<Array<TwoColumnsLayoutCards>>([
+    {
+      title: 'views.supplier.field_groups.general',
+      state: CardState.Expanded,
+      id: 'general',
+    },
+    {
+      title: 'views.supplier.field_groups.finance',
+      state: CardState.Expanded,
+      id: 'finance',
+    },
+    {
+      title: '',
+      state: CardState.Hidden,
+      id: 'button',
+    },
+  ]);
+  // #endregion
 
-// #region Computed
-const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
-const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
-// #endregion
+  // #region Computed
+  const isUserLocationSelected = computed(
+    () => selectedUserLocationStore.isUserLocationSelected
+  );
+  const selectedUserLocation = computed(
+    () => selectedUserLocationStore.selectedUserLocation
+  );
+  // #endregion
 
-// #region Emits
-const emits = defineEmits(["mode-state", "loading-state", "update-profile", "show-alert-placeholder"]);
-// #endregion
+  // #region Emits
+  const emits = defineEmits([
+    'mode-state',
+    'loading-state',
+    'update-profile',
+    'show-alert-placeholder',
+  ]);
+  // #endregion
 
-// #region Methods
-const setCode = () => {
-  form.forgetError("code");
-  if (form.code == "_AUTO_") {
-    form.setData({ code: "" });
-  } else {
-    form.setData({ code: "_AUTO_" });
-  }
-};
-
-const getDDL = async (): Promise<void> => {
-  isDDLLoading.value = true;
-  try {
-    await Promise.all([
-      (async () => {
-        const result = await dashboardServices.getStatusDDL(false);
-        statusDDL.value = result;
-      })(),
-      (async () => {
-        const result = await dashboardServices.getPaymentTermTypesDDL();
-        paymentTermTypeDDL.value = result;
-      })(),
-    ]);
-  } catch (error) {
-    console.error("Error loading DDLs:", error);
-  } finally {
-    isDDLLoading.value = false;
-  }
-};
-
-const loadFromCache = () => {
-  let data = cacheServices.getLastEntity("SUPPLIER_CREATE") as Record<string, unknown>;
-  if (!data) return;
-  form.setData(data);
-};
-
-const handleExpandCard = (index: number) => {
-  if (cards.value[index].state === CardState.Collapsed) {
-    cards.value[index].state = CardState.Expanded;
-  } else if (cards.value[index].state === CardState.Expanded) {
-    cards.value[index].state = CardState.Collapsed;
-  }
-};
-
-const scrollToError = (id: string): void => {
-  let el = document.getElementById(id);
-
-  if (!el) return;
-
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-};
-
-const onSubmit = async () => {
-  if (form.hasErrors) {
-    scrollToError(Object.keys(form.errors)[0]);
-  }
-
-  emits("loading-state", true);
-  await form
-    .submit()
-    .then(() => {
-      onReset();
-      emits("update-profile");
-      router.push({ name: "side-menu-supplier" });
-    })
-    .catch((error) => {
-      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
-      showAlertPlaceholder("danger", "", errorList);
-    })
-    .finally(() => {
-      emits("loading-state", false);
-    });
-};
-
-const onReset = () => {
-  form.reset();
-  form.setErrors({});
-  cacheServices.removeLastEntity("SUPPLIER_CREATE");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
-
-const showAlertPlaceholder = (
-  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
-  pTitle: string,
-  pAlertList: Record<string, Array<string>> | null,
-) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
+  // #region Methods
+  const setCode = () => {
+    form.forgetError('code');
+    if (form.code == '_AUTO_') {
+      form.setData({ code: '' });
+    } else {
+      form.setData({ code: '_AUTO_' });
+    }
   };
 
-  emits("show-alert-placeholder", ap);
-};
+  const getDDL = async (): Promise<void> => {
+    isDDLLoading.value = true;
+    try {
+      await Promise.all([
+        (async () => {
+          const result = await dashboardServices.getStatusDDL(false);
+          statusDDL.value = result;
+        })(),
+        (async () => {
+          const result = await dashboardServices.getPaymentTermTypesDDL();
+          paymentTermTypeDDL.value = result;
+        })(),
+      ]);
+    } catch (error) {
+      console.error('Error loading DDLs:', error);
+    } finally {
+      isDDLLoading.value = false;
+    }
+  };
 
-const convertErrorTypeToAlertListType = (error: unknown) => {
-  const record: Record<string, Array<string>> = {};
+  const loadFromCache = () => {
+    let data = cacheServices.getLastEntity('SUPPLIER_CREATE') as Record<
+      string,
+      unknown
+    >;
+    if (!data) return;
+    form.setData(data);
+  };
 
-  const anyError = error as any;
-  const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
+  const handleExpandCard = (index: number) => {
+    if (cards.value[index].state === CardState.Collapsed) {
+      cards.value[index].state = CardState.Expanded;
+    } else if (cards.value[index].state === CardState.Expanded) {
+      cards.value[index].state = CardState.Collapsed;
+    }
+  };
 
-  if (response && response.data) {
-    const data = response.data as any;
+  const scrollToError = (id: string): void => {
+    let el = document.getElementById(id);
 
-    if (data.errors && typeof data.errors === "object") {
-      for (const key of Object.keys(data.errors)) {
-        const value = data.errors[key];
-        if (Array.isArray(value)) {
-          record[key] = value;
-        } else if (value !== undefined && value !== null) {
-          record[key] = [String(value)];
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  const onSubmit = async () => {
+    if (form.hasErrors) {
+      scrollToError(Object.keys(form.errors)[0]);
+    }
+
+    emits('loading-state', true);
+    await form
+      .submit()
+      .then(() => {
+        onReset();
+        emits('update-profile');
+        router.push({ name: 'side-menu-supplier' });
+      })
+      .catch((error) => {
+        let errorList: Record<
+          string,
+          Array<string>
+        > = convertErrorTypeToAlertListType(error);
+        showAlertPlaceholder('danger', '', errorList);
+      })
+      .finally(() => {
+        emits('loading-state', false);
+      });
+  };
+
+  const onReset = () => {
+    form.reset();
+    form.setErrors({});
+    cacheServices.removeLastEntity('SUPPLIER_CREATE');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const showAlertPlaceholder = (
+    pAlertType:
+      | 'hidden'
+      | 'danger'
+      | 'success'
+      | 'warning'
+      | 'pending'
+      | 'dark',
+    pTitle: string,
+    pAlertList: Record<string, Array<string>> | null
+  ) => {
+    let ap: AlertPlaceholderProps = {
+      alertType: pAlertType,
+      title: pTitle,
+      alertList: pAlertList,
+    };
+
+    emits('show-alert-placeholder', ap);
+  };
+
+  const convertErrorTypeToAlertListType = (error: unknown) => {
+    const record: Record<string, Array<string>> = {};
+
+    const anyError = error as any;
+    const response = isAxiosError(error)
+      ? (error as AxiosError).response
+      : anyError?.response;
+
+    if (response && response.data) {
+      const data = response.data as any;
+
+      if (data.errors && typeof data.errors === 'object') {
+        for (const key of Object.keys(data.errors)) {
+          const value = data.errors[key];
+          if (Array.isArray(value)) {
+            record[key] = value;
+          } else if (value !== undefined && value !== null) {
+            record[key] = [String(value)];
+          }
         }
+        return record;
       }
-      return record;
+      if (data.message) {
+        record.error = [String(data.message)];
+        return record;
+      }
     }
-    if (data.message) {
-      record.error = [String(data.message)];
-      return record;
+    if (error instanceof Error && error.message) {
+      record.error = [error.message];
+    } else {
+      record.error = ['Unknown error'];
     }
-  }
-  if (error instanceof Error && error.message) {
-    record.error = [error.message];
-  } else {
-    record.error = ["Unknown error"];
-  }
-  return record;
-};
-// #endregion
+    return record;
+  };
+  // #endregion
 
-// #region Lifecycle Hooks
-onMounted(async () => {
-  emits("mode-state", ViewMode.FORM_CREATE);
+  // #region Lifecycle Hooks
+  onMounted(async () => {
+    emits('mode-state', ViewMode.FORM_CREATE);
 
-  loadFromCache();
+    loadFromCache();
 
-  if (isUserLocationSelected.value) {
-    form.setData({ company_id: selectedUserLocation.value.company.id });
-  }
+    if (isUserLocationSelected.value) {
+      form.setData({ company_id: selectedUserLocation.value.company.id });
+    }
 
-  await getDDL();
-});
-// #endregion
+    await getDDL();
+  });
+  // #endregion
 
-// #region Watchers
-watch(
-  form,
-  debounce((newValue): void => {
-    cacheServices.setLastEntity("SUPPLIER_CREATE", newValue.data());
-  }, 500),
-  { deep: true },
-);
-// #endregion
+  // #region Watchers
+  watch(
+    form,
+    debounce((newValue): void => {
+      cacheServices.setLastEntity('SUPPLIER_CREATE', newValue.data());
+    }, 500),
+    { deep: true }
+  );
+  // #endregion
 </script>
 
 <template>
   <!-- STEP 2: Struktur Template Dasar -->
   <form @submit.prevent="onSubmit">
     <!-- Kita panggil Layout 2 Kolom -->
-    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
+    <TwoColumnsLayout
+      :cards="cards"
+      :using-side-tab="false"
+      @handle-expand-card="handleExpandCard"
+    >
       <!-- Slot untuk Card General -->
       <template #card-items-general>
         <div class="p-5">
           <!-- Code -->
           <div class="mt-3">
             <FormLabel htmlFor="code">
-              {{ t("views.supplier.fields.code") }}
+              {{ t('views.supplier.fields.code') }}
               <span class="text-danger">*</span>
             </FormLabel>
             <FormInputCode
@@ -251,7 +287,7 @@ watch(
           <!-- Name -->
           <div class="mt-3">
             <FormLabel htmlFor="name">
-              {{ t("views.supplier.fields.name") }}
+              {{ t('views.supplier.fields.name') }}
               <span class="text-danger">*</span>
             </FormLabel>
             <FormInput
@@ -268,7 +304,7 @@ watch(
           <!-- Address -->
           <div class="mt-3">
             <FormLabel htmlFor="address">
-              {{ t("views.supplier.fields.address") }}
+              {{ t('views.supplier.fields.address') }}
             </FormLabel>
             <FormTextarea
               id="address"
@@ -283,7 +319,7 @@ watch(
           <!-- City -->
           <div class="mt-3">
             <FormLabel htmlFor="city">
-              {{ t("views.supplier.fields.city") }}
+              {{ t('views.supplier.fields.city') }}
             </FormLabel>
             <FormInput
               id="city"
@@ -299,12 +335,17 @@ watch(
           <!-- Status -->
           <div class="mt-3">
             <FormLabel htmlFor="status">
-              {{ t("views.supplier.fields.status") }}
+              {{ t('views.supplier.fields.status') }}
               <span class="text-danger">*</span>
             </FormLabel>
-            <FormSelect id="status" v-model="form.status" :class="{ 'border-danger': form.invalid('status') }" @change="form.validate('status')">
+            <FormSelect
+              id="status"
+              v-model="form.status"
+              :class="{ 'border-danger': form.invalid('status') }"
+              @change="form.validate('status')"
+            >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
               <option v-for="c in statusDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
@@ -316,7 +357,7 @@ watch(
           <!-- Remarks -->
           <div class="mt-3">
             <FormLabel htmlFor="remarks">
-              {{ t("views.supplier.fields.remarks") }}
+              {{ t('views.supplier.fields.remarks') }}
             </FormLabel>
             <FormTextarea
               id="remarks"
@@ -336,7 +377,7 @@ watch(
           <!-- Payment Term Type -->
           <div class="mt-3">
             <FormLabel htmlFor="payment_term_type">
-              {{ t("views.supplier.fields.payment_term_type") }}
+              {{ t('views.supplier.fields.payment_term_type') }}
             </FormLabel>
             <FormSelect
               id="payment_term_type"
@@ -345,9 +386,13 @@ watch(
               @change="form.validate('payment_term_type')"
             >
               <option value="">
-                {{ t("components.dropdown.placeholder") }}
+                {{ t('components.dropdown.placeholder') }}
               </option>
-              <option v-for="c in paymentTermTypeDDL" :key="c.code" :value="c.code">
+              <option
+                v-for="c in paymentTermTypeDDL"
+                :key="c.code"
+                :value="c.code"
+              >
                 {{ t(c.name) }}
               </option>
             </FormSelect>
@@ -357,7 +402,7 @@ watch(
           <!-- Payment Term -->
           <div class="mt-3">
             <FormLabel htmlFor="payment_term">
-              {{ t("views.supplier.fields.payment_term") }}
+              {{ t('views.supplier.fields.payment_term') }}
             </FormLabel>
             <FormInput
               id="payment_term"
@@ -373,7 +418,7 @@ watch(
           <!-- Taxable Enterprise -->
           <div class="mt-3">
             <FormLabel htmlFor="taxable_enterprise">
-              {{ t("views.supplier.fields.taxable_enterprise") }}
+              {{ t('views.supplier.fields.taxable_enterprise') }}
             </FormLabel>
             <FormSwitch class="mt-2">
               <FormSwitch.Input
@@ -389,7 +434,7 @@ watch(
           <!-- Tax ID (NPWP) -->
           <div class="mt-3">
             <FormLabel htmlFor="tax_id">
-              {{ t("views.supplier.fields.tax_id") }}
+              {{ t('views.supplier.fields.tax_id') }}
             </FormLabel>
             <FormInput
               id="tax_id"
@@ -407,14 +452,26 @@ watch(
       <!-- Slot untuk Tombol -->
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="form.validating || form.hasErrors">
+          <Button
+            type="submit"
+            href="#"
+            variant="primary"
+            class="w-28 shadow-md"
+            :disabled="form.validating || form.hasErrors"
+          >
             <Lucide v-if="form.validating" icon="Loader" class="animate-spin" />
             <template v-else>
-              {{ t("components.buttons.submit") }}
+              {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="onReset">
-            {{ t("components.buttons.reset") }}
+          <Button
+            type="button"
+            href="#"
+            variant="soft-secondary"
+            class="w-28 shadow-md"
+            @click="onReset"
+          >
+            {{ t('components.buttons.reset') }}
           </Button>
         </div>
       </template>

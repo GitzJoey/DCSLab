@@ -1,47 +1,47 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
-import logoUrl from "@/assets/images/logo.svg";
-import illustrationUrl from "@/assets/images/illustration.svg";
-import { FormInput, FormCheck } from "@/components/Base/Form";
-import Button from "@/components/Base/Button";
-import AuthService from "@/services/AuthServices";
-import LoadingOverlay from "@/components/LoadingOverlay";
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-import Alert from "@/components/Base/Alert";
+  import { ref, onMounted } from 'vue';
+  import ThemeSwitcher from '@/components/ThemeSwitcher';
+  import logoUrl from '@/assets/images/logo.svg';
+  import illustrationUrl from '@/assets/images/illustration.svg';
+  import { FormInput, FormCheck } from '@/components/Base/Form';
+  import Button from '@/components/Base/Button';
+  import AuthService from '@/services/AuthServices';
+  import LoadingOverlay from '@/components/LoadingOverlay';
+  import { useI18n } from 'vue-i18n';
+  import { useRouter } from 'vue-router';
+  import Alert from '@/components/Base/Alert';
 
-const { t } = useI18n();
-const router = useRouter();
+  const { t } = useI18n();
+  const router = useRouter();
 
-const authService = new AuthService();
+  const authService = new AuthService();
 
-const status = ref<"onLoad" | "success" | "error">("onLoad");
-const alertMessage = ref<string>("");
-const loading = ref<boolean>(false);
+  const status = ref<'onLoad' | 'success' | 'error'>('onLoad');
+  const alertMessage = ref<string>('');
+  const loading = ref<boolean>(false);
 
-const registerForm = authService.useRegisterForm();
+  const registerForm = authService.useRegisterForm();
 
-onMounted(async () => {
-  authService.ensureCSRF();
-});
+  onMounted(async () => {
+    authService.ensureCSRF();
+  });
 
-const onSubmit = async () => {
-  loading.value = true;
+  const onSubmit = async () => {
+    loading.value = true;
 
-  registerForm
-    .submit()
-    .then(() => {
-      router.push({ name: "side-menu-dashboard-maindashboard" });
-    })
-    .catch((error) => {
-      status.value = "error";
-      alertMessage.value = error.response.data.message;
-    })
-    .finally(() => {
-      loading.value = false;
-    });
-};
+    registerForm
+      .submit()
+      .then(() => {
+        router.push({ name: 'side-menu-dashboard-maindashboard' });
+      })
+      .catch((error) => {
+        status.value = 'error';
+        alertMessage.value = error.response.data.message;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  };
 </script>
 
 <template>
@@ -59,17 +59,25 @@ const onSubmit = async () => {
           <a href="" class="flex items-center pt-5 -intro-x">
             <img alt="DCSLab" class="w-6" :src="logoUrl" />
             <span class="ml-3 text-lg text-white">
-              {{ t("views.login.fields.email") }}
+              {{ t('views.login.fields.email') }}
             </span>
           </a>
           <div class="my-auto">
-            <img alt="DCSLab" class="w-1/2 -mt-16 -intro-x" :src="illustrationUrl" />
-            <div class="mt-10 text-4xl font-medium leading-tight text-white -intro-x">
+            <img
+              alt="DCSLab"
+              class="w-1/2 -mt-16 -intro-x"
+              :src="illustrationUrl"
+            />
+            <div
+              class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
+            >
               <span class="hidden">&nbsp;</span>
               <br />
               <span class="hidden">&nbsp;</span>
             </div>
-            <div class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400">
+            <div
+              class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
+            >
               <span class="hidden">&nbsp;</span>
             </div>
           </div>
@@ -79,12 +87,22 @@ const onSubmit = async () => {
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
           >
             <LoadingOverlay :visible="loading" :transparent="true">
-              <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
-                {{ t("views.register.title") }}
+              <h2
+                class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
+              >
+                {{ t('views.register.title') }}
               </h2>
-              <div class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden">&nbsp;</div>
+              <div
+                class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden"
+              >
+                &nbsp;
+              </div>
               <form id="registerForm" @submit.prevent="onSubmit">
-                <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">
+                <Alert
+                  v-if="status != 'onLoad'"
+                  :variant="status == 'success' ? 'success' : 'danger'"
+                  class="mt-2"
+                >
                   {{ alertMessage }}
                 </Alert>
                 <div class="mt-8 intro-x">
@@ -98,7 +116,9 @@ const onSubmit = async () => {
                     :placeholder="t('views.register.fields.name')"
                     @focus="registerForm.forgetError('name')"
                   />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.name }}</span>
+                  <span class="ml-1 text-danger">
+                    {{ registerForm.errors.name }}
+                  </span>
                   <FormInput
                     v-model="registerForm.email"
                     type="text"
@@ -109,7 +129,9 @@ const onSubmit = async () => {
                     :placeholder="t('views.register.fields.email')"
                     @focus="registerForm.forgetError('email')"
                   />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.email }}</span>
+                  <span class="ml-1 text-danger">
+                    {{ registerForm.errors.email }}
+                  </span>
                   <FormInput
                     v-model="registerForm.password"
                     type="password"
@@ -120,7 +142,9 @@ const onSubmit = async () => {
                     :placeholder="t('views.register.fields.password')"
                     @focus="registerForm.forgetError('password')"
                   />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
+                  <span class="ml-1 text-danger">
+                    {{ registerForm.errors.password }}
+                  </span>
                   <FormInput
                     v-model="registerForm.password_confirmation"
                     type="password"
@@ -128,12 +152,18 @@ const onSubmit = async () => {
                       'block px-4 py-3 mt-4 intro-x min-w-full xl:min-w-[350px]': true,
                       'border-danger': registerForm.invalid('password'),
                     }"
-                    :placeholder="t('views.register.fields.password_confirmation')"
+                    :placeholder="
+                      t('views.register.fields.password_confirmation')
+                    "
                     @focus="registerForm.forgetError('password_confirmation')"
                   />
-                  <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
+                  <span class="ml-1 text-danger">
+                    {{ registerForm.errors.password }}
+                  </span>
                 </div>
-                <div class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
+                <div
+                  class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
+                >
                   <FormCheck>
                     <FormCheck.Input
                       v-model="registerForm.terms"
@@ -143,17 +173,26 @@ const onSubmit = async () => {
                     />
                     <FormCheck.Label class="cursor-pointer select-none">
                       I agree to the
-                      {{ t("views.register.fields.terms_and_cond") }}
+                      {{ t('views.register.fields.terms_and_cond') }}
                     </FormCheck.Label>
                   </FormCheck>
-                  <span class="ml-1 text-danger">{{ registerForm.errors.terms }}</span>
+                  <span class="ml-1 text-danger">
+                    {{ registerForm.errors.terms }}
+                  </span>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
-                    {{ t("components.buttons.register") }}
+                  <Button
+                    variant="primary"
+                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
+                  >
+                    {{ t('components.buttons.register') }}
                   </Button>
-                  <Button variant="outline-secondary" class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0" @click="router.push({ name: 'login' })">
-                    {{ t("components.buttons.login") }}
+                  <Button
+                    variant="outline-secondary"
+                    class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
+                    @click="router.push({ name: 'login' })"
+                  >
+                    {{ t('components.buttons.login') }}
                   </Button>
                 </div>
               </form>

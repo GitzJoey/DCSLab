@@ -1,7 +1,7 @@
-import { Company } from "./Company";
-import { Brand } from "./Brand";
-import { ProductCategory } from "./ProductCategory";
-import { ProductUnit } from "./ProductUnit";
+import { Company } from './Company';
+import { Brand } from './Brand';
+import { ProductCategory } from './ProductCategory';
+import { ProductUnit } from './ProductUnit';
 
 export interface Product {
   id: string;

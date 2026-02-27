@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { computed, toRef } from "vue";
+  import { computed, toRef } from 'vue';
 
-export interface FormErrorMessagesProps {
-  messages: string | undefined;
-}
+  export interface FormErrorMessagesProps {
+    messages: string | undefined;
+  }
 
-const props = withDefaults(defineProps<FormErrorMessagesProps>(), {
-  messages: "",
-});
+  const props = withDefaults(defineProps<FormErrorMessagesProps>(), {
+    messages: '',
+  });
 
-const messages = toRef(props, "messages");
+  const messages = toRef(props, 'messages');
 
-const visible = computed(() => {
-  if (messages.value.length == 0) return false;
+  const visible = computed(() => {
+    if (messages.value.length == 0) return false;
 
-  return true;
-});
+    return true;
+  });
 </script>
 
 <template>

@@ -1,5 +1,5 @@
-import { Company } from "./Company";
-import { PaymentTermType } from "../enums/PaymentTermType";
+import { Company } from './Company';
+import { PaymentTermType } from '../enums/PaymentTermType';
 
 export interface Supplier {
   id: string;

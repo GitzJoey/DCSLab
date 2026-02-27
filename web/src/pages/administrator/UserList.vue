@@ -1,138 +1,166 @@
 <script setup lang="ts">
-// #region Imports
-import { onMounted, ref } from "vue";
-import AlertPlaceholder from "@/components/AlertPlaceholder";
-import DataList from "@/components/DataList";
-import { useI18n } from "vue-i18n";
-import Button from "@/components/Base/Button";
-import Lucide from "@/components/Base/Lucide";
-import Table from "@/components/Base/Table";
-import UserService from "@/services/UserService";
-import { User } from "@/types/models/User";
-import { Collection } from "@/types/resources/Collection";
-import { Role } from "@/types/models/Role";
-import { DataListEmittedData } from "@/components/DataList/DataList.vue";
-import { ServiceResponse } from "../../types/services/ServiceResponse";
-import { Resource } from "../../types/resources/Resource";
-import { ReadAnyRequest } from "../../types/services/ServiceRequest";
-import { useRouter } from "vue-router";
-import { ViewMode } from "../../types/enums/ViewMode";
-import { NotificationData } from "@/types/models/NotificationData";
-import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
-// #endregion
+  // #region Imports
+  import { onMounted, ref } from 'vue';
+  import AlertPlaceholder from '@/components/AlertPlaceholder';
+  import DataList from '@/components/DataList';
+  import { useI18n } from 'vue-i18n';
+  import Button from '@/components/Base/Button';
+  import Lucide from '@/components/Base/Lucide';
+  import Table from '@/components/Base/Table';
+  import UserService from '@/services/UserService';
+  import { User } from '@/types/models/User';
+  import { Collection } from '@/types/resources/Collection';
+  import { Role } from '@/types/models/Role';
+  import { DataListEmittedData } from '@/components/DataList/DataList.vue';
+  import { ServiceResponse } from '../../types/services/ServiceResponse';
+  import { Resource } from '../../types/resources/Resource';
+  import { ReadAnyRequest } from '../../types/services/ServiceRequest';
+  import { useRouter } from 'vue-router';
+  import { ViewMode } from '../../types/enums/ViewMode';
+  import { NotificationData } from '@/types/models/NotificationData';
+  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  // #endregion
 
-// #region Interfaces
-// #endregion
+  // #region Interfaces
+  // #endregion
 
-// #region Declarations
-const { t } = useI18n();
-const router = useRouter();
-const userServices = new UserService();
-// #endregion
+  // #region Declarations
+  const { t } = useI18n();
+  const router = useRouter();
+  const userServices = new UserService();
+  // #endregion
 
-// #region Props, Emits
-const emits = defineEmits(["mode-state", "loading-state", "show-alertplaceholder"]);
-// #endregion
+  // #region Props, Emits
+  const emits = defineEmits([
+    'mode-state',
+    'loading-state',
+    'show-alertplaceholder',
+  ]);
+  // #endregion
 
-// #region Refs
-const expandDetail = ref<number | null>(null);
-const userLists = ref<Collection<Array<User>> | null>({
-  data: [],
-  meta: {
-    current_page: 0,
-    from: null,
-    last_page: 0,
-    path: "",
-    per_page: 0,
-    to: null,
-    total: 0,
-  },
-  links: {
-    first: "",
-    last: "",
-    prev: null,
-    next: null,
-  },
-});
-// #endregion
-
-// #region Computed
-// #endregion
-
-// #region Lifecycle Hooks
-onMounted(async () => {
-  emits("mode-state", ViewMode.LIST);
-  await getUsers("", true, true, 1, 10);
-});
-// #endregion
-
-// #region Methods
-const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
-  emits("loading-state", true);
-
-  const searchReq: ReadAnyRequest = {
-    search: search,
-    refresh: refresh,
-    paginate: paginate,
-    page: page,
-    per_page: per_page,
-  };
-
-  let result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = await userServices.readAny(searchReq);
-
-  if (result.success && result.data) {
-    userLists.value = result.data as Collection<Array<User>>;
-  } else {
-    showAlertPlaceholder("danger", "", result.errors as Record<string, Array<string>>);
-  }
-
-  emits("loading-state", false);
-};
-
-const onDataListChanged = async (data: DataListEmittedData) => {
-  await getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
-};
-
-const viewSelected = (idx: number) => {
-  if (expandDetail.value === idx) {
-    expandDetail.value = null;
-  } else {
-    expandDetail.value = idx;
-  }
-};
-
-const editSelected = (itemIdx: number) => {
-  if (!userLists.value) return;
-
-  let ulid = userLists.value.data[itemIdx].ulid;
-  router.push({
-    name: "side-menu-administrator-user-edit",
-    params: { ulid: ulid },
+  // #region Refs
+  const expandDetail = ref<number | null>(null);
+  const userLists = ref<Collection<Array<User>> | null>({
+    data: [],
+    meta: {
+      current_page: 0,
+      from: null,
+      last_page: 0,
+      path: '',
+      per_page: 0,
+      to: null,
+      total: 0,
+    },
+    links: {
+      first: '',
+      last: '',
+      prev: null,
+      next: null,
+    },
   });
-};
+  // #endregion
 
-const flattenedRoles = (roles: Array<Role>): string => {
-  if (roles.length == 0) return "";
-  return roles.map((x: Role) => x.display_name).join(", ");
-};
+  // #region Computed
+  // #endregion
 
-const showAlertPlaceholder = (
-  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
-  pTitle: string,
-  pAlertList: Record<string, Array<string>> | null,
-) => {
-  let ap: AlertPlaceholderProps = {
-    alertType: pAlertType,
-    title: pTitle,
-    alertList: pAlertList,
+  // #region Lifecycle Hooks
+  onMounted(async () => {
+    emits('mode-state', ViewMode.LIST);
+    await getUsers('', true, true, 1, 10);
+  });
+  // #endregion
+
+  // #region Methods
+  const getUsers = async (
+    search: string,
+    refresh: boolean,
+    paginate: boolean,
+    page: number,
+    per_page: number
+  ) => {
+    emits('loading-state', true);
+
+    const searchReq: ReadAnyRequest = {
+      search: search,
+      refresh: refresh,
+      paginate: paginate,
+      page: page,
+      per_page: per_page,
+    };
+
+    let result: ServiceResponse<
+      Collection<Array<User>> | Resource<Array<User>> | null
+    > = await userServices.readAny(searchReq);
+
+    if (result.success && result.data) {
+      userLists.value = result.data as Collection<Array<User>>;
+    } else {
+      showAlertPlaceholder(
+        'danger',
+        '',
+        result.errors as Record<string, Array<string>>
+      );
+    }
+
+    emits('loading-state', false);
   };
 
-  emits("show-alertplaceholder", ap);
-};
-// #endregion
+  const onDataListChanged = async (data: DataListEmittedData) => {
+    await getUsers(
+      data.search.text,
+      false,
+      true,
+      data.pagination.page,
+      data.pagination.per_page
+    );
+  };
 
-// #region Watchers
-// #endregion
+  const viewSelected = (idx: number) => {
+    if (expandDetail.value === idx) {
+      expandDetail.value = null;
+    } else {
+      expandDetail.value = idx;
+    }
+  };
+
+  const editSelected = (itemIdx: number) => {
+    if (!userLists.value) return;
+
+    let ulid = userLists.value.data[itemIdx].ulid;
+    router.push({
+      name: 'side-menu-administrator-user-edit',
+      params: { ulid: ulid },
+    });
+  };
+
+  const flattenedRoles = (roles: Array<Role>): string => {
+    if (roles.length == 0) return '';
+    return roles.map((x: Role) => x.display_name).join(', ');
+  };
+
+  const showAlertPlaceholder = (
+    pAlertType:
+      | 'hidden'
+      | 'danger'
+      | 'success'
+      | 'warning'
+      | 'pending'
+      | 'dark',
+    pTitle: string,
+    pAlertList: Record<string, Array<string>> | null
+  ) => {
+    let ap: AlertPlaceholderProps = {
+      alertType: pAlertType,
+      title: pTitle,
+      alertList: pAlertList,
+    };
+
+    emits('show-alertplaceholder', ap);
+  };
+  // #endregion
+
+  // #region Watchers
+  // #endregion
 </script>
 
 <template>
@@ -149,16 +177,16 @@ const showAlertPlaceholder = (
         <Table.Thead variant="light">
           <Table.Tr>
             <Table.Th class="whitespace-nowrap">
-              {{ t("views.user.table.cols.name") }}
+              {{ t('views.user.table.cols.name') }}
             </Table.Th>
             <Table.Th class="whitespace-nowrap">
-              {{ t("views.user.table.cols.email") }}
+              {{ t('views.user.table.cols.email') }}
             </Table.Th>
             <Table.Th class="whitespace-nowrap">
-              {{ t("views.user.table.cols.roles") }}
+              {{ t('views.user.table.cols.roles') }}
             </Table.Th>
             <Table.Th class="whitespace-nowrap">
-              {{ t("views.user.table.cols.status") }}
+              {{ t('views.user.table.cols.status') }}
             </Table.Th>
             <Table.Th class="whitespace-nowrap"></Table.Th>
           </Table.Tr>
@@ -168,7 +196,7 @@ const showAlertPlaceholder = (
             <Table.Tr class="intro-x">
               <Table.Td colspan="5">
                 <div class="flex justify-center italic">
-                  {{ t("components.data-list.data_not_found") }}
+                  {{ t('components.data-list.data_not_found') }}
                 </div>
               </Table.Td>
             </Table.Tr>
@@ -177,23 +205,38 @@ const showAlertPlaceholder = (
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.name }}</Table.Td>
               <Table.Td>
-                <a href="" class="hover:animate-pulse" @click.prevent="viewSelected(itemIdx)">
+                <a
+                  href=""
+                  class="hover:animate-pulse"
+                  @click.prevent="viewSelected(itemIdx)"
+                >
                   {{ item.email }}
                 </a>
               </Table.Td>
               <Table.Td>
-                <span v-for="r in item.roles" :key="r.id">{{ r.display_name }}</span>
+                <span v-for="r in item.roles" :key="r.id">
+                  {{ r.display_name }}
+                </span>
               </Table.Td>
               <Table.Td>
-                <Lucide v-if="item.profile.status === 'ACTIVE'" icon="CheckCircle" />
+                <Lucide
+                  v-if="item.profile.status === 'ACTIVE'"
+                  icon="CheckCircle"
+                />
                 <Lucide v-if="item.profile.status === 'INACTIVE'" icon="X" />
               </Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="viewSelected(itemIdx)"
+                  >
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
+                  <Button
+                    variant="outline-secondary"
+                    @click="editSelected(itemIdx)"
+                  >
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
                 </div>
@@ -208,92 +251,92 @@ const showAlertPlaceholder = (
               <Table.Td colspan="5">
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.name") }}
+                    {{ t('views.user.fields.name') }}
                   </div>
                   <div class="flex-1">{{ item.name }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.email") }}
+                    {{ t('views.user.fields.email') }}
                   </div>
                   <div class="flex-1">{{ item.email }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.first_name") }}
+                    {{ t('views.user.fields.first_name') }}
                   </div>
                   <div class="flex-1">{{ item.profile.first_name }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.last_name") }}
+                    {{ t('views.user.fields.last_name') }}
                   </div>
                   <div class="flex-1">{{ item.profile.last_name }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.address") }}
+                    {{ t('views.user.fields.address') }}
                   </div>
                   <div class="flex-1">{{ item.profile.address }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.city") }}
+                    {{ t('views.user.fields.city') }}
                   </div>
                   <div class="flex-1">{{ item.profile.city }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.postal_code") }}
+                    {{ t('views.user.fields.postal_code') }}
                   </div>
                   <div class="flex-1">{{ item.profile.postal_code }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.country") }}
+                    {{ t('views.user.fields.country') }}
                   </div>
                   <div class="flex-1">{{ item.profile.country }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.picture") }}
+                    {{ t('views.user.fields.picture') }}
                   </div>
                   <div class="flex-1">{{ item.profile.img_path }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.tax_id") }}
+                    {{ t('views.user.fields.tax_id') }}
                   </div>
                   <div class="flex-1">{{ item.profile.tax_id }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.ic_num") }}
+                    {{ t('views.user.fields.ic_num') }}
                   </div>
                   <div class="flex-1">{{ item.profile.ic_num }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.remarks") }}
+                    {{ t('views.user.fields.remarks') }}
                   </div>
                   <div class="flex-1">{{ item.profile.remarks }}</div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.status") }}
+                    {{ t('views.user.fields.status') }}
                   </div>
                   <div class="flex-1">
                     <span v-if="item.profile.status === 'ACTIVE'">
-                      {{ t("components.dropdown.values.statusDDL.active") }}
+                      {{ t('components.dropdown.values.statusDDL.active') }}
                     </span>
                     <span v-if="item.profile.status === 'INACTIVE'">
-                      {{ t("components.dropdown.values.statusDDL.inactive") }}
+                      {{ t('components.dropdown.values.statusDDL.inactive') }}
                     </span>
                   </div>
                 </div>
                 <div class="flex flex-row">
                   <div class="ml-5 w-48 text-right pr-5">
-                    {{ t("views.user.fields.roles") }}
+                    {{ t('views.user.fields.roles') }}
                   </div>
                   <div class="flex-1">{{ flattenedRoles(item.roles) }}</div>
                 </div>
