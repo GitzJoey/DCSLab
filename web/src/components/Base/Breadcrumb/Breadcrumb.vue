@@ -1,21 +1,21 @@
 <script setup lang="ts">
-  import { type HTMLAttributes, useSlots, provide } from 'vue';
+import { type HTMLAttributes, useSlots, provide } from "vue";
 
-  export type ProvideBeradcrumb = {
-    light?: boolean;
-  };
+export type ProvideBeradcrumb = {
+  light?: boolean;
+};
 
-  interface BreadcrumbProps extends /* @vue-ignore */ HTMLAttributes {
-    light?: boolean;
-  }
+interface BreadcrumbProps extends /* @vue-ignore */ HTMLAttributes {
+  light?: boolean;
+}
 
-  const slots = useSlots();
+const slots = useSlots();
 
-  const { light } = defineProps<BreadcrumbProps>();
+const { light } = defineProps<BreadcrumbProps>();
 
-  provide<ProvideBeradcrumb>('breadcrumb', {
-    light: light,
-  });
+provide<ProvideBeradcrumb>("breadcrumb", {
+  light: light,
+});
 </script>
 
 <template>

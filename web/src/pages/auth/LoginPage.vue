@@ -1,73 +1,73 @@
 <script setup lang="ts">
-  import ThemeSwitcher from '@/components/ThemeSwitcher';
-  import logoUrl from '@/assets/images/logo.svg';
-  import illustrationUrl from '@/assets/images/illustration.svg';
-  import { FormInput, FormCheck, FormErrorMessages } from '@/components/Base/Form';
-  import Button from '@/components/Base/Button';
-  import { useI18n } from 'vue-i18n';
-  import { useRouter } from 'vue-router';
-  import AuthService from '@/services/AuthServices';
-  import { onMounted, ref } from 'vue';
-  import { LoginResponse } from '@/types/models/Auth';
-  import Alert from '@/components/Base/Alert';
+import ThemeSwitcher from "@/components/ThemeSwitcher";
+import logoUrl from "@/assets/images/logo.svg";
+import illustrationUrl from "@/assets/images/illustration.svg";
+import { FormInput, FormCheck, FormErrorMessages } from "@/components/Base/Form";
+import Button from "@/components/Base/Button";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import AuthService from "@/services/AuthServices";
+import { onMounted, ref } from "vue";
+import { LoginResponse } from "@/types/models/Auth";
+import Alert from "@/components/Base/Alert";
 
-  const { t } = useI18n();
-  const router = useRouter();
+const { t } = useI18n();
+const router = useRouter();
 
-  const authService = new AuthService();
+const authService = new AuthService();
 
-  const appName = import.meta.env.VITE_APP_NAME;
-  const loading = ref<boolean>(false);
-  const status = ref<'onLoad' | 'success' | 'error'>('onLoad');
-  const alertMessage = ref<string>('');
-  const requireTwoFactor = ref<boolean>(false);
-  const twoFactorRecoveryCodesMode = ref<boolean>(false);
+const appName = import.meta.env.VITE_APP_NAME;
+const loading = ref<boolean>(false);
+const status = ref<"onLoad" | "success" | "error">("onLoad");
+const alertMessage = ref<string>("");
+const requireTwoFactor = ref<boolean>(false);
+const twoFactorRecoveryCodesMode = ref<boolean>(false);
 
-  const loginForm = authService.useLoginForm();
-  const twoFactorLoginForm = authService.useTwoFactorLoginForm();
+const loginForm = authService.useLoginForm();
+const twoFactorLoginForm = authService.useTwoFactorLoginForm();
 
-  onMounted(async () => {
-    authService.ensureCSRF();
-  });
+onMounted(async () => {
+  authService.ensureCSRF();
+});
 
-  const onSubmit = async () => {
-    loading.value = true;
+const onSubmit = async () => {
+  loading.value = true;
 
-    loginForm
-      .submit()
-      .then((response: unknown) => {
-        let loginResp = response as LoginResponse;
-        if (loginResp.data.two_factor) {
-          requireTwoFactor.value = true;
-        } else {
-          router.push({ name: 'side-menu-dashboard-maindashboard' });
-        }
-      })
-      .catch((error) => {
-        status.value = 'error';
-        alertMessage.value = error.response.data.message;
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
+  loginForm
+    .submit()
+    .then((response: unknown) => {
+      let loginResp = response as LoginResponse;
+      if (loginResp.data.two_factor) {
+        requireTwoFactor.value = true;
+      } else {
+        router.push({ name: "side-menu-dashboard-maindashboard" });
+      }
+    })
+    .catch((error) => {
+      status.value = "error";
+      alertMessage.value = error.response.data.message;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
 
-  const onTwoFactorLoginSubmit = async () => {
-    loading.value = true;
+const onTwoFactorLoginSubmit = async () => {
+  loading.value = true;
 
-    twoFactorLoginForm
-      .submit()
-      .then(() => {
-        router.push({ name: 'side-menu-dashboard-maindashboard' });
-      })
-      .catch((error) => {
-        status.value = 'error';
-        alertMessage.value = error.response.data.message;
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
+  twoFactorLoginForm
+    .submit()
+    .then(() => {
+      router.push({ name: "side-menu-dashboard-maindashboard" });
+    })
+    .catch((error) => {
+      status.value = "error";
+      alertMessage.value = error.response.data.message;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
 </script>
 
 <template>
@@ -100,7 +100,7 @@
           >
             <LoadingOverlay :visible="loading" :transparent="true">
               <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
-                {{ t('views.login.title') }}
+                {{ t("views.login.title") }}
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">&nbsp;</div>
               <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">
@@ -131,30 +131,26 @@
                   <div class="flex items-center mr-auto">
                     <FormCheck.Input v-model="loginForm.remember" type="checkbox" class="mr-2 border" />
                     <label class="cursor-pointer select-none" htmlFor="remember-me">
-                      {{ t('views.login.fields.remember_me') }}
+                      {{ t("views.login.fields.remember_me") }}
                     </label>
                   </div>
                   <RouterLink to="/auth/forgot-password">
-                    {{ t('views.login.fields.forgot_pass') }}
+                    {{ t("views.login.fields.forgot_pass") }}
                   </RouterLink>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
-                    {{ t('components.buttons.login') }}
+                    {{ t("components.buttons.login") }}
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
-                    @click="router.push({ name: 'register' })"
-                  >
-                    {{ t('components.buttons.register') }}
+                  <Button variant="outline-secondary" class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0" @click="router.push({ name: 'register' })">
+                    {{ t("components.buttons.register") }}
                   </Button>
                 </div>
               </form>
               <form v-else id="twoFactorLoginForm" @submit.prevent="onTwoFactorLoginSubmit">
                 <div v-if="twoFactorRecoveryCodesMode" class="mt-8 intro-x">
                   <FormLabel>
-                    {{ t('views.login.fields.2fa.recovery_code') }}
+                    {{ t("views.login.fields.2fa.recovery_code") }}
                   </FormLabel>
                   <FormInput
                     v-model="twoFactorLoginForm.recovery_code"
@@ -170,7 +166,7 @@
                 </div>
                 <div v-else class="mt-8 intro-x">
                   <FormLabel>
-                    {{ t('views.login.fields.2fa.label') }}
+                    {{ t("views.login.fields.2fa.label") }}
                   </FormLabel>
                   <FormInput
                     v-model="twoFactorLoginForm.code"
@@ -189,14 +185,14 @@
                     <FormCheck>
                       <FormCheck.Input v-model="twoFactorRecoveryCodesMode" type="checkbox" />
                       <FormCheck.Label>
-                        {{ t('views.login.fields.2fa.use_recovery_codes') }}
+                        {{ t("views.login.fields.2fa.use_recovery_codes") }}
                       </FormCheck.Label>
                     </FormCheck>
                   </div>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
-                    {{ t('components.buttons.login') }}
+                    {{ t("components.buttons.login") }}
                   </Button>
                 </div>
               </form>

@@ -1,47 +1,47 @@
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import ThemeSwitcher from '@/components/ThemeSwitcher';
-  import logoUrl from '@/assets/images/logo.svg';
-  import illustrationUrl from '@/assets/images/illustration.svg';
-  import { FormInput, FormCheck } from '@/components/Base/Form';
-  import Button from '@/components/Base/Button';
-  import AuthService from '@/services/AuthServices';
-  import LoadingOverlay from '@/components/LoadingOverlay';
-  import { useI18n } from 'vue-i18n';
-  import { useRouter } from 'vue-router';
-  import Alert from '@/components/Base/Alert';
+import { ref, onMounted } from "vue";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
+import logoUrl from "@/assets/images/logo.svg";
+import illustrationUrl from "@/assets/images/illustration.svg";
+import { FormInput, FormCheck } from "@/components/Base/Form";
+import Button from "@/components/Base/Button";
+import AuthService from "@/services/AuthServices";
+import LoadingOverlay from "@/components/LoadingOverlay";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import Alert from "@/components/Base/Alert";
 
-  const { t } = useI18n();
-  const router = useRouter();
+const { t } = useI18n();
+const router = useRouter();
 
-  const authService = new AuthService();
+const authService = new AuthService();
 
-  const status = ref<'onLoad' | 'success' | 'error'>('onLoad');
-  const alertMessage = ref<string>('');
-  const loading = ref<boolean>(false);
+const status = ref<"onLoad" | "success" | "error">("onLoad");
+const alertMessage = ref<string>("");
+const loading = ref<boolean>(false);
 
-  const registerForm = authService.useRegisterForm();
+const registerForm = authService.useRegisterForm();
 
-  onMounted(async () => {
-    authService.ensureCSRF();
-  });
+onMounted(async () => {
+  authService.ensureCSRF();
+});
 
-  const onSubmit = async () => {
-    loading.value = true;
+const onSubmit = async () => {
+  loading.value = true;
 
-    registerForm
-      .submit()
-      .then(() => {
-        router.push({ name: 'side-menu-dashboard-maindashboard' });
-      })
-      .catch((error) => {
-        status.value = 'error';
-        alertMessage.value = error.response.data.message;
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
+  registerForm
+    .submit()
+    .then(() => {
+      router.push({ name: "side-menu-dashboard-maindashboard" });
+    })
+    .catch((error) => {
+      status.value = "error";
+      alertMessage.value = error.response.data.message;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
 </script>
 
 <template>
@@ -59,7 +59,7 @@
           <a href="" class="flex items-center pt-5 -intro-x">
             <img alt="DCSLab" class="w-6" :src="logoUrl" />
             <span class="ml-3 text-lg text-white">
-              {{ t('views.login.fields.email') }}
+              {{ t("views.login.fields.email") }}
             </span>
           </a>
           <div class="my-auto">
@@ -80,7 +80,7 @@
           >
             <LoadingOverlay :visible="loading" :transparent="true">
               <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
-                {{ t('views.register.title') }}
+                {{ t("views.register.title") }}
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 dark:text-slate-400 xl:hidden">&nbsp;</div>
               <form id="registerForm" @submit.prevent="onSubmit">
@@ -133,9 +133,7 @@
                   />
                   <span class="ml-1 text-danger">{{ registerForm.errors.password }}</span>
                 </div>
-                <div
-                  class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-                >
+                <div class="flex flex-col items-start mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <FormCheck>
                     <FormCheck.Input
                       v-model="registerForm.terms"
@@ -145,21 +143,17 @@
                     />
                     <FormCheck.Label class="cursor-pointer select-none">
                       I agree to the
-                      {{ t('views.register.fields.terms_and_cond') }}
+                      {{ t("views.register.fields.terms_and_cond") }}
                     </FormCheck.Label>
                   </FormCheck>
                   <span class="ml-1 text-danger">{{ registerForm.errors.terms }}</span>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
-                    {{ t('components.buttons.register') }}
+                    {{ t("components.buttons.register") }}
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0"
-                    @click="router.push({ name: 'login' })"
-                  >
-                    {{ t('components.buttons.login') }}
+                  <Button variant="outline-secondary" class="w-full px-4 py-3 mt-3 align-top xl:w-32 xl:mt-0" @click="router.push({ name: 'login' })">
+                    {{ t("components.buttons.login") }}
                   </Button>
                 </div>
               </form>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import Lucide from '@/components/Base/Lucide';
+import Lucide from "@/components/Base/Lucide";
 
-  interface ScrollToTopProps {
-    visible: boolean;
-  }
+interface ScrollToTopProps {
+  visible: boolean;
+}
 
-  const props = withDefaults(defineProps<ScrollToTopProps>(), {
-    visible: true,
-  });
+const props = withDefaults(defineProps<ScrollToTopProps>(), {
+  visible: true,
+});
 
-  const goTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+const goTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
 </script>
 
 <template>

@@ -1,19 +1,19 @@
 <script setup lang="ts">
-  import { toRef } from 'vue';
-  import Spinner from '@/assets/images/spinner-big.gif';
+import { toRef } from "vue";
+import Spinner from "@/assets/images/spinner-big.gif";
 
-  interface LoadingOverlayProps {
-    visible: boolean;
-    transparent: boolean;
-  }
+interface LoadingOverlayProps {
+  visible: boolean;
+  transparent: boolean;
+}
 
-  const props = withDefaults(defineProps<LoadingOverlayProps>(), {
-    visible: false,
-    transparent: false,
-  });
+const props = withDefaults(defineProps<LoadingOverlayProps>(), {
+  visible: false,
+  transparent: false,
+});
 
-  const visible = toRef(props, 'visible');
-  const transparent = toRef(props, 'transparent');
+const visible = toRef(props, "visible");
+const transparent = toRef(props, "transparent");
 </script>
 
 <template>

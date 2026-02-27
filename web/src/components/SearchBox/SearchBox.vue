@@ -1,35 +1,35 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import Lucide from '@/components/Base/Lucide';
-  import { FormInput } from '@/components/Base/Form';
-  import { TransitionRoot } from '@headlessui/vue';
-  import { useI18n } from 'vue-i18n';
-  import LoadingIcon from '@/components/Base/LoadingIcon';
+import { ref } from "vue";
+import Lucide from "@/components/Base/Lucide";
+import { FormInput } from "@/components/Base/Form";
+import { TransitionRoot } from "@headlessui/vue";
+import { useI18n } from "vue-i18n";
+import LoadingIcon from "@/components/Base/LoadingIcon";
 
-  const { t } = useI18n();
+const { t } = useI18n();
 
-  const props = withDefaults(
-    defineProps<{
-      theme?: 'rubick' | 'icewall' | 'tinker' | 'enigma';
-      layout?: 'side-menu' | 'simple-menu' | 'top-menu';
-      visible?: boolean;
-    }>(),
-    {
-      theme: 'rubick',
-      layout: 'side-menu',
-      visible: true,
-    },
-  );
+const props = withDefaults(
+  defineProps<{
+    theme?: "rubick" | "icewall" | "tinker" | "enigma";
+    layout?: "side-menu" | "simple-menu" | "top-menu";
+    visible?: boolean;
+  }>(),
+  {
+    theme: "rubick",
+    layout: "side-menu",
+    visible: true,
+  },
+);
 
-  const searchDropdown = ref(false);
+const searchDropdown = ref(false);
 
-  const showSearchDropdown = () => {
-    searchDropdown.value = true;
-  };
+const showSearchDropdown = () => {
+  searchDropdown.value = true;
+};
 
-  const hideSearchDropdown = () => {
-    searchDropdown.value = false;
-  };
+const hideSearchDropdown = () => {
+  searchDropdown.value = false;
+};
 </script>
 
 <template>
@@ -42,10 +42,7 @@
         @focus="showSearchDropdown"
         @blur="hideSearchDropdown"
       />
-      <Lucide
-        icon="Search"
-        class="absolute inset-y-0 right-0 w-5 h-5 my-auto mr-3 text-slate-600 dark:text-slate-500"
-      />
+      <Lucide icon="Search" class="absolute inset-y-0 right-0 w-5 h-5 my-auto mr-3 text-slate-600 dark:text-slate-500" />
     </div>
     <a class="relative text-white/70 sm:hidden" href="">
       <Lucide icon="Search" class="w-5 h-5 dark:text-slate-500" />
@@ -64,7 +61,7 @@
       <div class="absolute right-0 z-10 mt-[3px]">
         <div class="w-[450px] p-5 box">
           <div class="mb-2 font-medium">
-            {{ t('components.search-box.search_group.user') }}
+            {{ t("components.search-box.search_group.user") }}
           </div>
           <div class="mb-5">
             <div class="flex items-center mt-2">
@@ -74,7 +71,7 @@
             </div>
           </div>
           <div class="mb-2 font-medium">
-            {{ t('components.search-box.search_group.company') }}
+            {{ t("components.search-box.search_group.company") }}
           </div>
           <div class="mb-5">
             <div class="flex items-center mt-2">
@@ -84,7 +81,7 @@
             </div>
           </div>
           <div class="mb-2 font-medium">
-            {{ t('components.search-box.search_group.branch') }}
+            {{ t("components.search-box.search_group.branch") }}
           </div>
           <div class="mb-5">
             <div class="flex items-center mt-2">

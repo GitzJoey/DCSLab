@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import FormCheck from '../FormCheck';
+import FormCheck from "../FormCheck";
 </script>
 
 <template>

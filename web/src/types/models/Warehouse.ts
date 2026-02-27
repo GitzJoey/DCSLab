@@ -1,5 +1,5 @@
-import { Company } from './Company';
-import { Branch } from './Branch';
+import { Company } from "./Company";
+import { Branch } from "./Branch";
 
 export interface Warehouse {
   id: string;

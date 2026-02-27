@@ -1,6 +1,6 @@
-import { Company } from './Company';
-import { Product } from './Product';
-import { Unit } from './Unit';
+import { Company } from "./Company";
+import { Product } from "./Product";
+import { Unit } from "./Unit";
 
 export interface ProductUnit {
   id: string;

@@ -1,26 +1,26 @@
-import Toastify from 'toastify-js';
-import { type NotificationElement, type NotificationProps } from './Notification.vue';
+import Toastify from "toastify-js";
+import { type NotificationElement, type NotificationProps } from "./Notification.vue";
 
-const toastifyClass = '_' + Math.random().toString(36).substr(2, 9);
+const toastifyClass = "_" + Math.random().toString(36).substr(2, 9);
 
 const init = (el: NotificationElement, props: NotificationProps) => {
   el.showToast = () => {
     const clonedEl = el.cloneNode(true) as NotificationElement;
-    clonedEl.classList.remove('hidden');
+    clonedEl.classList.remove("hidden");
     clonedEl.classList.add(toastifyClass);
     clonedEl.toastify = Toastify({
       duration: -1,
       newWindow: true,
       close: true,
-      gravity: 'top',
-      position: 'right',
+      gravity: "top",
+      position: "right",
       stopOnFocus: true,
       ...props.options,
       node: clonedEl,
     });
     clonedEl.toastify.showToast();
     clonedEl.querySelectorAll("[data-dismiss='notification']").forEach(function (el) {
-      el.addEventListener('click', function () {
+      el.addEventListener("click", function () {
         clonedEl.toastify.hideToast();
       });
     });

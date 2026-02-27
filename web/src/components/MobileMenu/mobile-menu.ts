@@ -1,6 +1,6 @@
-import { type Router, type RouteLocationNormalizedLoaded } from 'vue-router';
-import { slideUp, slideDown } from '@/utils/helper';
-import { type Menu } from '@/stores/menu';
+import { type Router, type RouteLocationNormalizedLoaded } from "vue-router";
+import { slideUp, slideDown } from "@/utils/helper";
+import { type Menu } from "@/stores/menu";
 
 export interface FormattedMenu extends Menu {
   active?: boolean;
@@ -29,10 +29,10 @@ const findActiveMenu = (subMenu: Menu[], route: Route): boolean => {
   return match;
 };
 
-const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
-  const formattedMenu: Array<FormattedMenu | 'divider'> = [];
+const nestedMenu = (menu: Array<Menu | "divider">, route: Route) => {
+  const formattedMenu: Array<FormattedMenu | "divider"> = [];
   menu.forEach((item) => {
-    if (typeof item !== 'string') {
+    if (typeof item !== "string") {
       const menuItem: FormattedMenu = {
         icon: item.icon,
         title: item.title,
@@ -51,7 +51,7 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
 
         // Nested menu
         const subMenu: Array<FormattedMenu> = [];
-        nestedMenu(menuItem.subMenu, route).map((menu) => typeof menu !== 'string' && subMenu.push(menu));
+        nestedMenu(menuItem.subMenu, route).map((menu) => typeof menu !== "string" && subMenu.push(menu));
         menuItem.subMenu = subMenu;
       }
 

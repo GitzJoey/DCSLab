@@ -1,17 +1,17 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import Pagination from '@/components/Base/Pagination';
-  import Button from '@/components/Base/Button';
-  import { FormInput } from '@/components/Base/Form';
+import { ref } from "vue";
+import Pagination from "@/components/Base/Pagination";
+import Button from "@/components/Base/Button";
+import { FormInput } from "@/components/Base/Form";
 
-  const is_active_1 = ref<boolean>(false);
-  const is_active_2 = ref<boolean>(true);
+const is_active_1 = ref<boolean>(false);
+const is_active_2 = ref<boolean>(true);
 
-  const inputTestVal = ref<number>(1);
+const inputTestVal = ref<number>(1);
 
-  const changeInputTriggered = () => {
-    console.log('changeInputTriggered' + Date());
-  };
+const changeInputTriggered = () => {
+  console.log("changeInputTriggered" + Date());
+};
 </script>
 
 <template>

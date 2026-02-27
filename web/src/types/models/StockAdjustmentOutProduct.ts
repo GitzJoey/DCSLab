@@ -1,7 +1,7 @@
-import { Company } from './Company';
-import { Branch } from './Branch';
-import { StockAdjustment } from './StockAdjustment';
-import { ProductUnit } from './ProductUnit';
+import { Company } from "./Company";
+import { Branch } from "./Branch";
+import { StockAdjustment } from "./StockAdjustment";
+import { ProductUnit } from "./ProductUnit";
 
 export interface StockAdjustmentOutProduct {
   id: string;

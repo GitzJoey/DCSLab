@@ -1,14 +1,14 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 export interface DashboardState {
   screenMaskValue: boolean;
-  layoutValue: 'side-menu' | 'simple-menu' | undefined;
+  layoutValue: "side-menu" | "simple-menu" | undefined;
 }
 
-export const useDashboardStore = defineStore('dashboardStore', {
+export const useDashboardStore = defineStore("dashboardStore", {
   state: (): DashboardState => ({
     screenMaskValue: false,
-    layoutValue: 'side-menu',
+    layoutValue: "side-menu",
   }),
   getters: {
     getScreenMaskValue: (state) => state.screenMaskValue,
@@ -19,8 +19,8 @@ export const useDashboardStore = defineStore('dashboardStore', {
       this.screenMaskValue = screenMaskVal;
     },
     toggleLayoutValue() {
-      if (this.layoutValue == 'side-menu') this.layoutValue = 'simple-menu';
-      else this.layoutValue = 'side-menu';
+      if (this.layoutValue == "side-menu") this.layoutValue = "simple-menu";
+      else this.layoutValue = "side-menu";
     },
     toggleScreenMaskValue() {
       this.screenMaskValue = !this.screenMaskValue;

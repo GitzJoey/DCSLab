@@ -1,15 +1,15 @@
-import { useZiggyRouteStore } from '../stores/ziggy-route';
-import { route, Config } from 'ziggy-js';
-import { client, useForm } from 'laravel-precognition-vue';
-import { ServiceResponse } from '../types/services/ServiceResponse';
-import { AxiosResponse, isAxiosError, AxiosError } from 'axios';
-import axios from '../axios';
-import ErrorHandlerService from './ErrorHandlerService';
-import { TwoFactorResponse, QRCode, SecretKeyResponse } from '../types/models/TwoFactorAuthentication';
-import { ConfirmPasswordStatusResponse } from '../types/models/ConfirmPassword';
-import { StatusCode } from '../types/enums/StatusCode';
-import { UserProfile } from '../types/models/UserProfile';
-import { Resource } from '../types/resources/Resource';
+import { useZiggyRouteStore } from "../stores/ziggy-route";
+import { route, Config } from "ziggy-js";
+import { client, useForm } from "laravel-precognition-vue";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { AxiosResponse, isAxiosError, AxiosError } from "axios";
+import axios from "../axios";
+import ErrorHandlerService from "./ErrorHandlerService";
+import { TwoFactorResponse, QRCode, SecretKeyResponse } from "../types/models/TwoFactorAuthentication";
+import { ConfirmPasswordStatusResponse } from "../types/models/ConfirmPassword";
+import { StatusCode } from "../types/enums/StatusCode";
+import { UserProfile } from "../types/models/UserProfile";
+import { Resource } from "../types/resources/Resource";
 
 export default class ProfileService {
   private ziggyRoute: Config;
@@ -28,7 +28,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('api.get.db.module.profile.read', undefined, false, this.ziggyRoute);
+      const url = route("api.get.db.module.profile.read", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<Resource<UserProfile>> = await axios.get(url);
 
@@ -37,7 +37,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -48,34 +48,34 @@ export default class ProfileService {
   }
 
   public useUpdateUserProfileForm() {
-    const url = route('api.post.db.module.profile.update.user_profile', undefined, true, this.ziggyRoute);
+    const url = route("api.post.db.module.profile.update.user_profile", undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
-      name: '',
+    const form = useForm("post", url, {
+      name: "",
     });
 
     return form;
   }
 
   public useUpdatePersonalInfoForm() {
-    const url = route('api.post.db.module.profile.update.personal_info', undefined, true, this.ziggyRoute);
+    const url = route("api.post.db.module.profile.update.personal_info", undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
-      first_name: '',
-      last_name: '',
-      address: '',
-      city: '',
-      postal_code: '',
-      country: '',
-      img_path: '',
+    const form = useForm("post", url, {
+      first_name: "",
+      last_name: "",
+      address: "",
+      city: "",
+      postal_code: "",
+      country: "",
+      img_path: "",
       tax_id: 0,
       ic_num: 0,
-      status: '',
-      remarks: '',
+      status: "",
+      remarks: "",
     });
 
     return form;
@@ -87,7 +87,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('api.post.db.module.profile.send.email_verification', undefined, false, this.ziggyRoute);
+      const url = route("api.post.db.module.profile.send.email_verification", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<null> = await axios.post(url);
 
@@ -97,7 +97,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -108,51 +108,51 @@ export default class ProfileService {
   }
 
   public useUpdateAccountSettingsForm() {
-    const url = route('api.post.db.module.profile.update.account_settings', undefined, true, this.ziggyRoute);
+    const url = route("api.post.db.module.profile.update.account_settings", undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
-      theme: 'side-menu-light-full',
-      date_format: 'dd_MMM_yyyy',
-      time_format: 'hh_mm_ss',
+    const form = useForm("post", url, {
+      theme: "side-menu-light-full",
+      date_format: "dd_MMM_yyyy",
+      time_format: "hh_mm_ss",
     });
 
     return form;
   }
 
   public useUpdateUserRolesForm() {
-    const url = route('api.post.db.module.profile.update.roles', undefined, true, this.ziggyRoute);
+    const url = route("api.post.db.module.profile.update.roles", undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
-      roles: '',
+    const form = useForm("post", url, {
+      roles: "",
     });
 
     return form;
   }
 
   public useUpdatePasswordForm() {
-    const url = route('api.post.db.module.profile.update.password', undefined, true, this.ziggyRoute);
+    const url = route("api.post.db.module.profile.update.password", undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
-      current_password: '',
-      password: '',
-      password_confirmation: '',
+    const form = useForm("post", url, {
+      current_password: "",
+      password: "",
+      password_confirmation: "",
     });
 
     return form;
   }
 
   public useUpdateTokenForm() {
-    const url = route('api.post.db.module.profile.update.tokens', undefined, true, this.ziggyRoute);
+    const url = route("api.post.db.module.profile.update.tokens", undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
+    const form = useForm("post", url, {
       reset_tokens: true,
     });
 
@@ -165,7 +165,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('two-factor.enable', undefined, false, this.ziggyRoute);
+      const url = route("two-factor.enable", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<TwoFactorResponse> = await axios.post(url);
 
@@ -179,7 +179,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -195,7 +195,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('two-factor.disable', undefined, false, this.ziggyRoute);
+      const url = route("two-factor.disable", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<TwoFactorResponse> = await axios.delete(url);
 
@@ -209,7 +209,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -225,7 +225,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('password.confirm', undefined, false, this.ziggyRoute);
+      const url = route("password.confirm", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<TwoFactorResponse> = await axios.post(url, {
         password: password,
@@ -240,7 +240,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -256,7 +256,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('password.confirmation', undefined, false, this.ziggyRoute);
+      const url = route("password.confirmation", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<ConfirmPasswordStatusResponse> = await axios.get(url);
 
@@ -265,7 +265,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -281,7 +281,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('two-factor.confirm', undefined, false, this.ziggyRoute);
+      const url = route("two-factor.confirm", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<TwoFactorResponse | null> = await axios.post(url, {
         code: code,
@@ -292,7 +292,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -308,7 +308,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('two-factor.qr-code', undefined, false, this.ziggyRoute);
+      const url = route("two-factor.qr-code", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<QRCode> = await axios.get(url);
 
@@ -317,7 +317,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -333,7 +333,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('two-factor.recovery-codes', undefined, false, this.ziggyRoute);
+      const url = route("two-factor.recovery-codes", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<Array<string>> = await axios.get(url);
 
@@ -342,7 +342,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -358,7 +358,7 @@ export default class ProfileService {
     };
 
     try {
-      const url = route('two-factor.secret-key', undefined, false, this.ziggyRoute);
+      const url = route("two-factor.secret-key", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<SecretKeyResponse> = await axios.get(url);
 
@@ -367,7 +367,7 @@ export default class ProfileService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);

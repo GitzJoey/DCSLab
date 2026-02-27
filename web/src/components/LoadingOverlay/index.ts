@@ -1,3 +1,3 @@
-import LoadingOverlay from './LoadingOverlay.vue';
+import LoadingOverlay from "./LoadingOverlay.vue";
 
 export default LoadingOverlay;

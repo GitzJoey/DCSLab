@@ -1,4 +1,4 @@
-@import '@left4code/tw-starter/dist/css/mixins/_media.css';
+@import "@left4code/tw-starter/dist/css/mixins/_media.css";
 
 .enigma {
   .side-nav {
@@ -15,7 +15,7 @@
     .side-nav__divider {
       width: 100%;
       height: 1px;
-      background-color: theme('colors.black' / 6%);
+      background-color: theme("colors.black" / 6%);
       z-index: 10;
       position: relative;
     }
@@ -23,32 +23,32 @@
       height: 50px;
       display: flex;
       align-items: center;
-      padding-left: theme('spacing.5');
-      color: theme('colors.slate.600');
-      margin-bottom: theme('spacing.1');
+      padding-left: theme("spacing.5");
+      color: theme("colors.slate.600");
+      margin-bottom: theme("spacing.1");
       position: relative;
-      border-radius: theme('borderRadius.xl');
+      border-radius: theme("borderRadius.xl");
       .side-menu__title {
         display: none;
         align-items: center;
         width: 100%;
-        margin-left: theme('spacing.3');
+        margin-left: theme("spacing.3");
         @media screen(xl) {
           display: flex;
         }
         .side-menu__sub-icon {
-          transition-property: theme('transitionProperty.DEFAULT');
-          transition-timing-function: theme('transitionTimingFunction.in');
-          transition-duration: theme('transitionDuration.100');
+          transition-property: theme("transitionProperty.DEFAULT");
+          transition-timing-function: theme("transitionTimingFunction.in");
+          transition-duration: theme("transitionDuration.100");
           margin-left: auto;
-          margin-right: theme('spacing.5');
+          margin-right: theme("spacing.5");
           display: none;
           @media screen(xl) {
             display: block;
           }
           svg {
-            width: theme('spacing.4');
-            height: theme('spacing.4');
+            width: theme("spacing.4");
+            height: theme("spacing.4");
           }
         }
       }
@@ -90,21 +90,21 @@
         /* First level */
         & > .side-menu {
           &.side-menu--active {
-            background-color: theme('colors.slate.100');
+            background-color: theme("colors.slate.100");
             z-index: 10;
             &:before {
-              content: '';
+              content: "";
               display: block;
               top: 0;
               left: 0;
               right: 0;
               bottom: 0;
-              border-radius: theme('borderRadius.xl');
+              border-radius: theme("borderRadius.xl");
               position: absolute;
-              border-bottom: 3px solid theme('colors.black' / 8%);
+              border-bottom: 3px solid theme("colors.black" / 8%);
             }
             &:after {
-              content: '';
+              content: "";
               width: 20px;
               height: 80px;
               background-repeat: no-repeat;
@@ -122,46 +122,46 @@
               animation-fill-mode: forwards;
             }
             .side-menu__icon {
-              color: theme('colors.theme.1');
+              color: theme("colors.theme.1");
               z-index: 10;
             }
             .side-menu__title {
-              color: theme('colors.theme.1');
-              font-weight: theme('fontWeight.medium');
+              color: theme("colors.theme.1");
+              font-weight: theme("fontWeight.medium");
               z-index: 10;
             }
           }
           &:hover {
             &:not(.side-menu--active):not(.side-menu--open) {
-              background-color: theme('colors.slate.100');
+              background-color: theme("colors.slate.100");
               &:before {
-                content: '';
+                content: "";
                 display: block;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                border-radius: theme('borderRadius.xl');
+                border-radius: theme("borderRadius.xl");
                 position: absolute;
                 z-index: -1;
-                border-bottom: 3px solid theme('colors.black' / 8%);
+                border-bottom: 3px solid theme("colors.black" / 8%);
               }
             }
           }
         }
         & > ul {
-          background-color: theme('colors.white' / 4%);
-          border-radius: theme('borderRadius.xl');
+          background-color: theme("colors.white" / 4%);
+          border-radius: theme("borderRadius.xl");
           position: relative;
           &:before {
-            content: '';
+            content: "";
             display: block;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: theme('colors.white' / 30%);
-            border-radius: theme('borderRadius.xl');
+            background-color: theme("colors.white" / 30%);
+            border-radius: theme("borderRadius.xl");
             position: absolute;
             z-index: -1;
           }
@@ -173,15 +173,15 @@
             & > .side-menu {
               &.side-menu--active {
                 .side-menu__icon {
-                  color: theme('colors.slate.700');
+                  color: theme("colors.slate.700");
                 }
                 .side-menu__title {
-                  color: theme('colors.slate.700');
-                  font-weight: theme('fontWeight.medium');
+                  color: theme("colors.slate.700");
+                  font-weight: theme("fontWeight.medium");
                 }
               }
               &:not(.side-menu--active) {
-                color: theme('colors.slate.600');
+                color: theme("colors.slate.600");
               }
               &:hover {
               }
@@ -189,18 +189,18 @@
               }
             }
             & > ul {
-              background-color: theme('colors.white' / 4%);
-              border-radius: theme('borderRadius.xl');
+              background-color: theme("colors.white" / 4%);
+              border-radius: theme("borderRadius.xl");
               position: relative;
               &:before {
-                content: '';
+                content: "";
                 display: block;
                 top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: theme('colors.white' / 30%);
-                border-radius: theme('borderRadius.xl');
+                background-color: theme("colors.white" / 30%);
+                border-radius: theme("borderRadius.xl");
                 position: absolute;
                 z-index: -1;
               }
@@ -210,18 +210,18 @@
               & > li {
                 /* Third level */
                 & > .side-menu {
-                  padding-left: theme('spacing.10');
+                  padding-left: theme("spacing.10");
                   &.side-menu--active {
                     .side-menu__icon {
-                      color: theme('colors.slate.700');
+                      color: theme("colors.slate.700");
                     }
                     .side-menu__title {
-                      color: theme('colors.slate.700');
-                      font-weight: theme('fontWeight.medium');
+                      color: theme("colors.slate.700");
+                      font-weight: theme("fontWeight.medium");
                     }
                   }
                   &:not(.side-menu--active) {
-                    color: theme('colors.slate.600');
+                    color: theme("colors.slate.600");
                   }
                   &:hover {
                   }
@@ -268,10 +268,10 @@
   .enigma {
     .side-nav {
       .side-nav__divider {
-        background-color: theme('colors.white' / 7%);
+        background-color: theme("colors.white" / 7%);
       }
       .side-menu {
-        color: theme('colors.slate.300');
+        color: theme("colors.slate.300");
       }
       & > ul {
         & > li {
@@ -280,32 +280,32 @@
             &.side-menu--active {
               background-color: transparent;
               &:before {
-                border-color: theme('colors.black' / 8%);
-                background-color: theme('colors.darkmode.700');
+                border-color: theme("colors.black" / 8%);
+                background-color: theme("colors.darkmode.700");
               }
               &:after {
                 background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='80' viewBox='0 0 20 122.1'%3E%3Cpath data-name='Union 1' d='M16.038 122H16v-2.213a95.805 95.805 0 00-2.886-20.735 94.894 94.894 0 00-7.783-20.434A39.039 39.039 0 010 61.051a39.035 39.035 0 015.331-17.567 94.9 94.9 0 007.783-20.435A95.746 95.746 0 0016 2.314V0h4v122h-3.961v.1l-.001-.1z' fill='%23232e45'/%3E%3C/svg%3E");
               }
               .side-menu__icon {
-                color: theme('colors.slate.300');
+                color: theme("colors.slate.300");
               }
               .side-menu__title {
-                color: theme('colors.slate.300');
+                color: theme("colors.slate.300");
               }
             }
             &:not(.side-menu--active) {
               .side-menu__icon {
-                color: theme('colors.slate.400');
+                color: theme("colors.slate.400");
               }
               .side-menu__title {
-                color: theme('colors.slate.400');
+                color: theme("colors.slate.400");
               }
             }
             &:hover {
               &:not(.side-menu--active):not(.side-menu--open) {
                 background-color: transparent;
                 &:before {
-                  background-color: theme('colors.darkmode.700');
+                  background-color: theme("colors.darkmode.700");
                 }
               }
             }
@@ -313,23 +313,23 @@
           & > ul {
             background-color: transparent;
             &:before {
-              background-color: theme('colors.darkmode.900' / 30%);
+              background-color: theme("colors.darkmode.900" / 30%);
             }
             & > li {
               /* Second level */
               & > .side-menu {
                 &.side-menu--active {
                   .side-menu__icon {
-                    color: theme('colors.slate.300');
+                    color: theme("colors.slate.300");
                   }
                   .side-menu__title {
-                    color: theme('colors.slate.300');
+                    color: theme("colors.slate.300");
                   }
                 }
                 &:not(.side-menu--active) {
-                  color: theme('colors.slate.400');
+                  color: theme("colors.slate.400");
                   .side-menu__icon {
-                    color: theme('colors.slate.400');
+                    color: theme("colors.slate.400");
                   }
                 }
                 &:hover {
@@ -340,23 +340,23 @@
               & > ul {
                 background-color: transparent;
                 &:before {
-                  background-color: theme('colors.darkmode.900' / 30%);
+                  background-color: theme("colors.darkmode.900" / 30%);
                 }
                 & > li {
                   /* Third level */
                   & > .side-menu {
                     &.side-menu--active {
                       .side-menu__icon {
-                        color: theme('colors.slate.300');
+                        color: theme("colors.slate.300");
                       }
                       .side-menu__title {
-                        color: theme('colors.slate.300');
+                        color: theme("colors.slate.300");
                       }
                     }
                     &:not(.side-menu--active) {
-                      color: theme('colors.slate.400');
+                      color: theme("colors.slate.400");
                       .side-menu__icon {
-                        color: theme('colors.slate.400');
+                        color: theme("colors.slate.400");
                       }
                     }
                     &:hover {

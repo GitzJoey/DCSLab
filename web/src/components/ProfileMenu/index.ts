@@ -1,3 +1,3 @@
-import ProfileMenu from './ProfileMenu.vue';
+import ProfileMenu from "./ProfileMenu.vue";
 
 export default ProfileMenu;

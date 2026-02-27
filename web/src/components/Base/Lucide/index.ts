@@ -1,3 +1,3 @@
-import Lucide from './Lucide.vue';
+import Lucide from "./Lucide.vue";
 
 export default Lucide;

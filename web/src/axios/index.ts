@@ -1,13 +1,13 @@
-import axios from 'axios';
-import { getBackendUrl } from '@/utils/config';
+import axios from "axios";
+import { getBackendUrl } from "@/utils/config";
 
 const defaultAxiosInstance = axios.create({
   baseURL: getBackendUrl(),
   headers: {
-    'X-Requested-With': 'XMLHttpRequest',
-    Accept: 'application/json',
-    'X-LogRequestResponse': 'false',
-    'X-Sanitizer-Mode': '',
+    "X-Requested-With": "XMLHttpRequest",
+    Accept: "application/json",
+    "X-LogRequestResponse": "false",
+    "X-Sanitizer-Mode": "",
   },
 });
 
@@ -15,8 +15,7 @@ defaultAxiosInstance.defaults.withCredentials = true;
 defaultAxiosInstance.defaults.withXSRFToken = true;
 
 defaultAxiosInstance.interceptors.request.use(function (config) {
-  config.headers['X-Localization'] =
-    localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
+  config.headers["X-Localization"] = localStorage.getItem("DCSLAB_LANG") == null ? document.documentElement.lang : localStorage.getItem("DCSLAB_LANG");
   return config;
 });
 
@@ -28,7 +27,7 @@ defaultAxiosInstance.interceptors.response.use(
     if (error.response == undefined || error.response.status == undefined) return Promise.reject(error);
     switch (error.response.status) {
       case 401:
-        window.location.replace('/auth/login');
+        window.location.replace("/auth/login");
         break;
       case 403:
         break;
@@ -44,8 +43,8 @@ defaultAxiosInstance.interceptors.response.use(
 const authAxiosInstance = axios.create({
   baseURL: getBackendUrl(),
   headers: {
-    'X-Requested-With': 'XMLHttpRequest',
-    Accept: 'application/json',
+    "X-Requested-With": "XMLHttpRequest",
+    Accept: "application/json",
   },
 });
 

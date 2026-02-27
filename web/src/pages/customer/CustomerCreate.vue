@@ -1,281 +1,272 @@
 <script setup lang="ts">
-  // #region Imports
-  import { computed, onMounted, ref, watch } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import CustomerService from '@/services/CustomerService';
-  import CustomerGroupService from '@/services/CustomerGroupService';
-  import DashboardService from '@/services/DashboardService';
-  import CacheService from '@/services/CacheService';
-  import { DropDownOption } from '@/types/models/DropDownOption';
-  import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormTextarea,
-    FormSelect,
-    FormInputCode,
-    FormSwitch,
-    FormErrorMessages,
-    FormSelectSearch,
-  } from '@/components/Base/Form';
-  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
-  import { CardState } from '@/types/enums/CardState';
-  import Button from '@/components/Base/Button';
-  import { ViewMode } from '@/types/enums/ViewMode';
-  import { debounce } from 'lodash';
-  import Lucide from '@/components/Base/Lucide';
-  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
-  import { useRouter } from 'vue-router';
-  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-  import { ErrorCode } from '@/types/enums/ErrorCode';
-  import { CustomerGroup } from '@/types/models/CustomerGroup';
-  import { Collection } from '@/types/resources/Collection';
-  import { AxiosError, isAxiosError } from 'axios';
-  // #endregion
+// #region Imports
+import { computed, onMounted, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import CustomerService from "@/services/CustomerService";
+import CustomerGroupService from "@/services/CustomerGroupService";
+import DashboardService from "@/services/DashboardService";
+import CacheService from "@/services/CacheService";
+import { DropDownOption } from "@/types/models/DropDownOption";
+import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
+import { FormInput, FormLabel, FormTextarea, FormSelect, FormInputCode, FormSwitch, FormErrorMessages, FormSelectSearch } from "@/components/Base/Form";
+import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
+import { CardState } from "@/types/enums/CardState";
+import Button from "@/components/Base/Button";
+import { ViewMode } from "@/types/enums/ViewMode";
+import { debounce } from "lodash";
+import Lucide from "@/components/Base/Lucide";
+import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
+import { useRouter } from "vue-router";
+import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
+import { ErrorCode } from "@/types/enums/ErrorCode";
+import { CustomerGroup } from "@/types/models/CustomerGroup";
+import { Collection } from "@/types/resources/Collection";
+import { AxiosError, isAxiosError } from "axios";
+// #endregion
 
-  // #region Interfaces
-  // #endregion
+// #region Interfaces
+// #endregion
 
-  // #region Declarations
-  const { t } = useI18n();
-  const router = useRouter();
-  const selectedUserLocationStore = useSelectedUserLocationStore();
+// #region Declarations
+const { t } = useI18n();
+const router = useRouter();
+const selectedUserLocationStore = useSelectedUserLocationStore();
 
-  const customerService = new CustomerService();
-  const customerGroupService = new CustomerGroupService();
-  const cacheServices = new CacheService();
-  const dashboardServices = new DashboardService();
-  // #endregion
+const customerService = new CustomerService();
+const customerGroupService = new CustomerGroupService();
+const cacheServices = new CacheService();
+const dashboardServices = new DashboardService();
+// #endregion
 
-  // #region Props, Emits
-  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
-  // #endregion
+// #region Props, Emits
+const emits = defineEmits(["mode-state", "loading-state", "update-profile", "show-alertplaceholder"]);
+// #endregion
 
-  // #region Refs
-  const cards = ref<Array<TwoColumnsLayoutCards>>([
-    {
-      title: 'views.customer.field_groups.general_information',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.customer.field_groups.credit_limit',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.customer.field_groups.tax_information',
-      state: CardState.Expanded,
-    },
-    { title: '', state: CardState.Hidden, id: 'button' },
-  ]);
+// #region Refs
+const cards = ref<Array<TwoColumnsLayoutCards>>([
+  {
+    title: "views.customer.field_groups.general_information",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.customer.field_groups.credit_limit",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.customer.field_groups.tax_information",
+    state: CardState.Expanded,
+  },
+  { title: "", state: CardState.Hidden, id: "button" },
+]);
 
-  const customerGroupDDL = ref<Array<DropDownOption> | null>(null);
-  const customerGroupSearch = ref<string>('');
-  const customerGroupOptions = computed(() =>
-    (customerGroupDDL.value ?? []).map((item) => ({
-      value: item.code,
-      label: item.name,
-    })),
-  );
+const customerGroupDDL = ref<Array<DropDownOption> | null>(null);
+const customerGroupSearch = ref<string>("");
+const customerGroupOptions = computed(() =>
+  (customerGroupDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
 
-  const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
-  const statusDDL = ref<Array<DropDownOption> | null>(null);
+const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
+const statusDDL = ref<Array<DropDownOption> | null>(null);
 
-  const isDDLLoading = ref<boolean>(false);
+const isDDLLoading = ref<boolean>(false);
 
-  const customerForm = customerService.useCustomerCreateForm();
-  // #endregion
+const customerForm = customerService.useCustomerCreateForm();
+// #endregion
 
-  // #region Computed
-  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
-  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
-  // #endregion
+// #region Computed
+const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
+// #endregion
 
-  // #region Lifecycle Hooks
-  onMounted(async () => {
-    emits('mode-state', ViewMode.FORM_CREATE);
-    getDDL();
-    loadFromCache();
-    if (!isUserLocationSelected.value) {
-      router.push({
-        name: 'side-menu-error-code',
-        params: { code: ErrorCode.USERLOCATION_REQUIRED },
-      });
-    }
-    setCompanyIdData();
+// #region Lifecycle Hooks
+onMounted(async () => {
+  emits("mode-state", ViewMode.FORM_CREATE);
+  getDDL();
+  loadFromCache();
+  if (!isUserLocationSelected.value) {
+    router.push({
+      name: "side-menu-error-code",
+      params: { code: ErrorCode.USERLOCATION_REQUIRED },
+    });
+  }
+  setCompanyIdData();
+});
+// #endregion
+
+// #region Methods
+const setCompanyIdData = () => {
+  customerForm.setData({
+    company_id: selectedUserLocation.value.company.id,
   });
-  // #endregion
+};
 
-  // #region Methods
-  const setCompanyIdData = () => {
-    customerForm.setData({
-      company_id: selectedUserLocation.value.company.id,
+const loadFromCache = () => {
+  let data = cacheServices.getLastEntity("CUSTOMER_CREATE") as Record<string, unknown>;
+  if (!data) return;
+  customerForm.setData(data);
+};
+
+const getCustomerGroupDDL = async (search = ""): Promise<void> => {
+  const result = await customerGroupService.readAnyGet({
+    with_trashed: false,
+    company_id: selectedUserLocation.value.company.id,
+    search,
+    include_id: undefined,
+    refresh: false,
+    limit: 10,
+  });
+
+  if (result.success && result.data) {
+    const collection = result.data as Collection<Array<CustomerGroup>>;
+    customerGroupDDL.value = collection.data.map((item: CustomerGroup) => ({
+      code: item.id,
+      name: item.name,
+    }));
+  }
+};
+
+const getDDL = async (): Promise<void> => {
+  isDDLLoading.value = true;
+
+  try {
+    await Promise.all([
+      (async () => {
+        const result = await dashboardServices.getStatusDDL();
+        statusDDL.value = result;
+      })(),
+      (async () => {
+        const result = await dashboardServices.getPaymentTermTypesDDL();
+        paymentTermTypeDDL.value = result;
+      })(),
+      getCustomerGroupDDL(),
+    ]);
+  } catch (error) {
+    console.error("Error loading DDLs:", error);
+  } finally {
+    isDDLLoading.value = false;
+  }
+};
+
+const clearGroup = () => {
+  customerForm.setData({ group_id: "" });
+  getCustomerGroupDDL("");
+  customerForm.forgetError("group_id");
+  customerForm.validate("group_id");
+};
+
+const handleExpandCard = (index: number) => {
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded;
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed;
+  }
+};
+
+const scrollToError = (id: string): void => {
+  let el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
+const onSubmit = async () => {
+  if (customerForm.hasErrors) {
+    scrollToError(Object.keys(customerForm.errors)[0]);
+  }
+  emits("loading-state", true);
+  await customerForm
+    .submit()
+    .then(() => {
+      resetForm();
+      emits("update-profile");
+      router.push({ name: "side-menu-customer-list" });
+    })
+    .catch((error) => {
+      const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      emits("loading-state", false);
     });
+};
+
+const resetForm = () => {
+  customerForm.reset();
+  customerForm.setErrors({});
+};
+
+const setCode = () => {
+  customerForm.forgetError("code");
+  if (customerForm.code == "_AUTO_") {
+    customerForm.setData({ code: "" });
+  } else {
+    customerForm.setData({ code: "_AUTO_" });
+  }
+};
+
+const showAlertPlaceholder = (
+  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
+  pTitle: string,
+  pAlertList: Record<string, Array<string>> | null,
+) => {
+  let ap: AlertPlaceholderProps = {
+    alertType: pAlertType,
+    title: pTitle,
+    alertList: pAlertList,
   };
+  emits("show-alertplaceholder", ap);
+};
 
-  const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('CUSTOMER_CREATE') as Record<string, unknown>;
-    if (!data) return;
-    customerForm.setData(data);
-  };
+const convertErrorTypeToAlertListType = (error: unknown) => {
+  const record: Record<string, Array<string>> = {};
 
-  const getCustomerGroupDDL = async (search = ''): Promise<void> => {
-    const result = await customerGroupService.readAnyGet({
-      with_trashed: false,
-      company_id: selectedUserLocation.value.company.id,
-      search,
-      include_id: undefined,
-      refresh: false,
-      limit: 10,
-    });
+  const anyError = error as any;
+  const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
 
-    if (result.success && result.data) {
-      const collection = result.data as Collection<Array<CustomerGroup>>;
-      customerGroupDDL.value = collection.data.map((item: CustomerGroup) => ({
-        code: item.id,
-        name: item.name,
-      }));
-    }
-  };
+  if (response && response.data) {
+    const data = response.data as any;
 
-  const getDDL = async (): Promise<void> => {
-    isDDLLoading.value = true;
+    if (data.errors && typeof data.errors === "object") {
+      for (const key of Object.keys(data.errors)) {
+        const value = data.errors[key];
 
-    try {
-      await Promise.all([
-        (async () => {
-          const result = await dashboardServices.getStatusDDL();
-          statusDDL.value = result;
-        })(),
-        (async () => {
-          const result = await dashboardServices.getPaymentTermTypesDDL();
-          paymentTermTypeDDL.value = result;
-        })(),
-        getCustomerGroupDDL(),
-      ]);
-    } catch (error) {
-      console.error('Error loading DDLs:', error);
-    } finally {
-      isDDLLoading.value = false;
-    }
-  };
-
-  const clearGroup = () => {
-    customerForm.setData({ group_id: '' });
-    getCustomerGroupDDL('');
-    customerForm.forgetError('group_id');
-    customerForm.validate('group_id');
-  };
-
-  const handleExpandCard = (index: number) => {
-    if (cards.value[index].state === CardState.Collapsed) {
-      cards.value[index].state = CardState.Expanded;
-    } else if (cards.value[index].state === CardState.Expanded) {
-      cards.value[index].state = CardState.Collapsed;
-    }
-  };
-
-  const scrollToError = (id: string): void => {
-    let el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
-
-  const onSubmit = async () => {
-    if (customerForm.hasErrors) {
-      scrollToError(Object.keys(customerForm.errors)[0]);
-    }
-    emits('loading-state', true);
-    await customerForm
-      .submit()
-      .then(() => {
-        resetForm();
-        emits('update-profile');
-        router.push({ name: 'side-menu-customer-list' });
-      })
-      .catch((error) => {
-        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        emits('loading-state', false);
-      });
-  };
-
-  const resetForm = () => {
-    customerForm.reset();
-    customerForm.setErrors({});
-  };
-
-  const setCode = () => {
-    customerForm.forgetError('code');
-    if (customerForm.code == '_AUTO_') {
-      customerForm.setData({ code: '' });
-    } else {
-      customerForm.setData({ code: '_AUTO_' });
-    }
-  };
-
-  const showAlertPlaceholder = (
-    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
-    pTitle: string,
-    pAlertList: Record<string, Array<string>> | null,
-  ) => {
-    let ap: AlertPlaceholderProps = {
-      alertType: pAlertType,
-      title: pTitle,
-      alertList: pAlertList,
-    };
-    emits('show-alertplaceholder', ap);
-  };
-
-  const convertErrorTypeToAlertListType = (error: unknown) => {
-    const record: Record<string, Array<string>> = {};
-
-    const anyError = error as any;
-    const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
-
-    if (response && response.data) {
-      const data = response.data as any;
-
-      if (data.errors && typeof data.errors === 'object') {
-        for (const key of Object.keys(data.errors)) {
-          const value = data.errors[key];
-
-          if (Array.isArray(value)) {
-            record[key] = value;
-          } else if (value !== undefined && value !== null) {
-            record[key] = [String(value)];
-          }
+        if (Array.isArray(value)) {
+          record[key] = value;
+        } else if (value !== undefined && value !== null) {
+          record[key] = [String(value)];
         }
-
-        return record;
       }
 
-      if (data.message) {
-        record.error = [String(data.message)];
-        return record;
-      }
+      return record;
     }
 
-    if (error instanceof Error && error.message) {
-      record.error = [error.message];
-    } else {
-      record.error = ['Unknown error'];
+    if (data.message) {
+      record.error = [String(data.message)];
+      return record;
     }
+  }
 
-    return record;
-  };
-  // #endregion
+  if (error instanceof Error && error.message) {
+    record.error = [error.message];
+  } else {
+    record.error = ["Unknown error"];
+  }
 
-  // #region Watchers
-  watch(
-    customerForm,
-    debounce((newValue): void => {
-      cacheServices.setLastEntity('CUSTOMER_CREATE', newValue.data());
-    }, 500),
-    { deep: true },
-  );
-  // #endregion
+  return record;
+};
+// #endregion
+
+// #region Watchers
+watch(
+  customerForm,
+  debounce((newValue): void => {
+    cacheServices.setLastEntity("CUSTOMER_CREATE", newValue.data());
+  }, 500),
+  { deep: true },
+);
+// #endregion
 </script>
 
 <template>
@@ -286,7 +277,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('code') }">
-                {{ t('views.customer.fields.code') }}
+                {{ t("views.customer.fields.code") }}
               </FormLabel>
               <FormInputCode
                 v-model="customerForm.code"
@@ -299,7 +290,7 @@
             </div>
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('name') }">
-                {{ t('views.customer.fields.name') }}
+                {{ t("views.customer.fields.name") }}
               </FormLabel>
               <FormInput
                 v-model="customerForm.name"
@@ -316,7 +307,7 @@
                   'text-danger': customerForm.invalid('group_id'),
                 }"
               >
-                {{ t('views.customer.fields.group') }}
+                {{ t("views.customer.fields.group") }}
               </FormLabel>
               <div class="flex items-center gap-2">
                 <div class="flex-1">
@@ -332,12 +323,7 @@
                     @search="getCustomerGroupDDL"
                   />
                 </div>
-                <button
-                  v-if="customerForm.group_id"
-                  type="button"
-                  class="text-slate-500 hover:text-danger"
-                  @click="clearGroup"
-                >
+                <button v-if="customerForm.group_id" type="button" class="text-slate-500 hover:text-danger" @click="clearGroup">
                   <Lucide icon="X" class="w-4 h-4" />
                 </button>
               </div>
@@ -345,7 +331,7 @@
             </div>
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('is_member') }">
-                {{ t('views.customer.fields.is_member') }}
+                {{ t("views.customer.fields.is_member") }}
               </FormLabel>
               <FormSwitch>
                 <FormSwitch.Input
@@ -362,7 +348,7 @@
             </div>
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('zone') }">
-                {{ t('views.customer.fields.zone') }}
+                {{ t("views.customer.fields.zone") }}
               </FormLabel>
               <FormInput
                 v-model="customerForm.zone"
@@ -375,15 +361,11 @@
             </div>
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('status') }">
-                {{ t('views.customer.fields.status') }}
+                {{ t("views.customer.fields.status") }}
               </FormLabel>
-              <FormSelect
-                v-model="customerForm.status"
-                :class="{ 'border-danger': customerForm.invalid('status') }"
-                @change="customerForm.validate('status')"
-              >
+              <FormSelect v-model="customerForm.status" :class="{ 'border-danger': customerForm.invalid('status') }" @change="customerForm.validate('status')">
                 <option value="0" disabled>
-                  {{ t('components.dropdown.placeholder') }}
+                  {{ t("components.dropdown.placeholder") }}
                 </option>
                 <option v-for="s in statusDDL" :key="s.code" :value="s.code">
                   {{ t(s.name) }}
@@ -404,7 +386,7 @@
                   'text-danger': customerForm.invalid('max_open_invoice'),
                 }"
               >
-                {{ t('views.customer.fields.max_open_invoice') }}
+                {{ t("views.customer.fields.max_open_invoice") }}
               </FormLabel>
               <FormInput
                 v-model="customerForm.max_open_invoice"
@@ -423,7 +405,7 @@
                   'text-danger': customerForm.invalid('max_outstanding_invoice'),
                 }"
               >
-                {{ t('views.customer.fields.max_outstanding_invoice') }}
+                {{ t("views.customer.fields.max_outstanding_invoice") }}
               </FormLabel>
               <FormInput
                 v-model="customerForm.max_outstanding_invoice"
@@ -442,7 +424,7 @@
                   'text-danger': customerForm.invalid('max_invoice_age'),
                 }"
               >
-                {{ t('views.customer.fields.max_invoice_age') }}
+                {{ t("views.customer.fields.max_invoice_age") }}
               </FormLabel>
               <FormInput
                 v-model="customerForm.max_invoice_age"
@@ -461,7 +443,7 @@
                   'text-danger': customerForm.invalid('payment_term_type'),
                 }"
               >
-                {{ t('views.customer.fields.payment_term_type') }}
+                {{ t("views.customer.fields.payment_term_type") }}
               </FormLabel>
               <FormSelect
                 v-model="customerForm.payment_term_type"
@@ -472,7 +454,7 @@
                 @change="customerForm.validate('payment_term_type')"
               >
                 <option value="0" disabled>
-                  {{ t('components.dropdown.placeholder') }}
+                  {{ t("components.dropdown.placeholder") }}
                 </option>
                 <option v-for="s in paymentTermTypeDDL" :key="s.code" :value="s.code">
                   {{ t(s.name) }}
@@ -482,7 +464,7 @@
             </div>
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('payment_term') }">
-                {{ t('views.customer.fields.payment_term') }}
+                {{ t("views.customer.fields.payment_term") }}
               </FormLabel>
               <FormInput
                 v-model="customerForm.payment_term"
@@ -508,7 +490,7 @@
                   'text-danger': customerForm.invalid('taxable_enterprise'),
                 }"
               >
-                {{ t('views.customer.fields.taxable_enterprise') }}
+                {{ t("views.customer.fields.taxable_enterprise") }}
               </FormLabel>
               <FormSwitch>
                 <FormSwitch.Input
@@ -525,7 +507,7 @@
             </div>
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('tax_id') }">
-                {{ t('views.customer.fields.tax_id') }}
+                {{ t("views.customer.fields.tax_id") }}
               </FormLabel>
               <FormInput
                 v-model="customerForm.tax_id"
@@ -538,7 +520,7 @@
             </div>
             <div class="pb-4">
               <FormLabel :class="{ 'text-danger': customerForm.invalid('remarks') }">
-                {{ t('views.customer.fields.remarks') }}
+                {{ t("views.customer.fields.remarks") }}
               </FormLabel>
               <FormTextarea
                 v-model="customerForm.remarks"
@@ -554,20 +536,14 @@
 
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="customerForm.validating || customerForm.hasErrors"
-          >
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="customerForm.validating || customerForm.hasErrors">
             <Lucide v-if="customerForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
-              {{ t('components.buttons.submit') }}
+              {{ t("components.buttons.submit") }}
             </template>
           </Button>
           <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
-            {{ t('components.buttons.reset') }}
+            {{ t("components.buttons.reset") }}
           </Button>
         </div>
       </template>

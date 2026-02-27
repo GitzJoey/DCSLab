@@ -1,566 +1,556 @@
 <script setup lang="ts">
-  // #region Imports
-  import { onMounted, computed, ref, watchEffect, provide } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import {
-    FormInput,
-    FormLabel,
-    FormSwitch,
-    FormTextarea,
-    FormSelect,
-    FormErrorMessages,
-  } from '@/components/Base/Form';
-  import { useUserContextStore } from '@/stores/user-context';
-  import { useZiggyRouteStore } from '@/stores/ziggy-route';
-  import { useMenuStore, Menu as sMenu } from '@/stores/menu';
-  import { TitleLayout, TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
-  import LoadingOverlay from '@/components/LoadingOverlay';
-  import { CardState } from '@/types/enums/CardState';
-  import posSystemImage from '@/assets/images/pos_system.png';
-  import wareHouseImage from '@/assets/images/warehouse_system.png';
-  import accountingImage from '@/assets/images/accounting_system.jpg';
-  import googlePlayBadge from '@/assets/images/google-play-badge.png';
-  import Lucide from '@/components/Base/Lucide';
-  import Button from '@/components/Base/Button';
-  import { formatDate } from '@/utils/helper';
-  import ProfileService from '@/services/ProfileService';
-  import DashboardService from '@/services/DashboardService';
-  import { TwoFactorResponse, QRCode, SecretKeyResponse } from '@/types/models/TwoFactorAuthentication';
-  import { ConfirmPasswordStatusResponse } from '@/types/models/ConfirmPassword';
-  import { UserProfile } from '@/types/models/UserProfile';
-  import { ServiceResponse } from '@/types/services/ServiceResponse';
-  import { Dialog } from '@/components/Base/Headless';
-  import { Config } from 'ziggy-js';
-  import AlertPlaceholder from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-  import { type NotificationElement } from '@/components/Base/Notification/Notification.vue';
-  // #endregion
+// #region Imports
+import { onMounted, computed, ref, watchEffect, provide } from "vue";
+import { useI18n } from "vue-i18n";
+import { FormInput, FormLabel, FormSwitch, FormTextarea, FormSelect, FormErrorMessages } from "@/components/Base/Form";
+import { useUserContextStore } from "@/stores/user-context";
+import { useZiggyRouteStore } from "@/stores/ziggy-route";
+import { useMenuStore, Menu as sMenu } from "@/stores/menu";
+import { TitleLayout, TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
+import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
+import LoadingOverlay from "@/components/LoadingOverlay";
+import { CardState } from "@/types/enums/CardState";
+import posSystemImage from "@/assets/images/pos_system.png";
+import wareHouseImage from "@/assets/images/warehouse_system.png";
+import accountingImage from "@/assets/images/accounting_system.jpg";
+import googlePlayBadge from "@/assets/images/google-play-badge.png";
+import Lucide from "@/components/Base/Lucide";
+import Button from "@/components/Base/Button";
+import { formatDate } from "@/utils/helper";
+import ProfileService from "@/services/ProfileService";
+import DashboardService from "@/services/DashboardService";
+import { TwoFactorResponse, QRCode, SecretKeyResponse } from "@/types/models/TwoFactorAuthentication";
+import { ConfirmPasswordStatusResponse } from "@/types/models/ConfirmPassword";
+import { UserProfile } from "@/types/models/UserProfile";
+import { ServiceResponse } from "@/types/services/ServiceResponse";
+import { Dialog } from "@/components/Base/Headless";
+import { Config } from "ziggy-js";
+import AlertPlaceholder from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
+import { type NotificationElement } from "@/components/Base/Notification/Notification.vue";
+// #endregion
 
-  // #region Interfaces
-  interface RoleSelection {
-    images: string;
-    state: 'selectable' | 'checked' | 'disabled';
-    rolekey: string;
+// #region Interfaces
+interface RoleSelection {
+  images: string;
+  state: "selectable" | "checked" | "disabled";
+  rolekey: string;
+}
+// #endregion
+
+// #region Declarations
+const { t } = useI18n();
+
+const dashboardServices = new DashboardService();
+const profileServices = new ProfileService();
+
+const userContextStore = useUserContextStore();
+const menuStore = useMenuStore();
+const ziggyRouteStore = useZiggyRouteStore();
+// #endregion
+
+// #region Props, Emits
+// #endregion
+
+// #region Refs
+const loading = ref<boolean>(false);
+const cards = ref<Array<TwoColumnsLayoutCards>>([
+  {
+    title: "views.profile.field_groups.user_profile",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.profile.field_groups.email_verification",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.profile.field_groups.personal_information",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.profile.field_groups.account_settings",
+    state: CardState.Expanded,
+  },
+  { title: "views.profile.field_groups.roles", state: CardState.Expanded },
+  {
+    title: "views.profile.field_groups.change_password",
+    state: CardState.Expanded,
+  },
+  { title: "views.profile.field_groups.api_token", state: CardState.Expanded },
+  {
+    title: "views.profile.field_groups.two_factor_authentication",
+    state: CardState.Expanded,
+  },
+]);
+
+const sendVerificationEmailNotification = ref<NotificationElement>();
+
+provide("bind[sendVerificationEmailNotification]", (el: NotificationElement) => {
+  sendVerificationEmailNotification.value = el;
+});
+
+const roleSelection = ref<Array<RoleSelection>>([
+  {
+    images: posSystemImage,
+    state: "disabled",
+    rolekey: "pos",
+  },
+  {
+    images: wareHouseImage,
+    state: "disabled",
+    rolekey: "wh",
+  },
+  {
+    images: accountingImage,
+    state: "disabled",
+    rolekey: "wh",
+  },
+]);
+
+const twoFactorAuthStatus = ref<boolean>(false);
+const showQRCodeField = ref<boolean>(false);
+const showRecoveryCodesField = ref<boolean>(false);
+const showSecretKeyField = ref<boolean>(false);
+
+const qrCode = ref<QRCode>({
+  svg: "",
+  url: "",
+});
+const twoFactorCode = ref<string>("");
+const twoFactorCodeErrorText = ref<string>("");
+const twoFactorRecoveryCodes = ref<Array<string>>([]);
+const twoFactorSecretKey = ref<string>("");
+
+const confirmPasswordStatus = ref<ConfirmPasswordStatusResponse>({
+  confirmed: false,
+});
+const showConfirmPasswordDialog = ref<boolean>(false);
+const confirmPasswordPurpose = ref<"2FA" | "QRCODE" | "">("");
+const confirmPasswordText = ref<string>("");
+const confirmPasswordErrorText = ref<string>("");
+
+const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
+const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
+const updateAccountSettingsForm = profileServices.useUpdateAccountSettingsForm();
+const updateUserRolesForm = profileServices.useUpdateUserRolesForm();
+const updatePasswordForm = profileServices.useUpdatePasswordForm();
+const updateTokensForm = profileServices.useUpdateTokenForm();
+
+const alertType = ref<"hidden" | "danger" | "success" | "warning" | "pending" | "dark">("hidden");
+const alertTitle = ref<string>("");
+const alertList = ref<Record<string, Array<string>> | null>(null);
+// #endregion
+
+// #region Provide/Inject
+// #endregion
+
+// #region Computed
+const userContextIsLoaded = computed(() => userContextStore.getIsLoaded);
+const userContext = computed(() => userContextStore.getUserContext);
+// #endregion
+
+// #region Lifecycle Hooks
+onMounted(async () => {
+  loading.value = true;
+  if (userContextIsLoaded.value) {
+    setFormData();
+    loading.value = false;
   }
-  // #endregion
+});
+// #endregion
 
-  // #region Declarations
-  const { t } = useI18n();
-
-  const dashboardServices = new DashboardService();
-  const profileServices = new ProfileService();
-
-  const userContextStore = useUserContextStore();
-  const menuStore = useMenuStore();
-  const ziggyRouteStore = useZiggyRouteStore();
-  // #endregion
-
-  // #region Props, Emits
-  // #endregion
-
-  // #region Refs
-  const loading = ref<boolean>(false);
-  const cards = ref<Array<TwoColumnsLayoutCards>>([
-    {
-      title: 'views.profile.field_groups.user_profile',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.profile.field_groups.email_verification',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.profile.field_groups.personal_information',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.profile.field_groups.account_settings',
-      state: CardState.Expanded,
-    },
-    { title: 'views.profile.field_groups.roles', state: CardState.Expanded },
-    {
-      title: 'views.profile.field_groups.change_password',
-      state: CardState.Expanded,
-    },
-    { title: 'views.profile.field_groups.api_token', state: CardState.Expanded },
-    {
-      title: 'views.profile.field_groups.two_factor_authentication',
-      state: CardState.Expanded,
-    },
-  ]);
-
-  const sendVerificationEmailNotification = ref<NotificationElement>();
-
-  provide('bind[sendVerificationEmailNotification]', (el: NotificationElement) => {
-    sendVerificationEmailNotification.value = el;
+// #region Methods
+const setFormData = () => {
+  updateUserProfileForm.setData({
+    name: userContext.value.name,
   });
 
-  const roleSelection = ref<Array<RoleSelection>>([
-    {
-      images: posSystemImage,
-      state: 'disabled',
-      rolekey: 'pos',
-    },
-    {
-      images: wareHouseImage,
-      state: 'disabled',
-      rolekey: 'wh',
-    },
-    {
-      images: accountingImage,
-      state: 'disabled',
-      rolekey: 'wh',
-    },
-  ]);
-
-  const twoFactorAuthStatus = ref<boolean>(false);
-  const showQRCodeField = ref<boolean>(false);
-  const showRecoveryCodesField = ref<boolean>(false);
-  const showSecretKeyField = ref<boolean>(false);
-
-  const qrCode = ref<QRCode>({
-    svg: '',
-    url: '',
+  updatePersonalInfoForm.setData({
+    first_name: userContext.value.profile.first_name,
+    last_name: userContext.value.profile.last_name,
+    address: userContext.value.profile.address,
+    city: userContext.value.profile.city,
+    postal_code: userContext.value.profile.postal_code,
+    country: userContext.value.profile.country,
+    img_path: userContext.value.profile.img_path,
+    tax_id: userContext.value.profile.tax_id,
+    ic_num: userContext.value.profile.ic_num,
+    status: userContext.value.profile.status,
+    remarks: userContext.value.profile.remarks,
   });
-  const twoFactorCode = ref<string>('');
-  const twoFactorCodeErrorText = ref<string>('');
-  const twoFactorRecoveryCodes = ref<Array<string>>([]);
-  const twoFactorSecretKey = ref<string>('');
 
-  const confirmPasswordStatus = ref<ConfirmPasswordStatusResponse>({
-    confirmed: false,
+  updateAccountSettingsForm.setData({
+    theme: userContext.value.settings.theme,
+    date_format: userContext.value.settings.date_format,
+    time_format: userContext.value.settings.time_format,
   });
-  const showConfirmPasswordDialog = ref<boolean>(false);
-  const confirmPasswordPurpose = ref<'2FA' | 'QRCODE' | ''>('');
-  const confirmPasswordText = ref<string>('');
-  const confirmPasswordErrorText = ref<string>('');
 
-  const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
-  const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
-  const updateAccountSettingsForm = profileServices.useUpdateAccountSettingsForm();
-  const updateUserRolesForm = profileServices.useUpdateUserRolesForm();
-  const updatePasswordForm = profileServices.useUpdatePasswordForm();
-  const updateTokensForm = profileServices.useUpdateTokenForm();
-
-  const alertType = ref<'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark'>('hidden');
-  const alertTitle = ref<string>('');
-  const alertList = ref<Record<string, Array<string>> | null>(null);
-  // #endregion
-
-  // #region Provide/Inject
-  // #endregion
-
-  // #region Computed
-  const userContextIsLoaded = computed(() => userContextStore.getIsLoaded);
-  const userContext = computed(() => userContextStore.getUserContext);
-  // #endregion
-
-  // #region Lifecycle Hooks
-  onMounted(async () => {
-    loading.value = true;
-    if (userContextIsLoaded.value) {
-      setFormData();
-      loading.value = false;
+  roleSelection.value.forEach((r) => {
+    if (r.rolekey == "pos" && hasRolePOSOwner()) {
+      r.state = "checked";
+    } else if (r.rolekey == "wh" && hasRoleWHOwner()) {
+      r.state = "checked";
+    } else if (r.rolekey == "acc" && hasRoleACCOwner()) {
+      r.state = "checked";
+    } else {
+      r.state = "selectable";
     }
   });
-  // #endregion
+};
 
-  // #region Methods
-  const setFormData = () => {
-    updateUserProfileForm.setData({
-      name: userContext.value.name,
-    });
+const handleExpandCard = (index: number) => {
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded;
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed;
+  }
+};
 
-    updatePersonalInfoForm.setData({
-      first_name: userContext.value.profile.first_name,
-      last_name: userContext.value.profile.last_name,
-      address: userContext.value.profile.address,
-      city: userContext.value.profile.city,
-      postal_code: userContext.value.profile.postal_code,
-      country: userContext.value.profile.country,
-      img_path: userContext.value.profile.img_path,
-      tax_id: userContext.value.profile.tax_id,
-      ic_num: userContext.value.profile.ic_num,
-      status: userContext.value.profile.status,
-      remarks: userContext.value.profile.remarks,
-    });
+const handleChangeRole = (index: number) => {
+  let activeRole: string = roleSelection.value[index].rolekey;
 
-    updateAccountSettingsForm.setData({
-      theme: userContext.value.settings.theme,
-      date_format: userContext.value.settings.date_format,
-      time_format: userContext.value.settings.time_format,
-    });
+  updateUserRolesForm.setData({
+    roles: activeRole,
+  });
+};
 
-    roleSelection.value.forEach((r) => {
-      if (r.rolekey == 'pos' && hasRolePOSOwner()) {
-        r.state = 'checked';
-      } else if (r.rolekey == 'wh' && hasRoleWHOwner()) {
-        r.state = 'checked';
-      } else if (r.rolekey == 'acc' && hasRoleACCOwner()) {
-        r.state = 'checked';
-      } else {
-        r.state = 'selectable';
-      }
-    });
-  };
-
-  const handleExpandCard = (index: number) => {
-    if (cards.value[index].state === CardState.Collapsed) {
-      cards.value[index].state = CardState.Expanded;
-    } else if (cards.value[index].state === CardState.Expanded) {
-      cards.value[index].state = CardState.Collapsed;
+const hasRolePOSOwner = () => {
+  let result = false;
+  for (const r of userContext.value.roles) {
+    if (r.display_name == "POS-owner") {
+      result = true;
     }
-  };
+  }
+  return result;
+};
 
-  const handleChangeRole = (index: number) => {
-    let activeRole: string = roleSelection.value[index].rolekey;
-
-    updateUserRolesForm.setData({
-      roles: activeRole,
-    });
-  };
-
-  const hasRolePOSOwner = () => {
-    let result = false;
-    for (const r of userContext.value.roles) {
-      if (r.display_name == 'POS-owner') {
-        result = true;
-      }
+const hasRoleWHOwner = () => {
+  let result = false;
+  for (const r of userContext.value.roles) {
+    if (r.display_name == "WH-owner") {
+      result = true;
     }
-    return result;
-  };
+  }
+  return result;
+};
 
-  const hasRoleWHOwner = () => {
-    let result = false;
-    for (const r of userContext.value.roles) {
-      if (r.display_name == 'WH-owner') {
-        result = true;
-      }
+const hasRoleACCOwner = () => {
+  let result = false;
+  for (const r of userContext.value.roles) {
+    if (r.display_name == "ACC-owner") {
+      result = true;
     }
-    return result;
-  };
+  }
+  return result;
+};
 
-  const hasRoleACCOwner = () => {
-    let result = false;
-    for (const r of userContext.value.roles) {
-      if (r.display_name == 'ACC-owner') {
-        result = true;
-      }
-    }
-    return result;
-  };
+const setTwoFactorAuthStatus = async () => {
+  twoFactorAuthStatus.value = userContext.value.two_factor;
+};
 
-  const setTwoFactorAuthStatus = async () => {
-    twoFactorAuthStatus.value = userContext.value.two_factor;
-  };
+const setTwoFactor = async (event: Event) => {
+  let checked: boolean = (event.target as HTMLInputElement).checked;
+  twoFactorAuthStatus.value = checked;
 
-  const setTwoFactor = async (event: Event) => {
-    let checked: boolean = (event.target as HTMLInputElement).checked;
-    twoFactorAuthStatus.value = checked;
+  await checkConfirmPasswordStatus();
 
-    await checkConfirmPasswordStatus();
+  if (confirmPasswordStatus.value.confirmed) {
+    await setTwoFactorWithoutOrAfterConfirmPassword();
+  } else {
+    confirmPasswordPurpose.value = "2FA";
+    await setTwoFactorWithConfirmPassword();
+  }
+};
 
-    if (confirmPasswordStatus.value.confirmed) {
-      await setTwoFactorWithoutOrAfterConfirmPassword();
-    } else {
-      confirmPasswordPurpose.value = '2FA';
-      await setTwoFactorWithConfirmPassword();
-    }
-  };
+const setTwoFactorWithConfirmPassword = async () => {
+  confirmPasswordText.value = "";
+  confirmPasswordErrorText.value = "";
+  showConfirmPasswordDialog.value = true;
+};
 
-  const setTwoFactorWithConfirmPassword = async () => {
-    confirmPasswordText.value = '';
-    confirmPasswordErrorText.value = '';
-    showConfirmPasswordDialog.value = true;
-  };
+const setTwoFactorWithoutOrAfterConfirmPassword = async () => {
+  if (twoFactorAuthStatus.value) {
+    await profileServices.enableTwoFactor();
+    await showQR();
+  } else {
+    await profileServices.disableTwoFactor();
+    await reloadUserContext();
+  }
+};
 
-  const setTwoFactorWithoutOrAfterConfirmPassword = async () => {
-    if (twoFactorAuthStatus.value) {
-      await profileServices.enableTwoFactor();
-      await showQR();
-    } else {
-      await profileServices.disableTwoFactor();
-      await reloadUserContext();
-    }
-  };
+const doConfirmTwoFactorAuthentication = async () => {
+  let code = twoFactorCode.value;
+  let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.TwoFactorAuthenticationConfirmed(code);
 
-  const doConfirmTwoFactorAuthentication = async () => {
-    let code = twoFactorCode.value;
-    let response: ServiceResponse<TwoFactorResponse | null> =
-      await profileServices.TwoFactorAuthenticationConfirmed(code);
-
-    if (response.success) {
-      showQRCodeField.value = false;
-
-      await reloadUserContext();
-      await showRecoveryCodes();
-      await showSecretKey();
-    } else {
-      twoFactorCodeErrorText.value = t('views.profile.fields.2fa.confirm_2fa_auth_error');
-    }
-  };
-
-  const showQR = async () => {
-    await checkConfirmPasswordStatus();
-
-    if (confirmPasswordStatus.value.confirmed) {
-      await showQRWithoutOrAfterConfirmPassword();
-    } else {
-      confirmPasswordPurpose.value = 'QRCODE';
-      await showQRWithConfirmPassword();
-    }
-  };
-
-  const showQRWithoutOrAfterConfirmPassword = async () => {
-    let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
-
-    if (response.success && response.data) {
-      qrCode.value = response.data;
-      showQRCodeField.value = true;
-    }
-  };
-
-  const showQRWithConfirmPassword = async () => {
-    confirmPasswordText.value = '';
-    confirmPasswordErrorText.value = '';
-    showConfirmPasswordDialog.value = true;
-  };
-
-  const showRecoveryCodes = async () => {
-    let response: ServiceResponse<Array<string> | null> = await profileServices.twoFactorRecoveryCodes();
-
-    if (response.success && response.data) {
-      twoFactorRecoveryCodes.value = response.data;
-      showRecoveryCodesField.value = true;
-    }
-  };
-
-  const showSecretKey = async () => {
-    let response: ServiceResponse<SecretKeyResponse | null> = await profileServices.twoFactorSecretKey();
-
-    if (response.success) {
-      if (response.data) {
-        twoFactorSecretKey.value = response.data.secretKey;
-        showSecretKeyField.value = true;
-      }
-    }
-  };
-
-  const checkConfirmPasswordStatus = async () => {
-    let response: ServiceResponse<ConfirmPasswordStatusResponse | null> = await profileServices.confirmPasswordStatus();
-
-    if (response.success && response.data) {
-      confirmPasswordStatus.value = response.data;
-    }
-  };
-
-  const submitConfirmPassword = async () => {
-    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.confirmPassword(
-      confirmPasswordText.value,
-    );
-
-    if (response.success) {
-      switch (confirmPasswordPurpose.value) {
-        case '2FA':
-          await setTwoFactorWithoutOrAfterConfirmPassword();
-          break;
-        case 'QRCODE':
-          await showQRWithoutOrAfterConfirmPassword();
-          break;
-        case '':
-        default:
-          break;
-      }
-
-      await closeConfirmPasswordDialog();
-    } else {
-      confirmPasswordErrorText.value = t('views.profile.fields.2fa.confirm_password_error');
-    }
-  };
-
-  const closeConfirmPasswordDialog = async () => {
-    showConfirmPasswordDialog.value = false;
-
-    confirmPasswordText.value = '';
-    confirmPasswordErrorText.value = '';
-
-    confirmPasswordPurpose.value = '';
+  if (response.success) {
+    showQRCodeField.value = false;
 
     await reloadUserContext();
-  };
+    await showRecoveryCodes();
+    await showSecretKey();
+  } else {
+    twoFactorCodeErrorText.value = t("views.profile.fields.2fa.confirm_2fa_auth_error");
+  }
+};
 
-  const reloadUserContext = async () => {
-    let userprofile = await profileServices.readProfile();
-    userContextStore.setUserContext(userprofile.data as UserProfile);
-  };
+const showQR = async () => {
+  await checkConfirmPasswordStatus();
 
-  const sendEmailVerification = async () => {
-    loading.value = true;
+  if (confirmPasswordStatus.value.confirmed) {
+    await showQRWithoutOrAfterConfirmPassword();
+  } else {
+    confirmPasswordPurpose.value = "QRCODE";
+    await showQRWithConfirmPassword();
+  }
+};
 
-    let result = await profileServices.sendEmailVerification();
+const showQRWithoutOrAfterConfirmPassword = async () => {
+  let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
 
-    if (result.success && sendVerificationEmailNotification.value) {
-      sendVerificationEmailNotification.value.showToast();
+  if (response.success && response.data) {
+    qrCode.value = response.data;
+    showQRCodeField.value = true;
+  }
+};
+
+const showQRWithConfirmPassword = async () => {
+  confirmPasswordText.value = "";
+  confirmPasswordErrorText.value = "";
+  showConfirmPasswordDialog.value = true;
+};
+
+const showRecoveryCodes = async () => {
+  let response: ServiceResponse<Array<string> | null> = await profileServices.twoFactorRecoveryCodes();
+
+  if (response.success && response.data) {
+    twoFactorRecoveryCodes.value = response.data;
+    showRecoveryCodesField.value = true;
+  }
+};
+
+const showSecretKey = async () => {
+  let response: ServiceResponse<SecretKeyResponse | null> = await profileServices.twoFactorSecretKey();
+
+  if (response.success) {
+    if (response.data) {
+      twoFactorSecretKey.value = response.data.secretKey;
+      showSecretKeyField.value = true;
     }
+  }
+};
+
+const checkConfirmPasswordStatus = async () => {
+  let response: ServiceResponse<ConfirmPasswordStatusResponse | null> = await profileServices.confirmPasswordStatus();
+
+  if (response.success && response.data) {
+    confirmPasswordStatus.value = response.data;
+  }
+};
+
+const submitConfirmPassword = async () => {
+  let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.confirmPassword(confirmPasswordText.value);
+
+  if (response.success) {
+    switch (confirmPasswordPurpose.value) {
+      case "2FA":
+        await setTwoFactorWithoutOrAfterConfirmPassword();
+        break;
+      case "QRCODE":
+        await showQRWithoutOrAfterConfirmPassword();
+        break;
+      case "":
+      default:
+        break;
+    }
+
+    await closeConfirmPasswordDialog();
+  } else {
+    confirmPasswordErrorText.value = t("views.profile.fields.2fa.confirm_password_error");
+  }
+};
+
+const closeConfirmPasswordDialog = async () => {
+  showConfirmPasswordDialog.value = false;
+
+  confirmPasswordText.value = "";
+  confirmPasswordErrorText.value = "";
+
+  confirmPasswordPurpose.value = "";
+
+  await reloadUserContext();
+};
+
+const reloadUserContext = async () => {
+  let userprofile = await profileServices.readProfile();
+  userContextStore.setUserContext(userprofile.data as UserProfile);
+};
+
+const sendEmailVerification = async () => {
+  loading.value = true;
+
+  let result = await profileServices.sendEmailVerification();
+
+  if (result.success && sendVerificationEmailNotification.value) {
+    sendVerificationEmailNotification.value.showToast();
+  }
+
+  loading.value = false;
+};
+
+const updateUserProfile = async () => {
+  let userprofile = await profileServices.readProfile();
+  if (userprofile.success) {
+    userContextStore.setUserContext(userprofile.data as UserProfile);
+  }
+};
+
+const updateUserMenu = async () => {
+  let menuResult = await dashboardServices.readUserMenu();
+  menuStore.setMenu(menuResult.data as Array<sMenu>);
+
+  let apiResult = await dashboardServices.readUserApi();
+  ziggyRouteStore.setZiggy(apiResult.data as Config);
+};
+
+const onSubmitUpdateUserProfile = async () => {
+  loading.value = true;
+
+  await updateUserProfileForm
+    .submit()
+    .then(async () => {
+      await updateUserProfile();
+    })
+    .catch((error) => {
+      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const onSubmitUpdatePersonalInfo = async () => {
+  loading.value = true;
+
+  await updatePersonalInfoForm
+    .submit()
+    .then(async () => {
+      await updateUserProfile();
+    })
+    .catch((error) => {
+      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const onSubmitUpdateAccountSettings = async () => {
+  loading.value = true;
+
+  await updateAccountSettingsForm
+    .submit()
+    .then(async () => {
+      await updateUserProfile();
+    })
+    .catch((error) => {
+      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const onSubmitUpdateUserRoles = async () => {
+  loading.value = true;
+
+  await updateUserRolesForm
+    .submit()
+    .then(async () => {
+      await updateUserProfile();
+      await updateUserMenu();
+    })
+    .catch((error) => {
+      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const onSubmitUpdatePassword = async () => {
+  loading.value = true;
+
+  await updatePasswordForm
+    .submit()
+    .then(async () => {
+      await updateUserProfile();
+      updatePasswordForm.reset();
+    })
+    .catch((error) => {
+      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const onSubmitUpdateToken = async () => {
+  loading.value = true;
+
+  await updateTokensForm
+    .submit()
+    .then(async () => {
+      await updateUserProfile();
+      updateTokensForm.reset();
+    })
+    .catch((error) => {
+      let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+const showAlertPlaceholder = (
+  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
+  pTitle: string,
+  pAlertList: Record<string, Array<string>> | null,
+) => {
+  alertType.value = pAlertType;
+  alertTitle.value = pTitle;
+  alertList.value = pAlertList;
+};
+
+const resetAlertPlaceholder = () => {
+  alertTitle.value = "";
+  alertList.value = null;
+  alertType.value = "hidden";
+};
+
+const convertErrorTypeToAlertListType = (error: Error) => {
+  const record: Record<string, Array<string>> = {};
+
+  record.error = [error.message];
+
+  return record;
+};
+// #region Methods
+
+// #region Watchers
+watchEffect(async () => {
+  if (userContextIsLoaded.value) {
+    setFormData();
+    await setTwoFactorAuthStatus();
 
     loading.value = false;
-  };
-
-  const updateUserProfile = async () => {
-    let userprofile = await profileServices.readProfile();
-    if (userprofile.success) {
-      userContextStore.setUserContext(userprofile.data as UserProfile);
-    }
-  };
-
-  const updateUserMenu = async () => {
-    let menuResult = await dashboardServices.readUserMenu();
-    menuStore.setMenu(menuResult.data as Array<sMenu>);
-
-    let apiResult = await dashboardServices.readUserApi();
-    ziggyRouteStore.setZiggy(apiResult.data as Config);
-  };
-
-  const onSubmitUpdateUserProfile = async () => {
-    loading.value = true;
-
-    await updateUserProfileForm
-      .submit()
-      .then(async () => {
-        await updateUserProfile();
-      })
-      .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
-
-  const onSubmitUpdatePersonalInfo = async () => {
-    loading.value = true;
-
-    await updatePersonalInfoForm
-      .submit()
-      .then(async () => {
-        await updateUserProfile();
-      })
-      .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
-
-  const onSubmitUpdateAccountSettings = async () => {
-    loading.value = true;
-
-    await updateAccountSettingsForm
-      .submit()
-      .then(async () => {
-        await updateUserProfile();
-      })
-      .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
-
-  const onSubmitUpdateUserRoles = async () => {
-    loading.value = true;
-
-    await updateUserRolesForm
-      .submit()
-      .then(async () => {
-        await updateUserProfile();
-        await updateUserMenu();
-      })
-      .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
-
-  const onSubmitUpdatePassword = async () => {
-    loading.value = true;
-
-    await updatePasswordForm
-      .submit()
-      .then(async () => {
-        await updateUserProfile();
-        updatePasswordForm.reset();
-      })
-      .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
-
-  const onSubmitUpdateToken = async () => {
-    loading.value = true;
-
-    await updateTokensForm
-      .submit()
-      .then(async () => {
-        await updateUserProfile();
-        updateTokensForm.reset();
-      })
-      .catch((error) => {
-        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
-
-  const showAlertPlaceholder = (
-    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
-    pTitle: string,
-    pAlertList: Record<string, Array<string>> | null,
-  ) => {
-    alertType.value = pAlertType;
-    alertTitle.value = pTitle;
-    alertList.value = pAlertList;
-  };
-
-  const resetAlertPlaceholder = () => {
-    alertTitle.value = '';
-    alertList.value = null;
-    alertType.value = 'hidden';
-  };
-
-  const convertErrorTypeToAlertListType = (error: Error) => {
-    const record: Record<string, Array<string>> = {};
-
-    record.error = [error.message];
-
-    return record;
-  };
-  // #region Methods
-
-  // #region Watchers
-  watchEffect(async () => {
-    if (userContextIsLoaded.value) {
-      setFormData();
-      await setTwoFactorAuthStatus();
-
-      loading.value = false;
-    }
-  });
-  // #endregion
+  }
+});
+// #endregion
 </script>
 
 <template>
@@ -568,23 +558,13 @@
     <LoadingOverlay :visible="loading">
       <TitleLayout>
         <template #title>
-          {{ t('views.profile.title') }}
+          {{ t("views.profile.title") }}
         </template>
       </TitleLayout>
 
-      <AlertPlaceholder
-        :alert-type="alertType"
-        :title="alertTitle"
-        :alert-list="alertList"
-        @dismiss="resetAlertPlaceholder"
-      />
+      <AlertPlaceholder :alert-type="alertType" :title="alertTitle" :alert-list="alertList" @dismiss="resetAlertPlaceholder" />
 
-      <TwoColumnsLayout
-        :cards="cards"
-        :show-side-tab="true"
-        :using-side-tab="true"
-        @handleExpandCard="handleExpandCard"
-      >
+      <TwoColumnsLayout :cards="cards" :show-side-tab="true" :using-side-tab="true" @handleExpandCard="handleExpandCard">
         <template #side-menu-title>
           {{ userContext.name }}
         </template>
@@ -597,7 +577,7 @@
                     'text-danger': updateUserProfileForm.invalid('name'),
                   }"
                 >
-                  {{ t('views.profile.fields.name') }}
+                  {{ t("views.profile.fields.name") }}
                 </FormLabel>
                 <FormInput
                   v-model="updateUserProfileForm.name"
@@ -612,14 +592,9 @@
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.email') }}
+                  {{ t("views.profile.fields.email") }}
                 </FormLabel>
-                <FormInput
-                  v-model="userContext.email"
-                  type="text"
-                  :placeholder="t('views.profile.fields.email')"
-                  disabled
-                />
+                <FormInput v-model="userContext.email" type="text" :placeholder="t('views.profile.fields.email')" disabled />
               </div>
               <div>
                 <Button
@@ -632,7 +607,7 @@
                 >
                   <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
-                    {{ t('components.buttons.update') }}
+                    {{ t("components.buttons.update") }}
                   </template>
                 </Button>
               </div>
@@ -642,28 +617,21 @@
         <template #card-items-1>
           <div class="p-5">
             <div v-if="userContext.email_verified" class="pb-4">
-              <span>{{ t('views.profile.tooltip.email_verified') }}</span>
+              <span>{{ t("views.profile.tooltip.email_verified") }}</span>
             </div>
             <div v-else>
-              <Button
-                type="button"
-                size="sm"
-                href="#"
-                variant="primary"
-                class="w-42 shadow-md"
-                @click="sendEmailVerification"
-              >
-                {{ t('components.buttons.send_verification_email') }}
+              <Button type="button" size="sm" href="#" variant="primary" class="w-42 shadow-md" @click="sendEmailVerification">
+                {{ t("components.buttons.send_verification_email") }}
               </Button>
             </div>
             <Notification ref-key="sendVerificationEmailNotification" :options="{ duration: 3000 }" class="flex">
               <Lucide icon="CheckCircle" class="text-success" />
               <div class="ml-4 mr-4">
                 <div class="font-medium">
-                  {{ t('views.profile.alert.verification_email_sent.title') }}
+                  {{ t("views.profile.alert.verification_email_sent.title") }}
                 </div>
                 <div class="mt-1 text-slate-500">
-                  {{ t('views.profile.alert.verification_email_sent.content') }}
+                  {{ t("views.profile.alert.verification_email_sent.content") }}
                 </div>
               </div>
             </Notification>
@@ -674,60 +642,39 @@
             <form id="updatePersonalInfoForm" @submit.prevent="onSubmitUpdatePersonalInfo">
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.first_name') }}
+                  {{ t("views.profile.fields.first_name") }}
                 </FormLabel>
-                <FormInput
-                  v-model="updatePersonalInfoForm.first_name"
-                  type="text"
-                  :placeholder="t('views.profile.fields.first_name')"
-                />
+                <FormInput v-model="updatePersonalInfoForm.first_name" type="text" :placeholder="t('views.profile.fields.first_name')" />
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.last_name') }}
+                  {{ t("views.profile.fields.last_name") }}
                 </FormLabel>
-                <FormInput
-                  v-model="updatePersonalInfoForm.last_name"
-                  type="text"
-                  :placeholder="t('views.profile.fields.last_name')"
-                />
+                <FormInput v-model="updatePersonalInfoForm.last_name" type="text" :placeholder="t('views.profile.fields.last_name')" />
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.address') }}
+                  {{ t("views.profile.fields.address") }}
                 </FormLabel>
-                <FormTextarea
-                  v-model="updatePersonalInfoForm.address"
-                  rows="5"
-                  :placeholder="t('views.profile.fields.address')"
-                />
+                <FormTextarea v-model="updatePersonalInfoForm.address" rows="5" :placeholder="t('views.profile.fields.address')" />
               </div>
               <div class="flex gap-2">
                 <div class="pb-4 w-full">
                   <FormLabel>
-                    {{ t('views.profile.fields.city') }}
+                    {{ t("views.profile.fields.city") }}
                   </FormLabel>
-                  <FormInput
-                    v-model="updatePersonalInfoForm.city"
-                    type="text"
-                    class="w-full"
-                    :placeholder="t('views.profile.fields.city')"
-                  />
+                  <FormInput v-model="updatePersonalInfoForm.city" type="text" class="w-full" :placeholder="t('views.profile.fields.city')" />
                 </div>
                 <div class="pb-4">
                   <FormLabel>
-                    {{ t('views.profile.fields.postal_code') }}
+                    {{ t("views.profile.fields.postal_code") }}
                   </FormLabel>
-                  <FormInput
-                    v-model="updatePersonalInfoForm.postal_code"
-                    type="number"
-                    :placeholder="t('views.profile.fields.postal_code')"
-                  />
+                  <FormInput v-model="updatePersonalInfoForm.postal_code" type="number" :placeholder="t('views.profile.fields.postal_code')" />
                 </div>
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.country') }}
+                  {{ t("views.profile.fields.country") }}
                 </FormLabel>
                 <FormSelect
                   v-model="updatePersonalInfoForm.country"
@@ -751,7 +698,7 @@
                     'text-danger': updatePersonalInfoForm.invalid('tax_id'),
                   }"
                 >
-                  {{ t('views.profile.fields.tax_id') }}
+                  {{ t("views.profile.fields.tax_id") }}
                 </FormLabel>
                 <FormInput
                   v-model="updatePersonalInfoForm.tax_id"
@@ -773,7 +720,7 @@
                     'text-danger': updatePersonalInfoForm.invalid('ic_num'),
                   }"
                 >
-                  {{ t('views.profile.fields.ic_num') }}
+                  {{ t("views.profile.fields.ic_num") }}
                 </FormLabel>
                 <FormInput
                   v-model="updatePersonalInfoForm.ic_num"
@@ -787,13 +734,9 @@
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.remarks') }}
+                  {{ t("views.profile.fields.remarks") }}
                 </FormLabel>
-                <FormTextarea
-                  v-model="updatePersonalInfoForm.remarks"
-                  rows="5"
-                  :placeholder="t('views.profile.fields.remarks')"
-                />
+                <FormTextarea v-model="updatePersonalInfoForm.remarks" rows="5" :placeholder="t('views.profile.fields.remarks')" />
               </div>
               <div>
                 <Button
@@ -806,7 +749,7 @@
                 >
                   <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
-                    {{ t('components.buttons.update') }}
+                    {{ t("components.buttons.update") }}
                   </template>
                 </Button>
               </div>
@@ -818,7 +761,7 @@
             <form id="updateAccountSettingsForm" @submit.prevent="onSubmitUpdateAccountSettings">
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.settings.theme') }}
+                  {{ t("views.profile.fields.settings.theme") }}
                 </FormLabel>
                 <FormSelect v-model="updateAccountSettingsForm.theme">
                   <option value="side-menu-light-full">Menu Light</option>
@@ -829,27 +772,27 @@
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.settings.date_format') }}
+                  {{ t("views.profile.fields.settings.date_format") }}
                 </FormLabel>
                 <FormSelect v-model="updateAccountSettingsForm.date_format">
                   <option value="yyyy_MM_dd">
-                    {{ formatDate(new Date().toString(), 'YYYY-MM-DD') }}
+                    {{ formatDate(new Date().toString(), "YYYY-MM-DD") }}
                   </option>
                   <option value="dd_MMM_yyyy">
-                    {{ formatDate(new Date().toString(), 'DD-MMM-YYYY') }}
+                    {{ formatDate(new Date().toString(), "DD-MMM-YYYY") }}
                   </option>
                 </FormSelect>
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.settings.time_format') }}
+                  {{ t("views.profile.fields.settings.time_format") }}
                 </FormLabel>
                 <FormSelect v-model="updateAccountSettingsForm.time_format">
                   <option value="hh_mm_ss">
-                    {{ formatDate(new Date().toString(), 'HH:mm:ss') }}
+                    {{ formatDate(new Date().toString(), "HH:mm:ss") }}
                   </option>
                   <option value="h_m_A">
-                    {{ formatDate(new Date().toString(), 'H:m A') }}
+                    {{ formatDate(new Date().toString(), "H:m A") }}
                   </option>
                 </FormSelect>
               </div>
@@ -864,7 +807,7 @@
                 >
                   <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
-                    {{ t('components.buttons.update') }}
+                    {{ t("components.buttons.update") }}
                   </template>
                 </Button>
               </div>
@@ -888,14 +831,8 @@
                       <div v-if="item.state == 'checked'" class="grid grid-cols-1 place-items-center">
                         <Lucide icon="Check" class="text-success" />
                       </div>
-                      <Button
-                        v-else-if="item.state == 'selectable'"
-                        type="submit"
-                        variant="primary"
-                        size="sm"
-                        class="w-28 shadow-md"
-                      >
-                        {{ t('components.buttons.activate') }}
+                      <Button v-else-if="item.state == 'selectable'" type="submit" variant="primary" size="sm" class="w-28 shadow-md">
+                        {{ t("components.buttons.activate") }}
                       </Button>
                       <span v-else>&nbsp;</span>
                     </div>
@@ -914,7 +851,7 @@
                     'text-danger': updatePasswordForm.invalid('current_password'),
                   }"
                 >
-                  {{ t('views.profile.fields.change_password.current_password') }}
+                  {{ t("views.profile.fields.change_password.current_password") }}
                 </FormLabel>
                 <FormInput
                   v-model="updatePasswordForm.current_password"
@@ -933,7 +870,7 @@
                     'text-danger': updatePasswordForm.invalid('password'),
                   }"
                 >
-                  {{ t('views.profile.fields.change_password.password') }}
+                  {{ t("views.profile.fields.change_password.password") }}
                 </FormLabel>
                 <FormInput
                   v-model="updatePasswordForm.password"
@@ -947,7 +884,7 @@
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{ t('views.profile.fields.change_password.password_confirmation') }}
+                  {{ t("views.profile.fields.change_password.password_confirmation") }}
                 </FormLabel>
                 <FormInput
                   v-model="updatePasswordForm.password_confirmation"
@@ -966,7 +903,7 @@
                 >
                   <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
-                    {{ t('components.buttons.update') }}
+                    {{ t("components.buttons.update") }}
                   </template>
                 </Button>
               </div>
@@ -977,11 +914,7 @@
           <div class="p-5">
             <form id="updateTokenForm" @submit.prevent="onSubmitUpdateToken">
               <div class="pb-4">
-                <FormLabel>
-                  {{ t('views.profile.fields.api_token.total_token_generated') }}&nbsp;:&nbsp;{{
-                    userContext.personal_access_tokens
-                  }}
-                </FormLabel>
+                <FormLabel>{{ t("views.profile.fields.api_token.total_token_generated") }}&nbsp;:&nbsp;{{ userContext.personal_access_tokens }}</FormLabel>
               </div>
               <input id="resetToken" type="hidden" v-model="updateTokensForm.reset_tokens" />
               <div>
@@ -995,7 +928,7 @@
                 >
                   <Lucide v-if="updateTokensForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
-                    {{ t('components.buttons.reset') }}
+                    {{ t("components.buttons.reset") }}
                   </template>
                 </Button>
               </div>
@@ -1006,7 +939,7 @@
           <div class="p-5">
             <div class="pb-4">
               <FormLabel>
-                {{ t('views.profile.fields.2fa.status') }}
+                {{ t("views.profile.fields.2fa.status") }}
               </FormLabel>
               <FormSwitch>
                 <FormSwitch.Input type="checkbox" @change="setTwoFactor" v-model="twoFactorAuthStatus" />
@@ -1015,19 +948,19 @@
             <div v-if="showQRCodeField" class="pb-4">
               <img v-html="qrCode.svg" alt="QR Code" />
               <br />
-              {{ t('views.profile.fields.2fa.qr-code_description_1') }}
+              {{ t("views.profile.fields.2fa.qr-code_description_1") }}
               <br />
-              {{ t('views.profile.fields.2fa.qr-code_description_2') }}
+              {{ t("views.profile.fields.2fa.qr-code_description_2") }}
               <br />
               <img :src="googlePlayBadge" alt="Google Play" width="120" height="120" />
               <br />
-              {{ t('views.profile.fields.2fa.confirm_2fa_auth_description_1') }}
+              {{ t("views.profile.fields.2fa.confirm_2fa_auth_description_1") }}
               <br />
-              {{ t('views.profile.fields.2fa.confirm_2fa_auth_description_2') }}
+              {{ t("views.profile.fields.2fa.confirm_2fa_auth_description_2") }}
               <br />
               <br />
               <FormLabel>
-                {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
+                {{ t("views.profile.fields.2fa.confirm_2fa_auth") }}
               </FormLabel>
               <FormInput v-model="twoFactorCode" />
               <FormErrorMessages v-if="twoFactorCodeErrorText != ''" :messages="twoFactorCodeErrorText" />
@@ -1042,17 +975,17 @@
                 "
                 class="mt-2 w-24"
               >
-                {{ t('components.buttons.submit') }}
+                {{ t("components.buttons.submit") }}
               </Button>
             </div>
             <div v-if="showRecoveryCodesField" class="pb-4">
-              {{ t('views.profile.fields.2fa.recovery-codes_description_1') }}
+              {{ t("views.profile.fields.2fa.recovery-codes_description_1") }}
               <br />
-              {{ t('views.profile.fields.2fa.recovery-codes_description_2') }}
+              {{ t("views.profile.fields.2fa.recovery-codes_description_2") }}
               <br />
               <br />
               <FormLabel>
-                {{ t('views.profile.fields.2fa.recovery-codes') }}
+                {{ t("views.profile.fields.2fa.recovery-codes") }}
               </FormLabel>
               <div>
                 <template v-for="(rc, rcIdx) in twoFactorRecoveryCodes">
@@ -1062,13 +995,13 @@
               </div>
             </div>
             <div v-if="showSecretKeyField" class="pb-4">
-              {{ t('views.profile.fields.2fa.secret-key_description_1') }}
+              {{ t("views.profile.fields.2fa.secret-key_description_1") }}
               <br />
-              {{ t('views.profile.fields.2fa.secret-key_description_2') }}
+              {{ t("views.profile.fields.2fa.secret-key_description_2") }}
               <br />
               <br />
               <FormLabel>
-                {{ t('views.profile.fields.2fa.secret-key') }}
+                {{ t("views.profile.fields.2fa.secret-key") }}
               </FormLabel>
               <div class="italic">
                 {{ twoFactorSecretKey }}
@@ -1087,13 +1020,9 @@
                 <div class="text-center">
                   <div class="mb-5">
                     <FormLabel>
-                      {{ t('views.profile.fields.2fa.confirm_password') }}
+                      {{ t("views.profile.fields.2fa.confirm_password") }}
                     </FormLabel>
-                    <FormInput
-                      v-model="confirmPasswordText"
-                      type="password"
-                      :placeholder="t('views.profile.fields.2fa.confirm_password')"
-                    />
+                    <FormInput v-model="confirmPasswordText" type="password" :placeholder="t('views.profile.fields.2fa.confirm_password')" />
                     <FormErrorMessages v-if="confirmPasswordErrorText != ''" :messages="confirmPasswordErrorText" />
                   </div>
                   <div class="flex gap-2 justify-center items-center">
@@ -1107,7 +1036,7 @@
                       "
                       class="w-24"
                     >
-                      {{ t('components.buttons.submit') }}
+                      {{ t("components.buttons.submit") }}
                     </Button>
                     <Button
                       type="button"
@@ -1119,7 +1048,7 @@
                       "
                       class="w-24"
                     >
-                      {{ t('components.buttons.cancel') }}
+                      {{ t("components.buttons.cancel") }}
                     </Button>
                   </div>
                 </div>

@@ -1,76 +1,76 @@
-import { defineStore } from 'pinia';
-import RubickSideMenu from '@/themes/Rubick/SideMenu';
-import RubickSimpleMenu from '@/themes/Rubick/SimpleMenu';
-import RubickTopMenu from '@/themes/Rubick/TopMenu';
-import IcewallSideMenu from '@/themes/Icewall/SideMenu';
-import IcewallSimpleMenu from '@/themes/Icewall/SimpleMenu';
-import IcewallTopMenu from '@/themes/Icewall/TopMenu';
-import TinkerSideMenu from '@/themes/Tinker/SideMenu';
-import TinkerSimpleMenu from '@/themes/Tinker/SimpleMenu';
-import TinkerTopMenu from '@/themes/Tinker/TopMenu';
-import EnigmaSideMenu from '@/themes/Enigma/SideMenu';
-import EnigmaSimpleMenu from '@/themes/Enigma/SimpleMenu';
-import EnigmaTopMenu from '@/themes/Enigma/TopMenu';
+import { defineStore } from "pinia";
+import RubickSideMenu from "@/themes/Rubick/SideMenu";
+import RubickSimpleMenu from "@/themes/Rubick/SimpleMenu";
+import RubickTopMenu from "@/themes/Rubick/TopMenu";
+import IcewallSideMenu from "@/themes/Icewall/SideMenu";
+import IcewallSimpleMenu from "@/themes/Icewall/SimpleMenu";
+import IcewallTopMenu from "@/themes/Icewall/TopMenu";
+import TinkerSideMenu from "@/themes/Tinker/SideMenu";
+import TinkerSimpleMenu from "@/themes/Tinker/SimpleMenu";
+import TinkerTopMenu from "@/themes/Tinker/TopMenu";
+import EnigmaSideMenu from "@/themes/Enigma/SideMenu";
+import EnigmaSimpleMenu from "@/themes/Enigma/SimpleMenu";
+import EnigmaTopMenu from "@/themes/Enigma/TopMenu";
 
 export const themes = [
   {
-    name: 'rubick',
-    layout: 'side-menu',
+    name: "rubick",
+    layout: "side-menu",
     component: RubickSideMenu,
   },
   {
-    name: 'rubick',
-    layout: 'simple-menu',
+    name: "rubick",
+    layout: "simple-menu",
     component: RubickSimpleMenu,
   },
   {
-    name: 'rubick',
-    layout: 'top-menu',
+    name: "rubick",
+    layout: "top-menu",
     component: RubickTopMenu,
   },
   {
-    name: 'icewall',
-    layout: 'side-menu',
+    name: "icewall",
+    layout: "side-menu",
     component: IcewallSideMenu,
   },
   {
-    name: 'icewall',
-    layout: 'simple-menu',
+    name: "icewall",
+    layout: "simple-menu",
     component: IcewallSimpleMenu,
   },
   {
-    name: 'icewall',
-    layout: 'top-menu',
+    name: "icewall",
+    layout: "top-menu",
     component: IcewallTopMenu,
   },
   {
-    name: 'tinker',
-    layout: 'side-menu',
+    name: "tinker",
+    layout: "side-menu",
     component: TinkerSideMenu,
   },
   {
-    name: 'tinker',
-    layout: 'simple-menu',
+    name: "tinker",
+    layout: "simple-menu",
     component: TinkerSimpleMenu,
   },
   {
-    name: 'tinker',
-    layout: 'top-menu',
+    name: "tinker",
+    layout: "top-menu",
     component: TinkerTopMenu,
   },
   {
-    name: 'enigma',
-    layout: 'side-menu',
+    name: "enigma",
+    layout: "side-menu",
     component: EnigmaSideMenu,
   },
   {
-    name: 'enigma',
-    layout: 'simple-menu',
+    name: "enigma",
+    layout: "simple-menu",
     component: EnigmaSimpleMenu,
   },
   {
-    name: 'enigma',
-    layout: 'top-menu',
+    name: "enigma",
+    layout: "top-menu",
     component: EnigmaTopMenu,
   },
 ] as const;
@@ -79,17 +79,17 @@ export type Themes = (typeof themes)[number];
 
 interface ThemeState {
   themeValue: {
-    name: Themes['name'];
-    layout: Themes['layout'];
+    name: Themes["name"];
+    layout: Themes["layout"];
   };
 }
 
-export const getTheme = (search?: { name: Themes['name']; layout: Themes['layout'] }) => {
+export const getTheme = (search?: { name: Themes["name"]; layout: Themes["layout"] }) => {
   const searchValues =
     search === undefined
       ? {
-          name: localStorage.getItem('theme'),
-          layout: localStorage.getItem('layout'),
+          name: localStorage.getItem("theme"),
+          layout: localStorage.getItem("layout"),
         }
       : search;
   return themes.filter((item, key) => {
@@ -97,42 +97,42 @@ export const getTheme = (search?: { name: Themes['name']; layout: Themes['layout
   })[0];
 };
 
-export const useThemeStore = defineStore('theme', {
+export const useThemeStore = defineStore("theme", {
   state: (): ThemeState => ({
     themeValue: {
-      name: localStorage.getItem('theme') === null ? themes[0].name : getTheme().name,
-      layout: localStorage.getItem('layout') === null ? themes[0].layout : getTheme().layout,
+      name: localStorage.getItem("theme") === null ? themes[0].name : getTheme().name,
+      layout: localStorage.getItem("layout") === null ? themes[0].layout : getTheme().layout,
     },
   }),
   getters: {
     theme(state) {
-      if (localStorage.getItem('theme') === null) {
-        localStorage.setItem('theme', 'rubick');
+      if (localStorage.getItem("theme") === null) {
+        localStorage.setItem("theme", "rubick");
       }
 
-      if (localStorage.getItem('layout') === null) {
-        localStorage.setItem('layout', 'side-menu');
+      if (localStorage.getItem("layout") === null) {
+        localStorage.setItem("layout", "side-menu");
       }
 
       return state.themeValue;
     },
   },
   actions: {
-    setTheme(theme: Themes['name']) {
+    setTheme(theme: Themes["name"]) {
       this.themeValue = {
         name: theme,
         layout: this.themeValue.layout,
       };
 
-      localStorage.setItem('theme', theme);
+      localStorage.setItem("theme", theme);
     },
-    setLayout(layout: Themes['layout']) {
+    setLayout(layout: Themes["layout"]) {
       this.themeValue = {
         name: this.themeValue.name,
         layout: layout,
       };
 
-      localStorage.setItem('layout', layout);
+      localStorage.setItem("layout", layout);
     },
   },
 });

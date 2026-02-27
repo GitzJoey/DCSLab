@@ -1,19 +1,16 @@
-import axios from '../axios';
-import { useZiggyRouteStore } from '../stores/ziggy-route';
-import { route, Config } from 'ziggy-js';
-import { CashAccount } from '../types/models/CashAccount';
-import { Resource } from '../types/resources/Resource';
-import { Collection } from '../types/resources/Collection';
-import { ServiceResponse } from '../types/services/ServiceResponse';
-import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
-import ErrorHandlerService from './ErrorHandlerService';
-import {
-  CashAccountReadAnyPaginateRequest,
-  CashAccountReadAnyGetRequest,
-} from '../types/services/cash_account/CashAccountRequest';
-import { StatusCode } from '../types/enums/StatusCode';
-import { client, useForm } from 'laravel-precognition-vue';
-import CacheService from './CacheService';
+import axios from "../axios";
+import { useZiggyRouteStore } from "../stores/ziggy-route";
+import { route, Config } from "ziggy-js";
+import { CashAccount } from "../types/models/CashAccount";
+import { Resource } from "../types/resources/Resource";
+import { Collection } from "../types/resources/Collection";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { AxiosError, AxiosResponse, isAxiosError } from "axios";
+import ErrorHandlerService from "./ErrorHandlerService";
+import { CashAccountReadAnyPaginateRequest, CashAccountReadAnyGetRequest } from "../types/services/cash_account/CashAccountRequest";
+import { StatusCode } from "../types/enums/StatusCode";
+import { client, useForm } from "laravel-precognition-vue";
+import CacheService from "./CacheService";
 
 export default class CashAccountService {
   private ziggyRoute: Config;
@@ -30,47 +27,45 @@ export default class CashAccountService {
   }
 
   public useCashAccountCreateForm() {
-    const url = route('api.post.cash_account.save', undefined, true, this.ziggyRoute);
+    const url = route("api.post.cash_account.save", undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
-      company_id: '',
-      branch_id: '',
-      code: '_AUTO_',
-      name: '',
+    const form = useForm("post", url, {
+      company_id: "",
+      branch_id: "",
+      code: "_AUTO_",
+      name: "",
       is_bank: false,
       is_active: true,
-      remarks: '',
+      remarks: "",
     });
 
     return form;
   }
 
-  public async readAnyPaginate(
-    args: CashAccountReadAnyPaginateRequest,
-  ): Promise<ServiceResponse<Collection<Array<CashAccount>> | null>> {
+  public async readAnyPaginate(args: CashAccountReadAnyPaginateRequest): Promise<ServiceResponse<Collection<Array<CashAccount>> | null>> {
     const result: ServiceResponse<Collection<Array<CashAccount>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
-      if (args.company_id) queryParams['company_id'] = args.company_id;
-      if (args.branch_id) queryParams['branch_id'] = args.branch_id;
+      if (args.with_trashed !== undefined) queryParams["with_trashed"] = args.with_trashed;
+      if (args.company_id) queryParams["company_id"] = args.company_id;
+      if (args.branch_id) queryParams["branch_id"] = args.branch_id;
 
-      if (args.search) queryParams['search'] = args.search;
-      if (args.include_id) queryParams['include_id'] = args.include_id;
+      if (args.search) queryParams["search"] = args.search;
+      if (args.include_id) queryParams["include_id"] = args.include_id;
 
-      queryParams['refresh'] = args.refresh;
-      queryParams['paginate'] = {
+      queryParams["refresh"] = args.refresh;
+      queryParams["paginate"] = {
         page: args.page,
         per_page: args.per_page,
       };
 
       const url = route(
-        'api.get.cash_account.read_any',
+        "api.get.cash_account.read_any",
         {
           _query: queryParams,
         },
@@ -87,7 +82,7 @@ export default class CashAccountService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -97,29 +92,27 @@ export default class CashAccountService {
     }
   }
 
-  public async readAnyGet(
-    args: CashAccountReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<CashAccount>> | null>> {
+  public async readAnyGet(args: CashAccountReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<CashAccount>> | null>> {
     const result: ServiceResponse<Resource<Array<CashAccount>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
-      if (args.company_id) queryParams['company_id'] = args.company_id;
-      if (args.branch_id) queryParams['branch_id'] = args.branch_id;
+      if (args.with_trashed !== undefined) queryParams["with_trashed"] = args.with_trashed;
+      if (args.company_id) queryParams["company_id"] = args.company_id;
+      if (args.branch_id) queryParams["branch_id"] = args.branch_id;
 
-      if (args.search) queryParams['search'] = args.search;
-      if (args.include_id) queryParams['include_id'] = args.include_id;
+      if (args.search) queryParams["search"] = args.search;
+      if (args.include_id) queryParams["include_id"] = args.include_id;
 
-      queryParams['refresh'] = args.refresh;
-      queryParams['get'] = {
+      queryParams["refresh"] = args.refresh;
+      queryParams["get"] = {
         limit: args.limit,
       };
 
       const url = route(
-        'api.get.cash_account.read_any',
+        "api.get.cash_account.read_any",
         {
           _query: queryParams,
         },
@@ -136,7 +129,7 @@ export default class CashAccountService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -153,7 +146,7 @@ export default class CashAccountService {
 
     try {
       const url = route(
-        'api.get.cash_account.read',
+        "api.get.cash_account.read",
         {
           cash_account: ulid,
         },
@@ -170,7 +163,7 @@ export default class CashAccountService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -182,7 +175,7 @@ export default class CashAccountService {
 
   public useCashAccountEditForm(ulid: string) {
     const url = route(
-      'api.post.cash_account.edit',
+      "api.post.cash_account.edit",
       {
         cash_account: ulid,
       },
@@ -192,13 +185,13 @@ export default class CashAccountService {
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
-    const form = useForm('post', url, {
-      company_id: '',
-      code: '_AUTO_',
-      name: '',
+    const form = useForm("post", url, {
+      company_id: "",
+      code: "_AUTO_",
+      name: "",
       is_bank: false,
       is_active: true,
-      remarks: '',
+      remarks: "",
     });
 
     return form;
@@ -211,7 +204,7 @@ export default class CashAccountService {
 
     try {
       const url = route(
-        'api.post.cash_account.delete',
+        "api.post.cash_account.delete",
         {
           cash_account: ulid,
         },
@@ -227,7 +220,7 @@ export default class CashAccountService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);

@@ -1,14 +1,14 @@
-import axios from '../axios';
-import { useZiggyRouteStore } from '../stores/ziggy-route';
-import { route, Config } from 'ziggy-js';
-import CacheService from './CacheService';
-import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
-import { ServiceResponse } from '../types/services/ServiceResponse';
-import { Menu as sMenu } from '../stores/menu';
-import ErrorHandlerService from './ErrorHandlerService';
-import { Resource } from '../types/resources/Resource';
-import { DropDownOption } from '../types/models/DropDownOption';
-import { FileUpload } from '../types/models/FileUpload';
+import axios from "../axios";
+import { useZiggyRouteStore } from "../stores/ziggy-route";
+import { route, Config } from "ziggy-js";
+import CacheService from "./CacheService";
+import { AxiosResponse, AxiosError, isAxiosError } from "axios";
+import { ServiceResponse } from "../types/services/ServiceResponse";
+import { Menu as sMenu } from "../stores/menu";
+import ErrorHandlerService from "./ErrorHandlerService";
+import { Resource } from "../types/resources/Resource";
+import { DropDownOption } from "../types/models/DropDownOption";
+import { FileUpload } from "../types/models/FileUpload";
 
 export default class DashboardService {
   private ziggyRoute: Config;
@@ -30,7 +30,7 @@ export default class DashboardService {
     };
 
     try {
-      const url = route('api.get.db.core.user.menu', undefined, false, this.ziggyRoute);
+      const url = route("api.get.db.core.user.menu", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<Array<sMenu>> = await axios.get(url);
 
@@ -39,7 +39,7 @@ export default class DashboardService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -55,7 +55,7 @@ export default class DashboardService {
     };
 
     try {
-      const url = route('api.get.db.core.user.api', undefined, false, this.ziggyRoute);
+      const url = route("api.get.db.core.user.api", undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<Config> = await axios.get(url);
 
@@ -64,7 +64,7 @@ export default class DashboardService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
@@ -75,12 +75,12 @@ export default class DashboardService {
   }
 
   public async getStatusDDL(showDeleted: boolean = true): Promise<Array<DropDownOption> | null> {
-    const ddlName = showDeleted ? 'statusDDL_with_deleted' : 'statusDDL_no_deleted';
+    const ddlName = showDeleted ? "statusDDL_with_deleted" : "statusDDL_no_deleted";
     let result: Array<DropDownOption> = [];
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route('api.get.db.common.ddl.list.statuses', { show_deleted: showDeleted }, false, this.ziggyRoute);
+        const url = route("api.get.db.common.ddl.list.statuses", { show_deleted: showDeleted }, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -100,12 +100,12 @@ export default class DashboardService {
   }
 
   public async getCountriesDDL(): Promise<Array<DropDownOption> | null> {
-    const ddlName = 'countriesDDL';
+    const ddlName = "countriesDDL";
     let result: Array<DropDownOption> = [];
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route('api.get.db.common.ddl.list.countries', undefined, false, this.ziggyRoute);
+        const url = route("api.get.db.common.ddl.list.countries", undefined, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -125,12 +125,12 @@ export default class DashboardService {
   }
 
   public async getPaymentTermTypesDDL(): Promise<Array<DropDownOption> | null> {
-    const ddlName = 'paymentTermTypesDDL';
+    const ddlName = "paymentTermTypesDDL";
     let result: Array<DropDownOption> = [];
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route('api.get.db.common.ddl.list.payment_term_types', undefined, false, this.ziggyRoute);
+        const url = route("api.get.db.common.ddl.list.payment_term_types", undefined, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -150,12 +150,12 @@ export default class DashboardService {
   }
 
   public async getRoundingTypesDDL(): Promise<Array<DropDownOption> | null> {
-    const ddlName = 'roundingTypesDDL';
+    const ddlName = "roundingTypesDDL";
     let result: Array<DropDownOption> = [];
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route('api.get.db.common.ddl.list.rounding_types', undefined, false, this.ziggyRoute);
+        const url = route("api.get.db.common.ddl.list.rounding_types", undefined, false, this.ziggyRoute);
 
         const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
@@ -181,11 +181,11 @@ export default class DashboardService {
 
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
-      const url = route('api.post.db.core.user.upload', undefined, false, this.ziggyRoute);
+      const url = route("api.post.db.core.user.upload", undefined, false, this.ziggyRoute);
 
-      axios.defaults.headers.common['Content-Type'] = 'multipart/form-data';
+      axios.defaults.headers.common["Content-Type"] = "multipart/form-data";
 
       const response: AxiosResponse<Resource<FileUpload>> = await axios.post(url, formData);
 
@@ -194,7 +194,7 @@ export default class DashboardService {
 
       return result;
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
+      if (e instanceof Error && e.message.includes("Ziggy error")) {
         return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);

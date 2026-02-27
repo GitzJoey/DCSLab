@@ -1,48 +1,48 @@
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import logoUrl from '@/assets/images/logo.svg';
-  import illustrationUrl from '@/assets/images/illustration.svg';
-  import { FormInput, FormErrorMessages } from '@/components/Base/Form';
-  import Button from '@/components/Base/Button';
-  import { useI18n } from 'vue-i18n';
-  import LoadingOverlay from '@/components/LoadingOverlay';
-  import AuthService from '@/services/AuthServices';
-  import { useRouter } from 'vue-router';
-  import Alert from '@/components/Base/Alert';
+import { ref, onMounted } from "vue";
+import logoUrl from "@/assets/images/logo.svg";
+import illustrationUrl from "@/assets/images/illustration.svg";
+import { FormInput, FormErrorMessages } from "@/components/Base/Form";
+import Button from "@/components/Base/Button";
+import { useI18n } from "vue-i18n";
+import LoadingOverlay from "@/components/LoadingOverlay";
+import AuthService from "@/services/AuthServices";
+import { useRouter } from "vue-router";
+import Alert from "@/components/Base/Alert";
 
-  const { t } = useI18n();
-  const router = useRouter();
+const { t } = useI18n();
+const router = useRouter();
 
-  const authService = new AuthService();
+const authService = new AuthService();
 
-  const appName = import.meta.env.VITE_APP_NAME;
-  const loading = ref<boolean>(false);
-  const status = ref<'onLoad' | 'success' | 'error'>('onLoad');
-  const alertMessage = ref<string>('');
+const appName = import.meta.env.VITE_APP_NAME;
+const loading = ref<boolean>(false);
+const status = ref<"onLoad" | "success" | "error">("onLoad");
+const alertMessage = ref<string>("");
 
-  const forgotPasswordForm = authService.useRequestResetPasswordForm();
+const forgotPasswordForm = authService.useRequestResetPasswordForm();
 
-  onMounted(async () => {
-    authService.ensureCSRF();
-  });
+onMounted(async () => {
+  authService.ensureCSRF();
+});
 
-  const onSubmit = async () => {
-    loading.value = true;
+const onSubmit = async () => {
+  loading.value = true;
 
-    forgotPasswordForm
-      .submit()
-      .then(() => {
-        status.value = 'success';
-        alertMessage.value = t('views.forgot_password.alert.successfully_send_link');
-      })
-      .catch((error) => {
-        status.value = 'error';
-        alertMessage.value = error.response.data.message;
-      })
-      .finally(() => {
-        loading.value = false;
-      });
-  };
+  forgotPasswordForm
+    .submit()
+    .then(() => {
+      status.value = "success";
+      alertMessage.value = t("views.forgot_password.alert.successfully_send_link");
+    })
+    .catch((error) => {
+      status.value = "error";
+      alertMessage.value = error.response.data.message;
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
 </script>
 
 <template>
@@ -78,7 +78,7 @@
           >
             <LoadingOverlay :visible="loading" :transparent="true">
               <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
-                {{ t('views.forgot_password.title') }}
+                {{ t("views.forgot_password.title") }}
               </h2>
               <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">&nbsp;</div>
               <form id="forgotPasswordForm" @submit.prevent="onSubmit">
@@ -99,13 +99,8 @@
                   <FormErrorMessages :messages="forgotPasswordForm.errors.email" />
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button
-                    v-if="status == 'onLoad'"
-                    type="submit"
-                    variant="primary"
-                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
-                  >
-                    {{ t('components.buttons.submit') }}
+                  <Button v-if="status == 'onLoad'" type="submit" variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
+                    {{ t("components.buttons.submit") }}
                   </Button>
                   <Button
                     type="button"
@@ -116,7 +111,7 @@
                       router.push({ name: 'login' });
                     "
                   >
-                    {{ t('components.buttons.login') }}
+                    {{ t("components.buttons.login") }}
                   </Button>
                 </div>
               </form>

@@ -1,47 +1,47 @@
 <script setup lang="ts">
-  import '@/assets/css/vendors/simplebar.css';
-  import '@/assets/css/components/mobile-menu.css';
-  import { useRoute, useRouter } from 'vue-router';
-  import { twMerge } from 'tailwind-merge';
-  import logoUrl from '@/assets/images/logo.svg';
-  import Lucide from '@/components/Base/Lucide';
-  import { useMenuStore } from '@/stores/menu';
-  import { useThemeStore } from '@/stores/theme';
-  import { type FormattedMenu, nestedMenu, linkTo, enter, leave } from './mobile-menu';
-  import { watch, reactive, computed, onMounted, ref } from 'vue';
-  import SimpleBar from 'simplebar';
-  import { useI18n } from 'vue-i18n';
+import "@/assets/css/vendors/simplebar.css";
+import "@/assets/css/components/mobile-menu.css";
+import { useRoute, useRouter } from "vue-router";
+import { twMerge } from "tailwind-merge";
+import logoUrl from "@/assets/images/logo.svg";
+import Lucide from "@/components/Base/Lucide";
+import { useMenuStore } from "@/stores/menu";
+import { useThemeStore } from "@/stores/theme";
+import { type FormattedMenu, nestedMenu, linkTo, enter, leave } from "./mobile-menu";
+import { watch, reactive, computed, onMounted, ref } from "vue";
+import SimpleBar from "simplebar";
+import { useI18n } from "vue-i18n";
 
-  const { t } = useI18n();
+const { t } = useI18n();
 
-  const route = useRoute();
-  const router = useRouter();
-  let formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
-  const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
-    Object.assign(formattedMenu, computedFormattedMenu);
-  };
-  const themeStore = useThemeStore();
-  const menuStore = useMenuStore();
-  const menu = computed(() => nestedMenu(menuStore.menu(themeStore.theme.layout), route));
+const route = useRoute();
+const router = useRouter();
+let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
+const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | "divider">) => {
+  Object.assign(formattedMenu, computedFormattedMenu);
+};
+const themeStore = useThemeStore();
+const menuStore = useMenuStore();
+const menu = computed(() => nestedMenu(menuStore.menu(themeStore.theme.layout), route));
 
-  const activeMobileMenu = ref(false);
-  const setActiveMobileMenu = (active: boolean) => {
-    activeMobileMenu.value = active;
-  };
+const activeMobileMenu = ref(false);
+const setActiveMobileMenu = (active: boolean) => {
+  activeMobileMenu.value = active;
+};
 
-  const scrollableRef = ref<HTMLDivElement>();
+const scrollableRef = ref<HTMLDivElement>();
 
-  watch(menu, () => {
-    setFormattedMenu(menu.value);
-  });
+watch(menu, () => {
+  setFormattedMenu(menu.value);
+});
 
-  onMounted(() => {
-    if (scrollableRef.value) {
-      new SimpleBar(scrollableRef.value);
-    }
+onMounted(() => {
+  if (scrollableRef.value) {
+    new SimpleBar(scrollableRef.value);
+  }
 
-    setFormattedMenu(menu.value);
-  });
+  setFormattedMenu(menu.value);
+});
 </script>
 
 <template>
@@ -168,19 +168,13 @@
                     </div>
                     <div class="menu__title">
                       {{ t(subMenu.title) }}
-                      <div
-                        v-if="subMenu.subMenu"
-                        :class="['menu__sub-icon', subMenu.activeDropdown && 'transform rotate-180']"
-                      >
+                      <div v-if="subMenu.subMenu" :class="['menu__sub-icon', subMenu.activeDropdown && 'transform rotate-180']">
                         <Lucide icon="ChevronDown" />
                       </div>
                     </div>
                   </a>
                   <Transition @enter="enter" @leave="leave">
-                    <ul
-                      v-if="subMenu.subMenu && subMenu.activeDropdown"
-                      :class="{ 'menu__sub-open': subMenu.activeDropdown }"
-                    >
+                    <ul v-if="subMenu.subMenu && subMenu.activeDropdown" :class="{ 'menu__sub-open': subMenu.activeDropdown }">
                       <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                         <a
                           :href="

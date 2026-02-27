@@ -1,3 +1,3 @@
-import HomeLogo from './HomeLogo.vue';
+import HomeLogo from "./HomeLogo.vue";
 
 export default HomeLogo;

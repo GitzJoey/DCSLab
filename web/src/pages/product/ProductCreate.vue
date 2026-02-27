@@ -1,445 +1,445 @@
 <script setup lang="ts">
-  // #region Imports
-  import { computed, onMounted, ref, watch, watchEffect } from 'vue';
-  import { useI18n } from 'vue-i18n';
-  import ProductService from '@/services/ProductService';
-  import ProductCategoryService from '@/services/ProductCategoryService';
-  import BrandService from '@/services/BrandService';
-  import UnitService from '@/services/UnitService';
-  import DashboardService from '@/services/DashboardService';
-  import CacheService from '@/services/CacheService';
-  import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormSelect,
-    FormInputCode,
-    FormInputCurrency,
-    FormErrorMessages,
-    FormSwitch,
-    FormTextarea,
-    FormSelectSearch,
-  } from '@/components/Base/Form';
-  import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
-  import { CardState } from '@/types/enums/CardState';
-  import Button from '@/components/Base/Button';
-  import { ViewMode } from '@/types/enums/ViewMode';
-  import { debounce } from 'lodash';
-  import Lucide from '@/components/Base/Lucide';
-  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
-  import { useRouter } from 'vue-router';
-  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-  import { ErrorCode } from '@/types/enums/ErrorCode';
-  import { DropDownOption } from '@/types/models/DropDownOption';
-  import { formatCurrency } from '@/utils/helper';
-  import { AxiosError, isAxiosError } from 'axios';
-  // #endregion
+// #region Imports
+import { computed, onMounted, ref, watch, watchEffect } from "vue";
+import { useI18n } from "vue-i18n";
+import ProductService from "@/services/ProductService";
+import ProductCategoryService from "@/services/ProductCategoryService";
+import BrandService from "@/services/BrandService";
+import UnitService from "@/services/UnitService";
+import DashboardService from "@/services/DashboardService";
+import CacheService from "@/services/CacheService";
+import { TwoColumnsLayout } from "@/components/Base/Form/FormLayout";
+import {
+  FormInput,
+  FormLabel,
+  FormSelect,
+  FormInputCode,
+  FormInputCurrency,
+  FormErrorMessages,
+  FormSwitch,
+  FormTextarea,
+  FormSelectSearch,
+} from "@/components/Base/Form";
+import { TwoColumnsLayoutCards } from "@/components/Base/Form/FormLayout/TwoColumnsLayout.vue";
+import { CardState } from "@/types/enums/CardState";
+import Button from "@/components/Base/Button";
+import { ViewMode } from "@/types/enums/ViewMode";
+import { debounce } from "lodash";
+import Lucide from "@/components/Base/Lucide";
+import { useSelectedUserLocationStore } from "@/stores/selected-user-location";
+import { useRouter } from "vue-router";
+import { type AlertPlaceholderProps } from "@/components/AlertPlaceholder/AlertPlaceholder.vue";
+import { ErrorCode } from "@/types/enums/ErrorCode";
+import { DropDownOption } from "@/types/models/DropDownOption";
+import { formatCurrency } from "@/utils/helper";
+import { AxiosError, isAxiosError } from "axios";
+// #endregion
 
-  // #region Declarations
-  const { t } = useI18n();
-  const router = useRouter();
-  const selectedUserLocationStore = useSelectedUserLocationStore();
+// #region Declarations
+const { t } = useI18n();
+const router = useRouter();
+const selectedUserLocationStore = useSelectedUserLocationStore();
 
-  const productService = new ProductService();
-  const productCategoryService = new ProductCategoryService();
-  const brandService = new BrandService();
-  const unitService = new UnitService();
-  const dashboardServices = new DashboardService();
-  const cacheServices = new CacheService();
-  // #endregion
+const productService = new ProductService();
+const productCategoryService = new ProductCategoryService();
+const brandService = new BrandService();
+const unitService = new UnitService();
+const dashboardServices = new DashboardService();
+const cacheServices = new CacheService();
+// #endregion
 
-  // #region Props, Emits
-  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
-  // #endregion
+// #region Props, Emits
+const emits = defineEmits(["mode-state", "loading-state", "update-profile", "show-alertplaceholder"]);
+// #endregion
 
-  // #region Refs
-  const cards = ref<Array<TwoColumnsLayoutCards>>([
-    {
-      title: 'views.product.field_groups.company_info',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.product.field_groups.product_data',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.product.field_groups.price_tax_settings',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.product.field_groups.unit_settings',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.product.field_groups.other_settings',
-      state: CardState.Expanded,
-    },
-    { title: '', state: CardState.Hidden, id: 'button' },
-  ]);
+// #region Refs
+const cards = ref<Array<TwoColumnsLayoutCards>>([
+  {
+    title: "views.product.field_groups.company_info",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.product.field_groups.product_data",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.product.field_groups.price_tax_settings",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.product.field_groups.unit_settings",
+    state: CardState.Expanded,
+  },
+  {
+    title: "views.product.field_groups.other_settings",
+    state: CardState.Expanded,
+  },
+  { title: "", state: CardState.Hidden, id: "button" },
+]);
 
-  const categoryDDL = ref<Array<DropDownOption> | null>(null);
-  const categorySearch = ref<string>('');
-  const categoryOptions = computed(() =>
-    (categoryDDL.value ?? []).map((item) => ({
-      value: item.code,
-      label: item.name,
-    })),
-  );
+const categoryDDL = ref<Array<DropDownOption> | null>(null);
+const categorySearch = ref<string>("");
+const categoryOptions = computed(() =>
+  (categoryDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
 
-  const brandDDL = ref<Array<DropDownOption> | null>(null);
-  const brandSearch = ref<string>('');
-  const brandOptions = computed(() =>
-    (brandDDL.value ?? []).map((item) => ({
-      value: item.code,
-      label: item.name,
-    })),
-  );
+const brandDDL = ref<Array<DropDownOption> | null>(null);
+const brandSearch = ref<string>("");
+const brandOptions = computed(() =>
+  (brandDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
 
-  const unitDDL = ref<Array<DropDownOption> | null>(null);
-  const unitSearch = ref<string[]>([]);
-  const unitOptions = computed(() =>
-    (unitDDL.value ?? []).map((item) => ({
-      value: item.code,
-      label: item.name,
-    })),
-  );
+const unitDDL = ref<Array<DropDownOption> | null>(null);
+const unitSearch = ref<string[]>([]);
+const unitOptions = computed(() =>
+  (unitDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
 
-  const statusDDL = ref<Array<DropDownOption> | null>(null);
+const statusDDL = ref<Array<DropDownOption> | null>(null);
 
-  const productForm = productService.useProductPhysicalStoreForm();
+const productForm = productService.useProductPhysicalStoreForm();
 
-  // #endregion
+// #endregion
 
-  // #region Computed
-  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
-  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
-  // #endregion
+// #region Computed
+const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
+// #endregion
 
-  // #region Lifecycle Hooks
-  onMounted(async () => {
-    emits('mode-state', ViewMode.FORM_CREATE);
-    if (!isUserLocationSelected.value) {
-      router.push({
-        name: 'side-menu-error-code',
-        params: { code: ErrorCode.USERLOCATION_REQUIRED },
-      });
-    }
+// #region Lifecycle Hooks
+onMounted(async () => {
+  emits("mode-state", ViewMode.FORM_CREATE);
+  if (!isUserLocationSelected.value) {
+    router.push({
+      name: "side-menu-error-code",
+      params: { code: ErrorCode.USERLOCATION_REQUIRED },
+    });
+  }
 
-    loadFromCache();
+  loadFromCache();
 
-    if (productForm.product_units.length === 0) {
-      productForm.product_units.push({
-        code: '_AUTO_',
+  if (productForm.product_units.length === 0) {
+    productForm.product_units.push({
+      code: "_AUTO_",
+      is_manufacturer_sku: false,
+      unit_id: "",
+      unit_name: "",
+      price: 0,
+      is_base: true,
+      conversion_value: 1,
+      is_primary_unit: true,
+      point: 0,
+      remarks: "",
+    });
+  }
+
+  await Promise.all([getCategoryDDL(), getBrandDDL(), getUnitDDL(), getStatusDDL()]);
+
+  setCompanyIdData();
+});
+// #endregion
+
+// #region Methods
+const setCompanyIdData = () => {
+  productForm.setData({
+    company_id: selectedUserLocation.value.company.id,
+  });
+};
+
+const getCategoryDDL = async (search = ""): Promise<void> => {
+  const result = await productCategoryService.readAnyGet({
+    with_trashed: false,
+    search: search,
+    company_id: selectedUserLocation.value.company.id,
+    type: 1, // Product Type
+    refresh: false,
+    limit: 10,
+  });
+
+  if (result.success && result.data) {
+    categoryDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
+  }
+};
+
+const getBrandDDL = async (search = ""): Promise<void> => {
+  const result = await brandService.readAnyGet({
+    with_trashed: false,
+    search: search,
+    company_id: selectedUserLocation.value.company.id,
+    refresh: false,
+    limit: 10,
+  });
+
+  if (result.success && result.data) {
+    brandDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
+  }
+};
+
+const getUnitDDL = async (search = ""): Promise<void> => {
+  const result = await unitService.readAnyGet({
+    with_trashed: false,
+    search: search,
+    company_id: selectedUserLocation.value.company.id,
+    refresh: false,
+    limit: 10,
+  });
+
+  if (result.success && result.data) {
+    unitDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
+
+    productForm.product_units.forEach((u: any, index: number) => {
+      if (u.unit_id && !u.unit_name) {
+        const match = unitDDL.value?.find((opt) => opt.code === u.unit_id);
+        if (match) u.unit_name = match.name;
+      }
+    });
+  }
+};
+
+const getStatusDDL = async (): Promise<void> => {
+  const result = await dashboardServices.getStatusDDL(false);
+  if (result) {
+    statusDDL.value = result;
+  }
+};
+
+const loadFromCache = () => {
+  let data = cacheServices.getLastEntity("PRODUCT_CREATE") as Record<string, unknown>;
+  if (!data) return;
+  if (!data.code) data.code = "_AUTO_";
+  productForm.setData(data);
+};
+
+const handleExpandCard = (index: number) => {
+  if (cards.value[index].state === CardState.Collapsed) {
+    cards.value[index].state = CardState.Expanded;
+  } else if (cards.value[index].state === CardState.Expanded) {
+    cards.value[index].state = CardState.Collapsed;
+  }
+};
+
+const scrollToError = (id: string): void => {
+  let el = document.getElementById(id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
+const onSubmit = async () => {
+  if (productForm.hasErrors) {
+    scrollToError(Object.keys(productForm.errors)[0]);
+  }
+  emits("loading-state", true);
+  await productForm
+    .submit()
+    .then(() => {
+      resetForm();
+      showAlertPlaceholder("hidden", "", null);
+      emits("update-profile");
+      router.push({ name: "side-menu-product-product-list" });
+    })
+    .catch((error) => {
+      const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
+      showAlertPlaceholder("danger", "", errorList);
+    })
+    .finally(() => {
+      emits("loading-state", false);
+    });
+};
+
+const resetForm = () => {
+  productForm.reset();
+  productForm.setErrors({});
+  // Re-initialize unit
+  productForm.setData({
+    product_units: [
+      {
+        code: "_AUTO_",
         is_manufacturer_sku: false,
-        unit_id: '',
-        unit_name: '',
+        unit_id: "",
+        unit_name: "",
         price: 0,
         is_base: true,
         conversion_value: 1,
         is_primary_unit: true,
         point: 0,
-        remarks: '',
-      });
-    }
-
-    await Promise.all([getCategoryDDL(), getBrandDDL(), getUnitDDL(), getStatusDDL()]);
-
-    setCompanyIdData();
+        remarks: "",
+      },
+    ],
   });
-  // #endregion
+};
 
-  // #region Methods
-  const setCompanyIdData = () => {
-    productForm.setData({
-      company_id: selectedUserLocation.value.company.id,
-    });
-  };
+const setCode = () => {
+  productForm.forgetError("code");
+  if (productForm.code == "_AUTO_") {
+    productForm.setData({ code: "" });
+  } else {
+    productForm.setData({ code: "_AUTO_" });
+  }
+};
 
-  const getCategoryDDL = async (search = ''): Promise<void> => {
-    const result = await productCategoryService.readAnyGet({
-      with_trashed: false,
-      search: search,
-      company_id: selectedUserLocation.value.company.id,
-      type: 1, // Product Type
-      refresh: false,
-      limit: 10,
-    });
+const setUnitCode = (index: number) => {
+  if (productForm.product_units[index].code == "_AUTO_") {
+    productForm.product_units[index].code = "";
+  } else {
+    productForm.product_units[index].code = "_AUTO_";
+  }
+};
 
-    if (result.success && result.data) {
-      categoryDDL.value = result.data.data.map((item: any) => ({
-        code: item.id,
-        name: item.name,
-      }));
+const setPrimaryUnit = (index: number) => {
+  productForm.product_units.forEach((u: any, i: number) => {
+    u.is_primary_unit = i === index;
+  });
+  productForm.validate("product_units.is_primary_unit" as any);
+};
+
+const addUnit = () => {
+  productForm.product_units.push({
+    code: "_AUTO_",
+    is_manufacturer_sku: false,
+    unit_id: "",
+    unit_name: "",
+    price: 0,
+    is_base: false,
+    conversion_value: "",
+    is_primary_unit: false,
+    point: 0,
+    remarks: "",
+  } as any);
+
+  Object.keys(productForm.errors).forEach((key) => {
+    if (key.startsWith("product_units.")) {
+      productForm.forgetError(key as any);
     }
-  };
+  });
+};
 
-  const getBrandDDL = async (search = ''): Promise<void> => {
-    const result = await brandService.readAnyGet({
-      with_trashed: false,
-      search: search,
-      company_id: selectedUserLocation.value.company.id,
-      refresh: false,
-      limit: 10,
-    });
-
-    if (result.success && result.data) {
-      brandDDL.value = result.data.data.map((item: any) => ({
-        code: item.id,
-        name: item.name,
-      }));
-    }
-  };
-
-  const getUnitDDL = async (search = ''): Promise<void> => {
-    const result = await unitService.readAnyGet({
-      with_trashed: false,
-      search: search,
-      company_id: selectedUserLocation.value.company.id,
-      refresh: false,
-      limit: 10,
-    });
-
-    if (result.success && result.data) {
-      unitDDL.value = result.data.data.map((item: any) => ({
-        code: item.id,
-        name: item.name,
-      }));
-
-      productForm.product_units.forEach((u: any, index: number) => {
-        if (u.unit_id && !u.unit_name) {
-          const match = unitDDL.value?.find((opt) => opt.code === u.unit_id);
-          if (match) u.unit_name = match.name;
-        }
-      });
-    }
-  };
-
-  const getStatusDDL = async (): Promise<void> => {
-    const result = await dashboardServices.getStatusDDL(false);
-    if (result) {
-      statusDDL.value = result;
-    }
-  };
-
-  const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('PRODUCT_CREATE') as Record<string, unknown>;
-    if (!data) return;
-    if (!data.code) data.code = '_AUTO_';
-    productForm.setData(data);
-  };
-
-  const handleExpandCard = (index: number) => {
-    if (cards.value[index].state === CardState.Collapsed) {
-      cards.value[index].state = CardState.Expanded;
-    } else if (cards.value[index].state === CardState.Expanded) {
-      cards.value[index].state = CardState.Collapsed;
-    }
-  };
-
-  const scrollToError = (id: string): void => {
-    let el = document.getElementById(id);
-    if (!el) return;
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  };
-
-  const onSubmit = async () => {
-    if (productForm.hasErrors) {
-      scrollToError(Object.keys(productForm.errors)[0]);
-    }
-    emits('loading-state', true);
-    await productForm
-      .submit()
-      .then(() => {
-        resetForm();
-        showAlertPlaceholder('hidden', '', null);
-        emits('update-profile');
-        router.push({ name: 'side-menu-product-product-list' });
-      })
-      .catch((error) => {
-        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
-        showAlertPlaceholder('danger', '', errorList);
-      })
-      .finally(() => {
-        emits('loading-state', false);
-      });
-  };
-
-  const resetForm = () => {
-    productForm.reset();
-    productForm.setErrors({});
-    // Re-initialize unit
-    productForm.setData({
-      product_units: [
-        {
-          code: '_AUTO_',
-          is_manufacturer_sku: false,
-          unit_id: '',
-          unit_name: '',
-          price: 0,
-          is_base: true,
-          conversion_value: 1,
-          is_primary_unit: true,
-          point: 0,
-          remarks: '',
-        },
-      ],
-    });
-  };
-
-  const setCode = () => {
-    productForm.forgetError('code');
-    if (productForm.code == '_AUTO_') {
-      productForm.setData({ code: '' });
-    } else {
-      productForm.setData({ code: '_AUTO_' });
-    }
-  };
-
-  const setUnitCode = (index: number) => {
-    if (productForm.product_units[index].code == '_AUTO_') {
-      productForm.product_units[index].code = '';
-    } else {
-      productForm.product_units[index].code = '_AUTO_';
-    }
-  };
-
-  const setPrimaryUnit = (index: number) => {
-    productForm.product_units.forEach((u: any, i: number) => {
-      u.is_primary_unit = i === index;
-    });
-    productForm.validate('product_units.is_primary_unit' as any);
-  };
-
-  const addUnit = () => {
-    productForm.product_units.push({
-      code: '_AUTO_',
-      is_manufacturer_sku: false,
-      unit_id: '',
-      unit_name: '',
-      price: 0,
-      is_base: false,
-      conversion_value: '',
-      is_primary_unit: false,
-      point: 0,
-      remarks: '',
-    } as any);
-
-    Object.keys(productForm.errors).forEach((key) => {
-      if (key.startsWith('product_units.')) {
-        productForm.forgetError(key as any);
-      }
-    });
-  };
-
-  const updateUnitName = (index: number, newUnitId?: string) => {
-    const unitId = newUnitId ?? productForm.product_units[index].unit_id;
-    if (!unitId) {
-      productForm.product_units[index].unit_name = '';
-      return;
-    }
-    const unit = unitDDL.value?.find((u) => u.code === unitId);
-    if (unit) {
-      productForm.product_units[index].unit_name = unit.name;
-      productForm.forgetError(`product_units.${index}.unit_id` as any);
-    }
-  };
-
-  const clearUnit = (index: number) => {
-    productForm.product_units[index].unit_id = '';
-    productForm.product_units[index].unit_name = '';
+const updateUnitName = (index: number, newUnitId?: string) => {
+  const unitId = newUnitId ?? productForm.product_units[index].unit_id;
+  if (!unitId) {
+    productForm.product_units[index].unit_name = "";
+    return;
+  }
+  const unit = unitDDL.value?.find((u) => u.code === unitId);
+  if (unit) {
+    productForm.product_units[index].unit_name = unit.name;
     productForm.forgetError(`product_units.${index}.unit_id` as any);
-  };
+  }
+};
 
-  const removeUnit = (index: number) => {
-    const isPrimary = productForm.product_units[index].is_primary_unit;
-    productForm.product_units.splice(index, 1);
+const clearUnit = (index: number) => {
+  productForm.product_units[index].unit_id = "";
+  productForm.product_units[index].unit_name = "";
+  productForm.forgetError(`product_units.${index}.unit_id` as any);
+};
 
-    // If the removed unit was the primary unit, set the first unit (Base Unit) as primary
-    if (isPrimary && productForm.product_units.length > 0) {
-      productForm.product_units[0].is_primary_unit = true;
+const removeUnit = (index: number) => {
+  const isPrimary = productForm.product_units[index].is_primary_unit;
+  productForm.product_units.splice(index, 1);
+
+  // If the removed unit was the primary unit, set the first unit (Base Unit) as primary
+  if (isPrimary && productForm.product_units.length > 0) {
+    productForm.product_units[0].is_primary_unit = true;
+  }
+
+  // Clear errors related to product_units to prevent stale "duplicate" errors
+  // because 'distinct' validation depends on the array content
+  Object.keys(productForm.errors).forEach((key) => {
+    if (key.startsWith("product_units.")) {
+      productForm.forgetError(key as any);
     }
+  });
+};
 
-    // Clear errors related to product_units to prevent stale "duplicate" errors
-    // because 'distinct' validation depends on the array content
-    Object.keys(productForm.errors).forEach((key) => {
-      if (key.startsWith('product_units.')) {
-        productForm.forgetError(key as any);
-      }
-    });
+watch(
+  () => productForm.errors,
+  (newErrors) => {
+    console.log("Realtime Errors Update:", JSON.parse(JSON.stringify(newErrors)));
+    console.log("Has Errors:", productForm.hasErrors);
+  },
+  { deep: true },
+);
+
+const showAlertPlaceholder = (
+  pAlertType: "hidden" | "danger" | "success" | "warning" | "pending" | "dark",
+  pTitle: string,
+  pAlertList: Record<string, Array<string>> | null,
+) => {
+  let ap: AlertPlaceholderProps = {
+    alertType: pAlertType,
+    title: pTitle,
+    alertList: pAlertList,
   };
+  emits("show-alertplaceholder", ap);
+};
 
-  watch(
-    () => productForm.errors,
-    (newErrors) => {
-      console.log('Realtime Errors Update:', JSON.parse(JSON.stringify(newErrors)));
-      console.log('Has Errors:', productForm.hasErrors);
-    },
-    { deep: true },
-  );
+const convertErrorTypeToAlertListType = (error: unknown) => {
+  const record: Record<string, Array<string>> = {};
 
-  const showAlertPlaceholder = (
-    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
-    pTitle: string,
-    pAlertList: Record<string, Array<string>> | null,
-  ) => {
-    let ap: AlertPlaceholderProps = {
-      alertType: pAlertType,
-      title: pTitle,
-      alertList: pAlertList,
-    };
-    emits('show-alertplaceholder', ap);
-  };
+  const anyError = error as any;
+  const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
 
-  const convertErrorTypeToAlertListType = (error: unknown) => {
-    const record: Record<string, Array<string>> = {};
+  if (response && response.data) {
+    const data = response.data as any;
 
-    const anyError = error as any;
-    const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
+    if (data.errors && typeof data.errors === "object") {
+      for (const key of Object.keys(data.errors)) {
+        const value = data.errors[key];
 
-    if (response && response.data) {
-      const data = response.data as any;
-
-      if (data.errors && typeof data.errors === 'object') {
-        for (const key of Object.keys(data.errors)) {
-          const value = data.errors[key];
-
-          if (Array.isArray(value)) {
-            record[key] = value;
-          } else if (value !== undefined && value !== null) {
-            record[key] = [String(value)];
-          }
+        if (Array.isArray(value)) {
+          record[key] = value;
+        } else if (value !== undefined && value !== null) {
+          record[key] = [String(value)];
         }
-
-        return record;
       }
 
-      if (data.message) {
-        record.error = [String(data.message)];
-        return record;
-      }
+      return record;
     }
 
-    if (error instanceof Error && error.message) {
-      record.error = [error.message];
-    } else {
-      record.error = ['Unknown error'];
+    if (data.message) {
+      record.error = [String(data.message)];
+      return record;
     }
+  }
 
-    return record;
-  };
-  // #endregion
+  if (error instanceof Error && error.message) {
+    record.error = [error.message];
+  } else {
+    record.error = ["Unknown error"];
+  }
 
-  // #region Watchers
-  watch(
-    productForm,
-    debounce(() => {
-      cacheServices.setLastEntity('PRODUCT_CREATE', productForm.data());
-      console.log('productForm.errors:', JSON.parse(JSON.stringify(productForm.errors)));
-      console.log('productForm.product_units:', JSON.parse(JSON.stringify(productForm.product_units)));
-    }, 500),
-    { deep: true },
-  );
-  // #endregion
+  return record;
+};
+// #endregion
+
+// #region Watchers
+watch(
+  productForm,
+  debounce(() => {
+    cacheServices.setLastEntity("PRODUCT_CREATE", productForm.data());
+    console.log("productForm.errors:", JSON.parse(JSON.stringify(productForm.errors)));
+    console.log("productForm.product_units:", JSON.parse(JSON.stringify(productForm.product_units)));
+  }, 500),
+  { deep: true },
+);
+// #endregion
 </script>
 
 <template>
@@ -461,9 +461,10 @@
       <template #card-items-1>
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
+            <!-- Column 1: Code -->
             <div class="col-span-12 sm:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('code') }">
-                {{ t('views.product.fields.code') }}
+                {{ t("views.product.fields.code") }}
               </FormLabel>
               <FormInputCode
                 v-model="productForm.code"
@@ -475,9 +476,10 @@
               <FormErrorMessages :messages="productForm.errors.code" />
             </div>
 
+            <!-- Column 2: Category -->
             <div class="col-span-12 sm:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('category_id') }">
-                {{ t('views.product.fields.category_id') }}
+                {{ t("views.product.fields.category_id") }}
               </FormLabel>
               <FormSelectSearch
                 v-model="productForm.category_id"
@@ -491,9 +493,10 @@
               <FormErrorMessages :messages="productForm.errors.category_id" />
             </div>
 
+            <!-- Column 3: Brand -->
             <div class="col-span-12 sm:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('brand_id') }">
-                {{ t('views.product.fields.brand_id') }}
+                {{ t("views.product.fields.brand_id") }}
               </FormLabel>
               <FormSelectSearch
                 v-model="productForm.brand_id"
@@ -507,9 +510,10 @@
               <FormErrorMessages :messages="productForm.errors.brand_id" />
             </div>
 
+            <!-- Column 4: Name -->
             <div class="col-span-12 sm:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('name') }">
-                {{ t('views.product.fields.name') }}
+                {{ t("views.product.fields.name") }}
               </FormLabel>
               <FormInput
                 v-model="productForm.name"
@@ -521,13 +525,14 @@
               <FormErrorMessages :messages="productForm.errors.name" />
             </div>
 
+            <!-- Column 5: Is Use Serial Number -->
             <div class="col-span-12 sm:col-span-6">
               <FormLabel
                 :class="{
                   'text-danger': productForm.invalid('is_use_serial_number'),
                 }"
               >
-                {{ t('views.product.fields.is_use_serial_number') }}
+                {{ t("views.product.fields.is_use_serial_number") }}
               </FormLabel>
               <FormSwitch class="mt-2">
                 <FormSwitch.Input
@@ -542,9 +547,10 @@
               <FormErrorMessages :messages="productForm.errors.is_use_serial_number" />
             </div>
 
+            <!-- Column 6: Is Expirable -->
             <div class="col-span-12 sm:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('is_expirable') }">
-                {{ t('views.product.fields.is_expirable') }}
+                {{ t("views.product.fields.is_expirable") }}
               </FormLabel>
               <FormSwitch class="mt-2">
                 <FormSwitch.Input
@@ -568,7 +574,7 @@
           <div class="grid grid-cols-12 gap-4 gap-y-3">
             <div class="col-span-12">
               <FormLabel :class="{ 'text-danger': productForm.invalid('is_taxable') }">
-                {{ t('views.product.fields.is_taxable') }}
+                {{ t("views.product.fields.is_taxable") }}
               </FormLabel>
               <FormSwitch class="mt-2">
                 <FormSwitch.Input
@@ -585,7 +591,7 @@
 
             <div class="col-span-12 sm:col-span-6" v-if="productForm.is_taxable">
               <FormLabel :class="{ 'text-danger': productForm.invalid('vat_rate') }">
-                {{ t('views.product.fields.vat_rate') }}
+                {{ t("views.product.fields.vat_rate") }}
               </FormLabel>
               <FormInputCurrency
                 v-model="productForm.vat_rate"
@@ -602,7 +608,7 @@
                   'text-danger': productForm.invalid('is_price_include_vat'),
                 }"
               >
-                {{ t('views.product.fields.is_price_include_vat') }}
+                {{ t("views.product.fields.is_price_include_vat") }}
               </FormLabel>
               <FormSwitch class="mt-2">
                 <FormSwitch.Input
@@ -624,36 +630,31 @@
       <template #card-items-3>
         <div class="p-5">
           <div v-if="productForm.product_units.length === 0" class="text-slate-500 text-sm">
-            {{ t('components.data-list.data_not_found') }}
+            {{ t("components.data-list.data_not_found") }}
           </div>
 
           <div v-else class="space-y-5">
-            <div
-              v-for="(unit, index) in productForm.product_units"
-              :key="index"
-              class="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-4"
-            >
+            <div v-for="(unit, index) in productForm.product_units" :key="index" class="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-4">
+              <!-- title -->
               <div class="flex items-center justify-between mb-3">
                 <div class="font-medium text-sm">
-                  {{
-                    index === 0
-                      ? t('views.product.fields.base_unit')
-                      : t('views.product.fields.other_unit') + ' #' + index
-                  }}
+                  {{ index === 0 ? t("views.product.fields.base_unit") : t("views.product.fields.other_unit") + " #" + index }}
                 </div>
                 <Button v-if="index > 0" type="button" variant="outline-secondary" @click="removeUnit(index)">
                   <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                 </Button>
               </div>
 
+              <!-- Columns 1-6: Unit Code, Unit Name, Conversion Value, Price, Point, Is Primary Unit -->
               <div class="grid grid-cols-12 gap-4 gap-y-3">
-                <div class="col-span-12 sm:col-span-6">
+                <!-- Column 1: Unit Code -->
+                <div class="col-span-12 lg:col-span-3">
                   <FormLabel
                     :class="{
                       'text-danger': productForm.invalid(`product_units.${index}.code` as any),
                     }"
                   >
-                    {{ t('views.product.fields.unit_code') }}
+                    {{ t("views.product.fields.unit_code") }}
                   </FormLabel>
                   <FormInputCode
                     v-model="productForm.product_units[index].code"
@@ -667,13 +668,14 @@
                   <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.code`]" />
                 </div>
 
-                <div class="col-span-12 sm:col-span-6">
+                <!-- Column 2: Unit Name -->
+                <div class="col-span-12" :class="index === 0 ? 'lg:col-span-3' : 'lg:col-span-2'">
                   <FormLabel
                     :class="{
                       'text-danger': productForm.invalid(`product_units.${index}.unit_id` as any),
                     }"
                   >
-                    {{ t('views.product.fields.unit_id') }}
+                    {{ t("views.product.fields.unit_id") }}
                   </FormLabel>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
@@ -694,25 +696,21 @@
                         @search="getUnitDDL"
                       />
                     </div>
-                    <button
-                      v-if="productForm.product_units[index].unit_id"
-                      type="button"
-                      class="text-slate-500 hover:text-danger"
-                      @click="clearUnit(index)"
-                    >
+                    <button v-if="productForm.product_units[index].unit_id" type="button" class="text-slate-500 hover:text-danger" @click="clearUnit(index)">
                       <Lucide icon="X" class="w-4 h-4" />
                     </button>
                   </div>
                   <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]" />
                 </div>
 
-                <div class="col-span-12 sm:col-span-6" v-if="index > 0">
+                <!-- Column 3: Conversion Value -->
+                <div class="col-span-12 lg:col-span-1" v-if="index > 0">
                   <FormLabel
                     :class="{
                       'text-danger': productForm.invalid(`product_units.${index}.conversion_value` as any),
                     }"
                   >
-                    {{ t('views.product.fields.conversion_value') }}
+                    {{ t("views.product.fields.conversion_value") }}
                   </FormLabel>
                   <FormInput
                     type="number"
@@ -723,18 +721,17 @@
                     :placeholder="t('views.product.fields.conversion_value')"
                     @change="productForm.validate(`product_units.${index}.conversion_value` as any)"
                   />
-                  <FormErrorMessages
-                    :messages="(productForm.errors as any)[`product_units.${index}.conversion_value`]"
-                  />
+                  <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.conversion_value`]" />
                 </div>
 
-                <div class="col-span-12 sm:col-span-6" v-if="index > 0">
+                <!-- Column 4: Price -->
+                <div class="col-span-12 lg:col-span-3" v-if="index > 0">
                   <FormLabel
                     :class="{
                       'text-danger': productForm.invalid(`product_units.${index}.price` as any),
                     }"
                   >
-                    {{ t('views.product.fields.price') }}
+                    {{ t("views.product.fields.price") }}
                   </FormLabel>
                   <FormInputCurrency
                     v-model="productForm.product_units[index].price"
@@ -752,25 +749,20 @@
                     "
                     class="text-xs text-slate-500 mt-1 text-right"
                   >
-                    {{ t('views.product.fields.base_unit_price') }}:
-                    {{
-                      formatCurrency(
-                        (
-                          productForm.product_units[index].price / productForm.product_units[index].conversion_value
-                        ).toFixed(2),
-                      )
-                    }}
+                    {{ t("views.product.fields.base_unit_price") }}:
+                    {{ formatCurrency((productForm.product_units[index].price / productForm.product_units[index].conversion_value).toFixed(2)) }}
                   </div>
                   <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
                 </div>
 
-                <div class="col-span-12 sm:col-span-4" v-else>
+                <!-- Column 5: Is Primary Unit -->
+                <div class="col-span-12 lg:col-span-3" v-else>
                   <FormLabel
                     :class="{
                       'text-danger': productForm.invalid(`product_units.${index}.price` as any),
                     }"
                   >
-                    {{ t('views.product.fields.price') }}
+                    {{ t("views.product.fields.price") }}
                   </FormLabel>
                   <FormInputCurrency
                     v-model="productForm.product_units[index].price"
@@ -782,13 +774,14 @@
                   <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
                 </div>
 
-                <div class="col-span-12 sm:col-span-4" v-if="index === 0">
+                <!-- Column 6: Point -->
+                <div class="col-span-12 lg:col-span-3" v-if="index === 0">
                   <FormLabel
                     :class="{
                       'text-danger': productForm.invalid(`product_units.${index}.point` as any),
                     }"
                   >
-                    {{ t('views.product.fields.point') }}
+                    {{ t("views.product.fields.point") }}
                   </FormLabel>
                   <FormInput
                     v-model="productForm.product_units[index].point"
@@ -801,9 +794,10 @@
                   <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.point`]" />
                 </div>
 
-                <div class="col-span-12 sm:col-span-4" v-if="index === 0">
+                <!-- Column 7: Is Primary Unit -->
+                <div class="col-span-12 lg:col-span-3" v-if="index === 0">
                   <FormLabel class="opacity-0 select-none">
-                    {{ t('views.product.fields.is_primary_unit') }}
+                    {{ t("views.product.fields.is_primary_unit") }}
                   </FormLabel>
                   <div class="mt-2 flex items-center">
                     <input
@@ -820,19 +814,20 @@
                         'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
                       }"
                     >
-                      {{ t('views.product.fields.is_primary_unit') }}
+                      {{ t("views.product.fields.is_primary_unit") }}
                     </span>
                   </div>
                   <FormErrorMessages :messages="(productForm.errors as any)['product_units.is_primary_unit']" />
                 </div>
 
-                <div class="col-span-12 sm:col-span-6" v-if="index > 0">
+                <!-- Column 8: Is Primary Unit -->
+                <div class="col-span-12 sm:col-span-3" v-if="index > 0">
                   <FormLabel
                     :class="{
                       'text-danger': productForm.invalid(`product_units.${index}.point` as any),
                     }"
                   >
-                    {{ t('views.product.fields.point') }}
+                    {{ t("views.product.fields.point") }}
                   </FormLabel>
                   <div class="mt-2 flex items-center">
                     <FormInput
@@ -859,7 +854,7 @@
                           'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
                         }"
                       >
-                        {{ t('views.product.fields.is_primary_unit') }}
+                        {{ t("views.product.fields.is_primary_unit") }}
                       </span>
                     </div>
                   </div>
@@ -874,7 +869,7 @@
             <FormLabel></FormLabel>
             <Button type="button" variant="primary" class="shadow-md" @click="addUnit">
               <Lucide icon="Plus" class="w-4 h-4 mr-2" />
-              {{ t('views.product.actions.add_unit') }}
+              {{ t("views.product.actions.add_unit") }}
             </Button>
           </div>
         </div>
@@ -884,17 +879,14 @@
       <template #card-items-4>
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
+            <!-- Column 1: Status -->
             <div class="col-span-12 sm:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('status') }">
-                {{ t('views.product.fields.status') }}
+                {{ t("views.product.fields.status") }}
               </FormLabel>
-              <FormSelect
-                v-model="productForm.status"
-                :class="{ 'border-danger': productForm.invalid('status') }"
-                @change="productForm.validate('status')"
-              >
+              <FormSelect v-model="productForm.status" :class="{ 'border-danger': productForm.invalid('status') }" @change="productForm.validate('status')">
                 <option value="">
-                  {{ t('components.dropdown.placeholder') }}
+                  {{ t("components.dropdown.placeholder") }}
                 </option>
                 <option v-for="s in statusDDL" :key="s.code" :value="s.code">
                   {{ t(s.name) }}
@@ -903,9 +895,10 @@
               <FormErrorMessages :messages="productForm.errors.status" />
             </div>
 
+            <!-- Column 2: Remarks -->
             <div class="col-span-12">
               <FormLabel :class="{ 'text-danger': productForm.invalid('remarks') }">
-                {{ t('views.product.fields.remarks') }}
+                {{ t("views.product.fields.remarks") }}
               </FormLabel>
               <FormTextarea
                 v-model="productForm.remarks"
@@ -922,20 +915,14 @@
       <!-- Buttons -->
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="productForm.validating || productForm.hasErrors"
-          >
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="productForm.validating || productForm.hasErrors">
             <Lucide v-if="productForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
-              {{ t('components.buttons.submit') }}
+              {{ t("components.buttons.submit") }}
             </template>
           </Button>
           <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
-            {{ t('components.buttons.reset') }}
+            {{ t("components.buttons.reset") }}
           </Button>
         </div>
       </template>

@@ -1,38 +1,38 @@
 <script lang="ts">
-  export default {
-    inheritAttrs: false,
-  };
+export default {
+  inheritAttrs: false,
+};
 </script>
 
 <script setup lang="ts">
-  import { DialogPanel as HeadlessDialogPanel, TransitionChild } from '@headlessui/vue';
-  import _ from 'lodash';
-  import { twMerge } from 'tailwind-merge';
-  import { type ProvideSlideover } from './Slideover.vue';
-  import { inject, useAttrs, computed } from 'vue';
+import { DialogPanel as HeadlessDialogPanel, TransitionChild } from "@headlessui/vue";
+import _ from "lodash";
+import { twMerge } from "tailwind-merge";
+import { type ProvideSlideover } from "./Slideover.vue";
+import { inject, useAttrs, computed } from "vue";
 
-  interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogPanel> {
-    as?: string | object;
-  }
+interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogPanel> {
+  as?: string | object;
+}
 
-  const { as } = withDefaults(defineProps<PanelProps>(), {
-    as: 'div',
-  });
+const { as } = withDefaults(defineProps<PanelProps>(), {
+  as: "div",
+});
 
-  const slideover = inject<ProvideSlideover>('slideover');
+const slideover = inject<ProvideSlideover>("slideover");
 
-  const attrs = useAttrs();
-  const computedClass = computed(() =>
-    twMerge([
-      'w-[90%] ml-auto h-screen flex flex-col bg-white relative shadow-md transition-transform dark:bg-darkmode-600',
-      slideover?.size == 'md' && 'sm:w-[460px]',
-      slideover?.size == 'sm' && 'sm:w-[300px]',
-      slideover?.size == 'lg' && 'sm:w-[600px]',
-      slideover?.size == 'xl' && 'sm:w-[600px] lg:w-[900px]',
-      slideover?.zoom.value && 'scale-105',
-      typeof attrs.class === 'string' && attrs.class,
-    ]),
-  );
+const attrs = useAttrs();
+const computedClass = computed(() =>
+  twMerge([
+    "w-[90%] ml-auto h-screen flex flex-col bg-white relative shadow-md transition-transform dark:bg-darkmode-600",
+    slideover?.size == "md" && "sm:w-[460px]",
+    slideover?.size == "sm" && "sm:w-[300px]",
+    slideover?.size == "lg" && "sm:w-[600px]",
+    slideover?.size == "xl" && "sm:w-[600px] lg:w-[900px]",
+    slideover?.zoom.value && "scale-105",
+    typeof attrs.class === "string" && attrs.class,
+  ]),
+);
 </script>
 
 <template>

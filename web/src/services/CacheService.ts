@@ -1,10 +1,10 @@
-import { DropDownOption } from '../types/models/DropDownOption';
-import { omit } from 'lodash';
+import { DropDownOption } from "../types/models/DropDownOption";
+import { omit } from "lodash";
 
 export default class CacheService {
   protected debugMode = false;
-  protected DCSLAB_SYSTEM_KEY = 'DCSLAB_SYSTEM';
-  protected DCSLAB_LAST_ENTITY_KEY = 'DCSLAB_LAST_ENTITY';
+  protected DCSLAB_SYSTEM_KEY = "DCSLAB_SYSTEM";
+  protected DCSLAB_LAST_ENTITY_KEY = "DCSLAB_LAST_ENTITY";
 
   constructor() {
     this.debugMode = import.meta.env.VITE_APP_DEBUG;
