@@ -30,12 +30,7 @@ export default class CustomerGroupService {
   }
 
   public useCustomerGroupCreateForm() {
-    const url = route(
-      'api.post.customer_group.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.customer_group.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -64,7 +59,7 @@ export default class CustomerGroupService {
   }
 
   public async readAnyPaginate(
-    args: CustomerGroupReadAnyPaginateRequest
+    args: CustomerGroupReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<CustomerGroup>> | null>> {
     const result: ServiceResponse<Collection<Array<CustomerGroup>> | null> = {
       success: false,
@@ -72,8 +67,7 @@ export default class CustomerGroupService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
 
       if (args.search) queryParams['search'] = args.search;
@@ -91,11 +85,10 @@ export default class CustomerGroupService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<CustomerGroup>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<CustomerGroup>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -105,13 +98,9 @@ export default class CustomerGroupService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -119,7 +108,7 @@ export default class CustomerGroupService {
   }
 
   public async readAnyGet(
-    args: CustomerGroupReadAnyGetRequest
+    args: CustomerGroupReadAnyGetRequest,
   ): Promise<ServiceResponse<Resource<Array<CustomerGroup>> | null>> {
     const result: ServiceResponse<Resource<Array<CustomerGroup>> | null> = {
       success: false,
@@ -127,8 +116,7 @@ export default class CustomerGroupService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
 
       if (args.search) queryParams['search'] = args.search;
@@ -145,11 +133,10 @@ export default class CustomerGroupService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<CustomerGroup>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<CustomerGroup>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -159,22 +146,16 @@ export default class CustomerGroupService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async read(
-    ulid: string
-  ): Promise<ServiceResponse<CustomerGroup | null>> {
+  public async read(ulid: string): Promise<ServiceResponse<CustomerGroup | null>> {
     const result: ServiceResponse<CustomerGroup | null> = {
       success: false,
     };
@@ -186,11 +167,10 @@ export default class CustomerGroupService {
           customer_group: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<CustomerGroup>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<CustomerGroup>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -200,13 +180,9 @@ export default class CustomerGroupService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -220,7 +196,7 @@ export default class CustomerGroupService {
         customer_group: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -261,7 +237,7 @@ export default class CustomerGroupService {
           customer_group: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -274,13 +250,9 @@ export default class CustomerGroupService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

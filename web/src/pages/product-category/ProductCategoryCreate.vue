@@ -6,13 +6,7 @@
   import DashboardService from '@/services/DashboardService';
   import CacheService from '@/services/CacheService';
   import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormSelect,
-    FormInputCode,
-    FormErrorMessages,
-  } from '@/components/Base/Form';
+  import { FormInput, FormLabel, FormSelect, FormInputCode, FormErrorMessages } from '@/components/Base/Form';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import { CardState } from '@/types/enums/CardState';
   import Button from '@/components/Base/Button';
@@ -42,12 +36,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -65,17 +54,12 @@
 
   const typeDDL = ref<Array<DropDownOption> | null>(null);
 
-  const productCategoryForm =
-    productCategoryService.useProductCategoryCreateForm();
+  const productCategoryForm = productCategoryService.useProductCategoryCreateForm();
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -108,10 +92,7 @@
   };
 
   const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('PRODUCT_CATEGORY_CREATE') as Record<
-      string,
-      unknown
-    >;
+    let data = cacheServices.getLastEntity('PRODUCT_CATEGORY_CREATE') as Record<string, unknown>;
     if (!data) return;
     productCategoryForm.setData(data);
   };
@@ -143,10 +124,7 @@
         router.push({ name: 'side-menu-product-product-category-list' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -169,15 +147,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -197,18 +169,14 @@
       if (productCategoryForm.hasErrors) {
       }
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="productCategoryForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -222,9 +190,7 @@
       <template #card-items-1>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productCategoryForm.invalid('code') }"
-            >
+            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('code') }">
               {{ t('views.product_category.fields.code') }}
             </FormLabel>
             <FormInputCode
@@ -237,9 +203,7 @@
             <FormErrorMessages :messages="productCategoryForm.errors.code" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productCategoryForm.invalid('name') }"
-            >
+            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('name') }">
               {{ t('views.product_category.fields.name') }}
             </FormLabel>
             <FormInput
@@ -252,9 +216,7 @@
             <FormErrorMessages :messages="productCategoryForm.errors.name" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productCategoryForm.invalid('type') }"
-            >
+            <FormLabel :class="{ 'text-danger': productCategoryForm.invalid('type') }">
               {{ t('views.product_category.fields.type') }}
             </FormLabel>
             <FormSelect
@@ -281,26 +243,14 @@
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              productCategoryForm.validating || productCategoryForm.hasErrors
-            "
+            :disabled="productCategoryForm.validating || productCategoryForm.hasErrors"
           >
-            <Lucide
-              v-if="productCategoryForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="productCategoryForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

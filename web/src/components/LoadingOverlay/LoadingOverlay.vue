@@ -19,10 +19,7 @@
 <template>
   <div :class="{ 'loading-container': visible }">
     <slot></slot>
-    <div
-      v-if="visible"
-      :class="{ 'loading-overlay': true, 'loading-overlay-gray': !transparent }"
-    >
+    <div v-if="visible" :class="{ 'loading-overlay': true, 'loading-overlay-gray': !transparent }">
       <img :src="Spinner" class="spinner" alt="DCSLab" />
     </div>
   </div>

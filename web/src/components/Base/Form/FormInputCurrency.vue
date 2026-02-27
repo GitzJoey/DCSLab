@@ -1,12 +1,5 @@
 <script setup lang="ts">
-  import {
-    computed,
-    ref,
-    watch,
-    type InputHTMLAttributes,
-    useAttrs,
-    inject,
-  } from 'vue';
+  import { computed, ref, watch, type InputHTMLAttributes, useAttrs, inject } from 'vue';
   import { twMerge } from 'tailwind-merge';
   import _ from 'lodash';
   import { formatCurrency } from '@/utils/helper';
@@ -42,11 +35,10 @@
       props.formInputSize == 'lg' && 'text-lg py-1.5 px-4',
       props.rounded && 'rounded-full',
       formInline && 'flex-1',
-      inputGroup &&
-        'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
+      inputGroup && 'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
       typeof attrs.class === 'string' && attrs.class,
       'text-right', // Currency usually right aligned
-    ])
+    ]),
   );
 
   const displayValue = ref('');
@@ -59,7 +51,7 @@
         displayValue.value = formatCurrency(newVal ?? '');
       }
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   const handleInput = (event: Event) => {

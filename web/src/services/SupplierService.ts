@@ -9,10 +9,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
-import {
-  SupplierReadAnyPaginateRequest,
-  SupplierReadAnyGetRequest,
-} from '../types/services/supplier/SupplierRequest';
+import { SupplierReadAnyPaginateRequest, SupplierReadAnyGetRequest } from '../types/services/supplier/SupplierRequest';
 
 export default class SupplierService {
   private ziggyRoute: Config;
@@ -26,12 +23,7 @@ export default class SupplierService {
   }
 
   public useSupplierCreateForm() {
-    const url = route(
-      'api.post.supplier.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.supplier.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -53,7 +45,7 @@ export default class SupplierService {
   }
 
   public async readAnyPaginate(
-    args: SupplierReadAnyPaginateRequest
+    args: SupplierReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<Supplier>> | null>> {
     const result: ServiceResponse<Collection<Array<Supplier>> | null> = {
       success: false,
@@ -64,8 +56,7 @@ export default class SupplierService {
       queryParams['with_trashed'] = args.with_trashed ? 1 : 0;
       queryParams['company_id'] = args.company_id;
       queryParams['search'] = args.search ? args.search : '';
-      if (args.status !== undefined && args.status !== null)
-        queryParams['status'] = args.status;
+      if (args.status !== undefined && args.status !== null) queryParams['status'] = args.status;
       if (args.include_id) queryParams['include_id'] = args.include_id;
 
       queryParams['refresh'] = args.refresh;
@@ -80,11 +71,10 @@ export default class SupplierService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<Supplier>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<Supplier>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -94,34 +84,26 @@ export default class SupplierService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async readAnyGet(
-    args: SupplierReadAnyGetRequest
-  ): Promise<ServiceResponse<Resource<Array<Supplier>> | null>> {
+  public async readAnyGet(args: SupplierReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Supplier>> | null>> {
     const result: ServiceResponse<Resource<Array<Supplier>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
-      if (args.status !== undefined && args.status !== null)
-        queryParams['status'] = args.status;
+      if (args.status !== undefined && args.status !== null) queryParams['status'] = args.status;
       if (args.include_id) queryParams['include_id'] = args.include_id;
 
       queryParams['refresh'] = args.refresh;
@@ -135,11 +117,10 @@ export default class SupplierService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<Supplier>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<Supplier>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -149,13 +130,9 @@ export default class SupplierService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -174,7 +151,7 @@ export default class SupplierService {
           supplier: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<Supplier>> = await axios.get(url);
@@ -187,13 +164,9 @@ export default class SupplierService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -234,7 +207,7 @@ export default class SupplierService {
           supplier: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -247,13 +220,9 @@ export default class SupplierService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

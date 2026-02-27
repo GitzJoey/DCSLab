@@ -5,12 +5,7 @@
   import StockAdjustmentCategoryService from '@/services/StockAdjustmentCategoryService';
   import CacheService from '@/services/CacheService';
   import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormErrorMessages,
-    FormInputCode,
-  } from '@/components/Base/Form';
+  import { FormInput, FormLabel, FormErrorMessages, FormInputCode } from '@/components/Base/Form';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import { CardState } from '@/types/enums/CardState';
   import Button from '@/components/Base/Button';
@@ -30,12 +25,7 @@
   const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
   const cacheServices = new CacheService();
 
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
 
   const cards = ref<Array<TwoColumnsLayoutCards>>([
     {
@@ -43,24 +33,18 @@
       state: CardState.Expanded,
     },
     {
-      title:
-        'views.stock_adjustment_category.field_groups.stock_adjustment_category_data',
+      title: 'views.stock_adjustment_category.field_groups.stock_adjustment_category_data',
       state: CardState.Expanded,
     },
     { title: '', state: CardState.Hidden, id: 'button' },
   ]);
 
-  const stockAdjustmentCategoryForm =
-    stockAdjustmentCategoryService.useStockAdjustmentCategoryEditForm(
-      route.params.ulid.toString()
-    );
+  const stockAdjustmentCategoryForm = stockAdjustmentCategoryService.useStockAdjustmentCategoryEditForm(
+    route.params.ulid.toString(),
+  );
 
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
   onMounted(async () => {
     emits('mode-state', ViewMode.FORM_EDIT);
@@ -76,9 +60,7 @@
 
   const loadData = async () => {
     emits('loading-state', true);
-    const result = await stockAdjustmentCategoryService.read(
-      route.params.ulid.toString()
-    );
+    const result = await stockAdjustmentCategoryService.read(route.params.ulid.toString());
     emits('loading-state', false);
 
     if (result.success && result.data) {
@@ -119,10 +101,7 @@
         router.push({ name: 'side-menu-stock-adjustment-category-list' });
       })
       .catch((error) => {
-        const errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -146,15 +125,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     const ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -167,22 +140,15 @@
   watch(
     stockAdjustmentCategoryForm,
     debounce((newValue): void => {
-      cacheServices.setLastEntity(
-        'STOCK_ADJUSTMENT_CATEGORY_EDIT',
-        newValue.data()
-      );
+      cacheServices.setLastEntity('STOCK_ADJUSTMENT_CATEGORY_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
 </script>
 
 <template>
   <form id="stockAdjustmentCategoryForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -190,10 +156,7 @@
             <br />
             {{ selectedUserLocation.company.name }}
           </FormLabel>
-          <FormInput
-            type="hidden"
-            v-model="stockAdjustmentCategoryForm.company_id"
-          />
+          <FormInput type="hidden" v-model="stockAdjustmentCategoryForm.company_id" />
         </div>
       </template>
 
@@ -217,9 +180,7 @@
                 @set-auto="setCode"
                 @change="stockAdjustmentCategoryForm.validate('code')"
               />
-              <FormErrorMessages
-                :messages="stockAdjustmentCategoryForm.errors.code"
-              />
+              <FormErrorMessages :messages="stockAdjustmentCategoryForm.errors.code" />
             </div>
 
             <div class="col-span-12 sm:col-span-6">
@@ -239,9 +200,7 @@
                 :placeholder="t('views.stock_adjustment_category.fields.name')"
                 @change="stockAdjustmentCategoryForm.validate('name')"
               />
-              <FormErrorMessages
-                :messages="stockAdjustmentCategoryForm.errors.name"
-              />
+              <FormErrorMessages :messages="stockAdjustmentCategoryForm.errors.name" />
             </div>
           </div>
         </div>
@@ -254,27 +213,14 @@
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              stockAdjustmentCategoryForm.validating ||
-              stockAdjustmentCategoryForm.hasErrors
-            "
+            :disabled="stockAdjustmentCategoryForm.validating || stockAdjustmentCategoryForm.hasErrors"
           >
-            <Lucide
-              v-if="stockAdjustmentCategoryForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="stockAdjustmentCategoryForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

@@ -1,12 +1,5 @@
-import {
-  type TomSelectProps,
-  type TomSelectElement,
-  type TomSelectEmit,
-} from './TomSelect.vue';
-import {
-  type TomSettings,
-  type RecursivePartial,
-} from 'tom-select/src/types/index';
+import { type TomSelectProps, type TomSelectElement, type TomSelectEmit } from './TomSelect.vue';
+import { type TomSettings, type RecursivePartial } from 'tom-select/src/types/index';
 import TomSelect from 'tom-select';
 import _ from 'lodash';
 
@@ -15,14 +8,10 @@ const setValue = (el: TomSelectElement, props: TomSelectProps) => {
     if (Array.isArray(props.modelValue)) {
       for (const value of props.modelValue) {
         const selectedOption = Array.from(el).find(
-          (option) =>
-            option instanceof HTMLOptionElement && option.value == value
+          (option) => option instanceof HTMLOptionElement && option.value == value,
         );
 
-        if (
-          selectedOption !== undefined &&
-          selectedOption instanceof HTMLOptionElement
-        ) {
+        if (selectedOption !== undefined && selectedOption instanceof HTMLOptionElement) {
           selectedOption.selected = true;
         }
       }
@@ -37,7 +26,7 @@ const init = (
   clonedEl: TomSelectElement,
   props: TomSelectProps,
   computedOptions: RecursivePartial<TomSettings>,
-  emit: TomSelectEmit
+  emit: TomSelectEmit,
 ) => {
   // On option add
   if (Array.isArray(props.modelValue)) {
@@ -60,17 +49,11 @@ const init = (
 
   // On change
   clonedEl.TomSelect.on('change', function (selectedItems: string[] | string) {
-    emit(
-      'update:modelValue',
-      Array.isArray(selectedItems) ? [...selectedItems] : selectedItems
-    );
+    emit('update:modelValue', Array.isArray(selectedItems) ? [...selectedItems] : selectedItems);
   });
 };
 
-const getOptions = (
-  options: HTMLCollection | undefined,
-  tempOptions: Element[] = []
-) => {
+const getOptions = (options: HTMLCollection | undefined, tempOptions: Element[] = []) => {
   if (options) {
     Array.from(options).forEach(function (optionEl) {
       if (optionEl instanceof HTMLOptGroupElement) {
@@ -90,18 +73,13 @@ const updateValue = (
   value: string | string[],
   props: TomSelectProps,
   computedOptions: RecursivePartial<TomSettings>,
-  emit: TomSelectEmit
+  emit: TomSelectEmit,
 ) => {
   // Remove old options
-  for (const [optionKey, option] of Object.entries(
-    clonedEl.TomSelect.options
-  )) {
+  for (const [optionKey, option] of Object.entries(clonedEl.TomSelect.options)) {
     if (
       !getOptions(originalEl.children).filter((optionEl) => {
-        return (
-          optionEl instanceof HTMLOptionElement &&
-          optionEl.value === option.value
-        );
+        return optionEl instanceof HTMLOptionElement && optionEl.value === option.value;
       }).length
     ) {
       clonedEl.TomSelect.removeOption(option.value);
@@ -109,31 +87,24 @@ const updateValue = (
   }
 
   // Update classnames
-  const initialClassNames = clonedEl
-    .getAttribute('data-initial-class')
-    ?.split(' ');
+  const initialClassNames = clonedEl.getAttribute('data-initial-class')?.split(' ');
   clonedEl.setAttribute(
     'class',
     [
       ...Array.from(originalEl.classList),
-      ...Array.from(clonedEl.classList).filter(
-        (className) => initialClassNames?.indexOf(className) == -1
-      ),
-    ].join(' ')
+      ...Array.from(clonedEl.classList).filter((className) => initialClassNames?.indexOf(className) == -1),
+    ].join(' '),
   );
   clonedEl.TomSelect.wrapper.setAttribute(
     'class',
     [
       ...Array.from(originalEl.classList),
       ...Array.from(clonedEl.TomSelect.wrapper.classList).filter(
-        (className) => initialClassNames?.indexOf(className) == -1
+        (className) => initialClassNames?.indexOf(className) == -1,
       ),
-    ].join(' ')
+    ].join(' '),
   );
-  clonedEl.setAttribute(
-    'data-initial-class',
-    Array.from(originalEl.classList).join(' ')
-  );
+  clonedEl.setAttribute('data-initial-class', Array.from(originalEl.classList).join(' '));
 
   // Add new options
   const options = originalEl.children;

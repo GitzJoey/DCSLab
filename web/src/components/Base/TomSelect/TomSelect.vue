@@ -2,18 +2,9 @@
   import '@/assets/css/vendors/tom-select.css';
   import _ from 'lodash';
   import { setValue, init, updateValue } from './tom-select';
-  import {
-    type TomSettings,
-    type RecursivePartial,
-  } from 'tom-select/src/types/index';
+  import { type TomSettings, type RecursivePartial } from 'tom-select/src/types/index';
   import TomSelectPlugin from 'tom-select';
-  import {
-    computed,
-    type SelectHTMLAttributes,
-    onMounted,
-    inject,
-    ref,
-  } from 'vue';
+  import { computed, type SelectHTMLAttributes, onMounted, inject, ref } from 'vue';
 
   export interface TomSelectElement extends HTMLSelectElement {
     TomSelect: TomSelectPlugin;
@@ -55,10 +46,8 @@
         onDelete: function (values: string[]) {
           return confirm(
             values.length > 1
-              ? 'Are you sure you want to remove these ' +
-                  values.length +
-                  ' items?'
-              : 'Are you sure you want to remove "' + values[0] + '"?'
+              ? 'Are you sure you want to remove these ' + values.length + ' items?'
+              : 'Are you sure you want to remove "' + values[0] + '"?',
           );
         },
         ...options,
@@ -96,7 +85,7 @@
     },
     updated(el: TomSelectElement) {
       const clonedEl = document.querySelectorAll(
-        `[data-id='${el.getAttribute('data-id')}'][data-initial-class]`
+        `[data-id='${el.getAttribute('data-id')}'][data-initial-class]`,
       )[0] as TomSelectElement;
       const value = props.modelValue;
       updateValue(el, clonedEl, value, props, computedOptions.value, emit);

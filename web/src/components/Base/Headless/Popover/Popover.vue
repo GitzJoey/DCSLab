@@ -10,9 +10,7 @@
   import { Popover as HeadlessPopover } from '@headlessui/vue';
   import { useAttrs, computed } from 'vue';
 
-  interface PopoverProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessPopover
-  > {
+  interface PopoverProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessPopover> {
     as?: string | object;
   }
 
@@ -21,9 +19,7 @@
   });
 
   const attrs = useAttrs();
-  const computedClass = computed(() =>
-    twMerge(['relative', typeof attrs.class === 'string' && attrs.class])
-  );
+  const computedClass = computed(() => twMerge(['relative', typeof attrs.class === 'string' && attrs.class]));
 </script>
 
 <template>

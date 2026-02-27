@@ -18,9 +18,7 @@
     size?: Size;
   };
 
-  export interface DialogProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessDialog
-  > {
+  export interface DialogProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialog> {
     size?: Size;
     open: boolean;
     staticBackdrop?: boolean;
@@ -36,9 +34,7 @@
   const open = computed(() => props.open);
 
   const attrs = useAttrs();
-  const computedClass = computed(() =>
-    twMerge(['relative z-[60]', typeof attrs.class === 'string' && attrs.class])
-  );
+  const computedClass = computed(() => twMerge(['relative z-[60]', typeof attrs.class === 'string' && attrs.class]));
 
   const zoom = ref(false);
   const emit = defineEmits<{
@@ -70,12 +66,7 @@
 </script>
 
 <template>
-  <TransitionRoot
-    appear
-    as="template"
-    :show="open"
-    @after-leave="emitAfterLeave"
-  >
+  <TransitionRoot appear as="template" :show="open" @after-leave="emitAfterLeave">
     <HeadlessDialog
       :as="as"
       @close="

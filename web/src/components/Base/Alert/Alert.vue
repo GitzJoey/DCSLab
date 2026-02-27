@@ -43,12 +43,9 @@
     onHidden?: () => {};
   }
 
-  const { as, dismissible, variant, ...props } = withDefaults(
-    defineProps<AlertProps>(),
-    {
-      as: 'div',
-    }
-  );
+  const { as, dismissible, variant, ...props } = withDefaults(defineProps<AlertProps>(), {
+    as: 'div',
+  });
 
   const attrs = useAttrs();
   const show = ref<boolean>(true);
@@ -169,7 +166,7 @@
       variant == 'soft-dark' && softDark,
       dismissible && 'pl-5 pr-16',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 
@@ -184,12 +181,7 @@
     leaveFrom="visible opacity-100 translate-y-0"
     leaveTo="invisible opacity-0 translate-y-1"
   >
-    <component
-      :is="as"
-      role="alert"
-      :class="computedClass"
-      v-bind="_.omit(attrs, 'class')"
-    >
+    <component :is="as" role="alert" :class="computedClass" v-bind="_.omit(attrs, 'class')">
       <slot
         :dismiss="
           () => {

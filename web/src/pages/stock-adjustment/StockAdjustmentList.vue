@@ -56,12 +56,8 @@
     },
   });
 
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
   onMounted(async () => {
     emits('mode-state', ViewMode.LIST);
@@ -77,12 +73,7 @@
     await getStockAdjustments('', true, 1, 10);
   });
 
-  const getStockAdjustments = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number
-  ) => {
+  const getStockAdjustments = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     const request: StockAdjustmentReadAnyPaginateRequest = {
@@ -102,23 +93,14 @@
       stockAdjustmentLists.value = result.data;
       showAlertPlaceholder('hidden', '', null);
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getStockAdjustments(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getStockAdjustments(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -162,14 +144,10 @@
       await getStockAdjustments('', true, 1, 10);
       showNotification(
         t('views.stock_adjustment.alert.delete.title'),
-        t('views.stock_adjustment.alert.delete.message')
+        t('views.stock_adjustment.alert.delete.message'),
       );
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
   };
 
@@ -183,15 +161,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     const ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -266,10 +238,7 @@
                 </Table.Tr>
               </template>
               <!-- data found -->
-              <template
-                v-for="(item, itemIdx) in stockAdjustmentLists.data"
-                :key="item.ulid"
-              >
+              <template v-for="(item, itemIdx) in stockAdjustmentLists.data" :key="item.ulid">
                 <!-- main row -->
                 <Table.Tr class="intro-x">
                   <!-- code -->
@@ -305,11 +274,7 @@
                   <!-- is posted -->
                   <Table.Td>
                     <div class="flex items-center">
-                      <Lucide
-                        v-if="item.is_posted"
-                        icon="CheckCircle"
-                        class="w-4 h-4 text-success"
-                      />
+                      <Lucide v-if="item.is_posted" icon="CheckCircle" class="w-4 h-4 text-success" />
                       <Lucide v-else icon="X" class="w-4 h-4 text-danger" />
                     </div>
                   </Table.Td>
@@ -322,22 +287,13 @@
                   <!-- actions -->
                   <Table.Td>
                     <div class="flex justify-end gap-1">
-                      <Button
-                        variant="outline-secondary"
-                        @click="viewSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                         <Lucide icon="Info" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="editSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                         <Lucide icon="Pen" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="deleteSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
@@ -374,17 +330,13 @@
                               {{ t('views.stock_adjustment.fields.date') }}
                             </div>
                             <div class="flex-1 font-medium">
-                              {{
-                                formatDate(item.date, 'DD-MMM-YYYY HH:mm:ss')
-                              }}
+                              {{ formatDate(item.date, 'DD-MMM-YYYY HH:mm:ss') }}
                             </div>
                           </div>
                           <!-- category -->
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{
-                                t('views.stock_adjustment.fields.category_id')
-                              }}
+                              {{ t('views.stock_adjustment.fields.category_id') }}
                             </div>
                             <div class="flex-1 font-medium">
                               {{ item.category.name }}
@@ -393,33 +345,19 @@
                           <!-- in warehouse -->
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{
-                                t(
-                                  'views.stock_adjustment.fields.in_warehouse_id'
-                                )
-                              }}
+                              {{ t('views.stock_adjustment.fields.in_warehouse_id') }}
                             </div>
                             <div class="flex-1 font-medium">
-                              {{
-                                item.in_warehouse ? item.in_warehouse.name : '-'
-                              }}
+                              {{ item.in_warehouse ? item.in_warehouse.name : '-' }}
                             </div>
                           </div>
                           <!-- out warehouse -->
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{
-                                t(
-                                  'views.stock_adjustment.fields.out_warehouse_id'
-                                )
-                              }}
+                              {{ t('views.stock_adjustment.fields.out_warehouse_id') }}
                             </div>
                             <div class="flex-1 font-medium">
-                              {{
-                                item.out_warehouse
-                                  ? item.out_warehouse.name
-                                  : '-'
-                              }}
+                              {{ item.out_warehouse ? item.out_warehouse.name : '-' }}
                             </div>
                           </div>
                           <!-- is posted -->
@@ -429,16 +367,8 @@
                             </div>
                             <div class="flex-1 font-medium">
                               <div class="flex items-center">
-                                <Lucide
-                                  v-if="item.is_posted"
-                                  icon="CheckCircle"
-                                  class="w-4 h-4 text-success"
-                                />
-                                <Lucide
-                                  v-else
-                                  icon="X"
-                                  class="w-4 h-4 text-danger"
-                                />
+                                <Lucide v-if="item.is_posted" icon="CheckCircle" class="w-4 h-4 text-success" />
+                                <Lucide v-else icon="X" class="w-4 h-4 text-danger" />
                               </div>
                             </div>
                           </div>
@@ -455,38 +385,21 @@
                           <!-- in products -->
                           <div class="mt-4">
                             <div class="font-medium text-sm mb-2">
-                              {{
-                                t(
-                                  'views.stock_adjustment.field_groups.in_products'
-                                )
-                              }}
+                              {{ t('views.stock_adjustment.field_groups.in_products') }}
                             </div>
-                            <div
-                              v-if="item.in_products.length === 0"
-                              class="text-slate-500 text-sm"
-                            >
+                            <div v-if="item.in_products.length === 0" class="text-slate-500 text-sm">
                               {{ t('components.data-list.data_not_found') }}
                             </div>
                             <div v-else class="space-y-2 text-xs sm:text-sm">
-                              <div
-                                v-for="(p, index) in item.in_products"
-                                :key="p.ulid"
-                                class="flex gap-3"
-                              >
-                                <div class="w-6 text-right text-slate-500">
-                                  {{ index + 1 }}.
-                                </div>
+                              <div v-for="(p, index) in item.in_products" :key="p.ulid" class="flex gap-3">
+                                <div class="w-6 text-right text-slate-500">{{ index + 1 }}.</div>
                                 <div class="flex-1">
                                   <div class="font-medium truncate">
                                     [{{ p.product_unit.code }}]
                                     {{ p.product_unit.product.name }}
                                   </div>
                                   <div class="mt-0.5 text-slate-500">
-                                    {{
-                                      t(
-                                        'views.stock_adjustment_in_product.fields.qty'
-                                      )
-                                    }}:
+                                    {{ t('views.stock_adjustment_in_product.fields.qty') }}:
                                     <span class="font-medium">
                                       {{ formatCurrency(p.qty) }}
                                       {{ p.product_unit.unit.name }}
@@ -500,38 +413,21 @@
                           <!-- out products -->
                           <div class="mt-4">
                             <div class="font-medium text-sm mb-2">
-                              {{
-                                t(
-                                  'views.stock_adjustment.field_groups.out_products'
-                                )
-                              }}
+                              {{ t('views.stock_adjustment.field_groups.out_products') }}
                             </div>
-                            <div
-                              v-if="item.out_products.length === 0"
-                              class="text-slate-500 text-sm"
-                            >
+                            <div v-if="item.out_products.length === 0" class="text-slate-500 text-sm">
                               {{ t('components.data-list.data_not_found') }}
                             </div>
                             <div v-else class="space-y-2 text-xs sm:text-sm">
-                              <div
-                                v-for="(p, index) in item.out_products"
-                                :key="p.ulid"
-                                class="flex gap-3"
-                              >
-                                <div class="w-6 text-right text-slate-500">
-                                  {{ index + 1 }}.
-                                </div>
+                              <div v-for="(p, index) in item.out_products" :key="p.ulid" class="flex gap-3">
+                                <div class="w-6 text-right text-slate-500">{{ index + 1 }}.</div>
                                 <div class="flex-1">
                                   <div class="font-medium truncate">
                                     [{{ p.product_unit.code }}]
                                     {{ p.product_unit.product.name }}
                                   </div>
                                   <div class="mt-0.5 text-slate-500">
-                                    {{
-                                      t(
-                                        'views.stock_adjustment_in_product.fields.qty'
-                                      )
-                                    }}:
+                                    {{ t('views.stock_adjustment_in_product.fields.qty') }}:
                                     <span class="font-medium">
                                       {{ formatCurrency(p.qty) }}
                                       {{ p.product_unit.unit.name }}
@@ -589,12 +485,7 @@
         >
           {{ t('components.buttons.cancel') }}
         </Button>
-        <Button
-          type="button"
-          variant="danger"
-          class="w-24"
-          @click="confirmDelete"
-        >
+        <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
           {{ t('components.buttons.delete') }}
         </Button>
       </div>

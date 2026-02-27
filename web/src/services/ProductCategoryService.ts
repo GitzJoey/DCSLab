@@ -31,12 +31,7 @@ export default class ProductCategoryService {
   }
 
   public useProductCategoryCreateForm() {
-    const url = route(
-      'api.post.product_category.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.product_category.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -51,7 +46,7 @@ export default class ProductCategoryService {
   }
 
   public async readAnyPaginate(
-    args: ProductCategoryReadAnyPaginateRequest
+    args: ProductCategoryReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<ProductCategory>> | null>> {
     const result: ServiceResponse<Collection<Array<ProductCategory>> | null> = {
       success: false,
@@ -59,8 +54,7 @@ export default class ProductCategoryService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
@@ -79,11 +73,10 @@ export default class ProductCategoryService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<ProductCategory>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<ProductCategory>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -93,13 +86,9 @@ export default class ProductCategoryService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -107,7 +96,7 @@ export default class ProductCategoryService {
   }
 
   public async readAnyGet(
-    args: ProductCategoryReadAnyGetRequest
+    args: ProductCategoryReadAnyGetRequest,
   ): Promise<ServiceResponse<Resource<Array<ProductCategory>> | null>> {
     const result: ServiceResponse<Resource<Array<ProductCategory>> | null> = {
       success: false,
@@ -115,8 +104,7 @@ export default class ProductCategoryService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
@@ -134,11 +122,10 @@ export default class ProductCategoryService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<ProductCategory>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<ProductCategory>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -148,22 +135,16 @@ export default class ProductCategoryService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async read(
-    ulid: string
-  ): Promise<ServiceResponse<ProductCategory | null>> {
+  public async read(ulid: string): Promise<ServiceResponse<ProductCategory | null>> {
     const result: ServiceResponse<ProductCategory | null> = {
       success: false,
     };
@@ -175,11 +156,10 @@ export default class ProductCategoryService {
           product_category: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<ProductCategory>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<ProductCategory>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -189,13 +169,9 @@ export default class ProductCategoryService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -209,7 +185,7 @@ export default class ProductCategoryService {
         product_category: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -236,7 +212,7 @@ export default class ProductCategoryService {
           product_category: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -248,13 +224,9 @@ export default class ProductCategoryService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -267,21 +239,14 @@ export default class ProductCategoryService {
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route(
-          'api.get.product_category.read_types',
-          undefined,
-          false,
-          this.ziggyRoute
-        );
+        const url = route('api.get.product_category.read_types', undefined, false, this.ziggyRoute);
 
-        const response: AxiosResponse<Array<DropDownOption> | null> =
-          await axios.get(url);
+        const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
         this.cacheService.setCachedDDL(ddlName, response.data);
       }
 
-      const cachedData: Array<DropDownOption> | null =
-        this.cacheService.getCachedDDL(ddlName);
+      const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
 
       if (cachedData != null) {
         result = cachedData as Array<DropDownOption>;

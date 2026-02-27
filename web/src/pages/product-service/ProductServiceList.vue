@@ -64,12 +64,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -88,12 +84,7 @@
   // #endregion
 
   // #region Methods
-  const getProducts = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number
-  ) => {
+  const getProducts = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     let company_id = selectedUserLocation.value.company.id;
@@ -111,29 +102,19 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Product>> | null> =
-      await productServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Product>> | null> = await productServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       productLists.value = result.data;
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getProducts(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getProducts(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -171,16 +152,9 @@
 
     if (result.success) {
       await getProducts('', true, 1, 10);
-      showNotification(
-        t('views.product_service.alert.delete.title'),
-        t('views.product_service.alert.delete.message')
-      );
+      showNotification(t('views.product_service.alert.delete.title'), t('views.product_service.alert.delete.message'));
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
   };
 
@@ -193,15 +167,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -261,10 +229,7 @@
                   </Table.Td>
                 </Table.Tr>
               </template>
-              <template
-                v-for="(item, itemIdx) in productLists.data"
-                :key="item.ulid"
-              >
+              <template v-for="(item, itemIdx) in productLists.data" :key="item.ulid">
                 <Table.Tr class="intro-x">
                   <Table.Td>
                     {{ item.code }}
@@ -273,9 +238,7 @@
                     <div class="font-medium whitespace-nowrap">
                       {{ item.name }}
                     </div>
-                    <div
-                      class="text-slate-500 text-xs whitespace-nowrap mt-0.5"
-                    >
+                    <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
                       {{ item.slug }}
                     </div>
                   </Table.Td>
@@ -289,35 +252,18 @@
                     {{ item.product_units[0].unit.name }}
                   </Table.Td>
                   <Table.Td>
-                    <Lucide
-                      v-if="item.status == 'ACTIVE'"
-                      icon="CheckCircle"
-                      class="text-success"
-                    />
-                    <Lucide
-                      v-if="item.status == 'INACTIVE'"
-                      icon="X"
-                      class="text-danger"
-                    />
+                    <Lucide v-if="item.status == 'ACTIVE'" icon="CheckCircle" class="text-success" />
+                    <Lucide v-if="item.status == 'INACTIVE'" icon="X" class="text-danger" />
                   </Table.Td>
                   <Table.Td>
                     <div class="flex justify-end gap-1">
-                      <Button
-                        variant="outline-secondary"
-                        @click="viewSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                         <Lucide icon="Info" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="editSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                         <Lucide icon="Pen" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="deleteSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
@@ -394,15 +340,11 @@
                       <div class="ml-5 w-48 text-right pr-5">
                         {{ t('views.product_service.fields.vat_rate') }}
                       </div>
-                      <div class="flex-1">
-                        {{ formatCurrency(item.vat_rate) }}%
-                      </div>
+                      <div class="flex-1">{{ formatCurrency(item.vat_rate) }}%</div>
                     </div>
                     <div class="flex flex-row">
                       <div class="ml-5 w-48 text-right pr-5">
-                        {{
-                          t('views.product_service.fields.is_price_include_vat')
-                        }}
+                        {{ t('views.product_service.fields.is_price_include_vat') }}
                       </div>
                       <div class="flex-1">
                         {{
@@ -472,12 +414,7 @@
         >
           {{ t('components.buttons.cancel') }}
         </Button>
-        <Button
-          type="button"
-          variant="danger"
-          class="w-24"
-          @click="confirmDelete"
-        >
+        <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
           {{ t('components.buttons.delete') }}
         </Button>
       </div>

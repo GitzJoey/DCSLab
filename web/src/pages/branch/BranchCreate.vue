@@ -43,12 +43,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -70,12 +65,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -104,10 +95,7 @@
   };
 
   const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('BRANCH_CREATE') as Record<
-      string,
-      unknown
-    >;
+    let data = cacheServices.getLastEntity('BRANCH_CREATE') as Record<string, unknown>;
     if (!data) return;
     branchForm.setData(data);
   };
@@ -149,10 +137,7 @@
         router.push({ name: 'side-menu-company-branch-list' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -175,15 +160,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -198,9 +177,7 @@
     const record: Record<string, Array<string>> = {};
 
     const anyError = error as any;
-    const response = isAxiosError(error)
-      ? (error as AxiosError).response
-      : anyError?.response;
+    const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
 
     if (response && response.data) {
       const data = response.data as any;
@@ -236,18 +213,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('BRANCH_CREATE', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="branchForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -291,37 +264,22 @@
             <FormLabel>
               {{ t('views.branch.fields.address') }}
             </FormLabel>
-            <FormTextarea
-              v-model="branchForm.address"
-              type="text"
-              :placeholder="t('views.branch.fields.address')"
-            />
+            <FormTextarea v-model="branchForm.address" type="text" :placeholder="t('views.branch.fields.address')" />
           </div>
           <div class="pb-4">
             <FormLabel>
               {{ t('views.branch.fields.city') }}
             </FormLabel>
-            <FormInput
-              v-model="branchForm.city"
-              type="text"
-              :placeholder="t('views.branch.fields.city')"
-            />
+            <FormInput v-model="branchForm.city" type="text" :placeholder="t('views.branch.fields.city')" />
           </div>
           <div class="pb-4">
             <FormLabel>
               {{ t('views.branch.fields.contact') }}
             </FormLabel>
-            <FormInput
-              v-model="branchForm.contact"
-              type="text"
-              :placeholder="t('views.branch.fields.contact')"
-            />
+            <FormInput v-model="branchForm.contact" type="text" :placeholder="t('views.branch.fields.contact')" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': branchForm.invalid('is_main') }"
-              class="pr-5"
-            >
+            <FormLabel :class="{ 'text-danger': branchForm.invalid('is_main') }" class="pr-5">
               {{ t('views.branch.fields.is_main') }}
             </FormLabel>
             <FormSwitch>
@@ -375,22 +333,12 @@
             class="w-28 shadow-md"
             :disabled="branchForm.validating || branchForm.hasErrors"
           >
-            <Lucide
-              v-if="branchForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="branchForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

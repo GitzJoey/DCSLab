@@ -9,10 +9,7 @@ import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
-import {
-  CustomerReadAnyPaginateRequest,
-  CustomerReadAnyGetRequest,
-} from '../types/services/customer/CustomerRequest';
+import { CustomerReadAnyPaginateRequest, CustomerReadAnyGetRequest } from '../types/services/customer/CustomerRequest';
 
 export default class CustomerService {
   private ziggyRoute: Config;
@@ -26,12 +23,7 @@ export default class CustomerService {
   }
 
   public useCustomerCreateForm() {
-    const url = route(
-      'api.post.db.customer.customer.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.db.customer.customer.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -57,7 +49,7 @@ export default class CustomerService {
   }
 
   public async readAnyPaginate(
-    args: CustomerReadAnyPaginateRequest
+    args: CustomerReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<Customer>> | null>> {
     const result: ServiceResponse<Collection<Array<Customer>> | null> = {
       success: false,
@@ -68,8 +60,7 @@ export default class CustomerService {
       queryParams['with_trashed'] = args.with_trashed ? 1 : 0;
       queryParams['company_id'] = args.company_id;
       queryParams['search'] = args.search ? args.search : '';
-      if (args.status !== undefined && args.status !== null)
-        queryParams['status'] = args.status;
+      if (args.status !== undefined && args.status !== null) queryParams['status'] = args.status;
       if (args.include_id) queryParams['include_id'] = args.include_id;
 
       queryParams['refresh'] = args.refresh;
@@ -84,11 +75,10 @@ export default class CustomerService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<Customer>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<Customer>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -98,34 +88,26 @@ export default class CustomerService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async readAnyGet(
-    args: CustomerReadAnyGetRequest
-  ): Promise<ServiceResponse<Resource<Array<Customer>> | null>> {
+  public async readAnyGet(args: CustomerReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Customer>> | null>> {
     const result: ServiceResponse<Resource<Array<Customer>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
-      if (args.status !== undefined && args.status !== null)
-        queryParams['status'] = args.status;
+      if (args.status !== undefined && args.status !== null) queryParams['status'] = args.status;
       if (args.include_id) queryParams['include_id'] = args.include_id;
 
       queryParams['refresh'] = args.refresh;
@@ -139,11 +121,10 @@ export default class CustomerService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<Customer>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<Customer>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -153,13 +134,9 @@ export default class CustomerService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -178,7 +155,7 @@ export default class CustomerService {
           customer: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<Customer>> = await axios.get(url);
@@ -191,13 +168,9 @@ export default class CustomerService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -205,12 +178,7 @@ export default class CustomerService {
   }
 
   public useCustomerEditForm(ulid: string) {
-    const url = route(
-      'api.post.db.customer.customer.edit',
-      ulid,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.db.customer.customer.edit', ulid, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -247,7 +215,7 @@ export default class CustomerService {
           customer: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -260,13 +228,9 @@ export default class CustomerService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

@@ -13,10 +13,7 @@
   import { useUserContextStore } from '@/stores/user-context';
   import { useZiggyRouteStore } from '@/stores/ziggy-route';
   import { useMenuStore, Menu as sMenu } from '@/stores/menu';
-  import {
-    TitleLayout,
-    TwoColumnsLayout,
-  } from '@/components/Base/Form/FormLayout';
+  import { TitleLayout, TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import LoadingOverlay from '@/components/LoadingOverlay';
   import { CardState } from '@/types/enums/CardState';
@@ -29,11 +26,7 @@
   import { formatDate } from '@/utils/helper';
   import ProfileService from '@/services/ProfileService';
   import DashboardService from '@/services/DashboardService';
-  import {
-    TwoFactorResponse,
-    QRCode,
-    SecretKeyResponse,
-  } from '@/types/models/TwoFactorAuthentication';
+  import { TwoFactorResponse, QRCode, SecretKeyResponse } from '@/types/models/TwoFactorAuthentication';
   import { ConfirmPasswordStatusResponse } from '@/types/models/ConfirmPassword';
   import { UserProfile } from '@/types/models/UserProfile';
   import { ServiceResponse } from '@/types/services/ServiceResponse';
@@ -101,12 +94,9 @@
 
   const sendVerificationEmailNotification = ref<NotificationElement>();
 
-  provide(
-    'bind[sendVerificationEmailNotification]',
-    (el: NotificationElement) => {
-      sendVerificationEmailNotification.value = el;
-    }
-  );
+  provide('bind[sendVerificationEmailNotification]', (el: NotificationElement) => {
+    sendVerificationEmailNotification.value = el;
+  });
 
   const roleSelection = ref<Array<RoleSelection>>([
     {
@@ -150,15 +140,12 @@
 
   const updateUserProfileForm = profileServices.useUpdateUserProfileForm();
   const updatePersonalInfoForm = profileServices.useUpdatePersonalInfoForm();
-  const updateAccountSettingsForm =
-    profileServices.useUpdateAccountSettingsForm();
+  const updateAccountSettingsForm = profileServices.useUpdateAccountSettingsForm();
   const updateUserRolesForm = profileServices.useUpdateUserRolesForm();
   const updatePasswordForm = profileServices.useUpdatePasswordForm();
   const updateTokensForm = profileServices.useUpdateTokenForm();
 
-  const alertType = ref<
-    'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark'
-  >('hidden');
+  const alertType = ref<'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark'>('hidden');
   const alertTitle = ref<string>('');
   const alertList = ref<Record<string, Array<string>> | null>(null);
   // #endregion
@@ -312,9 +299,7 @@
       await showRecoveryCodes();
       await showSecretKey();
     } else {
-      twoFactorCodeErrorText.value = t(
-        'views.profile.fields.2fa.confirm_2fa_auth_error'
-      );
+      twoFactorCodeErrorText.value = t('views.profile.fields.2fa.confirm_2fa_auth_error');
     }
   };
 
@@ -330,8 +315,7 @@
   };
 
   const showQRWithoutOrAfterConfirmPassword = async () => {
-    let response: ServiceResponse<QRCode | null> =
-      await profileServices.twoFactorQR();
+    let response: ServiceResponse<QRCode | null> = await profileServices.twoFactorQR();
 
     if (response.success && response.data) {
       qrCode.value = response.data;
@@ -346,8 +330,7 @@
   };
 
   const showRecoveryCodes = async () => {
-    let response: ServiceResponse<Array<string> | null> =
-      await profileServices.twoFactorRecoveryCodes();
+    let response: ServiceResponse<Array<string> | null> = await profileServices.twoFactorRecoveryCodes();
 
     if (response.success && response.data) {
       twoFactorRecoveryCodes.value = response.data;
@@ -356,8 +339,7 @@
   };
 
   const showSecretKey = async () => {
-    let response: ServiceResponse<SecretKeyResponse | null> =
-      await profileServices.twoFactorSecretKey();
+    let response: ServiceResponse<SecretKeyResponse | null> = await profileServices.twoFactorSecretKey();
 
     if (response.success) {
       if (response.data) {
@@ -368,8 +350,7 @@
   };
 
   const checkConfirmPasswordStatus = async () => {
-    let response: ServiceResponse<ConfirmPasswordStatusResponse | null> =
-      await profileServices.confirmPasswordStatus();
+    let response: ServiceResponse<ConfirmPasswordStatusResponse | null> = await profileServices.confirmPasswordStatus();
 
     if (response.success && response.data) {
       confirmPasswordStatus.value = response.data;
@@ -377,8 +358,9 @@
   };
 
   const submitConfirmPassword = async () => {
-    let response: ServiceResponse<TwoFactorResponse | null> =
-      await profileServices.confirmPassword(confirmPasswordText.value);
+    let response: ServiceResponse<TwoFactorResponse | null> = await profileServices.confirmPassword(
+      confirmPasswordText.value,
+    );
 
     if (response.success) {
       switch (confirmPasswordPurpose.value) {
@@ -395,9 +377,7 @@
 
       await closeConfirmPasswordDialog();
     } else {
-      confirmPasswordErrorText.value = t(
-        'views.profile.fields.2fa.confirm_password_error'
-      );
+      confirmPasswordErrorText.value = t('views.profile.fields.2fa.confirm_password_error');
     }
   };
 
@@ -453,10 +433,7 @@
         await updateUserProfile();
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -473,10 +450,7 @@
         await updateUserProfile();
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -493,10 +467,7 @@
         await updateUserProfile();
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -514,10 +485,7 @@
         await updateUserMenu();
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -535,10 +503,7 @@
         updatePasswordForm.reset();
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -556,10 +521,7 @@
         updateTokensForm.reset();
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -568,15 +530,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     alertType.value = pAlertType;
     alertTitle.value = pTitle;
@@ -637,10 +593,7 @@
         </template>
         <template #card-items-0>
           <div class="p-5">
-            <form
-              id="updateUserProfileForm"
-              @submit.prevent="onSubmitUpdateUserProfile"
-            >
+            <form id="updateUserProfileForm" @submit.prevent="onSubmitUpdateUserProfile">
               <div class="pb-4">
                 <FormLabel
                   :class="{
@@ -658,9 +611,7 @@
                   :placeholder="t('views.profile.fields.name')"
                   @change="updateUserProfileForm.validate('name')"
                 />
-                <FormErrorMessages
-                  :messages="updateUserProfileForm.errors.name"
-                />
+                <FormErrorMessages :messages="updateUserProfileForm.errors.name" />
               </div>
               <div class="pb-4">
                 <FormLabel>
@@ -680,16 +631,9 @@
                   href="#"
                   variant="primary"
                   class="w-28 shadow-md"
-                  :disabled="
-                    updateUserProfileForm.validating ||
-                    updateUserProfileForm.hasErrors
-                  "
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -715,11 +659,7 @@
                 {{ t('components.buttons.send_verification_email') }}
               </Button>
             </div>
-            <Notification
-              ref-key="sendVerificationEmailNotification"
-              :options="{ duration: 3000 }"
-              class="flex"
-            >
+            <Notification ref-key="sendVerificationEmailNotification" :options="{ duration: 3000 }" class="flex">
               <Lucide icon="CheckCircle" class="text-success" />
               <div class="ml-4 mr-4">
                 <div class="font-medium">
@@ -734,10 +674,7 @@
         </template>
         <template #card-items-2>
           <div class="p-5">
-            <form
-              id="updatePersonalInfoForm"
-              @submit.prevent="onSubmitUpdatePersonalInfo"
-            >
+            <form id="updatePersonalInfoForm" @submit.prevent="onSubmitUpdatePersonalInfo">
               <div class="pb-4">
                 <FormLabel>
                   {{ t('views.profile.fields.first_name') }}
@@ -809,9 +746,7 @@
                   <option>Singapore</option>
                   <option>Indonesia</option>
                 </FormSelect>
-                <FormErrorMessages
-                  :messages="updatePersonalInfoForm.errors.country"
-                />
+                <FormErrorMessages :messages="updatePersonalInfoForm.errors.country" />
               </div>
               <div class="pb-4">
                 <FormLabel
@@ -833,9 +768,7 @@
                     updatePersonalInfoForm.submit();
                   "
                 />
-                <FormErrorMessages
-                  :messages="updatePersonalInfoForm.errors.tax_id"
-                />
+                <FormErrorMessages :messages="updatePersonalInfoForm.errors.tax_id" />
               </div>
               <div class="pb-4">
                 <FormLabel
@@ -872,16 +805,9 @@
                   href="#"
                   variant="primary"
                   class="w-28 shadow-md"
-                  :disabled="
-                    updateUserProfileForm.validating ||
-                    updateUserProfileForm.hasErrors
-                  "
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -892,10 +818,7 @@
         </template>
         <template #card-items-3>
           <div class="p-5">
-            <form
-              id="updateAccountSettingsForm"
-              @submit.prevent="onSubmitUpdateAccountSettings"
-            >
+            <form id="updateAccountSettingsForm" @submit.prevent="onSubmitUpdateAccountSettings">
               <div class="pb-4">
                 <FormLabel>
                   {{ t('views.profile.fields.settings.theme') }}
@@ -940,16 +863,9 @@
                   href="#"
                   variant="primary"
                   class="w-28 shadow-md"
-                  :disabled="
-                    updateUserProfileForm.validating ||
-                    updateUserProfileForm.hasErrors
-                  "
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -960,17 +876,10 @@
         </template>
         <template #card-items-4>
           <div class="p-5">
-            <form
-              id="updateUserRolesForm"
-              @submit.prevent="onSubmitUpdateUserRoles"
-            >
+            <form id="updateUserRolesForm" @submit.prevent="onSubmitUpdateUserRoles">
               <div class="pb-4">
                 <div class="grid grid-cols-3 gap-2 place-items center">
-                  <div
-                    v-for="(item, index) in roleSelection"
-                    :key="index"
-                    class="flex flex-col items-center"
-                  >
+                  <div v-for="(item, index) in roleSelection" :key="index" class="flex flex-col items-center">
                     <div
                       :class="{
                         'cursor-pointer': item.state == 'selectable',
@@ -979,10 +888,7 @@
                       @click="handleChangeRole(index)"
                     >
                       <img alt="" :src="item.images" width="100" height="100" />
-                      <div
-                        v-if="item.state == 'checked'"
-                        class="grid grid-cols-1 place-items-center"
-                      >
+                      <div v-if="item.state == 'checked'" class="grid grid-cols-1 place-items-center">
                         <Lucide icon="Check" class="text-success" />
                       </div>
                       <Button
@@ -1004,36 +910,25 @@
         </template>
         <template #card-items-5>
           <div class="p-5">
-            <form
-              id="updatePasswordForm"
-              @submit.prevent="onSubmitUpdatePassword"
-            >
+            <form id="updatePasswordForm" @submit.prevent="onSubmitUpdatePassword">
               <div class="pb-4">
                 <FormLabel
                   :class="{
-                    'text-danger':
-                      updatePasswordForm.invalid('current_password'),
+                    'text-danger': updatePasswordForm.invalid('current_password'),
                   }"
                 >
-                  {{
-                    t('views.profile.fields.change_password.current_password')
-                  }}
+                  {{ t('views.profile.fields.change_password.current_password') }}
                 </FormLabel>
                 <FormInput
                   v-model="updatePasswordForm.current_password"
                   type="password"
                   :class="{
-                    'border-danger':
-                      updatePasswordForm.invalid('current_password'),
+                    'border-danger': updatePasswordForm.invalid('current_password'),
                   }"
-                  :placeholder="
-                    t('views.profile.fields.change_password.current_password')
-                  "
+                  :placeholder="t('views.profile.fields.change_password.current_password')"
                   @change="updatePasswordForm.validate('current_password')"
                 />
-                <FormErrorMessages
-                  :messages="updatePasswordForm.errors.current_password"
-                />
+                <FormErrorMessages :messages="updatePasswordForm.errors.current_password" />
               </div>
               <div class="pb-4">
                 <FormLabel
@@ -1049,30 +944,18 @@
                   :class="{
                     'border-danger': updatePasswordForm.invalid('password'),
                   }"
-                  :placeholder="
-                    t('views.profile.fields.change_password.password')
-                  "
+                  :placeholder="t('views.profile.fields.change_password.password')"
                 />
-                <FormErrorMessages
-                  :messages="updatePasswordForm.errors.password"
-                />
+                <FormErrorMessages :messages="updatePasswordForm.errors.password" />
               </div>
               <div class="pb-4">
                 <FormLabel>
-                  {{
-                    t(
-                      'views.profile.fields.change_password.password_confirmation'
-                    )
-                  }}
+                  {{ t('views.profile.fields.change_password.password_confirmation') }}
                 </FormLabel>
                 <FormInput
                   v-model="updatePasswordForm.password_confirmation"
                   type="password"
-                  :placeholder="
-                    t(
-                      'views.profile.fields.change_password.password_confirmation'
-                    )
-                  "
+                  :placeholder="t('views.profile.fields.change_password.password_confirmation')"
                 />
               </div>
               <div>
@@ -1082,16 +965,9 @@
                   href="#"
                   variant="primary"
                   class="w-28 shadow-md"
-                  :disabled="
-                    updateUserProfileForm.validating ||
-                    updateUserProfileForm.hasErrors
-                  "
+                  :disabled="updateUserProfileForm.validating || updateUserProfileForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateUserProfileForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateUserProfileForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.update') }}
                   </template>
@@ -1105,16 +981,12 @@
             <form id="updateTokenForm" @submit.prevent="onSubmitUpdateToken">
               <div class="pb-4">
                 <FormLabel>
-                  {{
-                    t('views.profile.fields.api_token.total_token_generated')
-                  }}&nbsp;:&nbsp;{{ userContext.personal_access_tokens }}
+                  {{ t('views.profile.fields.api_token.total_token_generated') }}&nbsp;:&nbsp;{{
+                    userContext.personal_access_tokens
+                  }}
                 </FormLabel>
               </div>
-              <input
-                id="resetToken"
-                type="hidden"
-                v-model="updateTokensForm.reset_tokens"
-              />
+              <input id="resetToken" type="hidden" v-model="updateTokensForm.reset_tokens" />
               <div>
                 <Button
                   type="submit"
@@ -1122,15 +994,9 @@
                   href="#"
                   variant="primary"
                   class="w-28 shadow-md"
-                  :disabled="
-                    updateTokensForm.validating || updateTokensForm.hasErrors
-                  "
+                  :disabled="updateTokensForm.validating || updateTokensForm.hasErrors"
                 >
-                  <Lucide
-                    v-if="updateTokensForm.validating"
-                    icon="Loader"
-                    class="animate-spin"
-                  />
+                  <Lucide v-if="updateTokensForm.validating" icon="Loader" class="animate-spin" />
                   <template v-else>
                     {{ t('components.buttons.reset') }}
                   </template>
@@ -1146,11 +1012,7 @@
                 {{ t('views.profile.fields.2fa.status') }}
               </FormLabel>
               <FormSwitch>
-                <FormSwitch.Input
-                  type="checkbox"
-                  @change="setTwoFactor"
-                  v-model="twoFactorAuthStatus"
-                />
+                <FormSwitch.Input type="checkbox" @change="setTwoFactor" v-model="twoFactorAuthStatus" />
               </FormSwitch>
             </div>
             <div v-if="showQRCodeField" class="pb-4">
@@ -1160,12 +1022,7 @@
               <br />
               {{ t('views.profile.fields.2fa.qr-code_description_2') }}
               <br />
-              <img
-                :src="googlePlayBadge"
-                alt="Google Play"
-                width="120"
-                height="120"
-              />
+              <img :src="googlePlayBadge" alt="Google Play" width="120" height="120" />
               <br />
               {{ t('views.profile.fields.2fa.confirm_2fa_auth_description_1') }}
               <br />
@@ -1176,10 +1033,7 @@
                 {{ t('views.profile.fields.2fa.confirm_2fa_auth') }}
               </FormLabel>
               <FormInput v-model="twoFactorCode" />
-              <FormErrorMessages
-                v-if="twoFactorCodeErrorText != ''"
-                :messages="twoFactorCodeErrorText"
-              />
+              <FormErrorMessages v-if="twoFactorCodeErrorText != ''" :messages="twoFactorCodeErrorText" />
               <br />
               <Button
                 type="button"
@@ -1241,14 +1095,9 @@
                     <FormInput
                       v-model="confirmPasswordText"
                       type="password"
-                      :placeholder="
-                        t('views.profile.fields.2fa.confirm_password')
-                      "
+                      :placeholder="t('views.profile.fields.2fa.confirm_password')"
                     />
-                    <FormErrorMessages
-                      v-if="confirmPasswordErrorText != ''"
-                      :messages="confirmPasswordErrorText"
-                    />
+                    <FormErrorMessages v-if="confirmPasswordErrorText != ''" :messages="confirmPasswordErrorText" />
                   </div>
                   <div class="flex gap-2 justify-center items-center">
                     <Button

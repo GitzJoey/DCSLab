@@ -84,10 +84,7 @@ interface ThemeState {
   };
 }
 
-export const getTheme = (search?: {
-  name: Themes['name'];
-  layout: Themes['layout'];
-}) => {
+export const getTheme = (search?: { name: Themes['name']; layout: Themes['layout'] }) => {
   const searchValues =
     search === undefined
       ? {
@@ -96,23 +93,15 @@ export const getTheme = (search?: {
         }
       : search;
   return themes.filter((item, key) => {
-    return (
-      item.name === searchValues.name && item.layout === searchValues.layout
-    );
+    return item.name === searchValues.name && item.layout === searchValues.layout;
   })[0];
 };
 
 export const useThemeStore = defineStore('theme', {
   state: (): ThemeState => ({
     themeValue: {
-      name:
-        localStorage.getItem('theme') === null
-          ? themes[0].name
-          : getTheme().name,
-      layout:
-        localStorage.getItem('layout') === null
-          ? themes[0].layout
-          : getTheme().layout,
+      name: localStorage.getItem('theme') === null ? themes[0].name : getTheme().name,
+      layout: localStorage.getItem('layout') === null ? themes[0].layout : getTheme().layout,
     },
   }),
   getters: {

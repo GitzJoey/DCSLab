@@ -42,12 +42,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -67,12 +62,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -100,10 +91,7 @@
   };
 
   const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('CASH_ACCOUNT_CREATE') as Record<
-      string,
-      unknown
-    >;
+    let data = cacheServices.getLastEntity('CASH_ACCOUNT_CREATE') as Record<string, unknown>;
     if (!data) return;
     cashAccountForm.setData(data);
   };
@@ -138,10 +126,7 @@
         router.push({ name: 'side-menu-finance-cash-account-list' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -164,15 +149,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -186,9 +165,7 @@
   const convertErrorTypeToAlertListType = (error: unknown) => {
     const record: Record<string, Array<string>> = {};
     const anyError = error as any;
-    const response = isAxiosError(error)
-      ? (error as AxiosError).response
-      : anyError?.response;
+    const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
 
     if (response && response.data) {
       const data = response.data as any;
@@ -225,18 +202,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('CASH_ACCOUNT_CREATE', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="cashAccountForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :title="t('views.cash_account.page_title')"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :title="t('views.cash_account.page_title')" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -258,9 +231,7 @@
         <div class="p-5">
           <!-- Code -->
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': cashAccountForm.invalid('code') }"
-            >
+            <FormLabel :class="{ 'text-danger': cashAccountForm.invalid('code') }">
               {{ t('views.cash_account.fields.code') }}
             </FormLabel>
             <FormInputCode
@@ -276,9 +247,7 @@
 
           <!-- Name -->
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': cashAccountForm.invalid('name') }"
-            >
+            <FormLabel :class="{ 'text-danger': cashAccountForm.invalid('name') }">
               {{ t('views.cash_account.fields.name') }}
             </FormLabel>
             <FormInput
@@ -293,10 +262,7 @@
 
           <!-- Is Bank -->
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': cashAccountForm.invalid('is_bank') }"
-              class="pr-5"
-            >
+            <FormLabel :class="{ 'text-danger': cashAccountForm.invalid('is_bank') }" class="pr-5">
               {{ t('views.cash_account.fields.is_bank') }}
             </FormLabel>
             <FormSwitch>
@@ -313,10 +279,7 @@
 
           <!-- Is Active -->
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': cashAccountForm.invalid('is_active') }"
-              class="pr-5"
-            >
+            <FormLabel :class="{ 'text-danger': cashAccountForm.invalid('is_active') }" class="pr-5">
               {{ t('views.cash_account.fields.is_active') }}
             </FormLabel>
             <FormSwitch>
@@ -356,22 +319,12 @@
             class="w-28 shadow-md"
             :disabled="cashAccountForm.validating || cashAccountForm.hasErrors"
           >
-            <Lucide
-              v-if="cashAccountForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="cashAccountForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

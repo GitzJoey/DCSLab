@@ -10,9 +10,7 @@
   import { DialogDescription as HeadlessDialogDescription } from '@headlessui/vue';
   import { useAttrs, computed } from 'vue';
 
-  interface DescriptionProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessDialogDescription
-  > {
+  interface DescriptionProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDialogDescription> {
     as?: string | object;
   }
 
@@ -21,9 +19,7 @@
   });
 
   const attrs = useAttrs();
-  const computedClass = computed(() =>
-    twMerge(['p-5', typeof attrs.class === 'string' && attrs.class])
-  );
+  const computedClass = computed(() => twMerge(['p-5', typeof attrs.class === 'string' && attrs.class]));
 </script>
 
 <template>

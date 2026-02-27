@@ -7,10 +7,7 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  BranchReadAnyPaginateRequest,
-  BranchReadAnyGetRequest,
-} from '../types/services/branch/BranchRequest';
+import { BranchReadAnyPaginateRequest, BranchReadAnyGetRequest } from '../types/services/branch/BranchRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 
@@ -47,7 +44,7 @@ export default class BranchService {
   }
 
   public async readAnyPaginate(
-    args: BranchReadAnyPaginateRequest
+    args: BranchReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<Branch>> | null>> {
     const result: ServiceResponse<Collection<Array<Branch>> | null> = {
       success: false,
@@ -56,8 +53,7 @@ export default class BranchService {
     try {
       const queryParams: Record<string, any> = {};
 
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
@@ -77,11 +73,10 @@ export default class BranchService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<Branch>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<Branch>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -91,30 +86,23 @@ export default class BranchService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async readAnyGet(
-    args: BranchReadAnyGetRequest
-  ): Promise<ServiceResponse<Resource<Array<Branch>> | null>> {
+  public async readAnyGet(args: BranchReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Branch>> | null>> {
     const result: ServiceResponse<Resource<Array<Branch>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
@@ -133,11 +121,10 @@ export default class BranchService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<Branch>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<Branch>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -147,13 +134,9 @@ export default class BranchService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -172,7 +155,7 @@ export default class BranchService {
           branch: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<Branch>> = await axios.get(url);
@@ -185,13 +168,9 @@ export default class BranchService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -235,13 +214,9 @@ export default class BranchService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

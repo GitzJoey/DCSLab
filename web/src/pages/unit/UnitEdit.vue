@@ -45,12 +45,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -71,12 +66,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -143,10 +134,7 @@
         router.push({ name: 'side-menu-product-unit-list' });
       })
       .catch((error) => {
-        const errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -170,15 +158,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -194,18 +176,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('UNIT_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="unitForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -272,11 +250,7 @@
               <option value="" disabled selected>
                 {{ t('components.dropdown.placeholder') }}
               </option>
-              <option
-                v-for="item in unitTypesDDL"
-                :key="item.code"
-                :value="item.code"
-              >
+              <option v-for="item in unitTypesDDL" :key="item.code" :value="item.code">
                 {{ t(item.name) }}
               </option>
             </FormSelect>
@@ -294,22 +268,12 @@
             class="w-28 shadow-md"
             :disabled="unitForm.validating || unitForm.hasErrors"
           >
-            <Lucide
-              v-if="unitForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="unitForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

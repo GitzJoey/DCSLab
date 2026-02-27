@@ -7,14 +7,7 @@
 <script setup lang="ts">
   import _ from 'lodash';
   import { twMerge } from 'tailwind-merge';
-  import {
-    computed,
-    ref,
-    watch,
-    type InputHTMLAttributes,
-    useAttrs,
-    inject,
-  } from 'vue';
+  import { computed, ref, watch, type InputHTMLAttributes, useAttrs, inject } from 'vue';
   import { type ProvideFormInline } from './FormInline.vue';
   import { type ProvideInputGroup } from './InputGroup/InputGroup.vue';
 
@@ -58,40 +51,29 @@
       props.formInputSize == 'lg' && 'text-lg py-1.5 px-4',
       props.rounded && 'rounded-full',
       formInline && 'flex-1',
-      inputGroup &&
-        'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
+      inputGroup && 'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 
   const selectedOption = computed<FormSelectSearchOption | null>(() => {
-    if (
-      !props.options ||
-      props.modelValue === undefined ||
-      props.modelValue === null
-    ) {
+    if (!props.options || props.modelValue === undefined || props.modelValue === null) {
       return null;
     }
 
-    return (
-      props.options.find((option) => option.value === props.modelValue) ?? null
-    );
+    return props.options.find((option) => option.value === props.modelValue) ?? null;
   });
 
-  const displayedOptions = computed<FormSelectSearchOption[]>(
-    () => props.options ?? []
-  );
+  const displayedOptions = computed<FormSelectSearchOption[]>(() => props.options ?? []);
 
   watch(
     () => [props.modelValue, props.options],
     () => {
       if (!isFocused.value) {
-        displayValue.value = selectedOption.value
-          ? selectedOption.value.label
-          : '';
+        displayValue.value = selectedOption.value ? selectedOption.value.label : '';
       }
     },
-    { immediate: true }
+    { immediate: true },
   );
 
   const emitSearchDebounced = _.debounce((value: string) => {
@@ -116,9 +98,7 @@
   const handleBlur = () => {
     isFocused.value = false;
     isOpen.value = false;
-    displayValue.value = selectedOption.value
-      ? selectedOption.value.label
-      : displayValue.value;
+    displayValue.value = selectedOption.value ? selectedOption.value.label : displayValue.value;
   };
 
   const handleSelect = (option: FormSelectSearchOption) => {

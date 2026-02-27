@@ -46,11 +46,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -183,10 +179,7 @@
         router.push({ name: 'side-menu-administrator-user-list' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -201,15 +194,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -228,18 +215,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('USER_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="userForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <div class="pb-4">
@@ -276,21 +259,13 @@
           </div>
           <div class="pb-4">
             <FormLabel>{{ t('views.user.fields.last_name') }}</FormLabel>
-            <FormInput
-              v-model="userForm.last_name"
-              type="text"
-              :placeholder="t('views.user.fields.last_name')"
-            />
+            <FormInput v-model="userForm.last_name" type="text" :placeholder="t('views.user.fields.last_name')" />
           </div>
           <div class="pb-4">
             <FormLabel class="form-label">
               {{ t('views.user.fields.address') }}
             </FormLabel>
-            <FormInput
-              v-model="userForm.address"
-              type="text"
-              :placeholder="t('views.user.fields.address')"
-            />
+            <FormInput v-model="userForm.address" type="text" :placeholder="t('views.user.fields.address')" />
           </div>
           <div class="pb-4">
             <FormLabel>{{ t('views.user.fields.city') }}</FormLabel>
@@ -303,11 +278,7 @@
           </div>
           <div class="pb-4">
             <FormLabel>{{ t('views.user.fields.postal_code') }}</FormLabel>
-            <FormInput
-              v-model="userForm.postal_code"
-              type="text"
-              :placeholder="t('views.user.fields.postal_code')"
-            />
+            <FormInput v-model="userForm.postal_code" type="text" :placeholder="t('views.user.fields.postal_code')" />
           </div>
           <div class="pb-4">
             <FormLabel :class="{ 'text-danger': userForm.invalid('country') }">
@@ -454,10 +425,7 @@
               {{ t('views.user.fields.tokens.reset') }}
             </FormLabel>
             <FormSwitch>
-              <FormSwitch.Input
-                type="checkbox"
-                v-model="userForm.tokens_reset"
-              />
+              <FormSwitch.Input type="checkbox" v-model="userForm.tokens_reset" />
             </FormSwitch>
           </div>
         </div>
@@ -469,10 +437,7 @@
               {{ t('views.user.fields.reset_password') }}
             </FormLabel>
             <FormSwitch>
-              <FormSwitch.Input
-                type="checkbox"
-                v-model="userForm.reset_password"
-              />
+              <FormSwitch.Input type="checkbox" v-model="userForm.reset_password" />
             </FormSwitch>
           </div>
         </div>
@@ -498,22 +463,12 @@
             class="w-28 shadow-md"
             :disabled="userForm.validating || userForm.hasErrors"
           >
-            <Lucide
-              v-if="userForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="userForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

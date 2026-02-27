@@ -1,12 +1,6 @@
 import { defineStore } from 'pinia';
 
-const colorSchemes = [
-  'default',
-  'theme-1',
-  'theme-2',
-  'theme-3',
-  'theme-4',
-] as const;
+const colorSchemes = ['default', 'theme-1', 'theme-2', 'theme-3', 'theme-4'] as const;
 
 export type ColorSchemes = (typeof colorSchemes)[number];
 
@@ -23,10 +17,7 @@ const getColorScheme = () => {
 
 export const useColorSchemeStore = defineStore('colorScheme', {
   state: (): ColorSchemeState => ({
-    colorSchemeValue:
-      localStorage.getItem('colorScheme') === null
-        ? 'default'
-        : getColorScheme(),
+    colorSchemeValue: localStorage.getItem('colorScheme') === null ? 'default' : getColorScheme(),
   }),
   getters: {
     colorScheme(state) {

@@ -2,11 +2,7 @@
   import ThemeSwitcher from '@/components/ThemeSwitcher';
   import logoUrl from '@/assets/images/logo.svg';
   import illustrationUrl from '@/assets/images/illustration.svg';
-  import {
-    FormInput,
-    FormCheck,
-    FormErrorMessages,
-  } from '@/components/Base/Form';
+  import { FormInput, FormCheck, FormErrorMessages } from '@/components/Base/Form';
   import Button from '@/components/Base/Button';
   import { useI18n } from 'vue-i18n';
   import { useRouter } from 'vue-router';
@@ -91,19 +87,11 @@
             <span class="ml-3 text-lg text-white">{{ appName }}</span>
           </a>
           <div class="my-auto">
-            <img
-              alt="DCSLab"
-              class="w-1/2 -mt-16 -intro-x"
-              :src="illustrationUrl"
-            />
-            <div
-              class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
-            >
+            <img alt="DCSLab" class="w-1/2 -mt-16 -intro-x" :src="illustrationUrl" />
+            <div class="mt-10 text-4xl font-medium leading-tight text-white -intro-x">
               <br />
             </div>
-            <div
-              class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
-            ></div>
+            <div class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"></div>
           </div>
         </div>
         <div class="flex h-screen py-5 my-10 xl:h-auto xl:py-0 xl:my-0">
@@ -111,26 +99,14 @@
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
           >
             <LoadingOverlay :visible="loading" :transparent="true">
-              <h2
-                class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
-              >
+              <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
                 {{ t('views.login.title') }}
               </h2>
-              <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
-                &nbsp;
-              </div>
-              <Alert
-                v-if="status != 'onLoad'"
-                :variant="status == 'success' ? 'success' : 'danger'"
-                class="mt-2"
-              >
+              <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">&nbsp;</div>
+              <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">
                 {{ alertMessage }}
               </Alert>
-              <form
-                v-if="!requireTwoFactor"
-                id="loginForm"
-                @submit.prevent="onSubmit"
-              >
+              <form v-if="!requireTwoFactor" id="loginForm" @submit.prevent="onSubmit">
                 <div class="mt-8 intro-x">
                   <FormInput
                     v-model="loginForm.email"
@@ -151,19 +127,10 @@
                   />
                   <FormErrorMessages :messages="loginForm.errors.password" />
                 </div>
-                <div
-                  class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-                >
+                <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
-                    <FormCheck.Input
-                      v-model="loginForm.remember"
-                      type="checkbox"
-                      class="mr-2 border"
-                    />
-                    <label
-                      class="cursor-pointer select-none"
-                      htmlFor="remember-me"
-                    >
+                    <FormCheck.Input v-model="loginForm.remember" type="checkbox" class="mr-2 border" />
+                    <label class="cursor-pointer select-none" htmlFor="remember-me">
                       {{ t('views.login.fields.remember_me') }}
                     </label>
                   </div>
@@ -172,10 +139,7 @@
                   </RouterLink>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button
-                    variant="primary"
-                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
-                  >
+                  <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
                     {{ t('components.buttons.login') }}
                   </Button>
                   <Button
@@ -187,11 +151,7 @@
                   </Button>
                 </div>
               </form>
-              <form
-                v-else
-                id="twoFactorLoginForm"
-                @submit.prevent="onTwoFactorLoginSubmit"
-              >
+              <form v-else id="twoFactorLoginForm" @submit.prevent="onTwoFactorLoginSubmit">
                 <div v-if="twoFactorRecoveryCodesMode" class="mt-8 intro-x">
                   <FormLabel>
                     {{ t('views.login.fields.2fa.recovery_code') }}
@@ -201,15 +161,12 @@
                     type="text"
                     class="block px-4 py-3 intro-x min-w-full xl:min-w-[350px]"
                     :class="{
-                      'border-danger':
-                        twoFactorLoginForm.invalid('recovery_code'),
+                      'border-danger': twoFactorLoginForm.invalid('recovery_code'),
                     }"
                     :placeholder="t('views.login.fields.2fa.recovery_code')"
                     @focus="twoFactorLoginForm.forgetError('recovery_code')"
                   />
-                  <FormErrorMessages
-                    :messages="twoFactorLoginForm.errors.recovery_code"
-                  />
+                  <FormErrorMessages :messages="twoFactorLoginForm.errors.recovery_code" />
                 </div>
                 <div v-else class="mt-8 intro-x">
                   <FormLabel>
@@ -225,19 +182,12 @@
                     :placeholder="t('views.login.fields.2fa.code')"
                     @focus="twoFactorLoginForm.forgetError('code')"
                   />
-                  <FormErrorMessages
-                    :messages="twoFactorLoginForm.errors.code"
-                  />
+                  <FormErrorMessages :messages="twoFactorLoginForm.errors.code" />
                 </div>
-                <div
-                  class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm"
-                >
+                <div class="flex mt-4 text-xs intro-x text-slate-600 dark:text-slate-500 sm:text-sm">
                   <div class="flex items-center mr-auto">
                     <FormCheck>
-                      <FormCheck.Input
-                        v-model="twoFactorRecoveryCodesMode"
-                        type="checkbox"
-                      />
+                      <FormCheck.Input v-model="twoFactorRecoveryCodesMode" type="checkbox" />
                       <FormCheck.Label>
                         {{ t('views.login.fields.2fa.use_recovery_codes') }}
                       </FormCheck.Label>
@@ -245,25 +195,16 @@
                   </div>
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
-                  <Button
-                    variant="primary"
-                    class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
-                  >
+                  <Button variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
                     {{ t('components.buttons.login') }}
                   </Button>
                 </div>
               </form>
-              <div
-                class="mt-10 text-center intro-x xl:mt-24 text-slate-600 dark:text-slate-500 xl:text-left"
-              >
+              <div class="mt-10 text-center intro-x xl:mt-24 text-slate-600 dark:text-slate-500 xl:text-left">
                 By signin up, you agree to our
-                <a class="text-primary dark:text-slate-200" href="">
-                  Terms and Conditions
-                </a>
+                <a class="text-primary dark:text-slate-200" href="">Terms and Conditions</a>
                 &
-                <a class="text-primary dark:text-slate-200" href="">
-                  Privacy Policy
-                </a>
+                <a class="text-primary dark:text-slate-200" href="">Privacy Policy</a>
               </div>
             </LoadingOverlay>
           </div>

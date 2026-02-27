@@ -1,11 +1,6 @@
 <script setup lang="ts">
   import '@/assets/css/vendors/tippy.css';
-  import tippy, {
-    type PopperElement,
-    type Props,
-    roundArrow,
-    animateFill as animateFillPlugin,
-  } from 'tippy.js';
+  import tippy, { type PopperElement, type Props, roundArrow, animateFill as animateFillPlugin } from 'tippy.js';
   import { ref, onMounted, inject, watch } from 'vue';
 
   export type ProvideTippy = (el: PopperElement) => void;
@@ -63,9 +58,7 @@
 
   const isDisabled = () => {
     if (tippyRef.value && tippyRef.value._tippy !== undefined) {
-      props.disable
-        ? tippyRef.value._tippy.disable()
-        : tippyRef.value._tippy.enable();
+      props.disable ? tippyRef.value._tippy.disable() : tippyRef.value._tippy.enable();
     }
   };
 

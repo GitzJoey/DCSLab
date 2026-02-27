@@ -7,15 +7,10 @@
 <script setup lang="ts">
   import _ from 'lodash';
   import { twMerge } from 'tailwind-merge';
-  import {
-    DisclosurePanel as HeadlessDisclosurePanel,
-    TransitionRoot,
-  } from '@headlessui/vue';
+  import { DisclosurePanel as HeadlessDisclosurePanel, TransitionRoot } from '@headlessui/vue';
   import { useAttrs, computed } from 'vue';
 
-  interface PanelProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessDisclosurePanel
-  > {
+  interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosurePanel> {
     as?: string | object;
   }
 
@@ -28,7 +23,7 @@
     twMerge([
       'mt-3 text-slate-700 leading-relaxed dark:text-slate-400',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 
@@ -44,11 +39,7 @@
     leaveTo="mt-0 max-h-0 invisible opacity-0"
   >
     <HeadlessDisclosurePanel as="template">
-      <component
-        :is="as"
-        :class="computedClass"
-        v-bind="_.omit(attrs, 'class')"
-      >
+      <component :is="as" :class="computedClass" v-bind="_.omit(attrs, 'class')">
         <slot></slot>
       </component>
     </HeadlessDisclosurePanel>

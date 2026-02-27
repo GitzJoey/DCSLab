@@ -31,10 +31,7 @@
   import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
   import { ErrorCode } from '@/types/enums/ErrorCode';
   import { DropDownOption } from '@/types/models/DropDownOption';
-  import {
-    formatCurrency,
-    convertErrorTypeToAlertListType,
-  } from '@/utils/helper';
+  import { formatCurrency, convertErrorTypeToAlertListType } from '@/utils/helper';
   // #endregion
 
   // #region Declarations
@@ -52,12 +49,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -91,7 +83,7 @@
     (categoryDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const brandDDL = ref<Array<DropDownOption> | null>(null);
@@ -100,7 +92,7 @@
     (brandDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const unitDDL = ref<Array<DropDownOption> | null>(null);
@@ -109,23 +101,17 @@
     (unitDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const statusDDL = ref<Array<DropDownOption> | null>(null);
 
-  const productForm = productService.useProductPhysicalUpdateForm(
-    route.params.ulid.toString()
-  );
+  const productForm = productService.useProductPhysicalUpdateForm(route.params.ulid.toString());
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -138,12 +124,7 @@
       });
     }
 
-    await Promise.all([
-      getCategoryDDL(),
-      getBrandDDL(),
-      getUnitDDL(),
-      getStatusDDL(),
-    ]);
+    await Promise.all([getCategoryDDL(), getBrandDDL(), getUnitDDL(), getStatusDDL()]);
     await loadData();
   });
   // #endregion
@@ -290,10 +271,7 @@
         router.push({ name: 'side-menu-product-product-list' });
       })
       .catch((error) => {
-        const errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -397,15 +375,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -423,18 +395,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('PRODUCT_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="productForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <!-- Card 1: Company Info -->
       <template #card-items-0>
         <div class="p-5">
@@ -452,9 +420,7 @@
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
             <div class="col-span-12 sm:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('code') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('code') }">
                 {{ t('views.product.fields.code') }}
               </FormLabel>
               <FormInputCode
@@ -468,9 +434,7 @@
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('category_id') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('category_id') }">
                 {{ t('views.product.fields.category_id') }}
               </FormLabel>
               <FormSelectSearch
@@ -486,9 +450,7 @@
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('brand_id') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('brand_id') }">
                 {{ t('views.product.fields.brand_id') }}
               </FormLabel>
               <FormSelectSearch
@@ -504,9 +466,7 @@
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('name') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('name') }">
                 {{ t('views.product.fields.name') }}
               </FormLabel>
               <FormInput
@@ -532,22 +492,16 @@
                   v-model="productForm.is_use_serial_number"
                   type="checkbox"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      'is_use_serial_number'
-                    ),
+                    'border-danger': productForm.invalid('is_use_serial_number'),
                   }"
                   @change="productForm.validate('is_use_serial_number')"
                 />
               </FormSwitch>
-              <FormErrorMessages
-                :messages="productForm.errors.is_use_serial_number"
-              />
+              <FormErrorMessages :messages="productForm.errors.is_use_serial_number" />
             </div>
 
             <div class="col-span-12 sm:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('is_expirable') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('is_expirable') }">
                 {{ t('views.product.fields.is_expirable') }}
               </FormLabel>
               <FormSwitch class="mt-2">
@@ -571,9 +525,7 @@
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
             <div class="col-span-12">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('is_taxable') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('is_taxable') }">
                 {{ t('views.product.fields.is_taxable') }}
               </FormLabel>
               <FormSwitch class="mt-2">
@@ -589,13 +541,8 @@
               <FormErrorMessages :messages="productForm.errors.is_taxable" />
             </div>
 
-            <div
-              class="col-span-12 sm:col-span-6"
-              v-if="productForm.is_taxable"
-            >
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('vat_rate') }"
-              >
+            <div class="col-span-12 sm:col-span-6" v-if="productForm.is_taxable">
+              <FormLabel :class="{ 'text-danger': productForm.invalid('vat_rate') }">
                 {{ t('views.product.fields.vat_rate') }}
               </FormLabel>
               <FormInputCurrency
@@ -607,10 +554,7 @@
               <FormErrorMessages :messages="productForm.errors.vat_rate" />
             </div>
 
-            <div
-              class="col-span-12 sm:col-span-6"
-              v-if="productForm.is_taxable"
-            >
+            <div class="col-span-12 sm:col-span-6" v-if="productForm.is_taxable">
               <FormLabel
                 :class="{
                   'text-danger': productForm.invalid('is_price_include_vat'),
@@ -623,16 +567,12 @@
                   v-model="productForm.is_price_include_vat"
                   type="checkbox"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      'is_price_include_vat'
-                    ),
+                    'border-danger': productForm.invalid('is_price_include_vat'),
                   }"
                   @change="productForm.validate('is_price_include_vat')"
                 />
               </FormSwitch>
-              <FormErrorMessages
-                :messages="productForm.errors.is_price_include_vat"
-              />
+              <FormErrorMessages :messages="productForm.errors.is_price_include_vat" />
             </div>
           </div>
         </div>
@@ -646,9 +586,7 @@
             :key="index"
             class="border-b border-slate-200/60 dark:border-darkmode-400 last:border-0 pb-5 mb-5 last:pb-0 last:mb-0"
           >
-            <div
-              class="font-medium text-base mb-5 flex items-center justify-between"
-            >
+            <div class="font-medium text-base mb-5 flex items-center justify-between">
               <span>
                 {{
                   index === 0
@@ -656,12 +594,7 @@
                     : t('views.product.fields.other_unit') + ' #' + index
                 }}
               </span>
-              <Button
-                v-if="index > 0"
-                variant="danger"
-                size="sm"
-                @click="removeUnit(index)"
-              >
+              <Button v-if="index > 0" variant="danger" size="sm" @click="removeUnit(index)">
                 <Lucide icon="Trash2" class="w-4 h-4" />
               </Button>
             </div>
@@ -670,9 +603,7 @@
               <div class="col-span-12 sm:col-span-6">
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.code` as any
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.code` as any),
                   }"
                 >
                   {{ t('views.product.fields.unit_code') }}
@@ -680,29 +611,19 @@
                 <FormInputCode
                   v-model="productForm.product_units[index].code"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      `product_units.${index}.code` as any
-                    ),
+                    'border-danger': productForm.invalid(`product_units.${index}.code` as any),
                   }"
                   :placeholder="t('views.product.fields.unit_code')"
                   @set-auto="setUnitCode(index)"
-                  @change="
-                    productForm.validate(`product_units.${index}.code` as any)
-                  "
+                  @change="productForm.validate(`product_units.${index}.code` as any)"
                 />
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)[`product_units.${index}.code`]
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.code`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-6">
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.unit_id` as any
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.unit_id` as any),
                   }"
                 >
                   {{ t('views.product.fields.unit_id') }}
@@ -715,16 +636,12 @@
                       :options="unitOptions"
                       :placeholder="t('components.dropdown.placeholder')"
                       :class="{
-                        'border-danger': productForm.invalid(
-                          `product_units.${index}.unit_id` as any
-                        ),
+                        'border-danger': productForm.invalid(`product_units.${index}.unit_id` as any),
                       }"
                       @change="
                         () => {
                           updateUnitName(index);
-                          productForm.validate(
-                            `product_units.${index}.unit_id` as any
-                          );
+                          productForm.validate(`product_units.${index}.unit_id` as any);
                         }
                       "
                       @search="getUnitDDL"
@@ -739,21 +656,13 @@
                     <Lucide icon="X" class="w-4 h-4" />
                   </button>
                 </div>
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)[
-                      `product_units.${index}.unit_id`
-                    ]
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-6" v-if="index > 0">
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.conversion_value` as any
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.conversion_value` as any),
                   }"
                 >
                   {{ t('views.product.fields.conversion_value') }}
@@ -762,32 +671,18 @@
                   type="number"
                   v-model="productForm.product_units[index].conversion_value"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      `product_units.${index}.conversion_value` as any
-                    ),
+                    'border-danger': productForm.invalid(`product_units.${index}.conversion_value` as any),
                   }"
                   :placeholder="t('views.product.fields.conversion_value')"
-                  @change="
-                    productForm.validate(
-                      `product_units.${index}.conversion_value` as any
-                    )
-                  "
+                  @change="productForm.validate(`product_units.${index}.conversion_value` as any)"
                 />
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)[
-                      `product_units.${index}.conversion_value`
-                    ]
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.conversion_value`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-6" v-if="index > 0">
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.price` as any
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.price` as any),
                   }"
                 >
                   {{ t('views.product.fields.price') }}
@@ -795,14 +690,10 @@
                 <FormInputCurrency
                   v-model="productForm.product_units[index].price"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      `product_units.${index}.price` as any
-                    ),
+                    'border-danger': productForm.invalid(`product_units.${index}.price` as any),
                   }"
                   :placeholder="t('views.product.fields.price')"
-                  @change="
-                    productForm.validate(`product_units.${index}.price` as any)
-                  "
+                  @change="productForm.validate(`product_units.${index}.price` as any)"
                 />
                 <div
                   v-if="
@@ -816,25 +707,18 @@
                   {{
                     formatCurrency(
                       (
-                        productForm.product_units[index].price /
-                        productForm.product_units[index].conversion_value
-                      ).toFixed(2)
+                        productForm.product_units[index].price / productForm.product_units[index].conversion_value
+                      ).toFixed(2),
                     )
                   }}
                 </div>
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)[`product_units.${index}.price`]
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-4" v-else>
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.price` as any
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.price` as any),
                   }"
                 >
                   {{ t('views.product.fields.price') }}
@@ -842,28 +726,18 @@
                 <FormInputCurrency
                   v-model="productForm.product_units[index].price"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      `product_units.${index}.price` as any
-                    ),
+                    'border-danger': productForm.invalid(`product_units.${index}.price` as any),
                   }"
                   :placeholder="t('views.product.fields.price')"
-                  @change="
-                    productForm.validate(`product_units.${index}.price` as any)
-                  "
+                  @change="productForm.validate(`product_units.${index}.price` as any)"
                 />
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)[`product_units.${index}.price`]
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.price`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-4" v-if="index === 0">
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.point` as any
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.point` as any),
                   }"
                 >
                   {{ t('views.product.fields.point') }}
@@ -872,20 +746,12 @@
                   v-model="productForm.product_units[index].point"
                   type="number"
                   :class="{
-                    'border-danger': productForm.invalid(
-                      `product_units.${index}.point` as any
-                    ),
+                    'border-danger': productForm.invalid(`product_units.${index}.point` as any),
                   }"
                   :placeholder="t('views.product.fields.point')"
-                  @change="
-                    productForm.validate(`product_units.${index}.point` as any)
-                  "
+                  @change="productForm.validate(`product_units.${index}.point` as any)"
                 />
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)[`product_units.${index}.point`]
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.point`]" />
               </div>
 
               <div class="col-span-12 sm:col-span-4" v-if="index === 0">
@@ -903,30 +769,20 @@
                   <span
                     class="ml-2 text-sm"
                     :class="{
-                      'text-danger': (productForm.errors as any)[
-                        'product_units.is_primary_unit'
-                      ],
-                      'text-slate-700': !(productForm.errors as any)[
-                        'product_units.is_primary_unit'
-                      ],
+                      'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
+                      'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
                     }"
                   >
                     {{ t('views.product.fields.is_primary_unit') }}
                   </span>
                 </div>
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)['product_units.is_primary_unit']
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)['product_units.is_primary_unit']" />
               </div>
 
               <div class="col-span-12 sm:col-span-6" v-if="index > 0">
                 <FormLabel
                   :class="{
-                    'text-danger': productForm.invalid(
-                      `product_units.${index}.point` as any
-                    ),
+                    'text-danger': productForm.invalid(`product_units.${index}.point` as any),
                   }"
                 >
                   {{ t('views.product.fields.point') }}
@@ -936,61 +792,37 @@
                     v-model="productForm.product_units[index].point"
                     type="number"
                     :class="{
-                      'border-danger': productForm.invalid(
-                        `product_units.${index}.point` as any
-                      ),
+                      'border-danger': productForm.invalid(`product_units.${index}.point` as any),
                     }"
                     :placeholder="t('views.product.fields.point')"
-                    @change="
-                      productForm.validate(
-                        `product_units.${index}.point` as any
-                      )
-                    "
+                    @change="productForm.validate(`product_units.${index}.point` as any)"
                   />
                   <div class="ml-4 flex items-center">
                     <input
                       type="radio"
                       name="primary_unit"
                       class="form-check-input border-slate-300"
-                      :checked="
-                        productForm.product_units[index].is_primary_unit
-                      "
+                      :checked="productForm.product_units[index].is_primary_unit"
                       @change="setPrimaryUnit(index)"
                     />
                     <span
                       class="ml-2 text-sm"
                       :class="{
-                        'text-danger': (productForm.errors as any)[
-                          'product_units.is_primary_unit'
-                        ],
-                        'text-slate-700': !(productForm.errors as any)[
-                          'product_units.is_primary_unit'
-                        ],
+                        'text-danger': (productForm.errors as any)['product_units.is_primary_unit'],
+                        'text-slate-700': !(productForm.errors as any)['product_units.is_primary_unit'],
                       }"
                     >
                       {{ t('views.product.fields.is_primary_unit') }}
                     </span>
                   </div>
                 </div>
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)[`product_units.${index}.point`]
-                  "
-                />
-                <FormErrorMessages
-                  :messages="
-                    (productForm.errors as any)['product_units.is_primary_unit']
-                  "
-                />
+                <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.point`]" />
+                <FormErrorMessages :messages="(productForm.errors as any)['product_units.is_primary_unit']" />
               </div>
             </div>
           </div>
 
-          <Button
-            variant="outline-primary"
-            class="w-full mt-5"
-            @click="addUnit"
-          >
+          <Button variant="outline-primary" class="w-full mt-5" @click="addUnit">
             <Lucide icon="Plus" class="w-4 h-4 mr-2" />
             {{ t('views.product.actions.add_unit') }}
           </Button>
@@ -1002,9 +834,7 @@
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
             <div class="col-span-12 sm:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('status') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('status') }">
                 {{ t('views.product.fields.status') }}
               </FormLabel>
               <FormSelect
@@ -1023,9 +853,7 @@
             </div>
 
             <div class="col-span-12">
-              <FormLabel
-                :class="{ 'text-danger': productForm.invalid('remarks') }"
-              >
+              <FormLabel :class="{ 'text-danger': productForm.invalid('remarks') }">
                 {{ t('views.product.fields.remarks') }}
               </FormLabel>
               <FormTextarea
@@ -1043,29 +871,13 @@
       <!-- Buttons -->
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="productForm.validating"
-          >
-            <Lucide
-              v-if="productForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="productForm.validating">
+            <Lucide v-if="productForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

@@ -24,12 +24,7 @@ export default class UserService {
   }
 
   public useUserCreateForm() {
-    const url = route(
-      'api.post.db.admin.user.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.db.admin.user.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -60,13 +55,9 @@ export default class UserService {
   }
 
   public async readAny(
-    args: ReadAnyRequest
-  ): Promise<
-    ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>
-  > {
-    const result: ServiceResponse<
-      Collection<Array<User>> | Resource<Array<User>> | null
-    > = {
+    args: ReadAnyRequest,
+  ): Promise<ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null>> {
+    const result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> = {
       success: false,
     };
 
@@ -80,15 +71,9 @@ export default class UserService {
 
       //ZiggyRouteNotFoundException
       //const url = route('invalid.route', undefined, false, this.ziggyRoute);
-      const url = route(
-        'api.get.db.admin.user.read_any',
-        { _query: queryParams },
-        false,
-        this.ziggyRoute
-      );
+      const url = route('api.get.db.admin.user.read_any', { _query: queryParams }, false, this.ziggyRoute);
 
-      const response: AxiosResponse<Collection<Array<User>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<User>>> = await axios.get(url);
 
       //Slow API Call (10 seconds Delay)
       /*
@@ -106,20 +91,14 @@ export default class UserService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
         if (e.response) {
           switch (e.response.status) {
             case StatusCode.UnprocessableEntity:
-              return this.errorHandlerService.generateAxiosValidationErrorServiceResponse(
-                e as AxiosError
-              );
+              return this.errorHandlerService.generateAxiosValidationErrorServiceResponse(e as AxiosError);
             default:
-              return this.errorHandlerService.generateAxiosErrorServiceResponse(
-                e as AxiosError
-              );
+              return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
           }
         } else {
           return result;
@@ -142,7 +121,7 @@ export default class UserService {
           user: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<User>> = await axios.get(url);
@@ -153,13 +132,9 @@ export default class UserService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -167,12 +142,7 @@ export default class UserService {
   }
 
   public useUserEditForm(ulid: string) {
-    const url = route(
-      'api.post.db.admin.user.edit',
-      ulid,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.db.admin.user.edit', ulid, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -206,9 +176,7 @@ export default class UserService {
     return form;
   }
 
-  public async getTokensCount(
-    ulid: string
-  ): Promise<ServiceResponse<number | null>> {
+  public async getTokensCount(ulid: string): Promise<ServiceResponse<number | null>> {
     const result: ServiceResponse<number | null> = {
       success: false,
     };
@@ -220,7 +188,7 @@ export default class UserService {
           user: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<number>> = await axios.get(url);
@@ -231,13 +199,9 @@ export default class UserService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

@@ -94,18 +94,14 @@
 
   const pages = computed(() => {
     if (props.pagination == null) return [];
-    return generatePaginationArray(
-      props.pagination.current_page,
-      props.pagination.total,
-      props.pagination.per_page
-    );
+    return generatePaginationArray(props.pagination.current_page, props.pagination.total, props.pagination.per_page);
   });
 
   const generatePaginationArray = (
     currentPage: number,
     totalRecords: number,
     perPage: number,
-    maxVisiblePages = 7
+    maxVisiblePages = 7,
   ): number[] => {
     if (currentPage === 0 || totalRecords === 0 || perPage === 0) {
       return [];
@@ -147,11 +143,7 @@
     return paginationArray;
   };
 
-  const createDataEmittedPayload = (
-    search: string,
-    page: number,
-    per_page: number
-  ): DataListEmittedData => {
+  const createDataEmittedPayload = (search: string, page: number, per_page: number): DataListEmittedData => {
     let result: DataListEmittedData = {
       search: {
         text: search,
@@ -167,21 +159,14 @@
 
   const searchTextboxChanged = () => {
     if (props.pagination != null)
-      emits(
-        'dataListChanged',
-        createDataEmittedPayload(search.value, 1, props.pagination.per_page)
-      );
+      emits('dataListChanged', createDataEmittedPayload(search.value, 1, props.pagination.per_page));
   };
 
   const refreshButtonClicked = () => {
     if (props.pagination != null)
       emits(
         'dataListChanged',
-        createDataEmittedPayload(
-          search.value,
-          props.pagination.current_page,
-          props.pagination.per_page
-        )
+        createDataEmittedPayload(search.value, props.pagination.current_page, props.pagination.per_page),
       );
   };
 
@@ -200,10 +185,7 @@
 
   const paginationFirstButtonClicked = () => {
     if (props.pagination != null)
-      emits(
-        'dataListChanged',
-        createDataEmittedPayload(search.value, 1, props.pagination.per_page)
-      );
+      emits('dataListChanged', createDataEmittedPayload(search.value, 1, props.pagination.per_page));
   };
 
   const paginationPreviousButtonClicked = () => {
@@ -211,21 +193,14 @@
       if (props.pagination.current_page > 1)
         emits(
           'dataListChanged',
-          createDataEmittedPayload(
-            search.value,
-            props.pagination.current_page - 1,
-            props.pagination.per_page
-          )
+          createDataEmittedPayload(search.value, props.pagination.current_page - 1, props.pagination.per_page),
         );
     }
   };
 
   const paginationNumberButtonClicked = (n: number) => {
     if (props.pagination != null)
-      emits(
-        'dataListChanged',
-        createDataEmittedPayload(search.value, n, props.pagination.per_page)
-      );
+      emits('dataListChanged', createDataEmittedPayload(search.value, n, props.pagination.per_page));
   };
 
   const paginationNextButtonClicked = () => {
@@ -233,11 +208,7 @@
       if (props.pagination.current_page != props.pagination.last_page)
         emits(
           'dataListChanged',
-          createDataEmittedPayload(
-            search.value,
-            props.pagination.current_page + 1,
-            props.pagination.per_page
-          )
+          createDataEmittedPayload(search.value, props.pagination.current_page + 1, props.pagination.per_page),
         );
     }
   };
@@ -246,27 +217,19 @@
     if (props.pagination != null)
       emits(
         'dataListChanged',
-        createDataEmittedPayload(
-          search.value,
-          props.pagination.last_page,
-          props.pagination.per_page
-        )
+        createDataEmittedPayload(search.value, props.pagination.last_page, props.pagination.per_page),
       );
   };
 
   const pageSizeChanged = () => {
-    if (props.pagination != null)
-      emits(
-        'dataListChanged',
-        createDataEmittedPayload(search.value, 1, perPage.value)
-      );
+    if (props.pagination != null) emits('dataListChanged', createDataEmittedPayload(search.value, 1, perPage.value));
   };
 
   watch(
     search,
     debounce((): void => {
       searchTextboxChanged();
-    }, 500)
+    }, 500),
   );
 
   watch(perPage, (val, oldVal) => {
@@ -279,16 +242,8 @@
     <div class="grid justify-items-end">
       <div class="flex flex-row gap-2">
         <div v-if="enableSearch" class="relative w-56 text-slate-500">
-          <FormInput
-            v-model="search"
-            type="text"
-            class="w-56 pr-10"
-            placeholder="Search..."
-          />
-          <Lucide
-            icon="Search"
-            class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3"
-          />
+          <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..." />
+          <Lucide icon="Search" class="absolute inset-y-0 right-0 w-4 h-4 my-auto mr-3" />
         </div>
 
         <Button @click="refreshButtonClicked">
@@ -319,9 +274,7 @@
     <div class="overflow-x-auto mb-4">
       <slot name="content"></slot>
     </div>
-    <div
-      class="flex flex-wrap justify-center intro-y sm:flex-row sm:flex-nowrap"
-    >
+    <div class="flex flex-wrap justify-center intro-y sm:flex-row sm:flex-nowrap">
       <div v-if="pages.length > 0" class="pb-1 border-b">
         <Pagination class="w-full sm:w-auto sm:mr-auto">
           <Pagination.Link @click="paginationFirstButtonClicked">

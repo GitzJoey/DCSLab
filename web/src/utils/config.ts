@@ -9,11 +9,7 @@ declare global {
 }
 
 export const getBackendUrl = (): string => {
-  if (
-    typeof window !== 'undefined' &&
-    window.APP_CONFIG &&
-    window.APP_CONFIG.VITE_BACKEND_URL
-  ) {
+  if (typeof window !== 'undefined' && window.APP_CONFIG && window.APP_CONFIG.VITE_BACKEND_URL) {
     return window.APP_CONFIG.VITE_BACKEND_URL;
   }
   return import.meta.env.VITE_BACKEND_URL;

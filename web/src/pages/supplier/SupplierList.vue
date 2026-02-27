@@ -63,12 +63,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Methods
@@ -77,7 +73,7 @@
 
     refresh: boolean,
     page: number,
-    per_page: number
+    per_page: number,
   ) => {
     emits('loading-state', true);
 
@@ -112,12 +108,7 @@
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getSuppliers(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getSuppliers(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -147,8 +138,7 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    const result: ServiceResponse<boolean | null> =
-      await supplierServices.delete(deleteUlid.value);
+    const result: ServiceResponse<boolean | null> = await supplierServices.delete(deleteUlid.value);
 
     if (result.success) {
       emits('update-profile');
@@ -223,10 +213,7 @@
               </Table.Td>
             </Table.Tr>
           </template>
-          <template
-            v-for="(item, itemIdx) in supplierLists.data"
-            :key="item.ulid"
-          >
+          <template v-for="(item, itemIdx) in supplierLists.data" :key="item.ulid">
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.code }}</Table.Td>
               <Table.Td>{{ item.name }}</Table.Td>
@@ -236,22 +223,13 @@
               </Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button
-                    variant="outline-secondary"
-                    @click="viewSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="editSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="deleteSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
@@ -345,12 +323,7 @@
             >
               {{ t('components.buttons.cancel') }}
             </Button>
-            <Button
-              type="button"
-              variant="danger"
-              class="w-24"
-              @click="confirmDelete"
-            >
+            <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
               {{ t('components.buttons.delete') }}
             </Button>
           </div>

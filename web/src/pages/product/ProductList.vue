@@ -64,12 +64,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -88,12 +84,7 @@
   // #endregion
 
   // #region Methods
-  const getProducts = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number
-  ) => {
+  const getProducts = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     let company_id = selectedUserLocation.value.company.id;
@@ -111,30 +102,20 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Product>> | null> =
-      await productServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Product>> | null> = await productServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       productLists.value = result.data;
       showAlertPlaceholder('hidden', '', null);
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getProducts(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getProducts(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -173,16 +154,9 @@
     if (result.success) {
       await getProducts('', true, 1, 10);
       showAlertPlaceholder('hidden', '', null);
-      showNotification(
-        t('views.product.alert.delete.title'),
-        t('views.product.alert.delete.message')
-      );
+      showNotification(t('views.product.alert.delete.title'), t('views.product.alert.delete.message'));
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
   };
 
@@ -195,15 +169,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -257,10 +225,7 @@
                   </Table.Td>
                 </Table.Tr>
               </template>
-              <template
-                v-for="(item, itemIdx) in productLists.data"
-                :key="item.ulid"
-              >
+              <template v-for="(item, itemIdx) in productLists.data" :key="item.ulid">
                 <Table.Tr class="intro-x">
                   <Table.Td>
                     <div class="font-medium whitespace-nowrap">
@@ -269,18 +234,12 @@
                     <div class="mt-0.5 flex items-center flex-wrap">
                       <span class="font-medium">{{ item.category.name }}</span>
                       <template v-if="item.brand">
-                        <Lucide
-                          icon="ChevronRight"
-                          class="w-3 h-3 text-slate-400 mx-1"
-                        />
+                        <Lucide icon="ChevronRight" class="w-3 h-3 text-slate-400 mx-1" />
                         <span>{{ item.brand.name }}</span>
                       </template>
                     </div>
                     <div class="mt-1">
-                      <div
-                        v-if="item.status == 'ACTIVE'"
-                        class="flex items-center text-success text-xs"
-                      >
+                      <div v-if="item.status == 'ACTIVE'" class="flex items-center text-success text-xs">
                         <Lucide icon="CheckCircle" class="w-3 h-3 mr-1" />
                         {{ t('views.product.status.active') }}
                       </div>
@@ -308,10 +267,7 @@
                         {{ unit.unit.name
                         }}{{
                           unit.conversion_value > 1
-                            ? ': ' +
-                              formatCurrency(unit.conversion_value) +
-                              ' ' +
-                              item.product_units[0].unit.name
+                            ? ': ' + formatCurrency(unit.conversion_value) + ' ' + item.product_units[0].unit.name
                             : ''
                         }}
                       </div>
@@ -330,22 +286,13 @@
                   </Table.Td>
                   <Table.Td>
                     <div class="flex justify-end gap-1">
-                      <Button
-                        variant="outline-secondary"
-                        @click="viewSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                         <Lucide icon="Info" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="editSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                         <Lucide icon="Pen" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="deleteSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
@@ -450,15 +397,11 @@
                             <div class="w-48 text-slate-500">
                               {{ t('views.product.fields.vat_rate') }}
                             </div>
-                            <div class="flex-1 font-medium">
-                              {{ formatCurrency(item.vat_rate) }}%
-                            </div>
+                            <div class="flex-1 font-medium">{{ formatCurrency(item.vat_rate) }}%</div>
                           </div>
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{
-                                t('views.product.fields.is_price_include_vat')
-                              }}
+                              {{ t('views.product.fields.is_price_include_vat') }}
                             </div>
                             <div class="flex-1 font-medium">
                               {{
@@ -470,9 +413,7 @@
                           </div>
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{
-                                t('views.product.fields.is_use_serial_number')
-                              }}
+                              {{ t('views.product.fields.is_use_serial_number') }}
                             </div>
                             <div class="flex-1 font-medium">
                               {{
@@ -521,17 +462,12 @@
                                 {{ t('views.product.fields.point') }}
                               </Table.Th>
                               <Table.Th class="text-center">
-                                {{
-                                  t('views.product.fields.is_manufacturer_sku')
-                                }}
+                                {{ t('views.product.fields.is_manufacturer_sku') }}
                               </Table.Th>
                             </Table.Tr>
                           </Table.Thead>
                           <Table.Tbody>
-                            <Table.Tr
-                              v-for="unit in item.product_units"
-                              :key="unit.ulid"
-                            >
+                            <Table.Tr v-for="unit in item.product_units" :key="unit.ulid">
                               <Table.Td>{{ unit.code }}</Table.Td>
                               <Table.Td class="font-medium">
                                 {{ unit.unit.name }}
@@ -541,10 +477,7 @@
                                   <span>
                                     {{ formatCurrency(unit.conversion_value) }}
                                   </span>
-                                  <span
-                                    v-if="unit.conversion_value > 1"
-                                    class="text-xs text-slate-500"
-                                  >
+                                  <span v-if="unit.conversion_value > 1" class="text-xs text-slate-500">
                                     1 {{ unit.unit.name }} =
                                     {{ formatCurrency(unit.conversion_value) }}
                                     {{ item.product_units[0].unit.name }}
@@ -558,22 +491,11 @@
                                 <div class="flex flex-col">
                                   <span>{{ formatCurrency(unit.price) }}</span>
                                   <span
-                                    v-if="
-                                      unit.conversion_value > 1 &&
-                                      unit.price > 0
-                                    "
+                                    v-if="unit.conversion_value > 1 && unit.price > 0"
                                     class="text-xs text-slate-500 whitespace-nowrap"
                                   >
-                                    {{
-                                      t('views.product.fields.base_unit_price')
-                                    }}:
-                                    {{
-                                      formatCurrency(
-                                        (
-                                          unit.price / unit.conversion_value
-                                        ).toFixed(2)
-                                      )
-                                    }}
+                                    {{ t('views.product.fields.base_unit_price') }}:
+                                    {{ formatCurrency((unit.price / unit.conversion_value).toFixed(2)) }}
                                   </span>
                                 </div>
                               </Table.Td>
@@ -586,11 +508,7 @@
                                   icon="CheckCircle"
                                   class="text-success w-4 h-4 mx-auto"
                                 />
-                                <Lucide
-                                  v-else
-                                  icon="X"
-                                  class="text-danger w-4 h-4 mx-auto"
-                                />
+                                <Lucide v-else icon="X" class="text-danger w-4 h-4 mx-auto" />
                               </Table.Td>
                             </Table.Tr>
                           </Table.Tbody>
@@ -639,12 +557,7 @@
         >
           {{ t('components.buttons.cancel') }}
         </Button>
-        <Button
-          type="button"
-          variant="danger"
-          class="w-24"
-          @click="confirmDelete"
-        >
+        <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
           {{ t('components.buttons.delete') }}
         </Button>
       </div>

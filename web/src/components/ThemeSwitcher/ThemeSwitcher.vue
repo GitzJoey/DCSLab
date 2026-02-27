@@ -2,10 +2,7 @@
   import { Slideover } from '@/components/Base/Headless';
   import Lucide from '@/components/Base/Lucide';
   import { useThemeStore, type Themes } from '@/stores/theme';
-  import {
-    useColorSchemeStore,
-    type ColorSchemes,
-  } from '@/stores/color-scheme';
+  import { useColorSchemeStore, type ColorSchemes } from '@/stores/color-scheme';
   import { useDarkModeStore } from '@/stores/dark-mode';
   import { ref } from 'vue';
 
@@ -36,9 +33,7 @@
 
   const setDarkModeClass = () => {
     const el = document.querySelectorAll('html')[0];
-    useDarkModeStore().darkModeValue
-      ? el.classList.add('dark')
-      : el.classList.remove('dark');
+    useDarkModeStore().darkModeValue ? el.classList.add('dark') : el.classList.remove('dark');
   };
   const darkModeStore = useDarkModeStore();
   const switchDarkMode = (darkMode: boolean) => {
@@ -47,24 +42,9 @@
   };
   setDarkModeClass();
 
-  const themes: Array<Themes['name']> = [
-    'rubick',
-    'icewall',
-    'tinker',
-    'enigma',
-  ];
-  const layouts: Array<Themes['layout']> = [
-    'side-menu',
-    'simple-menu',
-    'top-menu',
-  ];
-  const colorSchemes: Array<ColorSchemes> = [
-    'default',
-    'theme-1',
-    'theme-2',
-    'theme-3',
-    'theme-4',
-  ];
+  const themes: Array<Themes['name']> = ['rubick', 'icewall', 'tinker', 'enigma'];
+  const layouts: Array<Themes['layout']> = ['side-menu', 'simple-menu', 'top-menu'];
+  const colorSchemes: Array<ColorSchemes> = ['default', 'theme-1', 'theme-2', 'theme-3', 'theme-4'];
 
   const themeImages = import.meta.glob<{
     default: string;
@@ -112,21 +92,13 @@
                     "
                     :class="[
                       'h-28 cursor-pointer bg-slate-50 box p-1 block',
-                      themeStore.theme.name == theme
-                        ? 'border-2 border-theme-1/60'
-                        : '',
+                      themeStore.theme.name == theme ? 'border-2 border-theme-1/60' : '',
                     ]"
                   >
-                    <div
-                      class="w-full h-full overflow-hidden rounded-md image-fit"
-                    >
+                    <div class="w-full h-full overflow-hidden rounded-md image-fit">
                       <img
                         class="w-full h-full"
-                        :src="
-                          themeImages[
-                            '/src/assets/images/themes/' + theme + '.png'
-                          ].default
-                        "
+                        :src="themeImages['/src/assets/images/themes/' + theme + '.png'].default"
                         alt="DCSLab"
                       />
                     </div>
@@ -152,19 +124,13 @@
                     "
                     :class="[
                       'h-24 cursor-pointer bg-slate-50 box p-1 block',
-                      themeStore.theme.layout == layout
-                        ? 'border-2 border-theme-1/60'
-                        : '',
+                      themeStore.theme.layout == layout ? 'border-2 border-theme-1/60' : '',
                     ]"
                   >
                     <div class="w-full h-full overflow-hidden rounded-md">
                       <img
                         class="w-full h-full"
-                        :src="
-                          layoutImages[
-                            '/src/assets/images/layouts/' + layout + '.png'
-                          ].default
-                        "
+                        :src="layoutImages['/src/assets/images/layouts/' + layout + '.png'].default"
                         alt="DCSLab"
                       />
                     </div>
@@ -191,25 +157,13 @@
                     :class="[
                       'h-14 cursor-pointer bg-slate-50 box p-1 border-slate-300/80 block',
                       '[&.active]:border-2 [&.active]:border-theme-1/60',
-                      colorSchemeStore.colorSchemeValue == colorScheme
-                        ? 'active'
-                        : '',
+                      colorSchemeStore.colorSchemeValue == colorScheme ? 'active' : '',
                     ]"
                   >
                     <div class="h-full overflow-hidden rounded-md">
                       <div class="flex items-center h-full gap-1 -mx-2">
-                        <div
-                          :class="[
-                            'w-1/2 h-[200%] bg-theme-1 rotate-12',
-                            colorScheme,
-                          ]"
-                        ></div>
-                        <div
-                          :class="[
-                            'w-1/2 h-[200%] bg-theme-2 rotate-12',
-                            colorScheme,
-                          ]"
-                        ></div>
+                        <div :class="['w-1/2 h-[200%] bg-theme-1 rotate-12', colorScheme]"></div>
+                        <div :class="['w-1/2 h-[200%] bg-theme-2 rotate-12', colorScheme]"></div>
                       </div>
                     </div>
                   </a>
@@ -235,9 +189,7 @@
                       !darkModeStore.darkModeValue ? 'active' : '',
                     ]"
                   >
-                    <div
-                      class="h-full overflow-hidden rounded-md bg-slate-200"
-                    ></div>
+                    <div class="h-full overflow-hidden rounded-md bg-slate-200"></div>
                   </a>
                   <div class="mt-2.5 text-center text-xs capitalize">Light</div>
                 </div>
@@ -255,9 +207,7 @@
                       darkModeStore.darkModeValue ? 'active' : '',
                     ]"
                   >
-                    <div
-                      class="h-full overflow-hidden rounded-md bg-slate-900"
-                    ></div>
+                    <div class="h-full overflow-hidden rounded-md bg-slate-900"></div>
                   </a>
                   <div class="mt-2.5 text-center text-xs capitalize">Dark</div>
                 </div>

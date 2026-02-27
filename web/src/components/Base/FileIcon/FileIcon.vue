@@ -36,10 +36,7 @@
       >
         {{ type }}
       </div>
-      <div
-        v-if="variant == 'image'"
-        class="absolute top-0 left-0 w-full h-full image-fit"
-      >
+      <div v-if="variant == 'image'" class="absolute top-0 left-0 w-full h-full image-fit">
         <img class="rounded-md" alt="DCSLab" :src="src" />
       </div>
     </div>

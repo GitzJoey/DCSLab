@@ -7,10 +7,7 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  BrandReadAnyPaginateRequest,
-  BrandReadAnyGetRequest,
-} from '../types/services/brand/BrandRequest';
+import { BrandReadAnyPaginateRequest, BrandReadAnyGetRequest } from '../types/services/brand/BrandRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 
@@ -41,7 +38,7 @@ export default class BrandService {
   }
 
   public async readAnyPaginate(
-    args: BrandReadAnyPaginateRequest
+    args: BrandReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<Brand>> | null>> {
     const result: ServiceResponse<Collection<Array<Brand>> | null> = {
       success: false,
@@ -49,8 +46,7 @@ export default class BrandService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
@@ -68,11 +64,10 @@ export default class BrandService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<Brand>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<Brand>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -82,30 +77,23 @@ export default class BrandService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async readAnyGet(
-    args: BrandReadAnyGetRequest
-  ): Promise<ServiceResponse<Resource<Array<Brand>> | null>> {
+  public async readAnyGet(args: BrandReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Brand>> | null>> {
     const result: ServiceResponse<Resource<Array<Brand>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.search) queryParams['search'] = args.search;
@@ -122,11 +110,10 @@ export default class BrandService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<Brand>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<Brand>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -136,13 +123,9 @@ export default class BrandService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -161,7 +144,7 @@ export default class BrandService {
           brand: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<Brand>> = await axios.get(url);
@@ -174,13 +157,9 @@ export default class BrandService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -194,7 +173,7 @@ export default class BrandService {
         brand: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -220,7 +199,7 @@ export default class BrandService {
           brand: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -232,13 +211,9 @@ export default class BrandService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

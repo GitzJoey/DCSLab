@@ -42,12 +42,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -68,12 +63,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -135,10 +126,7 @@
       })
       .catch((error: any) => {
         console.error(error);
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error as Error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error as Error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -161,15 +149,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -180,10 +162,7 @@
   };
 
   const loadFromCache = () => {
-    const data = cacheServices.getLastEntity('UNIT_CREATE') as Record<
-      string,
-      unknown
-    >;
+    const data = cacheServices.getLastEntity('UNIT_CREATE') as Record<string, unknown>;
     if (data) {
       unitForm.setData(data);
     }
@@ -198,18 +177,14 @@
       if (unitForm.hasErrors) {
       }
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="unitForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -249,9 +224,7 @@
             <FormErrorMessages :messages="unitForm.errors.name" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': unitForm.invalid('description') }"
-            >
+            <FormLabel :class="{ 'text-danger': unitForm.invalid('description') }">
               {{ t('views.unit.fields.description') }}
             </FormLabel>
             <FormTextarea
@@ -274,11 +247,7 @@
               <option value="" disabled selected>
                 {{ t('components.dropdown.placeholder') }}
               </option>
-              <option
-                v-for="item in unitTypesDDL"
-                :key="item.code"
-                :value="item.code"
-              >
+              <option v-for="item in unitTypesDDL" :key="item.code" :value="item.code">
                 {{ t(item.name) }}
               </option>
             </FormSelect>
@@ -288,29 +257,13 @@
       </template>
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="unitForm.validating"
-          >
-            <Lucide
-              v-if="unitForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="unitForm.validating">
+            <Lucide v-if="unitForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

@@ -22,7 +22,7 @@
     twMerge([
       'px-5 py-3 text-right border-t border-slate-200/60 dark:border-darkmode-400',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 

@@ -34,7 +34,7 @@
       'before:checked:ml-[14px] before:checked:bg-white',
 
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 
   const emit = defineEmits<InputEmit>();
@@ -50,10 +50,5 @@
 </script>
 
 <template>
-  <FormCheck.Input
-    :type="props.type"
-    :class="computedClass"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  />
+  <FormCheck.Input :type="props.type" :class="computedClass" v-bind="_.omit(attrs, 'class')" v-model="localValue" />
 </template>

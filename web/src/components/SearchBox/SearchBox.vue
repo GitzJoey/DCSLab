@@ -18,7 +18,7 @@
       theme: 'rubick',
       layout: 'side-menu',
       visible: true,
-    }
+    },
   );
 
   const searchDropdown = ref(false);

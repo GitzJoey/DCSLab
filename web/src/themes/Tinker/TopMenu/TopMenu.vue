@@ -36,9 +36,7 @@
   const route: Route = useRoute();
   const router = useRouter();
   let formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
-  const setFormattedMenu = (
-    computedFormattedMenu: Array<FormattedMenu | 'divider'>
-  ) => {
+  const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
     Object.assign(formattedMenu, computedFormattedMenu);
   };
   const menuStore = useMenuStore();
@@ -74,7 +72,7 @@
     computed(() => route.path),
     () => {
       delete route.forceActiveMenu;
-    }
+    },
   );
 
   onMounted(async () => {
@@ -116,9 +114,7 @@
           </div>
         </div>
 
-        <nav
-          class="top-nav relative z-50 -mt-[3px] hidden translate-y-[50px] opacity-0 md:block"
-        >
+        <nav class="top-nav relative z-50 -mt-[3px] hidden translate-y-[50px] opacity-0 md:block">
           <ul class="flex flex-wrap h-[58px] px-6 xl:px-[50px]">
             <li v-for="(menu, menuKey) in formattedMenu" :key="menuKey">
               <template v-if="menu != 'divider'">
@@ -136,9 +132,7 @@
                           }
                         })(menu.pageName)
                   "
-                  :class="[
-                    menu.active ? 'top-menu top-menu--active' : 'top-menu',
-                  ]"
+                  :class="[menu.active ? 'top-menu top-menu--active' : 'top-menu']"
                   @click="
                     (event: MouseEvent) => {
                       event.preventDefault();
@@ -151,21 +145,11 @@
                   </div>
                   <div class="top-menu__title">
                     {{ t(menu.title) }}
-                    <Lucide
-                      v-if="menu.subMenu"
-                      class="top-menu__sub-icon"
-                      icon="ChevronDown"
-                    />
+                    <Lucide v-if="menu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                   </div>
                 </a>
-                <ul
-                  v-if="menu.subMenu"
-                  :class="{ 'side-menu__sub-open': menu.activeDropdown }"
-                >
-                  <li
-                    v-for="(subMenu, subMenuKey) in menu.subMenu"
-                    :key="subMenuKey"
-                  >
+                <ul v-if="menu.subMenu" :class="{ 'side-menu__sub-open': menu.activeDropdown }">
+                  <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                     <a
                       :href="
                         subMenu.subMenu
@@ -193,21 +177,11 @@
                       </div>
                       <div class="top-menu__title">
                         {{ t(subMenu.title) }}
-                        <Lucide
-                          v-if="subMenu.subMenu"
-                          class="top-menu__sub-icon"
-                          icon="ChevronDown"
-                        />
+                        <Lucide v-if="subMenu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                       </div>
                     </a>
-                    <ul
-                      v-if="subMenu.subMenu"
-                      :class="{ 'side-menu__sub-open': subMenu.activeDropdown }"
-                    >
-                      <li
-                        v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                        :key="lastSubMenuKey"
-                      >
+                    <ul v-if="subMenu.subMenu" :class="{ 'side-menu__sub-open': subMenu.activeDropdown }">
+                      <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                         <a
                           :href="
                             lastSubMenu.subMenu

@@ -28,9 +28,7 @@
   const loading = ref<boolean>(false);
   const titleView = ref<string>('views.stock_adjustment.page_title');
 
-  const alertType = ref<
-    'danger' | 'success' | 'warning' | 'pending' | 'dark' | 'hidden'
-  >('hidden');
+  const alertType = ref<'danger' | 'success' | 'warning' | 'pending' | 'dark' | 'hidden'>('hidden');
   const title = ref<string>('');
   const alertList = ref<Record<string, Array<string>> | null>(null);
 
@@ -128,25 +126,11 @@
         </template>
         <template #optional>
           <div class="flex w-full mt-4 sm:w-auto sm:mt-0">
-            <Button
-              v-if="mode == ViewMode.LIST"
-              as="a"
-              href="#"
-              variant="primary"
-              class="shadow-md"
-              @click="createNew"
-            >
+            <Button v-if="mode == ViewMode.LIST" as="a" href="#" variant="primary" class="shadow-md" @click="createNew">
               <Lucide icon="Plus" class="w-4 h-4" />
               &nbsp;{{ t('components.buttons.create_new') }}
             </Button>
-            <Button
-              v-else
-              as="a"
-              href="#"
-              variant="primary"
-              class="shadow-md"
-              @click="backToList"
-            >
+            <Button v-else as="a" href="#" variant="primary" class="shadow-md" @click="backToList">
               <Lucide icon="ArrowLeft" class="w-4 h-4" />
               &nbsp;{{ t('components.buttons.back') }}
             </Button>
@@ -170,11 +154,7 @@
       />
     </LoadingOverlay>
 
-    <Notification
-      ref-key="stockAdjustmentNotification"
-      :options="{ duration: 3000 }"
-      class="flex"
-    >
+    <Notification ref-key="stockAdjustmentNotification" :options="{ duration: 3000 }" class="flex">
       <Lucide icon="CheckCircle" class="text-success" />
       <div class="ml-4 mr-4">
         <div class="font-medium">{{ notificationTitle }}</div>

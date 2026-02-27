@@ -35,9 +35,7 @@
   const deleteUlid = ref<string>('');
   const deleteModalShow = ref<boolean>(false);
   const expandDetail = ref<number | null>(null);
-  const stockAdjustmentCategoryLists = ref<Collection<
-    Array<StockAdjustmentCategory>
-  > | null>({
+  const stockAdjustmentCategoryLists = ref<Collection<Array<StockAdjustmentCategory>> | null>({
     data: [],
     meta: {
       current_page: 0,
@@ -56,12 +54,8 @@
     },
   });
 
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
   onMounted(async () => {
     emits('mode-state', ViewMode.LIST);
@@ -76,12 +70,7 @@
     await getStockAdjustmentCategories('', true, 1, 10);
   });
 
-  const getStockAdjustmentCategories = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number
-  ) => {
+  const getStockAdjustmentCategories = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     const company_id = selectedUserLocation.value.company.id;
@@ -98,31 +87,21 @@
       per_page: per_page,
     };
 
-    const result: ServiceResponse<Collection<
-      Array<StockAdjustmentCategory>
-    > | null> = await stockAdjustmentCategoryService.readAnyPaginate(searchReq);
+    const result: ServiceResponse<Collection<Array<StockAdjustmentCategory>> | null> =
+      await stockAdjustmentCategoryService.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       stockAdjustmentCategoryLists.value = result.data;
       showAlertPlaceholder('hidden', '', null);
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getStockAdjustmentCategories(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getStockAdjustmentCategories(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -154,9 +133,7 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    const result = await stockAdjustmentCategoryService.delete(
-      deleteUlid.value
-    );
+    const result = await stockAdjustmentCategoryService.delete(deleteUlid.value);
 
     emits('loading-state', false);
 
@@ -164,19 +141,11 @@
       emits('update-profile');
       await getStockAdjustmentCategories('', true, 1, 10);
       showNotification(
-        t(
-          'views.stock_adjustment_category.alert.delete_stock_adjustment_category.title'
-        ),
-        t(
-          'views.stock_adjustment_category.alert.delete_stock_adjustment_category.content'
-        )
+        t('views.stock_adjustment_category.alert.delete_stock_adjustment_category.title'),
+        t('views.stock_adjustment_category.alert.delete_stock_adjustment_category.content'),
       );
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
   };
 
@@ -189,15 +158,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     const ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -218,11 +181,7 @@
         :enable-search="true"
         :can-print="true"
         :can-export="true"
-        :pagination="
-          stockAdjustmentCategoryLists
-            ? stockAdjustmentCategoryLists.meta
-            : null
-        "
+        :pagination="stockAdjustmentCategoryLists ? stockAdjustmentCategoryLists.meta : null"
         @dataListChanged="handleDataListChange"
       >
         <template #content>
@@ -248,10 +207,7 @@
                   </Table.Td>
                 </Table.Tr>
               </template>
-              <template
-                v-for="(item, itemIdx) in stockAdjustmentCategoryLists.data"
-                :key="item.ulid"
-              >
+              <template v-for="(item, itemIdx) in stockAdjustmentCategoryLists.data" :key="item.ulid">
                 <Table.Tr class="intro-x">
                   <Table.Td>
                     <div class="font-medium whitespace-nowrap">
@@ -265,22 +221,13 @@
                   </Table.Td>
                   <Table.Td>
                     <div class="flex justify-end gap-1">
-                      <Button
-                        variant="outline-secondary"
-                        @click="viewSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                         <Lucide icon="Info" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="editSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                         <Lucide icon="Pen" class="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline-secondary"
-                        @click="deleteSelected(itemIdx)"
-                      >
+                      <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
@@ -301,9 +248,7 @@
                         <div class="grid grid-cols-1 gap-y-2">
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{
-                                t('views.stock_adjustment_category.fields.code')
-                              }}
+                              {{ t('views.stock_adjustment_category.fields.code') }}
                             </div>
                             <div class="flex-1 font-medium">
                               {{ item.code }}
@@ -311,9 +256,7 @@
                           </div>
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{
-                                t('views.stock_adjustment_category.fields.name')
-                              }}
+                              {{ t('views.stock_adjustment_category.fields.name') }}
                             </div>
                             <div class="flex-1 font-medium">
                               {{ item.name }}
@@ -364,12 +307,7 @@
         >
           {{ t('components.buttons.cancel') }}
         </Button>
-        <Button
-          type="button"
-          variant="danger"
-          class="w-24"
-          @click="confirmDelete"
-        >
+        <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
           {{ t('components.buttons.delete') }}
         </Button>
       </div>

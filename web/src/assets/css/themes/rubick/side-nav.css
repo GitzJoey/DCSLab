@@ -202,8 +202,7 @@
               display: none;
             }
           }
-          &:hover:not(.side-menu--active):not(.side-menu--open)
-            .side-menu__icon:before {
+          &:hover:not(.side-menu--active):not(.side-menu--open) .side-menu__icon:before {
             background-color: theme('colors.white' / 5%);
           }
         }
@@ -279,8 +278,7 @@
             .side-menu__title {
               color: theme('colors.slate.400');
             }
-            &:hover:not(.side-menu--active):not(.side-menu--open)
-              .side-menu__icon:before {
+            &:hover:not(.side-menu--active):not(.side-menu--open) .side-menu__icon:before {
               background-color: theme('colors.darkmode.500' / 70%);
             }
           }

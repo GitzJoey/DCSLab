@@ -36,10 +36,9 @@
       props.formTextareaSize == 'lg' && 'text-lg py-1.5 px-4',
       props.rounded && 'rounded-full',
       formInline && 'flex-1',
-      inputGroup &&
-        'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
+      inputGroup && 'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 
   const emit = defineEmits<FormTextareaEmit>();
@@ -55,10 +54,5 @@
 </script>
 
 <template>
-  <textarea
-    :type="props.type"
-    :class="computedClass"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  />
+  <textarea :type="props.type" :class="computedClass" v-bind="_.omit(attrs, 'class')" v-model="localValue" />
 </template>

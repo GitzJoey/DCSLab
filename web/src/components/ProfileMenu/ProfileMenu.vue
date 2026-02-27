@@ -66,9 +66,7 @@
 
 <template>
   <Menu v-if="visible">
-    <Menu.Button
-      class="block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x"
-    >
+    <Menu.Button class="block w-8 h-8 overflow-hidden rounded-full shadow-lg image-fit zoom-in intro-x">
       <img :alt="profilePictureAlt" :src="profilePicture" />
     </Menu.Button>
     <Menu.Items
@@ -81,10 +79,7 @@
         </div>
       </Menu.Header>
       <Menu.Divider class="bg-white/[0.08]" />
-      <Menu.Item
-        class="hover:bg-white/5"
-        @click="router.push({ name: 'side-menu-dashboard-profile' })"
-      >
+      <Menu.Item class="hover:bg-white/5" @click="router.push({ name: 'side-menu-dashboard-profile' })">
         <Lucide icon="User" class="w-4 h-4 mr-2" />
         {{ t('components.profile-menu.profile_ddl.profile') }}
       </Menu.Item>

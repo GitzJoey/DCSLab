@@ -30,12 +30,7 @@ export default class CashAccountService {
   }
 
   public useCashAccountCreateForm() {
-    const url = route(
-      'api.post.cash_account.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.cash_account.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -53,7 +48,7 @@ export default class CashAccountService {
   }
 
   public async readAnyPaginate(
-    args: CashAccountReadAnyPaginateRequest
+    args: CashAccountReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<CashAccount>> | null>> {
     const result: ServiceResponse<Collection<Array<CashAccount>> | null> = {
       success: false,
@@ -61,8 +56,7 @@ export default class CashAccountService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
 
@@ -81,11 +75,10 @@ export default class CashAccountService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<CashAccount>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<CashAccount>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -95,13 +88,9 @@ export default class CashAccountService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -109,7 +98,7 @@ export default class CashAccountService {
   }
 
   public async readAnyGet(
-    args: CashAccountReadAnyGetRequest
+    args: CashAccountReadAnyGetRequest,
   ): Promise<ServiceResponse<Resource<Array<CashAccount>> | null>> {
     const result: ServiceResponse<Resource<Array<CashAccount>> | null> = {
       success: false,
@@ -117,8 +106,7 @@ export default class CashAccountService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
 
@@ -136,11 +124,10 @@ export default class CashAccountService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<CashAccount>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<CashAccount>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -150,22 +137,16 @@ export default class CashAccountService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async read(
-    ulid: string
-  ): Promise<ServiceResponse<CashAccount | null>> {
+  public async read(ulid: string): Promise<ServiceResponse<CashAccount | null>> {
     const result: ServiceResponse<CashAccount | null> = {
       success: false,
     };
@@ -177,11 +158,10 @@ export default class CashAccountService {
           cash_account: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<CashAccount>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<CashAccount>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -191,13 +171,9 @@ export default class CashAccountService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -211,7 +187,7 @@ export default class CashAccountService {
         cash_account: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -240,7 +216,7 @@ export default class CashAccountService {
           cash_account: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -252,13 +228,9 @@ export default class CashAccountService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

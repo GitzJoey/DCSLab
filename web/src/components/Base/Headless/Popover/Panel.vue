@@ -7,15 +7,10 @@
 <script setup lang="ts">
   import _ from 'lodash';
   import { twMerge } from 'tailwind-merge';
-  import {
-    PopoverPanel as HeadlessPopoverPanel,
-    TransitionRoot,
-  } from '@headlessui/vue';
+  import { PopoverPanel as HeadlessPopoverPanel, TransitionRoot } from '@headlessui/vue';
   import { useAttrs, computed } from 'vue';
 
-  interface PanelProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessPopoverPanel
-  > {
+  interface PanelProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessPopoverPanel> {
     as?: string | object;
     placement?:
       | 'top-start'
@@ -42,7 +37,7 @@
     twMerge([
       'p-2 shadow-[0px_3px_20px_#0000000b] bg-white border-transparent rounded-md dark:bg-darkmode-600 dark:border-transparent',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 
@@ -74,11 +69,7 @@
         { 'right-[100%] bottom-0': placement == 'left-end' },
       ]"
     >
-      <HeadlessPopoverPanel
-        :as="as"
-        :class="computedClass"
-        v-bind="_.omit(attrs, 'class')"
-      >
+      <HeadlessPopoverPanel :as="as" :class="computedClass" v-bind="_.omit(attrs, 'class')">
         <slot></slot>
       </HeadlessPopoverPanel>
     </div>

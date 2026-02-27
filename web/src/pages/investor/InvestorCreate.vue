@@ -43,12 +43,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -70,12 +65,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -104,10 +95,7 @@
   };
 
   const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('INVESTOR_CREATE') as Record<
-      string,
-      unknown
-    >;
+    let data = cacheServices.getLastEntity('INVESTOR_CREATE') as Record<string, unknown>;
     if (!data) return;
     investorForm.setData(data);
   };
@@ -149,10 +137,7 @@
         router.push({ name: 'side-menu-company-investor-list' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -175,15 +160,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -197,9 +176,7 @@
   const convertErrorTypeToAlertListType = (error: unknown) => {
     const record: Record<string, Array<string>> = {};
     const anyError = error as any;
-    const response = isAxiosError(error)
-      ? (error as AxiosError).response
-      : anyError?.response;
+    const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
 
     if (response && response.data) {
       const data = response.data as any;
@@ -236,18 +213,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('INVESTOR_CREATE', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="investorForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -309,22 +282,12 @@
             class="w-28 shadow-md"
             :disabled="investorForm.validating || investorForm.hasErrors"
           >
-            <Lucide
-              v-if="investorForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="investorForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

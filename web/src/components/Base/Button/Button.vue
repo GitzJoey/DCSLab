@@ -48,12 +48,9 @@
     rounded?: Rounded;
   }
 
-  const { as, size, variant, elevated, rounded } = withDefaults(
-    defineProps<ButtonProps>(),
-    {
-      as: 'button',
-    }
-  );
+  const { as, size, variant, elevated, rounded } = withDefaults(defineProps<ButtonProps>(), {
+    as: 'button',
+  });
 
   const attrs = useAttrs();
 
@@ -105,18 +102,10 @@
   ];
 
   // Social Media
-  const facebook = [
-    'bg-[#3b5998] border-[#3b5998] text-white dark:border-[#3b5998]',
-  ];
-  const twitter = [
-    'bg-[#4ab3f4] border-[#4ab3f4] text-white dark:border-[#4ab3f4]',
-  ];
-  const instagram = [
-    'bg-[#517fa4] border-[#517fa4] text-white dark:border-[#517fa4]',
-  ];
-  const linkedin = [
-    'bg-[#0077b5] border-[#0077b5] text-white dark:border-[#0077b5]',
-  ];
+  const facebook = ['bg-[#3b5998] border-[#3b5998] text-white dark:border-[#3b5998]'];
+  const twitter = ['bg-[#4ab3f4] border-[#4ab3f4] text-white dark:border-[#4ab3f4]'];
+  const instagram = ['bg-[#517fa4] border-[#517fa4] text-white dark:border-[#517fa4]'];
+  const linkedin = ['bg-[#0077b5] border-[#0077b5] text-white dark:border-[#0077b5]'];
 
   // Outline
   const outlinePrimary = [
@@ -230,7 +219,7 @@
       rounded && 'rounded-full',
       elevated && 'shadow-md',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 

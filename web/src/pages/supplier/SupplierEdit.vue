@@ -45,18 +45,11 @@
   const selectedUserLocationStore = useSelectedUserLocationStore();
   const { isUserLocationSelected } = storeToRefs(selectedUserLocationStore);
 
-  const form = supplierServices.useSupplierEditForm(
-    route.params.ulid as string
-  );
+  const form = supplierServices.useSupplierEditForm(route.params.ulid as string);
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alert-placeholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alert-placeholder']);
   // #endregion
 
   // #region Refs
@@ -89,8 +82,7 @@
   // #region Methods
   const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    let result: ServiceResponse<Supplier | null> =
-      await supplierServices.read(ulid);
+    let result: ServiceResponse<Supplier | null> = await supplierServices.read(ulid);
 
     if (result.success && result.data) {
       form.setData({
@@ -162,10 +154,7 @@
         router.push({ name: 'side-menu-supplier' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -189,15 +178,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -232,7 +215,7 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('SUPPLIER_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
@@ -240,11 +223,7 @@
 <template>
   <form id="supplierForm" @submit.prevent="onSubmit">
     <!-- Kita panggil Layout 2 Kolom -->
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <!-- Slot untuk Card General -->
       <template #card-items-general>
         <div class="p-5">
@@ -369,11 +348,7 @@
               <option value="">
                 {{ t('components.dropdown.placeholder') }}
               </option>
-              <option
-                v-for="c in paymentTermTypeDDL"
-                :key="c.code"
-                :value="c.code"
-              >
+              <option v-for="c in paymentTermTypeDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
               </option>
             </FormSelect>
@@ -445,13 +420,7 @@
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

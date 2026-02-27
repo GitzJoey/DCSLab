@@ -7,13 +7,7 @@
 <script setup lang="ts">
   import _ from 'lodash';
   import { twMerge } from 'tailwind-merge';
-  import {
-    computed,
-    type SelectHTMLAttributes,
-    useAttrs,
-    inject,
-    ref,
-  } from 'vue';
+  import { computed, type SelectHTMLAttributes, useAttrs, inject, ref } from 'vue';
   import { type ProvideFormInline } from './FormInline.vue';
 
   export interface FormSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
@@ -40,7 +34,7 @@
       props.formSelectSize == 'lg' && 'text-lg py-1.5 pl-4 pr-8',
       formInline && 'flex-1',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 
   const emit = defineEmits<FormSelectEmit>();
@@ -51,9 +45,7 @@
         const firstOption = selectRef.value?.querySelectorAll('option')[0];
         return (
           firstOption !== undefined &&
-          (firstOption.getAttribute('value') !== null
-            ? firstOption.getAttribute('value')
-            : firstOption.text)
+          (firstOption.getAttribute('value') !== null ? firstOption.getAttribute('value') : firstOption.text)
         );
       }
 
@@ -66,12 +58,7 @@
 </script>
 
 <template>
-  <select
-    ref="selectRef"
-    :class="computedClass"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  >
+  <select ref="selectRef" :class="computedClass" v-bind="_.omit(attrs, 'class')" v-model="localValue">
     <slot></slot>
   </select>
 </template>

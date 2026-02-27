@@ -27,12 +27,7 @@ export default class StockAdjustmentInProductService {
   }
 
   public useStockAdjustmentInProductCreateForm() {
-    const url = route(
-      'api.post.stock_adjustment_in_product.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.stock_adjustment_in_product.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -58,7 +53,7 @@ export default class StockAdjustmentInProductService {
         stock_adjustment_in_product: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -79,24 +74,18 @@ export default class StockAdjustmentInProductService {
   }
 
   public async readAnyPaginate(
-    args: StockAdjustmentInProductReadAnyPaginateRequest
-  ): Promise<
-    ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null>
-  > {
-    const result: ServiceResponse<Collection<
-      Array<StockAdjustmentInProduct>
-    > | null> = {
+    args: StockAdjustmentInProductReadAnyPaginateRequest,
+  ): Promise<ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null>> {
+    const result: ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null> = {
       success: false,
     };
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
-      if (args.stock_adjustment_id)
-        queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
+      if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
 
       if (args.search) queryParams['search'] = args.search;
 
@@ -112,12 +101,10 @@ export default class StockAdjustmentInProductService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<
-        Collection<Array<StockAdjustmentInProduct>>
-      > = await axios.get(url);
+      const response: AxiosResponse<Collection<Array<StockAdjustmentInProduct>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -127,13 +114,9 @@ export default class StockAdjustmentInProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -141,13 +124,9 @@ export default class StockAdjustmentInProductService {
   }
 
   public async readAnyGet(
-    args: StockAdjustmentInProductReadAnyGetRequest
-  ): Promise<
-    ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null>
-  > {
-    const result: ServiceResponse<Resource<
-      Array<StockAdjustmentInProduct>
-    > | null> = {
+    args: StockAdjustmentInProductReadAnyGetRequest,
+  ): Promise<ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null>> {
+    const result: ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null> = {
       success: false,
     };
 
@@ -156,8 +135,7 @@ export default class StockAdjustmentInProductService {
       queryParams['with_trashed'] = args.with_trashed;
       queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
-      if (args.stock_adjustment_id)
-        queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
+      if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
 
       if (args.search) queryParams['search'] = args.search;
 
@@ -172,11 +150,10 @@ export default class StockAdjustmentInProductService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<StockAdjustmentInProduct>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<StockAdjustmentInProduct>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -186,22 +163,16 @@ export default class StockAdjustmentInProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async read(
-    ulid: string
-  ): Promise<ServiceResponse<StockAdjustmentInProduct | null>> {
+  public async read(ulid: string): Promise<ServiceResponse<StockAdjustmentInProduct | null>> {
     const result: ServiceResponse<StockAdjustmentInProduct | null> = {
       success: false,
     };
@@ -213,11 +184,10 @@ export default class StockAdjustmentInProductService {
           stock_adjustment_in_product: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<StockAdjustmentInProduct>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<StockAdjustmentInProduct>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -227,13 +197,9 @@ export default class StockAdjustmentInProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -252,7 +218,7 @@ export default class StockAdjustmentInProductService {
           stock_adjustment_in_product: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -264,13 +230,9 @@ export default class StockAdjustmentInProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

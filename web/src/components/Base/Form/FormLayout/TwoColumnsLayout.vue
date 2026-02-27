@@ -85,11 +85,7 @@
                 }"
                 @click="onLinkClicked(index)"
               >
-                <Lucide
-                  v-if="link.state === 'EXPANDED'"
-                  class="w-4 h-4"
-                  icon="Minus"
-                />
+                <Lucide v-if="link.state === 'EXPANDED'" class="w-4 h-4" icon="Minus" />
                 <Lucide v-else-if="link.state" class="w-4 h-4" icon="Plus" />
               </div>
             </a>
@@ -148,10 +144,7 @@
                   {{ t(card.title) }}
                 </h2>
               </div>
-              <div
-                v-if="card.state !== CardState.Hidden"
-                class="w-1/2 flex justify-end"
-              >
+              <div v-if="card.state !== CardState.Hidden" class="w-1/2 flex justify-end">
                 <div
                   :class="{
                     'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true,
@@ -163,16 +156,9 @@
               </div>
             </div>
             <div
-              :class="[
-                { block: card.state === CardState.Expanded },
-                { hidden: card.state === CardState.Collapsed },
-              ]"
+              :class="[{ block: card.state === CardState.Expanded }, { hidden: card.state === CardState.Collapsed }]"
             >
-              <slot
-                :name="`card-items-${card.id ? card.id : index}`"
-                :card="card"
-                :index="index"
-              ></slot>
+              <slot :name="`card-items-${card.id ? card.id : index}`" :card="card" :index="index"></slot>
             </div>
           </div>
         </div>

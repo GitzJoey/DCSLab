@@ -48,12 +48,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -79,7 +74,7 @@
     (customerGroupDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const paymentTermTypeDDL = ref<Array<DropDownOption> | null>(null);
@@ -87,18 +82,12 @@
 
   const isDDLLoading = ref<boolean>(false);
 
-  const customerForm = customerService.useCustomerEditForm(
-    route.params.ulid as string
-  );
+  const customerForm = customerService.useCustomerEditForm(route.params.ulid as string);
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -123,8 +112,7 @@
 
   const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    const response: ServiceResponse<Customer | null> =
-      await customerService.read(ulid);
+    const response: ServiceResponse<Customer | null> = await customerService.read(ulid);
 
     if (response && response.data) {
       customerForm.setData({
@@ -223,10 +211,7 @@
         router.push({ name: 'side-menu-customer-list' });
       })
       .catch((error) => {
-        const errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -250,15 +235,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     const ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -275,25 +254,19 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('CUSTOMER_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="customerForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4">
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('code') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('code') }">
                 {{ t('views.customer.fields.code') }}
               </FormLabel>
               <FormInputCode
@@ -306,9 +279,7 @@
               <FormErrorMessages :messages="customerForm.errors.code" />
             </div>
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('name') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('name') }">
                 {{ t('views.customer.fields.name') }}
               </FormLabel>
               <FormInput
@@ -354,9 +325,7 @@
               <FormErrorMessages :messages="customerForm.errors.group_id" />
             </div>
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('is_member') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('is_member') }">
                 {{ t('views.customer.fields.is_member') }}
               </FormLabel>
               <FormSwitch>
@@ -373,9 +342,7 @@
               <FormErrorMessages :messages="customerForm.errors.is_member" />
             </div>
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('zone') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('zone') }">
                 {{ t('views.customer.fields.zone') }}
               </FormLabel>
               <FormInput
@@ -388,9 +355,7 @@
               <FormErrorMessages :messages="customerForm.errors.zone" />
             </div>
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('status') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('status') }">
                 {{ t('views.customer.fields.status') }}
               </FormLabel>
               <FormSelect
@@ -431,16 +396,12 @@
                 :placeholder="t('views.customer.fields.max_open_invoice')"
                 @change="customerForm.validate('max_open_invoice')"
               />
-              <FormErrorMessages
-                :messages="customerForm.errors.max_open_invoice"
-              />
+              <FormErrorMessages :messages="customerForm.errors.max_open_invoice" />
             </div>
             <div class="pb-4">
               <FormLabel
                 :class="{
-                  'text-danger': customerForm.invalid(
-                    'max_outstanding_invoice'
-                  ),
+                  'text-danger': customerForm.invalid('max_outstanding_invoice'),
                 }"
               >
                 {{ t('views.customer.fields.max_outstanding_invoice') }}
@@ -449,18 +410,12 @@
                 v-model="customerForm.max_outstanding_invoice"
                 type="number"
                 :class="{
-                  'border-danger': customerForm.invalid(
-                    'max_outstanding_invoice'
-                  ),
+                  'border-danger': customerForm.invalid('max_outstanding_invoice'),
                 }"
-                :placeholder="
-                  t('views.customer.fields.max_outstanding_invoice')
-                "
+                :placeholder="t('views.customer.fields.max_outstanding_invoice')"
                 @change="customerForm.validate('max_outstanding_invoice')"
               />
-              <FormErrorMessages
-                :messages="customerForm.errors.max_outstanding_invoice"
-              />
+              <FormErrorMessages :messages="customerForm.errors.max_outstanding_invoice" />
             </div>
             <div class="pb-4">
               <FormLabel
@@ -479,9 +434,7 @@
                 :placeholder="t('views.customer.fields.max_invoice_age')"
                 @change="customerForm.validate('max_invoice_age')"
               />
-              <FormErrorMessages
-                :messages="customerForm.errors.max_invoice_age"
-              />
+              <FormErrorMessages :messages="customerForm.errors.max_invoice_age" />
             </div>
             <div class="pb-4">
               <FormLabel
@@ -491,29 +444,18 @@
               >
                 {{ t('views.customer_group.fields.payment_term_type') }}
               </FormLabel>
-              <FormSelect
-                v-model="customerForm.payment_term_type"
-                @change="customerForm.validate('payment_term_type')"
-              >
+              <FormSelect v-model="customerForm.payment_term_type" @change="customerForm.validate('payment_term_type')">
                 <option value="">
                   {{ t('components.dropdown.placeholder') }}
                 </option>
-                <option
-                  v-for="pt in paymentTermTypeDDL"
-                  :key="pt.code"
-                  :value="pt.code"
-                >
+                <option v-for="pt in paymentTermTypeDDL" :key="pt.code" :value="pt.code">
                   {{ t(pt.name) }}
                 </option>
               </FormSelect>
-              <FormErrorMessages
-                :messages="customerForm.errors.payment_term_type"
-              />
+              <FormErrorMessages :messages="customerForm.errors.payment_term_type" />
             </div>
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('payment_term') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('payment_term') }">
                 {{ t('views.customer.fields.payment_term') }}
               </FormLabel>
               <FormInput
@@ -553,14 +495,10 @@
                   @change="customerForm.validate('taxable_enterprise')"
                 />
               </FormSwitch>
-              <FormErrorMessages
-                :messages="customerForm.errors.taxable_enterprise"
-              />
+              <FormErrorMessages :messages="customerForm.errors.taxable_enterprise" />
             </div>
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('tax_id') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('tax_id') }">
                 {{ t('views.customer.fields.tax_id') }}
               </FormLabel>
               <FormInput
@@ -573,9 +511,7 @@
               <FormErrorMessages :messages="customerForm.errors.tax_id" />
             </div>
             <div class="pb-4">
-              <FormLabel
-                :class="{ 'text-danger': customerForm.invalid('remarks') }"
-              >
+              <FormLabel :class="{ 'text-danger': customerForm.invalid('remarks') }">
                 {{ t('views.customer.fields.remarks') }}
               </FormLabel>
               <FormTextarea
@@ -592,29 +528,13 @@
 
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="customerForm.validating"
-          >
-            <Lucide
-              v-if="customerForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="customerForm.validating">
+            <Lucide v-if="customerForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

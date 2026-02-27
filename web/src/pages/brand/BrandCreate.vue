@@ -6,12 +6,7 @@
   import BrandService from '@/services/BrandService';
   import CacheService from '@/services/CacheService';
   import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormInputCode,
-    FormErrorMessages,
-  } from '@/components/Base/Form';
+  import { FormInput, FormLabel, FormInputCode, FormErrorMessages } from '@/components/Base/Form';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import { CardState } from '@/types/enums/CardState';
   import Button from '@/components/Base/Button';
@@ -37,12 +32,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -62,12 +52,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -120,10 +106,7 @@
       })
       .catch((error: any) => {
         console.error(error);
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -146,15 +129,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -167,9 +144,7 @@
   const convertErrorTypeToAlertListType = (error: unknown) => {
     const record: Record<string, Array<string>> = {};
     const anyError = error as any;
-    const response = isAxiosError(error)
-      ? (error as AxiosError).response
-      : anyError?.response;
+    const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
 
     if (response && response.data) {
       const data = response.data as any;
@@ -199,10 +174,7 @@
   };
 
   const loadFromCache = () => {
-    const data = cacheServices.getLastEntity('BRAND_CREATE') as Record<
-      string,
-      unknown
-    >;
+    const data = cacheServices.getLastEntity('BRAND_CREATE') as Record<string, unknown>;
     if (data) {
       brandForm.setData(data);
     }
@@ -217,18 +189,14 @@
       if (brandForm.hasErrors) {
       }
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="brandForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -271,29 +239,13 @@
       </template>
       <template #card-items-button>
         <div class="flex gap-4">
-          <Button
-            type="submit"
-            href="#"
-            variant="primary"
-            class="w-28 shadow-md"
-            :disabled="brandForm.validating"
-          >
-            <Lucide
-              v-if="brandForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+          <Button type="submit" href="#" variant="primary" class="w-28 shadow-md" :disabled="brandForm.validating">
+            <Lucide v-if="brandForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

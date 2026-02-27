@@ -19,14 +19,11 @@
 
   const slots = useSlots();
 
-  const { as, selectedIndex, variant } = withDefaults(
-    defineProps<GroupProps>(),
-    {
-      as: 'div',
-      selectedIndex: 0,
-      variant: 'default',
-    }
-  );
+  const { as, selectedIndex, variant } = withDefaults(defineProps<GroupProps>(), {
+    as: 'div',
+    selectedIndex: 0,
+    variant: 'default',
+  });
 
   const active = ref(selectedIndex);
   const setActive = (value: number) => {
@@ -41,16 +38,12 @@
         setSelectedIndex: setActive,
         variant: variant,
       };
-    })
+    }),
   );
 </script>
 
 <template>
   <component :is="as">
-    <component
-      v-for="(item, key) in slots.default && slots.default()"
-      :is="item"
-      :index="key"
-    />
+    <component v-for="(item, key) in slots.default && slots.default()" :is="item" :index="key" />
   </component>
 </template>

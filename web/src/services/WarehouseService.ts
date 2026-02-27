@@ -27,12 +27,7 @@ export default class WarehouseService {
   }
 
   public useWarehouseCreateForm() {
-    const url = route(
-      'api.post.warehouse.save',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.warehouse.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -52,7 +47,7 @@ export default class WarehouseService {
   }
 
   public async readAnyPaginate(
-    args: WarehouseReadAnyPaginateRequest
+    args: WarehouseReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<Warehouse>> | null>> {
     const result: ServiceResponse<Collection<Array<Warehouse>> | null> = {
       success: false,
@@ -61,8 +56,7 @@ export default class WarehouseService {
     try {
       const queryParams: Record<string, any> = {};
 
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
@@ -82,11 +76,10 @@ export default class WarehouseService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<Warehouse>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<Warehouse>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -96,13 +89,9 @@ export default class WarehouseService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -110,7 +99,7 @@ export default class WarehouseService {
   }
 
   public async readAnyGet(
-    args: WarehouseReadAnyGetRequest
+    args: WarehouseReadAnyGetRequest,
   ): Promise<ServiceResponse<Resource<Array<Warehouse>> | null>> {
     const result: ServiceResponse<Resource<Array<Warehouse>> | null> = {
       success: false,
@@ -118,8 +107,7 @@ export default class WarehouseService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
 
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
@@ -138,11 +126,10 @@ export default class WarehouseService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<Warehouse>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<Warehouse>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -152,13 +139,9 @@ export default class WarehouseService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -177,7 +160,7 @@ export default class WarehouseService {
           warehouse: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<Warehouse>> = await axios.get(url);
@@ -190,13 +173,9 @@ export default class WarehouseService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -229,12 +208,7 @@ export default class WarehouseService {
     };
 
     try {
-      const url = route(
-        'api.post.warehouse.delete',
-        ulid,
-        false,
-        this.ziggyRoute
-      );
+      const url = route('api.post.warehouse.delete', ulid, false, this.ziggyRoute);
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
 
@@ -245,13 +219,9 @@ export default class WarehouseService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

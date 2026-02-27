@@ -67,12 +67,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -91,12 +87,7 @@
   // #endregion
 
   // #region Methods
-  const getProductCategories = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number
-  ) => {
+  const getProductCategories = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     let company_id = selectedUserLocation.value.company.id;
@@ -118,27 +109,16 @@
       await productCategoryServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
-      productCategoryLists.value = result.data as Collection<
-        Array<ProductCategory>
-      >;
+      productCategoryLists.value = result.data as Collection<Array<ProductCategory>>;
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const onDataListChanged = async (data: DataListEmittedData) => {
-    await getProductCategories(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getProductCategories(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -172,22 +152,17 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    let result: ServiceResponse<boolean | null> =
-      await productCategoryServices.delete(deleteUlid.value);
+    let result: ServiceResponse<boolean | null> = await productCategoryServices.delete(deleteUlid.value);
 
     if (result.success) {
       emits('update-profile');
       await getProductCategories('', true, 1, 10);
       showNotification(
         t('views.product_category.alert.delete_product_category.title'),
-        t('views.product_category.alert.delete_product_category.content')
+        t('views.product_category.alert.delete_product_category.content'),
       );
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
@@ -203,15 +178,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -223,9 +192,7 @@
   };
 
   const getTypeLabel = (type: number): string => {
-    return type === 1
-      ? t('views.product_category.type.product')
-      : t('views.product_category.type.service');
+    return type === 1 ? t('views.product_category.type.product') : t('views.product_category.type.service');
   };
   // #endregion
 
@@ -268,32 +235,20 @@
               </Table.Td>
             </Table.Tr>
           </template>
-          <template
-            v-for="(item, itemIdx) in productCategoryLists.data"
-            :key="item.ulid"
-          >
+          <template v-for="(item, itemIdx) in productCategoryLists.data" :key="item.ulid">
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.code }}</Table.Td>
               <Table.Td>{{ item.name }}</Table.Td>
               <Table.Td>{{ getTypeLabel(item.type) }}</Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button
-                    variant="outline-secondary"
-                    @click="viewSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="editSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="deleteSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
@@ -362,12 +317,7 @@
             >
               {{ t('components.buttons.cancel') }}
             </Button>
-            <Button
-              type="button"
-              variant="danger"
-              class="w-24"
-              @click="confirmDelete"
-            >
+            <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
               {{ t('components.buttons.delete') }}
             </Button>
           </div>

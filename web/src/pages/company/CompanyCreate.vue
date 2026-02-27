@@ -40,12 +40,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -76,10 +71,7 @@
 
   // #region Methods
   const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('COMPANY_CREATE') as Record<
-      string,
-      unknown
-    >;
+    let data = cacheServices.getLastEntity('COMPANY_CREATE') as Record<string, unknown>;
     if (!data) return;
     companyForm.setData(data);
   };
@@ -121,10 +113,7 @@
         router.push({ name: 'side-menu-company-company-list' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -147,15 +136,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -170,9 +153,7 @@
     const record: Record<string, Array<string>> = {};
 
     const anyError = error as any;
-    const response = isAxiosError(error)
-      ? (error as AxiosError).response
-      : anyError?.response;
+    const response = isAxiosError(error) ? (error as AxiosError).response : anyError?.response;
 
     if (response && response.data) {
       const data = response.data as any;
@@ -210,18 +191,14 @@
       if (companyForm.hasErrors) {
       }
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="companyForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <div class="pb-4">
@@ -254,16 +231,10 @@
             <FormLabel>
               {{ t('views.company.fields.address') }}
             </FormLabel>
-            <FormTextarea
-              v-model="companyForm.address"
-              type="text"
-              :placeholder="t('views.company.fields.address')"
-            />
+            <FormTextarea v-model="companyForm.address" type="text" :placeholder="t('views.company.fields.address')" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': companyForm.invalid('default') }"
-            >
+            <FormLabel :class="{ 'text-danger': companyForm.invalid('default') }">
               {{ t('views.company.fields.default') }}
             </FormLabel>
             <FormSwitch class="mt-2">
@@ -277,9 +248,7 @@
             <FormErrorMessages :messages="companyForm.errors.default" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': companyForm.invalid('status') }"
-            >
+            <FormLabel :class="{ 'text-danger': companyForm.invalid('status') }">
               {{ t('views.company.fields.status') }}
             </FormLabel>
             <FormSelect
@@ -307,22 +276,12 @@
             class="w-28 shadow-md"
             :disabled="companyForm.validating || companyForm.hasErrors"
           >
-            <Lucide
-              v-if="companyForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="companyForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

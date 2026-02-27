@@ -1,13 +1,13 @@
 {
-  "printWidth": 80,
+  "printWidth": 120,
   "tabWidth": 2,
   "semi": true,
   "singleQuote": true,
-  "trailingComma": "es5",
+  "trailingComma": "all",
   "jsxBracketSameLine": false,
-  "vueIndentScriptAndStyle": true,
   "htmlWhitespaceSensitivity": "ignore",
+  "vueIndentScriptAndStyle": true,
   "arrowParens": "always",
   "bracketSpacing": true,
-  "pluginSearchDirs": ["./node_modules"]
+  "jsxSingleQuote": true
 }

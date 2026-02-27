@@ -31,11 +31,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -71,13 +67,7 @@
   // #endregion
 
   // #region Methods
-  const getUsers = async (
-    search: string,
-    refresh: boolean,
-    paginate: boolean,
-    page: number,
-    per_page: number
-  ) => {
+  const getUsers = async (search: string, refresh: boolean, paginate: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     const searchReq: ReadAnyRequest = {
@@ -88,31 +78,20 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<
-      Collection<Array<User>> | Resource<Array<User>> | null
-    > = await userServices.readAny(searchReq);
+    let result: ServiceResponse<Collection<Array<User>> | Resource<Array<User>> | null> =
+      await userServices.readAny(searchReq);
 
     if (result.success && result.data) {
       userLists.value = result.data as Collection<Array<User>>;
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const onDataListChanged = async (data: DataListEmittedData) => {
-    await getUsers(
-      data.search.text,
-      false,
-      true,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getUsers(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -139,15 +118,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -205,11 +178,7 @@
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.name }}</Table.Td>
               <Table.Td>
-                <a
-                  href=""
-                  class="hover:animate-pulse"
-                  @click.prevent="viewSelected(itemIdx)"
-                >
+                <a href="" class="hover:animate-pulse" @click.prevent="viewSelected(itemIdx)">
                   {{ item.email }}
                 </a>
               </Table.Td>
@@ -219,24 +188,15 @@
                 </span>
               </Table.Td>
               <Table.Td>
-                <Lucide
-                  v-if="item.profile.status === 'ACTIVE'"
-                  icon="CheckCircle"
-                />
+                <Lucide v-if="item.profile.status === 'ACTIVE'" icon="CheckCircle" />
                 <Lucide v-if="item.profile.status === 'INACTIVE'" icon="X" />
               </Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button
-                    variant="outline-secondary"
-                    @click="viewSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="editSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
                 </div>

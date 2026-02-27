@@ -8,13 +8,7 @@
   import CacheService from '@/services/CacheService';
   import { convertErrorTypeToAlertListType } from '@/utils/helper';
   import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
-  import {
-    FormInput,
-    FormLabel,
-    FormTextarea,
-    FormInputCode,
-    FormErrorMessages,
-  } from '@/components/Base/Form';
+  import { FormInput, FormLabel, FormTextarea, FormInputCode, FormErrorMessages } from '@/components/Base/Form';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import { CardState } from '@/types/enums/CardState';
   import { DropDownOption } from '@/types/models/DropDownOption';
@@ -45,12 +39,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -68,18 +57,12 @@
 
   const statusDDL = ref<Array<DropDownOption> | null>(null);
 
-  const investorForm = investorServices.useInvestorEditForm(
-    route.params.ulid as string
-  );
+  const investorForm = investorServices.useInvestorEditForm(route.params.ulid as string);
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -100,8 +83,7 @@
   // #region Methods
   const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    const result: ServiceResponse<Investor | null> =
-      await investorServices.read(ulid);
+    const result: ServiceResponse<Investor | null> = await investorServices.read(ulid);
 
     if (result.success && result.data) {
       investorForm.setData({
@@ -149,10 +131,7 @@
         router.push({ name: 'side-menu-company-investor-list' });
       })
       .catch((error) => {
-        const errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -176,15 +155,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -203,18 +176,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('INVESTOR_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="investorForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -276,22 +245,12 @@
             class="w-28 shadow-md"
             :disabled="investorForm.validating || investorForm.hasErrors"
           >
-            <Lucide
-              v-if="investorForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="investorForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

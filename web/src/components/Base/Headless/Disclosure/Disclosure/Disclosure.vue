@@ -12,9 +12,7 @@
   import { type ProvideGroup } from '../Group.vue';
   import Provider from './Provider.vue';
 
-  interface DisclosureProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessDisclosure
-  > {
+  interface DisclosureProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessDisclosure> {
     index?: number;
   }
 
@@ -32,7 +30,7 @@
       group?.value.variant == 'boxed' &&
         'p-4 first:mt-0 last:mb-0 border border-slate-200/60 mt-3 dark:border-darkmode-400',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 

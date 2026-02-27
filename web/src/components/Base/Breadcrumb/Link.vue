@@ -28,10 +28,7 @@
       index > 0 &&
       "before:content-[''] before:w-[14px] before:h-[14px] before:bg-chevron-white before:transform before:rotate-[-90deg] before:bg-[length:100%] before:-ml-[1.125rem] before:absolute before:my-auto before:inset-y-0",
     index > 0 && 'dark:before:bg-chevron-white',
-    breadcrumb &&
-      !breadcrumb.light &&
-      active &&
-      'text-slate-800 cursor-text dark:text-slate-400',
+    breadcrumb && !breadcrumb.light && active && 'text-slate-800 cursor-text dark:text-slate-400',
     breadcrumb && breadcrumb.light && active && 'text-white/70',
   ]);
 </script>

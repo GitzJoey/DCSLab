@@ -10,9 +10,7 @@
   import { Menu as HeadlessMenu } from '@headlessui/vue';
   import { useAttrs, computed } from 'vue';
 
-  interface MenuProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessMenu
-  > {
+  interface MenuProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenu> {
     as?: string | object;
   }
 
@@ -21,9 +19,7 @@
   });
 
   const attrs = useAttrs();
-  const computedClass = computed(() =>
-    twMerge(['relative', typeof attrs.class === 'string' && attrs.class])
-  );
+  const computedClass = computed(() => twMerge(['relative', typeof attrs.class === 'string' && attrs.class]));
 </script>
 
 <template>

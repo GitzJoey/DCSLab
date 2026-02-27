@@ -1,11 +1,6 @@
 <script setup lang="ts">
   import '@/assets/css/vendors/tippy.css';
-  import tippy, {
-    type PopperElement,
-    type Props,
-    roundArrow,
-    animateFill as animateFillPlugin,
-  } from 'tippy.js';
+  import tippy, { type PopperElement, type Props, roundArrow, animateFill as animateFillPlugin } from 'tippy.js';
   import { ref, onMounted, inject } from 'vue';
 
   export type ProvideTippy = (el: PopperElement) => void;

@@ -23,11 +23,7 @@
   import Button from '@/components/Base/Button';
   import Lucide from '@/components/Base/Lucide';
   import { Dialog } from '@/components/Base/Headless';
-  import {
-    formatDate,
-    formatCurrency,
-    convertErrorTypeToAlertListType,
-  } from '@/utils/helper';
+  import { formatDate, formatCurrency, convertErrorTypeToAlertListType } from '@/utils/helper';
   import StockAdjustmentService from '@/services/StockAdjustmentService';
   import StockAdjustmentCategoryService from '@/services/StockAdjustmentCategoryService';
   import CacheService from '@/services/CacheService';
@@ -91,24 +87,13 @@
   const route = useRoute();
   const selectedUserLocationStore = useSelectedUserLocationStore();
 
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
 
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
   const stockAdjustmentService = new StockAdjustmentService();
-  const stockAdjustmentForm = stockAdjustmentService.useStockAdjustmentEditForm(
-    route.params.ulid as string
-  );
+  const stockAdjustmentForm = stockAdjustmentService.useStockAdjustmentEditForm(route.params.ulid as string);
   const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
   const warehouseService = new WarehouseService();
   const productService = new ProductService();
@@ -121,7 +106,7 @@
     (categoryDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const inWarehouseDDL = ref<Array<DropDownOption> | null>(null);
@@ -130,7 +115,7 @@
     (inWarehouseDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const outWarehouseDDL = ref<Array<DropDownOption> | null>(null);
@@ -139,7 +124,7 @@
     (outWarehouseDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const showProductUnitModal = ref<boolean>(false);
@@ -173,11 +158,10 @@
   ]);
 
   const inProductsForm = computed<StockAdjustmentInProductFormItem[]>(
-    () => stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[]
+    () => stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[],
   );
   const outProductsForm = computed<StockAdjustmentOutProductFormItem[]>(
-    () =>
-      stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[]
+    () => stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[],
   );
   // #endregion
 
@@ -200,15 +184,13 @@
         item.product_unit_total_cogs = qty * cogs;
       });
     },
-    { deep: true }
+    { deep: true },
   );
 
   watch(showProductUnitModal, (open) => {
     if (!open) return;
     nextTick(() => {
-      const el = document.getElementById(
-        'product-unit-search-input'
-      ) as HTMLInputElement | null;
+      const el = document.getElementById('product-unit-search-input') as HTMLInputElement | null;
       el?.focus();
     });
   });
@@ -218,7 +200,7 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('STOCK_ADJUSTMENT_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
 
   onMounted(async () => {
@@ -237,11 +219,7 @@
     try {
       await loadData();
 
-      await Promise.all([
-        loadCategoryDDL(),
-        loadInWarehouseDDL(),
-        loadOutWarehouseDDL(),
-      ]);
+      await Promise.all([loadCategoryDDL(), loadInWarehouseDDL(), loadOutWarehouseDDL()]);
     } finally {
       emits('loading-state', false);
     }
@@ -260,9 +238,7 @@
 
       dateTimeDisplay.value = formatDate(data.date, 'YYYY-MM-DDTHH:mm');
 
-      const inProducts: StockAdjustmentInProductFormItem[] = (
-        data.in_products || []
-      ).map((item: any) => {
+      const inProducts: StockAdjustmentInProductFormItem[] = (data.in_products || []).map((item: any) => {
         const productUnit = item.product_unit;
         const unit = productUnit?.unit;
         const product = (productUnit as any)?.product;
@@ -282,9 +258,7 @@
         };
       });
 
-      const outProducts: StockAdjustmentOutProductFormItem[] = (
-        data.out_products || []
-      ).map((item: any) => {
+      const outProducts: StockAdjustmentOutProductFormItem[] = (data.out_products || []).map((item: any) => {
         const productUnit = item.product_unit;
         const unit = productUnit?.unit;
         const product = (productUnit as any)?.product;
@@ -325,7 +299,7 @@
         cards.value = cards.value.map((card) =>
           card.title === 'views.stock_adjustment.field_groups.in_products'
             ? { ...card, state: CardState.Expanded }
-            : card
+            : card,
         );
       }
 
@@ -333,7 +307,7 @@
         cards.value = cards.value.map((card) =>
           card.title === 'views.stock_adjustment.field_groups.out_products'
             ? { ...card, state: CardState.Expanded }
-            : card
+            : card,
         );
       }
     }
@@ -402,9 +376,7 @@
       company_id: selectedUserLocation.value.company.id,
       branch_id: selectedUserLocation.value.branch.id,
       search,
-      include_id: stockAdjustmentData.value?.in_warehouse?.id as
-        | string
-        | undefined,
+      include_id: stockAdjustmentData.value?.in_warehouse?.id as string | undefined,
       status: undefined,
       refresh: false,
       limit: 20,
@@ -433,9 +405,7 @@
       company_id: selectedUserLocation.value.company.id,
       branch_id: selectedUserLocation.value.branch.id,
       search,
-      include_id: stockAdjustmentData.value?.out_warehouse?.id as
-        | string
-        | undefined,
+      include_id: stockAdjustmentData.value?.out_warehouse?.id as string | undefined,
       status: undefined,
       refresh: false,
       limit: 20,
@@ -464,8 +434,7 @@
       product_unit_product_code: option.product_unit_code,
       product_unit_product_name: option.product_name,
       product_unit_unit_name: option.unit_name,
-      product_unit_base_unit_name:
-        option.conversion_value != 1 ? option.base_unit_name : '',
+      product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
       product_unit_conversion_value: option.conversion_value,
       product_unit_cogs: option.cogs,
     };
@@ -484,9 +453,7 @@
       targetIndex = stockAdjustmentForm.in_products.length - 1;
     } else {
       const index = editingInProductIndex.value;
-      const current = stockAdjustmentForm.in_products[
-        index
-      ] as StockAdjustmentInProductFormItem;
+      const current = stockAdjustmentForm.in_products[index] as StockAdjustmentInProductFormItem;
       stockAdjustmentForm.in_products[index] = {
         ...current,
         ...baseData,
@@ -511,8 +478,7 @@
       product_unit_product_code: option.product_unit_code,
       product_unit_product_name: option.product_name,
       product_unit_unit_name: option.unit_name,
-      product_unit_base_unit_name:
-        option.conversion_value != 1 ? option.base_unit_name : '',
+      product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
       product_unit_conversion_value: option.conversion_value,
     };
 
@@ -530,9 +496,7 @@
       targetIndex = stockAdjustmentForm.out_products.length - 1;
     } else {
       const index = editingOutProductIndex.value;
-      const current = stockAdjustmentForm.out_products[
-        index
-      ] as StockAdjustmentOutProductFormItem;
+      const current = stockAdjustmentForm.out_products[index] as StockAdjustmentOutProductFormItem;
       stockAdjustmentForm.out_products[index] = {
         ...current,
         ...baseData,
@@ -572,13 +536,9 @@
       let el: HTMLInputElement | null = null;
 
       if (inIndex !== null) {
-        el = document.getElementById(
-          `in-product-qty-${inIndex}`
-        ) as HTMLInputElement | null;
+        el = document.getElementById(`in-product-qty-${inIndex}`) as HTMLInputElement | null;
       } else if (outIndex !== null) {
-        el = document.getElementById(
-          `out-product-qty-${outIndex}`
-        ) as HTMLInputElement | null;
+        el = document.getElementById(`out-product-qty-${outIndex}`) as HTMLInputElement | null;
       }
 
       el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -618,12 +578,10 @@
         const units: any[] = p.product_units || [];
 
         let baseUnit = units.find((u: any) => u.is_base);
-        if (!baseUnit)
-          baseUnit = units.find((u: any) => Number(u.conversion_value) === 1);
+        if (!baseUnit) baseUnit = units.find((u: any) => Number(u.conversion_value) === 1);
         if (!baseUnit) baseUnit = units.find((u: any) => u.is_primary_unit);
         if (!baseUnit && units.length > 0) baseUnit = units[0];
-        const baseUnitName =
-          baseUnit && baseUnit.unit ? baseUnit.unit.name : '';
+        const baseUnitName = baseUnit && baseUnit.unit ? baseUnit.unit.name : '';
 
         return units.map((u: any) => ({
           product_id: p.id,
@@ -666,8 +624,7 @@
   };
 
   const removeInProduct = (index: number) => {
-    const items =
-      stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+    const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
     const item = items[index];
 
     if (item && item.id) {
@@ -714,8 +671,7 @@
   };
 
   const removeOutProduct = (index: number) => {
-    const items =
-      stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+    const items = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
     const item = items[index];
 
     if (item && item.id) {
@@ -750,15 +706,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     const ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -777,32 +727,28 @@
       return;
     }
 
-    const originalInProducts =
-      stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
-    const cleanedInProducts: StockAdjustmentInProductNestedUpdateRequest[] =
-      originalInProducts.map(
-        ({
-          product_unit_product_code,
-          product_unit_product_name,
-          product_unit_unit_name,
-          product_unit_base_unit_name,
-          product_unit_total_cogs,
-          ...rest
-        }: StockAdjustmentInProductFormItem) => rest
-      );
+    const originalInProducts = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+    const cleanedInProducts: StockAdjustmentInProductNestedUpdateRequest[] = originalInProducts.map(
+      ({
+        product_unit_product_code,
+        product_unit_product_name,
+        product_unit_unit_name,
+        product_unit_base_unit_name,
+        product_unit_total_cogs,
+        ...rest
+      }: StockAdjustmentInProductFormItem) => rest,
+    );
 
-    const originalOutProducts =
-      stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
-    const cleanedOutProducts: StockAdjustmentOutProductNestedUpdateRequest[] =
-      originalOutProducts.map(
-        ({
-          product_unit_product_code,
-          product_unit_product_name,
-          product_unit_unit_name,
-          product_unit_base_unit_name,
-          ...rest
-        }: StockAdjustmentOutProductFormItem) => rest
-      );
+    const originalOutProducts = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+    const cleanedOutProducts: StockAdjustmentOutProductNestedUpdateRequest[] = originalOutProducts.map(
+      ({
+        product_unit_product_code,
+        product_unit_product_name,
+        product_unit_unit_name,
+        product_unit_base_unit_name,
+        ...rest
+      }: StockAdjustmentOutProductFormItem) => rest,
+    );
 
     const backupInProducts = [...originalInProducts];
     const backupOutProducts = [...originalOutProducts];
@@ -820,10 +766,7 @@
     } catch (error) {
       stockAdjustmentForm.in_products = backupInProducts as any;
       stockAdjustmentForm.out_products = backupOutProducts as any;
-      const errorList: Record<
-        string,
-        Array<string>
-      > = convertErrorTypeToAlertListType(error);
+      const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
       showAlertPlaceholder('danger', '', errorList);
     } finally {
       emits('loading-state', false);
@@ -834,11 +777,7 @@
 
 <template>
   <form id="stockAdjustmentForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
@@ -848,10 +787,7 @@
                 <br />
                 {{ selectedUserLocation.company.name }}
               </FormLabel>
-              <FormInput
-                type="hidden"
-                v-model="stockAdjustmentForm.company_id"
-              />
+              <FormInput type="hidden" v-model="stockAdjustmentForm.company_id" />
             </div>
 
             <div class="col-span-12 lg:col-span-4 md:col-span-6">
@@ -860,10 +796,7 @@
                 <br />
                 {{ selectedUserLocation.branch.name }}
               </FormLabel>
-              <FormInput
-                type="hidden"
-                v-model="stockAdjustmentForm.branch_id"
-              />
+              <FormInput type="hidden" v-model="stockAdjustmentForm.branch_id" />
             </div>
           </div>
         </div>
@@ -873,9 +806,7 @@
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
             <div class="col-span-12 lg:col-span-4 md:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': stockAdjustmentForm.invalid('code') }"
-              >
+              <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('code') }">
                 {{ t('views.stock_adjustment.fields.code') }}
               </FormLabel>
               <FormInputCode
@@ -890,9 +821,7 @@
               <FormErrorMessages :messages="stockAdjustmentForm.errors.code" />
             </div>
             <div class="col-span-12 lg:col-span-4 md:col-span-6">
-              <FormLabel
-                :class="{ 'text-danger': stockAdjustmentForm.invalid('date') }"
-              >
+              <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('date') }">
                 {{ t('views.stock_adjustment.fields.date') }}
               </FormLabel>
               <FormInput
@@ -922,8 +851,7 @@
                     :options="categoryOptions"
                     :placeholder="t('components.dropdown.placeholder')"
                     :class="{
-                      'border-danger':
-                        stockAdjustmentForm.invalid('category_id'),
+                      'border-danger': stockAdjustmentForm.invalid('category_id'),
                     }"
                     @change="stockAdjustmentForm.validate('category_id')"
                     @search="loadCategoryDDL"
@@ -938,9 +866,7 @@
                   <Lucide icon="X" class="w-4 h-4" />
                 </button>
               </div>
-              <FormErrorMessages
-                :messages="stockAdjustmentForm.errors.category_id"
-              />
+              <FormErrorMessages :messages="stockAdjustmentForm.errors.category_id" />
             </div>
             <div class="col-span-12 lg:col-span-6">
               <FormLabel
@@ -958,8 +884,7 @@
                     :options="inWarehouseOptions"
                     :placeholder="t('components.dropdown.placeholder')"
                     :class="{
-                      'border-danger':
-                        stockAdjustmentForm.invalid('in_warehouse_id'),
+                      'border-danger': stockAdjustmentForm.invalid('in_warehouse_id'),
                     }"
                     @change="stockAdjustmentForm.validate('in_warehouse_id')"
                     @search="loadInWarehouseDDL"
@@ -974,15 +899,12 @@
                   <Lucide icon="X" class="w-4 h-4" />
                 </button>
               </div>
-              <FormErrorMessages
-                :messages="stockAdjustmentForm.errors.in_warehouse_id"
-              />
+              <FormErrorMessages :messages="stockAdjustmentForm.errors.in_warehouse_id" />
             </div>
             <div class="col-span-12 lg:col-span-6">
               <FormLabel
                 :class="{
-                  'text-danger':
-                    stockAdjustmentForm.invalid('out_warehouse_id'),
+                  'text-danger': stockAdjustmentForm.invalid('out_warehouse_id'),
                 }"
               >
                 {{ t('views.stock_adjustment.fields.out_warehouse_id') }}
@@ -995,8 +917,7 @@
                     :options="outWarehouseOptions"
                     :placeholder="t('components.dropdown.placeholder')"
                     :class="{
-                      'border-danger':
-                        stockAdjustmentForm.invalid('out_warehouse_id'),
+                      'border-danger': stockAdjustmentForm.invalid('out_warehouse_id'),
                     }"
                     @change="stockAdjustmentForm.validate('out_warehouse_id')"
                     @search="loadOutWarehouseDDL"
@@ -1011,9 +932,7 @@
                   <Lucide icon="X" class="w-4 h-4" />
                 </button>
               </div>
-              <FormErrorMessages
-                :messages="stockAdjustmentForm.errors.out_warehouse_id"
-              />
+              <FormErrorMessages :messages="stockAdjustmentForm.errors.out_warehouse_id" />
             </div>
             <div class="col-span-12">
               <FormLabel
@@ -1032,19 +951,14 @@
                 :placeholder="t('views.stock_adjustment.fields.remarks')"
                 @change="stockAdjustmentForm.validate('remarks')"
               />
-              <FormErrorMessages
-                :messages="stockAdjustmentForm.errors.remarks"
-              />
+              <FormErrorMessages :messages="stockAdjustmentForm.errors.remarks" />
             </div>
             <div class="col-span-12">
               <FormLabel class="pr-5">
                 {{ t('views.stock_adjustment.fields.is_posted') }}
               </FormLabel>
               <FormSwitch>
-                <FormSwitch.Input
-                  v-model="stockAdjustmentForm.is_posted"
-                  type="checkbox"
-                />
+                <FormSwitch.Input v-model="stockAdjustmentForm.is_posted" type="checkbox" />
               </FormSwitch>
             </div>
           </div>
@@ -1054,10 +968,7 @@
       <!-- in_product -->
       <template #card-items-2>
         <div class="p-5">
-          <div
-            v-if="stockAdjustmentForm.in_products.length === 0"
-            class="text-slate-500 text-sm"
-          >
+          <div v-if="stockAdjustmentForm.in_products.length === 0" class="text-slate-500 text-sm">
             {{ t('components.data-list.data_not_found') }}
           </div>
 
@@ -1071,9 +982,7 @@
               <!-- in_product actions -->
               <div class="flex items-center justify-between mb-3">
                 <div class="font-medium text-sm">
-                  {{ t('views.stock_adjustment_in_product.page_title') }} #{{
-                    index + 1
-                  }}
+                  {{ t('views.stock_adjustment_in_product.page_title') }} #{{ index + 1 }}
                 </div>
                 <div class="flex items-center gap-2">
                   <Button
@@ -1083,11 +992,7 @@
                   >
                     {{ inProductsRemarksExpanded[index] ? '▲' : '▼' }}
                   </Button>
-                  <Button
-                    type="button"
-                    variant="outline-secondary"
-                    @click="removeInProduct(index)"
-                  >
+                  <Button type="button" variant="outline-secondary" @click="removeInProduct(index)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
@@ -1099,9 +1004,7 @@
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel
                     :class="{
-                      'text-danger': stockAdjustmentForm.invalid(
-                        `in_products.${index}.qty` as any
-                      ),
+                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any),
                     }"
                   >
                     {{ t('views.stock_adjustment_in_product.fields.qty') }}
@@ -1109,27 +1012,15 @@
                   <FormInputCurrency
                     :id="`in-product-qty-${index}`"
                     v-model="item.qty"
-                    @change="
-                      stockAdjustmentForm.validate(
-                        `in_products.${index}.qty` as any
-                      )
-                    "
+                    @change="stockAdjustmentForm.validate(`in_products.${index}.qty` as any)"
                     :class="[
                       'text-right',
                       {
-                        'border-danger': stockAdjustmentForm.invalid(
-                          `in_products.${index}.qty` as any
-                        ),
+                        'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any),
                       },
                     ]"
                   />
-                  <FormErrorMessages
-                    :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `in_products.${index}.qty`
-                      ]
-                    "
-                  />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.qty`]" />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_unit_name }}
                   </div>
@@ -1139,14 +1030,10 @@
                 <div class="col-span-12 lg:col-span-5">
                   <FormLabel
                     :class="{
-                      'text-danger': stockAdjustmentForm.invalid(
-                        `in_products.${index}.product_unit_id` as any
-                      ),
+                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_id` as any),
                     }"
                   >
-                    {{
-                      t('views.stock_adjustment_in_product.table.cols.product')
-                    }}
+                    {{ t('views.stock_adjustment_in_product.table.cols.product') }}
                   </FormLabel>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
@@ -1167,11 +1054,7 @@
                     </Button>
                   </div>
                   <FormErrorMessages
-                    :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `in_products.${index}.product_unit_id`
-                      ]
-                    "
+                    :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_id`]"
                   />
                   <div class="text-sm text-slate-500 font-bold mt-1">
                     {{ item.product_unit_product_code }}
@@ -1183,38 +1066,28 @@
                   <FormLabel
                     :class="{
                       'text-danger': stockAdjustmentForm.invalid(
-                        `in_products.${index}.product_unit_conversion_value` as any
+                        `in_products.${index}.product_unit_conversion_value` as any,
                       ),
                     }"
                   >
-                    {{
-                      t(
-                        'views.stock_adjustment_in_product.fields.product_unit_conversion_value'
-                      )
-                    }}
+                    {{ t('views.stock_adjustment_in_product.fields.product_unit_conversion_value') }}
                   </FormLabel>
                   <FormInputCurrency
                     v-model="item.product_unit_conversion_value"
                     tabindex="-1"
-                    @change="
-                      stockAdjustmentForm.validate(
-                        `in_products.${index}.product_unit_conversion_value` as any
-                      )
-                    "
+                    @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_conversion_value` as any)"
                     :class="[
                       'text-right',
                       {
                         'border-danger': stockAdjustmentForm.invalid(
-                          `in_products.${index}.product_unit_conversion_value` as any
+                          `in_products.${index}.product_unit_conversion_value` as any,
                         ),
                       },
                     ]"
                   />
                   <FormErrorMessages
                     :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `in_products.${index}.product_unit_conversion_value`
-                      ]
+                      (stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_conversion_value`]
                     "
                   />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
@@ -1226,39 +1099,23 @@
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel
                     :class="{
-                      'text-danger': stockAdjustmentForm.invalid(
-                        `in_products.${index}.product_unit_cogs` as any
-                      ),
+                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_cogs` as any),
                     }"
                   >
-                    {{
-                      t(
-                        'views.stock_adjustment_in_product.fields.product_unit_cogs'
-                      )
-                    }}
+                    {{ t('views.stock_adjustment_in_product.fields.product_unit_cogs') }}
                   </FormLabel>
                   <FormInputCurrency
                     v-model="item.product_unit_cogs"
-                    @change="
-                      stockAdjustmentForm.validate(
-                        `in_products.${index}.product_unit_cogs` as any
-                      )
-                    "
+                    @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_cogs` as any)"
                     :class="[
                       'text-right',
                       {
-                        'border-danger': stockAdjustmentForm.invalid(
-                          `in_products.${index}.product_unit_cogs` as any
-                        ),
+                        'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_cogs` as any),
                       },
                     ]"
                   />
                   <FormErrorMessages
-                    :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `in_products.${index}.product_unit_cogs`
-                      ]
-                    "
+                    :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_cogs`]"
                   />
                   <div
                     v-if="
@@ -1268,14 +1125,7 @@
                     "
                     class="text-sm text-slate-500 text-right font-bold mt-1"
                   >
-                    {{
-                      formatCurrency(
-                        (
-                          item.product_unit_cogs /
-                          item.product_unit_conversion_value
-                        ).toFixed(2)
-                      )
-                    }}
+                    {{ formatCurrency((item.product_unit_cogs / item.product_unit_conversion_value).toFixed(2)) }}
                     / {{ item.product_unit_base_unit_name }}
                   </div>
                 </div>
@@ -1283,11 +1133,7 @@
                 <!-- product_unit_total_cogs -->
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel>
-                    {{
-                      t(
-                        'views.stock_adjustment_in_product.fields.product_unit_total_cogs'
-                      )
-                    }}
+                    {{ t('views.stock_adjustment_in_product.fields.product_unit_total_cogs') }}
                   </FormLabel>
                   <FormInputCurrency
                     :model-value="item.product_unit_total_cogs ?? 0"
@@ -1298,15 +1144,10 @@
                 </div>
 
                 <!-- product_unit_remarks -->
-                <div
-                  v-if="inProductsRemarksExpanded[index]"
-                  class="col-span-12"
-                >
+                <div v-if="inProductsRemarksExpanded[index]" class="col-span-12">
                   <FormLabel
                     :class="{
-                      'text-danger': stockAdjustmentForm.invalid(
-                        `in_products.${index}.remarks` as any
-                      ),
+                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
                     }"
                   >
                     {{ t('views.stock_adjustment_in_product.fields.remarks') }}
@@ -1315,23 +1156,11 @@
                     rows="2"
                     v-model="stockAdjustmentForm.in_products[index].remarks"
                     :class="{
-                      'border-danger': stockAdjustmentForm.invalid(
-                        `in_products.${index}.remarks` as any
-                      ),
+                      'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
                     }"
-                    @change="
-                      stockAdjustmentForm.validate(
-                        `in_products.${index}.remarks` as any
-                      )
-                    "
+                    @change="stockAdjustmentForm.validate(`in_products.${index}.remarks` as any)"
                   />
-                  <FormErrorMessages
-                    :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `in_products.${index}.remarks`
-                      ]
-                    "
-                  />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.remarks`]" />
                 </div>
               </div>
             </div>
@@ -1340,12 +1169,7 @@
           <!-- in_product actions -->
           <div class="flex items-center justify-between mt-4">
             <FormLabel></FormLabel>
-            <Button
-              type="button"
-              variant="primary"
-              class="shadow-md"
-              @click="addInProduct"
-            >
+            <Button type="button" variant="primary" class="shadow-md" @click="addInProduct">
               {{ t('views.stock_adjustment_in_product.actions.create') }}
             </Button>
           </div>
@@ -1355,10 +1179,7 @@
       <!-- out_product -->
       <template #card-items-3>
         <div class="p-5">
-          <div
-            v-if="stockAdjustmentForm.out_products.length === 0"
-            class="text-slate-500 text-sm"
-          >
+          <div v-if="stockAdjustmentForm.out_products.length === 0" class="text-slate-500 text-sm">
             {{ t('components.data-list.data_not_found') }}
           </div>
 
@@ -1371,9 +1192,7 @@
             >
               <div class="flex items-center justify-between mb-3">
                 <div class="font-medium text-sm">
-                  {{ t('views.stock_adjustment_out_product.page_title') }} #{{
-                    index + 1
-                  }}
+                  {{ t('views.stock_adjustment_out_product.page_title') }} #{{ index + 1 }}
                 </div>
                 <div class="flex items-center gap-2">
                   <Button
@@ -1383,11 +1202,7 @@
                   >
                     {{ outProductsRemarksExpanded[index] ? '▲' : '▼' }}
                   </Button>
-                  <Button
-                    type="button"
-                    variant="outline-secondary"
-                    @click="removeOutProduct(index)"
-                  >
+                  <Button type="button" variant="outline-secondary" @click="removeOutProduct(index)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
@@ -1398,9 +1213,7 @@
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel
                     :class="{
-                      'text-danger': stockAdjustmentForm.invalid(
-                        `out_products.${index}.qty` as any
-                      ),
+                      'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.qty` as any),
                     }"
                   >
                     {{ t('views.stock_adjustment_out_product.fields.qty') }}
@@ -1408,27 +1221,15 @@
                   <FormInputCurrency
                     :id="`out-product-qty-${index}`"
                     v-model="item.qty"
-                    @change="
-                      stockAdjustmentForm.validate(
-                        `out_products.${index}.qty` as any
-                      )
-                    "
+                    @change="stockAdjustmentForm.validate(`out_products.${index}.qty` as any)"
                     :class="[
                       'text-right',
                       {
-                        'border-danger': stockAdjustmentForm.invalid(
-                          `out_products.${index}.qty` as any
-                        ),
+                        'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.qty` as any),
                       },
                     ]"
                   />
-                  <FormErrorMessages
-                    :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `out_products.${index}.qty`
-                      ]
-                    "
-                  />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.qty`]" />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_unit_name }}
                   </div>
@@ -1437,14 +1238,10 @@
                 <div class="col-span-12 lg:col-span-5">
                   <FormLabel
                     :class="{
-                      'text-danger': stockAdjustmentForm.invalid(
-                        `out_products.${index}.product_unit_id` as any
-                      ),
+                      'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.product_unit_id` as any),
                     }"
                   >
-                    {{
-                      t('views.stock_adjustment_out_product.table.cols.product')
-                    }}
+                    {{ t('views.stock_adjustment_out_product.table.cols.product') }}
                   </FormLabel>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
@@ -1465,11 +1262,7 @@
                     </Button>
                   </div>
                   <FormErrorMessages
-                    :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `out_products.${index}.product_unit_id`
-                      ]
-                    "
+                    :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.product_unit_id`]"
                   />
                   <div class="text-sm text-slate-500 font-bold mt-1">
                     {{ item.product_unit_product_code }}
@@ -1480,38 +1273,28 @@
                   <FormLabel
                     :class="{
                       'text-danger': stockAdjustmentForm.invalid(
-                        `out_products.${index}.product_unit_conversion_value` as any
+                        `out_products.${index}.product_unit_conversion_value` as any,
                       ),
                     }"
                   >
-                    {{
-                      t(
-                        'views.stock_adjustment_out_product.fields.product_unit_conversion_value'
-                      )
-                    }}
+                    {{ t('views.stock_adjustment_out_product.fields.product_unit_conversion_value') }}
                   </FormLabel>
                   <FormInputCurrency
                     v-model="item.product_unit_conversion_value"
                     tabindex="-1"
-                    @change="
-                      stockAdjustmentForm.validate(
-                        `out_products.${index}.product_unit_conversion_value` as any
-                      )
-                    "
+                    @change="stockAdjustmentForm.validate(`out_products.${index}.product_unit_conversion_value` as any)"
                     :class="[
                       'text-right',
                       {
                         'border-danger': stockAdjustmentForm.invalid(
-                          `out_products.${index}.product_unit_conversion_value` as any
+                          `out_products.${index}.product_unit_conversion_value` as any,
                         ),
                       },
                     ]"
                   />
                   <FormErrorMessages
                     :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `out_products.${index}.product_unit_conversion_value`
-                      ]
+                      (stockAdjustmentForm.errors as any)[`out_products.${index}.product_unit_conversion_value`]
                     "
                   />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
@@ -1519,15 +1302,10 @@
                   </div>
                 </div>
 
-                <div
-                  v-if="outProductsRemarksExpanded[index]"
-                  class="col-span-12"
-                >
+                <div v-if="outProductsRemarksExpanded[index]" class="col-span-12">
                   <FormLabel
                     :class="{
-                      'text-danger': stockAdjustmentForm.invalid(
-                        `out_products.${index}.remarks` as any
-                      ),
+                      'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
                     }"
                   >
                     {{ t('views.stock_adjustment_out_product.fields.remarks') }}
@@ -1536,23 +1314,11 @@
                     rows="2"
                     v-model="stockAdjustmentForm.out_products[index].remarks"
                     :class="{
-                      'border-danger': stockAdjustmentForm.invalid(
-                        `out_products.${index}.remarks` as any
-                      ),
+                      'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
                     }"
-                    @change="
-                      stockAdjustmentForm.validate(
-                        `out_products.${index}.remarks` as any
-                      )
-                    "
+                    @change="stockAdjustmentForm.validate(`out_products.${index}.remarks` as any)"
                   />
-                  <FormErrorMessages
-                    :messages="
-                      (stockAdjustmentForm.errors as any)[
-                        `out_products.${index}.remarks`
-                      ]
-                    "
-                  />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.remarks`]" />
                 </div>
               </div>
             </div>
@@ -1561,12 +1327,7 @@
           <!-- out_product actions -->
           <div class="flex items-center justify-between mt-4">
             <FormLabel></FormLabel>
-            <Button
-              type="button"
-              variant="primary"
-              class="shadow-md"
-              @click="addOutProduct"
-            >
+            <Button type="button" variant="primary" class="shadow-md" @click="addOutProduct">
               {{ t('views.stock_adjustment_out_product.actions.create') }}
             </Button>
           </div>
@@ -1580,26 +1341,14 @@
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              stockAdjustmentForm.validating || stockAdjustmentForm.hasErrors
-            "
+            :disabled="stockAdjustmentForm.validating || stockAdjustmentForm.hasErrors"
           >
-            <Lucide
-              v-if="stockAdjustmentForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="stockAdjustmentForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>
@@ -1624,11 +1373,7 @@
             <FormLabel>
               {{ t('views.stock_adjustment_in_product.table.title') }}
             </FormLabel>
-            <button
-              type="button"
-              class="text-slate-500 hover:text-danger"
-              @click="showProductUnitModal = false"
-            >
+            <button type="button" class="text-slate-500 hover:text-danger" @click="showProductUnitModal = false">
               <Lucide icon="X" class="w-4 h-4" />
             </button>
           </div>
@@ -1660,17 +1405,13 @@
           </div>
 
           <!-- product unit table -->
-          <div
-            class="max-h-80 overflow-auto border border-slate-200/60 dark:border-darkmode-400 rounded-md"
-          >
+          <div class="max-h-80 overflow-auto border border-slate-200/60 dark:border-darkmode-400 rounded-md">
             <table class="min-w-full text-sm">
               <thead class="bg-slate-100 dark:bg-darkmode-600">
                 <tr>
                   <!-- product -->
                   <th class="px-3 py-2 text-left">
-                    {{
-                      t('views.stock_adjustment_in_product.table.cols.product')
-                    }}
+                    {{ t('views.stock_adjustment_in_product.table.cols.product') }}
                   </th>
                   <!-- unit -->
                   <th class="px-3 py-2 text-left">
@@ -1682,11 +1423,7 @@
                   </th>
                   <!-- product_unit_cogs -->
                   <th class="px-3 py-2 text-right">
-                    {{
-                      t(
-                        'views.stock_adjustment_in_product.table.cols.product_unit_cogs'
-                      )
-                    }}
+                    {{ t('views.stock_adjustment_in_product.table.cols.product_unit_cogs') }}
                   </th>
                   <!-- actions -->
                   <th class="px-3 py-2"></th>
@@ -1707,9 +1444,7 @@
                   class="border-t border-slate-200/60 dark:border-darkmode-400"
                 >
                   <!-- product -->
-                  <td class="px-3 py-2">
-                    [{{ opt.product_code }}] {{ opt.product_name }}
-                  </td>
+                  <td class="px-3 py-2">[{{ opt.product_code }}] {{ opt.product_name }}</td>
                   <!-- unit -->
                   <td class="px-3 py-2">
                     {{ opt.unit_name }}
@@ -1724,12 +1459,7 @@
                   </td>
                   <!-- select button -->
                   <td class="px-3 py-2 text-right">
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="sm"
-                      @click="selectProductUnit(opt)"
-                    >
+                    <Button type="button" variant="primary" size="sm" @click="selectProductUnit(opt)">
                       {{ t('components.buttons.select') }}
                     </Button>
                   </td>

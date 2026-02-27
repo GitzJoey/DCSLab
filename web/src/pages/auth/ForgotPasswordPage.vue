@@ -33,9 +33,7 @@
       .submit()
       .then(() => {
         status.value = 'success';
-        alertMessage.value = t(
-          'views.forgot_password.alert.successfully_send_link'
-        );
+        alertMessage.value = t('views.forgot_password.alert.successfully_send_link');
       })
       .catch((error) => {
         status.value = 'error';
@@ -63,21 +61,13 @@
             <span class="ml-3 text-lg text-white">{{ appName }}</span>
           </a>
           <div class="my-auto">
-            <img
-              alt="DCSLab"
-              class="w-1/2 -mt-16 -intro-x"
-              :src="illustrationUrl"
-            />
-            <div
-              class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
-            >
+            <img alt="DCSLab" class="w-1/2 -mt-16 -intro-x" :src="illustrationUrl" />
+            <div class="mt-10 text-4xl font-medium leading-tight text-white -intro-x">
               <span class="hidden">&nbsp;</span>
               <br />
               <span class="hidden">&nbsp;</span>
             </div>
-            <div
-              class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
-            >
+            <div class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400">
               <span class="hidden">&nbsp;</span>
             </div>
           </div>
@@ -87,20 +77,12 @@
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
           >
             <LoadingOverlay :visible="loading" :transparent="true">
-              <h2
-                class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
-              >
+              <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
                 {{ t('views.forgot_password.title') }}
               </h2>
-              <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
-                &nbsp;
-              </div>
+              <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">&nbsp;</div>
               <form id="forgotPasswordForm" @submit.prevent="onSubmit">
-                <Alert
-                  v-if="status != 'onLoad'"
-                  :variant="status == 'success' ? 'success' : 'danger'"
-                  class="mt-2"
-                >
+                <Alert v-if="status != 'onLoad'" :variant="status == 'success' ? 'success' : 'danger'" class="mt-2">
                   {{ alertMessage }}
                 </Alert>
                 <div class="mt-8 intro-x">
@@ -114,9 +96,7 @@
                     :placeholder="t('views.forgot_password.fields.email')"
                     @focus="forgotPasswordForm.forgetError('email')"
                   />
-                  <FormErrorMessages
-                    :messages="forgotPasswordForm.errors.email"
-                  />
+                  <FormErrorMessages :messages="forgotPasswordForm.errors.email" />
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <Button

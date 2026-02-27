@@ -7,14 +7,7 @@
 <script setup lang="ts">
   import _ from 'lodash';
   import { twMerge } from 'tailwind-merge';
-  import {
-    computed,
-    InputHTMLAttributes,
-    useAttrs,
-    inject,
-    ref,
-    onMounted,
-  } from 'vue';
+  import { computed, InputHTMLAttributes, useAttrs, inject, ref, onMounted } from 'vue';
   import { ProvideFormInline } from './FormInline.vue';
   import { ProvideInputGroup } from './InputGroup/InputGroup.vue';
   import DashboardService from '@/services/DashboardService';
@@ -51,10 +44,9 @@
       props.formInputSize == 'lg' && 'text-lg py-1.5 px-4',
       props.rounded && 'rounded-full',
       formInline && 'flex-1',
-      inputGroup &&
-        'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
+      inputGroup && 'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 
   const emit = defineEmits<{
@@ -79,8 +71,7 @@
       let filename: string = files[0].name;
       fileReader.readAsDataURL(files[0]);
       localValue.value = filename;
-      let uploadResponse: ServiceResponse<FileUpload | null> =
-        await dashboardService.uploadFile(files[0]);
+      let uploadResponse: ServiceResponse<FileUpload | null> = await dashboardService.uploadFile(files[0]);
 
       if (uploadResponse && uploadResponse.data) {
         imageUrl.value = uploadResponse.data.url;
@@ -109,19 +100,10 @@
       'p-4',
     ]"
   >
-    <img
-      class="rounded aspect-auto"
-      :src="imageUrl ? imageUrl : ''"
-      alt="Image Preview"
-    />
+    <img class="rounded aspect-auto" :src="imageUrl ? imageUrl : ''" alt="Image Preview" />
   </div>
   <div class="flex gap-2 mt-4">
-    <input
-      disabled
-      :class="computedClass"
-      :type="props.type"
-      v-bind="_.omit(attrs, 'class')"
-    />
+    <input disabled :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" />
     <input id="upload" type="file" hidden @change="(e) => handleUpload(e)" />
     <label
       class="border-slate-200 border w-[15%] rounded bg-slate-100 cursor-pointer flex justify-center items-center"

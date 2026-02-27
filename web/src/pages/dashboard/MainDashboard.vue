@@ -12,9 +12,7 @@
 <template>
   <div class="col-span-12 mt-8">
     <div class="flex items-center h-10 intro-y">
-      <h2 class="mr-5 text-lg font-medium truncate">
-        Welcome, {{ welcomeName }}
-      </h2>
+      <h2 class="mr-5 text-lg font-medium truncate">Welcome, {{ welcomeName }}</h2>
       <a href="" class="flex items-center ml-auto text-primary">
         <Lucide icon="RefreshCcw" class="w-4 h-4 mr-3" />
       </a>
@@ -29,10 +27,7 @@
         >
           <div class="p-5 box">
             <div class="flex">
-              <Lucide
-                icon="ShoppingCart"
-                class="w-[28px] h-[28px] text-primary"
-              />
+              <Lucide icon="ShoppingCart" class="w-[28px] h-[28px] text-primary" />
               <div class="ml-auto">
                 <Tippy
                   as="div"
@@ -58,10 +53,7 @@
         >
           <div class="p-5 box">
             <div class="flex">
-              <Lucide
-                icon="CreditCard"
-                class="w-[28px] h-[28px] text-pending"
-              />
+              <Lucide icon="CreditCard" class="w-[28px] h-[28px] text-pending" />
               <div class="ml-auto">
                 <Tippy
                   as="div"

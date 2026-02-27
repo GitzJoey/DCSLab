@@ -46,7 +46,7 @@
       '[&:disabled:checked]:opacity-70 [&:disabled:checked]:cursor-not-allowed [&:disabled:checked]:dark:bg-darkmode-800/50',
 
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 
   const emit = defineEmits<InputEmit>();
@@ -62,10 +62,5 @@
 </script>
 
 <template>
-  <input
-    :class="computedClass"
-    :type="props.type"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="localValue"
-  />
+  <input :class="computedClass" :type="props.type" v-bind="_.omit(attrs, 'class')" v-model="localValue" />
 </template>

@@ -23,10 +23,8 @@ const findActiveMenu = (subMenu: Menu[], route: Route): boolean => {
   let match = false;
   subMenu.forEach((item) => {
     if (
-      ((route.forceActiveMenu !== undefined &&
-        item.pageName === route.forceActiveMenu) ||
-        (route.forceActiveMenu === undefined &&
-          item.pageName === route.name)) &&
+      ((route.forceActiveMenu !== undefined && item.pageName === route.forceActiveMenu) ||
+        (route.forceActiveMenu === undefined && item.pageName === route.name)) &&
       !item.ignore
     ) {
       match = true;
@@ -49,10 +47,8 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
         ignore: item.ignore,
       };
       menuItem.active =
-        ((route.forceActiveMenu !== undefined &&
-          menuItem.pageName === route.forceActiveMenu) ||
-          (route.forceActiveMenu === undefined &&
-            menuItem.pageName === route.name) ||
+        ((route.forceActiveMenu !== undefined && menuItem.pageName === route.forceActiveMenu) ||
+          (route.forceActiveMenu === undefined && menuItem.pageName === route.name) ||
           (menuItem.subMenu && findActiveMenu(menuItem.subMenu, route))) &&
         !menuItem.ignore;
 
@@ -61,9 +57,7 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
 
         // Nested menu
         const subMenu: Array<FormattedMenu> = [];
-        nestedMenu(menuItem.subMenu, route).map(
-          (menu) => typeof menu !== 'string' && subMenu.push(menu)
-        );
+        nestedMenu(menuItem.subMenu, route).map((menu) => typeof menu !== 'string' && subMenu.push(menu));
         menuItem.subMenu = subMenu;
       }
 

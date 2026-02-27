@@ -1,10 +1,6 @@
 import dayjs from 'dayjs';
 import Litepicker from 'litepicker';
-import {
-  type LitepickerElement,
-  type LitepickerProps,
-  type LitepickerEmit,
-} from './Litepicker.vue';
+import { type LitepickerElement, type LitepickerProps, type LitepickerEmit } from './Litepicker.vue';
 
 const getDateFormat = (format: string | undefined) => {
   return format !== undefined ? format : 'D MMM, YYYY';
@@ -22,11 +18,7 @@ const setValue = (props: LitepickerProps, emit: LitepickerEmit) => {
   }
 };
 
-const init = (
-  el: LitepickerElement,
-  props: LitepickerProps,
-  emit: LitepickerEmit
-) => {
+const init = (el: LitepickerElement, props: LitepickerProps, emit: LitepickerEmit) => {
   const format = getDateFormat(props.options.format);
   el.litePickerInstance = new Litepicker({
     ...props.options,
@@ -36,10 +28,7 @@ const init = (
       if (picker.on) {
         picker.on('selected', (startDate, endDate) => {
           let date = dayjs(startDate.dateInstance).format(format);
-          date +=
-            endDate !== undefined && endDate !== null
-              ? ' - ' + dayjs(endDate.dateInstance).format(format)
-              : '';
+          date += endDate !== undefined && endDate !== null ? ' - ' + dayjs(endDate.dateInstance).format(format) : '';
           emit('update:modelValue', date);
         });
       }
@@ -47,11 +36,7 @@ const init = (
   });
 };
 
-const reInit = (
-  el: LitepickerElement,
-  props: LitepickerProps,
-  emit: LitepickerEmit
-) => {
+const reInit = (el: LitepickerElement, props: LitepickerProps, emit: LitepickerEmit) => {
   el.litePickerInstance.destroy();
   init(el, props, emit);
 };

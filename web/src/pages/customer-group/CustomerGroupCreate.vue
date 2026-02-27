@@ -43,12 +43,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -82,12 +77,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -113,10 +104,7 @@
   };
 
   const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('CUSTOMER_GROUP_CREATE') as Record<
-      string,
-      unknown
-    >;
+    let data = cacheServices.getLastEntity('CUSTOMER_GROUP_CREATE') as Record<string, unknown>;
     if (!data) return;
     customerGroupForm.setData(data);
   };
@@ -164,10 +152,7 @@
         router.push({ name: 'side-menu-customer-group-list' });
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -190,15 +175,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -216,24 +195,18 @@
       if (customerGroupForm.hasErrors) {
       }
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="customerGroupForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': customerGroupForm.invalid('code') }"
-            >
+            <FormLabel :class="{ 'text-danger': customerGroupForm.invalid('code') }">
               {{ t('views.customer_group.fields.code') }}
             </FormLabel>
             <FormInputCode
@@ -246,9 +219,7 @@
             <FormErrorMessages :messages="customerGroupForm.errors.code" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': customerGroupForm.invalid('name') }"
-            >
+            <FormLabel :class="{ 'text-danger': customerGroupForm.invalid('name') }">
               {{ t('views.customer_group.fields.name') }}
             </FormLabel>
             <FormInput
@@ -292,16 +263,12 @@
               }"
               @change="customerGroupForm.validate('max_open_invoice')"
             />
-            <FormErrorMessages
-              :messages="customerGroupForm.errors.max_open_invoice"
-            />
+            <FormErrorMessages :messages="customerGroupForm.errors.max_open_invoice" />
           </div>
           <div class="pb-4">
             <FormLabel
               :class="{
-                'text-danger': customerGroupForm.invalid(
-                  'max_outstanding_invoice'
-                ),
+                'text-danger': customerGroupForm.invalid('max_outstanding_invoice'),
               }"
             >
               {{ t('views.customer_group.fields.max_outstanding_invoice') }}
@@ -310,15 +277,11 @@
               v-model="customerGroupForm.max_outstanding_invoice"
               type="number"
               :class="{
-                'border-danger': customerGroupForm.invalid(
-                  'max_outstanding_invoice'
-                ),
+                'border-danger': customerGroupForm.invalid('max_outstanding_invoice'),
               }"
               @change="customerGroupForm.validate('max_outstanding_invoice')"
             />
-            <FormErrorMessages
-              :messages="customerGroupForm.errors.max_outstanding_invoice"
-            />
+            <FormErrorMessages :messages="customerGroupForm.errors.max_outstanding_invoice" />
           </div>
           <div class="pb-4">
             <FormLabel
@@ -336,9 +299,7 @@
               }"
               @change="customerGroupForm.validate('max_invoice_age')"
             />
-            <FormErrorMessages
-              :messages="customerGroupForm.errors.max_invoice_age"
-            />
+            <FormErrorMessages :messages="customerGroupForm.errors.max_invoice_age" />
           </div>
           <div class="pb-4">
             <FormLabel
@@ -358,17 +319,11 @@
               <option value="">
                 {{ t('components.dropdown.placeholder') }}
               </option>
-              <option
-                v-for="c in paymentTermTypeDDL"
-                :key="c.code"
-                :value="c.code"
-              >
+              <option v-for="c in paymentTermTypeDDL" :key="c.code" :value="c.code">
                 {{ t(c.name) }}
               </option>
             </FormSelect>
-            <FormErrorMessages
-              :messages="customerGroupForm.errors.payment_term_type"
-            />
+            <FormErrorMessages :messages="customerGroupForm.errors.payment_term_type" />
           </div>
           <div class="pb-4 col-span-1 md:col-span-2">
             <FormLabel
@@ -386,9 +341,7 @@
               }"
               @change="customerGroupForm.validate('payment_term')"
             />
-            <FormErrorMessages
-              :messages="customerGroupForm.errors.payment_term"
-            />
+            <FormErrorMessages :messages="customerGroupForm.errors.payment_term" />
           </div>
         </div>
       </template>
@@ -412,16 +365,12 @@
                 }"
                 @change="customerGroupForm.validate('selling_point')"
               />
-              <FormErrorMessages
-                :messages="customerGroupForm.errors.selling_point"
-              />
+              <FormErrorMessages :messages="customerGroupForm.errors.selling_point" />
             </div>
             <div>
               <FormLabel
                 :class="{
-                  'text-danger': customerGroupForm.invalid(
-                    'selling_point_multiple'
-                  ),
+                  'text-danger': customerGroupForm.invalid('selling_point_multiple'),
                 }"
               >
                 {{ t('views.customer_group.fields.selling_point_multiple') }}
@@ -430,15 +379,11 @@
                 v-model="customerGroupForm.selling_point_multiple"
                 type="number"
                 :class="{
-                  'border-danger': customerGroupForm.invalid(
-                    'selling_point_multiple'
-                  ),
+                  'border-danger': customerGroupForm.invalid('selling_point_multiple'),
                 }"
                 @change="customerGroupForm.validate('selling_point_multiple')"
               />
-              <FormErrorMessages
-                :messages="customerGroupForm.errors.selling_point_multiple"
-              />
+              <FormErrorMessages :messages="customerGroupForm.errors.selling_point_multiple" />
             </div>
           </div>
           <div class="pb-4">
@@ -446,19 +391,14 @@
               {{ t('views.customer_group.fields.sell_at_cost') }}
             </FormLabel>
             <FormSwitch>
-              <FormSwitch.Input
-                v-model="customerGroupForm.sell_at_cost"
-                type="checkbox"
-              />
+              <FormSwitch.Input v-model="customerGroupForm.sell_at_cost" type="checkbox" />
             </FormSwitch>
           </div>
           <div class="pb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <FormLabel
                 :class="{
-                  'text-danger': customerGroupForm.invalid(
-                    'price_markup_percent'
-                  ),
+                  'text-danger': customerGroupForm.invalid('price_markup_percent'),
                 }"
               >
                 {{ t('views.customer_group.fields.price_markup_percent') }}
@@ -467,22 +407,16 @@
                 v-model="customerGroupForm.price_markup_percent"
                 type="number"
                 :class="{
-                  'border-danger': customerGroupForm.invalid(
-                    'price_markup_percent'
-                  ),
+                  'border-danger': customerGroupForm.invalid('price_markup_percent'),
                 }"
                 @change="customerGroupForm.validate('price_markup_percent')"
               />
-              <FormErrorMessages
-                :messages="customerGroupForm.errors.price_markup_percent"
-              />
+              <FormErrorMessages :messages="customerGroupForm.errors.price_markup_percent" />
             </div>
             <div>
               <FormLabel
                 :class="{
-                  'text-danger': customerGroupForm.invalid(
-                    'price_markup_nominal'
-                  ),
+                  'text-danger': customerGroupForm.invalid('price_markup_nominal'),
                 }"
               >
                 {{ t('views.customer_group.fields.price_markup_nominal') }}
@@ -491,22 +425,16 @@
                 v-model="customerGroupForm.price_markup_nominal"
                 type="number"
                 :class="{
-                  'border-danger': customerGroupForm.invalid(
-                    'price_markup_nominal'
-                  ),
+                  'border-danger': customerGroupForm.invalid('price_markup_nominal'),
                 }"
                 @change="customerGroupForm.validate('price_markup_nominal')"
               />
-              <FormErrorMessages
-                :messages="customerGroupForm.errors.price_markup_nominal"
-              />
+              <FormErrorMessages :messages="customerGroupForm.errors.price_markup_nominal" />
             </div>
             <div>
               <FormLabel
                 :class="{
-                  'text-danger': customerGroupForm.invalid(
-                    'price_markdown_percent'
-                  ),
+                  'text-danger': customerGroupForm.invalid('price_markdown_percent'),
                 }"
               >
                 {{ t('views.customer_group.fields.price_markdown_percent') }}
@@ -515,22 +443,16 @@
                 v-model="customerGroupForm.price_markdown_percent"
                 type="number"
                 :class="{
-                  'border-danger': customerGroupForm.invalid(
-                    'price_markdown_percent'
-                  ),
+                  'border-danger': customerGroupForm.invalid('price_markdown_percent'),
                 }"
                 @change="customerGroupForm.validate('price_markdown_percent')"
               />
-              <FormErrorMessages
-                :messages="customerGroupForm.errors.price_markdown_percent"
-              />
+              <FormErrorMessages :messages="customerGroupForm.errors.price_markdown_percent" />
             </div>
             <div>
               <FormLabel
                 :class="{
-                  'text-danger': customerGroupForm.invalid(
-                    'price_markdown_nominal'
-                  ),
+                  'text-danger': customerGroupForm.invalid('price_markdown_nominal'),
                 }"
               >
                 {{ t('views.customer_group.fields.price_markdown_nominal') }}
@@ -539,15 +461,11 @@
                 v-model="customerGroupForm.price_markdown_nominal"
                 type="number"
                 :class="{
-                  'border-danger': customerGroupForm.invalid(
-                    'price_markdown_nominal'
-                  ),
+                  'border-danger': customerGroupForm.invalid('price_markdown_nominal'),
                 }"
                 @change="customerGroupForm.validate('price_markdown_nominal')"
               />
-              <FormErrorMessages
-                :messages="customerGroupForm.errors.price_markdown_nominal"
-              />
+              <FormErrorMessages :messages="customerGroupForm.errors.price_markdown_nominal" />
             </div>
           </div>
         </div>
@@ -577,9 +495,7 @@
                 {{ t(c.name) }}
               </option>
             </FormSelect>
-            <FormErrorMessages
-              :messages="customerGroupForm.errors.rounding_type"
-            />
+            <FormErrorMessages :messages="customerGroupForm.errors.rounding_type" />
           </div>
           <div class="pb-4">
             <FormLabel
@@ -597,9 +513,7 @@
               }"
               @change="customerGroupForm.validate('rounding_digit')"
             />
-            <FormErrorMessages
-              :messages="customerGroupForm.errors.rounding_digit"
-            />
+            <FormErrorMessages :messages="customerGroupForm.errors.rounding_digit" />
           </div>
         </div>
       </template>
@@ -611,26 +525,14 @@
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              customerGroupForm.validating || customerGroupForm.hasErrors
-            "
+            :disabled="customerGroupForm.validating || customerGroupForm.hasErrors"
           >
-            <Lucide
-              v-if="customerGroupForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="customerGroupForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

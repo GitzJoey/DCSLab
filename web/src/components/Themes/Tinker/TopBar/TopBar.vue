@@ -7,9 +7,7 @@
 </script>
 
 <template>
-  <div
-    class="relative z-[51] flex h-[67px] items-center border-b border-slate-200"
-  >
+  <div class="relative z-[51] flex h-[67px] items-center border-b border-slate-200">
     <UserLocation theme="tinker" />
     <SearchBox theme="tinker" />
     <SidebarPop theme="tinker" />

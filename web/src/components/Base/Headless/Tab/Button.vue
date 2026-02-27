@@ -30,8 +30,7 @@
       tab?.selected.value && 'text-slate-800 dark:text-white',
 
       // Default
-      list?.variant == 'tabs' &&
-        'block border-transparent rounded-t-md dark:border-transparent',
+      list?.variant == 'tabs' && 'block border-transparent rounded-t-md dark:border-transparent',
       list?.variant == 'tabs' &&
         tab?.selected.value &&
         'bg-white border-slate-200 border-b-transparent font-medium dark:bg-transparent dark:border-t-darkmode-400 dark:border-b-darkmode-600 dark:border-x-darkmode-400',
@@ -41,26 +40,18 @@
 
       // Pills
       list?.variant == 'pills' && 'rounded-md border-0',
-      list?.variant == 'pills' &&
-        tab?.selected.value &&
-        'bg-primary text-white font-medium',
+      list?.variant == 'pills' && tab?.selected.value && 'bg-primary text-white font-medium',
 
       // Boxed tabs
-      list?.variant == 'boxed-tabs' &&
-        'shadow-[0px_3px_20px_#0000000b] rounded-md',
-      list?.variant == 'boxed-tabs' &&
-        tab?.selected.value &&
-        'bg-primary text-white font-medium',
+      list?.variant == 'boxed-tabs' && 'shadow-[0px_3px_20px_#0000000b] rounded-md',
+      list?.variant == 'boxed-tabs' && tab?.selected.value && 'bg-primary text-white font-medium',
 
       // Link tabs
-      list?.variant == 'link-tabs' &&
-        'border-b-2 border-transparent dark:border-transparent',
-      list?.variant == 'link-tabs' &&
-        tab?.selected.value &&
-        'border-b-primary font-medium dark:border-b-primary',
+      list?.variant == 'link-tabs' && 'border-b-2 border-transparent dark:border-transparent',
+      list?.variant == 'link-tabs' && tab?.selected.value && 'border-b-primary font-medium dark:border-b-primary',
 
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 

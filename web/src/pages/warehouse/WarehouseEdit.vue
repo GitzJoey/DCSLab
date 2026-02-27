@@ -47,12 +47,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -70,18 +65,12 @@
 
   const statusDDL = ref<Array<DropDownOption> | null>(null);
 
-  const warehouseForm = warehouseServices.useWarehouseEditForm(
-    route.params.ulid as string
-  );
+  const warehouseForm = warehouseServices.useWarehouseEditForm(route.params.ulid as string);
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -102,8 +91,7 @@
   // #region Methods
   const loadData = async (ulid: string) => {
     emits('loading-state', true);
-    const result: ServiceResponse<Warehouse | null> =
-      await warehouseServices.read(ulid);
+    const result: ServiceResponse<Warehouse | null> = await warehouseServices.read(ulid);
 
     if (result.success && result.data) {
       warehouseForm.setData({
@@ -156,10 +144,7 @@
         router.push({ name: 'side-menu-company-warehouse-list' });
       })
       .catch((error) => {
-        const errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -183,15 +168,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -210,18 +189,14 @@
     debounce((newValue): void => {
       cacheServices.setLastEntity('WAREHOUSE_EDIT', newValue.data());
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="warehouseForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <template #card-items-0>
         <div class="p-5">
           <FormLabel>
@@ -236,9 +211,7 @@
       <template #card-items-1>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': warehouseForm.invalid('code') }"
-            >
+            <FormLabel :class="{ 'text-danger': warehouseForm.invalid('code') }">
               {{ t('views.warehouse.fields.code') }}
             </FormLabel>
             <FormInputCode
@@ -252,9 +225,7 @@
             <FormErrorMessages :messages="warehouseForm.errors.code" />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': warehouseForm.invalid('name') }"
-            >
+            <FormLabel :class="{ 'text-danger': warehouseForm.invalid('name') }">
               {{ t('views.warehouse.fields.name') }}
             </FormLabel>
             <FormInput
@@ -280,21 +251,13 @@
             <FormLabel>
               {{ t('views.warehouse.fields.city') }}
             </FormLabel>
-            <FormInput
-              v-model="warehouseForm.city"
-              type="text"
-              :placeholder="t('views.warehouse.fields.city')"
-            />
+            <FormInput v-model="warehouseForm.city" type="text" :placeholder="t('views.warehouse.fields.city')" />
           </div>
           <div class="pb-4">
             <FormLabel>
               {{ t('views.warehouse.fields.contact') }}
             </FormLabel>
-            <FormInput
-              v-model="warehouseForm.contact"
-              type="text"
-              :placeholder="t('views.warehouse.fields.contact')"
-            />
+            <FormInput v-model="warehouseForm.contact" type="text" :placeholder="t('views.warehouse.fields.contact')" />
           </div>
           <div class="pb-4">
             <FormLabel>
@@ -308,9 +271,7 @@
             />
           </div>
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': warehouseForm.invalid('status') }"
-            >
+            <FormLabel :class="{ 'text-danger': warehouseForm.invalid('status') }">
               {{ t('views.warehouse.fields.status') }}
             </FormLabel>
             <FormSelect
@@ -338,22 +299,12 @@
             class="w-28 shadow-md"
             :disabled="warehouseForm.validating || warehouseForm.hasErrors"
           >
-            <Lucide
-              v-if="warehouseForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="warehouseForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

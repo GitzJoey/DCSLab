@@ -10,9 +10,7 @@
   import { MenuItem as HeadlessMenuItem } from '@headlessui/vue';
   import { useAttrs, computed } from 'vue';
 
-  interface ItemProps extends /* @vue-ignore */ ExtractProps<
-    typeof HeadlessMenuItem
-  > {
+  interface ItemProps extends /* @vue-ignore */ ExtractProps<typeof HeadlessMenuItem> {
     as?: string | object;
   }
 
@@ -25,7 +23,7 @@
     twMerge([
       'cursor-pointer flex items-center p-2 transition duration-300 ease-in-out rounded-md hover:bg-slate-200/60 dark:bg-darkmode-600 dark:hover:bg-darkmode-400',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 </script>
 

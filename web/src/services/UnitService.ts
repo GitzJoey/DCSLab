@@ -7,10 +7,7 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  UnitReadAnyPaginateRequest,
-  UnitReadAnyGetRequest,
-} from '../types/services/unit/UnitRequest';
+import { UnitReadAnyPaginateRequest, UnitReadAnyGetRequest } from '../types/services/unit/UnitRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 import CacheService from './CacheService';
@@ -47,7 +44,7 @@ export default class UnitService {
   }
 
   public async readAnyPaginate(
-    args: UnitReadAnyPaginateRequest
+    args: UnitReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<Unit>> | null>> {
     const result: ServiceResponse<Collection<Array<Unit>> | null> = {
       success: false,
@@ -55,8 +52,7 @@ export default class UnitService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
 
       if (args.search) queryParams['search'] = args.search;
@@ -74,11 +70,10 @@ export default class UnitService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<Unit>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<Unit>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -88,22 +83,16 @@ export default class UnitService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async readAnyGet(
-    args: UnitReadAnyGetRequest
-  ): Promise<ServiceResponse<Resource<Array<Unit>> | null>> {
+  public async readAnyGet(args: UnitReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Unit>> | null>> {
     const result: ServiceResponse<Resource<Array<Unit>> | null> = {
       success: false,
     };
@@ -127,11 +116,10 @@ export default class UnitService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<Unit>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<Unit>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -141,13 +129,9 @@ export default class UnitService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -166,7 +150,7 @@ export default class UnitService {
           unit: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<Unit>> = await axios.get(url);
@@ -179,13 +163,9 @@ export default class UnitService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -199,7 +179,7 @@ export default class UnitService {
         unit: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -227,7 +207,7 @@ export default class UnitService {
           unit: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -239,13 +219,9 @@ export default class UnitService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -258,21 +234,14 @@ export default class UnitService {
 
     try {
       if (this.cacheService.getCachedDDL(ddlName) == null) {
-        const url = route(
-          'api.get.unit.read_types',
-          undefined,
-          false,
-          this.ziggyRoute
-        );
+        const url = route('api.get.unit.read_types', undefined, false, this.ziggyRoute);
 
-        const response: AxiosResponse<Array<DropDownOption> | null> =
-          await axios.get(url);
+        const response: AxiosResponse<Array<DropDownOption> | null> = await axios.get(url);
 
         this.cacheService.setCachedDDL(ddlName, response.data);
       }
 
-      const cachedData: Array<DropDownOption> | null =
-        this.cacheService.getCachedDDL(ddlName);
+      const cachedData: Array<DropDownOption> | null = this.cacheService.getCachedDDL(ddlName);
 
       if (cachedData != null) {
         result = cachedData as Array<DropDownOption>;

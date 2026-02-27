@@ -40,9 +40,7 @@
             margin-bottom: auto;
           }
         }
-        &.tabulator-sortable[aria-sort='none']
-          .tabulator-col-content
-          .tabulator-arrow {
+        &.tabulator-sortable[aria-sort='none'] .tabulator-col-content .tabulator-arrow {
           border-bottom-color: #cbd5e0;
         }
       }
@@ -144,8 +142,8 @@
           border-color: transparent;
           color: theme('colors.slate.700');
           transition-property:
-            color, background-color, border-color, text-decoration-color, fill,
-            stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+            color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform,
+            filter, backdrop-filter;
           transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
           transition-duration: 200ms;
           border-width: 1px;

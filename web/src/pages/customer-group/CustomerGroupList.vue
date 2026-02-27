@@ -66,12 +66,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -95,7 +91,7 @@
     refresh: boolean,
     paginate: boolean,
     page: number,
-    per_page: number
+    per_page: number,
   ) => {
     emits('loading-state', true);
 
@@ -117,28 +113,16 @@
       await customerGroupServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
-      customerGroupLists.value = result.data as Collection<
-        Array<CustomerGroup>
-      >;
+      customerGroupLists.value = result.data as Collection<Array<CustomerGroup>>;
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const onDataListChanged = async (data: DataListEmittedData) => {
-    await getCustomerGroups(
-      data.search.text,
-      false,
-      true,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getCustomerGroups(data.search.text, false, true, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -172,22 +156,17 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    let result: ServiceResponse<boolean | null> =
-      await customerGroupServices.delete(deleteUlid.value); // Diubah dari companyServices
+    let result: ServiceResponse<boolean | null> = await customerGroupServices.delete(deleteUlid.value); // Diubah dari companyServices
 
     if (result.success) {
       emits('update-profile');
       await getCustomerGroups('', true, true, 1, 10); // Diubah dari getCompanies
       showNotification(
         t('views.customer_group.alert.delete_customer_group.title'),
-        t('views.customer_group.alert.delete_customer_group.content')
+        t('views.customer_group.alert.delete_customer_group.content'),
       ); // Diubah path terjemahan
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
@@ -203,15 +182,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -259,31 +232,19 @@
               </Table.Td>
             </Table.Tr>
           </template>
-          <template
-            v-for="(item, itemIdx) in customerGroupLists.data"
-            :key="item.ulid"
-          >
+          <template v-for="(item, itemIdx) in customerGroupLists.data" :key="item.ulid">
             <Table.Tr class="intro-x">
               <Table.Td>{{ item.code }}</Table.Td>
               <Table.Td>{{ item.name }}</Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button
-                    variant="outline-secondary"
-                    @click="viewSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="editSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="deleteSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
@@ -324,9 +285,7 @@
                 </div>
                 <div class="flex flex-row mt-1">
                   <div class="ml-5 w-48 text-right pr-5 font-medium">
-                    {{
-                      t('views.customer_group.fields.max_outstanding_invoice')
-                    }}
+                    {{ t('views.customer_group.fields.max_outstanding_invoice') }}
                   </div>
                   <div class="flex-1">{{ item.max_outstanding_invoice }}</div>
                 </div>
@@ -371,9 +330,7 @@
                 </div>
                 <div class="flex flex-row mt-1">
                   <div class="ml-5 w-48 text-right pr-5 font-medium">
-                    {{
-                      t('views.customer_group.fields.selling_point_multiple')
-                    }}
+                    {{ t('views.customer_group.fields.selling_point_multiple') }}
                   </div>
                   <div class="flex-1">{{ item.selling_point_multiple }}</div>
                 </div>
@@ -391,17 +348,13 @@
                 </div>
                 <div class="flex flex-row mt-1">
                   <div class="ml-5 w-48 text-right pr-5 font-medium">
-                    {{
-                      t('views.customer_group.fields.price_markdown_percent')
-                    }}
+                    {{ t('views.customer_group.fields.price_markdown_percent') }}
                   </div>
                   <div class="flex-1">{{ item.price_markdown_percent }}%</div>
                 </div>
                 <div class="flex flex-row mt-1">
                   <div class="ml-5 w-48 text-right pr-5 font-medium">
-                    {{
-                      t('views.customer_group.fields.price_markdown_nominal')
-                    }}
+                    {{ t('views.customer_group.fields.price_markdown_nominal') }}
                   </div>
                   <div class="flex-1">{{ item.price_markdown_nominal }}</div>
                 </div>
@@ -457,12 +410,7 @@
             >
               {{ t('components.buttons.cancel') }}
             </Button>
-            <Button
-              type="button"
-              variant="danger"
-              class="w-24"
-              @click="confirmDelete"
-            >
+            <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
               {{ t('components.buttons.delete') }}
             </Button>
           </div>

@@ -25,16 +25,13 @@
     sm?: boolean;
   }
 
-  const { dark, bordered, hover, striped, sm } = withDefaults(
-    defineProps<TableProps>(),
-    {
-      dark: false,
-      bordered: false,
-      hover: false,
-      striped: false,
-      sm: false,
-    }
-  );
+  const { dark, bordered, hover, striped, sm } = withDefaults(defineProps<TableProps>(), {
+    dark: false,
+    bordered: false,
+    hover: false,
+    striped: false,
+    sm: false,
+  });
 
   const attrs = useAttrs();
 
@@ -43,7 +40,7 @@
       'w-full text-left',
       dark && 'bg-dark text-white dark:bg-black/30',
       typeof attrs.class === 'string' && attrs.class,
-    ])
+    ]),
   );
 
   provide<ProvideTable>('table', {

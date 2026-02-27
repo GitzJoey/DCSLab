@@ -7,14 +7,8 @@ import { Collection } from '../types/resources/Collection';
 import { ServiceResponse } from '../types/services/ServiceResponse';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
-import {
-  ProductReadAnyPaginateRequest,
-  ProductReadAnyGetRequest,
-} from '../types/services/product/ProductRequest';
-import {
-  ProductUnitStoreRequest,
-  ProductUnitUpdateRequest,
-} from '../types/services/product-unit/ProductUnitRequest';
+import { ProductReadAnyPaginateRequest, ProductReadAnyGetRequest } from '../types/services/product/ProductRequest';
+import { ProductUnitStoreRequest, ProductUnitUpdateRequest } from '../types/services/product-unit/ProductUnitRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 import CacheService from './CacheService';
@@ -34,12 +28,7 @@ export default class ProductService {
   }
 
   public useProductPhysicalStoreForm() {
-    const url = route(
-      'api.post.product.save.physical',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.product.save.physical', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -71,7 +60,7 @@ export default class ProductService {
         product: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -99,12 +88,7 @@ export default class ProductService {
   }
 
   public useProductServiceStoreForm() {
-    const url = route(
-      'api.post.product.save.service',
-      undefined,
-      true,
-      this.ziggyRoute
-    );
+    const url = route('api.post.product.save.service', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -134,7 +118,7 @@ export default class ProductService {
         product: ulid,
       },
       true,
-      this.ziggyRoute
+      this.ziggyRoute,
     );
 
     client.axios().defaults.withCredentials = true;
@@ -160,7 +144,7 @@ export default class ProductService {
   }
 
   public async readAnyPaginate(
-    args: ProductReadAnyPaginateRequest
+    args: ProductReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<Product>> | null>> {
     const result: ServiceResponse<Collection<Array<Product>> | null> = {
       success: false,
@@ -168,26 +152,17 @@ export default class ProductService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined)
-        queryParams['with_trashed'] = args.with_trashed;
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
 
       if (args.search) queryParams['search'] = args.search;
       if (args.category_id) queryParams['category_id'] = args.category_id;
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
-      if (args.is_taxable !== undefined && args.is_taxable !== null)
-        queryParams['is_taxable'] = args.is_taxable;
-      if (args.vat_rate !== undefined && args.vat_rate !== null)
-        queryParams['vat_rate'] = args.vat_rate;
-      if (
-        args.is_price_include_vat !== undefined &&
-        args.is_price_include_vat !== null
-      )
+      if (args.is_taxable !== undefined && args.is_taxable !== null) queryParams['is_taxable'] = args.is_taxable;
+      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
+      if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat;
-      if (
-        args.is_use_serial_number !== undefined &&
-        args.is_use_serial_number !== null
-      )
+      if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
         queryParams['is_use_serial_number'] = args.is_use_serial_number;
       if (args.is_expirable !== undefined && args.is_expirable !== null)
         queryParams['is_expirable'] = args.is_expirable;
@@ -207,11 +182,10 @@ export default class ProductService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<Product>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Collection<Array<Product>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -221,22 +195,16 @@ export default class ProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
     }
   }
 
-  public async readAnyGet(
-    args: ProductReadAnyGetRequest
-  ): Promise<ServiceResponse<Resource<Array<Product>> | null>> {
+  public async readAnyGet(args: ProductReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Product>> | null>> {
     const result: ServiceResponse<Resource<Array<Product>> | null> = {
       success: false,
     };
@@ -251,17 +219,10 @@ export default class ProductService {
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
       if (args.is_taxable !== undefined && args.is_taxable !== null)
         queryParams['is_taxable'] = args.is_taxable ? 1 : 0;
-      if (args.vat_rate !== undefined && args.vat_rate !== null)
-        queryParams['vat_rate'] = args.vat_rate;
-      if (
-        args.is_price_include_vat !== undefined &&
-        args.is_price_include_vat !== null
-      )
+      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
+      if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat ? 1 : 0;
-      if (
-        args.is_use_serial_number !== undefined &&
-        args.is_use_serial_number !== null
-      )
+      if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
         queryParams['is_use_serial_number'] = args.is_use_serial_number ? 1 : 0;
       if (args.is_expirable !== undefined && args.is_expirable !== null)
         queryParams['is_expirable'] = args.is_expirable ? 1 : 0;
@@ -280,11 +241,10 @@ export default class ProductService {
           _query: queryParams,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<Product>>> =
-        await axios.get(url);
+      const response: AxiosResponse<Resource<Array<Product>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -294,13 +254,9 @@ export default class ProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -319,7 +275,7 @@ export default class ProductService {
           product: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<Resource<Product>> = await axios.get(url);
@@ -332,13 +288,9 @@ export default class ProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }
@@ -357,7 +309,7 @@ export default class ProductService {
           product: ulid,
         },
         false,
-        this.ziggyRoute
+        this.ziggyRoute,
       );
 
       const response: AxiosResponse<boolean | null> = await axios.post(url);
@@ -369,13 +321,9 @@ export default class ProductService {
       return result;
     } catch (e: unknown) {
       if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(
-          e.message
-        );
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
       } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(
-          e as AxiosError
-        );
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
       } else {
         return result;
       }

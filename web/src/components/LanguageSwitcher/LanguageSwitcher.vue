@@ -31,7 +31,7 @@
       props.theme == 'tinker' && 'text-white',
       props.theme == 'icewall' && 'text-white',
       'hover:animate-spin',
-    ])
+    ]),
   );
 </script>
 

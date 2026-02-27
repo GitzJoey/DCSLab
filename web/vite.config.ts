@@ -17,9 +17,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'tailwind-config': fileURLToPath(
-        new URL('./tailwind.config.js', import.meta.url)
-      ),
+      'tailwind-config': fileURLToPath(new URL('./tailwind.config.js', import.meta.url)),
     },
   },
 });

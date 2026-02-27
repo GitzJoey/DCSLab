@@ -39,9 +39,7 @@
       .submit()
       .then(() => {
         status.value = 'finishResetting';
-        statusMessage.value = t(
-          'views.reset_password.alert.successfully_reset_password'
-        );
+        statusMessage.value = t('views.reset_password.alert.successfully_reset_password');
       })
       .catch((error) => {
         status.value = 'resettingError';
@@ -78,21 +76,13 @@
             <span class="ml-3 text-lg text-white">{{ appName }}</span>
           </a>
           <div class="my-auto">
-            <img
-              alt="DCSLab"
-              class="w-1/2 -mt-16 -intro-x"
-              :src="illustrationUrl"
-            />
-            <div
-              class="mt-10 text-4xl font-medium leading-tight text-white -intro-x"
-            >
+            <img alt="DCSLab" class="w-1/2 -mt-16 -intro-x" :src="illustrationUrl" />
+            <div class="mt-10 text-4xl font-medium leading-tight text-white -intro-x">
               <span class="hidden">&nbsp;</span>
               <br />
               <span class="hidden">&nbsp;</span>
             </div>
-            <div
-              class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400"
-            >
+            <div class="mt-5 text-lg text-white -intro-x text-opacity-70 dark:text-slate-400">
               <span class="hidden">&nbsp;</span>
             </div>
           </div>
@@ -102,14 +92,10 @@
             class="w-full px-5 py-8 mx-auto my-auto bg-white rounded-md shadow-md xl:ml-20 dark:bg-darkmode-600 xl:bg-transparent sm:px-8 xl:p-0 xl:shadow-none sm:w-3/4 lg:w-2/4 xl:w-auto"
           >
             <LoadingOverlay :visible="loading" :transparent="true">
-              <h2
-                class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left"
-              >
+              <h2 class="text-2xl font-bold text-center intro-x xl:text-3xl xl:text-left">
                 {{ t('views.reset_password.title') }}
               </h2>
-              <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">
-                &nbsp;
-              </div>
+              <div class="mt-2 text-center intro-x text-slate-400 xl:hidden">&nbsp;</div>
               <form id="forgotPasswordForm" @submit.prevent="onSubmit">
                 <Alert
                   v-if="status != 'onLoad'"
@@ -131,12 +117,8 @@
                     :placeholder="t('views.reset_password.fields.password')"
                     @focus="resetPasswordForm.forgetError('password')"
                   />
-                  <FormErrorMessages
-                    :messages="resetPasswordForm.errors.email"
-                  />
-                  <FormErrorMessages
-                    :messages="resetPasswordForm.errors.password"
-                  />
+                  <FormErrorMessages :messages="resetPasswordForm.errors.email" />
+                  <FormErrorMessages :messages="resetPasswordForm.errors.password" />
                   <FormInput
                     v-model="resetPasswordForm.password_confirmation"
                     type="password"
@@ -144,22 +126,14 @@
                     :class="{
                       'border-danger': resetPasswordForm.invalid('password'),
                     }"
-                    :placeholder="
-                      t('views.reset_password.fields.password_confirmation')
-                    "
+                    :placeholder="t('views.reset_password.fields.password_confirmation')"
                     @focus="resetPasswordForm.forgetError('password')"
                   />
-                  <FormErrorMessages
-                    :messages="resetPasswordForm.errors.password"
-                  />
+                  <FormErrorMessages :messages="resetPasswordForm.errors.password" />
                 </div>
                 <div class="mt-5 text-center intro-x xl:mt-8 xl:text-left">
                   <template v-if="status != 'finishResetting'">
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3"
-                    >
+                    <Button type="submit" variant="primary" class="w-full px-4 py-3 align-top xl:w-32 xl:mr-3">
                       {{ t('components.buttons.submit') }}
                     </Button>
                     <Button

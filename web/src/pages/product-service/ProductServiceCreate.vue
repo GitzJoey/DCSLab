@@ -46,12 +46,7 @@
   // #endregion
 
   // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-  ]);
+  const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'show-alertplaceholder']);
   // #endregion
 
   // #region Refs
@@ -81,7 +76,7 @@
     (categoryDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const unitDDL = ref<Array<DropDownOption> | null>(null);
@@ -90,7 +85,7 @@
     (unitDDL.value ?? []).map((item) => ({
       value: item.code,
       label: item.name,
-    }))
+    })),
   );
 
   const statusDDL = ref<Array<DropDownOption> | null>(null);
@@ -99,12 +94,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -176,10 +167,7 @@
   };
 
   const loadFromCache = () => {
-    let data = cacheServices.getLastEntity('PRODUCT_SERVICE_CREATE') as Record<
-      string,
-      unknown
-    >;
+    let data = cacheServices.getLastEntity('PRODUCT_SERVICE_CREATE') as Record<string, unknown>;
     if (!data) return;
     productServiceForm.setData(data);
   };
@@ -211,10 +199,7 @@
         router.push({ name: 'side-menu-product-product-service-list' }); // Make sure this route exists or is created
       })
       .catch((error) => {
-        let errorList: Record<
-          string,
-          Array<string>
-        > = convertErrorTypeToAlertListType(error);
+        let errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
         showAlertPlaceholder('danger', '', errorList);
       })
       .finally(() => {
@@ -237,15 +222,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -263,18 +242,14 @@
       if (productServiceForm.hasErrors) {
       }
     }, 500),
-    { deep: true }
+    { deep: true },
   );
   // #endregion
 </script>
 
 <template>
   <form id="productServiceForm" @submit.prevent="onSubmit">
-    <TwoColumnsLayout
-      :cards="cards"
-      :using-side-tab="false"
-      @handle-expand-card="handleExpandCard"
-    >
+    <TwoColumnsLayout :cards="cards" :using-side-tab="false" @handle-expand-card="handleExpandCard">
       <!-- Card 1: Company Info -->
       <template #card-items-0>
         <div class="p-5">
@@ -291,9 +266,7 @@
       <template #card-items-1>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('code') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('code') }">
               {{ t('views.product_service.fields.code') }}
             </FormLabel>
             <FormInputCode
@@ -325,15 +298,11 @@
               @change="productServiceForm.validate('category_id')"
               @search="getCategoryDDL"
             />
-            <FormErrorMessages
-              :messages="productServiceForm.errors.category_id"
-            />
+            <FormErrorMessages :messages="productServiceForm.errors.category_id" />
           </div>
 
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('name') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('name') }">
               {{ t('views.product_service.fields.name') }}
             </FormLabel>
             <FormInput
@@ -347,9 +316,7 @@
           </div>
 
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('unit_id') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('unit_id') }">
               {{ t('views.product_service.fields.unit_id') }}
             </FormLabel>
             <FormSelectSearch
@@ -372,9 +339,7 @@
       <template #card-items-2>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('price') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('price') }">
               {{ t('views.product_service.fields.price') }}
             </FormLabel>
             <FormInputCurrency
@@ -387,9 +352,7 @@
           </div>
 
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('point') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('point') }">
               {{ t('views.product_service.fields.point') }}
             </FormLabel>
             <FormInput
@@ -420,15 +383,11 @@
                 @change="productServiceForm.validate('is_taxable')"
               />
             </FormSwitch>
-            <FormErrorMessages
-              :messages="productServiceForm.errors.is_taxable"
-            />
+            <FormErrorMessages :messages="productServiceForm.errors.is_taxable" />
           </div>
 
           <div class="pb-4" v-if="productServiceForm.is_taxable">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('vat_rate') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('vat_rate') }">
               {{ t('views.product_service.fields.vat_rate') }}
             </FormLabel>
             <FormInputCurrency
@@ -445,9 +404,7 @@
           <div class="pb-4" v-if="productServiceForm.is_taxable">
             <FormLabel
               :class="{
-                'text-danger': productServiceForm.invalid(
-                  'is_price_include_vat'
-                ),
+                'text-danger': productServiceForm.invalid('is_price_include_vat'),
               }"
             >
               {{ t('views.product_service.fields.is_price_include_vat') }}
@@ -457,16 +414,12 @@
                 v-model="productServiceForm.is_price_include_vat"
                 type="checkbox"
                 :class="{
-                  'border-danger': productServiceForm.invalid(
-                    'is_price_include_vat'
-                  ),
+                  'border-danger': productServiceForm.invalid('is_price_include_vat'),
                 }"
                 @change="productServiceForm.validate('is_price_include_vat')"
               />
             </FormSwitch>
-            <FormErrorMessages
-              :messages="productServiceForm.errors.is_price_include_vat"
-            />
+            <FormErrorMessages :messages="productServiceForm.errors.is_price_include_vat" />
           </div>
         </div>
       </template>
@@ -475,9 +428,7 @@
       <template #card-items-3>
         <div class="p-5">
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('status') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('status') }">
               {{ t('views.product_service.fields.status') }}
             </FormLabel>
             <FormSelect
@@ -496,9 +447,7 @@
           </div>
 
           <div class="pb-4">
-            <FormLabel
-              :class="{ 'text-danger': productServiceForm.invalid('remarks') }"
-            >
+            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('remarks') }">
               {{ t('views.product_service.fields.remarks') }}
             </FormLabel>
             <FormTextarea
@@ -522,26 +471,14 @@
             href="#"
             variant="primary"
             class="w-28 shadow-md"
-            :disabled="
-              productServiceForm.validating || productServiceForm.hasErrors
-            "
+            :disabled="productServiceForm.validating || productServiceForm.hasErrors"
           >
-            <Lucide
-              v-if="productServiceForm.validating"
-              icon="Loader"
-              class="animate-spin"
-            />
+            <Lucide v-if="productServiceForm.validating" icon="Loader" class="animate-spin" />
             <template v-else>
               {{ t('components.buttons.submit') }}
             </template>
           </Button>
-          <Button
-            type="button"
-            href="#"
-            variant="soft-secondary"
-            class="w-28 shadow-md"
-            @click="resetForm"
-          >
+          <Button type="button" href="#" variant="soft-secondary" class="w-28 shadow-md" @click="resetForm">
             {{ t('components.buttons.reset') }}
           </Button>
         </div>

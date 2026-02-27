@@ -70,12 +70,8 @@
   // #endregion
 
   // #region Computed
-  const isUserLocationSelected = computed(
-    () => selectedUserLocationStore.isUserLocationSelected
-  );
-  const selectedUserLocation = computed(
-    () => selectedUserLocationStore.selectedUserLocation
-  );
+  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
   // #endregion
 
   // #region Lifecycle Hooks
@@ -105,12 +101,7 @@
     return option ? t(option.name) : code;
   };
 
-  const getUnits = async (
-    search: string,
-    refresh: boolean,
-    page: number,
-    per_page: number
-  ) => {
+  const getUnits = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
 
     let company_id = selectedUserLocation.value.company.id;
@@ -127,29 +118,19 @@
       per_page: per_page,
     };
 
-    let result: ServiceResponse<Collection<Array<Unit>> | null> =
-      await unitServices.readAnyPaginate(searchReq);
+    let result: ServiceResponse<Collection<Array<Unit>> | null> = await unitServices.readAnyPaginate(searchReq);
 
     if (result.success && result.data) {
       unitLists.value = result.data;
     } else {
-      showAlertPlaceholder(
-        'danger',
-        '',
-        result.errors as Record<string, Array<string>>
-      );
+      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
     }
 
     emits('loading-state', false);
   };
 
   const onDataListChanged = async (data: DataListEmittedData) => {
-    await getUnits(
-      data.search.text,
-      false,
-      data.pagination.page,
-      data.pagination.per_page
-    );
+    await getUnits(data.search.text, false, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {
@@ -183,22 +164,17 @@
     deleteModalShow.value = false;
     emits('loading-state', true);
 
-    let result: ServiceResponse<any> = await unitServices.delete(
-      deleteUlid.value
-    );
+    let result: ServiceResponse<any> = await unitServices.delete(deleteUlid.value);
 
     if (result.success) {
       emits('update-profile');
       await getUnits('', true, 1, 10);
-      showNotification(
-        t('views.unit.alert.delete_unit.title'),
-        t('views.unit.alert.delete_unit.content')
-      );
+      showNotification(t('views.unit.alert.delete_unit.title'), t('views.unit.alert.delete_unit.content'));
     } else {
       showAlertPlaceholder(
         'danger',
         t('components.alert_placeholder.title.danger'),
-        result.errors as Record<string, Array<string>>
+        result.errors as Record<string, Array<string>>,
       );
     }
 
@@ -215,15 +191,9 @@
   };
 
   const showAlertPlaceholder = (
-    pAlertType:
-      | 'hidden'
-      | 'danger'
-      | 'success'
-      | 'warning'
-      | 'pending'
-      | 'dark',
+    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
     pTitle: string,
-    pAlertList: Record<string, Array<string>> | null
+    pAlertList: Record<string, Array<string>> | null,
   ) => {
     let ap: AlertPlaceholderProps = {
       alertType: pAlertType,
@@ -287,22 +257,13 @@
               </Table.Td>
               <Table.Td>
                 <div class="flex justify-end gap-1">
-                  <Button
-                    variant="outline-secondary"
-                    @click="viewSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
                     <Lucide icon="Info" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="editSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="editSelected(itemIdx)">
                     <Lucide icon="Pen" class="w-4 h-4" />
                   </Button>
-                  <Button
-                    variant="outline-secondary"
-                    @click="deleteSelected(itemIdx)"
-                  >
+                  <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
@@ -377,12 +338,7 @@
             >
               {{ t('components.buttons.cancel') }}
             </Button>
-            <Button
-              type="button"
-              variant="danger"
-              class="w-24"
-              @click="confirmDelete"
-            >
+            <Button type="button" variant="danger" class="w-24" @click="confirmDelete">
               {{ t('components.buttons.delete') }}
             </Button>
           </div>

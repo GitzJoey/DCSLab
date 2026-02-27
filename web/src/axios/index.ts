@@ -16,9 +16,7 @@ defaultAxiosInstance.defaults.withXSRFToken = true;
 
 defaultAxiosInstance.interceptors.request.use(function (config) {
   config.headers['X-Localization'] =
-    localStorage.getItem('DCSLAB_LANG') == null
-      ? document.documentElement.lang
-      : localStorage.getItem('DCSLAB_LANG');
+    localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
   return config;
 });
 
@@ -27,8 +25,7 @@ defaultAxiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response == undefined || error.response.status == undefined)
-      return Promise.reject(error);
+    if (error.response == undefined || error.response.status == undefined) return Promise.reject(error);
     switch (error.response.status) {
       case 401:
         window.location.replace('/auth/login');
@@ -41,7 +38,7 @@ defaultAxiosInstance.interceptors.response.use(
         break;
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 const authAxiosInstance = axios.create({

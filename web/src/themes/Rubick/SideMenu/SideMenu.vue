@@ -33,9 +33,7 @@
   const route: Route = useRoute();
   const router = useRouter();
   let formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
-  const setFormattedMenu = (
-    computedFormattedMenu: Array<FormattedMenu | 'divider'>
-  ) => {
+  const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
     Object.assign(formattedMenu, computedFormattedMenu);
   };
   const menuStore = useMenuStore();
@@ -72,7 +70,7 @@
     computed(() => route.path),
     () => {
       delete route.forceActiveMenu;
-    }
+    },
   );
 
   onMounted(async () => {
@@ -107,13 +105,8 @@
       >
         <MobileMenu />
         <div class="mt-[4.7rem] flex md:mt-0">
-          <nav
-            class="side-nav hidden w-[80px] overflow-x-hidden pb-16 pr-5 md:block xl:w-[230px]"
-          >
-            <RouterLink
-              :to="{ name: 'side-menu-dashboard-maindashboard' }"
-              class="flex items-center pt-4 pl-5 intro-x"
-            >
+          <nav class="side-nav hidden w-[80px] overflow-x-hidden pb-16 pr-5 md:block xl:w-[230px]">
+            <RouterLink :to="{ name: 'side-menu-dashboard-maindashboard' }" class="flex items-center pt-4 pl-5 intro-x">
               <img alt="DCSLab" class="w-6" :src="logoUrl" />
               <span class="hidden ml-3 text-lg text-white xl:block">
                 {{ appName }}
@@ -122,12 +115,7 @@
             <div class="my-6 side-nav__divider"></div>
             <ul>
               <template v-for="(menu, menuKey) in formattedMenu">
-                <li
-                  v-if="menu == 'divider'"
-                  type="li"
-                  class="my-6 side-nav__divider"
-                  :key="'divider-' + menuKey"
-                ></li>
+                <li v-if="menu == 'divider'" type="li" class="my-6 side-nav__divider" :key="'divider-' + menuKey"></li>
                 <li v-else :key="menuKey">
                   <Tippy
                     as="a"
@@ -156,9 +144,7 @@
                         setFormattedMenu([...formattedMenu]);
                       }
                     "
-                    :class="[
-                      menu.active ? 'side-menu side-menu--active' : 'side-menu',
-                    ]"
+                    :class="[menu.active ? 'side-menu side-menu--active' : 'side-menu']"
                   >
                     <div class="side-menu__icon">
                       <Lucide :icon="menu.icon" />
@@ -167,10 +153,7 @@
                       {{ t(menu.title) }}
                       <div
                         v-if="menu.subMenu"
-                        :class="[
-                          'side-menu__sub-icon',
-                          { 'transform rotate-180': menu.activeDropdown },
-                        ]"
+                        :class="['side-menu__sub-icon', { 'transform rotate-180': menu.activeDropdown }]"
                       >
                         <Lucide icon="ChevronDown" />
                       </div>
@@ -181,10 +164,7 @@
                       v-if="menu.subMenu && menu.activeDropdown"
                       :class="{ 'side-menu__sub-open': menu.activeDropdown }"
                     >
-                      <li
-                        v-for="(subMenu, subMenuKey) in menu.subMenu"
-                        :key="subMenuKey"
-                      >
+                      <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                         <Tippy
                           as="a"
                           :content="t(subMenu.title)"
@@ -205,11 +185,7 @@
                                   }
                                 })(subMenu.pageName)
                           "
-                          :class="[
-                            subMenu.active
-                              ? 'side-menu side-menu--active'
-                              : 'side-menu',
-                          ]"
+                          :class="[subMenu.active ? 'side-menu side-menu--active' : 'side-menu']"
                           @click="
                             (event: MouseEvent) => {
                               event.preventDefault();
@@ -228,8 +204,7 @@
                               :class="[
                                 'side-menu__sub-icon',
                                 {
-                                  'transform rotate-180':
-                                    subMenu.activeDropdown,
+                                  'transform rotate-180': subMenu.activeDropdown,
                                 },
                               ]"
                             >
@@ -237,23 +212,14 @@
                             </div>
                           </div>
                         </Tippy>
-                        <Transition
-                          @enter="enter"
-                          @leave="leave"
-                          v-if="subMenu.subMenu"
-                        >
+                        <Transition @enter="enter" @leave="leave" v-if="subMenu.subMenu">
                           <ul
                             v-if="subMenu.subMenu && subMenu.activeDropdown"
                             :class="{
                               'side-menu__sub-open': subMenu.activeDropdown,
                             }"
                           >
-                            <li
-                              v-for="(
-                                lastSubMenu, lastSubMenuKey
-                              ) in subMenu.subMenu"
-                              :key="lastSubMenuKey"
-                            >
+                            <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                               <Tippy
                                 as="a"
                                 :content="t(lastSubMenu.title)"
@@ -274,11 +240,7 @@
                                         }
                                       })(lastSubMenu.pageName)
                                 "
-                                :class="[
-                                  lastSubMenu.active
-                                    ? 'side-menu side-menu--active'
-                                    : 'side-menu',
-                                ]"
+                                :class="[lastSubMenu.active ? 'side-menu side-menu--active' : 'side-menu']"
                                 @click="
                                   (event: MouseEvent) => {
                                     event.preventDefault();
