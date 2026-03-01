@@ -72,6 +72,11 @@ class Warehouse extends Model
         return $this->hasMany(SaleReceipt::class);
     }
 
+    public function stockTransactions()
+    {
+        return $this->hasMany(StockTransaction::class);
+    }
+
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {

@@ -49,6 +49,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'in_products.*.product_unit_cogs',
             'in_products.*.remarks',
         );
+        $rules['in_products.*.product_unit_id'] = array_merge($rules['in_products.*.product_unit_id'] ?? [], ['distinct']);
 
         $rules['out_products'] = ['array', 'required_with:out_warehouse_id'];
         $rules += StockAdjustmentOutProductRules::mapToFieldNames($this->company_id ?? 0,
@@ -57,6 +58,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'out_products.*.product_unit_conversion_value',
             'out_products.*.remarks',
         );
+        $rules['out_products.*.product_unit_id'] = array_merge($rules['out_products.*.product_unit_id'] ?? [], ['distinct']);
 
         return $rules;
     }

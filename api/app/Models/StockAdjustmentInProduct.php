@@ -60,6 +60,11 @@ class StockAdjustmentInProduct extends Model
         return $this->belongsTo(ProductUnit::class)->withTrashed();
     }
 
+    public function stockTransaction()
+    {
+        return $this->morphOne(StockTransaction::class, 'referable');
+    }
+
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {

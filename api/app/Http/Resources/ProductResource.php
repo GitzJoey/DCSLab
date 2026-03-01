@@ -34,6 +34,10 @@ class ProductResource extends JsonResource
             'remarks' => $this->remarks,
             'type' => $this->type,
             'status' => $this->setStatus($this->status, $this->deleted_at),
+            'remaining_stock_base_unit' => $this->when(
+                isset($this->remaining_stock),
+                (float) $this->remaining_stock
+            ),
             $this->mergeWhen($this->relationLoaded('productUnits'), [
                 'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits')),
             ]),

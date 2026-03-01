@@ -43,7 +43,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
         ];
 
         $rules['delete_in_product_ids'] = ['nullable', 'array'];
-        $rules['delete_in_product_ids.*'] = ['required', 'integer', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)];
+        $rules['delete_in_product_ids.*'] = ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)];
 
         $rules['in_products'] = ['array', 'required_with:in_warehouse_id'];
         $rules['in_products.*.id'] = ['nullable', 'integer', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)];
@@ -54,9 +54,10 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'in_products.*.product_unit_cogs',
             'in_products.*.remarks',
         );
+        $rules['in_products.*.product_unit_id'] = array_merge($rules['in_products.*.product_unit_id'] ?? [], ['distinct']);
 
         $rules['delete_out_product_ids'] = ['nullable', 'array'];
-        $rules['delete_out_product_ids.*'] = ['required', 'integer', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)];
+        $rules['delete_out_product_ids.*'] = ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)];
 
         $rules['out_products'] = ['array', 'required_with:out_warehouse_id'];
         $rules['out_products.*.id'] = ['nullable', 'integer', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)];
@@ -66,6 +67,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'out_products.*.product_unit_conversion_value',
             'out_products.*.remarks',
         );
+        $rules['out_products.*.product_unit_id'] = array_merge($rules['out_products.*.product_unit_id'] ?? [], ['distinct']);
 
         return $rules;
     }

@@ -9,6 +9,7 @@ use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -62,6 +63,11 @@ class Product extends Model
         return $this->belongsTo(Brand::class)->withTrashed();
     }
 
+    public function baseProductUnit()
+    {
+        return $this->hasOne(ProductUnit::class)->where('is_base', true);
+    }
+
     public function productUnits()
     {
         return $this->hasMany(ProductUnit::class);
@@ -95,6 +101,39 @@ class Product extends Model
     public function saleReceiptProductUnits()
     {
         return $this->hasMany(SaleReceiptProductUnit::class);
+    }
+
+    public function stockTransactions()
+    {
+        return $this->hasMany(StockTransaction::class);
+    }
+
+    public function scopeWithRemainingStock($query, ?string $endDate, ?int $warehouseId)
+    {
+        $productsWithRemainingStockQuery = StockTransaction::select(
+            'stock_transactions.product_id',
+            DB::raw('SUM(stock_transactions.base_qty) AS remaining_stock')
+        );
+
+        if ($endDate) {
+            $productsWithRemainingStockQuery->where('stock_transactions.date', '<=', $endDate);
+        }
+
+        if ($warehouseId) {
+            $productsWithRemainingStockQuery->where('stock_transactions.warehouse_id', '=', $warehouseId);
+        }
+
+        $productsWithRemainingStockQuery->groupBy('stock_transactions.product_id');
+
+        $query->leftJoinSub($productsWithRemainingStockQuery, 'products_with_remaining_stock', function ($join) {
+            $join->on('products.id', '=', 'products_with_remaining_stock.product_id');
+        });
+
+        $query->addSelect(
+            DB::raw('COALESCE(products_with_remaining_stock.remaining_stock, 0) AS remaining_stock')
+        );
+
+        return $query;
     }
 
     public function scopeSearch($query, string $search)

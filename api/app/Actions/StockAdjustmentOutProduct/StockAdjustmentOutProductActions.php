@@ -2,9 +2,12 @@
 
 namespace App\Actions\StockAdjustmentOutProduct;
 
+use App\Actions\StockTransaction\StockTransactionActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\StockAdjustmentOutProductCreateDTO;
 use App\DTOs\StockAdjustmentOutProductUpdateDTO;
+use App\DTOs\StockTransactionCreateDTO;
+use App\DTOs\StockTransactionUpdateDTO;
 use App\Models\StockAdjustmentOutProduct;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -133,6 +136,9 @@ class StockAdjustmentOutProductActions
             $stockAdjustmentOutProduct->remarks = $data->remarks;
             $stockAdjustmentOutProduct->save();
 
+            $stockTransactionActions = new StockTransactionActions();
+            $stockTransactionActions->create(StockTransactionCreateDTO::fromStockAdjustmentOutProduct($stockAdjustmentOutProduct));
+
             $this->flushCache();
 
             return $stockAdjustmentOutProduct;
@@ -157,6 +163,16 @@ class StockAdjustmentOutProductActions
             $stockAdjustmentOutProduct->remarks = $data->remarks;
             $stockAdjustmentOutProduct->save();
 
+            $stockTransaction = $stockAdjustmentOutProduct->stockTransaction;
+            $stockTransactionActions = new StockTransactionActions();
+            if (! $stockTransaction) {
+                $dto = StockTransactionCreateDTO::fromStockAdjustmentOutProduct($stockAdjustmentOutProduct);
+                $stockTransaction = $stockTransactionActions->create($dto);
+            } else {
+                $dto = StockTransactionUpdateDTO::fromStockAdjustmentOutProduct($stockAdjustmentOutProduct);
+                $stockTransactionActions->update($stockTransaction, $dto);
+            }
+
             $this->flushCache();
 
             return $stockAdjustmentOutProduct;
@@ -175,6 +191,12 @@ class StockAdjustmentOutProductActions
 
         try {
             $result = $stockAdjustmentOutProduct->delete();
+
+            $stockTransaction = $stockAdjustmentOutProduct->stockTransaction;
+            if ($stockTransaction) {
+                $stockTransactionActions = new StockTransactionActions();
+                $stockTransactionActions->delete($stockTransaction);
+            }
 
             $this->flushCache();
 
