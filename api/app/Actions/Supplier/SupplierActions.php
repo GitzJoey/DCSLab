@@ -60,7 +60,7 @@ class SupplierActions
         ?ExecuteDTO $execute
     ) {
         $query = Supplier::with('company')->select('suppliers.*')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('suppliers', $companyId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search, $includeId) {

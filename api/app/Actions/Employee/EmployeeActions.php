@@ -69,7 +69,7 @@ class EmployeeActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('employees', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -259,7 +259,7 @@ class EmployeeActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = Employee::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = Employee::whereCompanyId('employees', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);
@@ -270,7 +270,7 @@ class EmployeeActions
 
     public function isUniqueName(int $companyId, string $name, ?int $exceptId): bool
     {
-        $result = Employee::whereCompanyId($companyId)->where('name', '=', $name);
+        $result = Employee::whereCompanyId('employees', $companyId)->where('name', '=', $name);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

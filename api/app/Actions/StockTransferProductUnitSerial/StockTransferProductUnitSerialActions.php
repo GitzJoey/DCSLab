@@ -70,7 +70,7 @@ class StockTransferProductUnitSerialActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('stock_transfer_product_unit_serials', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')

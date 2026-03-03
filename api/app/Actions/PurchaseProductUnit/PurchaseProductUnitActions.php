@@ -103,7 +103,7 @@ class PurchaseProductUnitActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_order_product_units', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')

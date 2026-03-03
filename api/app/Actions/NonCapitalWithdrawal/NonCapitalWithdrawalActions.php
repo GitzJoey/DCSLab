@@ -74,7 +74,7 @@ class NonCapitalWithdrawalActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('non_capital_withdrawals', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -268,7 +268,7 @@ class NonCapitalWithdrawalActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = NonCapitalWithdrawal::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = NonCapitalWithdrawal::whereCompanyId('non_capital_withdrawals', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

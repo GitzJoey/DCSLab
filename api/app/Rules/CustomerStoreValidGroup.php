@@ -21,7 +21,7 @@ class CustomerStoreValidGroup implements ValidationRule
             return;
         }
 
-        $data = CustomerGroup::whereCompanyId($this->companyId)->where('id', $value);
+        $data = CustomerGroup::whereCompanyId('customer_groups', $this->companyId)->where('id', $value);
         if ($data->doesntExist()) {
             $fail('rules.valid_customer_group')->translate();
 

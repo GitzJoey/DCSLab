@@ -101,7 +101,7 @@ class PurchaseReturnProductUnitActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_order_product_units', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -324,7 +324,7 @@ class PurchaseReturnProductUnitActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseReturnProductUnit::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseReturnProductUnit::whereCompanyId('purchase_order_product_units', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

@@ -17,7 +17,7 @@ class InvestorStoreValidName implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $investor = Investor::whereCompanyId($this->companyId)->where('name', $value);
+        $investor = Investor::whereCompanyId('investors', $this->companyId)->where('name', $value);
 
         if ($investor->exists()) {
             $fail('rules.unique_name')->translate();

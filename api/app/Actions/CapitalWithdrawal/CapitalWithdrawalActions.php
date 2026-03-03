@@ -74,7 +74,7 @@ class CapitalWithdrawalActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('capital_withdrawals', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -269,7 +269,7 @@ class CapitalWithdrawalActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = CapitalWithdrawal::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = CapitalWithdrawal::whereCompanyId('capital_withdrawals', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

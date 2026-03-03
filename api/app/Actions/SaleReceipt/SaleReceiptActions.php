@@ -71,7 +71,7 @@ class SaleReceiptActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('sale_receipts', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -262,7 +262,7 @@ class SaleReceiptActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = SaleReceipt::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = SaleReceipt::whereCompanyId('sale_receipts', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

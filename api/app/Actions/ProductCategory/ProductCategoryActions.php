@@ -54,7 +54,7 @@ class ProductCategoryActions
         ?ExecuteDTO $execute
     ) {
         $query = ProductCategory::with('company')->select('product_categories.*')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('product_categories', $companyId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search, $type, $includeId) {

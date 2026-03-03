@@ -109,7 +109,7 @@ class SaleActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('sales', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -338,7 +338,7 @@ class SaleActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = Sale::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = Sale::whereCompanyId('sales', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

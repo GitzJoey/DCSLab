@@ -52,7 +52,7 @@ class BrandActions
         ?ExecuteDTO $execute
     ) {
         $query = Brand::with('company')->select('brands.*')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('brands', $companyId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search, $includeId) {

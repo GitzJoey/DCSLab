@@ -85,7 +85,7 @@ class PurchaseOrderActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_orders', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -289,7 +289,7 @@ class PurchaseOrderActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseOrder::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseOrder::whereCompanyId('purchase_orders', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

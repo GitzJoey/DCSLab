@@ -74,7 +74,7 @@ class CapitalAdditionActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('capital_additions', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -268,7 +268,7 @@ class CapitalAdditionActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = CapitalAddition::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = CapitalAddition::whereCompanyId('capital_additions', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

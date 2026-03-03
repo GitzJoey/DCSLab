@@ -25,7 +25,7 @@ class CustomerUpdateValidGroup implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $data = CustomerGroup::whereCompanyId($this->companyId)->where('id', $value);
+        $data = CustomerGroup::whereCompanyId('customer_groups', $this->companyId)->where('id', $value);
 
         if ($data->doesntExist() && $this->customer->group_id !== $value) {
             $fail('rules.valid_customer_group')->translate();

@@ -35,7 +35,7 @@ class StockAdjustmentOutProductActions
             ->with(['company', 'branch', 'productUnit'])
             ->join('companies', 'companies.id', '=', 'stock_adjustment_out_products.company_id')
             ->join('stock_adjustments', 'stock_adjustments.id', '=', 'stock_adjustment_out_products.stock_adjustment_id')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('stock_adjustment_out_products', $companyId)
             ->whereBranchId($branchId)
             ->withTrashed();
 

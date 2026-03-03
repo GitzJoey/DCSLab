@@ -74,7 +74,7 @@ class SaleOrderDownPaymentApplyActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('sale_order_down_payment_applies', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -267,7 +267,7 @@ class SaleOrderDownPaymentApplyActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = SaleOrderDownPaymentApply::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = SaleOrderDownPaymentApply::whereCompanyId('sale_order_down_payment_applies', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

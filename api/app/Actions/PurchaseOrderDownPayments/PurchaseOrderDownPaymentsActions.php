@@ -74,7 +74,7 @@ class PurchaseOrderDownPaymentActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_order_down_payments', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -267,7 +267,7 @@ class PurchaseOrderDownPaymentActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseOrderDownPayment::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseOrderDownPayment::whereCompanyId('purchase_order_down_payments', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

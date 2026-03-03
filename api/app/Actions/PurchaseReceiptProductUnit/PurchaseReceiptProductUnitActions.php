@@ -62,9 +62,9 @@ class PurchaseReceiptProductUnitActions
 
         ?int $limit
     ) {
-        $query = PurchaseReceiptProductUnit::select('purchase_order_product_units.*')->withTrashed()
+        $query = PurchaseReceiptProductUnit::select('purchase_receipt_product_units.*')->withTrashed()
             ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'purchase_order_product_units.company_id')
+            ->join('companies', 'companies.id', '=', 'purchase_receipt_product_units.company_id')
             ->where(function ($query) use ($withTrashed, $search, $companyId) {
                 if ($withTrashed == true) {
                     $query->withTrashed();
@@ -76,7 +76,7 @@ class PurchaseReceiptProductUnitActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_receipt_product_units', $companyId);
             });
 
         $query->orderBy('company_name', 'asc')
@@ -274,7 +274,7 @@ class PurchaseReceiptProductUnitActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseReceiptProductUnit::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseReceiptProductUnit::whereCompanyId('purchase_receipt_product_units', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

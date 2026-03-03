@@ -55,7 +55,7 @@ class StockAdjustmentActions
                 ]);
             })
             ->join('companies', 'companies.id', '=', 'stock_adjustments.company_id')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('stock_adjustments', $companyId)
             ->whereBranchId($branchId)
             ->withTrashed();
 

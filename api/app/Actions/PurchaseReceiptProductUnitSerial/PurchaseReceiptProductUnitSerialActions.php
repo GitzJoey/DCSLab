@@ -70,7 +70,7 @@ class PurchaseReceiptProductUnitSerialActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_order_product_unit_serials', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')

@@ -71,7 +71,7 @@ class PurchaseProductUnitSerialActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_order_product_unit_serials', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -264,7 +264,7 @@ class PurchaseProductUnitSerialActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseProductUnitSerial::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseProductUnitSerial::whereCompanyId('purchase_order_product_unit_serials', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

@@ -22,7 +22,7 @@ class NonCapitalAdditionCategoryActions
 
     public function isUniqueName(int $companyId, string $name, ?int $exceptId = null): bool
     {
-        $query = NonCapitalAdditionCategory::whereCompanyId($companyId)->whereName($name);
+        $query = NonCapitalAdditionCategory::whereCompanyId('non_capital_addition_categories', $companyId)->whereName($name);
 
         if ($exceptId) {
             $query->where('id', '<>', $exceptId);
@@ -80,7 +80,7 @@ class NonCapitalAdditionCategoryActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('non_capital_addition_categories', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -270,7 +270,7 @@ class NonCapitalAdditionCategoryActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = NonCapitalAdditionCategory::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = NonCapitalAdditionCategory::whereCompanyId('non_capital_addition_categories', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

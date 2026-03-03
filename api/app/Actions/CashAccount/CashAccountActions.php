@@ -57,7 +57,7 @@ class CashAccountActions
         ?ExecuteDTO $execute
     ) {
         $query = CashAccount::with('company', 'branch')->select('cash_accounts.*')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('cash_accounts', $companyId)
             ->withTrashed();
 
         if ($branchId) {

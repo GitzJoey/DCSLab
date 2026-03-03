@@ -75,7 +75,7 @@ class StockTransferProductUnitActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('stock_transfer_product_units', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -272,7 +272,7 @@ class StockTransferProductUnitActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = StockTransferProductUnit::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = StockTransferProductUnit::whereCompanyId('stock_transfer_product_units', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

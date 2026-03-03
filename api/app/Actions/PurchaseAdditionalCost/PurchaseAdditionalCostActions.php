@@ -74,7 +74,7 @@ class PurchaseAdditionalCostActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_additional_costs', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -270,7 +270,7 @@ class PurchaseAdditionalCostActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseAdditionalCost::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseAdditionalCost::whereCompanyId('purchase_additional_costs', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

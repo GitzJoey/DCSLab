@@ -74,7 +74,7 @@ class StockTransferActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('stock_transfers', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -268,7 +268,7 @@ class StockTransferActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = StockTransfer::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = StockTransfer::whereCompanyId('stock_transfers', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

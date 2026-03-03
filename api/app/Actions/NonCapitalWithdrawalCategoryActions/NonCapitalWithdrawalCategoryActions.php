@@ -22,7 +22,7 @@ class NonCapitalWithdrawalCategoryActions
 
     public function isUniqueName(int $companyId, string $name, ?int $exceptId = null): bool
     {
-        $query = NonCapitalWithdrawalCategory::whereCompanyId($companyId)->whereName($name);
+        $query = NonCapitalWithdrawalCategory::whereCompanyId('non_capital_withdrawal_categories', $companyId)->whereName($name);
 
         if ($exceptId) {
             $query->where('id', '<>', $exceptId);
@@ -79,7 +79,7 @@ class NonCapitalWithdrawalCategoryActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('non_capital_withdrawal_categories', $companyId);
             });
 
         $query->orderBy('company_name', 'asc')
@@ -269,7 +269,7 @@ class NonCapitalWithdrawalCategoryActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = NonCapitalWithdrawalCategory::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = NonCapitalWithdrawalCategory::whereCompanyId('non_capital_withdrawal_categories', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

@@ -22,7 +22,7 @@ class PurchaseAdditionalCostCategoryActions
 
     public function isUniqueName(int $companyId, string $name, ?int $exceptId = null): bool
     {
-        $query = PurchaseAdditionalCostCategory::whereCompanyId($companyId)->whereName($name);
+        $query = PurchaseAdditionalCostCategory::whereCompanyId('purchase_additional_cost_categories', $companyId)->whereName($name);
 
         if ($exceptId) {
             $query->where('id', '<>', $exceptId);
@@ -80,7 +80,7 @@ class PurchaseAdditionalCostCategoryActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_additional_cost_categories', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -270,7 +270,7 @@ class PurchaseAdditionalCostCategoryActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseAdditionalCostCategory::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseAdditionalCostCategory::whereCompanyId('purchase_additional_cost_categories', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

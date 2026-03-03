@@ -51,7 +51,7 @@ class ProductActions
         $query->join('product_categories', 'products.category_id', '=', 'product_categories.id');
         $query->leftJoin('brands', 'products.brand_id', '=', 'brands.id');
 
-        $query->whereCompanyId($companyId);
+        $query->whereCompanyId('products', $companyId);
 
         if ($withRemainingStock) {
             $endDate = $withRemainingStock->endDate ? TimezoneHelper::convertToUTC($withRemainingStock->endDate) : null;

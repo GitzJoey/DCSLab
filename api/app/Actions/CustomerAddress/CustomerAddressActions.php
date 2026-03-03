@@ -21,7 +21,7 @@ class CustomerAddressActions
 
     public function isUniqueAddress(int $companyId, int $customerId, string $address, ?int $exceptId = null): bool
     {
-        $query = CustomerAddress::whereCompanyId($companyId)
+        $query = CustomerAddress::whereCompanyId('customer_addresses', $companyId)
             ->whereCustomerId($customerId)
             ->whereAddress($address);
 
@@ -85,7 +85,7 @@ class CustomerAddressActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('customer_addresses', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')

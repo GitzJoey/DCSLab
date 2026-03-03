@@ -74,7 +74,7 @@ class NonCapitalAdditionActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('non_capital_additions', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -268,7 +268,7 @@ class NonCapitalAdditionActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = NonCapitalAddition::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = NonCapitalAddition::whereCompanyId('non_capital_additions', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

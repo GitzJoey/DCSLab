@@ -73,7 +73,7 @@ class PurchaseReceiptActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_receipt', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -268,7 +268,7 @@ class PurchaseReceiptActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseReceipt::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseReceipt::whereCompanyId('purchase_receipt', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

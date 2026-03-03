@@ -62,7 +62,7 @@ class BranchActions
         ?ExecuteDTO $execute
     ) {
         $query = Branch::with('company')->select('branches.*')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('branches', $companyId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search, $isMain, $status, $includeId) {

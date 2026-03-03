@@ -68,7 +68,7 @@ class RepToPascalThisActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('RepToSnakeThis', $companyId);
             });
 
         $query->orderBy('company_name', 'asc')
@@ -258,7 +258,7 @@ class RepToPascalThisActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = RepToPascalThis::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = RepToPascalThis::whereCompanyId('RepToSnakeThis', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

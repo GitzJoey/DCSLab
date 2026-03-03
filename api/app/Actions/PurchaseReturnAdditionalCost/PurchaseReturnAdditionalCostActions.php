@@ -74,7 +74,7 @@ class PurchaseReturnAdditionalCostActions
                     $query->search($search);
                 }
 
-                $query->whereCompanyId($companyId);
+                $query->whereCompanyId('purchase_return_additional_costs', $companyId);
             });
 
         $query->orderBy('companies.name', 'asc')
@@ -271,7 +271,7 @@ class PurchaseReturnAdditionalCostActions
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
-        $result = PurchaseReturnAdditionalCost::whereCompanyId($companyId)->where('code', '=', $code);
+        $result = PurchaseReturnAdditionalCost::whereCompanyId('purchase_return_additional_costs', $companyId)->where('code', '=', $code);
 
         if ($exceptId) {
             $result = $result->where('id', '<>', $exceptId);

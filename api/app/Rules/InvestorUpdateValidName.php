@@ -20,7 +20,7 @@ class InvestorUpdateValidName implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $data = Investor::whereCompanyId($this->companyId)->where('name', $value);
+        $data = Investor::whereCompanyId('investors', $this->companyId)->where('name', $value);
 
         if ($data->exists() && $this->investor->name !== $value) {
             $fail('rules.unique_name')->translate();

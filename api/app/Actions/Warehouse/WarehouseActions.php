@@ -60,7 +60,7 @@ class WarehouseActions
         ?ExecuteDTO $execute
     ) {
         $query = Warehouse::with('company', 'branch')->select('warehouses.*')
-            ->whereCompanyId($companyId)
+            ->whereCompanyId('warehouses', $companyId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search, $branchId, $status, $includeId) {
