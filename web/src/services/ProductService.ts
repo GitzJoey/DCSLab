@@ -27,6 +27,192 @@ export default class ProductService {
     this.cacheService = new CacheService();
   }
 
+  public async readAnyPaginate(
+    args: ProductReadAnyPaginateRequest,
+  ): Promise<ServiceResponse<Collection<Array<Product>> | null>> {
+    const result: ServiceResponse<Collection<Array<Product>> | null> = {
+      success: false,
+    };
+
+    try {
+      const queryParams: Record<string, any> = {};
+      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
+      if (args.company_id) queryParams['company_id'] = args.company_id;
+
+      if (args.search) queryParams['search'] = args.search;
+      if (args.category_id) queryParams['category_id'] = args.category_id;
+      if (args.brand_id) queryParams['brand_id'] = args.brand_id;
+      if (args.is_taxable !== undefined && args.is_taxable !== null) queryParams['is_taxable'] = args.is_taxable;
+      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
+      if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
+        queryParams['is_price_include_vat'] = args.is_price_include_vat;
+      if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
+        queryParams['is_use_serial_number'] = args.is_use_serial_number;
+      if (args.is_expirable !== undefined && args.is_expirable !== null)
+        queryParams['is_expirable'] = args.is_expirable;
+      if (args.type) queryParams['type'] = args.type;
+      if (args.status) queryParams['status'] = args.status;
+      if (args.include_id) queryParams['include_id'] = args.include_id;
+
+      if (args.with_remaining_stock) {
+        const wrs = args.with_remaining_stock;
+        const wrsQuery: Record<string, any> = {};
+
+        if (wrs.end_date !== undefined && wrs.end_date !== null) wrsQuery['end_date'] = wrs.end_date;
+        if (wrs.warehouse_id) wrsQuery['warehouse_id'] = wrs.warehouse_id;
+        if (wrs.stock_filter) wrsQuery['stock_filter'] = wrs.stock_filter;
+        if (wrs.less_than !== undefined && wrs.less_than !== null) wrsQuery['less_than'] = wrs.less_than;
+        if (wrs.greater_than !== undefined && wrs.greater_than !== null) wrsQuery['greater_than'] = wrs.greater_than;
+        if (wrs.include_service_products !== undefined && wrs.include_service_products !== null)
+          wrsQuery['include_service_products'] = wrs.include_service_products;
+        if (wrs.sort_by_remaining_stock) wrsQuery['sort_by_remaining_stock'] = wrs.sort_by_remaining_stock;
+
+        if (Object.keys(wrsQuery).length > 0) queryParams['with_remaining_stock'] = wrsQuery;
+      }
+
+      queryParams['refresh'] = args.refresh;
+      queryParams['paginate'] = {
+        page: args.page,
+        per_page: args.per_page,
+      };
+
+      const url = route(
+        'api.get.product.read_any',
+        {
+          _query: queryParams,
+        },
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Collection<Array<Product>>> = await axios.get(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
+  public async readAnyGet(args: ProductReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Product>> | null>> {
+    const result: ServiceResponse<Resource<Array<Product>> | null> = {
+      success: false,
+    };
+
+    try {
+      const queryParams: Record<string, any> = {};
+      queryParams['with_trashed'] = args.with_trashed ? 1 : 0;
+
+      queryParams['company_id'] = args.company_id;
+      queryParams['search'] = args.search ? args.search : '';
+      if (args.category_id) queryParams['category_id'] = args.category_id;
+      if (args.brand_id) queryParams['brand_id'] = args.brand_id;
+      if (args.is_taxable !== undefined && args.is_taxable !== null)
+        queryParams['is_taxable'] = args.is_taxable ? 1 : 0;
+      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
+      if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
+        queryParams['is_price_include_vat'] = args.is_price_include_vat ? 1 : 0;
+      if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
+        queryParams['is_use_serial_number'] = args.is_use_serial_number ? 1 : 0;
+      if (args.is_expirable !== undefined && args.is_expirable !== null)
+        queryParams['is_expirable'] = args.is_expirable ? 1 : 0;
+      if (args.type) queryParams['type'] = args.type;
+      if (args.status) queryParams['status'] = args.status;
+      if (args.include_id) queryParams['include_id'] = args.include_id;
+
+      if (args.with_remaining_stock) {
+        const wrs = args.with_remaining_stock;
+        const wrsQuery: Record<string, any> = {};
+
+        if (wrs.end_date !== undefined && wrs.end_date !== null) wrsQuery['end_date'] = wrs.end_date;
+        if (wrs.warehouse_id) wrsQuery['warehouse_id'] = wrs.warehouse_id;
+        if (wrs.stock_filter) wrsQuery['stock_filter'] = wrs.stock_filter;
+        if (wrs.less_than !== undefined && wrs.less_than !== null) wrsQuery['less_than'] = wrs.less_than;
+        if (wrs.greater_than !== undefined && wrs.greater_than !== null) wrsQuery['greater_than'] = wrs.greater_than;
+        if (wrs.include_service_products !== undefined && wrs.include_service_products !== null)
+          wrsQuery['include_service_products'] = wrs.include_service_products ? 1 : 0;
+        if (wrs.sort_by_remaining_stock) wrsQuery['sort_by_remaining_stock'] = wrs.sort_by_remaining_stock;
+
+        if (Object.keys(wrsQuery).length > 0) queryParams['with_remaining_stock'] = wrsQuery;
+      }
+
+      queryParams['refresh'] = args.refresh;
+      queryParams['get'] = {
+        limit: args.limit,
+      };
+
+      const url = route(
+        'api.get.product.read_any',
+        {
+          _query: queryParams,
+        },
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Resource<Array<Product>>> = await axios.get(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
+  public async read(ulid: string): Promise<ServiceResponse<Product | null>> {
+    const result: ServiceResponse<Product | null> = {
+      success: false,
+    };
+
+    try {
+      const url = route(
+        'api.get.product.read',
+        {
+          product: ulid,
+        },
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Resource<Product>> = await axios.get(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
   public useProductPhysicalStoreForm() {
     const url = route('api.post.product.save.physical', undefined, true, this.ziggyRoute);
 
@@ -141,160 +327,6 @@ export default class ProductService {
     });
 
     return form;
-  }
-
-  public async readAnyPaginate(
-    args: ProductReadAnyPaginateRequest,
-  ): Promise<ServiceResponse<Collection<Array<Product>> | null>> {
-    const result: ServiceResponse<Collection<Array<Product>> | null> = {
-      success: false,
-    };
-
-    try {
-      const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
-      if (args.company_id) queryParams['company_id'] = args.company_id;
-
-      if (args.search) queryParams['search'] = args.search;
-      if (args.category_id) queryParams['category_id'] = args.category_id;
-      if (args.brand_id) queryParams['brand_id'] = args.brand_id;
-      if (args.is_taxable !== undefined && args.is_taxable !== null) queryParams['is_taxable'] = args.is_taxable;
-      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
-      if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
-        queryParams['is_price_include_vat'] = args.is_price_include_vat;
-      if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
-        queryParams['is_use_serial_number'] = args.is_use_serial_number;
-      if (args.is_expirable !== undefined && args.is_expirable !== null)
-        queryParams['is_expirable'] = args.is_expirable;
-      if (args.type) queryParams['type'] = args.type;
-      if (args.status) queryParams['status'] = args.status;
-      if (args.include_id) queryParams['include_id'] = args.include_id;
-
-      queryParams['refresh'] = args.refresh;
-      queryParams['paginate'] = {
-        page: args.page,
-        per_page: args.per_page,
-      };
-
-      const url = route(
-        'api.get.product.read_any',
-        {
-          _query: queryParams,
-        },
-        false,
-        this.ziggyRoute,
-      );
-
-      const response: AxiosResponse<Collection<Array<Product>>> = await axios.get(url);
-
-      if (response.status == StatusCode.OK) {
-        result.success = true;
-        result.data = response.data;
-      }
-
-      return result;
-    } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-      } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-      } else {
-        return result;
-      }
-    }
-  }
-
-  public async readAnyGet(args: ProductReadAnyGetRequest): Promise<ServiceResponse<Resource<Array<Product>> | null>> {
-    const result: ServiceResponse<Resource<Array<Product>> | null> = {
-      success: false,
-    };
-
-    try {
-      const queryParams: Record<string, any> = {};
-      queryParams['with_trashed'] = args.with_trashed ? 1 : 0;
-
-      queryParams['company_id'] = args.company_id;
-      queryParams['search'] = args.search ? args.search : '';
-      if (args.category_id) queryParams['category_id'] = args.category_id;
-      if (args.brand_id) queryParams['brand_id'] = args.brand_id;
-      if (args.is_taxable !== undefined && args.is_taxable !== null)
-        queryParams['is_taxable'] = args.is_taxable ? 1 : 0;
-      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
-      if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
-        queryParams['is_price_include_vat'] = args.is_price_include_vat ? 1 : 0;
-      if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
-        queryParams['is_use_serial_number'] = args.is_use_serial_number ? 1 : 0;
-      if (args.is_expirable !== undefined && args.is_expirable !== null)
-        queryParams['is_expirable'] = args.is_expirable ? 1 : 0;
-      if (args.type) queryParams['type'] = args.type;
-      if (args.status) queryParams['status'] = args.status;
-      if (args.include_id) queryParams['include_id'] = args.include_id;
-
-      queryParams['refresh'] = args.refresh;
-      queryParams['get'] = {
-        limit: args.limit,
-      };
-
-      const url = route(
-        'api.get.product.read_any',
-        {
-          _query: queryParams,
-        },
-        false,
-        this.ziggyRoute,
-      );
-
-      const response: AxiosResponse<Resource<Array<Product>>> = await axios.get(url);
-
-      if (response.status == StatusCode.OK) {
-        result.success = true;
-        result.data = response.data;
-      }
-
-      return result;
-    } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-      } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-      } else {
-        return result;
-      }
-    }
-  }
-
-  public async read(ulid: string): Promise<ServiceResponse<Product | null>> {
-    const result: ServiceResponse<Product | null> = {
-      success: false,
-    };
-
-    try {
-      const url = route(
-        'api.get.product.read',
-        {
-          product: ulid,
-        },
-        false,
-        this.ziggyRoute,
-      );
-
-      const response: AxiosResponse<Resource<Product>> = await axios.get(url);
-
-      if (response.status == StatusCode.OK) {
-        result.success = true;
-        result.data = response.data.data;
-      }
-
-      return result;
-    } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
-      } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
-      } else {
-        return result;
-      }
-    }
   }
 
   public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {

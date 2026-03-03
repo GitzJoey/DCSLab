@@ -34,6 +34,7 @@ export default class AuthService {
   public useLoginForm() {
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
+    client.axios().defaults.headers.common['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const form = useForm('post', getBackendUrl() + '/login', {
       email: '',
       password: '',

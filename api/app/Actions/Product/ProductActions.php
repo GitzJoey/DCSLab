@@ -3,6 +3,11 @@
 namespace App\Actions\Product;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\ProductWithRemainingStockDTO;
+use App\Enums\ProductStockFilterEnum;
+use App\Enums\ProductTypeEnum;
+use App\Enums\SortDirectionEnum;
+use App\Helpers\TimezoneHelper;
 use App\Models\Product;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -32,18 +37,30 @@ class ProductActions
         ?int $type,
         ?int $status,
         ?int $includeId,
+        ?ProductWithRemainingStockDTO $withRemainingStock,
         ?ExecuteDTO $execute
     ) {
-        $query = Product::with([
+        $query = Product::select('products.*')->withTrashed();
+        $query->with([
             'company',
             'category',
             'brand',
             'productUnits.unit',
         ]);
 
-        $query->select('products.*')
-            ->whereCompanyId($companyId)
-            ->withTrashed();
+        $query->join('product_categories', 'products.category_id', '=', 'product_categories.id');
+        $query->leftJoin('brands', 'products.brand_id', '=', 'brands.id');
+
+        $query->whereCompanyId($companyId);
+
+        if ($withRemainingStock) {
+            $endDate = $withRemainingStock->endDate ? TimezoneHelper::convertToUTC($withRemainingStock->endDate) : null;
+
+            $query->withRemainingStock(
+                endDate: $endDate,
+                warehouseId: $withRemainingStock->warehouseId,
+            );
+        }
 
         $query->where(function ($query) use (
             $withTrashed,
@@ -58,6 +75,7 @@ class ProductActions
             $type,
             $status,
             $includeId,
+            $withRemainingStock,
         ) {
             $query->where(function ($query) use (
                 $withTrashed,
@@ -70,7 +88,8 @@ class ProductActions
                 $isUseSerialNumber,
                 $isExpirable,
                 $type,
-                $status
+                $status,
+                $withRemainingStock,
             ) {
                 $query->withoutTrashed();
                 if ($withTrashed) {
@@ -116,6 +135,42 @@ class ProductActions
                 if (! is_null($status)) {
                     $query->where('products.status', $status);
                 }
+
+                if ($withRemainingStock) {
+                    $query->where(function ($query) use ($withRemainingStock) {
+                        if ($withRemainingStock->stockFilter !== null) {
+                            $stockFilter = $withRemainingStock->stockFilter;
+
+                            if ($stockFilter === ProductStockFilterEnum::HAS_STOCK->value) {
+                                $query->whereRaw('COALESCE(products_with_remaining_stock.remaining_stock, 0) > 0');
+                            } elseif ($stockFilter === ProductStockFilterEnum::EMPTY->value) {
+                                $query->whereRaw('COALESCE(products_with_remaining_stock.remaining_stock, 0) = 0');
+                            } elseif ($stockFilter === ProductStockFilterEnum::VALID->value) {
+                                $query->whereRaw('COALESCE(products_with_remaining_stock.remaining_stock, 0) >= 0');
+                            } elseif ($stockFilter === ProductStockFilterEnum::INVALID->value) {
+                                $query->whereRaw('COALESCE(products_with_remaining_stock.remaining_stock, 0) < 0');
+                            }
+                        }
+
+                        if ($withRemainingStock->lessThan !== null) {
+                            $query->whereRaw(
+                                'COALESCE(products_with_remaining_stock.remaining_stock, 0) < ?',
+                                [$withRemainingStock->lessThan]
+                            );
+                        }
+
+                        if ($withRemainingStock->greaterThan !== null) {
+                            $query->whereRaw(
+                                'COALESCE(products_with_remaining_stock.remaining_stock, 0) > ?',
+                                [$withRemainingStock->greaterThan]
+                            );
+                        }
+                    });
+
+                    if ($withRemainingStock->includeServiceProducts === true) {
+                        $query->orWhere('products.type', ProductTypeEnum::SERVICE->value);
+                    }
+                }
             });
 
             if ($includeId) {
@@ -126,6 +181,15 @@ class ProductActions
         if ($includeId) {
             $query->orderByRaw('FIELD(products.id, '.$includeId.') desc');
         }
+
+        if ($withRemainingStock?->sortByRemainingStock) {
+            $directionEnum = SortDirectionEnum::tryFrom(strtolower($withRemainingStock->sortByRemainingStock)) ?? SortDirectionEnum::ASC;
+            $query->orderByRaw('COALESCE(products_with_remaining_stock.remaining_stock, 0) '.$directionEnum->value);
+        }
+
+        $query->orderBy('product_categories.name', 'asc');
+        $query->orderBy('brands.name', 'asc');
+        $query->orderBy('products.is_active', 'desc');
         $query->orderBy('products.name', 'asc');
 
         if ($execute) {

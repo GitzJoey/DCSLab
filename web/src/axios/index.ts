@@ -17,6 +17,7 @@ defaultAxiosInstance.defaults.withXSRFToken = true;
 defaultAxiosInstance.interceptors.request.use(function (config) {
   config.headers['X-Localization'] =
     localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG');
+  config.headers['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return config;
 });
 
@@ -50,6 +51,11 @@ const authAxiosInstance = axios.create({
 });
 
 authAxiosInstance.defaults.withCredentials = true;
+
+authAxiosInstance.interceptors.request.use(function (config) {
+  config.headers['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return config;
+});
 
 const axiosInstance = axios.create();
 

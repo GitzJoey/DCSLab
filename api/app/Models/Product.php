@@ -143,7 +143,8 @@ class Product extends Model
                 ->orWhereHas('category', fn ($q) => $q->search($search))
                 ->orWhere('products.code', 'like', '%'.$search.'%')
                 ->orWhere('products.name', 'like', '%'.$search.'%')
-                ->orWhere('products.remarks', 'like', '%'.$search.'%');
+                ->orWhere('products.remarks', 'like', '%'.$search.'%')
+                ->orWhereHas('productUnits', fn ($q) => $q->search($search));
         });
     }
 }

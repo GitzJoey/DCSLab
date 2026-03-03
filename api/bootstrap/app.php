@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\RedirectIfAuthenticatedJson;
+use App\Http\Middleware\UpdateUserTimezone;
 use App\Http\Middleware\ValidateUser;
 use App\Http\Middleware\XssSanitizer;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'validate.user' => ValidateUser::class,
         ]);
         $middleware->append(XssSanitizer::class);
+        $middleware->append(UpdateUserTimezone::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

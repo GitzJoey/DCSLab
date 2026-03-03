@@ -12,6 +12,8 @@ use App\DTOs\ProductPhysicalCreateDTO;
 use App\DTOs\ProductPhysicalUpdateDTO;
 use App\DTOs\ProductServiceCreateDTO;
 use App\DTOs\ProductServiceUpdateDTO;
+use App\DTOs\ProductWithRemainingStockDTO;
+use App\Enums\ProductStockFilterEnum;
 use App\Enums\ProductTypeEnum;
 use App\Enums\RecordStatusEnum;
 use App\Helpers\HashidsHelper;
@@ -58,6 +60,11 @@ class ProductController extends BaseController
         if ($request->filled('include_id')) $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
         if ($request->filled('category_id')) $request->merge(['category_id' => HashidsHelper::decodeId($request->category_id)]);
         if ($request->filled('brand_id')) $request->merge(['brand_id' => HashidsHelper::decodeId($request->brand_id)]);
+        if ($request->filled('with_remaining_stock.warehouse_id')) {
+            $withRemainingStock = $request->input('with_remaining_stock', []);
+            $withRemainingStock['warehouse_id'] = HashidsHelper::decodeId($request->input('with_remaining_stock.warehouse_id'));
+            $request->merge(['with_remaining_stock' => $withRemainingStock]);
+        }
 
         $validatedRequest = $request->validate([
             'refresh' => ['required', 'boolean'],
@@ -76,12 +83,36 @@ class ProductController extends BaseController
             'status' => ['nullable', 'integer', new Enum(RecordStatusEnum::class)],
             'include_id' => ['nullable', 'integer', new ExistsForCompany('products', $request->company_id)],
 
+            'with_remaining_stock' => ['nullable', 'array'],
+            'with_remaining_stock.end_date' => ['nullable', 'date'],
+            'with_remaining_stock.warehouse_id' => ['nullable', 'integer', new ExistsForCompany('warehouses', $request->company_id)],
+            'with_remaining_stock.stock_filter' => ['nullable', 'string', new Enum(ProductStockFilterEnum::class)],
+            'with_remaining_stock.less_than' => ['nullable', 'numeric'],
+            'with_remaining_stock.greater_than' => ['nullable', 'numeric'],
+            'with_remaining_stock.include_service_products' => ['nullable', 'boolean'],
+            'with_remaining_stock.sort_by_remaining_stock' => ['nullable', 'string', 'in:asc,desc'],
+
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
             'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
             'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
             'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
             'get.limit' => ['required_with:get', 'integer', 'min:10'],
         ]);
+
+        $withRemainingStockDTO = null;
+        if (isset($validatedRequest['with_remaining_stock'])) {
+            $withRemainingStock = $validatedRequest['with_remaining_stock'];
+
+            $withRemainingStockDTO = new ProductWithRemainingStockDTO(
+                endDate: $withRemainingStock['end_date'] ?? null,
+                warehouseId: $withRemainingStock['warehouse_id'] ?? null,
+                stockFilter: $withRemainingStock['stock_filter'] ?? null,
+                lessThan: array_key_exists('less_than', $withRemainingStock) ? (float) $withRemainingStock['less_than'] : null,
+                greaterThan: array_key_exists('greater_than', $withRemainingStock) ? (float) $withRemainingStock['greater_than'] : null,
+                includeServiceProducts: array_key_exists('include_service_products', $withRemainingStock) ? (bool) $withRemainingStock['include_service_products'] : null,
+                sortByRemainingStock: $withRemainingStock['sort_by_remaining_stock'] ?? null,
+            );
+        }
 
         $result = null;
         $errorMsg = '';
@@ -101,6 +132,7 @@ class ProductController extends BaseController
                 type: $validatedRequest['type'] ?? null,
                 status: $validatedRequest['status'] ?? null,
                 includeId: $validatedRequest['include_id'] ?? null,
+                withRemainingStock: $withRemainingStockDTO,
 
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],

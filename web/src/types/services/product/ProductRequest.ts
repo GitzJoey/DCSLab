@@ -1,5 +1,18 @@
 import { ProductUnitStoreRequest, ProductUnitUpdateRequest } from '../product-unit/ProductUnitRequest';
 
+export type ProductStockFilter = 'has_stock' | 'empty' | 'valid' | 'invalid';
+export type SortDirection = 'asc' | 'desc';
+
+export interface ProductWithRemainingStockFilter {
+  end_date?: string | null;
+  warehouse_id?: string | null;
+  stock_filter?: ProductStockFilter | null;
+  less_than?: number | null;
+  greater_than?: number | null;
+  include_service_products?: boolean | null;
+  sort_by_remaining_stock?: SortDirection | null;
+}
+
 export interface ProductReadAnyPaginateRequest {
   with_trashed: boolean;
   company_id: string;
@@ -15,6 +28,7 @@ export interface ProductReadAnyPaginateRequest {
   type?: number | null;
   status?: string | number;
   include_id?: string;
+  with_remaining_stock?: ProductWithRemainingStockFilter | null;
 
   refresh: boolean;
   page: number;
@@ -36,6 +50,7 @@ export interface ProductReadAnyGetRequest {
   type?: number | null;
   status?: string | number;
   include_id?: string;
+  with_remaining_stock?: ProductWithRemainingStockFilter | null;
 
   refresh: boolean;
   limit: number;
