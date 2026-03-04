@@ -6,6 +6,7 @@
       "product": "Product",
       "qty": "Qty",
       "product_unit": "Product Unit",
+      "remaining_stock": "Remaining Stock",
       "product_unit_conversion_value": "C. Val",
       "product_unit_cogs": "Unit COGS",
       "product_unit_total_cogs": "Total COGS",

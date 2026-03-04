@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\TimezoneHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -21,7 +22,7 @@ class StockAdjustmentResource extends JsonResource
             'company' => new CompanyResource($this->whenLoaded('company')),
             'branch' => new BranchResource($this->whenLoaded('branch')),
             'code' => $this->code,
-            'date' => $this->date,
+            'date' => TimezoneHelper::convertFromUTCIfValid($this->date),
             'category' => new StockAdjustmentCategoryResource($this->whenLoaded('category')),
             'in_warehouse' => new WarehouseResource($this->whenLoaded('inWarehouse')),
             'out_warehouse' => new WarehouseResource($this->whenLoaded('outWarehouse')),

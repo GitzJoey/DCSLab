@@ -11,6 +11,7 @@ use App\DTOs\StockAdjustmentInProductUpdateDTO;
 use App\DTOs\StockAdjustmentOutProductCreateDTO;
 use App\DTOs\StockAdjustmentOutProductUpdateDTO;
 use App\DTOs\StockAdjustmentUpdateDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\StockAdjustment;
 use App\Traits\CacheHelper;
@@ -150,7 +151,7 @@ class StockAdjustmentActions
             $stockAdjustment->company_id = $data->companyId;
             $stockAdjustment->branch_id = $data->branchId;
             $stockAdjustment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
-            $stockAdjustment->date = $data->date;
+            $stockAdjustment->date = TimezoneHelper::convertToUTC($data->date);
             $stockAdjustment->category_id = $data->categoryId;
             $stockAdjustment->in_warehouse_id = $data->inWarehouseId;
             $stockAdjustment->out_warehouse_id = $data->outWarehouseId;
@@ -221,7 +222,7 @@ class StockAdjustmentActions
             $stockAdjustment->company_id = $data->companyId;
             $stockAdjustment->branch_id = $data->branchId;
             $stockAdjustment->code = $this->generateUniqueCode($data->companyId, $data->code, $stockAdjustment->id);
-            $stockAdjustment->date = $data->date;
+            $stockAdjustment->date = TimezoneHelper::convertToUTC($data->date);
             $stockAdjustment->category_id = $data->categoryId;
             $stockAdjustment->in_warehouse_id = $data->inWarehouseId;
             $stockAdjustment->out_warehouse_id = $data->outWarehouseId;

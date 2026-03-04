@@ -72,10 +72,8 @@ type ProductUnitOption = {
   base_unit_name: string;
   conversion_value: number;
   cogs: number;
+  remaining_stock: number;
 };
-
-const inProductsRemarksExpanded = ref<boolean[]>([]);
-const outProductsRemarksExpanded = ref<boolean[]>([]);
 
 const { t } = useI18n();
 const router = useRouter();
@@ -127,11 +125,9 @@ const isSearchingInProductUnit = ref<boolean>(false);
 const productUnitOptionsIn = ref<Array<ProductUnitOption>>([]);
 const editingInProductIndex = ref<number | null>(null);
 const inProductQtyToFocus = ref<number | null>(null);
+const inProductsRemarksExpanded = ref<boolean[]>([]);
 const inProductsForm = computed<StockAdjustmentInProductFormItem[]>(
   () => stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[],
-);
-const outProductsForm = computed<StockAdjustmentOutProductFormItem[]>(
-  () => stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[],
 );
 
 const showOutProductUnitModal = ref<boolean>(false);
@@ -140,6 +136,10 @@ const isSearchingOutProductUnit = ref<boolean>(false);
 const productUnitOptionsOut = ref<Array<ProductUnitOption>>([]);
 const editingOutProductIndex = ref<number | null>(null);
 const outProductQtyToFocus = ref<number | null>(null);
+const outProductsRemarksExpanded = ref<boolean[]>([]);
+const outProductsForm = computed<StockAdjustmentOutProductFormItem[]>(
+  () => stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[],
+);
 
 const cards = ref<Array<TwoColumnsLayoutCards>>([
   {
@@ -409,7 +409,7 @@ const searchInProductUnits = async () => {
       warehouse_id: stockAdjustmentForm.in_warehouse_id as string,
       include_service_products: false,
     },
-    refresh: false,
+    refresh: true,
     limit: 20,
   });
 
@@ -419,6 +419,7 @@ const searchInProductUnits = async () => {
     const products = result.data.data as any[];
     productUnitOptionsIn.value = products.flatMap((p: any) => {
       const units: any[] = p.product_units || [];
+      const remainingStockBaseUnit = Number(p.remaining_stock_base_unit ?? 0);
 
       let baseUnit = units.find((u: any) => u.is_base);
       if (!baseUnit) baseUnit = units.find((u: any) => Number(u.conversion_value) === 1);
@@ -426,17 +427,23 @@ const searchInProductUnits = async () => {
       if (!baseUnit && units.length > 0) baseUnit = units[0];
       const baseUnitName = baseUnit && baseUnit.unit ? baseUnit.unit.name : '';
 
-      return units.map((u: any) => ({
-        product_id: p.id,
-        product_code: p.code,
-        product_name: p.name,
-        product_unit_id: u.id,
-        product_unit_code: u.code,
-        unit_name: u.unit ? u.unit.name : '',
-        base_unit_name: baseUnitName,
-        conversion_value: Number(u.conversion_value),
-        cogs: Number(u.price),
-      }));
+      return units.map((u: any) => {
+        const conversionValue = Number(u.conversion_value) || 1;
+        const remainingStock = remainingStockBaseUnit / conversionValue;
+
+        return {
+          product_id: p.id,
+          product_code: p.code,
+          product_name: p.name,
+          product_unit_id: u.id,
+          product_unit_code: u.code,
+          unit_name: u.unit ? u.unit.name : '',
+          base_unit_name: baseUnitName,
+          conversion_value: conversionValue,
+          cogs: Number(u.price),
+          remaining_stock: remainingStock,
+        };
+      });
     });
   } else {
     productUnitOptionsIn.value = [];
@@ -554,7 +561,7 @@ const searchOutProductUnits = async () => {
       stock_filter: 'has_stock',
       include_service_products: false,
     },
-    refresh: false,
+    refresh: true,
     limit: 20,
   });
 
@@ -564,6 +571,7 @@ const searchOutProductUnits = async () => {
     const products = result.data.data as any[];
     productUnitOptionsOut.value = products.flatMap((p: any) => {
       const units: any[] = p.product_units || [];
+      const remainingStockBaseUnit = Number(p.remaining_stock_base_unit ?? 0);
 
       let baseUnit = units.find((u: any) => u.is_base);
       if (!baseUnit) baseUnit = units.find((u: any) => Number(u.conversion_value) === 1);
@@ -571,17 +579,23 @@ const searchOutProductUnits = async () => {
       if (!baseUnit && units.length > 0) baseUnit = units[0];
       const baseUnitName = baseUnit && baseUnit.unit ? baseUnit.unit.name : '';
 
-      return units.map((u: any) => ({
-        product_id: p.id,
-        product_code: p.code,
-        product_name: p.name,
-        product_unit_id: u.id,
-        product_unit_code: u.code,
-        unit_name: u.unit ? u.unit.name : '',
-        base_unit_name: baseUnitName,
-        conversion_value: Number(u.conversion_value),
-        cogs: Number(u.price),
-      }));
+      return units.map((u: any) => {
+        const conversionValue = Number(u.conversion_value) || 1;
+        const remainingStock = remainingStockBaseUnit / conversionValue;
+
+        return {
+          product_id: p.id,
+          product_code: p.code,
+          product_name: p.name,
+          product_unit_id: u.id,
+          product_unit_code: u.code,
+          unit_name: u.unit ? u.unit.name : '',
+          base_unit_name: baseUnitName,
+          conversion_value: conversionValue,
+          cogs: Number(u.price),
+          remaining_stock: remainingStock,
+        };
+      });
     });
   } else {
     productUnitOptionsOut.value = [];
@@ -1239,6 +1253,10 @@ const onSubmit = async () => {
                   <th class="px-3 py-2 text-left">
                     {{ t('views.stock_adjustment_in_product.table.cols.product') }}
                   </th>
+                  <!-- remaining_stock -->
+                  <th class="px-3 py-2 text-right">
+                    {{ t('views.stock_adjustment_in_product.table.cols.remaining_stock') }}
+                  </th>
                   <!-- unit -->
                   <th class="px-3 py-2 text-left">
                     {{ t('views.product.table.cols.unit') }}
@@ -1258,7 +1276,7 @@ const onSubmit = async () => {
               <tbody>
                 <!-- empty state -->
                 <tr v-if="productUnitOptionsIn.length === 0">
-                  <td colspan="5" class="px-3 py-4 text-center text-slate-500">
+                  <td colspan="6" class="px-3 py-4 text-center text-slate-500">
                     {{ t('components.data-list.data_not_found') }}
                   </td>
                 </tr>
@@ -1268,6 +1286,10 @@ const onSubmit = async () => {
                   class="border-t border-slate-200/60 dark:border-darkmode-400">
                   <!-- product -->
                   <td class="px-3 py-2">[{{ opt.product_unit_code }}] {{ opt.product_name }}</td>
+                  <!-- remaining_stock -->
+                  <td class="px-3 py-2 text-right">
+                    {{ formatCurrency(opt.remaining_stock) }}
+                  </td>
                   <!-- unit -->
                   <td class="px-3 py-2">
                     {{ opt.unit_name }}
@@ -1317,7 +1339,7 @@ const onSubmit = async () => {
             <FormInput id="product-unit-search-input" v-model="productSearchTextOut" type="text"
               :placeholder="t('components.search-box.placeholder.search')" @keyup.enter="searchOutProductUnits" />
             <Button type="button" variant="primary" class="shadow-md" @click="searchOutProductUnits" tabindex="-1"
-              :disabled="isSearchingOutProductUnit">
+              :disabled="isSearchingOutProductUnit || !stockAdjustmentForm.out_warehouse_id">
               <template v-if="isSearchingOutProductUnit">
                 <Lucide icon="Loader" class="w-4 h-4 animate-spin" />
               </template>
@@ -1335,6 +1357,10 @@ const onSubmit = async () => {
                   <!-- product -->
                   <th class="px-3 py-2 text-left">
                     {{ t('views.stock_adjustment_out_product.table.cols.product') }}
+                  </th>
+                  <!-- remaining_stock -->
+                  <th class="px-3 py-2 text-right">
+                    {{ t('views.stock_adjustment_out_product.table.cols.remaining_stock') }}
                   </th>
                   <!-- unit -->
                   <th class="px-3 py-2 text-left">
@@ -1355,7 +1381,7 @@ const onSubmit = async () => {
               <tbody>
                 <!-- empty state -->
                 <tr v-if="productUnitOptionsOut.length === 0">
-                  <td colspan="5" class="px-3 py-4 text-center text-slate-500">
+                  <td colspan="6" class="px-3 py-4 text-center text-slate-500">
                     {{ t('components.data-list.data_not_found') }}
                   </td>
                 </tr>
@@ -1365,6 +1391,10 @@ const onSubmit = async () => {
                   class="border-t border-slate-200/60 dark:border-darkmode-400">
                   <!-- product -->
                   <td class="px-3 py-2">[{{ opt.product_unit_code }}] {{ opt.product_name }}</td>
+                  <!-- remaining_stock -->
+                  <td class="px-3 py-2 text-right">
+                    {{ formatCurrency(opt.remaining_stock) }}
+                  </td>
                   <!-- unit -->
                   <td class="px-3 py-2">
                     {{ opt.unit_name }}

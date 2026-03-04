@@ -100,7 +100,7 @@
   };
 
   const handleDataListChange = async (data: DataListEmittedData) => {
-    await getStockAdjustments(data.search.text, false, data.pagination.page, data.pagination.per_page);
+    await getStockAdjustments(data.search.text, true, data.pagination.page, data.pagination.per_page);
   };
 
   const viewSelected = (idx: number) => {

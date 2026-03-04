@@ -6,7 +6,9 @@
       "product": "Produk",
       "qty": "Qty",
       "product_unit": "Satuan Produk",
+      "remaining_stock": "Sisa Stok",
       "product_unit_conversion_value": "Nilai Konversi",
+      "product_unit_cogs": "HPP Satuan",
       "remarks": "Catatan"
     }
   },

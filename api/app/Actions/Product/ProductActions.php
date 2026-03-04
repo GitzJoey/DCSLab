@@ -189,7 +189,7 @@ class ProductActions
 
         $query->orderBy('product_categories.name', 'asc');
         $query->orderBy('brands.name', 'asc');
-        $query->orderBy('products.is_active', 'desc');
+        $query->orderBy('products.status', 'desc');
         $query->orderBy('products.name', 'asc');
 
         if ($execute) {
