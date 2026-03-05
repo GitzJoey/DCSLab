@@ -14,6 +14,7 @@
     FormErrorMessages,
     FormInputCode,
     FormInputCurrency,
+    FormInputDateTime,
     FormTextarea,
     FormSelectSearch,
     FormSwitch,
@@ -98,8 +99,6 @@
   const warehouseService = new WarehouseService();
   const productService = new ProductService();
   const cacheServices = new CacheService();
-
-  const dateTimeDisplay = ref<string>('');
   const categoryDDL = ref<Array<DropDownOption> | null>(null);
   const categorySearch = ref<string>('');
   const categoryOptions = computed(() =>
@@ -236,8 +235,6 @@
 
       stockAdjustmentData.value = data;
 
-      dateTimeDisplay.value = formatDate(data.date, 'YYYY-MM-DDTHH:mm');
-
       const inProducts: StockAdjustmentInProductFormItem[] = (data.in_products || []).map((item: any) => {
         const productUnit = item.product_unit;
         const unit = productUnit?.unit;
@@ -322,23 +319,6 @@
     } else {
       stockAdjustmentForm.setData({ code: '_AUTO_' });
     }
-  };
-
-  const handleDateTimeChange = () => {
-    const value = dateTimeDisplay.value;
-    if (!value) {
-      stockAdjustmentForm.setData({ date: '' });
-      stockAdjustmentForm.validate('date');
-      return;
-    }
-
-    const [datePart, timePartRaw] = value.split('T');
-    const timePart = timePartRaw ?? '';
-    const normalized = `${datePart} ${timePart}:00`;
-
-    stockAdjustmentForm.setData({ date: normalized });
-    stockAdjustmentForm.forgetError('date');
-    stockAdjustmentForm.validate('date');
   };
 
   const loadCategoryDDL = async (search = '') => {
@@ -699,7 +679,6 @@
   const resetForm = async () => {
     stockAdjustmentForm.reset();
     stockAdjustmentForm.setErrors({});
-    dateTimeDisplay.value = '';
     inProductsRemarksExpanded.value = [];
     outProductsRemarksExpanded.value = [];
     await loadData();
@@ -824,14 +803,13 @@
               <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('date') }">
                 {{ t('views.stock_adjustment.fields.date') }}
               </FormLabel>
-              <FormInput
-                v-model="dateTimeDisplay"
-                type="datetime-local"
+              <FormInputDateTime
+                v-model="stockAdjustmentForm.date"
                 :class="{
                   'border-danger': stockAdjustmentForm.invalid('date'),
                 }"
                 :placeholder="t('views.stock_adjustment.fields.date')"
-                @change="handleDateTimeChange"
+                @change="stockAdjustmentForm.validate('date')"
               />
               <FormErrorMessages :messages="stockAdjustmentForm.errors.date" />
             </div>

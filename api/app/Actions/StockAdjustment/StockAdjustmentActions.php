@@ -151,7 +151,7 @@ class StockAdjustmentActions
             $stockAdjustment->company_id = $data->companyId;
             $stockAdjustment->branch_id = $data->branchId;
             $stockAdjustment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
-            $stockAdjustment->date = TimezoneHelper::convertToUTC($data->date);
+            $stockAdjustment->date = $this->generateDate($data->date);
             $stockAdjustment->category_id = $data->categoryId;
             $stockAdjustment->in_warehouse_id = $data->inWarehouseId;
             $stockAdjustment->out_warehouse_id = $data->outWarehouseId;
@@ -222,7 +222,7 @@ class StockAdjustmentActions
             $stockAdjustment->company_id = $data->companyId;
             $stockAdjustment->branch_id = $data->branchId;
             $stockAdjustment->code = $this->generateUniqueCode($data->companyId, $data->code, $stockAdjustment->id);
-            $stockAdjustment->date = TimezoneHelper::convertToUTC($data->date);
+            $stockAdjustment->date = $this->generateDate($data->date);
             $stockAdjustment->category_id = $data->categoryId;
             $stockAdjustment->in_warehouse_id = $data->inWarehouseId;
             $stockAdjustment->out_warehouse_id = $data->outWarehouseId;
@@ -341,6 +341,17 @@ class StockAdjustmentActions
             $execution_time = microtime(true) - $timer_start;
             $this->loggerPerformance(__METHOD__, $execution_time);
         }
+    }
+
+    public function generateDate(string $date): string
+    {
+        if ($date == config('dcslab.KEYWORDS.AUTO')) {
+            $nowLocal = now(TimezoneHelper::getUserTimezone())->toDateTimeString();
+
+            return TimezoneHelper::convertToUTC($nowLocal);
+        }
+
+        return TimezoneHelper::convertToUTC($date);
     }
 
     public function generateUniqueCode(int $companyId, string $code, ?int $exceptId): string

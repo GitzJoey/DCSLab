@@ -11,6 +11,7 @@ import InputGroup from './InputGroup';
 import FormFileUpload from './FormFileUpload.vue';
 import FormInputCode from './FormInputCode.vue';
 import FormInputCurrency from './FormInputCurrency.vue';
+import FormInputDateTime from './FormInputDateTime.vue';
 import FormErrorMessages from './FormErrorMessages.vue';
 import FormTomSelect from '../TomSelect';
 
@@ -27,6 +28,7 @@ export {
   InputGroup,
   FormInputCode,
   FormInputCurrency,
+  FormInputDateTime,
   FormFileUpload,
   FormErrorMessages,
   FormTomSelect,

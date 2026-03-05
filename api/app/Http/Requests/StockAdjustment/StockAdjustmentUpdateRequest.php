@@ -7,6 +7,7 @@ use App\Models\StockAdjustment;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
+use App\Rules\IsValidDate;
 use App\Rules\IsValidWarehouse;
 use App\Validation\StockAdjustment\StockAdjustmentInProductRules;
 use App\Validation\StockAdjustment\StockAdjustmentOutProductRules;
@@ -34,7 +35,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
             'code' => ['required', 'string', 'max:255'],
-            'date' => ['required', 'date_format:Y-m-d H:i:s'],
+            'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'category_id' => ['required', 'integer', new ExistsForCompany('stock_adjustment_categories', $this->company_id)],
             'in_warehouse_id' => ['nullable', 'integer', 'required_without:out_warehouse_id', new IsValidWarehouse($this->company_id, false)],
             'out_warehouse_id' => ['nullable', 'integer', 'different:in_warehouse_id', 'required_without:in_warehouse_id', new IsValidWarehouse($this->company_id, false)],

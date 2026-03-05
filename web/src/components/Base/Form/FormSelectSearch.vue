@@ -66,6 +66,8 @@
 
   const displayedOptions = computed<FormSelectSearchOption[]>(() => props.options ?? []);
 
+  const isLocked = computed(() => selectedOption.value !== null);
+
   watch(
     () => [props.modelValue, props.options],
     () => {
@@ -82,6 +84,7 @@
   }, 300);
 
   const handleInput = (event: Event) => {
+    if (isLocked.value) return;
     const target = event.target as HTMLInputElement;
     const value = target.value;
 
@@ -91,6 +94,7 @@
   };
 
   const handleFocus = () => {
+    if (isLocked.value) return;
     isFocused.value = true;
     isOpen.value = true;
   };
@@ -118,6 +122,7 @@
       type="text"
       v-bind="_.omit(attrs, 'class')"
       v-model="displayValue"
+      :readonly="isLocked"
       @focus="handleFocus"
       @blur="handleBlur"
       @input="handleInput"

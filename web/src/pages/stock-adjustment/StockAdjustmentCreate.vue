@@ -14,6 +14,7 @@ import {
   FormErrorMessages,
   FormInputCode,
   FormInputCurrency,
+  FormInputDateTime,
   FormTextarea,
   FormSelectSearch,
   FormSwitch,
@@ -90,8 +91,6 @@ const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
 const warehouseService = new WarehouseService();
 const productService = new ProductService();
 const cacheServices = new CacheService();
-
-const dateTimeDisplay = ref<string>('');
 
 const categoryDDL = ref<Array<DropDownOption> | null>(null);
 const categorySearch = ref<string>('');
@@ -226,16 +225,6 @@ onMounted(() => {
     branch_id: selectedUserLocation.value.branch.id,
   });
 
-  if (stockAdjustmentForm.date) {
-    dateTimeDisplay.value = formatDate(stockAdjustmentForm.date as string, 'YYYY-MM-DDTHH:mm');
-  } else {
-    const now = new Date().toString();
-    dateTimeDisplay.value = formatDate(now, 'YYYY-MM-DDTHH:mm');
-    stockAdjustmentForm.setData({
-      date: formatDate(now, 'YYYY-MM-DD HH:mm:ss'),
-    });
-  }
-
   loadCategoryDDL();
   loadInWarehouseDDL();
   loadOutWarehouseDDL();
@@ -250,23 +239,6 @@ const setCode = () => {
   } else {
     stockAdjustmentForm.setData({ code: '_AUTO_' });
   }
-};
-
-const handleDateTimeChange = () => {
-  const value = dateTimeDisplay.value;
-  if (!value) {
-    stockAdjustmentForm.setData({ date: '' });
-    stockAdjustmentForm.validate('date');
-    return;
-  }
-
-  const [datePart, timePartRaw] = value.split('T');
-  const timePart = timePartRaw ?? '';
-  const normalized = `${datePart} ${timePart}:00`;
-
-  stockAdjustmentForm.setData({ date: normalized });
-  stockAdjustmentForm.forgetError('date');
-  stockAdjustmentForm.validate('date');
 };
 
 const loadInWarehouseDDL = async (search = '') => {
@@ -356,10 +328,6 @@ const loadFromCache = () => {
   const data = cacheServices.getLastEntity('STOCK_ADJUSTMENT_CREATE') as Record<string, unknown>;
   if (!data) return;
   stockAdjustmentForm.setData(data);
-  const cachedDate = (data as any).date as string | undefined;
-  if (cachedDate) {
-    dateTimeDisplay.value = formatDate(cachedDate, 'YYYY-MM-DDTHH:mm');
-  }
 };
 // #endregion
 
@@ -388,7 +356,19 @@ const searchInProductUnits = async () => {
     return;
   }
 
+  if (!stockAdjustmentForm.date) {
+    stockAdjustmentForm.validate('date');
+    return;
+  }
+
   isSearchingInProductUnit.value = true;
+
+  let endDate: string;
+  if (stockAdjustmentForm.date === '_AUTO_') {
+    endDate = formatDate(new Date().toString(), 'YYYY-MM-DD HH:mm:ss');
+  } else {
+    endDate = stockAdjustmentForm.date as string;
+  }
 
   const result = await productService.readAnyGet({
     with_trashed: false,
@@ -405,7 +385,7 @@ const searchInProductUnits = async () => {
     status: undefined,
     include_id: undefined,
     with_remaining_stock: {
-      end_date: stockAdjustmentForm.date as string,
+      end_date: endDate,
       warehouse_id: stockAdjustmentForm.in_warehouse_id as string,
       include_service_products: false,
     },
@@ -539,7 +519,19 @@ const searchOutProductUnits = async () => {
     return;
   }
 
+  if (!stockAdjustmentForm.date) {
+    stockAdjustmentForm.validate('date');
+    return;
+  }
+
   isSearchingOutProductUnit.value = true;
+
+  let endDate: string;
+  if (stockAdjustmentForm.date === '_AUTO_') {
+    endDate = formatDate(new Date().toString(), 'YYYY-MM-DD HH:mm:ss');
+  } else {
+    endDate = stockAdjustmentForm.date as string;
+  }
 
   const result = await productService.readAnyGet({
     with_trashed: false,
@@ -556,7 +548,7 @@ const searchOutProductUnits = async () => {
     status: undefined,
     include_id: undefined,
     with_remaining_stock: {
-      end_date: stockAdjustmentForm.date as string,
+      end_date: endDate,
       warehouse_id: stockAdjustmentForm.out_warehouse_id as string,
       stock_filter: 'has_stock',
       include_service_products: false,
@@ -692,7 +684,6 @@ const showAlertPlaceholder = (
 const resetForm = () => {
   stockAdjustmentForm.reset();
   stockAdjustmentForm.setErrors({});
-  dateTimeDisplay.value = '';
   inProductsRemarksExpanded.value = [];
   outProductsRemarksExpanded.value = [];
 };
@@ -805,9 +796,14 @@ const onSubmit = async () => {
               <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('date') }">
                 {{ t('views.stock_adjustment.fields.date') }}
               </FormLabel>
-              <FormInput v-model="dateTimeDisplay" type="datetime-local" :class="{
-                'border-danger': stockAdjustmentForm.invalid('date'),
-              }" :placeholder="t('views.stock_adjustment.fields.date')" @change="handleDateTimeChange" />
+              <FormInputDateTime
+                v-model="stockAdjustmentForm.date"
+                :class="{
+                  'border-danger': stockAdjustmentForm.invalid('date'),
+                }"
+                :placeholder="t('views.stock_adjustment.fields.date')"
+                @change="stockAdjustmentForm.validate('date')"
+              />
               <FormErrorMessages :messages="stockAdjustmentForm.errors.date" />
             </div>
             <!-- category -->

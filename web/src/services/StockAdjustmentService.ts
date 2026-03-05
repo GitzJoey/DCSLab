@@ -38,7 +38,7 @@ export default class StockAdjustmentService {
       company_id: '',
       branch_id: '',
       code: '_AUTO_',
-      date: '',
+      date: '_AUTO_',
       category_id: '',
       in_warehouse_id: '',
       out_warehouse_id: '',
