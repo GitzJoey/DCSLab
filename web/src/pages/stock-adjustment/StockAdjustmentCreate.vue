@@ -14,7 +14,7 @@ import {
   FormErrorMessages,
   FormInputCode,
   FormInputCurrency,
-  FormInputDateTime,
+  FormInputDateTimeAuto,
   FormTextarea,
   FormSelectSearch,
   FormSwitch,
@@ -796,7 +796,7 @@ const onSubmit = async () => {
               <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('date') }">
                 {{ t('views.stock_adjustment.fields.date') }}
               </FormLabel>
-              <FormInputDateTime
+              <FormInputDateTimeAuto
                 v-model="stockAdjustmentForm.date"
                 :class="{
                   'border-danger': stockAdjustmentForm.invalid('date'),

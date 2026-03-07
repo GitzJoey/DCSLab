@@ -1,5 +1,7 @@
 {
   "page_title": "Produk",
+  "page_title_with_remaining_stock": "Produk dengan Sisa Stok",
+  "with_remaining_stock_suffix": "Dengan Sisa Stok",
   "table": {
     "title": "Daftar Produk",
     "cols": {

@@ -27,6 +27,8 @@
   "purchase-management": "Purchase Management",
   "purchase-order": "Purchase Order",
   "master-data": "Master Data",
+  "report": "Report",
+  "product-with-remaining-stock": "Products With Remaining Stock",
   "administrator": "Administrator",
   "administrator-user": "User",
   "devtool": "Dev Tool",

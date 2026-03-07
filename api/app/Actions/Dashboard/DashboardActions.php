@@ -47,6 +47,7 @@ class DashboardActions
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_MasterData($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
         $menu = $this->createMenu_Transaction($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
+        $menu = $this->createMenu_Report($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
 
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
@@ -242,6 +243,40 @@ class DashboardActions
         ];
 
         array_push($root_array['subMenu'], $stockAdjustment);
+
+        array_push($menu, $root_array);
+
+        return $menu;
+    }
+
+    private function createMenu_Report(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
+    {
+        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
+            return $menu;
+        }
+
+        $root_array = [
+            'icon' => 'Cpu',
+            'pageName' => 'side-menu-report',
+            'title' => 'components.menu.report',
+            'subMenu' => [],
+        ];
+
+        $product = [
+            'icon' => 'Package',
+            'pageName' => 'side-menu-report-product',
+            'title' => 'components.menu.product',
+            'subMenu' => [],
+        ];
+
+        $productWithRemainingStock = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-with-remaining-stock',
+            'title' => 'components.menu.product-with-remaining-stock',
+        ];
+
+        array_push($product['subMenu'], $productWithRemainingStock);
+        array_push($root_array['subMenu'], $product);
 
         array_push($menu, $root_array);
 

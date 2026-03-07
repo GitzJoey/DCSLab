@@ -1,31 +1,35 @@
 <script setup lang="ts">
-import { computed, ref, watch, type InputHTMLAttributes, useAttrs, inject } from 'vue';
+import { computed, ref, watch, type InputHTMLAttributes, useAttrs, inject, onBeforeUnmount } from 'vue';
 import { twMerge } from 'tailwind-merge';
 import _ from 'lodash';
 import { formatDate } from '@/utils/helper';
 import { type ProvideFormInline } from './FormInline.vue';
 import { type ProvideInputGroup } from './InputGroup/InputGroup.vue';
 
-interface FormInputDateTimeProps extends /* @vue-ignore */ InputHTMLAttributes {
+interface FormInputDateTimeAutoProps extends /* @vue-ignore */ InputHTMLAttributes {
   modelValue?: string | null;
   formInputSize?: 'sm' | 'lg';
   rounded?: boolean;
 }
 
-interface FormInputDateTimeEmit {
+interface FormInputDateTimeAutoEmit {
   (e: 'update:modelValue', value: string | null): void;
   (e: 'change', value: string | null): void;
 }
 
-const props = defineProps<FormInputDateTimeProps>();
-const emit = defineEmits<FormInputDateTimeEmit>();
+const props = defineProps<FormInputDateTimeAutoProps>();
+const emit = defineEmits<FormInputDateTimeAutoEmit>();
 const attrs = useAttrs();
 const formInline = inject<ProvideFormInline>('formInline', false);
 const inputGroup = inject<ProvideInputGroup>('inputGroup', false);
 
+const AUTO_VALUE = '_AUTO_';
+
 const inputRef = ref<HTMLInputElement | null>(null);
 const isFocused = ref(false);
 const displayValue = ref('');
+
+const isAutoMode = computed(() => props.modelValue === AUTO_VALUE);
 
 const computedClass = computed(() =>
   twMerge([
@@ -41,15 +45,56 @@ const computedClass = computed(() =>
   ]),
 );
 
+const isDisabled = computed(() => {
+  const attrDisabled = (attrs as any).disabled as boolean | undefined;
+  return !!attrDisabled || isAutoMode.value;
+});
+
 watch(
   () => props.modelValue,
   (newVal) => {
     if (isFocused.value) return;
-    if (!newVal) {
+    if (!newVal || newVal === AUTO_VALUE) {
       displayValue.value = '';
       return;
     }
     displayValue.value = formatDate(newVal, 'YYYY-MM-DDTHH:mm:ss');
+  },
+  { immediate: true },
+);
+
+let autoTimer: number | null = null;
+
+const stopAutoTimer = () => {
+  if (autoTimer !== null) {
+    window.clearInterval(autoTimer);
+    autoTimer = null;
+  }
+};
+
+const startAutoTimer = () => {
+  stopAutoTimer();
+  autoTimer = window.setInterval(() => {
+    if (!isAutoMode.value) return;
+    const now = new Date().toString();
+    displayValue.value = formatDate(now, 'YYYY-MM-DDTHH:mm:ss');
+  }, 1000);
+};
+
+watch(
+  isAutoMode,
+  (auto) => {
+    if (auto) {
+      startAutoTimer();
+    } else {
+      stopAutoTimer();
+      const current = props.modelValue;
+      if (!current || current === AUTO_VALUE) {
+        displayValue.value = '';
+      } else {
+        displayValue.value = formatDate(current, 'YYYY-MM-DDTHH:mm:ss');
+      }
+    }
   },
   { immediate: true },
 );
@@ -77,6 +122,20 @@ const handleChange = (event: Event) => {
   emit('change', normalized);
 };
 
+const toggleAuto = () => {
+  if (isAutoMode.value) {
+    emit('update:modelValue', null);
+    emit('change', null);
+  } else {
+    emit('update:modelValue', AUTO_VALUE);
+    emit('change', AUTO_VALUE);
+  }
+};
+
+onBeforeUnmount(() => {
+  stopAutoTimer();
+});
+
 const handleFocus = () => {
   isFocused.value = true;
 };
@@ -87,17 +146,29 @@ const handleBlur = () => {
 </script>
 
 <template>
-  <input
-    ref="inputRef"
-    :class="computedClass"
-    type="datetime-local"
-    step="1"
-    v-bind="_.omit(attrs, 'class')"
-    v-model="displayValue"
-    @input="handleInput"
-    @change="handleChange"
-    @focus="handleFocus"
-    @blur="handleBlur"
-  />
+  <div class="flex items-center gap-2">
+    <div class="flex-1">
+      <input
+        ref="inputRef"
+        :class="computedClass"
+        type="datetime-local"
+        step="1"
+        v-bind="_.omit(attrs, 'class')"
+        v-model="displayValue"
+        :disabled="isDisabled"
+        @input="handleInput"
+        @change="handleChange"
+        @focus="handleFocus"
+        @blur="handleBlur"
+      />
+    </div>
+    <button
+      type="button"
+      class="px-3 py-2.5 text-xs font-medium border border-slate-200 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 whitespace-nowrap"
+      @click="toggleAuto"
+    >
+      Auto
+    </button>
+  </div>
 </template>
 

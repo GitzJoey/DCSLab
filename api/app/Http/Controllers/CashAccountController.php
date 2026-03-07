@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CashAccount\CashAccountActions;
+use App\DTOs\CashAccountWithRemainingBalanceDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -27,6 +28,84 @@ class CashAccountController extends BaseController
         parent::__construct();
 
         $this->cashAccountActions = $cashAccountActions;
+    }
+
+    public function readAny(Request $request)
+    {
+        if (! Auth::check()) return response()->error(trans('rules.auth.unauthorized'), 401);
+        $this->authorize('viewAny', CashAccount::class);
+
+        if ($request->filled('company_id')) {
+            $request->merge(['company_id' => HashidsHelper::decodeId($request->company_id)]);
+        }
+        if ($request->filled('branch_id')) {
+            $request->merge(['branch_id' => HashidsHelper::decodeId($request->branch_id)]);
+        }
+        if ($request->filled('include_id')) {
+            $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
+        }
+
+        $validatedRequest = $request->validate([
+            'refresh' => ['required', 'boolean'],
+            'with_trashed' => ['required', 'boolean'],
+
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'branch_id' => ['nullable', 'integer', 'bail', new IsValidBranch($request->company_id, true)],
+            'search' => ['nullable', 'string'],
+            'include_id' => ['nullable', 'integer', 'exists:cash_accounts,id'],
+
+            'with_remaining_balance' => ['nullable', 'array'],
+            'with_remaining_balance.end_date' => ['nullable', 'date'],
+
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:10'],
+        ]);
+
+        $withRemainingBalanceDTO = null;
+        if (isset($validatedRequest['with_remaining_balance'])) {
+            $withRemainingBalance = $validatedRequest['with_remaining_balance'];
+
+            $withRemainingBalanceDTO = new CashAccountWithRemainingBalanceDTO(
+                endDate: $withRemainingBalance['end_date'] ?? null,
+            );
+        }
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->cashAccountActions->readAny(
+                withTrashed: $validatedRequest['with_trashed'],
+
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
+                includeId: $validatedRequest['include_id'] ?? null,
+                withRemainingBalance: $withRemainingBalanceDTO,
+
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                )
+            );
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return CashAccountResource::collection($result);
+        }
     }
 
     public function store(CashAccountStoreRequest $request)
@@ -60,71 +139,6 @@ class CashAccountController extends BaseController
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(Request $request)
-    {
-        if (! Auth::check()) return response()->error(trans('rules.auth.unauthorized'), 401);
-        $this->authorize('viewAny', CashAccount::class);
-
-        if ($request->filled('company_id')) {
-            $request->merge(['company_id' => HashidsHelper::decodeId($request->company_id)]);
-        }
-        if ($request->filled('branch_id')) {
-            $request->merge(['branch_id' => HashidsHelper::decodeId($request->branch_id)]);
-        }
-        if ($request->filled('include_id')) {
-            $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
-        }
-
-        $validatedRequest = $request->validate([
-            'with_trashed' => ['required', 'boolean'],
-
-            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
-            'branch_id' => ['nullable', 'integer', 'bail', new IsValidBranch($request->company_id, true)],
-            'search' => ['nullable', 'string'],
-            'include_id' => ['nullable', 'integer', 'exists:cash_accounts,id'],
-
-            'refresh' => ['required', 'boolean'],
-            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
-            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
-            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
-            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
-            'get.limit' => ['required_with:get', 'integer', 'min:10'],
-        ]);
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->cashAccountActions->readAny(
-                withTrashed: $validatedRequest['with_trashed'],
-
-                companyId: $validatedRequest['company_id'],
-                branchId: $validatedRequest['branch_id'] ?? null,
-                search: $validatedRequest['search'] ?? null,
-                includeId: $validatedRequest['include_id'] ?? null,
-
-                execute: new ExecuteDTO(
-                    useCache: ! $validatedRequest['refresh'],
-                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
-                        page: $validatedRequest['paginate']['page'],
-                        perPage: $validatedRequest['paginate']['per_page'],
-                    ) : null,
-                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
-                        limit: $validatedRequest['get']['limit'],
-                    ) : null,
-                )
-            );
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return CashAccountResource::collection($result);
-        }
     }
 
     public function read(CashAccount $cashAccount)

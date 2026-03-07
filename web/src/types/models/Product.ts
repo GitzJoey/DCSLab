@@ -20,5 +20,6 @@ export interface Product {
   remarks: string;
   type: number;
   status: string;
+  remaining_stock_base_unit?: number;
   product_units: ProductUnit[];
 }

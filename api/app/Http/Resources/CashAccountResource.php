@@ -24,6 +24,10 @@ class CashAccountResource extends JsonResource
             'is_bank' => $this->is_bank,
             'is_active' => $this->is_active,
             'remarks' => $this->remarks,
+            'remaining_balance' => $this->when(
+                isset($this->remaining_balance),
+                (float) $this->remaining_balance
+            ),
         ];
     }
 }

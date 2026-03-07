@@ -2,7 +2,9 @@
 
 namespace App\Actions\CashAccount;
 
+use App\DTOs\CashAccountWithRemainingBalanceDTO;
 use App\DTOs\ExecuteDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\CashAccount;
 use App\Models\Company;
 use App\Traits\CacheHelper;
@@ -19,33 +21,6 @@ class CashAccountActions
     {
     }
 
-    public function create(array $data): CashAccount
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $cashAccount = new CashAccount();
-            $cashAccount->company_id = $data['company_id'];
-            $cashAccount->branch_id = $data['branch_id'];
-            $cashAccount->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $cashAccount->name = $data['name'];
-            $cashAccount->is_bank = $data['is_bank'];
-            $cashAccount->is_active = $data['is_active'];
-            $cashAccount->remarks = $data['remarks'];
-            $cashAccount->save();
-
-            $this->flushCache();
-
-            return $cashAccount;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
 
@@ -53,12 +28,21 @@ class CashAccountActions
         ?int $branchId,
         ?string $search,
         ?int $includeId,
+        ?CashAccountWithRemainingBalanceDTO $withRemainingBalance,
 
         ?ExecuteDTO $execute
     ) {
         $query = CashAccount::with('company', 'branch')->select('cash_accounts.*')
             ->whereCompanyId('cash_accounts', $companyId)
             ->withTrashed();
+
+        if ($withRemainingBalance) {
+            $endDate = $withRemainingBalance->endDate ? TimezoneHelper::convertToUTC($withRemainingBalance->endDate) : null;
+
+            $query->withRemainingBalance(
+                endDate: $endDate
+            );
+        }
 
         if ($branchId) {
             $query->where('cash_accounts.branch_id', $branchId);
@@ -84,6 +68,7 @@ class CashAccountActions
         if ($includeId) {
             $query->orderByRaw('FIELD(cash_accounts.id, '.$includeId.') desc');
         }
+
         $query->orderBy('cash_accounts.name', 'asc');
 
         if ($execute) {
@@ -148,6 +133,33 @@ class CashAccountActions
     public function read(CashAccount $cashAccount): CashAccount
     {
         return $cashAccount->load('company', 'branch');
+    }
+
+    public function create(array $data): CashAccount
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $cashAccount = new CashAccount();
+            $cashAccount->company_id = $data['company_id'];
+            $cashAccount->branch_id = $data['branch_id'];
+            $cashAccount->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $cashAccount->name = $data['name'];
+            $cashAccount->is_bank = $data['is_bank'];
+            $cashAccount->is_active = $data['is_active'];
+            $cashAccount->remarks = $data['remarks'];
+            $cashAccount->save();
+
+            $this->flushCache();
+
+            return $cashAccount;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(CashAccount $cashAccount, array $data): CashAccount

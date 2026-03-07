@@ -76,6 +76,9 @@ import StockAdjustmentIndex from '@/pages/stock-adjustment/StockAdjustmentIndex.
 import StockAdjustmentList from '@/pages/stock-adjustment/StockAdjustmentList.vue';
 import StockAdjustmentCreate from '@/pages/stock-adjustment/StockAdjustmentCreate.vue';
 import StockAdjustmentEdit from '@/pages/stock-adjustment/StockAdjustmentEdit.vue';
+import ProductWithRemainingStockIndex from '@/pages/product/ProductWithRemainingStockIndex.vue';
+import ProductWithRemainingStockList from '@/pages/product/ProductWithRemainingStockList.vue';
+
 
 export default [
   // login
@@ -629,6 +632,7 @@ export default [
           },
         ],
       },
+      
       // Stock Adjustment
       {
         path: '/dashboard/stock-adjustment',
@@ -656,6 +660,24 @@ export default [
             path: '/dashboard/stock-adjustment/edit/:ulid',
             name: 'side-menu-stock-adjustment-edit',
             component: StockAdjustmentEdit,
+            meta: {
+              remember: true,
+            },
+          },
+        ],
+      },
+
+      // Product With Remaining Stock
+      {
+        path: '/dashboard/product/product-with-remaining-stock',
+        name: 'side-menu-product-with-remaining-stock',
+        redirect: '/dashboard/product/product-with-remaining-stock/list',
+        component: ProductWithRemainingStockIndex,
+        children: [
+          {
+            path: '/dashboard/product/product-with-remaining-stock/list',
+            name: 'side-menu-product-with-remaining-stock-list',
+            component: ProductWithRemainingStockList,
             meta: {
               remember: true,
             },
