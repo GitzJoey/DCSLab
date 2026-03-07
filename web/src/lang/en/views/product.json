@@ -58,7 +58,8 @@
     "is_use_serial_number": "Use Serial Number",
     "is_expirable": "Expirable",
     "status": "Status",
-    "remarks": "Remarks"
+    "remarks": "Remarks",
+    "with_remaining_stock_end_date": "Stock as of date"
   },
   "status": {
     "active": "Active",

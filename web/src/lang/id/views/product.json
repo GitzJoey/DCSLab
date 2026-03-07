@@ -56,7 +56,8 @@
     "is_use_serial_number": "Gunakan Nomor Seri",
     "is_expirable": "Dapat Kedaluwarsa",
     "status": "Status",
-    "remarks": "Keterangan"
+    "remarks": "Keterangan",
+    "with_remaining_stock_end_date": "s/d Tanggal"
   },
   "status": {
     "active": "Aktif",

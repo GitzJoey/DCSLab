@@ -250,20 +250,20 @@ const showAlertPlaceholder = (
 <template>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
-      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
+      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3 relative z-50">
         <div class="col-span-12 lg:col-span-3 md:col-span-6">
           <FormLabel>
-            {{ t('views.stock_adjustment.fields.date') }}
+            {{ t('views.product.fields.with_remaining_stock_end_date') }}
           </FormLabel>
-          <FormInputDateTime v-model="filters.endDate" :placeholder="t('views.stock_adjustment.fields.date')"
-            @change="handleEndDateFilterChange" />
+          <FormInputDateTime v-model="filters.endDate"
+            :placeholder="t('views.product.fields.with_remaining_stock_end_date')" @change="handleEndDateFilterChange" />
         </div>
         <div class="col-span-12 lg:col-span-3 md:col-span-6">
           <FormLabel>
             {{ t('views.product.fields.category_id') }}
           </FormLabel>
           <div class="flex items-center gap-2">
-            <div class="flex-1">
+            <div class="flex-1 relative z-30">
               <FormSelectSearch v-model="filters.category_id" v-model:search="categorySearch"
                 :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')"
                 @change="handleCategoryFilterChange" @search="getCategoryDDL" />
@@ -279,7 +279,7 @@ const showAlertPlaceholder = (
             {{ t('views.product.fields.brand_id') }}
           </FormLabel>
           <div class="flex items-center gap-2">
-            <div class="flex-1">
+            <div class="flex-1 relative z-30">
               <FormSelectSearch v-model="filters.brand_id" v-model:search="brandSearch" :options="brandOptions"
                 :placeholder="t('components.dropdown.placeholder')" @change="handleBrandFilterChange"
                 @search="getBrandDDL" />
