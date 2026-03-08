@@ -318,29 +318,18 @@
               >
                 {{ t('views.customer.fields.group') }}
               </FormLabel>
-              <div class="flex items-center gap-2">
-                <div class="flex-1">
-                  <FormSelectSearch
-                    v-model="customerForm.group_id"
-                    v-model:search="customerGroupSearch"
-                    :options="customerGroupOptions"
-                    :placeholder="t('components.dropdown.placeholder')"
-                    :class="{
-                      'border-danger': customerForm.invalid('group_id'),
-                    }"
-                    @change="customerForm.validate('group_id')"
-                    @search="getCustomerGroupDDL"
-                  />
-                </div>
-                <button
-                  v-if="customerForm.group_id"
-                  type="button"
-                  class="text-slate-500 hover:text-danger"
-                  @click="clearGroup"
-                >
-                  <Lucide icon="X" class="w-4 h-4" />
-                </button>
-              </div>
+              <FormSelectSearch
+                v-model="customerForm.group_id"
+                v-model:search="customerGroupSearch"
+                :options="customerGroupOptions"
+                :placeholder="t('components.dropdown.placeholder')"
+                :class="{
+                  'border-danger': customerForm.invalid('group_id'),
+                }"
+                @change="customerForm.validate('group_id')"
+                @search="getCustomerGroupDDL"
+                @clear="clearGroup"
+              />
               <FormErrorMessages :messages="customerForm.errors.group_id" />
             </div>
             <div class="pb-4">

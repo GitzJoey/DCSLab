@@ -266,12 +266,8 @@ const showAlertPlaceholder = (
             <div class="flex-1 relative z-30">
               <FormSelectSearch v-model="filters.category_id" v-model:search="categorySearch"
                 :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')"
-                @change="handleCategoryFilterChange" @search="getCategoryDDL" />
+                @change="handleCategoryFilterChange" @search="getCategoryDDL" @clear="clearCategoryFilter" />
             </div>
-            <button v-if="filters.category_id" type="button" class="text-slate-500 hover:text-danger"
-              @click="clearCategoryFilter">
-              <Lucide icon="X" class="w-4 h-4" />
-            </button>
           </div>
         </div>
         <div class="col-span-12 lg:col-span-3 md:col-span-6">
@@ -282,12 +278,8 @@ const showAlertPlaceholder = (
             <div class="flex-1 relative z-30">
               <FormSelectSearch v-model="filters.brand_id" v-model:search="brandSearch" :options="brandOptions"
                 :placeholder="t('components.dropdown.placeholder')" @change="handleBrandFilterChange"
-                @search="getBrandDDL" />
+                @search="getBrandDDL" @clear="clearBrandFilter" />
             </div>
-            <button v-if="filters.brand_id" type="button" class="text-slate-500 hover:text-danger"
-              @click="clearBrandFilter">
-              <Lucide icon="X" class="w-4 h-4" />
-            </button>
           </div>
         </div>
       </div>

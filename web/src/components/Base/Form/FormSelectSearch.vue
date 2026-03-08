@@ -10,6 +10,7 @@
   import { computed, ref, watch, type InputHTMLAttributes, useAttrs, inject } from 'vue';
   import { type ProvideFormInline } from './FormInline.vue';
   import { type ProvideInputGroup } from './InputGroup/InputGroup.vue';
+  import Lucide from '@/components/Base/Lucide';
 
   export interface FormSelectSearchOption {
     value: string | number;
@@ -28,6 +29,7 @@
     (e: 'change', value: string | number | null): void;
     (e: 'update:search', value: string): void;
     (e: 'search', value: string): void;
+    (e: 'clear'): void;
   }
 
   const props = defineProps<FormSelectSearchProps>();
@@ -52,6 +54,7 @@
       props.rounded && 'rounded-full',
       formInline && 'flex-1',
       inputGroup && 'rounded-none [&:not(:first-child)]:border-l-transparent first:rounded-l last:rounded-r z-10',
+      'pr-8',
       typeof attrs.class === 'string' && attrs.class,
     ]),
   );
@@ -67,6 +70,8 @@
   const displayedOptions = computed<FormSelectSearchOption[]>(() => props.options ?? []);
 
   const isLocked = computed(() => selectedOption.value !== null);
+
+  const hasValue = computed(() => props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '');
 
   watch(
     () => [props.modelValue, props.options],
@@ -112,6 +117,17 @@
     isOpen.value = false;
     isFocused.value = false;
   };
+
+  const handleClear = () => {
+    emit('update:modelValue', null);
+    emit('change', null);
+    displayValue.value = '';
+    isOpen.value = false;
+    isFocused.value = false;
+    emit('update:search', '');
+    emit('search', '');
+    emit('clear');
+  };
 </script>
 
 <template>
@@ -127,6 +143,14 @@
       @blur="handleBlur"
       @input="handleInput"
     />
+    <button
+      v-if="hasValue"
+      type="button"
+      class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-danger"
+      @mousedown.prevent.stop="handleClear"
+    >
+      <Lucide icon="X" class="w-4 h-4" />
+    </button>
     <ul
       v-if="isOpen && displayedOptions.length > 0"
       class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white text-sm shadow-lg dark:border-slate-600 dark:bg-darkmode-800"

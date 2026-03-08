@@ -262,13 +262,6 @@ const loadInWarehouseDDL = async (search = '') => {
   }
 };
 
-const clearInWarehouse = () => {
-  stockAdjustmentForm.setData({ in_warehouse_id: '' });
-  loadInWarehouseDDL('');
-  stockAdjustmentForm.forgetError('in_warehouse_id');
-  stockAdjustmentForm.validate('in_warehouse_id');
-};
-
 const loadOutWarehouseDDL = async (search = '') => {
   if (!selectedUserLocation.value) return;
 
@@ -290,13 +283,6 @@ const loadOutWarehouseDDL = async (search = '') => {
   }
 };
 
-const clearOutWarehouse = () => {
-  stockAdjustmentForm.setData({ out_warehouse_id: '' });
-  loadOutWarehouseDDL('');
-  stockAdjustmentForm.forgetError('out_warehouse_id');
-  stockAdjustmentForm.validate('out_warehouse_id');
-};
-
 const loadCategoryDDL = async (search = '') => {
   if (!selectedUserLocation.value) return;
 
@@ -315,6 +301,20 @@ const loadCategoryDDL = async (search = '') => {
       name: item.name,
     }));
   }
+};
+
+const clearInWarehouse = () => {
+  stockAdjustmentForm.setData({ in_warehouse_id: '' });
+  loadInWarehouseDDL('');
+  stockAdjustmentForm.forgetError('in_warehouse_id');
+  stockAdjustmentForm.validate('in_warehouse_id');
+};
+
+const clearOutWarehouse = () => {
+  stockAdjustmentForm.setData({ out_warehouse_id: '' });
+  loadOutWarehouseDDL('');
+  stockAdjustmentForm.forgetError('out_warehouse_id');
+  stockAdjustmentForm.validate('out_warehouse_id');
 };
 
 const clearCategory = () => {
@@ -813,18 +813,11 @@ const onSubmit = async () => {
               }">
                 {{ t('views.stock_adjustment.fields.category_id') }}
               </FormLabel>
-              <div class="flex items-center gap-2">
-                <div class="flex-1">
-                  <FormSelectSearch v-model="stockAdjustmentForm.category_id" v-model:search="categorySearch"
-                    :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')" :class="{
-                      'border-danger': stockAdjustmentForm.invalid('category_id'),
-                    }" @change="stockAdjustmentForm.validate('category_id')" @search="loadCategoryDDL" />
-                </div>
-                <button v-if="stockAdjustmentForm.category_id" type="button" class="text-slate-500 hover:text-danger"
-                  @click="clearCategory">
-                  <Lucide icon="X" class="w-4 h-4" />
-                </button>
-              </div>
+              <FormSelectSearch v-model="stockAdjustmentForm.category_id" v-model:search="categorySearch"
+                :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')" :class="{
+                  'border-danger': stockAdjustmentForm.invalid('category_id'),
+                }" @change="stockAdjustmentForm.validate('category_id')" @search="loadCategoryDDL"
+                @clear="clearCategory" />
               <FormErrorMessages :messages="stockAdjustmentForm.errors.category_id" />
             </div>
             <!-- in_warehouse -->
@@ -834,18 +827,11 @@ const onSubmit = async () => {
               }">
                 {{ t('views.stock_adjustment.fields.in_warehouse_id') }}
               </FormLabel>
-              <div class="flex items-center gap-2">
-                <div class="flex-1">
-                  <FormSelectSearch v-model="stockAdjustmentForm.in_warehouse_id" v-model:search="inWarehouseSearch"
-                    :options="inWarehouseOptions" :placeholder="t('components.dropdown.placeholder')" :class="{
-                      'border-danger': stockAdjustmentForm.invalid('in_warehouse_id'),
-                    }" @change="stockAdjustmentForm.validate('in_warehouse_id')" @search="loadInWarehouseDDL" />
-                </div>
-                <button v-if="stockAdjustmentForm.in_warehouse_id" type="button"
-                  class="text-slate-500 hover:text-danger" @click="clearInWarehouse">
-                  <Lucide icon="X" class="w-4 h-4" />
-                </button>
-              </div>
+              <FormSelectSearch v-model="stockAdjustmentForm.in_warehouse_id" v-model:search="inWarehouseSearch"
+                :options="inWarehouseOptions" :placeholder="t('components.dropdown.placeholder')" :class="{
+                  'border-danger': stockAdjustmentForm.invalid('in_warehouse_id'),
+                }" @change="stockAdjustmentForm.validate('in_warehouse_id')" @search="loadInWarehouseDDL"
+                @clear="clearInWarehouse" />
               <FormErrorMessages :messages="stockAdjustmentForm.errors.in_warehouse_id" />
             </div>
             <!-- out_warehouse -->
@@ -855,18 +841,11 @@ const onSubmit = async () => {
               }">
                 {{ t('views.stock_adjustment.fields.out_warehouse_id') }}
               </FormLabel>
-              <div class="flex items-center gap-2">
-                <div class="flex-1">
-                  <FormSelectSearch v-model="stockAdjustmentForm.out_warehouse_id" v-model:search="outWarehouseSearch"
-                    :options="outWarehouseOptions" :placeholder="t('components.dropdown.placeholder')" :class="{
-                      'border-danger': stockAdjustmentForm.invalid('out_warehouse_id'),
-                    }" @change="stockAdjustmentForm.validate('out_warehouse_id')" @search="loadOutWarehouseDDL" />
-                </div>
-                <button v-if="stockAdjustmentForm.out_warehouse_id" type="button"
-                  class="text-slate-500 hover:text-danger" @click="clearOutWarehouse">
-                  <Lucide icon="X" class="w-4 h-4" />
-                </button>
-              </div>
+              <FormSelectSearch v-model="stockAdjustmentForm.out_warehouse_id" v-model:search="outWarehouseSearch"
+                :options="outWarehouseOptions" :placeholder="t('components.dropdown.placeholder')" :class="{
+                  'border-danger': stockAdjustmentForm.invalid('out_warehouse_id'),
+                }" @change="stockAdjustmentForm.validate('out_warehouse_id')" @search="loadOutWarehouseDDL"
+                @clear="clearOutWarehouse" />
               <FormErrorMessages :messages="stockAdjustmentForm.errors.out_warehouse_id" />
             </div>
             <!-- remarks -->

@@ -64,15 +64,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     state: CardState.Expanded,
   },
   {
-    title: 'views.product.field_groups.price_tax_settings',
-    state: CardState.Expanded,
-  },
-  {
     title: 'views.product.field_groups.unit_settings',
-    state: CardState.Expanded,
-  },
-  {
-    title: 'views.product.field_groups.other_settings',
     state: CardState.Expanded,
   },
   { title: '', state: CardState.Hidden, id: 'button' },
@@ -442,7 +434,7 @@ watch(
       <template #card-items-1>
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('code') }">
                 {{ t('views.product.fields.code') }}
               </FormLabel>
@@ -452,7 +444,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.code" />
             </div>
 
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('category_id') }">
                 {{ t('views.product.fields.category_id') }}
               </FormLabel>
@@ -463,7 +455,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.category_id" />
             </div>
 
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('brand_id') }">
                 {{ t('views.product.fields.brand_id') }}
               </FormLabel>
@@ -474,7 +466,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.brand_id" />
             </div>
 
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 lg:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('name') }">
                 {{ t('views.product.fields.name') }}
               </FormLabel>
@@ -484,7 +476,43 @@ watch(
               <FormErrorMessages :messages="productForm.errors.name" />
             </div>
 
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productForm.invalid('is_taxable') }">
+                {{ t('views.product.fields.is_taxable') }}
+              </FormLabel>
+              <FormSwitch class="mt-2">
+                <FormSwitch.Input v-model="productForm.is_taxable" type="checkbox" :class="{
+                  'border-danger': productForm.invalid('is_taxable'),
+                }" @change="productForm.validate('is_taxable')" />
+              </FormSwitch>
+              <FormErrorMessages :messages="productForm.errors.is_taxable" />
+            </div>
+
+            <div class="col-span-12 sm:col-span-2" v-if="productForm.is_taxable">
+              <FormLabel :class="{ 'text-danger': productForm.invalid('vat_rate') }">
+                {{ t('views.product.fields.vat_rate') }}
+              </FormLabel>
+              <FormInputCurrency v-model="productForm.vat_rate"
+                :class="{ 'border-danger': productForm.invalid('vat_rate') }"
+                :placeholder="t('views.product.fields.vat_rate')" @change="productForm.validate('vat_rate')" />
+              <FormErrorMessages :messages="productForm.errors.vat_rate" />
+            </div>
+
+            <div class="col-span-12 sm:col-span-2" v-if="productForm.is_taxable">
+              <FormLabel :class="{
+                'text-danger': productForm.invalid('is_price_include_vat'),
+              }">
+                {{ t('views.product.fields.is_price_include_vat') }}
+              </FormLabel>
+              <FormSwitch class="mt-2">
+                <FormSwitch.Input v-model="productForm.is_price_include_vat" type="checkbox" :class="{
+                  'border-danger': productForm.invalid('is_price_include_vat'),
+                }" @change="productForm.validate('is_price_include_vat')" />
+              </FormSwitch>
+              <FormErrorMessages :messages="productForm.errors.is_price_include_vat" />
+            </div>
+
+            <div class="col-span-12 sm:col-span-2">
               <FormLabel :class="{
                 'text-danger': productForm.invalid('is_use_serial_number'),
               }">
@@ -498,7 +526,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.is_use_serial_number" />
             </div>
 
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 sm:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('is_expirable') }">
                 {{ t('views.product.fields.is_expirable') }}
               </FormLabel>
@@ -509,55 +537,37 @@ watch(
               </FormSwitch>
               <FormErrorMessages :messages="productForm.errors.is_expirable" />
             </div>
-          </div>
-        </div>
-      </template>
 
-      <!-- Card 3: Price & Tax Settings -->
-      <template #card-items-2>
-        <div class="p-5">
-          <div class="grid grid-cols-12 gap-4 gap-y-3">
             <div class="col-span-12">
-              <FormLabel :class="{ 'text-danger': productForm.invalid('is_taxable') }">
-                {{ t('views.product.fields.is_taxable') }}
+              <FormLabel :class="{ 'text-danger': productForm.invalid('remarks') }">
+                {{ t('views.product.fields.remarks') }}
               </FormLabel>
-              <FormSwitch class="mt-2">
-                <FormSwitch.Input v-model="productForm.is_taxable" type="checkbox" :class="{
-                  'border-danger': productForm.invalid('is_taxable'),
-                }" @change="productForm.validate('is_taxable')" />
-              </FormSwitch>
-              <FormErrorMessages :messages="productForm.errors.is_taxable" />
+              <FormTextarea v-model="productForm.remarks" :class="{ 'border-danger': productForm.invalid('remarks') }"
+                :placeholder="t('views.product.fields.remarks')" @change="productForm.validate('remarks')" />
+              <FormErrorMessages :messages="productForm.errors.remarks" />
             </div>
 
-            <div class="col-span-12 sm:col-span-6" v-if="productForm.is_taxable">
-              <FormLabel :class="{ 'text-danger': productForm.invalid('vat_rate') }">
-                {{ t('views.product.fields.vat_rate') }}
+            <div class="col-span-12 sm:col-span-6">
+              <FormLabel :class="{ 'text-danger': productForm.invalid('status') }">
+                {{ t('views.product.fields.status') }}
               </FormLabel>
-              <FormInputCurrency v-model="productForm.vat_rate"
-                :class="{ 'border-danger': productForm.invalid('vat_rate') }"
-                :placeholder="t('views.product.fields.vat_rate')" @change="productForm.validate('vat_rate')" />
-              <FormErrorMessages :messages="productForm.errors.vat_rate" />
-            </div>
-
-            <div class="col-span-12 sm:col-span-6" v-if="productForm.is_taxable">
-              <FormLabel :class="{
-                'text-danger': productForm.invalid('is_price_include_vat'),
-              }">
-                {{ t('views.product.fields.is_price_include_vat') }}
-              </FormLabel>
-              <FormSwitch class="mt-2">
-                <FormSwitch.Input v-model="productForm.is_price_include_vat" type="checkbox" :class="{
-                  'border-danger': productForm.invalid('is_price_include_vat'),
-                }" @change="productForm.validate('is_price_include_vat')" />
-              </FormSwitch>
-              <FormErrorMessages :messages="productForm.errors.is_price_include_vat" />
+              <FormSelect v-model="productForm.status" :class="{ 'border-danger': productForm.invalid('status') }"
+                @change="productForm.validate('status')">
+                <option value="">
+                  {{ t('components.dropdown.placeholder') }}
+                </option>
+                <option v-for="s in statusDDL" :key="s.code" :value="s.code">
+                  {{ t(s.name) }}
+                </option>
+              </FormSelect>
+              <FormErrorMessages :messages="productForm.errors.status" />
             </div>
           </div>
         </div>
       </template>
 
-      <!-- Card 4: Product Unit Settings -->
-      <template #card-items-3>
+      <!-- Card 3: Product Unit Settings -->
+      <template #card-items-2>
         <div class="p-5">
           <!-- No Product Unit Found -->
           <div v-if="productForm.product_units.length === 0" class="text-slate-500 text-sm">
@@ -649,12 +659,8 @@ watch(
                             updateUnitName(index);
                             productForm.validate(`product_units.${index}.unit_id` as any);
                           }
-                        " @search="(q) => getUnitDDL(index, q)" />
+                        " @search="(q) => getUnitDDL(index, q)" @clear="clearUnit(index)" />
                     </div>
-                    <button v-if="productForm.product_units[index].unit_id" type="button"
-                      class="text-slate-500 hover:text-danger" @click="clearUnit(index)">
-                      <Lucide icon="X" class="w-4 h-4" />
-                    </button>
                   </div>
                   <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]" />
                 </div>
@@ -677,12 +683,8 @@ watch(
                             updateUnitName(index);
                             productForm.validate(`product_units.${index}.unit_id` as any);
                           }
-                        " @search="(q) => getUnitDDL(index, q)" />
+                        " @search="(q) => getUnitDDL(index, q)" @clear="clearUnit(index)" />
                     </div>
-                    <button v-if="productForm.product_units[index].unit_id" type="button"
-                      class="text-slate-500 hover:text-danger" @click="clearUnit(index)">
-                      <Lucide icon="X" class="w-4 h-4" />
-                    </button>
                   </div>
                   <FormErrorMessages :messages="(productForm.errors as any)[`product_units.${index}.unit_id`]" />
                 </div>
@@ -805,38 +807,6 @@ watch(
               <Lucide icon="Plus" class="w-4 h-4 mr-2" />
               {{ t('views.product.actions.add_unit') }}
             </Button>
-          </div>
-        </div>
-      </template>
-
-      <!-- Card 5: Other Settings -->
-      <template #card-items-4>
-        <div class="p-5">
-          <div class="grid grid-cols-12 gap-4 gap-y-3">
-            <div class="col-span-12 sm:col-span-6">
-              <FormLabel :class="{ 'text-danger': productForm.invalid('status') }">
-                {{ t('views.product.fields.status') }}
-              </FormLabel>
-              <FormSelect v-model="productForm.status" :class="{ 'border-danger': productForm.invalid('status') }"
-                @change="productForm.validate('status')">
-                <option value="">
-                  {{ t('components.dropdown.placeholder') }}
-                </option>
-                <option v-for="s in statusDDL" :key="s.code" :value="s.code">
-                  {{ t(s.name) }}
-                </option>
-              </FormSelect>
-              <FormErrorMessages :messages="productForm.errors.status" />
-            </div>
-
-            <div class="col-span-12">
-              <FormLabel :class="{ 'text-danger': productForm.invalid('remarks') }">
-                {{ t('views.product.fields.remarks') }}
-              </FormLabel>
-              <FormTextarea v-model="productForm.remarks" :class="{ 'border-danger': productForm.invalid('remarks') }"
-                :placeholder="t('views.product.fields.remarks')" @change="productForm.validate('remarks')" />
-              <FormErrorMessages :messages="productForm.errors.remarks" />
-            </div>
           </div>
         </div>
       </template>
