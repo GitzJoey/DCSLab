@@ -286,9 +286,6 @@ const closePreview = () => {
                     <div class="font-medium">
                       {{ item.name }}
                     </div>
-                    <div class="text-slate-500 text-xs mt-0.5">
-                      {{ item.slug }}
-                    </div>
                   </Table.Td>
                   <Table.Td>
                     <div class="flex flex-col gap-0">
@@ -368,14 +365,6 @@ const closePreview = () => {
                             </div>
                             <div class="flex-1 font-medium">
                               {{ item.name }}
-                            </div>
-                          </div>
-                          <div class="flex flex-row">
-                            <div class="w-48 text-slate-500">
-                              {{ t('views.product.fields.slug') }}
-                            </div>
-                            <div class="flex-1 font-medium">
-                              {{ item.slug }}
                             </div>
                           </div>
                           <div class="flex flex-row">

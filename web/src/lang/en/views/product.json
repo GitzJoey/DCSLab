@@ -39,7 +39,6 @@
     "company_id": "Company",
     "code": "Code",
     "name": "Name",
-    "slug": "Slug",
     "category_id": "Category",
     "brand_id": "Brand",
     "unit_id": "Unit",

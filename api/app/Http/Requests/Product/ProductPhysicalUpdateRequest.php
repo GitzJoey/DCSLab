@@ -10,7 +10,6 @@ use App\Rules\ExistsForCompany;
 use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
@@ -37,7 +36,6 @@ class ProductPhysicalUpdateRequest extends FormRequest
             'category_id' => ['required', 'integer', new ExistsForCompany('product_categories', $this->company_id)],
             'brand_id' => ['nullable', 'integer', new ExistsForCompany('brands', $this->company_id)],
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255'],
             'is_taxable' => ['required', 'boolean'],
             'vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'is_price_include_vat' => ['required', 'boolean'],
@@ -87,7 +85,6 @@ class ProductPhysicalUpdateRequest extends FormRequest
             'category_id' => trans('validation_attributes.product.product_category'),
             'brand_id' => trans('validation_attributes.product.brand'),
             'name' => trans('validation_attributes.product.name'),
-            'slug' => trans('validation_attributes.product.slug'),
             'is_taxable' => trans('validation_attributes.product.is_taxable'),
             'vat_rate' => trans('validation_attributes.product.vat_rate'),
             'is_price_include_vat' => trans('validation_attributes.product.is_price_include_vat'),
@@ -110,7 +107,6 @@ class ProductPhysicalUpdateRequest extends FormRequest
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
             'category_id' => $this->filled('category_id') ? HashidsHelper::decodeId($this->category_id) : null,
             'brand_id' => $this->filled('brand_id') ? HashidsHelper::decodeId($this->brand_id) : null,
-            'slug' => $this->slug === '_AUTO_' ? '_AUTO_' : Str::slug($this->slug),
             'status' => RecordStatusEnum::isValid($this->status) ? RecordStatusEnum::resolveToEnum($this->status)->value : null,
         ]);
 

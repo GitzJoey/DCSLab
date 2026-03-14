@@ -15,7 +15,6 @@ use App\Models\Product;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Support\Str;
 
 class ProductPhysicalActions
 {
@@ -39,7 +38,6 @@ class ProductPhysicalActions
             $product->category_id = $data->categoryId;
             $product->brand_id = $data->brandId;
             $product->name = $data->name;
-            $product->slug = $this->generateUniqueSlug($data->companyId, $data->slug, $data->name, $product->code, null);
             $product->is_taxable = $data->isTaxable;
             $product->vat_rate = $data->vatRate;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
@@ -97,7 +95,6 @@ class ProductPhysicalActions
             $product->category_id = $data->categoryId;
             $product->brand_id = $data->brandId;
             $product->name = $data->name;
-            $product->slug = $this->generateUniqueSlug($product->company_id, $data->slug, $data->name, $product->code, $product->id);
             $product->is_taxable = $data->isTaxable;
             $product->vat_rate = $data->vatRate;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
@@ -194,26 +191,6 @@ class ProductPhysicalActions
         return $code;
     }
 
-    public function generateUniqueSlug(int $companyId, string $baseSlug, string $productName, string $productCode, ?int $exceptId): string
-    {
-        $company = Company::find($companyId);
-        $slug = $baseSlug;
-
-        if ($slug === config('dcslab.KEYWORDS.AUTO'))  $slug = Str::slug($productName.' '.$productCode);
-
-        if ($this->isUniqueSlug($companyId, $slug, $exceptId))  return $slug;
-
-        $tryCount = 0;
-        $originalSlug = $slug;
-        do {
-            $count = $company->products()->where('type', '<>', ProductTypeEnum::SERVICE->value)->withTrashed()->count() + 1 + $tryCount;
-            $slug = $originalSlug.'-'.$count;
-            $tryCount++;
-        } while (! $this->isUniqueSlug($companyId, $slug, $exceptId));
-
-        return $slug;
-    }
-
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
     {
         $company = Company::find($companyId);
@@ -223,22 +200,6 @@ class ProductPhysicalActions
         }
 
         $query = $company->products()->where('code', '=', $code);
-        if ($exceptId) {
-            $query->where('products.id', '<>', $exceptId);
-        }
-
-        return $query->doesntExist();
-    }
-
-    public function isUniqueSlug(int $companyId, string $slug, ?int $exceptId): bool
-    {
-        $company = Company::find($companyId);
-
-        if ($company->products()->count() == 0) {
-            return true;
-        }
-
-        $query = $company->products()->where('slug', '=', $slug);
         if ($exceptId) {
             $query->where('products.id', '<>', $exceptId);
         }

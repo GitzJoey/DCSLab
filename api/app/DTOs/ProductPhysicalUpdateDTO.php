@@ -10,7 +10,6 @@ final class ProductPhysicalUpdateDTO
         public readonly int $categoryId,
         public readonly ?int $brandId,
         public readonly string $name,
-        public readonly string $slug,
         public readonly bool $isTaxable,
         public readonly float $vatRate,
         public readonly bool $isPriceIncludeVat,

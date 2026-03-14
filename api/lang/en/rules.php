@@ -4,7 +4,6 @@ return [
     'unique_code' => 'The Code has already been taken',
     'unique_name' => 'The Name has already been taken',
     'unique_address' => 'The Address has already been taken',
-    'unique_slug' => 'The Slug has already been taken',
     'valid_dropdown' => 'Invalid value',
     'valid_company' => 'Invalid company value',
     'valid_branch' => 'Invalid branch value',

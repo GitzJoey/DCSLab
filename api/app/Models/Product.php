@@ -24,7 +24,6 @@ class Product extends Model
         'category_id',
         'brand_id',
         'name',
-        'slug',
         'is_taxable',
         'vat_rate',
         'is_price_include_vat',

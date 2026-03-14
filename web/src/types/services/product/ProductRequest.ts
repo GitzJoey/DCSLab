@@ -62,7 +62,6 @@ export interface ProductPhysicalStoreRequest {
   category_id: string;
   brand_id: string;
   name: string;
-  slug: string;
   is_taxable: boolean;
   vat_rate: number;
   is_price_include_vat: boolean;
@@ -85,7 +84,6 @@ export interface ProductPhysicalUpdateRequest {
   category_id: string;
   brand_id: string;
   name: string;
-  slug: string;
   is_taxable: boolean;
   vat_rate: number;
   is_price_include_vat: boolean;
@@ -109,7 +107,6 @@ export interface ProductServiceStoreRequest {
   code: string;
   category_id: string;
   name: string;
-  slug: string;
   is_taxable: boolean;
   vat_rate: number;
   is_price_include_vat: boolean;
@@ -130,7 +127,6 @@ export interface ProductServiceUpdateRequest {
   code: string;
   category_id: string;
   name: string;
-  slug: string;
   is_taxable: boolean;
   vat_rate: number;
   is_price_include_vat: boolean;

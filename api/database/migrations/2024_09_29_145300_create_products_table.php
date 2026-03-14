@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('category_id')->references('id')->on('product_categories');
             $table->foreignId('brand_id')->nullable()->references('id')->on('brands');
             $table->string('name');
-            $table->string('slug');
             $table->boolean('is_taxable')->default(false);
             $table->decimal('vat_rate', 30, 8)->default(0);
             $table->boolean('is_price_include_vat')->default(false);

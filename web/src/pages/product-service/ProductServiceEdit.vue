@@ -121,7 +121,6 @@
         code: result.data.code,
         category_id: result.data.category.id,
         name: result.data.name,
-        slug: result.data.slug,
         is_taxable: result.data.is_taxable,
         vat_rate: result.data.vat_rate,
         is_price_include_vat: result.data.is_price_include_vat,

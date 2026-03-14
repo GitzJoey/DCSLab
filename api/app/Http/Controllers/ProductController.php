@@ -213,13 +213,6 @@ class ProductController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            if ($validatedRequest['slug'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUniqueSlug = $this->productPhysicalActions->isUniqueSlug(
-                    $validatedRequest['company_id'], $validatedRequest['slug'], null
-                );
-                if (! $isUniqueSlug) return response()->error(['slug' => [trans('rules.unique_slug')]], 422);
-            }
-
             if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
                 return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
             }
@@ -273,7 +266,6 @@ class ProductController extends BaseController
                     categoryId: $validatedRequest['category_id'],
                     brandId: $validatedRequest['brand_id'] ?? null,
                     name: $validatedRequest['name'],
-                    slug: $validatedRequest['slug'],
                     isTaxable: $validatedRequest['is_taxable'],
                     vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
@@ -319,13 +311,6 @@ class ProductController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            if ($validatedRequest['slug'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUniqueSlug = $this->productServiceActions->isUniqueSlug(
-                    $validatedRequest['company_id'], $validatedRequest['slug'], null
-                );
-                if (! $isUniqueSlug) return response()->error(['slug' => [trans('rules.unique_slug')]], 422);
-            }
-
             if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
                 return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
             }
@@ -344,7 +329,6 @@ class ProductController extends BaseController
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
                     name: $validatedRequest['name'],
-                    slug: $validatedRequest['slug'],
                     isTaxable: $validatedRequest['is_taxable'],
                     vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
@@ -388,13 +372,6 @@ class ProductController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $product->id
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            if ($validatedRequest['slug'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUniqueSlug = $this->productPhysicalActions->isUniqueSlug(
-                    $validatedRequest['company_id'], $validatedRequest['slug'], $product->id
-                );
-                if (! $isUniqueSlug) return response()->error(['slug' => [trans('rules.unique_slug')]], 422);
-            }
 
             if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
                 return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
@@ -467,7 +444,6 @@ class ProductController extends BaseController
                     categoryId: $validatedRequest['category_id'],
                     brandId: $validatedRequest['brand_id'] ?? null,
                     name: $validatedRequest['name'],
-                    slug: $validatedRequest['slug'],
                     isTaxable: $validatedRequest['is_taxable'],
                     vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
@@ -516,13 +492,6 @@ class ProductController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            if ($validatedRequest['slug'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUniqueSlug = $this->productServiceActions->isUniqueSlug(
-                    $validatedRequest['company_id'], $validatedRequest['slug'], $product->id
-                );
-                if (! $isUniqueSlug) return response()->error(['slug' => [trans('rules.unique_slug')]], 422);
-            }
-
             if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
                 return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
             }
@@ -542,7 +511,6 @@ class ProductController extends BaseController
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
                     name: $validatedRequest['name'],
-                    slug: $validatedRequest['slug'],
                     isTaxable: $validatedRequest['is_taxable'],
                     vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],

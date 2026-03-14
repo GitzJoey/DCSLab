@@ -27,7 +27,6 @@ class ProductFactory extends Factory
             'category_id' => $category->id,
             'brand_id' => $brand->id,
             'name' => $this->generateName($category, $brand),
-            'slug' => fake()->slug(),
             'is_taxable' => fake()->boolean(),
             'vat_rate' => fake()->numberBetween(0, 100),
             'is_price_include_vat' => fake()->boolean(),

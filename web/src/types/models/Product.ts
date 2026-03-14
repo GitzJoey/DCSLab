@@ -12,7 +12,6 @@ export interface Product {
   category: ProductCategory;
   brand: Brand | null;
   name: string;
-  slug: string;
   is_taxable: boolean;
   vat_rate: number;
   is_price_include_vat: boolean;

@@ -9,7 +9,6 @@ use App\Rules\ExistsForCompany;
 use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
@@ -35,7 +34,6 @@ class ProductServiceUpdateRequest extends FormRequest
             'code' => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'integer', new ExistsForCompany('product_categories', $this->company_id)],
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255'],
             'is_taxable' => ['required', 'boolean'],
             'vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'is_price_include_vat' => ['required', 'boolean'],
@@ -70,7 +68,6 @@ class ProductServiceUpdateRequest extends FormRequest
             'code' => trans('validation_attributes.product.code'),
             'category_id' => trans('validation_attributes.product.product_category'),
             'name' => trans('validation_attributes.product.name'),
-            'slug' => trans('validation_attributes.product.slug'),
             'is_taxable' => trans('validation_attributes.product.is_taxable'),
             'vat_rate' => trans('validation_attributes.product.vat_rate'),
             'is_price_include_vat' => trans('validation_attributes.product.is_price_include_vat'),
@@ -89,7 +86,6 @@ class ProductServiceUpdateRequest extends FormRequest
         $this->merge([
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
             'category_id' => $this->filled('category_id') ? HashidsHelper::decodeId($this->category_id) : null,
-            'slug' => $this->slug === '_AUTO_' ? '_AUTO_' : Str::slug($this->slug),
             'status' => RecordStatusEnum::isValid($this->status) ? RecordStatusEnum::resolveToEnum($this->status)->value : null,
             'unit_id' => $this->filled('unit_id') ? HashidsHelper::decodeId($this->unit_id) : null,
         ]);
