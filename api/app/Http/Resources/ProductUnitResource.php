@@ -19,6 +19,16 @@ class ProductUnitResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('product'), [
                 'product' => new ProductResource($this->whenLoaded('product')),
             ]),
+            $this->mergeWhen(
+                $this->relationLoaded('product')
+                && $this->product
+                && $this->product->relationLoaded('images'),
+                function () {
+                    return [
+                        'product_images' => ProductImageResource::collection($this->product->images),
+                    ];
+                }
+            ),
             'code' => $this->code,
             'is_manufacturer_sku' => $this->is_manufacturer_sku,
             $this->mergeWhen($this->relationLoaded('unit'), [

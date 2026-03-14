@@ -31,6 +31,8 @@
   import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
   import { ErrorCode } from '@/types/enums/ErrorCode';
   import { DropDownOption } from '@/types/models/DropDownOption';
+  import { ProductImage } from '@/types/models/ProductImage';
+  import ProductImagesField from '@/components/Product/ProductImagesField.vue';
   // #endregion
 
   // #region Declarations
@@ -57,14 +59,6 @@
     },
     {
       title: 'views.product_service.field_groups.product_data',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.product_service.field_groups.price_tax_settings',
-      state: CardState.Expanded,
-    },
-    {
-      title: 'views.product_service.field_groups.other_settings',
       state: CardState.Expanded,
     },
     { title: '', state: CardState.Hidden, id: 'button' },
@@ -265,200 +259,199 @@
       <!-- Card 2: Product Data -->
       <template #card-items-1>
         <div class="p-5">
-          <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('code') }">
-              {{ t('views.product_service.fields.code') }}
-            </FormLabel>
-            <FormInputCode
-              v-model="productServiceForm.code"
-              :class="{ 'border-danger': productServiceForm.invalid('code') }"
-              :placeholder="t('views.product_service.fields.code')"
-              @set-auto="setCode"
-              @change="productServiceForm.validate('code')"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.code" />
-          </div>
-
-          <div class="pb-4">
-            <FormLabel
-              :class="{
-                'text-danger': productServiceForm.invalid('category_id'),
-              }"
-            >
-              {{ t('views.product_service.fields.category_id') }}
-            </FormLabel>
-            <FormSelectSearch
-              v-model="productServiceForm.category_id"
-              v-model:search="categorySearch"
-              :options="categoryOptions"
-              :placeholder="t('components.dropdown.placeholder')"
-              :class="{
-                'border-danger': productServiceForm.invalid('category_id'),
-              }"
-              @change="productServiceForm.validate('category_id')"
-              @search="getCategoryDDL"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.category_id" />
-          </div>
-
-          <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('name') }">
-              {{ t('views.product_service.fields.name') }}
-            </FormLabel>
-            <FormInput
-              v-model="productServiceForm.name"
-              type="text"
-              :class="{ 'border-danger': productServiceForm.invalid('name') }"
-              :placeholder="t('views.product_service.fields.name')"
-              @change="productServiceForm.validate('name')"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.name" />
-          </div>
-
-          <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('unit_id') }">
-              {{ t('views.product_service.fields.unit_id') }}
-            </FormLabel>
-            <FormSelectSearch
-              v-model="productServiceForm.unit_id"
-              v-model:search="unitSearch"
-              :options="unitOptions"
-              :placeholder="t('components.dropdown.placeholder')"
-              :class="{
-                'border-danger': productServiceForm.invalid('unit_id'),
-              }"
-              @change="productServiceForm.validate('unit_id')"
-              @search="getUnitDDL"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.unit_id" />
-          </div>
-        </div>
-      </template>
-
-      <!-- Card 3: Price & Tax Settings -->
-      <template #card-items-2>
-        <div class="p-5">
-          <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('price') }">
-              {{ t('views.product_service.fields.price') }}
-            </FormLabel>
-            <FormInputCurrency
-              v-model="productServiceForm.price"
-              :class="{ 'border-danger': productServiceForm.invalid('price') }"
-              :placeholder="t('views.product_service.fields.price')"
-              @change="productServiceForm.validate('price')"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.price" />
-          </div>
-
-          <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('point') }">
-              {{ t('views.product_service.fields.point') }}
-            </FormLabel>
-            <FormInput
-              v-model="productServiceForm.point"
-              type="number"
-              :class="{ 'border-danger': productServiceForm.invalid('point') }"
-              :placeholder="t('views.product_service.fields.point')"
-              @change="productServiceForm.validate('point')"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.point" />
-          </div>
-
-          <div class="pb-4">
-            <FormLabel
-              :class="{
-                'text-danger': productServiceForm.invalid('is_taxable'),
-              }"
-            >
-              {{ t('views.product_service.fields.is_taxable') }}
-            </FormLabel>
-            <FormSwitch class="mt-2">
-              <FormSwitch.Input
-                v-model="productServiceForm.is_taxable"
-                type="checkbox"
-                :class="{
-                  'border-danger': productServiceForm.invalid('is_taxable'),
-                }"
-                @change="productServiceForm.validate('is_taxable')"
+          <div class="grid grid-cols-12 gap-4 gap-y-3">
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('code') }">
+                {{ t('views.product_service.fields.code') }}
+              </FormLabel>
+              <FormInputCode
+                v-model="productServiceForm.code"
+                :class="{ 'border-danger': productServiceForm.invalid('code') }"
+                :placeholder="t('views.product_service.fields.code')"
+                @set-auto="setCode"
+                @change="productServiceForm.validate('code')"
               />
-            </FormSwitch>
-            <FormErrorMessages :messages="productServiceForm.errors.is_taxable" />
-          </div>
+              <FormErrorMessages :messages="productServiceForm.errors.code" />
+            </div>
 
-          <div class="pb-4" v-if="productServiceForm.is_taxable">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('vat_rate') }">
-              {{ t('views.product_service.fields.vat_rate') }}
-            </FormLabel>
-            <FormInputCurrency
-              v-model="productServiceForm.vat_rate"
-              :class="{
-                'border-danger': productServiceForm.invalid('vat_rate'),
-              }"
-              :placeholder="t('views.product_service.fields.vat_rate')"
-              @change="productServiceForm.validate('vat_rate')"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.vat_rate" />
-          </div>
-
-          <div class="pb-4" v-if="productServiceForm.is_taxable">
-            <FormLabel
-              :class="{
-                'text-danger': productServiceForm.invalid('is_price_include_vat'),
-              }"
-            >
-              {{ t('views.product_service.fields.is_price_include_vat') }}
-            </FormLabel>
-            <FormSwitch class="mt-2">
-              <FormSwitch.Input
-                v-model="productServiceForm.is_price_include_vat"
-                type="checkbox"
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel
                 :class="{
-                  'border-danger': productServiceForm.invalid('is_price_include_vat'),
+                  'text-danger': productServiceForm.invalid('category_id'),
                 }"
-                @change="productServiceForm.validate('is_price_include_vat')"
+              >
+                {{ t('views.product_service.fields.category_id') }}
+              </FormLabel>
+              <FormSelectSearch
+                v-model="productServiceForm.category_id"
+                v-model:search="categorySearch"
+                :options="categoryOptions"
+                :placeholder="t('components.dropdown.placeholder')"
+                :class="{
+                  'border-danger': productServiceForm.invalid('category_id'),
+                }"
+                @change="productServiceForm.validate('category_id')"
+                @search="getCategoryDDL"
               />
-            </FormSwitch>
-            <FormErrorMessages :messages="productServiceForm.errors.is_price_include_vat" />
-          </div>
-        </div>
-      </template>
+              <FormErrorMessages :messages="productServiceForm.errors.category_id" />
+            </div>
 
-      <!-- Card 4: Other Settings -->
-      <template #card-items-3>
-        <div class="p-5">
-          <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('status') }">
-              {{ t('views.product_service.fields.status') }}
-            </FormLabel>
-            <FormSelect
-              v-model="productServiceForm.status"
-              :class="{ 'border-danger': productServiceForm.invalid('status') }"
-              @change="productServiceForm.validate('status')"
-            >
-              <option value="">
-                {{ t('components.dropdown.placeholder') }}
-              </option>
-              <option v-for="s in statusDDL" :key="s.code" :value="s.code">
-                {{ t(s.name) }}
-              </option>
-            </FormSelect>
-            <FormErrorMessages :messages="productServiceForm.errors.status" />
-          </div>
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('unit_id') }">
+                {{ t('views.product_service.fields.unit_id') }}
+              </FormLabel>
+              <FormSelectSearch
+                v-model="productServiceForm.unit_id"
+                v-model:search="unitSearch"
+                :options="unitOptions"
+                :placeholder="t('components.dropdown.placeholder')"
+                :class="{
+                  'border-danger': productServiceForm.invalid('unit_id'),
+                }"
+                @change="productServiceForm.validate('unit_id')"
+                @search="getUnitDDL"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.unit_id" />
+            </div>
 
-          <div class="pb-4">
-            <FormLabel :class="{ 'text-danger': productServiceForm.invalid('remarks') }">
-              {{ t('views.product_service.fields.remarks') }}
-            </FormLabel>
-            <FormTextarea
-              v-model="productServiceForm.remarks"
-              :class="{
-                'border-danger': productServiceForm.invalid('remarks'),
-              }"
-              :placeholder="t('views.product_service.fields.remarks')"
-              @change="productServiceForm.validate('remarks')"
-            />
-            <FormErrorMessages :messages="productServiceForm.errors.remarks" />
+            <div class="col-span-12 lg:col-span-6">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('name') }">
+                {{ t('views.product_service.fields.name') }}
+              </FormLabel>
+              <FormInput
+                v-model="productServiceForm.name"
+                type="text"
+                :class="{ 'border-danger': productServiceForm.invalid('name') }"
+                :placeholder="t('views.product_service.fields.name')"
+                @change="productServiceForm.validate('name')"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.name" />
+            </div>
+
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('price') }">
+                {{ t('views.product_service.fields.price') }}
+              </FormLabel>
+              <FormInputCurrency
+                v-model="productServiceForm.price"
+                :class="{ 'border-danger': productServiceForm.invalid('price') }"
+                :placeholder="t('views.product_service.fields.price')"
+                @change="productServiceForm.validate('price')"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.price" />
+            </div>
+
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('point') }">
+                {{ t('views.product_service.fields.point') }}
+              </FormLabel>
+              <FormInput
+                v-model="productServiceForm.point"
+                type="number"
+                :class="{ 'border-danger': productServiceForm.invalid('point') }"
+                :placeholder="t('views.product_service.fields.point')"
+                @change="productServiceForm.validate('point')"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.point" />
+            </div>
+
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel
+                :class="{
+                  'text-danger': productServiceForm.invalid('is_taxable'),
+                }"
+              >
+                {{ t('views.product_service.fields.is_taxable') }}
+              </FormLabel>
+              <FormSwitch class="mt-2">
+                <FormSwitch.Input
+                  v-model="productServiceForm.is_taxable"
+                  type="checkbox"
+                  :class="{
+                    'border-danger': productServiceForm.invalid('is_taxable'),
+                  }"
+                  @change="productServiceForm.validate('is_taxable')"
+                />
+              </FormSwitch>
+              <FormErrorMessages :messages="productServiceForm.errors.is_taxable" />
+            </div>
+
+            <div class="col-span-12 lg:col-span-2" v-if="productServiceForm.is_taxable">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('vat_rate') }">
+                {{ t('views.product_service.fields.vat_rate') }}
+              </FormLabel>
+              <FormInputCurrency
+                v-model="productServiceForm.vat_rate"
+                :class="{
+                  'border-danger': productServiceForm.invalid('vat_rate'),
+                }"
+                :placeholder="t('views.product_service.fields.vat_rate')"
+                @change="productServiceForm.validate('vat_rate')"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.vat_rate" />
+            </div>
+
+            <div class="col-span-12 lg:col-span-2" v-if="productServiceForm.is_taxable">
+              <FormLabel
+                :class="{
+                  'text-danger': productServiceForm.invalid('is_price_include_vat'),
+                }"
+              >
+                {{ t('views.product_service.fields.is_price_include_vat') }}
+              </FormLabel>
+              <FormSwitch class="mt-2">
+                <FormSwitch.Input
+                  v-model="productServiceForm.is_price_include_vat"
+                  type="checkbox"
+                  :class="{
+                    'border-danger': productServiceForm.invalid('is_price_include_vat'),
+                  }"
+                  @change="productServiceForm.validate('is_price_include_vat')"
+                />
+              </FormSwitch>
+              <FormErrorMessages :messages="productServiceForm.errors.is_price_include_vat" />
+            </div>
+
+            <div class="col-span-12">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('remarks') }">
+                {{ t('views.product_service.fields.remarks') }}
+              </FormLabel>
+              <FormTextarea
+                v-model="productServiceForm.remarks"
+                :class="{
+                  'border-danger': productServiceForm.invalid('remarks'),
+                }"
+                :placeholder="t('views.product_service.fields.remarks')"
+                @change="productServiceForm.validate('remarks')"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.remarks" />
+            </div>
+
+            <div class="col-span-12 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('status') }">
+                {{ t('views.product_service.fields.status') }}
+              </FormLabel>
+              <FormSelect
+                v-model="productServiceForm.status"
+                :class="{ 'border-danger': productServiceForm.invalid('status') }"
+                @change="productServiceForm.validate('status')"
+              >
+                <option value="">
+                  {{ t('components.dropdown.placeholder') }}
+                </option>
+                <option v-for="s in statusDDL" :key="s.code" :value="s.code">
+                  {{ t(s.name) }}
+                </option>
+              </FormSelect>
+              <FormErrorMessages :messages="productServiceForm.errors.status" />
+            </div>
+
+            <div class="col-span-12">
+              <FormLabel>
+                {{ t('views.product.fields.images') }}
+              </FormLabel>
+              <ProductImagesField v-model="productServiceForm.image_hashes" />
+            </div>
           </div>
         </div>
       </template>

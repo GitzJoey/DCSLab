@@ -46,6 +46,7 @@ class ProductActions
             'category',
             'brand',
             'productUnits.unit',
+            'images',
         ]);
 
         $query->join('product_categories', 'products.category_id', '=', 'product_categories.id');
@@ -261,7 +262,7 @@ class ProductActions
 
     public function read(Product $product): Product
     {
-        return $product->load('company', 'category', 'brand', 'productUnits.unit');
+        return $product->load('company', 'category', 'brand', 'productUnits.unit', 'images');
     }
 
     public function delete(Product $product): bool

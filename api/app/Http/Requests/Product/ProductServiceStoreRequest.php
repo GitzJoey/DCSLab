@@ -10,6 +10,7 @@ use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class ProductServiceStoreRequest extends FormRequest
@@ -35,13 +36,17 @@ class ProductServiceStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255'],
             'is_taxable' => ['required', 'boolean'],
-            'vat_rate' => ['required', 'numeric'],
+            'vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'is_price_include_vat' => ['required', 'boolean'],
             'remarks' => ['nullable', 'string', 'max:255'],
             'status' => ['required', new Enum(RecordStatusEnum::class)],
             'unit_id' => ['required', 'integer', new ExistsForCompany('units', $this->company_id)],
             'price' => ['required', 'numeric', 'min:0'],
             'point' => 'required|integer|min:0',
+
+            'image_hashes' => ['nullable', 'array'],
+            'image_hashes.*.hash' => ['required', 'string', Rule::exists('product_images', 'hash')],
+            'image_hashes.*.is_thumbnail' => 'required|boolean',
         ];
     }
 

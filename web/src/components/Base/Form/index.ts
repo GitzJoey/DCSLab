@@ -9,6 +9,7 @@ import FormSelectSearch from './FormSelectSearch.vue';
 import FormSwitch from './FormSwitch';
 import InputGroup from './InputGroup';
 import FormFileUpload from './FormFileUpload.vue';
+import FormImageUpload from './FormImageUpload.vue';
 import FormInputCode from './FormInputCode.vue';
 import FormInputCurrency from './FormInputCurrency.vue';
 import FormInputDateTime from './FormInputDateTime.vue';
@@ -32,6 +33,7 @@ export {
   FormInputDateTime,
   FormInputDateTimeAuto,
   FormFileUpload,
+  FormImageUpload,
   FormErrorMessages,
   FormTomSelect,
 };

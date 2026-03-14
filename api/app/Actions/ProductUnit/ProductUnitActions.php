@@ -222,6 +222,7 @@ class ProductUnitActions
             $isBase = $data->conversionValue == 1;
             if ($isBase) $this->resetBaseUnit($productUnit->company_id, $productUnit->product_id);
             if ($data->isPrimaryUnit)  $this->resetPrimaryUnit($productUnit->company_id, $productUnit->product_id);
+            $productUnit->refresh();
 
             $productUnit->code = $this->generateUniqueCode($productUnit->company_id, $data->code, $productUnit->id);
             $productUnit->is_manufacturer_sku = $data->isManufacturerSku;
@@ -236,7 +237,7 @@ class ProductUnitActions
 
             $this->flushCache();
 
-            return $productUnit->refresh();
+            return $productUnit;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;

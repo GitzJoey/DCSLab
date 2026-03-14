@@ -233,7 +233,13 @@ export default class ProductService {
       remarks: '',
       type: 1,
       status: 1,
+
       product_units: [] as ProductUnitStoreRequest[],
+
+      image_hashes: [] as {
+        hash: string;
+        is_thumbnail: boolean;
+      }[],
     });
 
     return form;
@@ -266,8 +272,15 @@ export default class ProductService {
       remarks: '',
       type: 1,
       status: 1,
+
       delete_product_unit_ids: [] as string[],
       product_units: [] as ProductUnitUpdateRequest[],
+
+      delete_image_ids: [] as string[],
+      image_hashes: [] as {
+        hash: string;
+        is_thumbnail: boolean;
+      }[],
     });
 
     return form;
@@ -292,6 +305,11 @@ export default class ProductService {
       unit_id: '',
       price: 0,
       point: 0,
+
+      image_hashes: [] as {
+        hash: string;
+        is_thumbnail: boolean;
+      }[],
     });
 
     return form;
@@ -323,7 +341,14 @@ export default class ProductService {
       unit_id: '',
       price: 0,
       point: 0,
+
       product_units: [],
+      
+      delete_image_ids: [] as string[],
+      image_hashes: [] as {
+        hash: string;
+        is_thumbnail: boolean;
+      }[],
     });
 
     return form;

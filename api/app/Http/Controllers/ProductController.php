@@ -253,7 +253,9 @@ class ProductController extends BaseController
                 return response()->error(['product_units.conversion_value' => [trans('rules.product.unit.single_base')]], 422);
             }
 
-            $primaryCount = count(array_filter($units, fn ($u) => (bool) $u['is_primary_unit']));
+            $primaryCount = count(array_filter($units, function ($u) {
+                return filter_var($u['is_primary_unit'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }));
             if ($primaryCount !== 1) {
                 return response()->error(['product_units.is_primary_unit' => [trans('rules.product.unit.single_primary')]], 422);
             }
@@ -280,7 +282,9 @@ class ProductController extends BaseController
                     remarks: $validatedRequest['remarks'] ?? null,
                     type: $validatedRequest['type'],
                     status: $validatedRequest['status'],
+
                     productUnits: $validatedRequest['product_units'],
+                    images: $validatedRequest['image_hashes'] ?? [],
                 )
             );
 
@@ -322,6 +326,16 @@ class ProductController extends BaseController
                 if (! $isUniqueSlug) return response()->error(['slug' => [trans('rules.unique_slug')]], 422);
             }
 
+            if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
+                return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
+            }
+            if ((bool) $validatedRequest['is_taxable']) {
+                $vat = (float) $validatedRequest['vat_rate'];
+                if ($vat < 0 || $vat > 100) {
+                    return response()->error(['vat_rate' => [trans('rules.product.vat.out_of_range')]], 422);
+                }
+            }
+
             if (! array_key_exists('remarks', $validatedRequest)) $validatedRequest['remarks'] = null;
 
             $result = $this->productServiceActions->create(
@@ -339,6 +353,8 @@ class ProductController extends BaseController
                     unitId: $validatedRequest['unit_id'],
                     price: $validatedRequest['price'],
                     point: $validatedRequest['point'],
+
+                    images: $validatedRequest['image_hashes'] ?? [],
                 )
             );
 
@@ -430,7 +446,9 @@ class ProductController extends BaseController
                 return response()->error(['product_units.conversion_value' => [trans('rules.product.unit.single_base')]], 422);
             }
 
-            $primaryCount = count(array_filter($units, fn ($u) => (bool) $u['is_primary_unit']));
+            $primaryCount = count(array_filter($units, function ($u) {
+                return filter_var($u['is_primary_unit'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }));
             if ($primaryCount !== 1) {
                 return response()->error(['product_units.is_primary_unit' => [trans('rules.product.unit.single_primary')]], 422);
             }
@@ -458,8 +476,12 @@ class ProductController extends BaseController
                     remarks: $validatedRequest['remarks'] ?? null,
                     type: $validatedRequest['type'],
                     status: $validatedRequest['status'],
+
+                    deleteProductUnitIds: $validatedRequest['delete_product_unit_ids'] ?? [],
                     productUnits: $validatedRequest['product_units'],
-                    deleteProductUnitIds: $validatedRequest['delete_product_unit_ids'] ?? null,
+
+                    deleteImageIds: $validatedRequest['delete_image_ids'] ?? [],
+                    images: $validatedRequest['image_hashes'] ?? [],
                 )
             );
 
@@ -501,6 +523,16 @@ class ProductController extends BaseController
                 if (! $isUniqueSlug) return response()->error(['slug' => [trans('rules.unique_slug')]], 422);
             }
 
+            if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
+                return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
+            }
+            if ((bool) $validatedRequest['is_taxable']) {
+                $vat = (float) $validatedRequest['vat_rate'];
+                if ($vat < 0 || $vat > 100) {
+                    return response()->error(['vat_rate' => [trans('rules.product.vat.out_of_range')]], 422);
+                }
+            }
+
             if (! array_key_exists('remarks', $validatedRequest)) $validatedRequest['remarks'] = null;
 
             $result = $this->productServiceActions->update(
@@ -519,6 +551,9 @@ class ProductController extends BaseController
                     unitId: $validatedRequest['unit_id'],
                     price: $validatedRequest['price'],
                     point: $validatedRequest['point'],
+
+                    deleteImageIds: $validatedRequest['delete_image_ids'] ?? [],
+                    images: $validatedRequest['image_hashes'] ?? [],
                 )
             );
 

@@ -2,7 +2,9 @@
 
 namespace App\Actions\Product;
 
+use App\Actions\ProductImage\ProductImageActions;
 use App\Actions\ProductUnit\ProductUnitActions;
+use App\DTOs\ProductImageDTO;
 use App\DTOs\ProductPhysicalCreateDTO;
 use App\DTOs\ProductPhysicalUpdateDTO;
 use App\DTOs\ProductUnitCreatePhysicalDTO;
@@ -19,6 +21,12 @@ class ProductPhysicalActions
 {
     use CacheHelper;
     use LoggerHelper;
+
+    public function __construct(
+        private ProductUnitActions $productUnitActions,
+        private ProductImageActions $productImageActions,
+    ) {
+    }
 
     public function create(ProductPhysicalCreateDTO $data): Product
     {
@@ -42,7 +50,6 @@ class ProductPhysicalActions
             $product->status = $data->status;
             $product->save();
 
-            $productUnitActions = new ProductUnitActions();
             foreach ($data->productUnits as $productUnit) {
                 $productUnitDTO = new ProductUnitCreatePhysicalDTO(
                     companyId: $product->company_id,
@@ -57,7 +64,16 @@ class ProductPhysicalActions
                     remarks: $productUnit['remarks'],
                 );
 
-                $productUnitActions->createPhysical($productUnitDTO);
+                $this->productUnitActions->createPhysical($productUnitDTO);
+            }
+
+            foreach ($data->images as $image) {
+                $productImageDTO = new ProductImageDTO(
+                    hash: $image['hash'],
+                    isThumbnail: (bool) $image['is_thumbnail'],
+                );
+
+                $this->productImageActions->attachByHash($product, $productImageDTO);
             }
 
             $this->flushCache();
@@ -92,11 +108,10 @@ class ProductPhysicalActions
             $product->status = $data->status;
             $product->save();
 
-            $productUnitActions = new ProductUnitActions();
             foreach ($data->deleteProductUnitIds as $deleteProductUnitId) {
                 $productUnit = $product->productUnits()->find($deleteProductUnitId);
                 if ($productUnit) {
-                    $productUnitActions->delete($productUnit);
+                    $this->productUnitActions->delete($productUnit);
                 }
             }
 
@@ -115,7 +130,7 @@ class ProductPhysicalActions
                         remarks: $productUnitData['remarks'],
                     );
 
-                    $productUnitActions->createPhysical($dto);
+                    $this->productUnitActions->createPhysical($dto);
                 } else {
                     $productUnit = $product->productUnits()->find($productUnitData['id']);
                     if ($productUnit) {
@@ -130,9 +145,22 @@ class ProductPhysicalActions
                             remarks: $productUnitData['remarks'],
                         );
 
-                        $productUnitActions->updatePhysical($productUnit, $updateDto);
+                        $this->productUnitActions->updatePhysical($productUnit, $updateDto);
                     }
                 }
+            }
+
+            foreach ($data->deleteImageIds as $imageId) {
+                $this->productImageActions->detachById($product, $imageId);
+            }
+
+            foreach ($data->images as $image) {
+                $productImageDTO = new ProductImageDTO(
+                    hash: $image['hash'],
+                    isThumbnail: (bool) $image['is_thumbnail'],
+                );
+
+                $this->productImageActions->attachByHash($product, $productImageDTO);
             }
 
             $this->flushCache();

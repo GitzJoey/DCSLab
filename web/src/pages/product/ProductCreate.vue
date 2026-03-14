@@ -21,6 +21,7 @@ import {
   FormTextarea,
   FormSelectSearch,
 } from '@/components/Base/Form';
+import ProductImagesField from '@/components/Product/ProductImagesField.vue';
 import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
 import { CardState } from '@/types/enums/CardState';
 import Button from '@/components/Base/Button';
@@ -99,7 +100,6 @@ const getUnitOptions = (index: number) =>
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 
 const productForm = productService.useProductPhysicalStoreForm();
-
 // #endregion
 
 // #region Computed
@@ -379,10 +379,7 @@ const removeUnit = (index: number) => {
 
 watch(
   () => productForm.errors,
-  (newErrors) => {
-    console.log('Realtime Errors Update:', JSON.parse(JSON.stringify(newErrors)));
-    console.log('Has Errors:', productForm.hasErrors);
-  },
+  () => {},
   { deep: true },
 );
 
@@ -443,8 +440,6 @@ watch(
   productForm,
   debounce(() => {
     cacheServices.setLastEntity('PRODUCT_CREATE', productForm.data());
-    console.log('productForm.errors:', JSON.parse(JSON.stringify(productForm.errors)));
-    console.log('productForm.product_units:', JSON.parse(JSON.stringify(productForm.product_units)));
   }, 500),
   { deep: true },
 );
@@ -594,7 +589,7 @@ watch(
             </div>
 
             <!-- Column 11: Status -->
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 sm:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('status') }">
                 {{ t('views.product.fields.status') }}
               </FormLabel>
@@ -608,6 +603,14 @@ watch(
                 </option>
               </FormSelect>
               <FormErrorMessages :messages="productForm.errors.status" />
+            </div>
+
+            <!-- Column 12: Images -->
+            <div class="col-span-12">
+              <FormLabel>
+                {{ t('views.product.fields.images') }}
+              </FormLabel>
+              <ProductImagesField v-model="productForm.image_hashes" />
             </div>
           </div>
         </div>

@@ -12,7 +12,8 @@
       "unit": "Satuan",
       "price": "Harga",
       "point": "Poin",
-      "status": "Status"
+      "status": "Status",
+      "image": "Gambar"
     }
   },
   "actions": {
@@ -44,6 +45,7 @@
     "base_unit": "Satuan Dasar",
     "base_unit_price": "Harga per Satuan Dasar",
     "other_unit": "Satuan Lain",
+    "images": "Gambar",
     "conversion_value": "Isi",
     "unit_code": "Kode Satuan",
     "is_primary_unit": "Satuan Utama",

@@ -11,6 +11,7 @@ use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class ProductPhysicalStoreRequest extends FormRequest
@@ -54,6 +55,10 @@ class ProductPhysicalStoreRequest extends FormRequest
             'product_units.*.is_primary_unit' => 'required|boolean',
             'product_units.*.point' => 'required|integer|min:0',
             'product_units.*.remarks' => 'nullable|string',
+
+            'image_hashes' => ['nullable', 'array'],
+            'image_hashes.*.hash' => ['required', 'string', Rule::exists('product_images', 'hash')],
+            'image_hashes.*.is_thumbnail' => 'required|boolean',
         ];
     }
 

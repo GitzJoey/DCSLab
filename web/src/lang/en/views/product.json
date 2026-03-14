@@ -12,7 +12,8 @@
       "unit": "Unit",
       "price": "Price",
       "point": "Point",
-      "status": "Status"
+      "status": "Status",
+      "image": "Image"
     }
   },
   "actions": {
@@ -45,6 +46,7 @@
     "base_unit": "Base Unit",
     "base_unit_price": "Price per Base Unit",
     "other_unit": "Other Unit",
+    "images": "Images",
     "conversion_value": "C. Value",
     "is_base": "Is Base Unit",
     "is_primary_unit": "Is Primary Unit",

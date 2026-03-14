@@ -2,7 +2,9 @@
 
 namespace App\Actions\Product;
 
+use App\Actions\ProductImage\ProductImageActions;
 use App\Actions\ProductUnit\ProductUnitActions;
+use App\DTOs\ProductImageDTO;
 use App\DTOs\ProductServiceCreateDTO;
 use App\DTOs\ProductServiceUpdateDTO;
 use App\DTOs\ProductUnitCreateServiceDTO;
@@ -19,6 +21,12 @@ class ProductServiceActions
 {
     use CacheHelper;
     use LoggerHelper;
+
+    public function __construct(
+        private ProductUnitActions $productUnitActions,
+        private ProductImageActions $productImageActions,
+    ) {
+    }
 
     public function create(ProductServiceCreateDTO $data): Product
     {
@@ -42,7 +50,6 @@ class ProductServiceActions
             $product->status = $data->status;
             $product->save();
 
-            $productUnitActions = new ProductUnitActions();
             $productUnitDTO = new ProductUnitCreateServiceDTO(
                 companyId: $product->company_id,
                 productId: $product->id,
@@ -52,7 +59,16 @@ class ProductServiceActions
                 point: $data->point,
             );
 
-            $productUnitActions->createService($productUnitDTO);
+            $this->productUnitActions->createService($productUnitDTO);
+
+            foreach ($data->images as $image) {
+                $productImageDTO = new ProductImageDTO(
+                    hash: $image['hash'],
+                    isThumbnail: (bool) $image['is_thumbnail'],
+                );
+
+                $this->productImageActions->attachByHash($product, $productImageDTO);
+            }
 
             $this->flushCache();
 
@@ -86,30 +102,28 @@ class ProductServiceActions
             $product->status = $data->status;
             $product->save();
 
-            $productUnitActions = new ProductUnitActions();
+            $productUnit = $product->productUnits()->firstOrFail();
 
-            $productUnit = $product->productUnits()->first();
+            $updateDto = new ProductUnitUpdateServiceDTO(
+                remarks: null,
+                unitId: $data->unitId,
+                price: $data->price,
+                point: $data->point,
+            );
 
-            if ($productUnit) {
-                $updateDto = new ProductUnitUpdateServiceDTO(
-                    remarks: null,
-                    unitId: $data->unitId,
-                    price: $data->price,
-                    point: $data->point,
+            $this->productUnitActions->updateService($productUnit, $updateDto);
+
+            foreach ($data->deleteImageIds as $imageId) {
+                $this->productImageActions->detachById($product, $imageId);
+            }
+
+            foreach ($data->images as $image) {
+                $productImageDTO = new ProductImageDTO(
+                    hash: $image['hash'],
+                    isThumbnail: (bool) $image['is_thumbnail'],
                 );
 
-                $productUnitActions->updateService($productUnit, $updateDto);
-            } else {
-                $createDto = new ProductUnitCreateServiceDTO(
-                    companyId: $product->company_id,
-                    productId: $product->id,
-                    remarks: null,
-                    unitId: $data->unitId,
-                    price: $data->price,
-                    point: $data->point,
-                );
-
-                $productUnitActions->createService($createDto);
+                $this->productImageActions->attachByHash($product, $productImageDTO);
             }
 
             $this->flushCache();

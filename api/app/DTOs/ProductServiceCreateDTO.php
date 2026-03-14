@@ -18,6 +18,8 @@ final class ProductServiceCreateDTO
         public readonly int $unitId,
         public readonly float $price,
         public readonly int $point,
+
+        public readonly array $images,
     ) {
     }
 }

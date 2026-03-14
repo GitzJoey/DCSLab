@@ -20,6 +20,7 @@ use App\Http\Controllers\NonCapitalWithdrawalCategoryController;
 use App\Http\Controllers\NonCapitalWithdrawalController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseAdditionalCostCategoryController;
 use App\Http\Controllers\PurchaseAdditionalCostController;
@@ -182,6 +183,7 @@ Route::prefix('product')->middleware('auth:sanctum')->group(function () {
         Route::post('edit/physical/{product:ulid}', [ProductController::class, 'updatePhysical'])->name('edit.physical');
         Route::post('edit/service/{product:ulid}', [ProductController::class, 'updateService'])->name('edit.service');
         Route::post('delete/{product:ulid}', [ProductController::class, 'delete'])->name('delete');
+        Route::post('image/upload', [ProductImageController::class, 'upload'])->name('image.upload');
     });
 });
 

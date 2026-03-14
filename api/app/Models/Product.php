@@ -73,34 +73,9 @@ class Product extends Model
         return $this->hasMany(ProductUnit::class);
     }
 
-    public function purchaseReturnProductUnits()
+    public function images()
     {
-        return $this->hasMany(PurchaseReturnProductUnit::class);
-    }
-
-    public function purchaseReceiptProductUnits()
-    {
-        return $this->hasMany(PurchaseReceiptProductUnit::class);
-    }
-
-    public function stockTransferProductUnits()
-    {
-        return $this->hasMany(StockTransferProductUnit::class);
-    }
-
-    public function saleOrderProductUnits()
-    {
-        return $this->hasMany(SaleOrderProductUnit::class);
-    }
-
-    public function saleProductUnits()
-    {
-        return $this->hasMany(SaleProductUnit::class);
-    }
-
-    public function saleReceiptProductUnits()
-    {
-        return $this->hasMany(SaleReceiptProductUnit::class);
+        return $this->hasMany(ProductImage::class);
     }
 
     public function stockTransactions()

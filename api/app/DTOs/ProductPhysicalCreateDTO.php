@@ -19,7 +19,9 @@ final class ProductPhysicalCreateDTO
         public readonly ?string $remarks,
         public readonly int $type,
         public readonly int $status,
+
         public readonly array $productUnits,
+        public readonly array $images,
     ) {
     }
 }

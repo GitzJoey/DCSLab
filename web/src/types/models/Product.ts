@@ -2,6 +2,7 @@ import { Company } from './Company';
 import { Brand } from './Brand';
 import { ProductCategory } from './ProductCategory';
 import { ProductUnit } from './ProductUnit';
+import { ProductImage } from './ProductImage';
 
 export interface Product {
   id: string;
@@ -9,7 +10,7 @@ export interface Product {
   company: Company;
   code: string;
   category: ProductCategory;
-  brand: Brand;
+  brand: Brand | null;
   name: string;
   slug: string;
   is_taxable: boolean;
@@ -22,4 +23,5 @@ export interface Product {
   status: string;
   remaining_stock_base_unit?: number;
   product_units: ProductUnit[];
+  product_images?: ProductImage[];
 }

@@ -22,6 +22,9 @@ final class ProductPhysicalUpdateDTO
 
         public readonly array $deleteProductUnitIds,
         public readonly array $productUnits,
+
+        public readonly array $deleteImageIds,
+        public readonly array $images,
     ) {
     }
 }

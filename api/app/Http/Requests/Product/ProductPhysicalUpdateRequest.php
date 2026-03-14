@@ -11,6 +11,7 @@ use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class ProductPhysicalUpdateRequest extends FormRequest
@@ -55,11 +56,26 @@ class ProductPhysicalUpdateRequest extends FormRequest
             'product_units.*.is_manufacturer_sku' => 'required|boolean',
             'product_units.*.unit_id' => ['required', 'integer', new ExistsForCompany('units', $this->company_id), 'distinct'],
             'product_units.*.price' => 'required|numeric|min:0',
-            'product_units.*.is_base' => 'required|boolean',
             'product_units.*.conversion_value' => 'required|numeric|min:1|distinct',
             'product_units.*.is_primary_unit' => 'required|boolean',
             'product_units.*.point' => 'required|integer|min:0',
             'product_units.*.remarks' => 'nullable|string',
+
+            'delete_image_ids' => 'nullable|array',
+            'delete_image_ids.*' => [
+                'required',
+                'integer',
+                Rule::exists('product_images', 'id')->where(function ($query) {
+                    $product = $this->route('product');
+                    if ($product) {
+                        $query->where('product_id', $product->id);
+                    }
+                }),
+            ],
+
+            'image_hashes' => ['nullable', 'array'],
+            'image_hashes.*.hash' => ['required', 'string', Rule::exists('product_images', 'hash')],
+            'image_hashes.*.is_thumbnail' => 'required|boolean',
         ];
     }
 
@@ -117,6 +133,14 @@ class ProductPhysicalUpdateRequest extends FormRequest
                 }
             }
             $this->merge(['product_units' => $productUnits]);
+        }
+
+        if ($this->filled('delete_image_ids')) {
+            $deleteImageIds = $this->delete_image_ids;
+            foreach ($deleteImageIds as $index => $id) {
+                $deleteImageIds[$index] = HashidsHelper::decodeId($id);
+            }
+            $this->merge(['delete_image_ids' => $deleteImageIds]);
         }
     }
 }

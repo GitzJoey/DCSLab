@@ -18,6 +18,9 @@ final class ProductServiceUpdateDTO
         public readonly int $unitId,
         public readonly float $price,
         public readonly int $point,
+
+        public readonly array $deleteImageIds,
+        public readonly array $images,
     ) {
     }
 }

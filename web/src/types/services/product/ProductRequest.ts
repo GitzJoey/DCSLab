@@ -71,7 +71,12 @@ export interface ProductPhysicalStoreRequest {
   remarks?: string | null;
   type: number;
   status: number;
+
   product_units: Array<ProductUnitStoreRequest>;
+  image_hashes?: {
+    hash: string;
+    is_thumbnail: boolean;
+  }[];
 }
 
 export interface ProductPhysicalUpdateRequest {
@@ -89,8 +94,14 @@ export interface ProductPhysicalUpdateRequest {
   remarks?: string | null;
   type: number;
   status: number;
+
   delete_product_unit_ids?: string[] | null;
   product_units: Array<ProductUnitUpdateRequest>;
+  delete_image_ids?: string[] | null;
+  image_hashes?: {
+    hash: string;
+    is_thumbnail: boolean;
+  }[];
 }
 
 export interface ProductServiceStoreRequest {
@@ -107,6 +118,11 @@ export interface ProductServiceStoreRequest {
   unit_id: string;
   price: number;
   point: number;
+
+  image_hashes?: {
+    hash: string;
+    is_thumbnail: boolean;
+  }[];
 }
 
 export interface ProductServiceUpdateRequest {
@@ -123,4 +139,10 @@ export interface ProductServiceUpdateRequest {
   unit_id: string;
   price: number;
   point: number;
+  
+  delete_image_ids?: string[] | null;
+  image_hashes?: {
+    hash: string;
+    is_thumbnail: boolean;
+  }[];
 }

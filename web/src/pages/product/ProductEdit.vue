@@ -21,6 +21,8 @@ import {
   FormTextarea,
   FormSelectSearch,
 } from '@/components/Base/Form';
+import { ProductImage } from '@/types/models/ProductImage';
+import ProductImagesField from '@/components/Product/ProductImagesField.vue';
 import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
 import { CardState } from '@/types/enums/CardState';
 import Button from '@/components/Base/Button';
@@ -99,6 +101,9 @@ const getUnitOptions = (index: number) =>
 const statusDDL = ref<Array<DropDownOption> | null>(null);
 
 const productForm = productService.useProductPhysicalUpdateForm(route.params.ulid.toString());
+
+const uploadedImages = ref<ProductImage[]>([]);
+
 // #endregion
 
 // #region Computed
@@ -160,6 +165,23 @@ const loadData = async () => {
         remarks: u.remarks,
       })),
     } as any);
+
+    if (result.data.product_images) {
+      const images = result.data.product_images.map((img: any) => ({
+        id: img.id,
+        product_id: img.product_id,
+        path: img.path,
+        url: img.url,
+        hash: img.hash,
+        is_thumbnail: img.is_thumbnail,
+      }));
+
+      uploadedImages.value = images;
+      productForm.image_hashes = images.map((img: any) => ({
+        hash: img.hash,
+        is_thumbnail: img.is_thumbnail,
+      }));
+    }
 
     // Ensure at least one unit exists for the form to render correctly
     if (productForm.product_units.length === 0) {
@@ -547,7 +569,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.remarks" />
             </div>
 
-            <div class="col-span-12 sm:col-span-6">
+            <div class="col-span-12 sm:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('status') }">
                 {{ t('views.product.fields.status') }}
               </FormLabel>
@@ -561,6 +583,18 @@ watch(
                 </option>
               </FormSelect>
               <FormErrorMessages :messages="productForm.errors.status" />
+            </div>
+
+            <!-- Column 12: Images -->
+            <div class="col-span-12">
+              <FormLabel>
+                {{ t('views.product.fields.images') }}
+              </FormLabel>
+              <ProductImagesField
+                v-model="productForm.image_hashes"
+                v-model:existing-images="uploadedImages"
+                v-model:delete-image-ids="productForm.delete_image_ids"
+              />
             </div>
           </div>
         </div>

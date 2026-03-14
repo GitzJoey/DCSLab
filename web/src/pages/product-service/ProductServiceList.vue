@@ -61,6 +61,8 @@
       next: null,
     },
   });
+  const previewImageUrl = ref<string | null>(null);
+  const isPreviewOpen = ref<boolean>(false);
   // #endregion
 
   // #region Computed
@@ -179,6 +181,27 @@
 
     emits('show-alertplaceholder', ap);
   };
+  const getProductThumbnailUrl = (item: Product): string | null => {
+    if (!item.product_images || item.product_images.length === 0) return null;
+
+    const thumbnail = item.product_images.find((img) => img.is_thumbnail);
+    if (thumbnail?.url) return thumbnail.url;
+
+    const first = item.product_images[0];
+    return first?.url ?? null;
+  };
+
+  const openPreview = (url: string | null | undefined) => {
+    if (!url) return;
+
+    previewImageUrl.value = url;
+    isPreviewOpen.value = true;
+  };
+
+  const closePreview = () => {
+    isPreviewOpen.value = false;
+    previewImageUrl.value = null;
+  };
   // #endregion
 </script>
 
@@ -199,22 +222,19 @@
             <Table.Thead variant="light">
               <Table.Tr>
                 <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product_service.table.cols.code') }}
+                  {{ t('views.product.table.cols.image') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product_service.table.cols.name') }}
+                  {{ t('views.product.detail.info_title') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product_service.table.cols.category') }}
+                  {{ t('views.product.table.cols.name') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap text-right">
-                  {{ t('views.product_service.table.cols.price') }}
+                  {{ t('views.product.table.cols.unit') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product_service.table.cols.unit') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product_service.table.cols.status') }}
+                  {{ t('views.product.table.cols.price') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap"></Table.Th>
               </Table.Tr>
@@ -232,28 +252,71 @@
               <template v-for="(item, itemIdx) in productLists.data" :key="item.ulid">
                 <Table.Tr class="intro-x">
                   <Table.Td>
-                    {{ item.code }}
+                    <div
+                      class="w-14 h-14 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
+                      @click="openPreview(getProductThumbnailUrl(item))"
+                    >
+                      <img
+                        v-if="item.product_images && item.product_images.length > 0"
+                        :src="getProductThumbnailUrl(item) || ''"
+                        class="w-full h-full object-cover"
+                      />
+                      <Lucide v-else icon="ImageOff" class="w-6 h-6 text-slate-400" />
+                    </div>
                   </Table.Td>
                   <Table.Td>
                     <div class="font-medium whitespace-nowrap">
+                      {{ item.code }}
+                    </div>
+                    <div class="mt-0.5 flex items-center flex-wrap">
+                      <span class="font-medium">{{ item.category.name }}</span>
+                    </div>
+                    <div class="mt-1">
+                      <div v-if="item.status == 'ACTIVE'" class="flex items-center text-success text-xs">
+                        <Lucide icon="CheckCircle" class="w-3 h-3 mr-1" />
+                        {{ t('views.product_service.status.active') }}
+                      </div>
+                      <div v-else class="flex items-center text-danger text-xs">
+                        <Lucide icon="X" class="w-3 h-3 mr-1" />
+                        {{ t('views.product_service.status.inactive') }}
+                      </div>
+                    </div>
+                  </Table.Td>
+                  <Table.Td>
+                    <div class="font-medium">
                       {{ item.name }}
                     </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+                    <div class="text-slate-500 text-xs mt-0.5">
                       {{ item.slug }}
                     </div>
                   </Table.Td>
                   <Table.Td>
-                    {{ item.category.name }}
-                  </Table.Td>
-                  <Table.Td class="text-right">
-                    {{ formatCurrency(item.product_units[0].price) }}
+                    <div class="flex flex-col gap-0">
+                      <div
+                        v-for="unit in item.product_units"
+                        :key="unit.ulid"
+                        class="h-6 flex items-center whitespace-nowrap"
+                      >
+                        {{
+                          unit.unit.name
+                        }}{{
+                          unit.conversion_value > 1
+                            ? ': ' + formatCurrency(unit.conversion_value) + ' ' + item.product_units[0].unit.name
+                            : ''
+                        }}
+                      </div>
+                    </div>
                   </Table.Td>
                   <Table.Td>
-                    {{ item.product_units[0].unit.name }}
-                  </Table.Td>
-                  <Table.Td>
-                    <Lucide v-if="item.status == 'ACTIVE'" icon="CheckCircle" class="text-success" />
-                    <Lucide v-if="item.status == 'INACTIVE'" icon="X" class="text-danger" />
+                    <div class="flex flex-col gap-0 items-end">
+                      <div
+                        v-for="unit in item.product_units"
+                        :key="unit.ulid"
+                        class="h-6 flex items-center whitespace-nowrap"
+                      >
+                        {{ formatCurrency(unit.price) }}
+                      </div>
+                    </div>
                   </Table.Td>
                   <Table.Td>
                     <div class="flex justify-end gap-1">
@@ -275,101 +338,140 @@
                     'hidden transition-all': expandDetail !== itemIdx,
                   }"
                 >
-                  <Table.Td colspan="7">
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.code') }}
+                  <Table.Td colspan="5" class="p-5">
+                    <div class="grid grid-cols-12 gap-6">
+                      <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium text-base mb-3 border-b pb-2">
+                          {{ t('views.product.detail.info_title') }}
+                        </div>
+                        <div class="grid grid-cols-1 gap-y-2">
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.code') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{ item.code }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.category_id') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{ item.category.name }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.name') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{ item.name }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.slug') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{ item.slug }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.status') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{
+                                item.status == 'ACTIVE'
+                                  ? t('views.product_service.status.active')
+                                  : t('views.product_service.status.inactive')
+                              }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.remarks') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{ item.remarks || '-' }}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div class="flex-1">{{ item.code }}</div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.name') }}
-                      </div>
-                      <div class="flex-1">{{ item.name }}</div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.slug') }}
-                      </div>
-                      <div class="flex-1">{{ item.slug }}</div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.category_id') }}
-                      </div>
-                      <div class="flex-1">{{ item.category.name }}</div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.price') }}
-                      </div>
-                      <div class="flex-1">
-                        {{ formatCurrency(item.product_units[0].price) }}
-                      </div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.unit_id') }}
-                      </div>
-                      <div class="flex-1">
-                        {{ item.product_units[0].unit.name }}
-                      </div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.point') }}
-                      </div>
-                      <div class="flex-1">
-                        {{ item.product_units[0].point }}
-                      </div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.is_taxable') }}
-                      </div>
-                      <div class="flex-1">
-                        {{
-                          item.is_taxable
-                            ? t('components.dropdown.values.switch.on')
-                            : t('components.dropdown.values.switch.off')
-                        }}
-                      </div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.vat_rate') }}
-                      </div>
-                      <div class="flex-1">{{ formatCurrency(item.vat_rate) }}%</div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.is_price_include_vat') }}
-                      </div>
-                      <div class="flex-1">
-                        {{
-                          item.is_price_include_vat
-                            ? t('components.dropdown.values.switch.on')
-                            : t('components.dropdown.values.switch.off')
-                        }}
-                      </div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.remarks') }}
-                      </div>
-                      <div class="flex-1">{{ item.remarks }}</div>
-                    </div>
-                    <div class="flex flex-row">
-                      <div class="ml-5 w-48 text-right pr-5">
-                        {{ t('views.product_service.fields.status') }}
-                      </div>
-                      <div class="flex-1">
-                        {{
-                          item.status == 'ACTIVE'
-                            ? t('views.product_service.status.active')
-                            : t('views.product_service.status.inactive')
-                        }}
+
+                      <div class="col-span-12 lg:col-span-6">
+                        <div class="font-medium text-base mb-3 border-b pb-2">
+                          {{ t('views.product.detail.settings_title') }}
+                        </div>
+                        <div class="grid grid-cols-1 gap-y-2">
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.is_taxable') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{
+                                item.is_taxable
+                                  ? t('components.dropdown.values.switch.on')
+                                  : t('components.dropdown.values.switch.off')
+                              }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.vat_rate') }}
+                            </div>
+                            <div class="flex-1 font-medium">{{ formatCurrency(item.vat_rate) }}%</div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.is_price_include_vat') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{
+                                item.is_price_include_vat
+                                  ? t('components.dropdown.values.switch.on')
+                                  : t('components.dropdown.values.switch.off')
+                              }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.unit_id') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{
+                                item.product_units && item.product_units.length > 0
+                                  ? item.product_units[0].unit.name
+                                  : '-'
+                              }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.price') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{
+                                item.product_units && item.product_units.length > 0
+                                  ? formatCurrency(item.product_units[0].price)
+                                  : '-'
+                              }}
+                            </div>
+                          </div>
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product_service.fields.point') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{
+                                item.product_units && item.product_units.length > 0
+                                  ? item.product_units[0].point
+                                  : '-'
+                              }}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Table.Td>
@@ -381,6 +483,23 @@
       </DataList>
     </div>
   </div>
+  <Dialog :open="isPreviewOpen" size="lg" @close="closePreview">
+    <Dialog.Panel class="flex flex-col">
+      <Dialog.Title>
+        <div class="flex items-center justify-between w-full">
+          <div class="font-medium">
+            {{ t('views.product.fields.images') }}
+          </div>
+          <Button type="button" variant="outline-secondary" size="sm" @click="closePreview">
+            <Lucide icon="X" class="w-4 h-4" />
+          </Button>
+        </div>
+      </Dialog.Title>
+      <Dialog.Description class="bg-slate-900 flex items-center justify-center">
+        <img v-if="previewImageUrl" :src="previewImageUrl" class="max-h-[80vh] max-w-full object-contain" />
+      </Dialog.Description>
+    </Dialog.Panel>
+  </Dialog>
   <Dialog
     :open="deleteModalShow"
     @close="
