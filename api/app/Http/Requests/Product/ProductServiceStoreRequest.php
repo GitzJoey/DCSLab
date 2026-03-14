@@ -46,7 +46,7 @@ class ProductServiceStoreRequest extends FormRequest
 
             'image_hashes' => ['nullable', 'array'],
             'image_hashes.*.hash' => ['required', 'string', Rule::exists('product_images', 'hash')],
-            'image_hashes.*.is_thumbnail' => 'required|boolean',
+            'image_hashes.*.is_main' => 'required|boolean',
         ];
     }
 

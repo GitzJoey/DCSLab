@@ -9,7 +9,7 @@ import { ProductImage } from '@/types/models/ProductImage';
 
 interface ImageHash {
   hash: string;
-  is_thumbnail: boolean;
+  is_main: boolean;
 }
 
 const props = withDefaults(
@@ -52,9 +52,9 @@ const newImages = ref<ProductImage[]>([]);
 const previewImageUrl = ref<string | null>(null);
 const isPreviewOpen = ref(false);
 
-const isImageThumbnail = (image: ProductImage): boolean => {
+const isImageMain = (image: ProductImage): boolean => {
   const item = imageHashes.value.find((h) => h.hash === image.hash);
-  return item ? item.is_thumbnail : false;
+  return item ? item.is_main : false;
 };
 
 const handleImageUploaded = (image: ProductImage) => {
@@ -63,7 +63,7 @@ const handleImageUploaded = (image: ProductImage) => {
   const hashes = [...imageHashes.value];
   hashes.push({
     hash: image.hash,
-    is_thumbnail: hashes.length === 0,
+    is_main: hashes.length === 0,
   });
 
   imageHashes.value = hashes;
@@ -104,8 +104,8 @@ const removeExistingImage = (index: number) => {
       hashes.splice(hashIndex, 1);
     }
 
-    if (hashes.length > 0 && !hashes.some((img) => img.is_thumbnail)) {
-      hashes[0].is_thumbnail = true;
+    if (hashes.length > 0 && !hashes.some((img) => img.is_main)) {
+      hashes[0].is_main = true;
     }
 
     imageHashes.value = hashes;
@@ -127,31 +127,31 @@ const removeNewImage = (index: number) => {
       hashes.splice(hashIndex, 1);
     }
 
-    if (hashes.length > 0 && !hashes.some((img) => img.is_thumbnail)) {
-      hashes[0].is_thumbnail = true;
+    if (hashes.length > 0 && !hashes.some((img) => img.is_main)) {
+      hashes[0].is_main = true;
     }
 
     imageHashes.value = hashes;
   }
 };
 
-const setThumbnail = (image: ProductImage) => {
+const setMainImage = (image: ProductImage) => {
   const hashes = imageHashes.value.map((img) => ({
     hash: img.hash,
-    is_thumbnail: img.hash === image.hash,
+    is_main: img.hash === image.hash,
   }));
 
   imageHashes.value = hashes;
 
   const updatedExisting = existingImages.value.map((img) => ({
     ...img,
-    is_thumbnail: img.hash === image.hash,
+    is_main: img.hash === image.hash,
   }));
   existingImages.value = updatedExisting;
 
   const updatedNew = newImages.value.map((img) => ({
     ...img,
-    is_thumbnail: img.hash === image.hash,
+    is_main: img.hash === image.hash,
   }));
   newImages.value = updatedNew;
 };
@@ -190,17 +190,17 @@ const setThumbnail = (image: ProductImage) => {
             </Button>
             <Button
               type="button"
-              :variant="isImageThumbnail(image) ? 'primary' : 'secondary'"
+              :variant="isImageMain(image) ? 'primary' : 'secondary'"
               size="sm"
               class="text-xs px-2 py-1"
-              @click.stop="setThumbnail(image)"
+              @click.stop="setMainImage(image)"
             >
-              {{ isImageThumbnail(image) ? 'Main' : 'Set Main' }}
+              {{ isImageMain(image) ? 'Main' : 'Set Main' }}
             </Button>
           </div>
 
           <div
-            v-if="isImageThumbnail(image)"
+            v-if="isImageMain(image)"
             class="absolute top-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded shadow-sm"
           >
             Main
@@ -230,17 +230,17 @@ const setThumbnail = (image: ProductImage) => {
 
             <Button
               type="button"
-              :variant="isImageThumbnail(image) ? 'primary' : 'secondary'"
+              :variant="isImageMain(image) ? 'primary' : 'secondary'"
               size="sm"
               class="text-xs px-2 py-1"
-              @click.stop="setThumbnail(image)"
+              @click.stop="setMainImage(image)"
             >
-              {{ isImageThumbnail(image) ? 'Main' : 'Set Main' }}
+              {{ isImageMain(image) ? 'Main' : 'Set Main' }}
             </Button>
           </div>
 
           <div
-            v-if="isImageThumbnail(image)"
+            v-if="isImageMain(image)"
             class="absolute top-2 left-2 bg-primary text-white text-xs px-2 py-1 rounded shadow-sm"
           >
             Main

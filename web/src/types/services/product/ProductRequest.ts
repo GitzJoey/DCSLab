@@ -75,7 +75,7 @@ export interface ProductPhysicalStoreRequest {
   product_units: Array<ProductUnitStoreRequest>;
   image_hashes?: {
     hash: string;
-    is_thumbnail: boolean;
+    is_main: boolean;
   }[];
 }
 
@@ -100,7 +100,7 @@ export interface ProductPhysicalUpdateRequest {
   delete_image_ids?: string[] | null;
   image_hashes?: {
     hash: string;
-    is_thumbnail: boolean;
+    is_main: boolean;
   }[];
 }
 
@@ -121,7 +121,7 @@ export interface ProductServiceStoreRequest {
 
   image_hashes?: {
     hash: string;
-    is_thumbnail: boolean;
+    is_main: boolean;
   }[];
 }
 
@@ -143,6 +143,6 @@ export interface ProductServiceUpdateRequest {
   delete_image_ids?: string[] | null;
   image_hashes?: {
     hash: string;
-    is_thumbnail: boolean;
+    is_main: boolean;
   }[];
 }

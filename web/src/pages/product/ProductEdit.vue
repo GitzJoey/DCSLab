@@ -173,13 +173,13 @@ const loadData = async () => {
         path: img.path,
         url: img.url,
         hash: img.hash,
-        is_thumbnail: img.is_thumbnail,
+        is_main: img.is_main,
       }));
 
       uploadedImages.value = images;
       productForm.image_hashes = images.map((img: any) => ({
         hash: img.hash,
-        is_thumbnail: img.is_thumbnail,
+        is_main: img.is_main,
       }));
     }
 

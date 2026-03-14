@@ -13,13 +13,13 @@ class ProductImage extends Model
         'product_id',
         'path',
         'hash',
-        'is_thumbnail',
+        'is_main',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_thumbnail' => 'boolean',
+            'is_main' => 'boolean',
         ];
     }
 

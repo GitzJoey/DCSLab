@@ -64,7 +64,7 @@ class ProductServiceActions
             foreach ($data->images as $image) {
                 $productImageDTO = new ProductImageDTO(
                     hash: $image['hash'],
-                    isThumbnail: (bool) $image['is_thumbnail'],
+                    isMain: (bool) $image['is_main'],
                 );
 
                 $this->productImageActions->attachByHash($product, $productImageDTO);
@@ -120,7 +120,7 @@ class ProductServiceActions
             foreach ($data->images as $image) {
                 $productImageDTO = new ProductImageDTO(
                     hash: $image['hash'],
-                    isThumbnail: (bool) $image['is_thumbnail'],
+                    isMain: (bool) $image['is_main'],
                 );
 
                 $this->productImageActions->attachByHash($product, $productImageDTO);

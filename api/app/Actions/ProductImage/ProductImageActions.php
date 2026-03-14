@@ -39,7 +39,7 @@ class ProductImageActions
                 $productImage = new ProductImage();
                 $productImage->path = $path;
                 $productImage->hash = $hash;
-                $productImage->is_thumbnail = false;
+                $productImage->is_main = false;
                 $productImage->save();
             }
 
@@ -60,8 +60,8 @@ class ProductImageActions
         $timer_start = microtime(true);
 
         try {
-            if ($data->isThumbnail === true) {
-                $product->images()->update(['is_thumbnail' => false]);
+            if ($data->isMain === true) {
+                $product->images()->update(['is_main' => false]);
             }
 
             $productImage = ProductImage::where('product_id', $product->id)
@@ -69,7 +69,7 @@ class ProductImageActions
                 ->first();
 
             if ($productImage) {
-                $productImage->is_thumbnail = $data->isThumbnail;
+                $productImage->is_main = $data->isMain;
                 $productImage->save();
             } else {
                 $productImage = ProductImage::where('hash', $data->hash)
@@ -78,7 +78,7 @@ class ProductImageActions
 
                 if ($productImage) {
                     $productImage->product_id = $product->id;
-                    $productImage->is_thumbnail = $data->isThumbnail;
+                    $productImage->is_main = $data->isMain;
                     $productImage->save();
                 } else {
                     $productImage = ProductImage::where('hash', $data->hash)->first();
@@ -87,7 +87,7 @@ class ProductImageActions
                         $product->images()->create([
                             'path' => $productImage->path,
                             'hash' => $productImage->hash,
-                            'is_thumbnail' => $data->isThumbnail,
+                            'is_main' => $data->isMain,
                         ]);
                     }
                 }
@@ -129,17 +129,17 @@ class ProductImageActions
                 ->first();
 
             if ($productImage) {
-                $wasThumbnail = (bool) $productImage->is_thumbnail;
+                $wasMainImage = (bool) $productImage->is_main;
                 $productImage->delete();
 
-                if ($wasThumbnail) {
-                    $nextThumbnail = ProductImage::where('product_id', $product->id)
+                if ($wasMainImage) {
+                    $nextMainImage = ProductImage::where('product_id', $product->id)
                         ->orderBy('id')
                         ->first();
 
-                    if ($nextThumbnail) {
-                        $nextThumbnail->is_thumbnail = true;
-                        $nextThumbnail->save();
+                    if ($nextMainImage) {
+                        $nextMainImage->is_main = true;
+                        $nextMainImage->save();
                     }
                 }
             }

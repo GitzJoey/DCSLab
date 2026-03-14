@@ -1,222 +1,216 @@
 <script setup lang="ts">
-  // #region Imports
-  import { computed, onMounted, ref } from 'vue';
-  import DataList from '@/components/DataList';
-  import { useI18n } from 'vue-i18n';
-  import Button from '@/components/Base/Button';
-  import Lucide from '@/components/Base/Lucide';
-  import Table from '@/components/Base/Table';
-  import ProductService from '@/services/ProductService';
-  import { Product } from '@/types/models/Product';
-  import { Collection } from '@/types/resources/Collection';
-  import { DataListEmittedData } from '@/components/DataList/DataList.vue';
-  import { ServiceResponse } from '@/types/services/ServiceResponse';
-  import { ProductReadAnyPaginateRequest } from '@/types/services/product/ProductRequest';
-  import { useRouter } from 'vue-router';
-  import { Dialog } from '@/components/Base/Headless';
-  import { ViewMode } from '@/types/enums/ViewMode';
-  import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
-  import { ErrorCode } from '@/types/enums/ErrorCode';
-  import { NotificationData } from '@/types/models/NotificationData';
-  import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-  import { formatCurrency } from '@/utils/helper';
-  // #endregion
+// #region Imports
+import { computed, onMounted, ref } from 'vue';
+import DataList from '@/components/DataList';
+import { useI18n } from 'vue-i18n';
+import Button from '@/components/Base/Button';
+import Lucide from '@/components/Base/Lucide';
+import Table from '@/components/Base/Table';
+import ProductService from '@/services/ProductService';
+import { Product } from '@/types/models/Product';
+import { Collection } from '@/types/resources/Collection';
+import { DataListEmittedData } from '@/components/DataList/DataList.vue';
+import { ServiceResponse } from '@/types/services/ServiceResponse';
+import { ProductReadAnyPaginateRequest } from '@/types/services/product/ProductRequest';
+import { useRouter } from 'vue-router';
+import { Dialog } from '@/components/Base/Headless';
+import { ViewMode } from '@/types/enums/ViewMode';
+import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
+import { ErrorCode } from '@/types/enums/ErrorCode';
+import { NotificationData } from '@/types/models/NotificationData';
+import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+import { formatCurrency } from '@/utils/helper';
+// #endregion
 
-  // #region Declarations
-  const { t } = useI18n();
-  const router = useRouter();
-  const productServices = new ProductService();
-  const selectedUserLocationStore = useSelectedUserLocationStore();
-  // #endregion
+// #region Declarations
+const { t } = useI18n();
+const router = useRouter();
+const productServices = new ProductService();
+const selectedUserLocationStore = useSelectedUserLocationStore();
+// #endregion
 
-  // #region Props, Emits
-  const emits = defineEmits([
-    'mode-state',
-    'loading-state',
-    'update-profile',
-    'show-alertplaceholder',
-    'show-notification',
-  ]);
-  // #endregion
+// #region Props, Emits
+const emits = defineEmits([
+  'mode-state',
+  'loading-state',
+  'update-profile',
+  'show-alertplaceholder',
+  'show-notification',
+]);
+// #endregion
 
-  // #region Refs
-  const deleteUlid = ref<string>('');
-  const deleteModalShow = ref<boolean>(false);
-  const expandDetail = ref<number | null>(null);
-  const productLists = ref<Collection<Array<Product>> | null>({
-    data: [],
-    meta: {
-      current_page: 0,
-      from: null,
-      last_page: 0,
-      path: '',
-      per_page: 0,
-      to: null,
-      total: 0,
-    },
-    links: {
-      first: '',
-      last: '',
-      prev: null,
-      next: null,
-    },
-  });
-  const previewImageUrl = ref<string | null>(null);
-  const isPreviewOpen = ref<boolean>(false);
-  // #endregion
+// #region Refs
+const deleteUlid = ref<string>('');
+const deleteModalShow = ref<boolean>(false);
+const expandDetail = ref<number | null>(null);
+const productLists = ref<Collection<Array<Product>> | null>({
+  data: [],
+  meta: {
+    current_page: 0,
+    from: null,
+    last_page: 0,
+    path: '',
+    per_page: 0,
+    to: null,
+    total: 0,
+  },
+  links: {
+    first: '',
+    last: '',
+    prev: null,
+    next: null,
+  },
+});
+const previewImageUrl = ref<string | null>(null);
+const isPreviewOpen = ref<boolean>(false);
+// #endregion
 
-  // #region Computed
-  const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
-  const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
-  // #endregion
+// #region Computed
+const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
+// #endregion
 
-  // #region Lifecycle Hooks
-  onMounted(async () => {
-    emits('mode-state', ViewMode.LIST);
+// #region Lifecycle Hooks
+onMounted(async () => {
+  emits('mode-state', ViewMode.LIST);
 
-    if (!isUserLocationSelected.value) {
-      router.push({
-        name: 'side-menu-error-code',
-        params: { code: ErrorCode.USERLOCATION_REQUIRED },
-      });
-    }
-
-    await getProducts('', true, 1, 10);
-  });
-  // #endregion
-
-  // #region Methods
-  const getProducts = async (search: string, refresh: boolean, page: number, per_page: number) => {
-    emits('loading-state', true);
-
-    let company_id = selectedUserLocation.value.company.id;
-
-    const searchReq: ProductReadAnyPaginateRequest = {
-      with_trashed: false,
-
-      company_id: company_id,
-      search: search,
-      type: 4,
-      include_id: undefined,
-
-      refresh: refresh,
-      page: page,
-      per_page: per_page,
-    };
-
-    let result: ServiceResponse<Collection<Array<Product>> | null> = await productServices.readAnyPaginate(searchReq);
-
-    if (result.success && result.data) {
-      productLists.value = result.data;
-    } else {
-      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
-    }
-
-    emits('loading-state', false);
-  };
-
-  const handleDataListChange = async (data: DataListEmittedData) => {
-    await getProducts(data.search.text, false, data.pagination.page, data.pagination.per_page);
-  };
-
-  const viewSelected = (idx: number) => {
-    if (expandDetail.value === idx) {
-      expandDetail.value = null;
-    } else {
-      expandDetail.value = idx;
-    }
-  };
-
-  const editSelected = (idx: number) => {
-    if (!productLists.value) return;
-    let ulid = productLists.value.data[idx].ulid;
-    emits('mode-state', ViewMode.FORM_EDIT);
+  if (!isUserLocationSelected.value) {
     router.push({
-      name: 'side-menu-product-product-service-edit',
-      params: { ulid: ulid },
+      name: 'side-menu-error-code',
+      params: { code: ErrorCode.USERLOCATION_REQUIRED },
     });
+  }
+
+  await getProducts('', true, 1, 10);
+});
+// #endregion
+
+// #region Methods
+const getProducts = async (search: string, refresh: boolean, page: number, per_page: number) => {
+  emits('loading-state', true);
+
+  let company_id = selectedUserLocation.value.company.id;
+
+  const searchReq: ProductReadAnyPaginateRequest = {
+    with_trashed: false,
+
+    company_id: company_id,
+    search: search,
+    type: 4,
+    include_id: undefined,
+
+    refresh: refresh,
+    page: page,
+    per_page: per_page,
   };
 
-  const deleteSelected = (idx: number) => {
-    if (!productLists.value) return;
-    let ulid = productLists.value.data[idx].ulid;
-    deleteUlid.value = ulid;
-    deleteModalShow.value = true;
+  let result: ServiceResponse<Collection<Array<Product>> | null> = await productServices.readAnyPaginate(searchReq);
+
+  if (result.success && result.data) {
+    productLists.value = result.data;
+  } else {
+    showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
+  }
+
+  emits('loading-state', false);
+};
+
+const handleDataListChange = async (data: DataListEmittedData) => {
+  await getProducts(data.search.text, false, data.pagination.page, data.pagination.per_page);
+};
+
+const viewSelected = (idx: number) => {
+  if (expandDetail.value === idx) {
+    expandDetail.value = null;
+  } else {
+    expandDetail.value = idx;
+  }
+};
+
+const editSelected = (idx: number) => {
+  if (!productLists.value) return;
+  let ulid = productLists.value.data[idx].ulid;
+  emits('mode-state', ViewMode.FORM_EDIT);
+  router.push({
+    name: 'side-menu-product-product-service-edit',
+    params: { ulid: ulid },
+  });
+};
+
+const deleteSelected = (idx: number) => {
+  if (!productLists.value) return;
+  let ulid = productLists.value.data[idx].ulid;
+  deleteUlid.value = ulid;
+  deleteModalShow.value = true;
+};
+
+const confirmDelete = async () => {
+  deleteModalShow.value = false;
+  emits('loading-state', true);
+
+  let result = await productServices.delete(deleteUlid.value);
+
+  emits('loading-state', false);
+
+  if (result.success) {
+    await getProducts('', true, 1, 10);
+    showNotification(t('views.product_service.alert.delete.title'), t('views.product_service.alert.delete.message'));
+  } else {
+    showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
+  }
+};
+
+const showNotification = (pTitle: string, pContent: string) => {
+  let n: NotificationData = {
+    title: pTitle,
+    content: pContent,
+  };
+  emits('show-notification', n);
+};
+
+const showAlertPlaceholder = (
+  pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
+  pTitle: string,
+  pAlertList: Record<string, Array<string>> | null,
+) => {
+  let ap: AlertPlaceholderProps = {
+    alertType: pAlertType,
+    title: pTitle,
+    alertList: pAlertList,
   };
 
-  const confirmDelete = async () => {
-    deleteModalShow.value = false;
-    emits('loading-state', true);
+  emits('show-alertplaceholder', ap);
+};
+const getProductMainImageUrl = (item: Product): string | null => {
+  if (!item.product_images || item.product_images.length === 0) return null;
 
-    let result = await productServices.delete(deleteUlid.value);
+  const mainImage = item.product_images.find((img) => img.is_main);
+  if (mainImage?.url) return mainImage.url;
 
-    emits('loading-state', false);
+  const first = item.product_images[0];
+  return first?.url ?? null;
+};
 
-    if (result.success) {
-      await getProducts('', true, 1, 10);
-      showNotification(t('views.product_service.alert.delete.title'), t('views.product_service.alert.delete.message'));
-    } else {
-      showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
-    }
-  };
+const openPreview = (url: string | null | undefined) => {
+  if (!url) return;
 
-  const showNotification = (pTitle: string, pContent: string) => {
-    let n: NotificationData = {
-      title: pTitle,
-      content: pContent,
-    };
-    emits('show-notification', n);
-  };
+  previewImageUrl.value = url;
+  isPreviewOpen.value = true;
+};
 
-  const showAlertPlaceholder = (
-    pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
-    pTitle: string,
-    pAlertList: Record<string, Array<string>> | null,
-  ) => {
-    let ap: AlertPlaceholderProps = {
-      alertType: pAlertType,
-      title: pTitle,
-      alertList: pAlertList,
-    };
-
-    emits('show-alertplaceholder', ap);
-  };
-  const getProductThumbnailUrl = (item: Product): string | null => {
-    if (!item.product_images || item.product_images.length === 0) return null;
-
-    const thumbnail = item.product_images.find((img) => img.is_thumbnail);
-    if (thumbnail?.url) return thumbnail.url;
-
-    const first = item.product_images[0];
-    return first?.url ?? null;
-  };
-
-  const openPreview = (url: string | null | undefined) => {
-    if (!url) return;
-
-    previewImageUrl.value = url;
-    isPreviewOpen.value = true;
-  };
-
-  const closePreview = () => {
-    isPreviewOpen.value = false;
-    previewImageUrl.value = null;
-  };
-  // #endregion
+const closePreview = () => {
+  isPreviewOpen.value = false;
+  previewImageUrl.value = null;
+};
+// #endregion
 </script>
 
 <template>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
-      <DataList
-        :title="t('views.product_service.table.title')"
-        :data="productLists"
-        :enable-search="true"
-        :can-print="true"
-        :can-export="true"
-        :pagination="productLists ? productLists.meta : null"
-        @dataListChanged="handleDataListChange"
-      >
+      <DataList :title="t('views.product_service.table.title')" :data="productLists" :enable-search="true"
+        :can-print="true" :can-export="true" :pagination="productLists ? productLists.meta : null"
+        @dataListChanged="handleDataListChange">
         <template #content>
           <Table class="mt-5" :hover="true">
             <Table.Thead variant="light">
@@ -254,13 +248,9 @@
                   <Table.Td>
                     <div
                       class="w-14 h-14 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
-                      @click="openPreview(getProductThumbnailUrl(item))"
-                    >
-                      <img
-                        v-if="item.product_images && item.product_images.length > 0"
-                        :src="getProductThumbnailUrl(item) || ''"
-                        class="w-full h-full object-cover"
-                      />
+                      @click="openPreview(getProductMainImageUrl(item))">
+                      <img v-if="item.product_images && item.product_images.length > 0"
+                        :src="getProductMainImageUrl(item) || ''" class="w-full h-full object-cover" />
                       <Lucide v-else icon="ImageOff" class="w-6 h-6 text-slate-400" />
                     </div>
                   </Table.Td>
@@ -292,11 +282,8 @@
                   </Table.Td>
                   <Table.Td>
                     <div class="flex flex-col gap-0">
-                      <div
-                        v-for="unit in item.product_units"
-                        :key="unit.ulid"
-                        class="h-6 flex items-center whitespace-nowrap"
-                      >
+                      <div v-for="unit in item.product_units" :key="unit.ulid"
+                        class="h-6 flex items-center whitespace-nowrap">
                         {{
                           unit.unit.name
                         }}{{
@@ -309,11 +296,8 @@
                   </Table.Td>
                   <Table.Td>
                     <div class="flex flex-col gap-0 items-end">
-                      <div
-                        v-for="unit in item.product_units"
-                        :key="unit.ulid"
-                        class="h-6 flex items-center whitespace-nowrap"
-                      >
+                      <div v-for="unit in item.product_units" :key="unit.ulid"
+                        class="h-6 flex items-center whitespace-nowrap">
                         {{ formatCurrency(unit.price) }}
                       </div>
                     </div>
@@ -332,12 +316,10 @@
                     </div>
                   </Table.Td>
                 </Table.Tr>
-                <Table.Tr
-                  :class="{
-                    'intro-x': true,
-                    'hidden transition-all': expandDetail !== itemIdx,
-                  }"
-                >
+                <Table.Tr :class="{
+                  'intro-x': true,
+                  'hidden transition-all': expandDetail !== itemIdx,
+                }">
                   <Table.Td colspan="5" class="p-5">
                     <div class="grid grid-cols-12 gap-6">
                       <div class="col-span-12 lg:col-span-6">
@@ -500,14 +482,11 @@
       </Dialog.Description>
     </Dialog.Panel>
   </Dialog>
-  <Dialog
-    :open="deleteModalShow"
-    @close="
-      () => {
-        deleteModalShow = false;
-      }
-    "
-  >
+  <Dialog :open="deleteModalShow" @close="
+    () => {
+      deleteModalShow = false;
+    }
+  ">
     <Dialog.Panel>
       <div class="p-5 text-center">
         <Lucide icon="XCircle" class="w-16 h-16 mx-auto mt-3 text-danger" />
@@ -521,16 +500,11 @@
         </div>
       </div>
       <div class="px-5 pb-8 text-center">
-        <Button
-          type="button"
-          variant="outline-secondary"
-          @click="
-            () => {
-              deleteModalShow = false;
-            }
-          "
-          class="w-24 mr-1"
-        >
+        <Button type="button" variant="outline-secondary" @click="
+          () => {
+            deleteModalShow = false;
+          }
+        " class="w-24 mr-1">
           {{ t('components.buttons.cancel') }}
         </Button>
         <Button type="button" variant="danger" class="w-24" @click="confirmDelete">

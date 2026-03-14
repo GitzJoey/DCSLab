@@ -238,7 +238,7 @@ export default class ProductService {
 
       image_hashes: [] as {
         hash: string;
-        is_thumbnail: boolean;
+        is_main: boolean;
       }[],
     });
 
@@ -279,7 +279,7 @@ export default class ProductService {
       delete_image_ids: [] as string[],
       image_hashes: [] as {
         hash: string;
-        is_thumbnail: boolean;
+        is_main: boolean;
       }[],
     });
 
@@ -308,7 +308,7 @@ export default class ProductService {
 
       image_hashes: [] as {
         hash: string;
-        is_thumbnail: boolean;
+        is_main: boolean;
       }[],
     });
 
@@ -347,7 +347,7 @@ export default class ProductService {
       delete_image_ids: [] as string[],
       image_hashes: [] as {
         hash: string;
-        is_thumbnail: boolean;
+        is_main: boolean;
       }[],
     });
 

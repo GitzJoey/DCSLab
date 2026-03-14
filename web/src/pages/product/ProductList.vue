@@ -184,11 +184,11 @@ const showAlertPlaceholder = (
   emits('show-alertplaceholder', ap);
 };
 
-const getProductThumbnailUrl = (item: Product): string | null => {
+const getProductMainImageUrl = (item: Product): string | null => {
   if (!item.product_images || item.product_images.length === 0) return null;
 
-  const thumbnail = item.product_images.find((img) => img.is_thumbnail);
-  if (thumbnail?.url) return thumbnail.url;
+  const mainImage = item.product_images.find((img) => img.is_main);
+  if (mainImage?.url) return mainImage.url;
 
   const first = item.product_images[0];
   return first?.url ?? null;
@@ -253,9 +253,9 @@ const closePreview = () => {
                   <Table.Td>
                     <div
                       class="w-14 h-14 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
-                      @click="openPreview(getProductThumbnailUrl(item))">
+                      @click="openPreview(getProductMainImageUrl(item))">
                       <img v-if="item.product_images && item.product_images.length > 0"
-                        :src="getProductThumbnailUrl(item) || ''"
+                        :src="getProductMainImageUrl(item) || ''"
                         class="w-full h-full object-cover" />
                       <Lucide v-else icon="ImageOff" class="w-6 h-6 text-slate-400" />
                     </div>

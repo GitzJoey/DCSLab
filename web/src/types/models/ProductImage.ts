@@ -4,5 +4,5 @@ export interface ProductImage {
   path: string;
   hash: string;
   url: string;
-  is_thumbnail: boolean;
+  is_main: boolean;
 }

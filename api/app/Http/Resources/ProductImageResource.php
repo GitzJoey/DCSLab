@@ -17,7 +17,7 @@ class ProductImageResource extends JsonResource
             'path' => $this->path,
             'url' => ImageHelper::getUrl($this->path),
             'hash' => $this->hash,
-            'is_thumbnail' => $this->is_thumbnail,
+            'is_main' => $this->is_main,
         ];
     }
 }
