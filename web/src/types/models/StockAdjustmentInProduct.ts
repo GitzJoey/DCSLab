@@ -2,6 +2,7 @@ import { Company } from './Company';
 import { Branch } from './Branch';
 import { StockAdjustment } from './StockAdjustment';
 import { ProductUnit } from './ProductUnit';
+import { StockAdjustmentInProductSerial } from './StockAdjustmentInProductSerial';
 
 export interface StockAdjustmentInProduct {
   id: string;
@@ -17,4 +18,5 @@ export interface StockAdjustmentInProduct {
   product_unit_total_cogs: number;
   product_unit_base_unit_cogs: number;
   remarks: string | null;
+  serials: StockAdjustmentInProductSerial[];
 }

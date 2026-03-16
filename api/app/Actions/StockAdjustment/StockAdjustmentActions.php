@@ -57,7 +57,7 @@ class StockAdjustmentActions
             })
             ->join('companies', 'companies.id', '=', 'stock_adjustments.company_id')
             ->whereCompanyId('stock_adjustments', $companyId)
-            ->whereBranchId($branchId)
+            ->whereBranchId('stock_adjustments', $branchId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search) {

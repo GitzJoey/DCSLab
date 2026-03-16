@@ -10,11 +10,15 @@ return new class extends Migration
     {
         Schema::create('stock_adjustment_in_product_serials', function (Blueprint $table) {
             $table->id();
+            $table->ulid();
 
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('stock_adjustment_id')->references('id')->on('stock_adjustments');
-            $table->foreignId('stock_adjustment_in_product_id')->references('id')->on('stock_adjustment_in_products');
+
+            $table->foreignId('stock_adjustment_in_product_id');
+            $table->foreign('stock_adjustment_in_product_id', 'fk_saip_serials_saip_id')->references('id')->on('stock_adjustment_in_products');
+
             $table->string('serial');
 
             $table->unsignedBigInteger('created_by')->default(0);

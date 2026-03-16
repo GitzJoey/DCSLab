@@ -410,6 +410,16 @@
                                       {{ p.product_unit.unit.name }}
                                     </span>
                                   </div>
+                                  <div v-if="p.serials && p.serials.length > 0" class="mt-1">
+                                    <div class="text-xs text-slate-500">{{ t('views.product.fields.serial_number') }}:
+                                    </div>
+                                    <div class="flex flex-wrap gap-1 mt-0.5">
+                                      <span v-for="s in p.serials" :key="s.id"
+                                        class="px-1.5 py-0.5 bg-slate-100 dark:bg-darkmode-600 rounded text-xs border border-slate-200 dark:border-darkmode-400">
+                                        {{ s.serial }}
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -437,6 +447,16 @@
                                       {{ formatCurrency(p.qty) }}
                                       {{ p.product_unit.unit.name }}
                                     </span>
+                                  </div>
+                                  <div v-if="p.serials && p.serials.length > 0" class="mt-1">
+                                    <div class="text-xs text-slate-500">{{ t('views.product.fields.serial_number') }}:
+                                    </div>
+                                    <div class="flex flex-wrap gap-1 mt-0.5">
+                                      <span v-for="s in p.serials" :key="s.id"
+                                        class="px-1.5 py-0.5 bg-slate-100 dark:bg-darkmode-600 rounded text-xs border border-slate-200 dark:border-darkmode-400">
+                                        {{ s.serial }}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>

@@ -46,7 +46,9 @@ class StockAdjustmentInProductController extends BaseController
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['nullable', 'integer', new IsValidBranch($request->company_id, false)],
             'search' => ['nullable', 'string'],
+
             'stock_adjustment_id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustments', $request->company_id)],
+
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
             'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],

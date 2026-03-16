@@ -23,6 +23,7 @@ export interface StockAdjustmentInProductNestedStoreRequest {
   product_unit_conversion_value: number;
   product_unit_cogs: number;
   remarks?: string | null;
+  serials?: { serial: string }[];
 }
 
 export interface StockAdjustmentOutProductNestedStoreRequest {
@@ -30,6 +31,7 @@ export interface StockAdjustmentOutProductNestedStoreRequest {
   product_unit_id: string;
   product_unit_conversion_value: number;
   remarks?: string | null;
+  serials?: { serial: string }[];
 }
 
 export interface StockAdjustmentStoreRequest {
@@ -53,6 +55,8 @@ export interface StockAdjustmentInProductNestedUpdateRequest {
   product_unit_conversion_value: number;
   product_unit_cogs: number;
   remarks?: string | null;
+  delete_serial_ids?: string[] | null;
+  serials?: { id?: string | null; serial: string }[];
 }
 
 export interface StockAdjustmentOutProductNestedUpdateRequest {
@@ -61,6 +65,8 @@ export interface StockAdjustmentOutProductNestedUpdateRequest {
   product_unit_id: string;
   product_unit_conversion_value: number;
   remarks?: string | null;
+  delete_serial_ids?: string[] | null;
+  serials?: { id?: string | null; serial: string }[];
 }
 
 export interface StockAdjustmentUpdateRequest {

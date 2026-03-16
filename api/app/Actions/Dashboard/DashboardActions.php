@@ -276,7 +276,47 @@ class DashboardActions
         ];
 
         array_push($product['subMenu'], $productWithRemainingStock);
-        array_push($root_array['subMenu'], $product);
+
+        $stockAdjustment = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-stock-adjustment',
+            'title' => 'components.menu.stock-adjustment',
+            'subMenu' => [],
+        ];
+
+        $stockAdjustmentInProduct = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-stock-adjustment-in-product',
+            'title' => 'components.menu.stock-adjustment-in-product',
+        ];
+
+        $stockAdjustmentInProductSerial = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-stock-adjustment-in-product-serial',
+            'title' => 'components.menu.stock-adjustment-in-product-serial',
+        ];
+
+        $stockAdjustmentOutProduct = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-stock-adjustment-out-product',
+            'title' => 'components.menu.stock-adjustment-out-product',
+        ];
+
+        $stockAdjustmentOutProductSerial = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-stock-adjustment-out-product-serial',
+            'title' => 'components.menu.stock-adjustment-out-product-serial',
+        ];
+
+        array_push(
+            $stockAdjustment['subMenu'],
+            $stockAdjustmentInProduct,
+            $stockAdjustmentInProductSerial,
+            $stockAdjustmentOutProduct,
+            $stockAdjustmentOutProductSerial
+        );
+
+        array_push($root_array['subMenu'], $product, $stockAdjustment);
 
         array_push($menu, $root_array);
 

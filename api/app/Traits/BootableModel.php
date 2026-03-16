@@ -2,7 +2,6 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 trait BootableModel
@@ -12,9 +11,7 @@ trait BootableModel
         parent::boot();
 
         static::creating(function ($model) {
-            if (Schema::hasColumn($model->getTable(), 'ulid')) {
-                $model->ulid = Str::ulid()->generate();
-            }
+            $model->ulid = Str::ulid()->generate();
 
             $user = auth()->check();
             if ($user) {

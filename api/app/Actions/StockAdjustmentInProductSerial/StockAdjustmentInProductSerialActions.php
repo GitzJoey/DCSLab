@@ -42,7 +42,7 @@ class StockAdjustmentInProductSerialActions
             ->join('stock_adjustment_in_products', 'stock_adjustment_in_products.id', '=', 'stock_adjustment_in_product_serials.stock_adjustment_in_product_id')
             ->join('product_units', 'product_units.id', '=', 'stock_adjustment_in_products.product_unit_id')
             ->whereCompanyId('stock_adjustment_in_product_serials', $companyId)
-            ->whereBranchId($branchId)
+            ->whereBranchId('stock_adjustment_in_product_serials', $branchId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search, $stockAdjustmentId, $productId) {

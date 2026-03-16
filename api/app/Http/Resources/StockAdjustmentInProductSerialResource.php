@@ -12,6 +12,7 @@ class StockAdjustmentInProductSerialResource extends JsonResource
     {
         return [
             'id' => Hashids::encode($this->id),
+            'ulid' => $this->ulid,
             $this->mergeWhen($this->relationLoaded('company'), [
                 'company' => new CompanyResource($this->whenLoaded('company')),
             ]),

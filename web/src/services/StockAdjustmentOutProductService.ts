@@ -26,51 +26,6 @@ export default class StockAdjustmentOutProductService {
     this.errorHandlerService = new ErrorHandlerService();
   }
 
-  public useStockAdjustmentOutProductCreateForm() {
-    const url = route('api.post.stock_adjustment_out_product.save', undefined, true, this.ziggyRoute);
-
-    client.axios().defaults.withCredentials = true;
-    client.axios().defaults.withXSRFToken = true;
-
-    const form = useForm('post', url, {
-      company_id: '',
-      branch_id: '',
-      stock_adjustment_id: '',
-      qty: 0,
-      product_unit_id: '',
-      product_unit_conversion_value: 1,
-      remarks: '',
-    });
-
-    return form;
-  }
-
-  public useStockAdjustmentOutProductEditForm(ulid: string) {
-    const url = route(
-      'api.post.stock_adjustment_out_product.edit',
-      {
-        stock_adjustment_out_product: ulid,
-      },
-      true,
-      this.ziggyRoute,
-    );
-
-    client.axios().defaults.withCredentials = true;
-    client.axios().defaults.withXSRFToken = true;
-
-    const form = useForm('post', url, {
-      company_id: '',
-      branch_id: '',
-      stock_adjustment_id: '',
-      qty: 0,
-      product_unit_id: '',
-      product_unit_conversion_value: 1,
-      remarks: '',
-    });
-
-    return form;
-  }
-
   public async readAnyPaginate(
     args: StockAdjustmentOutProductReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<StockAdjustmentOutProduct>> | null>> {
@@ -168,6 +123,51 @@ export default class StockAdjustmentOutProductService {
         return result;
       }
     }
+  }
+
+  public useStockAdjustmentOutProductCreateForm() {
+    const url = route('api.post.stock_adjustment_out_product.save', undefined, true, this.ziggyRoute);
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    const form = useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      stock_adjustment_id: '',
+      qty: 0,
+      product_unit_id: '',
+      product_unit_conversion_value: 1,
+      remarks: '',
+    });
+
+    return form;
+  }
+
+  public useStockAdjustmentOutProductEditForm(ulid: string) {
+    const url = route(
+      'api.post.stock_adjustment_out_product.edit',
+      {
+        stock_adjustment_out_product: ulid,
+      },
+      true,
+      this.ziggyRoute,
+    );
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    const form = useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      stock_adjustment_id: '',
+      qty: 0,
+      product_unit_id: '',
+      product_unit_conversion_value: 1,
+      remarks: '',
+    });
+
+    return form;
   }
 
   public async read(ulid: string): Promise<ServiceResponse<StockAdjustmentOutProduct | null>> {

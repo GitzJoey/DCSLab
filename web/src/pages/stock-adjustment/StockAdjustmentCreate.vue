@@ -50,6 +50,8 @@ type StockAdjustmentInProductFormItem = {
   product_unit_cogs: StockAdjustmentInProductNestedStoreRequest['product_unit_cogs'];
   product_unit_total_cogs?: number | null;
   remarks?: StockAdjustmentInProductNestedStoreRequest['remarks'];
+  is_use_serial_number?: boolean;
+  serials: { serial: string }[];
 };
 
 type StockAdjustmentOutProductFormItem = {
@@ -61,6 +63,8 @@ type StockAdjustmentOutProductFormItem = {
   product_unit_base_unit_name?: string | null;
   product_unit_conversion_value: StockAdjustmentOutProductNestedStoreRequest['product_unit_conversion_value'];
   remarks?: StockAdjustmentOutProductNestedStoreRequest['remarks'];
+  is_use_serial_number?: boolean;
+  serials: { serial: string }[];
 };
 
 type ProductUnitOption = {
@@ -74,6 +78,7 @@ type ProductUnitOption = {
   conversion_value: number;
   cogs: number;
   remaining_stock: number;
+  is_use_serial_number: boolean;
 };
 
 const { t } = useI18n();
@@ -422,6 +427,7 @@ const searchInProductUnits = async () => {
           conversion_value: conversionValue,
           cogs: Number(u.price),
           remaining_stock: remainingStock,
+          is_use_serial_number: p.is_use_serial_number,
         };
       });
     });
@@ -439,6 +445,8 @@ const selectProductUnitForIn = (option: ProductUnitOption) => {
     product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
     product_unit_conversion_value: option.conversion_value,
     product_unit_cogs: option.cogs,
+    is_use_serial_number: option.is_use_serial_number,
+    serials: [],
   };
 
   let targetIndex: number;
@@ -486,6 +494,20 @@ const handleInProductUnitModalAfterLeave = () => {
     el?.focus();
     el?.select();
   });
+};
+
+const addInProductSerial = (index: number) => {
+  const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+  const item = items[index];
+  if (!item) return;
+  item.serials.push({ serial: '' });
+};
+
+const removeInProductSerial = (index: number, serialIndex: number) => {
+  const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+  const item = items[index];
+  if (!item) return;
+  item.serials.splice(serialIndex, 1);
 };
 
 const removeInProduct = (index: number) => {
@@ -586,6 +608,7 @@ const searchOutProductUnits = async () => {
           conversion_value: conversionValue,
           cogs: Number(u.price),
           remaining_stock: remainingStock,
+          is_use_serial_number: p.is_use_serial_number,
         };
       });
     });
@@ -602,6 +625,8 @@ const selectProductUnitForOut = (option: ProductUnitOption) => {
     product_unit_unit_name: option.unit_name,
     product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
     product_unit_conversion_value: option.conversion_value,
+    is_use_serial_number: option.is_use_serial_number,
+    serials: [],
   };
 
   let targetIndex: number;
@@ -653,6 +678,20 @@ const handleOutProductUnitModalAfterLeave = () => {
     el?.focus();
     el?.select();
   });
+};
+
+const addOutProductSerial = (index: number) => {
+  const items = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+  const item = items[index];
+  if (!item) return;
+  item.serials.push({ serial: '' });
+};
+
+const removeOutProductSerial = (index: number, serialIndex: number) => {
+  const items = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+  const item = items[index];
+  if (!item) return;
+  item.serials.splice(serialIndex, 1);
 };
 
 const removeOutProduct = (index: number) => {
@@ -1007,17 +1046,44 @@ const onSubmit = async () => {
                     class="text-right" />
                 </div>
 
-                <!-- product_unit_remarks -->
-                <div v-if="inProductsRemarksExpanded[index]" class="col-span-12">
-                  <FormLabel :class="{
-                    'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
-                  }">
-                    {{ t('views.stock_adjustment_in_product.fields.remarks') }}
-                  </FormLabel>
-                  <FormTextarea rows="2" v-model="stockAdjustmentForm.in_products[index].remarks" :class="{
-                    'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
-                  }" @change="stockAdjustmentForm.validate(`in_products.${index}.remarks` as any)" />
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.remarks`]" />
+                <!-- product_unit_remarks & serials -->
+                <div v-if="inProductsRemarksExpanded[index]" class="col-span-12 space-y-3">
+                  <div>
+                    <FormLabel :class="{
+                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
+                    }">
+                      {{ t('views.stock_adjustment_in_product.fields.remarks') }}
+                    </FormLabel>
+                    <FormTextarea rows="2" v-model="stockAdjustmentForm.in_products[index].remarks" :class="{
+                      'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
+                    }" @change="stockAdjustmentForm.validate(`in_products.${index}.remarks` as any)" />
+                    <FormErrorMessages
+                      :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.remarks`]" />
+                  </div>
+
+                  <div v-if="item.is_use_serial_number">
+                    <div class="flex items-center justify-between mb-2">
+                      <FormLabel>
+                        {{ t('views.product.fields.serial_number') }}
+                      </FormLabel>
+                      <Button type="button" size="sm" variant="outline-primary" @click="addInProductSerial(index)">
+                        <Lucide icon="Plus" class="w-3 h-3 mr-1" />
+                        {{ t('components.buttons.create') }}
+                      </Button>
+                    </div>
+                    <div v-if="item.serials.length === 0" class="text-slate-500 text-xs italic">
+                      {{ t('components.data-list.data_not_found') }}
+                    </div>
+                    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
+                        <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
+                        <Button type="button" variant="outline-danger"
+                          @click="removeInProductSerial(index, sIdx)">
+                          <Lucide icon="Trash2" class="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1137,17 +1203,44 @@ const onSubmit = async () => {
                   </div>
                 </div>
 
-                <!-- remarks -->
-                <div v-if="outProductsRemarksExpanded[index]" class="col-span-12">
-                  <FormLabel :class="{
-                    'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
-                  }">
-                    {{ t('views.stock_adjustment_out_product.fields.remarks') }}
-                  </FormLabel>
-                  <FormTextarea rows="2" v-model="stockAdjustmentForm.out_products[index].remarks" :class="{
-                    'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
-                  }" @change="stockAdjustmentForm.validate(`out_products.${index}.remarks` as any)" />
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.remarks`]" />
+                <!-- remarks & serials -->
+                <div v-if="outProductsRemarksExpanded[index]" class="col-span-12 space-y-3">
+                  <div>
+                    <FormLabel :class="{
+                      'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
+                    }">
+                      {{ t('views.stock_adjustment_out_product.fields.remarks') }}
+                    </FormLabel>
+                    <FormTextarea rows="2" v-model="stockAdjustmentForm.out_products[index].remarks" :class="{
+                      'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
+                    }" @change="stockAdjustmentForm.validate(`out_products.${index}.remarks` as any)" />
+                    <FormErrorMessages
+                      :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.remarks`]" />
+                  </div>
+
+                  <div v-if="item.is_use_serial_number">
+                    <div class="flex items-center justify-between mb-2">
+                      <FormLabel>
+                        {{ t('views.product.fields.serial_number') }}
+                      </FormLabel>
+                      <Button type="button" size="sm" variant="outline-primary" @click="addOutProductSerial(index)">
+                        <Lucide icon="Plus" class="w-3 h-3 mr-1" />
+                        {{ t('components.buttons.create') }}
+                      </Button>
+                    </div>
+                    <div v-if="item.serials.length === 0" class="text-slate-500 text-xs italic">
+                      {{ t('components.data-list.data_not_found') }}
+                    </div>
+                    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
+                        <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
+                        <Button type="button" variant="outline-danger"
+                          @click="removeOutProductSerial(index, sIdx)">
+                          <Lucide icon="Trash2" class="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

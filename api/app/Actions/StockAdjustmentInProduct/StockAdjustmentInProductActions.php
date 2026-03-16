@@ -6,6 +6,8 @@ use App\Actions\StockAdjustmentInProductSerial\StockAdjustmentInProductSerialAct
 use App\Actions\StockTransaction\StockTransactionActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\StockAdjustmentInProductCreateDTO;
+use App\DTOs\StockAdjustmentInProductSerialCreateDTO;
+use App\DTOs\StockAdjustmentInProductSerialUpdateDTO;
 use App\DTOs\StockAdjustmentInProductUpdateDTO;
 use App\DTOs\StockTransactionCreateDTO;
 use App\DTOs\StockTransactionUpdateDTO;
@@ -47,7 +49,7 @@ class StockAdjustmentInProductActions
             ->join('companies', 'companies.id', '=', 'stock_adjustment_in_products.company_id')
             ->join('stock_adjustments', 'stock_adjustments.id', '=', 'stock_adjustment_in_products.stock_adjustment_id')
             ->whereCompanyId('stock_adjustment_in_products', $companyId)
-            ->whereBranchId($branchId)
+            ->whereBranchId('stock_adjustment_in_products', $branchId)
             ->withTrashed();
 
         $query->where(function ($query) use ($withTrashed, $search, $stockAdjustmentId) {
@@ -154,7 +156,8 @@ class StockAdjustmentInProductActions
             );
 
             foreach ($data->serials as $serial) {
-                $this->stockAdjustmentInProductSerialActions->create($stockAdjustmentInProduct, $serial);
+                $dto = StockAdjustmentInProductSerialCreateDTO::fromStockAdjustmentInProduct($stockAdjustmentInProduct, $serial);
+                $this->stockAdjustmentInProductSerialActions->create($dto);
             }
 
             $this->flushCache();
@@ -201,9 +204,12 @@ class StockAdjustmentInProductActions
             foreach ($data->serials as $serial) {
                 if ($serial['id']) {
                     $stockAdjustmentInProductSerial = $stockAdjustmentInProduct->serials()->findOrFail($serial['id']);
-                    $this->stockAdjustmentInProductSerialActions->update($stockAdjustmentInProductSerial, $serial['serial']);
+                    $dto = StockAdjustmentInProductSerialUpdateDTO::fromStockAdjustmentInProductSerial($stockAdjustmentInProductSerial, $serial['serial']);
+
+                    $this->stockAdjustmentInProductSerialActions->update($stockAdjustmentInProductSerial, $dto);
                 } else {
-                    $this->stockAdjustmentInProductSerialActions->create($stockAdjustmentInProduct, $serial['serial']);
+                    $dto = StockAdjustmentInProductSerialCreateDTO::fromStockAdjustmentInProduct($stockAdjustmentInProduct, $serial['serial']);
+                    $this->stockAdjustmentInProductSerialActions->create($stockAdjustmentInProductSerial, $dto);
                 }
             }
 

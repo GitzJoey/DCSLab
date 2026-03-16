@@ -166,8 +166,9 @@ class StockAdjustmentOutProductSerialController extends BaseController
         try {
             DB::beginTransaction();
 
-            $data = new StockAdjustmentOutProductSerialUpdateDTO(
-                serial: $validated['serial'],
+            $data = StockAdjustmentOutProductSerialUpdateDTO::fromStockAdjustmentOutProductSerial(
+                $stockAdjustmentOutProductSerial,
+                $validated['serial']
             );
 
             $result = $this->stockAdjustmentOutProductSerialActions->update(

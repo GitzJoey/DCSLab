@@ -1,20 +1,20 @@
 import axios from '../axios';
 import { useZiggyRouteStore } from '../stores/ziggy-route';
 import { route, type Config } from 'ziggy-js';
-import { StockAdjustmentInProduct } from '../types/models/StockAdjustmentInProduct';
+import { StockAdjustmentInProductSerial } from '../types/models/StockAdjustmentInProductSerial';
 import { type Resource } from '../types/resources/Resource';
 import { type Collection } from '../types/resources/Collection';
 import { type ServiceResponse } from '../types/services/ServiceResponse';
 import { type AxiosError, type AxiosResponse, isAxiosError } from 'axios';
 import ErrorHandlerService from './ErrorHandlerService';
 import {
-  type StockAdjustmentInProductReadAnyGetRequest,
-  type StockAdjustmentInProductReadAnyPaginateRequest,
-} from '../types/services/stock-adjustment-in-product/StockAdjustmentInProductRequest';
+  type StockAdjustmentInProductSerialReadAnyGetRequest,
+  type StockAdjustmentInProductSerialReadAnyPaginateRequest,
+} from '../types/services/stock-adjustment-in-product-serial/StockAdjustmentInProductSerialRequest';
 import { StatusCode } from '../types/enums/StatusCode';
 import { client, useForm } from 'laravel-precognition-vue';
 
-export default class StockAdjustmentInProductService {
+export default class StockAdjustmentInProductSerialService {
   private ziggyRoute: Config;
   private ziggyRouteStore = useZiggyRouteStore();
 
@@ -26,10 +26,47 @@ export default class StockAdjustmentInProductService {
     this.errorHandlerService = new ErrorHandlerService();
   }
 
+  public useStockAdjustmentInProductSerialCreateForm() {
+    const url = route('api.post.stock_adjustment_in_product_serial.save', undefined, true, this.ziggyRoute);
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    const form = useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      stock_adjustment_id: '',
+      stock_adjustment_in_product_id: '',
+      serial: '',
+    });
+
+    return form;
+  }
+
+  public useStockAdjustmentInProductSerialEditForm(ulid: string) {
+    const url = route(
+      'api.post.stock_adjustment_in_product_serial.edit',
+      {
+        stock_adjustment_in_product_serial: ulid,
+      },
+      true,
+      this.ziggyRoute,
+    );
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    const form = useForm('post', url, {
+      serial: '',
+    });
+
+    return form;
+  }
+
   public async readAnyPaginate(
-    args: StockAdjustmentInProductReadAnyPaginateRequest,
-  ): Promise<ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null>> {
-    const result: ServiceResponse<Collection<Array<StockAdjustmentInProduct>> | null> = {
+    args: StockAdjustmentInProductSerialReadAnyPaginateRequest,
+  ): Promise<ServiceResponse<Collection<Array<StockAdjustmentInProductSerial>> | null>> {
+    const result: ServiceResponse<Collection<Array<StockAdjustmentInProductSerial>> | null> = {
       success: false,
     };
 
@@ -39,7 +76,7 @@ export default class StockAdjustmentInProductService {
       queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
       if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
-
+      if (args.product_id) queryParams['product_id'] = args.product_id;
       if (args.search) queryParams['search'] = args.search;
 
       queryParams['refresh'] = args.refresh;
@@ -49,7 +86,7 @@ export default class StockAdjustmentInProductService {
       };
 
       const url = route(
-        'api.get.stock_adjustment_in_product.read_any',
+        'api.get.stock_adjustment_in_product_serial.read_any',
         {
           _query: queryParams,
         },
@@ -57,7 +94,7 @@ export default class StockAdjustmentInProductService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Collection<Array<StockAdjustmentInProduct>>> = await axios.get(url);
+      const response: AxiosResponse<Collection<Array<StockAdjustmentInProductSerial>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -77,9 +114,9 @@ export default class StockAdjustmentInProductService {
   }
 
   public async readAnyGet(
-    args: StockAdjustmentInProductReadAnyGetRequest,
-  ): Promise<ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null>> {
-    const result: ServiceResponse<Resource<Array<StockAdjustmentInProduct>> | null> = {
+    args: StockAdjustmentInProductSerialReadAnyGetRequest,
+  ): Promise<ServiceResponse<Resource<Array<StockAdjustmentInProductSerial>> | null>> {
+    const result: ServiceResponse<Resource<Array<StockAdjustmentInProductSerial>> | null> = {
       success: false,
     };
 
@@ -89,7 +126,7 @@ export default class StockAdjustmentInProductService {
       queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
       if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
-
+      if (args.product_id) queryParams['product_id'] = args.product_id;
       if (args.search) queryParams['search'] = args.search;
 
       queryParams['refresh'] = args.refresh;
@@ -98,7 +135,7 @@ export default class StockAdjustmentInProductService {
       };
 
       const url = route(
-        'api.get.stock_adjustment_in_product.read_any',
+        'api.get.stock_adjustment_in_product_serial.read_any',
         {
           _query: queryParams,
         },
@@ -106,7 +143,7 @@ export default class StockAdjustmentInProductService {
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<Array<StockAdjustmentInProduct>>> = await axios.get(url);
+      const response: AxiosResponse<Resource<Array<StockAdjustmentInProductSerial>>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -125,22 +162,22 @@ export default class StockAdjustmentInProductService {
     }
   }
 
-  public async read(ulid: string): Promise<ServiceResponse<StockAdjustmentInProduct | null>> {
-    const result: ServiceResponse<StockAdjustmentInProduct | null> = {
+  public async read(ulid: string): Promise<ServiceResponse<StockAdjustmentInProductSerial | null>> {
+    const result: ServiceResponse<StockAdjustmentInProductSerial | null> = {
       success: false,
     };
 
     try {
       const url = route(
-        'api.get.stock_adjustment_in_product.read',
+        'api.get.stock_adjustment_in_product_serial.read',
         {
-          stock_adjustment_in_product: ulid,
+          stock_adjustment_in_product_serial: ulid,
         },
         false,
         this.ziggyRoute,
       );
 
-      const response: AxiosResponse<Resource<StockAdjustmentInProduct>> = await axios.get(url);
+      const response: AxiosResponse<Resource<StockAdjustmentInProductSerial>> = await axios.get(url);
 
       if (response.status == StatusCode.OK) {
         result.success = true;
@@ -159,53 +196,6 @@ export default class StockAdjustmentInProductService {
     }
   }
 
-  public useStockAdjustmentInProductCreateForm() {
-    const url = route('api.post.stock_adjustment_in_product.save', undefined, true, this.ziggyRoute);
-
-    client.axios().defaults.withCredentials = true;
-    client.axios().defaults.withXSRFToken = true;
-
-    const form = useForm('post', url, {
-      company_id: '',
-      branch_id: '',
-      stock_adjustment_id: '',
-      qty: 0,
-      product_unit_id: '',
-      product_unit_conversion_value: 1,
-      product_unit_cogs: 0,
-      remarks: '',
-    });
-
-    return form;
-  }
-
-  public useStockAdjustmentInProductEditForm(ulid: string) {
-    const url = route(
-      'api.post.stock_adjustment_in_product.edit',
-      {
-        stock_adjustment_in_product: ulid,
-      },
-      true,
-      this.ziggyRoute,
-    );
-
-    client.axios().defaults.withCredentials = true;
-    client.axios().defaults.withXSRFToken = true;
-
-    const form = useForm('post', url, {
-      company_id: '',
-      branch_id: '',
-      stock_adjustment_id: '',
-      qty: 0,
-      product_unit_id: '',
-      product_unit_conversion_value: 1,
-      product_unit_cogs: 0,
-      remarks: '',
-    });
-
-    return form;
-  }
-
   public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
     const result: ServiceResponse<boolean | null> = {
       success: false,
@@ -213,9 +203,9 @@ export default class StockAdjustmentInProductService {
 
     try {
       const url = route(
-        'api.post.stock_adjustment_in_product.delete',
+        'api.post.stock_adjustment_in_product_serial.delete',
         {
-          stock_adjustment_in_product: ulid,
+          stock_adjustment_in_product_serial: ulid,
         },
         false,
         this.ziggyRoute,
@@ -239,3 +229,4 @@ export default class StockAdjustmentInProductService {
     }
   }
 }
+
