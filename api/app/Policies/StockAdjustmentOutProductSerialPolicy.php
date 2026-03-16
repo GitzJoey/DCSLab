@@ -3,11 +3,11 @@
 namespace App\Policies;
 
 use App\Enums\UserRolesEnum;
-use App\Models\StockAdjustmentCategory;
+use App\Models\StockAdjustmentOutProductSerial;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class StockAdjustmentCategoryPolicy
+class StockAdjustmentOutProductSerialPolicy
 {
     use HandlesAuthorization;
 
@@ -21,12 +21,12 @@ class StockAdjustmentCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('stock_adjustment_category-readAny')) {
+        if ($user->hasPermission('stock_adjustment_out_product_serial-readAny')) {
             return true;
         }
     }
 
-    public function view(User $user, ?StockAdjustmentCategory $stockAdjustmentCategory = null)
+    public function view(User $user, ?StockAdjustmentOutProductSerial $stockAdjustmentOutProductSerial = null)
     {
         if ($user->roles->isEmpty()) {
             return false;
@@ -36,7 +36,7 @@ class StockAdjustmentCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('stock_adjustment_category-read')) {
+        if ($user->hasPermission('stock_adjustment_out_product_serial-read')) {
             return true;
         }
     }
@@ -51,12 +51,12 @@ class StockAdjustmentCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('stock_adjustment_category-create')) {
+        if ($user->hasPermission('stock_adjustment_out_product_serial-create')) {
             return true;
         }
     }
 
-    public function update(User $user, ?StockAdjustmentCategory $stockAdjustmentCategory = null)
+    public function update(User $user, ?StockAdjustmentOutProductSerial $stockAdjustmentOutProductSerial = null)
     {
         if ($user->roles->isEmpty()) {
             return false;
@@ -66,12 +66,12 @@ class StockAdjustmentCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('stock_adjustment_category-update')) {
+        if ($user->hasPermission('stock_adjustment_out_product_serial-update')) {
             return true;
         }
     }
 
-    public function delete(User $user, ?StockAdjustmentCategory $stockAdjustmentCategory = null)
+    public function delete(User $user, ?StockAdjustmentOutProductSerial $stockAdjustmentOutProductSerial = null)
     {
         if ($user->roles->isEmpty()) {
             return false;
@@ -81,17 +81,17 @@ class StockAdjustmentCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('stock_adjustment_category-delete')) {
+        if ($user->hasPermission('stock_adjustment_out_product_serial-delete')) {
             return true;
         }
     }
 
-    public function restore(User $user, StockAdjustmentCategory $stockAdjustmentCategory)
+    public function restore(User $user, StockAdjustmentOutProductSerial $stockAdjustmentOutProductSerial)
     {
         return false;
     }
 
-    public function forceDelete(User $user, StockAdjustmentCategory $stockAdjustmentCategory)
+    public function forceDelete(User $user, StockAdjustmentOutProductSerial $stockAdjustmentOutProductSerial)
     {
         return false;
     }

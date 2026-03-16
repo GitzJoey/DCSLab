@@ -162,6 +162,45 @@ return [
         'name' => 'Nama',
     ],
 
+    'stock_adjustment_in_product' => [
+        'company_id' => 'Perusahaan',
+        'branch_id' => 'Cabang',
+        'stock_adjustment_id' => 'Penyesuaian Stok',
+        'qty' => 'Qty',
+        'product_unit_id' => 'Satuan Produk',
+        'product_unit_conversion_value' => 'Nilai Konversi Satuan',
+        'product_unit_cogs' => 'HPP Satuan',
+        'product_unit_total_cogs' => 'Total HPP',
+        'remarks' => 'Catatan',
+    ],
+
+    'stock_adjustment_in_product_serial' => [
+        'company_id' => 'Perusahaan',
+        'branch_id' => 'Cabang',
+        'stock_adjustment_id' => 'Penyesuaian Stok',
+        'stock_adjustment_in_product_id' => 'Produk Masuk',
+        'serial' => 'Serial',
+    ],
+
+    'stock_adjustment_out_product' => [
+        'company_id' => 'Perusahaan',
+        'branch_id' => 'Cabang',
+        'stock_adjustment_id' => 'Penyesuaian Stok',
+        'qty' => 'Qty',
+        'product_id' => 'Produk',
+        'product_unit_id' => 'Satuan Produk',
+        'product_unit_conversion_value' => 'Nilai Konversi Satuan',
+        'remarks' => 'Catatan',
+    ],
+
+    'stock_adjustment_out_product_serial' => [
+        'company_id' => 'Perusahaan',
+        'branch_id' => 'Cabang',
+        'stock_adjustment_id' => 'Penyesuaian Stok',
+        'stock_adjustment_out_product_id' => 'Produk Keluar',
+        'serial' => 'Serial',
+    ],
+
     'capital_addition' => [
         'company' => 'Perusahaan',
         'branch' => 'Cabang',

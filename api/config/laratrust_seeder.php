@@ -48,7 +48,9 @@ return [
 
             'stock_adjustment' => 'c,r,ra,u,d',
             'stock_adjustment_in_product' => 'c,r,ra,u,d',
+            'stock_adjustment_in_product_serial' => 'c,r,ra,u,d',
             'stock_adjustment_out_product' => 'c,r,ra,u,d',
+            'stock_adjustment_out_product_serial' => 'c,r,ra,u,d',
 
             'capital_addition' => 'c,r,ra,u,d',
             'capital_withdrawal' => 'c,r,ra,u,d',

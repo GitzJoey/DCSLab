@@ -13,6 +13,7 @@ final class StockAdjustmentInProductCreateDTO
         public readonly float $productUnitConversionValue,
         public readonly float $productUnitCogs,
         public readonly ?string $remarks,
+        public readonly array $serials,
     ) {
     }
 }

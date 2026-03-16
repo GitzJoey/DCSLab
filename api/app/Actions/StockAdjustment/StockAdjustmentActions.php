@@ -191,8 +191,8 @@ class StockAdjustmentActions
                 productUnitConversionValue: $inProduct['product_unit_conversion_value'],
                 productUnitCogs: $inProduct['product_unit_cogs'],
                 remarks: $inProduct['remarks'],
+                serials: $inProduct['serials'],
             );
-
             $this->stockAdjustmentInProductActions->create($data);
         }
     }
@@ -208,8 +208,8 @@ class StockAdjustmentActions
                 productUnitId: $outProduct['product_unit_id'],
                 productUnitConversionValue: $outProduct['product_unit_conversion_value'],
                 remarks: $outProduct['remarks'],
+                serials: $outProduct['serials'],
             );
-
             $this->stockAdjustmentOutProductActions->create($data);
         }
     }
@@ -267,6 +267,9 @@ class StockAdjustmentActions
                     productUnitConversionValue: $inProduct['product_unit_conversion_value'],
                     productUnitCogs: $inProduct['product_unit_cogs'],
                     remarks: $inProduct['remarks'],
+
+                    deleteSerialIds: $inProduct['delete_serial_ids'],
+                    serials: $inProduct['serials'],
                 );
 
                 $this->stockAdjustmentInProductActions->update($stockAdjustmentInProduct, $data);
@@ -280,8 +283,9 @@ class StockAdjustmentActions
                     productUnitConversionValue: $inProduct['product_unit_conversion_value'],
                     productUnitCogs: $inProduct['product_unit_cogs'],
                     remarks: $inProduct['remarks'],
-                );
 
+                    serials: $inProduct['serials'],
+                );
                 $this->stockAdjustmentInProductActions->create($data);
             }
         }
@@ -303,6 +307,9 @@ class StockAdjustmentActions
                     productUnitId: $outProduct['product_unit_id'],
                     productUnitConversionValue: $outProduct['product_unit_conversion_value'],
                     remarks: $outProduct['remarks'],
+
+                    deleteSerialIds: $outProduct['delete_serial_ids'],
+                    serials: $outProduct['serials'],
                 );
 
                 $this->stockAdjustmentOutProductActions->update($stockAdjustmentOutProduct, $data);
@@ -315,8 +322,9 @@ class StockAdjustmentActions
                     productUnitId: $outProduct['product_unit_id'],
                     productUnitConversionValue: $outProduct['product_unit_conversion_value'],
                     remarks: $outProduct['remarks'],
-                );
 
+                    serials: $outProduct['serials'],
+                );
                 $this->stockAdjustmentOutProductActions->create($data);
             }
         }

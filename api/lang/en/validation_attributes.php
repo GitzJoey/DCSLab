@@ -161,6 +161,7 @@ return [
         'code' => 'Code',
         'name' => 'Name',
     ],
+
     'stock_adjustment' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
@@ -175,6 +176,7 @@ return [
         'total_incoming_product_cogs' => 'Total Incoming Product COGS',
         'total_outgoing_product_qty' => 'Total Outgoing Product Qty',
     ],
+
     'stock_adjustment_in_product' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
@@ -186,6 +188,15 @@ return [
         'product_unit_total_cogs' => 'Product Unit Total COGS',
         'remarks' => 'Remarks',
     ],
+
+    'stock_adjustment_in_product_serial' => [
+        'company_id' => 'Company',
+        'branch_id' => 'Branch',
+        'stock_adjustment_id' => 'Stock Adjustment',
+        'stock_adjustment_in_product_id' => 'Stock Adjustment In Product',
+        'serial' => 'Serial',
+    ],
+
     'stock_adjustment_out_product' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
@@ -195,6 +206,14 @@ return [
         'product_unit_id' => 'Product Unit',
         'product_unit_conversion_value' => 'Product Unit Conversion Value',
         'remarks' => 'Remarks',
+    ],
+
+    'stock_adjustment_out_product_serial' => [
+        'company_id' => 'Company',
+        'branch_id' => 'Branch',
+        'stock_adjustment_id' => 'Stock Adjustment',
+        'stock_adjustment_out_product_id' => 'Stock Adjustment Out Product',
+        'serial' => 'Serial',
     ],
 
     'capital_addition' => [

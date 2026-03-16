@@ -2,6 +2,7 @@
 
 namespace App\Actions\StockAdjustmentOutProduct;
 
+use App\Actions\StockAdjustmentOutProductSerial\StockAdjustmentOutProductSerialActions;
 use App\Actions\StockTransaction\StockTransactionActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\StockAdjustmentOutProductCreateDTO;
@@ -19,8 +20,16 @@ class StockAdjustmentOutProductActions
     use CacheHelper;
     use LoggerHelper;
 
-    public function __construct()
-    {
+    private $stockAdjustmentOutProductSerialActions;
+
+    private $stockTransactionActions;
+
+    public function __construct(
+        StockTransactionActions $stockTransactionActions,
+        StockAdjustmentOutProductSerialActions $stockAdjustmentOutProductSerialActions,
+    ) {
+        $this->stockTransactionActions = $stockTransactionActions;
+        $this->stockAdjustmentOutProductSerialActions = $stockAdjustmentOutProductSerialActions;
     }
 
     public function readAny(
@@ -136,8 +145,13 @@ class StockAdjustmentOutProductActions
             $stockAdjustmentOutProduct->remarks = $data->remarks;
             $stockAdjustmentOutProduct->save();
 
-            $stockTransactionActions = new StockTransactionActions();
-            $stockTransactionActions->create(StockTransactionCreateDTO::fromStockAdjustmentOutProduct($stockAdjustmentOutProduct));
+            $this->stockTransactionActions->create(
+                data: StockTransactionCreateDTO::fromStockAdjustmentOutProduct($stockAdjustmentOutProduct)
+            );
+
+            foreach ($data->serials as $serial) {
+                $this->stockAdjustmentOutProductSerialActions->create($stockAdjustmentOutProduct, $serial);
+            }
 
             $this->flushCache();
 
@@ -164,13 +178,26 @@ class StockAdjustmentOutProductActions
             $stockAdjustmentOutProduct->save();
 
             $stockTransaction = $stockAdjustmentOutProduct->stockTransaction;
-            $stockTransactionActions = new StockTransactionActions();
             if (! $stockTransaction) {
                 $dto = StockTransactionCreateDTO::fromStockAdjustmentOutProduct($stockAdjustmentOutProduct);
-                $stockTransaction = $stockTransactionActions->create($dto);
+                $stockTransaction = $this->stockTransactionActions->create($dto);
             } else {
                 $dto = StockTransactionUpdateDTO::fromStockAdjustmentOutProduct($stockAdjustmentOutProduct);
-                $stockTransactionActions->update($stockTransaction, $dto);
+                $this->stockTransactionActions->update($stockTransaction, $dto);
+            }
+
+            foreach ($data->deleteSerialIds as $deleteId) {
+                $stockAdjustmentOutProductSerial = $stockAdjustmentOutProduct->serials()->findOrFail($deleteId);
+                $this->stockAdjustmentOutProductSerialActions->delete($stockAdjustmentOutProductSerial);
+            }
+
+            foreach ($data->serials as $serial) {
+                if ($serial['id']) {
+                    $stockAdjustmentOutProductSerial = $stockAdjustmentOutProduct->serials()->findOrFail($serial['id']);
+                    $this->stockAdjustmentOutProductSerialActions->update($stockAdjustmentOutProductSerial, $serial['serial']);
+                } else {
+                    $this->stockAdjustmentOutProductSerialActions->create($stockAdjustmentOutProduct, $serial['serial']);
+                }
             }
 
             $this->flushCache();
@@ -190,13 +217,17 @@ class StockAdjustmentOutProductActions
         $timer_start = microtime(true);
 
         try {
-            $result = $stockAdjustmentOutProduct->delete();
-
             $stockTransaction = $stockAdjustmentOutProduct->stockTransaction;
             if ($stockTransaction) {
-                $stockTransactionActions = new StockTransactionActions();
-                $stockTransactionActions->delete($stockTransaction);
+                $this->stockTransactionActions->delete($stockTransaction);
             }
+
+            $serials = $stockAdjustmentOutProduct->serials;
+            foreach ($serials as $serial) {
+                $this->stockAdjustmentOutProductSerialActions->delete($serial);
+            }
+
+            $result = $stockAdjustmentOutProduct->delete();
 
             $this->flushCache();
 

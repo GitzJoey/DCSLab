@@ -9,6 +9,9 @@ final class StockAdjustmentOutProductUpdateDTO
         public readonly int $productUnitId,
         public readonly float $productUnitConversionValue,
         public readonly ?string $remarks,
+
+        public readonly array $deleteSerialIds,
+        public readonly array $serials,
     ) {
     }
 }

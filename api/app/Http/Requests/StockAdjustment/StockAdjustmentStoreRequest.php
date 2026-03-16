@@ -9,8 +9,6 @@ use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidWarehouse;
-use App\Validation\StockAdjustment\StockAdjustmentInProductRules;
-use App\Validation\StockAdjustment\StockAdjustmentOutProductRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,7 +28,7 @@ class StockAdjustmentStoreRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
             'code' => ['required', 'string', 'max:255'],
@@ -40,28 +38,26 @@ class StockAdjustmentStoreRequest extends FormRequest
             'out_warehouse_id' => ['nullable', 'integer', 'different:in_warehouse_id', 'required_without:in_warehouse_id', new IsValidWarehouse($this->company_id, false)],
             'remarks' => ['nullable', 'string', 'max:255'],
             'is_posted' => ['required', 'boolean'],
+
+            'in_products' => ['array', 'required_with:in_warehouse_id'],
+            'in_products.*.qty' => ['required', 'numeric', 'min:1'],
+            'in_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
+            'in_products.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
+            'in_products.*.product_unit_cogs' => ['required', 'numeric', 'min:0'],
+            'in_products.*.remarks' => ['nullable', 'string', 'max:255'],
+
+            'in_products.*.serials' => ['present', 'array'],
+            'in_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
+
+            'out_products' => ['array', 'required_with:out_warehouse_id'],
+            'out_products.*.qty' => ['required', 'numeric', 'min:1'],
+            'out_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
+            'out_products.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
+            'out_products.*.remarks' => ['nullable', 'string', 'max:255'],
+
+            'out_products.*.serials' => ['present', 'array'],
+            'out_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
         ];
-
-        $rules['in_products'] = ['array', 'required_with:in_warehouse_id'];
-        $rules += StockAdjustmentInProductRules::mapToFieldNames($this->company_id ?? 0,
-            'in_products.*.qty',
-            'in_products.*.product_unit_id',
-            'in_products.*.product_unit_conversion_value',
-            'in_products.*.product_unit_cogs',
-            'in_products.*.remarks',
-        );
-        $rules['in_products.*.product_unit_id'] = array_merge($rules['in_products.*.product_unit_id'] ?? [], ['distinct']);
-
-        $rules['out_products'] = ['array', 'required_with:out_warehouse_id'];
-        $rules += StockAdjustmentOutProductRules::mapToFieldNames($this->company_id ?? 0,
-            'out_products.*.qty',
-            'out_products.*.product_unit_id',
-            'out_products.*.product_unit_conversion_value',
-            'out_products.*.remarks',
-        );
-        $rules['out_products.*.product_unit_id'] = array_merge($rules['out_products.*.product_unit_id'] ?? [], ['distinct']);
-
-        return $rules;
     }
 
     public function attributes()

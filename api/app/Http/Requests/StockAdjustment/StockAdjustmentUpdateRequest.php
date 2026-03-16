@@ -9,8 +9,6 @@ use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidWarehouse;
-use App\Validation\StockAdjustment\StockAdjustmentInProductRules;
-use App\Validation\StockAdjustment\StockAdjustmentOutProductRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +29,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
             'code' => ['required', 'string', 'max:255'],
@@ -41,36 +39,37 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'out_warehouse_id' => ['nullable', 'integer', 'different:in_warehouse_id', 'required_without:in_warehouse_id', new IsValidWarehouse($this->company_id, false)],
             'remarks' => ['nullable', 'string', 'max:255'],
             'is_posted' => ['required', 'boolean'],
+
+            'delete_in_product_ids' => ['nullable', 'array'],
+            'delete_in_product_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)],
+            'in_products' => ['array', 'required_with:in_warehouse_id'],
+            'in_products.*.id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)],
+            'in_products.*.qty' => ['required', 'numeric', 'min:1'],
+            'in_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
+            'in_products.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
+            'in_products.*.product_unit_cogs' => ['required', 'numeric', 'min:0'],
+            'in_products.*.remarks' => ['nullable', 'string', 'max:255'],
+
+            'in_products.*.delete_serial_ids' => ['nullable', 'array'],
+            'in_products.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
+            'in_products.*.serials' => ['present', 'array'],
+            'in_products.*.serials.*.id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
+            'in_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
+
+            'delete_out_product_ids' => ['nullable', 'array'],
+            'delete_out_product_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)],
+            'out_products' => ['array', 'required_with:out_warehouse_id'],
+            'out_products.*.id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)],
+            'out_products.*.qty' => ['required', 'numeric', 'min:1'],
+            'out_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
+            'out_products.*.remarks' => ['nullable', 'string', 'max:255'],
+
+            'out_products.*.delete_serial_ids' => ['nullable', 'array'],
+            'out_products.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
+            'out_products.*.serials' => ['present', 'array'],
+            'out_products.*.serials.*.id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
+            'out_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
         ];
-
-        $rules['delete_in_product_ids'] = ['nullable', 'array'];
-        $rules['delete_in_product_ids.*'] = ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)];
-
-        $rules['in_products'] = ['array', 'required_with:in_warehouse_id'];
-        $rules['in_products.*.id'] = ['nullable', 'integer', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)];
-        $rules += StockAdjustmentInProductRules::mapToFieldNames($this->company_id ?? 0,
-            'in_products.*.qty',
-            'in_products.*.product_unit_id',
-            'in_products.*.product_unit_conversion_value',
-            'in_products.*.product_unit_cogs',
-            'in_products.*.remarks',
-        );
-        $rules['in_products.*.product_unit_id'] = array_merge($rules['in_products.*.product_unit_id'] ?? [], ['distinct']);
-
-        $rules['delete_out_product_ids'] = ['nullable', 'array'];
-        $rules['delete_out_product_ids.*'] = ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)];
-
-        $rules['out_products'] = ['array', 'required_with:out_warehouse_id'];
-        $rules['out_products.*.id'] = ['nullable', 'integer', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)];
-        $rules += StockAdjustmentOutProductRules::mapToFieldNames($this->company_id ?? 0,
-            'out_products.*.qty',
-            'out_products.*.product_unit_id',
-            'out_products.*.product_unit_conversion_value',
-            'out_products.*.remarks',
-        );
-        $rules['out_products.*.product_unit_id'] = array_merge($rules['out_products.*.product_unit_id'] ?? [], ['distinct']);
-
-        return $rules;
     }
 
     public function attributes()
@@ -115,6 +114,23 @@ class StockAdjustmentUpdateRequest extends FormRequest
                 if (isset($item['product_unit_id'])) {
                     $item['product_unit_id'] = HashidsHelper::decodeId($item['product_unit_id']);
                 }
+                if (isset($item['delete_serial_ids']) && is_array($item['delete_serial_ids'])) {
+                    $deleteSerialIds = [];
+                    foreach ($item['delete_serial_ids'] as $deleteSerialId) {
+                        $deleteSerialIds[] = HashidsHelper::decodeId($deleteSerialId);
+                    }
+                    $item['delete_serial_ids'] = $deleteSerialIds;
+                }
+                if (isset($item['serials']) && is_array($item['serials'])) {
+                    $serials = [];
+                    foreach ($item['serials'] as $serialItem) {
+                        if (isset($serialItem['id'])) {
+                            $serialItem['id'] = HashidsHelper::decodeId($serialItem['id']);
+                        }
+                        $serials[] = $serialItem;
+                    }
+                    $item['serials'] = $serials;
+                }
                 $inProducts[] = $item;
             }
             $this->merge(['in_products' => $inProducts]);
@@ -136,6 +152,23 @@ class StockAdjustmentUpdateRequest extends FormRequest
                 }
                 if (isset($item['product_unit_id'])) {
                     $item['product_unit_id'] = HashidsHelper::decodeId($item['product_unit_id']);
+                }
+                if (isset($item['delete_serial_ids']) && is_array($item['delete_serial_ids'])) {
+                    $deleteSerialIds = [];
+                    foreach ($item['delete_serial_ids'] as $deleteSerialId) {
+                        $deleteSerialIds[] = HashidsHelper::decodeId($deleteSerialId);
+                    }
+                    $item['delete_serial_ids'] = $deleteSerialIds;
+                }
+                if (isset($item['serials']) && is_array($item['serials'])) {
+                    $serials = [];
+                    foreach ($item['serials'] as $serialItem) {
+                        if (isset($serialItem['id'])) {
+                            $serialItem['id'] = HashidsHelper::decodeId($serialItem['id']);
+                        }
+                        $serials[] = $serialItem;
+                    }
+                    $item['serials'] = $serials;
                 }
                 $outProducts[] = $item;
             }

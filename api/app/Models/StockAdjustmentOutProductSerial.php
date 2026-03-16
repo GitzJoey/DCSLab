@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StockAdjustmentOutProduct extends Model
+class StockAdjustmentOutProductSerial extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -21,18 +21,11 @@ class StockAdjustmentOutProduct extends Model
         'company_id',
         'branch_id',
         'stock_adjustment_id',
-        'qty',
-        'product_unit_id',
-        'product_unit_conversion_value',
-        'product_unit_qty_base',
-        'remarks',
+        'stock_adjustment_out_product_id',
+        'serial',
     ];
 
     protected $casts = [
-        'qty' => 'decimal:8',
-        'product_unit_conversion_value' => 'decimal:8',
-        'product_unit_qty_base' => 'decimal:8',
-        'product_base_unit_cogs' => 'decimal:8',
     ];
 
     public function company()
@@ -50,25 +43,18 @@ class StockAdjustmentOutProduct extends Model
         return $this->belongsTo(StockAdjustment::class)->withTrashed();
     }
 
-    public function productUnit()
+    public function stockAdjustmentOutProduct()
     {
-        return $this->belongsTo(ProductUnit::class)->withTrashed();
+        return $this->belongsTo(StockAdjustmentOutProduct::class)->withTrashed();
     }
 
-    public function stockTransaction()
+    public function stockSerialTransaction()
     {
-        return $this->morphOne(StockTransaction::class, 'referable');
-    }
-
-    public function serials()
-    {
-        return $this->hasMany(StockAdjustmentOutProductSerial::class);
+        return $this->morphOne(StockSerialTransaction::class, 'referable');
     }
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where(function ($query) use ($search) {
-            $query->where('remarks', 'like', '%'.$search.'%');
-        });
+        return $query->where('serial', 'like', '%'.$search.'%');
     }
 }

@@ -796,14 +796,10 @@ const onSubmit = async () => {
               <FormLabel :class="{ 'text-danger': stockAdjustmentForm.invalid('date') }">
                 {{ t('views.stock_adjustment.fields.date') }}
               </FormLabel>
-              <FormInputDateTimeAuto
-                v-model="stockAdjustmentForm.date"
-                :class="{
-                  'border-danger': stockAdjustmentForm.invalid('date'),
-                }"
-                :placeholder="t('views.stock_adjustment.fields.date')"
-                @change="stockAdjustmentForm.validate('date')"
-              />
+              <FormInputDateTimeAuto v-model="stockAdjustmentForm.date" :class="{
+                'border-danger': stockAdjustmentForm.invalid('date'),
+              }" :placeholder="t('views.stock_adjustment.fields.date')"
+                @change="stockAdjustmentForm.validate('date')" />
               <FormErrorMessages :messages="stockAdjustmentForm.errors.date" />
             </div>
             <!-- category -->

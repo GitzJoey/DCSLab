@@ -65,6 +65,11 @@ class StockAdjustmentInProduct extends Model
         return $this->morphOne(StockTransaction::class, 'referable');
     }
 
+    public function serials()
+    {
+        return $this->hasMany(StockAdjustmentInProductSerial::class);
+    }
+
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {

@@ -7,7 +7,6 @@ use App\Models\StockAdjustmentInProduct;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
-use App\Validation\StockAdjustment\StockAdjustmentInProductRules;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,21 +26,19 @@ class StockAdjustmentInProductStoreRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
             'stock_adjustment_id' => ['required', 'integer', new ExistsForCompany('stock_adjustments', $this->company_id)],
+            'qty' => ['required', 'numeric', 'min:1'],
+            'product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
+            'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
+            'product_unit_cogs' => ['required', 'numeric', 'min:0'],
+            'remarks' => ['nullable', 'string', 'max:255'],
+
+            'serials' => ['nullable', 'array'],
+            'serials.*.serial' => ['required', 'string', 'max:255'],
         ];
-
-        $rules += StockAdjustmentInProductRules::mapToFieldNames($this->company_id ?? 0,
-            'qty',
-            'product_unit_id',
-            'product_unit_conversion_value',
-            'product_unit_cogs',
-            'remarks',
-        );
-
-        return $rules;
     }
 
     public function attributes()
