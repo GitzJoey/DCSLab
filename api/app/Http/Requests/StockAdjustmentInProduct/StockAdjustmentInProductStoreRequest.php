@@ -34,9 +34,9 @@ class StockAdjustmentInProductStoreRequest extends FormRequest
             'product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
             'product_unit_cogs' => ['required', 'numeric', 'min:0'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'serials' => ['nullable', 'array'],
+            'serials' => ['present', 'nullable', 'array'],
             'serials.*.serial' => ['required', 'string', 'max:255'],
         ];
     }

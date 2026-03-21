@@ -75,9 +75,17 @@ export default class StockAdjustmentOutProductSerialService {
       if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
-      if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
-      if (args.product_id) queryParams['product_id'] = args.product_id;
       if (args.search) queryParams['search'] = args.search;
+      if (args.stock_adjustment_code) queryParams['stock_adjustment_code'] = args.stock_adjustment_code;
+      if (args.stock_adjustment_start_date) queryParams['stock_adjustment_start_date'] = args.stock_adjustment_start_date;
+      if (args.stock_adjustment_end_date) queryParams['stock_adjustment_end_date'] = args.stock_adjustment_end_date;
+      if (args.stock_adjustment_category_id) queryParams['stock_adjustment_category_id'] = args.stock_adjustment_category_id;
+      if (args.stock_adjustment_in_warehouse_id) queryParams['stock_adjustment_in_warehouse_id'] = args.stock_adjustment_in_warehouse_id;
+      if (args.stock_adjustment_out_warehouse_id) queryParams['stock_adjustment_out_warehouse_id'] = args.stock_adjustment_out_warehouse_id;
+      if (args.product_unit_code) queryParams['product_unit_code'] = args.product_unit_code;
+      if (args.product_unit_product_name) queryParams['product_unit_product_name'] = args.product_unit_product_name;
+      if (args.product_unit_product_category_id) queryParams['product_unit_product_category_id'] = args.product_unit_product_category_id;
+      if (args.product_unit_product_brand_id) queryParams['product_unit_product_brand_id'] = args.product_unit_product_brand_id;
 
       queryParams['refresh'] = args.refresh;
       queryParams['paginate'] = {
@@ -125,9 +133,17 @@ export default class StockAdjustmentOutProductSerialService {
       queryParams['with_trashed'] = args.with_trashed;
       queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
-      if (args.stock_adjustment_id) queryParams['stock_adjustment_id'] = args.stock_adjustment_id;
-      if (args.product_id) queryParams['product_id'] = args.product_id;
       if (args.search) queryParams['search'] = args.search;
+      if (args.stock_adjustment_code) queryParams['stock_adjustment_code'] = args.stock_adjustment_code;
+      if (args.stock_adjustment_start_date) queryParams['stock_adjustment_start_date'] = args.stock_adjustment_start_date;
+      if (args.stock_adjustment_end_date) queryParams['stock_adjustment_end_date'] = args.stock_adjustment_end_date;
+      if (args.stock_adjustment_category_id) queryParams['stock_adjustment_category_id'] = args.stock_adjustment_category_id;
+      if (args.stock_adjustment_in_warehouse_id) queryParams['stock_adjustment_in_warehouse_id'] = args.stock_adjustment_in_warehouse_id;
+      if (args.stock_adjustment_out_warehouse_id) queryParams['stock_adjustment_out_warehouse_id'] = args.stock_adjustment_out_warehouse_id;
+      if (args.product_unit_code) queryParams['product_unit_code'] = args.product_unit_code;
+      if (args.product_unit_product_name) queryParams['product_unit_product_name'] = args.product_unit_product_name;
+      if (args.product_unit_product_category_id) queryParams['product_unit_product_category_id'] = args.product_unit_product_category_id;
+      if (args.product_unit_product_brand_id) queryParams['product_unit_product_brand_id'] = args.product_unit_product_brand_id;
 
       queryParams['refresh'] = args.refresh;
       queryParams['get'] = {

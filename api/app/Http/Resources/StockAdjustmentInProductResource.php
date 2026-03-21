@@ -29,6 +29,7 @@ class StockAdjustmentInProductResource extends JsonResource
             'product_unit_total_cogs' => $this->product_unit_total_cogs,
             'product_unit_base_unit_cogs' => $this->product_unit_base_unit_cogs,
             'remarks' => $this->remarks,
+            'serials' => StockAdjustmentInProductSerialResource::collection($this->whenLoaded('serials')),
         ];
     }
 }

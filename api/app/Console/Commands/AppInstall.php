@@ -99,6 +99,7 @@ class AppInstall extends Command
             return;
         }
 
+        $this->cleanupStorageDirectories();
         $this->generateAppKey();
         $this->migrateAndSeed();
         $this->storageLinking();
@@ -167,6 +168,34 @@ class AppInstall extends Command
         }
 
         $this->info(Artisan::output());
+    }
+
+    private function cleanupStorageDirectories(): void
+    {
+        $this->info('Cleaning storage directories ...');
+
+        $directories = [
+            storage_path('app/public'),
+            storage_path('logs'),
+        ];
+
+        foreach ($directories as $directory) {
+            if (! File::exists($directory) || ! File::isDirectory($directory)) {
+                continue;
+            }
+
+            foreach (File::files($directory) as $file) {
+                if ($file->getFilename() === '.gitignore') {
+                    continue;
+                }
+
+                File::delete($file->getPathname());
+            }
+
+            foreach (File::directories($directory) as $subDirectory) {
+                File::deleteDirectory($subDirectory);
+            }
+        }
     }
 
     private function passPreInstallCheck()

@@ -20,6 +20,7 @@ import { ErrorCode } from '@/types/enums/ErrorCode';
 import { NotificationData } from '@/types/models/NotificationData';
 import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
 import { formatCurrency } from '@/utils/helper';
+import ProductImagePreview from '@/components/Product/ProductImagePreview.vue';
 // #endregion
 
 // #region Declarations
@@ -61,8 +62,6 @@ const productLists = ref<Collection<Array<Product>> | null>({
     next: null,
   },
 });
-const previewImageUrl = ref<string | null>(null);
-const isPreviewOpen = ref<boolean>(false);
 // #endregion
 
 // #region Computed
@@ -190,18 +189,6 @@ const getProductMainImageUrl = (item: Product): string | null => {
   const first = item.product_images[0];
   return first?.url ?? null;
 };
-
-const openPreview = (url: string | null | undefined) => {
-  if (!url) return;
-
-  previewImageUrl.value = url;
-  isPreviewOpen.value = true;
-};
-
-const closePreview = () => {
-  isPreviewOpen.value = false;
-  previewImageUrl.value = null;
-};
 // #endregion
 </script>
 
@@ -246,13 +233,7 @@ const closePreview = () => {
               <template v-for="(item, itemIdx) in productLists.data" :key="item.ulid">
                 <Table.Tr class="intro-x">
                   <Table.Td>
-                    <div
-                      class="w-14 h-14 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
-                      @click="openPreview(getProductMainImageUrl(item))">
-                      <img v-if="item.product_images && item.product_images.length > 0"
-                        :src="getProductMainImageUrl(item) || ''" class="w-full h-full object-cover" />
-                      <Lucide v-else icon="ImageOff" class="w-6 h-6 text-slate-400" />
-                    </div>
+                    <ProductImagePreview :image-url="getProductMainImageUrl(item)" />
                   </Table.Td>
                   <Table.Td>
                     <div class="font-medium whitespace-nowrap">
@@ -454,23 +435,6 @@ const closePreview = () => {
       </DataList>
     </div>
   </div>
-  <Dialog :open="isPreviewOpen" size="lg" @close="closePreview">
-    <Dialog.Panel class="flex flex-col">
-      <Dialog.Title>
-        <div class="flex items-center justify-between w-full">
-          <div class="font-medium">
-            {{ t('views.product.fields.images') }}
-          </div>
-          <Button type="button" variant="outline-secondary" size="sm" @click="closePreview">
-            <Lucide icon="X" class="w-4 h-4" />
-          </Button>
-        </div>
-      </Dialog.Title>
-      <Dialog.Description class="bg-slate-900 flex items-center justify-center">
-        <img v-if="previewImageUrl" :src="previewImageUrl" class="max-h-[80vh] max-w-full object-contain" />
-      </Dialog.Description>
-    </Dialog.Panel>
-  </Dialog>
   <Dialog :open="deleteModalShow" @close="
     () => {
       deleteModalShow = false;

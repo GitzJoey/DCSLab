@@ -57,6 +57,7 @@
     "vat_rate": "VAT Rate",
     "is_price_include_vat": "Price Include VAT",
     "is_use_serial_number": "Use Serial Number",
+    "serial_number": "Serial Number",
     "is_expirable": "Expirable",
     "status": "Status",
     "remarks": "Remarks",

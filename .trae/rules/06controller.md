@@ -70,7 +70,17 @@ Untuk semua controller CRUD di bawah menu Master Data, urutan method public utam
     - Syntax: `useCache: ! $validatedRequest['refresh']`.
 4.  **Pagination/Get Logic**:
     - Gunakan *Immediately Invoked Function Expression (IIFE)* atau closure untuk memisahkan logika `ExecutePaginationDTO` dan `ExecuteGetDTO`.
-5.  **Response**: `Resource::collection($result)`.
+5.  **Grouping Named Argument `readAny` (Wajib 3 Blok untuk Stock Adjustment Product)**:
+    - Pada pemanggilan Action `readAny`, susun named argument menjadi 3 blok dengan linebreak:
+      1. Blok basis: `withTrashed`, `companyId`, `branchId`, `search`
+      2. Blok filter: `stockAdjustmentId`, `stockAdjustmentStartDate`, `stockAdjustmentEndDate`, `stockAdjustmentCategoryId`, `stockAdjustmentInWarehouseId`, `stockAdjustmentOutWarehouseId`, `product_unit_code`, `product_name`, `product_category_id`, `product_brand_id`
+      3. Blok eksekusi: `execute`
+    - Terapkan konsisten pada controller:
+      - `StockAdjustmentInProductController`
+      - `StockAdjustmentOutProductController`
+      - `StockAdjustmentInProductSerialController`
+      - `StockAdjustmentOutProductSerialController`
+6.  **Response**: `Resource::collection($result)`.
     - Gunakan *Early Return* jika hasil null.
       ```php
       if (is_null($result)) {

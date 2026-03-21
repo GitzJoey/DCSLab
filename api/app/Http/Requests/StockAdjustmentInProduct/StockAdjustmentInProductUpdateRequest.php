@@ -35,12 +35,12 @@ class StockAdjustmentInProductUpdateRequest extends FormRequest
             'product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
             'product_unit_cogs' => ['required', 'numeric', 'min:0'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'delete_serial_ids' => ['nullable', 'array'],
+            'delete_serial_ids' => ['present', 'nullable', 'array'],
             'delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
-            'serials' => ['nullable', 'array'],
-            'serials.*.id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
+            'serials' => ['present', 'nullable', 'array'],
+            'serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
             'serials.*.serial' => ['required', 'string', 'max:255'],
         ];
     }
@@ -67,5 +67,24 @@ class StockAdjustmentInProductUpdateRequest extends FormRequest
             'stock_adjustment_id' => $this->filled('stock_adjustment_id') ? HashidsHelper::decodeId($this->stock_adjustment_id) : null,
             'product_unit_id' => $this->filled('product_unit_id') ? HashidsHelper::decodeId($this->product_unit_id) : null,
         ]);
+
+        if ($this->filled('delete_serial_ids')) {
+            $deleteSerialIds = $this->delete_serial_ids;
+            foreach ($deleteSerialIds as $index => $id) {
+                $deleteSerialIds[$index] = HashidsHelper::decodeId($id);
+            }
+            $this->merge(['delete_serial_ids' => $deleteSerialIds]);
+        }
+
+        if (is_array($this->input('serials'))) {
+            $serials = [];
+            foreach ($this->input('serials') as $item) {
+                if (isset($item['id'])) {
+                    $item['id'] = HashidsHelper::decodeId($item['id']);
+                }
+                $serials[] = $item;
+            }
+            $this->merge(['serials' => $serials]);
+        }
     }
 }

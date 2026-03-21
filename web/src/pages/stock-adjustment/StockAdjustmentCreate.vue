@@ -24,6 +24,7 @@ import ProductService from '@/services/ProductService';
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import { Dialog } from '@/components/Base/Headless';
+import ProductImagePreview from '@/components/Product/ProductImagePreview.vue';
 import { formatDate, formatCurrency, convertErrorTypeToAlertListType } from '@/utils/helper';
 import StockAdjustmentService from '@/services/StockAdjustmentService';
 import StockAdjustmentCategoryService from '@/services/StockAdjustmentCategoryService';
@@ -49,7 +50,7 @@ type StockAdjustmentInProductFormItem = {
   product_unit_conversion_value: StockAdjustmentInProductNestedStoreRequest['product_unit_conversion_value'];
   product_unit_cogs: StockAdjustmentInProductNestedStoreRequest['product_unit_cogs'];
   product_unit_total_cogs?: number | null;
-  remarks?: StockAdjustmentInProductNestedStoreRequest['remarks'];
+  remarks: StockAdjustmentInProductNestedStoreRequest['remarks'];
   is_use_serial_number?: boolean;
   serials: { serial: string }[];
 };
@@ -62,7 +63,7 @@ type StockAdjustmentOutProductFormItem = {
   product_unit_unit_name?: string | null;
   product_unit_base_unit_name?: string | null;
   product_unit_conversion_value: StockAdjustmentOutProductNestedStoreRequest['product_unit_conversion_value'];
-  remarks?: StockAdjustmentOutProductNestedStoreRequest['remarks'];
+  remarks: StockAdjustmentOutProductNestedStoreRequest['remarks'];
   is_use_serial_number?: boolean;
   serials: { serial: string }[];
 };
@@ -71,6 +72,7 @@ type ProductUnitOption = {
   product_id: string;
   product_code: string;
   product_name: string;
+  product_image_url: string | null;
   product_unit_id: string;
   product_unit_code: string;
   unit_name: string;
@@ -165,6 +167,16 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: '', state: CardState.Hidden, id: 'button' },
 ]);
 // #endregion
+
+const getProductMainImageUrl = (product: any): string | null => {
+  const images: any[] = product?.product_images ?? [];
+  if (images.length === 0) return null;
+
+  const mainImage = images.find((img: any) => img?.is_main);
+  if (mainImage?.url) return mainImage.url;
+
+  return images[0]?.url ?? null;
+};
 
 // #region Vue Core
 const handleExpandCard = (index: number) => {
@@ -420,6 +432,7 @@ const searchInProductUnits = async () => {
           product_id: p.id,
           product_code: p.code,
           product_name: p.name,
+          product_image_url: getProductMainImageUrl(p),
           product_unit_id: u.id,
           product_unit_code: u.code,
           unit_name: u.unit ? u.unit.name : '',
@@ -601,6 +614,7 @@ const searchOutProductUnits = async () => {
           product_id: p.id,
           product_code: p.code,
           product_name: p.name,
+          product_image_url: getProductMainImageUrl(p),
           product_unit_id: u.id,
           product_unit_code: u.code,
           unit_name: u.unit ? u.unit.name : '',
@@ -738,25 +752,29 @@ const onSubmit = async () => {
 
   const originalInProducts = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
   const cleanedInProducts: StockAdjustmentInProductNestedStoreRequest[] = originalInProducts.map(
-    ({
-      product_unit_product_code,
-      product_unit_product_name,
-      product_unit_unit_name,
-      product_unit_base_unit_name,
-      product_unit_total_cogs,
-      ...rest
-    }: StockAdjustmentInProductFormItem) => rest,
+    (item: StockAdjustmentInProductFormItem) => ({
+      qty: item.qty,
+      product_unit_id: item.product_unit_id,
+      product_unit_conversion_value: item.product_unit_conversion_value,
+      product_unit_cogs: item.product_unit_cogs,
+      remarks: item.remarks,
+      serials: item.serials.map((serialItem) => ({
+        serial: serialItem.serial,
+      })),
+    }),
   );
 
   const originalOutProducts = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
   const cleanedOutProducts: StockAdjustmentOutProductNestedStoreRequest[] = originalOutProducts.map(
-    ({
-      product_unit_product_code,
-      product_unit_product_name,
-      product_unit_unit_name,
-      product_unit_base_unit_name,
-      ...rest
-    }: StockAdjustmentOutProductFormItem) => rest,
+    (item: StockAdjustmentOutProductFormItem) => ({
+      qty: item.qty,
+      product_unit_id: item.product_unit_id,
+      product_unit_conversion_value: item.product_unit_conversion_value,
+      remarks: item.remarks,
+      serials: item.serials.map((serialItem) => ({
+        serial: serialItem.serial,
+      })),
+    }),
   );
 
   const backupInProducts = [...originalInProducts];
@@ -1046,7 +1064,30 @@ const onSubmit = async () => {
                     class="text-right" />
                 </div>
 
-                <!-- product_unit_remarks & serials -->
+                <!-- serials -->
+                <div v-if="item.is_use_serial_number" class="col-span-12">
+                  <div class="flex items-center justify-between mb-2">
+                    <FormLabel>
+                      {{ t('views.product.fields.serial_number') }}
+                    </FormLabel>
+                    <Button type="button" size="sm" variant="outline-primary" @click="addInProductSerial(index)">
+                      <Lucide icon="Plus" class="w-3 h-3 mr-1" />
+                      {{ t('components.buttons.create') }}
+                    </Button>
+                  </div>
+                  <div v-if="item.serials.length === 0" class="text-slate-500 text-xs italic">
+                    {{ t('components.data-list.data_not_found') }}
+                  </div>
+                  <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                    <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
+                      <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
+                      <Button type="button" variant="outline-danger" @click="removeInProductSerial(index, sIdx)">
+                        <Lucide icon="Trash2" class="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
                 <div v-if="inProductsRemarksExpanded[index]" class="col-span-12 space-y-3">
                   <div>
                     <FormLabel :class="{
@@ -1059,30 +1100,6 @@ const onSubmit = async () => {
                     }" @change="stockAdjustmentForm.validate(`in_products.${index}.remarks` as any)" />
                     <FormErrorMessages
                       :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.remarks`]" />
-                  </div>
-
-                  <div v-if="item.is_use_serial_number">
-                    <div class="flex items-center justify-between mb-2">
-                      <FormLabel>
-                        {{ t('views.product.fields.serial_number') }}
-                      </FormLabel>
-                      <Button type="button" size="sm" variant="outline-primary" @click="addInProductSerial(index)">
-                        <Lucide icon="Plus" class="w-3 h-3 mr-1" />
-                        {{ t('components.buttons.create') }}
-                      </Button>
-                    </div>
-                    <div v-if="item.serials.length === 0" class="text-slate-500 text-xs italic">
-                      {{ t('components.data-list.data_not_found') }}
-                    </div>
-                    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
-                        <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
-                        <Button type="button" variant="outline-danger"
-                          @click="removeInProductSerial(index, sIdx)">
-                          <Lucide icon="Trash2" class="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1203,7 +1220,30 @@ const onSubmit = async () => {
                   </div>
                 </div>
 
-                <!-- remarks & serials -->
+                <!-- serials -->
+                <div v-if="item.is_use_serial_number" class="col-span-12">
+                  <div class="flex items-center justify-between mb-2">
+                    <FormLabel>
+                      {{ t('views.product.fields.serial_number') }}
+                    </FormLabel>
+                    <Button type="button" size="sm" variant="outline-primary" @click="addOutProductSerial(index)">
+                      <Lucide icon="Plus" class="w-3 h-3 mr-1" />
+                      {{ t('components.buttons.create') }}
+                    </Button>
+                  </div>
+                  <div v-if="item.serials.length === 0" class="text-slate-500 text-xs italic">
+                    {{ t('components.data-list.data_not_found') }}
+                  </div>
+                  <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                    <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
+                      <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
+                      <Button type="button" variant="outline-danger" @click="removeOutProductSerial(index, sIdx)">
+                        <Lucide icon="Trash2" class="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
                 <div v-if="outProductsRemarksExpanded[index]" class="col-span-12 space-y-3">
                   <div>
                     <FormLabel :class="{
@@ -1216,30 +1256,6 @@ const onSubmit = async () => {
                     }" @change="stockAdjustmentForm.validate(`out_products.${index}.remarks` as any)" />
                     <FormErrorMessages
                       :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.remarks`]" />
-                  </div>
-
-                  <div v-if="item.is_use_serial_number">
-                    <div class="flex items-center justify-between mb-2">
-                      <FormLabel>
-                        {{ t('views.product.fields.serial_number') }}
-                      </FormLabel>
-                      <Button type="button" size="sm" variant="outline-primary" @click="addOutProductSerial(index)">
-                        <Lucide icon="Plus" class="w-3 h-3 mr-1" />
-                        {{ t('components.buttons.create') }}
-                      </Button>
-                    </div>
-                    <div v-if="item.serials.length === 0" class="text-slate-500 text-xs italic">
-                      {{ t('components.data-list.data_not_found') }}
-                    </div>
-                    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                      <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
-                        <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
-                        <Button type="button" variant="outline-danger"
-                          @click="removeOutProductSerial(index, sIdx)">
-                          <Lucide icon="Trash2" class="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1313,6 +1329,9 @@ const onSubmit = async () => {
             <table class="min-w-full text-sm">
               <thead class="bg-slate-100 dark:bg-darkmode-600">
                 <tr>
+                  <th class="px-3 py-2 text-left">
+                    {{ t('views.product.table.cols.image') }}
+                  </th>
                   <!-- product -->
                   <th class="px-3 py-2 text-left">
                     {{ t('views.stock_adjustment_in_product.table.cols.product') }}
@@ -1340,7 +1359,7 @@ const onSubmit = async () => {
               <tbody>
                 <!-- empty state -->
                 <tr v-if="productUnitOptionsIn.length === 0">
-                  <td colspan="6" class="px-3 py-4 text-center text-slate-500">
+                  <td colspan="7" class="px-3 py-4 text-center text-slate-500">
                     {{ t('components.data-list.data_not_found') }}
                   </td>
                 </tr>
@@ -1348,6 +1367,11 @@ const onSubmit = async () => {
                 <!-- product unit rows -->
                 <tr v-for="(opt, idx) in productUnitOptionsIn" :key="idx"
                   class="border-t border-slate-200/60 dark:border-darkmode-400">
+                  <td class="px-3 py-2">
+                    <ProductImagePreview :image-url="opt.product_image_url"
+                      wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
+                      icon-class="w-4 h-4 text-slate-400" />
+                  </td>
                   <!-- product -->
                   <td class="px-3 py-2">[{{ opt.product_unit_code }}] {{ opt.product_name }}</td>
                   <!-- remaining_stock -->
@@ -1418,6 +1442,9 @@ const onSubmit = async () => {
             <table class="min-w-full text-sm">
               <thead class="bg-slate-100 dark:bg-darkmode-600">
                 <tr>
+                  <th class="px-3 py-2 text-left">
+                    {{ t('views.product.table.cols.image') }}
+                  </th>
                   <!-- product -->
                   <th class="px-3 py-2 text-left">
                     {{ t('views.stock_adjustment_out_product.table.cols.product') }}
@@ -1445,7 +1472,7 @@ const onSubmit = async () => {
               <tbody>
                 <!-- empty state -->
                 <tr v-if="productUnitOptionsOut.length === 0">
-                  <td colspan="6" class="px-3 py-4 text-center text-slate-500">
+                  <td colspan="7" class="px-3 py-4 text-center text-slate-500">
                     {{ t('components.data-list.data_not_found') }}
                   </td>
                 </tr>
@@ -1453,6 +1480,11 @@ const onSubmit = async () => {
                 <!-- product unit rows -->
                 <tr v-for="(opt, idx) in productUnitOptionsOut" :key="idx"
                   class="border-t border-slate-200/60 dark:border-darkmode-400">
+                  <td class="px-3 py-2">
+                    <ProductImagePreview :image-url="opt.product_image_url"
+                      wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
+                      icon-class="w-4 h-4 text-slate-400" />
+                  </td>
                   <!-- product -->
                   <td class="px-3 py-2">[{{ opt.product_unit_code }}] {{ opt.product_name }}</td>
                   <!-- remaining_stock -->

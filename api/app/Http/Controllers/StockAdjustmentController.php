@@ -13,6 +13,7 @@ use App\Http\Requests\StockAdjustment\StockAdjustmentStoreRequest;
 use App\Http\Requests\StockAdjustment\StockAdjustmentUpdateRequest;
 use App\Http\Resources\StockAdjustmentResource;
 use App\Models\StockAdjustment;
+use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
 use Exception;
@@ -39,14 +40,22 @@ class StockAdjustmentController extends BaseController
         $request->merge([
             'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
             'branch_id' => $request->filled('branch_id') ? HashidsHelper::decodeId($request->branch_id) : null,
+            'category_id' => $request->filled('category_id') ? HashidsHelper::decodeId($request->category_id) : null,
+            'in_warehouse_id' => $request->filled('in_warehouse_id') ? HashidsHelper::decodeId($request->in_warehouse_id) : null,
+            'out_warehouse_id' => $request->filled('out_warehouse_id') ? HashidsHelper::decodeId($request->out_warehouse_id) : null,
         ]);
 
         $validatedRequest = $request->validate([
             'with_trashed' => ['required', 'boolean'],
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['nullable', 'integer', new IsValidBranch($request->company_id, false)],
-
             'search' => ['nullable', 'string'],
+
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'category_id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustment_categories', $request->company_id)],
+            'in_warehouse_id' => ['nullable', 'integer', new ExistsForCompany('warehouses', $request->company_id)],
+            'out_warehouse_id' => ['nullable', 'integer', new ExistsForCompany('warehouses', $request->company_id)],
 
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
@@ -65,6 +74,11 @@ class StockAdjustmentController extends BaseController
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'] ?? null,
                 search: $validatedRequest['search'] ?? null,
+                startDate: $validatedRequest['start_date'] ?? null,
+                endDate: $validatedRequest['end_date'] ?? null,
+                categoryId: $validatedRequest['category_id'] ?? null,
+                inWarehouseId: $validatedRequest['in_warehouse_id'] ?? null,
+                outWarehouseId: $validatedRequest['out_warehouse_id'] ?? null,
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {

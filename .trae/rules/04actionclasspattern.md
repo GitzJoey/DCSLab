@@ -54,6 +54,16 @@ Untuk konsistensi navigasi dan kemudahan membaca, urutan method public di setiap
 
 ### B. Method `readAny`
 *   **Signature**: `public function readAny(bool $withTrashed, int $companyId, ?int $branchId, ..., ?ExecuteDTO $execute)`
+*   **Grouping Parameter (Wajib 3 Blok)**:
+    *   Untuk semua modul Stock Adjustment Product (`StockAdjustmentInProductActions`, `StockAdjustmentOutProductActions`, `StockAdjustmentInProductSerialActions`, `StockAdjustmentOutProductSerialActions`), parameter `readAny` wajib dibagi menjadi 3 blok dengan linebreak:
+        1. Blok basis: `withTrashed`, `companyId`, `branchId`, `search`
+        2. Blok filter: `stockAdjustmentId`/`stockAdjustmentCode` (sesuai kebutuhan modul), `stockAdjustmentStartDate`, `stockAdjustmentEndDate`, `stockAdjustmentCategoryId`, `stockAdjustmentInWarehouseId`, `stockAdjustmentOutWarehouseId`, `...ProductUnitCode`, `...ProductName`, `...ProductCategoryId`, `...ProductBrandId`
+        3. Blok eksekusi: `execute`
+    *   Urutan ini wajib konsisten pada:
+        *   signature method `readAny`
+        *   daftar variable di closure `use (...)`
+        *   urutan filter `if (...)` di query
+        *   array `$cacheParams`
 *   **Alur Logika**:
     1.  **Build Query (Mandatory Filters)**:
         *   Inisialisasi query dengan filter wajib di level utama (bukan di dalam closure).
@@ -120,6 +130,15 @@ Untuk konsistensi navigasi dan kemudahan membaca, urutan method public di setiap
 *   **Signature**: `public function read(Model $model): Model`
 *   **Alur Logika**:
     *   Load relasi yang dibutuhkan: `return $model->load('relation1', 'relation2');`.
+    *   Untuk modul transaksi stok yang menampilkan detail produk di frontend, relasi produk dan gambar wajib ikut di-load (contoh jalur: `productUnit.product.images`).
+
+### F. Aturan Relasi `with` untuk Transaksi Stok
+*   Pada method `readAny`:
+    *   Relasi utama (`belongsTo`) yang sering dipakai UI harus selalu di-`with` (contoh: `stockAdjustment`, `productUnit`, `productUnit.unit`, `productUnit.product`, `productUnit.product.images`).
+    *   Relasi `hasMany` yang berat hanya di-`with` saat pagination (`$execute?->pagination`) untuk efisiensi query.
+    *   Pola ini wajib dipakai pada action transaksi stok seperti `StockAdjustmentActions`, `StockAdjustmentInProductActions`, `StockAdjustmentOutProductActions`, `StockAdjustmentInProductSerialActions`, dan `StockAdjustmentOutProductSerialActions`.
+*   Pada method `read`:
+    *   Gunakan `load([...])` yang lengkap untuk seluruh relasi yang dibutuhkan halaman detail, termasuk nested relation ke produk dan gambar.
 
 ### D. Method `update`
 *   **Signature**: `public function update(Model $model, array $data): Model`

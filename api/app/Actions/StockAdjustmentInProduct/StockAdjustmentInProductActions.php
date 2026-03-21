@@ -11,6 +11,7 @@ use App\DTOs\StockAdjustmentInProductSerialUpdateDTO;
 use App\DTOs\StockAdjustmentInProductUpdateDTO;
 use App\DTOs\StockTransactionCreateDTO;
 use App\DTOs\StockTransactionUpdateDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\StockAdjustmentInProduct;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -38,21 +39,54 @@ class StockAdjustmentInProductActions
         bool $withTrashed,
         int $companyId,
         ?int $branchId,
-
         ?string $search,
-        ?int $stockAdjustmentId,
+
+        ?string $stockAdjustmentCode,
+        ?string $stockAdjustmentStartDate,
+        ?string $stockAdjustmentEndDate,
+        ?int $stockAdjustmentCategoryId,
+        ?int $stockAdjustmentInWarehouseId,
+        ?int $stockAdjustmentOutWarehouseId,
+        ?string $productUnitCode,
+        ?string $productUnitProductName,
+        ?int $productUnitProductCategoryId,
+        ?int $productUnitProductBrandId,
 
         ?ExecuteDTO $execute
     ) {
         $query = StockAdjustmentInProduct::select('stock_adjustment_in_products.*')
-            ->with(['company', 'branch', 'productUnit'])
+            ->with([
+                'company',
+                'branch',
+                'stockAdjustment',
+                'productUnit',
+                'productUnit.unit',
+                'productUnit.product.images',
+            ])
             ->join('companies', 'companies.id', '=', 'stock_adjustment_in_products.company_id')
             ->join('stock_adjustments', 'stock_adjustments.id', '=', 'stock_adjustment_in_products.stock_adjustment_id')
+            ->join('product_units', 'product_units.id', '=', 'stock_adjustment_in_products.product_unit_id')
+            ->join('products', 'products.id', '=', 'product_units.product_id')
+            ->join('product_categories', 'product_categories.id', '=', 'products.category_id')
+            ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
             ->whereCompanyId('stock_adjustment_in_products', $companyId)
             ->whereBranchId('stock_adjustment_in_products', $branchId)
             ->withTrashed();
 
-        $query->where(function ($query) use ($withTrashed, $search, $stockAdjustmentId) {
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $stockAdjustmentCode,
+            $stockAdjustmentStartDate,
+            $stockAdjustmentEndDate,
+            $stockAdjustmentCategoryId,
+            $stockAdjustmentInWarehouseId,
+            $stockAdjustmentOutWarehouseId,
+            $productUnitCode,
+            $productUnitProductName,
+            $productUnitProductCategoryId,
+            $productUnitProductBrandId,
+        ) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
 
@@ -60,8 +94,46 @@ class StockAdjustmentInProductActions
                 $query->search($search);
             }
 
-            if ($stockAdjustmentId) {
-                $query->where('stock_adjustment_id', $stockAdjustmentId);
+            $stockAdjustmentStartDateUtc = $stockAdjustmentStartDate ? TimezoneHelper::convertToUTC($stockAdjustmentStartDate) : null;
+            if ($stockAdjustmentStartDateUtc) {
+                $query->where('stock_adjustments.date', '>=', $stockAdjustmentStartDateUtc);
+            }
+
+            $stockAdjustmentEndDateUtc = $stockAdjustmentEndDate ? TimezoneHelper::convertToUTC($stockAdjustmentEndDate) : null;
+            if ($stockAdjustmentEndDateUtc) {
+                $query->where('stock_adjustments.date', '<=', $stockAdjustmentEndDateUtc);
+            }
+
+            if ($stockAdjustmentCode) {
+                $query->where('stock_adjustments.code', $stockAdjustmentCode);
+            }
+
+            if ($stockAdjustmentCategoryId) {
+                $query->where('stock_adjustments.category_id', $stockAdjustmentCategoryId);
+            }
+
+            if ($stockAdjustmentInWarehouseId) {
+                $query->where('stock_adjustments.in_warehouse_id', $stockAdjustmentInWarehouseId);
+            }
+
+            if ($stockAdjustmentOutWarehouseId) {
+                $query->where('stock_adjustments.out_warehouse_id', $stockAdjustmentOutWarehouseId);
+            }
+
+            if ($productUnitCode) {
+                $query->where('product_units.code', 'like', '%'.$productUnitCode.'%');
+            }
+
+            if ($productUnitProductName) {
+                $query->where('products.name', 'like', '%'.$productUnitProductName.'%');
+            }
+
+            if ($productUnitProductCategoryId) {
+                $query->where('products.category_id', $productUnitProductCategoryId);
+            }
+
+            if ($productUnitProductBrandId) {
+                $query->where('products.brand_id', $productUnitProductBrandId);
             }
         });
 
@@ -78,7 +150,16 @@ class StockAdjustmentInProductActions
                     $companyId,
                     $branchId ?? '[null]',
                     empty($search) ? '[empty]' : $search,
-                    $stockAdjustmentId ?? '[null]',
+                    empty($stockAdjustmentCode) ? '[empty]' : $stockAdjustmentCode,
+                    $stockAdjustmentStartDate ?? '[null]',
+                    $stockAdjustmentEndDate ?? '[null]',
+                    $stockAdjustmentCategoryId ?? '[null]',
+                    $stockAdjustmentInWarehouseId ?? '[null]',
+                    $stockAdjustmentOutWarehouseId ?? '[null]',
+                    empty($productUnitCode) ? '[empty]' : $productUnitCode,
+                    empty($productUnitProductName) ? '[empty]' : $productUnitProductName,
+                    $productUnitProductCategoryId ?? '[null]',
+                    $productUnitProductBrandId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',
@@ -129,7 +210,15 @@ class StockAdjustmentInProductActions
 
     public function read(StockAdjustmentInProduct $stockAdjustmentInProduct): StockAdjustmentInProduct
     {
-        return $stockAdjustmentInProduct->load(['company', 'branch', 'productUnit']);
+        return $stockAdjustmentInProduct->load([
+            'company',
+            'branch',
+            'stockAdjustment',
+            'productUnit',
+            'productUnit.unit',
+            'productUnit.product.images',
+            'serials',
+        ]);
     }
 
     public function create(StockAdjustmentInProductCreateDTO $data): StockAdjustmentInProduct
@@ -156,7 +245,7 @@ class StockAdjustmentInProductActions
             );
 
             foreach ($data->serials as $serial) {
-                $dto = StockAdjustmentInProductSerialCreateDTO::fromStockAdjustmentInProduct($stockAdjustmentInProduct, $serial);
+                $dto = StockAdjustmentInProductSerialCreateDTO::fromStockAdjustmentInProduct($stockAdjustmentInProduct, $serial['serial']);
                 $this->stockAdjustmentInProductSerialActions->create($dto);
             }
 
@@ -209,7 +298,7 @@ class StockAdjustmentInProductActions
                     $this->stockAdjustmentInProductSerialActions->update($stockAdjustmentInProductSerial, $dto);
                 } else {
                     $dto = StockAdjustmentInProductSerialCreateDTO::fromStockAdjustmentInProduct($stockAdjustmentInProduct, $serial['serial']);
-                    $this->stockAdjustmentInProductSerialActions->create($stockAdjustmentInProductSerial, $dto);
+                    $this->stockAdjustmentInProductSerialActions->create($dto);
                 }
             }
 

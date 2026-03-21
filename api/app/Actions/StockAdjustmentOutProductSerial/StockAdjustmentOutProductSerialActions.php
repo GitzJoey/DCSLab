@@ -8,6 +8,7 @@ use App\DTOs\StockAdjustmentOutProductSerialCreateDTO;
 use App\DTOs\StockAdjustmentOutProductSerialUpdateDTO;
 use App\DTOs\StockSerialTransactionCreateDTO;
 use App\DTOs\StockSerialTransactionUpdateDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\StockAdjustmentOutProductSerial;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -31,21 +32,53 @@ class StockAdjustmentOutProductSerialActions
         int $companyId,
         ?int $branchId,
         ?string $search,
-        ?int $stockAdjustmentId,
-        ?int $productId,
+
+        ?string $stockAdjustmentCode,
+        ?string $stockAdjustmentStartDate,
+        ?string $stockAdjustmentEndDate,
+        ?int $stockAdjustmentCategoryId,
+        ?int $stockAdjustmentInWarehouseId,
+        ?int $stockAdjustmentOutWarehouseId,
+        ?string $stockAdjustmentProductUnitCode,
+        ?string $stockAdjustmentProductName,
+        ?int $stockAdjustmentProductCategoryId,
+        ?int $stockAdjustmentProductBrandId,
+
         ?ExecuteDTO $execute
     ) {
         $query = StockAdjustmentOutProductSerial::select('stock_adjustment_out_product_serials.*')
-            ->with(['company', 'branch', 'stockAdjustment', 'stockAdjustmentOutProduct'])
+            ->with([
+                'company',
+                'branch',
+                'stockAdjustment',
+                'stockAdjustmentOutProduct.productUnit.unit',
+                'stockAdjustmentOutProduct.productUnit.product.images',
+            ])
             ->join('companies', 'companies.id', '=', 'stock_adjustment_out_product_serials.company_id')
             ->join('stock_adjustments', 'stock_adjustments.id', '=', 'stock_adjustment_out_product_serials.stock_adjustment_id')
             ->join('stock_adjustment_out_products', 'stock_adjustment_out_products.id', '=', 'stock_adjustment_out_product_serials.stock_adjustment_out_product_id')
             ->join('product_units', 'product_units.id', '=', 'stock_adjustment_out_products.product_unit_id')
+            ->join('products', 'products.id', '=', 'product_units.product_id')
+            ->join('product_categories', 'product_categories.id', '=', 'products.category_id')
+            ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
             ->whereCompanyId('stock_adjustment_out_product_serials', $companyId)
             ->whereBranchId('stock_adjustment_out_product_serials', $branchId)
             ->withTrashed();
 
-        $query->where(function ($query) use ($withTrashed, $search, $productId, $stockAdjustmentId) {
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $stockAdjustmentCode,
+            $stockAdjustmentStartDate,
+            $stockAdjustmentEndDate,
+            $stockAdjustmentCategoryId,
+            $stockAdjustmentInWarehouseId,
+            $stockAdjustmentOutWarehouseId,
+            $stockAdjustmentProductUnitCode,
+            $stockAdjustmentProductName,
+            $stockAdjustmentProductCategoryId,
+            $stockAdjustmentProductBrandId,
+        ) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
 
@@ -53,12 +86,46 @@ class StockAdjustmentOutProductSerialActions
                 $query->search($search);
             }
 
-            if ($stockAdjustmentId) {
-                $query->where('stock_adjustment_id', $stockAdjustmentId);
+            $stockAdjustmentStartDateUtc = $stockAdjustmentStartDate ? TimezoneHelper::convertToUTC($stockAdjustmentStartDate) : null;
+            if ($stockAdjustmentStartDateUtc) {
+                $query->where('stock_adjustments.date', '>=', $stockAdjustmentStartDateUtc);
             }
 
-            if ($productId) {
-                $query->where('product_units.product_id', $productId);
+            $stockAdjustmentEndDateUtc = $stockAdjustmentEndDate ? TimezoneHelper::convertToUTC($stockAdjustmentEndDate) : null;
+            if ($stockAdjustmentEndDateUtc) {
+                $query->where('stock_adjustments.date', '<=', $stockAdjustmentEndDateUtc);
+            }
+
+            if ($stockAdjustmentCode) {
+                $query->where('stock_adjustments.code', $stockAdjustmentCode);
+            }
+
+            if ($stockAdjustmentCategoryId) {
+                $query->where('stock_adjustments.category_id', $stockAdjustmentCategoryId);
+            }
+
+            if ($stockAdjustmentInWarehouseId) {
+                $query->where('stock_adjustments.in_warehouse_id', $stockAdjustmentInWarehouseId);
+            }
+
+            if ($stockAdjustmentOutWarehouseId) {
+                $query->where('stock_adjustments.out_warehouse_id', $stockAdjustmentOutWarehouseId);
+            }
+
+            if ($stockAdjustmentProductUnitCode) {
+                $query->where('product_units.code', 'like', '%'.$stockAdjustmentProductUnitCode.'%');
+            }
+
+            if ($stockAdjustmentProductName) {
+                $query->where('products.name', 'like', '%'.$stockAdjustmentProductName.'%');
+            }
+
+            if ($stockAdjustmentProductCategoryId) {
+                $query->where('products.category_id', $stockAdjustmentProductCategoryId);
+            }
+
+            if ($stockAdjustmentProductBrandId) {
+                $query->where('products.brand_id', $stockAdjustmentProductBrandId);
             }
         });
 
@@ -75,8 +142,16 @@ class StockAdjustmentOutProductSerialActions
                     $companyId,
                     $branchId ?? '[null]',
                     empty($search) ? '[empty]' : $search,
-                    $stockAdjustmentId ?? '[null]',
-                    $productId ?? '[null]',
+                    empty($stockAdjustmentCode) ? '[empty]' : $stockAdjustmentCode,
+                    $stockAdjustmentStartDate ?? '[null]',
+                    $stockAdjustmentEndDate ?? '[null]',
+                    $stockAdjustmentCategoryId ?? '[null]',
+                    $stockAdjustmentInWarehouseId ?? '[null]',
+                    $stockAdjustmentOutWarehouseId ?? '[null]',
+                    empty($stockAdjustmentProductUnitCode) ? '[empty]' : $stockAdjustmentProductUnitCode,
+                    empty($stockAdjustmentProductName) ? '[empty]' : $stockAdjustmentProductName,
+                    $stockAdjustmentProductCategoryId ?? '[null]',
+                    $stockAdjustmentProductBrandId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',
@@ -128,7 +203,15 @@ class StockAdjustmentOutProductSerialActions
 
     public function read(StockAdjustmentOutProductSerial $stockAdjustmentOutProductSerial): StockAdjustmentOutProductSerial
     {
-        return $stockAdjustmentOutProductSerial->load(['company', 'branch', 'stockAdjustment', 'stockAdjustmentOutProduct']);
+        return $stockAdjustmentOutProductSerial->load([
+            'company',
+            'branch',
+            'stockAdjustment',
+            'stockAdjustmentOutProduct',
+            'stockAdjustmentOutProduct.stockAdjustment',
+            'stockAdjustmentOutProduct.productUnit.unit',
+            'stockAdjustmentOutProduct.productUnit.product.images',
+        ]);
     }
 
     public function create(StockAdjustmentOutProductSerialCreateDTO $data): StockAdjustmentOutProductSerial

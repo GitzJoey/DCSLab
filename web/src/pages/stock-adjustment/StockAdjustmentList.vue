@@ -19,10 +19,16 @@
   import { ErrorCode } from '@/types/enums/ErrorCode';
   import { formatDate, formatCurrency } from '@/utils/helper';
   import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+  import { FormInputDateTime, FormLabel, FormSelectSearch } from '@/components/Base/Form';
+  import StockAdjustmentCategoryService from '@/services/StockAdjustmentCategoryService';
+  import WarehouseService from '@/services/WarehouseService';
+  import { DropDownOption } from '@/types/models/DropDownOption';
 
   const { t } = useI18n();
   const router = useRouter();
   const stockAdjustmentService = new StockAdjustmentService();
+  const stockAdjustmentCategoryService = new StockAdjustmentCategoryService();
+  const warehouseService = new WarehouseService();
   const selectedUserLocationStore = useSelectedUserLocationStore();
 
   const emits = defineEmits([
@@ -36,6 +42,13 @@
   const deleteUlid = ref<string>('');
   const deleteModalShow = ref<boolean>(false);
   const expandDetail = ref<number | null>(null);
+  const startDate = ref<string | null>(null);
+  const endDate = ref<string | null>(null);
+  const searchText = ref<string>('');
+  const showAdvancedFilters = ref<boolean>(false);
+  const selectedCategoryId = ref<string | null>(null);
+  const selectedInWarehouseId = ref<string | null>(null);
+  const selectedOutWarehouseId = ref<string | null>(null);
 
   const stockAdjustmentLists = ref<Collection<Array<StockAdjustment>> | null>({
     data: [],
@@ -59,6 +72,33 @@
   const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
   const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
+  const categoryDDL = ref<Array<DropDownOption> | null>(null);
+  const categorySearch = ref<string>('');
+  const categoryOptions = computed(() =>
+    (categoryDDL.value ?? []).map((item) => ({
+      value: item.code,
+      label: item.name,
+    })),
+  );
+
+  const inWarehouseDDL = ref<Array<DropDownOption> | null>(null);
+  const inWarehouseSearch = ref<string>('');
+  const inWarehouseOptions = computed(() =>
+    (inWarehouseDDL.value ?? []).map((item) => ({
+      value: item.code,
+      label: item.name,
+    })),
+  );
+
+  const outWarehouseDDL = ref<Array<DropDownOption> | null>(null);
+  const outWarehouseSearch = ref<string>('');
+  const outWarehouseOptions = computed(() =>
+    (outWarehouseDDL.value ?? []).map((item) => ({
+      value: item.code,
+      label: item.name,
+    })),
+  );
+
   onMounted(async () => {
     emits('mode-state', ViewMode.LIST);
 
@@ -70,17 +110,29 @@
       return;
     }
 
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    startDate.value = formatDate(startOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
+    endDate.value = formatDate(endOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
+
     await getStockAdjustments('', true, 1, 10);
   });
 
   const getStockAdjustments = async (search: string, refresh: boolean, page: number, per_page: number) => {
     emits('loading-state', true);
+    searchText.value = search;
 
     const request: StockAdjustmentReadAnyPaginateRequest = {
       with_trashed: false,
       company_id: selectedUserLocation.value.company.id,
       branch_id: selectedUserLocation.value.branch.id,
       search,
+      start_date: startDate.value || null,
+      end_date: endDate.value || null,
+      category_id: selectedCategoryId.value,
+      in_warehouse_id: selectedInWarehouseId.value,
+      out_warehouse_id: selectedOutWarehouseId.value,
       refresh,
       page,
       per_page,
@@ -106,6 +158,117 @@
       data.pagination.page, 
       data.pagination.per_page
     );
+  };
+
+  const handleDateFilterChange = async () => {
+    const perPage = stockAdjustmentLists.value?.meta.per_page || 10;
+    await getStockAdjustments(searchText.value, true, 1, perPage);
+  };
+
+  const handleCategoryFilterChange = async () => {
+    const perPage = stockAdjustmentLists.value?.meta.per_page || 10;
+    await getStockAdjustments(searchText.value, true, 1, perPage);
+  };
+
+  const handleInWarehouseFilterChange = async () => {
+    const perPage = stockAdjustmentLists.value?.meta.per_page || 10;
+    await getStockAdjustments(searchText.value, true, 1, perPage);
+  };
+
+  const handleOutWarehouseFilterChange = async () => {
+    const perPage = stockAdjustmentLists.value?.meta.per_page || 10;
+    await getStockAdjustments(searchText.value, true, 1, perPage);
+  };
+
+  const loadInWarehouseDDL = async (search = '') => {
+    if (!selectedUserLocation.value) return;
+
+    const result = await warehouseService.readAnyGet({
+      with_trashed: false,
+      company_id: selectedUserLocation.value.company.id,
+      branch_id: selectedUserLocation.value.branch.id,
+      search,
+      status: undefined,
+      refresh: false,
+      limit: 20,
+    });
+
+    if (result.success && result.data) {
+      inWarehouseDDL.value = result.data.data.map((item: any) => ({
+        code: item.id,
+        name: item.name,
+      }));
+    }
+  };
+
+  const loadOutWarehouseDDL = async (search = '') => {
+    if (!selectedUserLocation.value) return;
+
+    const result = await warehouseService.readAnyGet({
+      with_trashed: false,
+      company_id: selectedUserLocation.value.company.id,
+      branch_id: selectedUserLocation.value.branch.id,
+      search,
+      status: undefined,
+      refresh: false,
+      limit: 20,
+    });
+
+    if (result.success && result.data) {
+      outWarehouseDDL.value = result.data.data.map((item: any) => ({
+        code: item.id,
+        name: item.name,
+      }));
+    }
+  };
+
+  const loadCategoryDDL = async (search = '') => {
+    if (!selectedUserLocation.value) return;
+
+    const result = await stockAdjustmentCategoryService.readAnyGet({
+      with_trashed: false,
+      company_id: selectedUserLocation.value.company.id,
+      search,
+      include_id: undefined,
+      refresh: false,
+      limit: 20,
+    });
+
+    if (result.success && result.data) {
+      categoryDDL.value = result.data.data.map((item: any) => ({
+        code: item.id,
+        name: item.name,
+      }));
+    }
+  };
+
+  const clearCategoryFilter = async () => {
+    selectedCategoryId.value = null;
+    await loadCategoryDDL('');
+    await handleCategoryFilterChange();
+  };
+
+  const clearInWarehouseFilter = async () => {
+    selectedInWarehouseId.value = null;
+    await loadInWarehouseDDL('');
+    await handleInWarehouseFilterChange();
+  };
+
+  const clearOutWarehouseFilter = async () => {
+    selectedOutWarehouseId.value = null;
+    await loadOutWarehouseDDL('');
+    await handleOutWarehouseFilterChange();
+  };
+
+  const toggleAdvancedFilters = async () => {
+    showAdvancedFilters.value = !showAdvancedFilters.value;
+    if (showAdvancedFilters.value) {
+      await Promise.all([
+        loadCategoryDDL(categorySearch.value),
+        loadInWarehouseDDL(inWarehouseSearch.value),
+        loadOutWarehouseDDL(outWarehouseSearch.value),
+      ]);
+    }
   };
 
   const viewSelected = (idx: number) => {
@@ -184,6 +347,68 @@
   <!-- page layout -->
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
+      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3 relative z-50">
+        <div class="col-span-12 lg:col-span-3">
+          <FormLabel>
+            {{ t('views.stock_adjustment.fields.start_date') }}
+          </FormLabel>
+          <FormInputDateTime v-model="startDate" @change="handleDateFilterChange" />
+        </div>
+        <div class="col-span-12 lg:col-span-3">
+          <FormLabel>
+            {{ t('views.stock_adjustment.fields.end_date') }}
+          </FormLabel>
+          <FormInputDateTime v-model="endDate" @change="handleDateFilterChange" />
+        </div>
+        <div class="col-span-12 md:col-span-12 lg:col-span-1 flex items-end">
+          <Button
+            variant="soft-secondary"
+            class="shadow-sm border-slate-300 bg-slate-100/80 hover:bg-slate-200 hover:border-slate-400 dark:border-darkmode-300 dark:bg-darkmode-300/40 dark:hover:bg-darkmode-300"
+            @click="toggleAdvancedFilters"
+          >
+            <Lucide icon="Filter" class="w-4 h-5" />
+          </Button>
+        </div>
+      </div>
+      <div v-if="showAdvancedFilters" class="grid grid-cols-12 gap-4 gap-y-3 mb-3 relative z-50">
+        <div class="col-span-12 md:col-span-4 lg:col-span-2">
+          <FormLabel>
+            {{ t('views.stock_adjustment.fields.category_id') }}
+          </FormLabel>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 relative z-30">
+              <FormSelectSearch v-model="selectedCategoryId" v-model:search="categorySearch" :options="categoryOptions"
+                :placeholder="t('components.dropdown.placeholder')" @change="handleCategoryFilterChange"
+                @search="loadCategoryDDL" @clear="clearCategoryFilter" />
+            </div>
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-4 lg:col-span-2">
+          <FormLabel>
+            {{ t('views.stock_adjustment.fields.in_warehouse_id') }}
+          </FormLabel>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 relative z-30">
+              <FormSelectSearch v-model="selectedInWarehouseId" v-model:search="inWarehouseSearch"
+                :options="inWarehouseOptions" :placeholder="t('components.dropdown.placeholder')"
+                @change="handleInWarehouseFilterChange" @search="loadInWarehouseDDL" @clear="clearInWarehouseFilter" />
+            </div>
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-4 lg:col-span-2">
+          <FormLabel>
+            {{ t('views.stock_adjustment.fields.out_warehouse_id') }}
+          </FormLabel>
+          <div class="flex items-center gap-2">
+            <div class="flex-1 relative z-30">
+              <FormSelectSearch v-model="selectedOutWarehouseId" v-model:search="outWarehouseSearch"
+                :options="outWarehouseOptions" :placeholder="t('components.dropdown.placeholder')"
+                @change="handleOutWarehouseFilterChange" @search="loadOutWarehouseDDL"
+                @clear="clearOutWarehouseFilter" />
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- data list wrapper -->
       <DataList
         :title="t('views.stock_adjustment.table.title')"
@@ -410,14 +635,17 @@
                                       {{ p.product_unit.unit.name }}
                                     </span>
                                   </div>
-                                  <div v-if="p.serials && p.serials.length > 0" class="mt-1">
+                                  <div v-if="p.product_unit?.product?.is_use_serial_number" class="mt-1">
                                     <div class="text-xs text-slate-500">{{ t('views.product.fields.serial_number') }}:
                                     </div>
-                                    <div class="flex flex-wrap gap-1 mt-0.5">
+                                    <div v-if="p.serials && p.serials.length > 0" class="flex flex-wrap gap-1 mt-0.5">
                                       <span v-for="s in p.serials" :key="s.id"
                                         class="px-1.5 py-0.5 bg-slate-100 dark:bg-darkmode-600 rounded text-xs border border-slate-200 dark:border-darkmode-400">
                                         {{ s.serial }}
                                       </span>
+                                    </div>
+                                    <div v-else class="text-slate-500 text-xs italic mt-0.5">
+                                      {{ t('components.data-list.data_not_found') }}
                                     </div>
                                   </div>
                                 </div>
@@ -448,14 +676,17 @@
                                       {{ p.product_unit.unit.name }}
                                     </span>
                                   </div>
-                                  <div v-if="p.serials && p.serials.length > 0" class="mt-1">
+                                  <div v-if="p.product_unit?.product?.is_use_serial_number" class="mt-1">
                                     <div class="text-xs text-slate-500">{{ t('views.product.fields.serial_number') }}:
                                     </div>
-                                    <div class="flex flex-wrap gap-1 mt-0.5">
+                                    <div v-if="p.serials && p.serials.length > 0" class="flex flex-wrap gap-1 mt-0.5">
                                       <span v-for="s in p.serials" :key="s.id"
                                         class="px-1.5 py-0.5 bg-slate-100 dark:bg-darkmode-600 rounded text-xs border border-slate-200 dark:border-darkmode-400">
                                         {{ s.serial }}
                                       </span>
+                                    </div>
+                                    <div v-else class="text-slate-500 text-xs italic mt-0.5">
+                                      {{ t('components.data-list.data_not_found') }}
                                     </div>
                                   </div>
                                 </div>

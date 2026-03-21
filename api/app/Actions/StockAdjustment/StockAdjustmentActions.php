@@ -42,6 +42,11 @@ class StockAdjustmentActions
         ?int $branchId,
 
         ?string $search,
+        ?string $startDate,
+        ?string $endDate,
+        ?int $categoryId,
+        ?int $inWarehouseId,
+        ?int $outWarehouseId,
 
         ?ExecuteDTO $execute
     ) {
@@ -49,10 +54,12 @@ class StockAdjustmentActions
             ->with(['company', 'branch', 'category', 'inWarehouse', 'outWarehouse'])
             ->when($execute?->pagination, function ($query) {
                 $query->with([
-                    'inProducts.productUnit.product',
+                    'inProducts.productUnit.product.images',
                     'inProducts.productUnit.unit',
-                    'outProducts.productUnit.product',
+                    'inProducts.serials',
+                    'outProducts.productUnit.product.images',
                     'outProducts.productUnit.unit',
+                    'outProducts.serials',
                 ]);
             })
             ->join('companies', 'companies.id', '=', 'stock_adjustments.company_id')
@@ -60,12 +67,40 @@ class StockAdjustmentActions
             ->whereBranchId('stock_adjustments', $branchId)
             ->withTrashed();
 
-        $query->where(function ($query) use ($withTrashed, $search) {
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $startDate,
+            $endDate,
+            $categoryId,
+            $inWarehouseId,
+            $outWarehouseId,
+        ) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
                 $query->search($search);
+            }
+
+            if ($startDate) {
+                $query->where('stock_adjustments.date', '>=', TimezoneHelper::convertToUTC($startDate));
+            }
+
+            if ($endDate) {
+                $query->where('stock_adjustments.date', '<=', TimezoneHelper::convertToUTC($endDate));
+            }
+
+            if ($categoryId) {
+                $query->where('stock_adjustments.category_id', $categoryId);
+            }
+
+            if ($inWarehouseId) {
+                $query->where('stock_adjustments.in_warehouse_id', $inWarehouseId);
+            }
+
+            if ($outWarehouseId) {
+                $query->where('stock_adjustments.out_warehouse_id', $outWarehouseId);
             }
         });
 
@@ -81,6 +116,11 @@ class StockAdjustmentActions
                     $companyId,
                     $branchId ?? '[null]',
                     empty($search) ? '[empty]' : $search,
+                    $startDate ?? '[null]',
+                    $endDate ?? '[null]',
+                    $categoryId ?? '[null]',
+                    $inWarehouseId ?? '[null]',
+                    $outWarehouseId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',
@@ -137,8 +177,14 @@ class StockAdjustmentActions
             'category',
             'inWarehouse',
             'outWarehouse',
-            'inProducts.productUnit.product',
-            'outProducts.productUnit.product',
+            'inProducts.productUnit',
+            'inProducts.productUnit.unit',
+            'inProducts.productUnit.product.images',
+            'inProducts.serials',
+            'outProducts.productUnit',
+            'outProducts.productUnit.unit',
+            'outProducts.productUnit.product.images',
+            'outProducts.serials',
         ]);
     }
 

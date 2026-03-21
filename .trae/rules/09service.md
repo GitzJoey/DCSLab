@@ -72,6 +72,18 @@ if (args.status) queryParams['status'] = args.status;
 if (args.company_id) queryParams['company_id'] = args.company_id;
 ```
 
+### d. Konsistensi Urutan Query `readAny` untuk Stock Adjustment Product
+Untuk service berikut:
+- `StockAdjustmentInProductService`
+- `StockAdjustmentOutProductService`
+- `StockAdjustmentInProductSerialService`
+- `StockAdjustmentOutProductSerialService`
+
+Urutan pengisian `queryParams` pada `readAnyPaginate` dan `readAnyGet` wajib mengikuti 3 blok:
+1. Basis: `with_trashed`, `company_id`, `branch_id`, `search`
+2. Filter: `stock_adjustment_id`, `start_date`, `end_date`, `category_id`, `in_warehouse_id`, `out_warehouse_id`, `product_unit_code`, `product_name`, `product_category_id`, `product_brand_id`
+3. Eksekusi: `refresh`, lalu `paginate` atau `get`
+
 ## 4. Return Types & Response Handling
 Selalu gunakan tipe data yang eksplisit.
 

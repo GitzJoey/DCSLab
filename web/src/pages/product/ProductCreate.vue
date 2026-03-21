@@ -68,6 +68,10 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     title: 'views.product.field_groups.unit_settings',
     state: CardState.Expanded,
   },
+  {
+    title: 'views.product.fields.images',
+    state: CardState.Expanded,
+  },
   { title: '', state: CardState.Hidden, id: 'button' },
 ]);
 
@@ -605,13 +609,6 @@ watch(
               <FormErrorMessages :messages="productForm.errors.status" />
             </div>
 
-            <!-- Column 12: Images -->
-            <div class="col-span-12">
-              <FormLabel>
-                {{ t('views.product.fields.images') }}
-              </FormLabel>
-              <ProductImagesField v-model="productForm.image_hashes" />
-            </div>
           </div>
         </div>
       </template>
@@ -858,6 +855,16 @@ watch(
               {{ t('views.product.actions.add_unit') }}
             </Button>
           </div>
+        </div>
+      </template>
+
+      <!-- Card 4: Product Images -->
+      <template #card-items-3>
+        <div class="p-5">
+          <FormLabel>
+            {{ t('views.product.fields.images') }}
+          </FormLabel>
+          <ProductImagesField v-model="productForm.image_hashes" />
         </div>
       </template>
 

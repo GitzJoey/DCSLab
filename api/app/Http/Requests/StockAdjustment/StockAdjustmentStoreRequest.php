@@ -34,9 +34,9 @@ class StockAdjustmentStoreRequest extends FormRequest
             'code' => ['required', 'string', 'max:255'],
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'category_id' => ['required', 'integer', new ExistsForCompany('stock_adjustment_categories', $this->company_id)],
-            'in_warehouse_id' => ['nullable', 'integer', 'required_without:out_warehouse_id', new IsValidWarehouse($this->company_id, false)],
-            'out_warehouse_id' => ['nullable', 'integer', 'different:in_warehouse_id', 'required_without:in_warehouse_id', new IsValidWarehouse($this->company_id, false)],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'in_warehouse_id' => ['present', 'nullable', 'integer', 'required_without:out_warehouse_id', new IsValidWarehouse($this->company_id, false)],
+            'out_warehouse_id' => ['present', 'nullable', 'integer', 'different:in_warehouse_id', 'required_without:in_warehouse_id', new IsValidWarehouse($this->company_id, false)],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
             'is_posted' => ['required', 'boolean'],
 
             'in_products' => ['array', 'required_with:in_warehouse_id'],
@@ -44,7 +44,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'in_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
             'in_products.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
             'in_products.*.product_unit_cogs' => ['required', 'numeric', 'min:0'],
-            'in_products.*.remarks' => ['nullable', 'string', 'max:255'],
+            'in_products.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
             'in_products.*.serials' => ['present', 'array'],
             'in_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
@@ -53,7 +53,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'out_products.*.qty' => ['required', 'numeric', 'min:1'],
             'out_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
             'out_products.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
-            'out_products.*.remarks' => ['nullable', 'string', 'max:255'],
+            'out_products.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
             'out_products.*.serials' => ['present', 'array'],
             'out_products.*.serials.*.serial' => ['required', 'string', 'max:255'],

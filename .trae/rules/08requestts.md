@@ -99,3 +99,18 @@ Semua filter tambahan (selain `company_id`, `branch_id`, dan `search`) **WAJIB**
 
 ## 5. Referensi
 Selalu pastikan interface ini sinkron dengan parameter yang diharapkan oleh Controller API di sisi backend (lihat `06controller.md` untuk urutan parameter di backend, meskipun di frontend kita mengirim object JSON/Query param, menjaga konsistensi penamaan sangat penting).
+
+## 6. Aturan Khusus Stock Adjustment Product `readAny`
+- Untuk request type:
+  - `StockAdjustmentInProductReadAnyPaginateRequest`
+  - `StockAdjustmentInProductReadAnyGetRequest`
+  - `StockAdjustmentOutProductReadAnyPaginateRequest`
+  - `StockAdjustmentOutProductReadAnyGetRequest`
+  - `StockAdjustmentInProductSerialReadAnyPaginateRequest`
+  - `StockAdjustmentInProductSerialReadAnyGetRequest`
+  - `StockAdjustmentOutProductSerialReadAnyPaginateRequest`
+  - `StockAdjustmentOutProductSerialReadAnyGetRequest`
+- Urutan property wajib mengikuti 3 blok:
+  1. `with_trashed`, `company_id`, `branch_id`, `search`
+  2. `stock_adjustment_id`, `start_date`, `end_date`, `category_id`, `in_warehouse_id`, `out_warehouse_id`, `product_unit_code`, `product_name`, `product_category_id`, `product_brand_id`
+  3. `refresh` lalu `page/per_page` atau `limit`

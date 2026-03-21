@@ -34,12 +34,12 @@ class StockAdjustmentOutProductUpdateRequest extends FormRequest
             'qty' => ['required', 'numeric', 'min:1'],
             'product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'delete_serial_ids' => ['nullable', 'array'],
+            'delete_serial_ids' => ['present', 'nullable', 'array'],
             'delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
-            'serials' => ['nullable', 'array'],
-            'serials.*.id' => ['nullable', 'integer', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
+            'serials' => ['present', 'nullable', 'array'],
+            'serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
             'serials.*.serial' => ['required', 'string', 'max:255'],
         ];
     }

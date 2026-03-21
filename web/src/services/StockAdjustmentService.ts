@@ -92,11 +92,15 @@ export default class StockAdjustmentService {
 
     try {
       const queryParams: Record<string, any> = {};
-      if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
+      queryParams['with_trashed'] = args.with_trashed;
       queryParams['company_id'] = args.company_id;
-      if (args.branch_id) queryParams['branch_id'] = args.branch_id;
-
-      if (args.search) queryParams['search'] = args.search;
+      queryParams['branch_id'] = args.branch_id;
+      queryParams['search'] = args.search;
+      queryParams['start_date'] = args.start_date;
+      queryParams['end_date'] = args.end_date;
+      queryParams['category_id'] = args.category_id;
+      queryParams['in_warehouse_id'] = args.in_warehouse_id;
+      queryParams['out_warehouse_id'] = args.out_warehouse_id;
 
       queryParams['refresh'] = args.refresh;
       queryParams['paginate'] = {
@@ -143,9 +147,13 @@ export default class StockAdjustmentService {
       const queryParams: Record<string, any> = {};
       queryParams['with_trashed'] = args.with_trashed;
       queryParams['company_id'] = args.company_id;
-      if (args.branch_id) queryParams['branch_id'] = args.branch_id;
-
-      if (args.search) queryParams['search'] = args.search;
+      queryParams['branch_id'] = args.branch_id;
+      queryParams['search'] = args.search;
+      queryParams['start_date'] = args.start_date;
+      queryParams['end_date'] = args.end_date;
+      queryParams['category_id'] = args.category_id;
+      queryParams['in_warehouse_id'] = args.in_warehouse_id;
+      queryParams['out_warehouse_id'] = args.out_warehouse_id;
 
       queryParams['refresh'] = args.refresh;
       queryParams['get'] = {
