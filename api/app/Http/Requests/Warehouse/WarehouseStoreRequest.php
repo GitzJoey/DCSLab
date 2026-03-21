@@ -43,10 +43,10 @@ class WarehouseStoreRequest extends FormRequest
             'branch_id' => ['required', 'integer', 'bail', new IsValidBranch($this->input('company_id'), true)],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:255'],
-            'contact' => ['nullable', 'string', 'max:255'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'address' => ['present', 'nullable', 'string', 'max:255'],
+            'city' => ['present', 'nullable', 'string', 'max:255'],
+            'contact' => ['present', 'nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
             'status' => ['required', new Enum(RecordStatusEnum::class), new WarehouseStoreValidStatus($this->input('default'))],
         ];
     }

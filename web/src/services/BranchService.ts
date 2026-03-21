@@ -32,11 +32,11 @@ export default class BranchService {
       company_id: '',
       code: '_AUTO_',
       name: '',
-      address: '',
-      city: '',
-      contact: '',
+      address: null,
+      city: null,
+      contact: null,
       is_main: false,
-      remarks: '',
+      remarks: null,
       status: 'ACTIVE',
     });
 
@@ -186,11 +186,11 @@ export default class BranchService {
       company_id: '',
       code: '_AUTO_',
       name: '',
-      address: '',
-      city: '',
-      contact: '',
+      address: null,
+      city: null,
+      contact: null,
       is_main: false,
-      remarks: '',
+      remarks: null,
       status: 'ACTIVE',
     });
 

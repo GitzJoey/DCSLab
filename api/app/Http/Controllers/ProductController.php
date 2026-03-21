@@ -217,8 +217,6 @@ class ProductController extends BaseController
                 return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
             }
 
-            if (! array_key_exists('remarks', $validatedRequest)) $validatedRequest['remarks'] = null;
-
             $units = $validatedRequest['product_units'];
 
             $unitCodes = array_map(fn ($u) => $u['code'], $units);
@@ -321,8 +319,6 @@ class ProductController extends BaseController
                 }
             }
 
-            if (! array_key_exists('remarks', $validatedRequest)) $validatedRequest['remarks'] = null;
-
             $result = $this->productServiceActions->create(
                 new ProductServiceCreateDTO(
                     companyId: $validatedRequest['company_id'],
@@ -382,8 +378,6 @@ class ProductController extends BaseController
                     return response()->error(['vat_rate' => [trans('rules.product.vat.out_of_range')]], 422);
                 }
             }
-
-            if (! array_key_exists('remarks', $validatedRequest)) $validatedRequest['remarks'] = null;
 
             if (! array_key_exists('delete_product_unit_ids', $validatedRequest)) $validatedRequest['delete_product_unit_ids'] = null;
 
@@ -501,8 +495,6 @@ class ProductController extends BaseController
                     return response()->error(['vat_rate' => [trans('rules.product.vat.out_of_range')]], 422);
                 }
             }
-
-            if (! array_key_exists('remarks', $validatedRequest)) $validatedRequest['remarks'] = null;
 
             $result = $this->productServiceActions->update(
                 product: $product,

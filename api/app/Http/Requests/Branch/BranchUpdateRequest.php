@@ -43,11 +43,11 @@ class BranchUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:255'],
-            'contact' => ['nullable', 'string', 'max:255'],
+            'address' => ['present', 'nullable', 'string', 'max:255'],
+            'city' => ['present', 'nullable', 'string', 'max:255'],
+            'contact' => ['present', 'nullable', 'string', 'max:255'],
             'is_main' => ['required', 'boolean', 'bail', new BranchUpdateValidIsMain($this->route('branch'))],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
             'status' => ['required', new Enum(RecordStatusEnum::class), 'bail', new BranchUpdateValidStatus($this->input('is_main'))],
         ];
     }

@@ -29,7 +29,7 @@ class InvestorUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -52,7 +52,6 @@ class InvestorUpdateRequest extends FormRequest
     {
         $this->merge([
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
-            'remarks' => $this->has('remarks') ? $this['remarks'] : null,
         ]);
     }
 }

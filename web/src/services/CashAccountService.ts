@@ -41,7 +41,7 @@ export default class CashAccountService {
       name: '',
       is_bank: false,
       is_active: true,
-      remarks: '',
+      remarks: null,
     });
 
     return form;
@@ -198,7 +198,7 @@ export default class CashAccountService {
       name: '',
       is_bank: false,
       is_active: true,
-      remarks: '',
+      remarks: null,
     });
 
     return form;

@@ -51,8 +51,6 @@ class CompanyController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            $validatedRequest['address'] = $validatedRequest['address'] ?? null;
-
             if ($validatedRequest['default']) {
                 $this->companyActions->resetDefault(Auth::user());
             }
@@ -191,8 +189,6 @@ class CompanyController extends BaseController
                 Auth::user(), $validatedRequest['name'], $company->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            $validatedRequest['address'] = $validatedRequest['address'] ?? null;
 
             if ($validatedRequest['default']) {
                 $this->companyActions->resetDefault(Auth::user());

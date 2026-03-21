@@ -34,7 +34,7 @@ class CustomerGroupStoreRequest extends FormRequest
             'max_open_invoice' => ['required', 'integer', 'min:0'],
             'max_outstanding_invoice' => ['required', 'numeric', 'min:0'],
             'max_invoice_age' => ['required', 'integer', 'min:0'],
-            'payment_term_type' => [new Enum(PaymentTermTypeEnum::class)],
+            'payment_term_type' => ['required', new Enum(PaymentTermTypeEnum::class)],
             'payment_term' => ['required', 'integer', 'min:0'],
             'selling_point' => ['required', 'integer', 'max:255'],
             'selling_point_multiple' => ['required', 'numeric', 'min:0'],
@@ -43,9 +43,9 @@ class CustomerGroupStoreRequest extends FormRequest
             'price_markup_nominal' => ['required', 'numeric', 'min:0'],
             'price_markdown_percent' => ['required', 'numeric', 'min:0'],
             'price_markdown_nominal' => ['required', 'numeric', 'min:0'],
-            'rounding_type' => [new Enum(RoundingTypeEnum::class)],
+            'rounding_type' => ['required', new Enum(RoundingTypeEnum::class)],
             'rounding_digit' => ['required', 'integer', 'min:0'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -79,7 +79,6 @@ class CustomerGroupStoreRequest extends FormRequest
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
             'payment_term_type' => PaymentTermTypeEnum::isValid($this->payment_term_type) ? PaymentTermTypeEnum::resolveToEnum($this->payment_term_type)->value : null,
             'rounding_type' => RoundingTypeEnum::isValid($this->rounding_type) ? RoundingTypeEnum::resolveToEnum($this->rounding_type)->value : null,
-            'remarks' => $this->has('remarks') ? $this['remarks'] : null,
         ]);
     }
 }

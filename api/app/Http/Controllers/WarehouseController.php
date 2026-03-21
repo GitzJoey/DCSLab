@@ -53,11 +53,6 @@ class WarehouseController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            $validatedRequest['address'] = $validatedRequest['address'] ?? null;
-            $validatedRequest['city'] = $validatedRequest['city'] ?? null;
-            $validatedRequest['contact'] = $validatedRequest['contact'] ?? null;
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
-
             $result = $this->warehouseActions->create($validatedRequest);
 
             DB::commit();
@@ -191,11 +186,6 @@ class WarehouseController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $warehouse->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            $validatedRequest['address'] = $validatedRequest['address'] ?? null;
-            $validatedRequest['city'] = $validatedRequest['city'] ?? null;
-            $validatedRequest['contact'] = $validatedRequest['contact'] ?? null;
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
 
             $result = $this->warehouseActions->update(
                 warehouse: $warehouse,

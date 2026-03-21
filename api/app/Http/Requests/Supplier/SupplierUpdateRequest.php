@@ -32,14 +32,14 @@ class SupplierUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:255'],
+            'address' => ['present', 'nullable', 'string', 'max:255'],
+            'city' => ['present', 'nullable', 'string', 'max:255'],
             'payment_term_type' => ['required', new Enum(PaymentTermTypeEnum::class)],
             'payment_term' => ['required', 'integer'],
             'taxable_enterprise' => ['required', 'boolean'],
-            'tax_id' => ['nullable', 'string', 'max:255'],
+            'tax_id' => ['present', 'nullable', 'string', 'max:255'],
             'status' => ['required', new Enum(RecordStatusEnum::class)],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -64,12 +64,8 @@ class SupplierUpdateRequest extends FormRequest
     {
         $this->merge([
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
-            'address' => $this->filled('address') ? $this['address'] : null,
-            'city' => $this->filled('city') ? $this['city'] : null,
-            'tax_id' => $this->filled('tax_id') ? $this['tax_id'] : null,
             'payment_term_type' => PaymentTermTypeEnum::isValid($this->payment_term_type) ? PaymentTermTypeEnum::resolveToEnum($this->payment_term_type)->value : null,
             'status' => RecordStatusEnum::isValid($this->status) ? RecordStatusEnum::resolveToEnum($this->status)->value : null,
-            'remarks' => $this->filled('remarks') ? $this['remarks'] : null,
         ]);
     }
 }

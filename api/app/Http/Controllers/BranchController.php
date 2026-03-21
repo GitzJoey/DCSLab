@@ -52,15 +52,9 @@ class BranchController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            $validatedRequest['address'] = $validatedRequest['address'] ?? null;
-            $validatedRequest['city'] = $validatedRequest['city'] ?? null;
-            $validatedRequest['contact'] = $validatedRequest['contact'] ?? null;
-
             if ($validatedRequest['is_main']) {
                 $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
             }
-
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
 
             $result = $this->branchActions->create($validatedRequest);
 
@@ -197,16 +191,10 @@ class BranchController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            $validatedRequest['address'] = $validatedRequest['address'] ?? null;
-            $validatedRequest['city'] = $validatedRequest['city'] ?? null;
-            $validatedRequest['contact'] = $validatedRequest['contact'] ?? null;
-
             if ($validatedRequest['is_main']) {
                 $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
                 $branch->refresh();
             }
-
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
 
             $result = $this->branchActions->update(
                 branch: $branch,

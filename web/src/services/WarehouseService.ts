@@ -36,10 +36,10 @@ export default class WarehouseService {
       branch_id: '',
       code: '_AUTO_',
       name: '',
-      address: '',
-      city: '',
-      contact: '',
-      remarks: '',
+      address: null,
+      city: null,
+      contact: null,
+      remarks: null,
       status: 'ACTIVE',
     });
 
@@ -192,10 +192,10 @@ export default class WarehouseService {
       branch_id: '',
       code: '_AUTO_',
       name: '',
-      address: '',
-      city: '',
-      contact: '',
-      remarks: '',
+      address: null,
+      city: null,
+      contact: null,
+      remarks: null,
       status: 'ACTIVE',
     });
 

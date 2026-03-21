@@ -33,17 +33,17 @@ class CustomerStoreRequest extends FormRequest
             'code' => ['required', 'string', 'max:255'],
             'is_member' => ['required', 'boolean'],
             'name' => ['required', 'string', 'max:255'],
-            'group_id' => ['nullable', 'integer', 'bail', new ExistsForCompany('customer_groups', $this->company_id)],
-            'zone' => ['nullable', 'string', 'max:255'],
+            'group_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('customer_groups', $this->company_id)],
+            'zone' => ['present', 'nullable', 'string', 'max:255'],
             'max_open_invoice' => ['required', 'integer', 'min:0'],
             'max_outstanding_invoice' => ['required', 'numeric', 'min:0'],
             'max_invoice_age' => ['required', 'integer', 'min:0'],
-            'payment_term_type' => ['nullable', new Enum(PaymentTermTypeEnum::class)],
+            'payment_term_type' => ['present', 'nullable', new Enum(PaymentTermTypeEnum::class)],
             'payment_term' => ['required', 'integer', 'min:0'],
             'taxable_enterprise' => ['required', 'boolean'],
-            'tax_id' => ['nullable', 'string', 'max:255'],
+            'tax_id' => ['present', 'nullable', 'string', 'max:255'],
             'status' => ['required', new Enum(RecordStatusEnum::class)],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -79,7 +79,6 @@ class CustomerStoreRequest extends FormRequest
             'group_id' => $this->filled('group_id') ? HashidsHelper::decodeId($this->group_id) : null,
             'payment_term_type' => PaymentTermTypeEnum::isValid($this->payment_term_type) ? PaymentTermTypeEnum::resolveToEnum($this->payment_term_type)->value : null,
             'status' => RecordStatusEnum::isValid($this->status) ? RecordStatusEnum::resolveToEnum($this->status)->value : null,
-            'remarks' => $this->filled('remarks') ? $this['remarks'] : null,
         ]);
     }
 }

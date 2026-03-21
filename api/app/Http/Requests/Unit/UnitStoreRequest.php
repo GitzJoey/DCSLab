@@ -40,7 +40,7 @@ class UnitStoreRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'description' => ['present', 'nullable', 'string'],
             'type' => ['required', Rule::enum(UnitTypeEnum::class)],
         ];
     }
@@ -58,10 +58,8 @@ class UnitStoreRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        if ($this->has('company_id')) {
-            $this->merge([
-                'company_id' => HashidsHelper::decodeId($this->company_id),
-            ]);
-        }
+        $this->merge([
+            'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
+        ]);
     }
 }

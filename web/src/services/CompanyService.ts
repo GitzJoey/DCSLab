@@ -31,7 +31,7 @@ export default class CompanyService {
     const form = useForm('post', url, {
       code: '_AUTO_',
       name: '',
-      address: '',
+      address: null,
       default: false,
       status: 'ACTIVE',
     });
@@ -171,7 +171,7 @@ export default class CompanyService {
     const form = useForm('post', url, {
       code: '_AUTO_',
       name: '',
-      address: '',
+      address: null,
       default: false,
       status: 'ACTIVE',
     });

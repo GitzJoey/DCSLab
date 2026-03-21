@@ -37,7 +37,7 @@ class ProductServiceUpdateRequest extends FormRequest
             'is_taxable' => ['required', 'boolean'],
             'vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'is_price_include_vat' => ['required', 'boolean'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
             'status' => ['required', new Enum(RecordStatusEnum::class)],
             'unit_id' => ['required', 'integer', new ExistsForCompany('units', $this->company_id)],
             'price' => ['required', 'numeric', 'min:0'],

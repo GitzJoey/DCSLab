@@ -31,7 +31,7 @@ class CompanyUpdateRequest extends FormRequest
         return [
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'address' => ['nullable', 'string', 'max:255'],
+            'address' => ['present', 'nullable', 'string', 'max:255'],
             'default' => ['required', 'boolean', new CompanyUpdateValidDefault($user)],
             'status' => ['required', new Enum(RecordStatusEnum::class), new CompanyUpdateValidStatus($this->input('default'))],
         ];

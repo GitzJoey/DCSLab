@@ -42,7 +42,7 @@ class CashAccountStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'is_bank' => ['required', 'boolean'],
             'is_active' => ['required', 'boolean'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 

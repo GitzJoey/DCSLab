@@ -41,7 +41,7 @@ class CashAccountUpdateRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'is_bank' => ['required', 'boolean'],
             'is_active' => ['required', 'boolean'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -59,10 +59,8 @@ class CashAccountUpdateRequest extends FormRequest
 
     public function prepareForValidation()
     {
-        if ($this->has('company_id')) {
-            $this->merge([
-                'company_id' => HashidsHelper::decodeId($this->company_id),
-            ]);
-        }
+        $this->merge([
+            'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
+        ]);
     }
 }
