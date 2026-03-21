@@ -3,6 +3,7 @@
 namespace App\Http\Requests\StockAdjustment;
 
 use App\Helpers\HashidsHelper;
+use App\Models\ProductUnit;
 use App\Models\StockAdjustment;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
@@ -47,7 +48,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'in_products.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
             'in_products.*.serials' => ['present', 'array'],
-            'in_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
+            'in_products.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
 
             'out_products' => ['array', 'required_with:out_warehouse_id'],
             'out_products.*.qty' => ['required', 'numeric', 'min:1'],
@@ -56,7 +57,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'out_products.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
             'out_products.*.serials' => ['present', 'array'],
-            'out_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
+            'out_products.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
         ];
     }
 
@@ -106,5 +107,36 @@ class StockAdjustmentStoreRequest extends FormRequest
             }
             $this->merge(['out_products' => $outProducts]);
         }
+    }
+
+    public function withValidator($validator)
+    {
+        // $validator->after(function ($validator) {
+        //     $inProductProductUnitIds = collect($validator->getData()['in_products'] ?? [])
+        //         ->pluck('product_unit_id')
+        //         ->toArray();
+
+        //     $inProductUnits = ProductUnit::with('product')->whereIn('id', $inProductProductUnitIds)->get();
+
+        //     $inProducts = $validator->getData()['in_products'] ?? [];
+
+        //     $inProducts = collect($inProducts)
+        //         ->map(function ($item) use ($inProductUnits) {
+        //             $productUnit = $inProductUnits->firstWhere('id', $item['product_unit_id']);
+        //             $item['product_unit'] = $productUnit;
+        //             return $item;
+        //         })
+        //         ->toArray();
+
+        //     foreach ($inProducts as $item) {
+        //         $product = $item['product_unit']?->product;
+        //         if ($product?->is_use_serial_number) {
+        //             $baseQty = $item['qty'] * $item['product_unit_conversion_value'];
+        //             if (count($item['serials'] ?? []) !== $baseQty) {
+        //                 $validator->errors()->add('in_products.*.serials', trans('validation.stock_adjustment_in_product.serial_count_not_match_qty'));
+        //             }
+        //         }
+        //     }
+        // });
     }
 }

@@ -36,7 +36,7 @@ class StockAdjustmentOutProductStoreRequest extends FormRequest
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
 
             'serials' => ['present', 'nullable', 'array'],
-            'serials.*.serial' => ['required', 'string', 'max:255'],
+            'serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
         ];
     }
 

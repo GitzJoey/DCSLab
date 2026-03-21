@@ -54,7 +54,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'in_products.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
             'in_products.*.serials' => ['present', 'array'],
             'in_products.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
-            'in_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
+            'in_products.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
 
             'delete_out_product_ids' => ['present', 'array'],
             'delete_out_product_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_products', $this->company_id)],
@@ -69,7 +69,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'out_products.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
             'out_products.*.serials' => ['present', 'array'],
             'out_products.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
-            'out_products.*.serials.*.serial' => ['required', 'string', 'max:255'],
+            'out_products.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
         ];
     }
 
