@@ -58,7 +58,9 @@ class StockAdjustmentInProductActions
             ->with([
                 'company',
                 'branch',
-                'stockAdjustment',
+                'stockAdjustment.category',
+                'stockAdjustment.inWarehouse',
+                'stockAdjustment.outWarehouse',
                 'productUnit',
                 'productUnit.unit',
                 'productUnit.product.images',

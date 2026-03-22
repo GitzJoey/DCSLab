@@ -3,6 +3,7 @@
 namespace App\Http\Requests\StockAdjustmentOutProduct;
 
 use App\Helpers\HashidsHelper;
+use App\Models\ProductUnit;
 use App\Models\StockAdjustmentOutProduct;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
@@ -61,5 +62,41 @@ class StockAdjustmentOutProductStoreRequest extends FormRequest
             'stock_adjustment_id' => $this->filled('stock_adjustment_id') ? HashidsHelper::decodeId($this->stock_adjustment_id) : null,
             'product_unit_id' => $this->filled('product_unit_id') ? HashidsHelper::decodeId($this->product_unit_id) : null,
         ]);
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($validator->errors()->isNotEmpty()) {
+                return;
+            }
+
+            $productUnitId = $validator->getData()['product_unit_id'] ?? null;
+            $qty = $validator->getData()['qty'] ?? null;
+            $conversionValue = $validator->getData()['product_unit_conversion_value'] ?? null;
+            $serials = $validator->getData()['serials'] ?? [];
+
+            if (empty($productUnitId) || ! is_numeric($qty) || ! is_numeric($conversionValue)) {
+                return;
+            }
+
+            $product = ProductUnit::with('product')->find($productUnitId)?->product;
+            if (! $product?->is_use_serial_number) {
+                return;
+            }
+
+            $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
+            $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
+            if (str_contains($normalizedBaseQty, '.')) {
+                $validator->errors()->add('serials', trans('validation.stock_adjustment_out_product.base_qty_must_be_integer'));
+
+                return;
+            }
+
+            $serialCount = (string) count(is_array($serials) ? $serials : []);
+            if (bccomp($serialCount, $baseQty, 8) !== 0) {
+                $validator->errors()->add('serials', trans('validation.stock_adjustment_out_product.serial_count_not_match_qty'));
+            }
+        });
     }
 }

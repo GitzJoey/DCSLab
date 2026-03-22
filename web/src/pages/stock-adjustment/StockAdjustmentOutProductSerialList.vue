@@ -326,34 +326,29 @@
     }
   };
 
-  const clearCategoryFilter = async () => {
+  const clearCategoryFilter = () => {
     selectedCategoryId.value = null;
-    await loadCategoryDDL('');
-    await handleCategoryFilterChange();
+    categorySearch.value = '';
   };
 
-  const clearInWarehouseFilter = async () => {
+  const clearInWarehouseFilter = () => {
     selectedInWarehouseId.value = null;
-    await loadInWarehouseDDL('');
-    await handleInWarehouseFilterChange();
+    inWarehouseSearch.value = '';
   };
 
-  const clearOutWarehouseFilter = async () => {
+  const clearOutWarehouseFilter = () => {
     selectedOutWarehouseId.value = null;
-    await loadOutWarehouseDDL('');
-    await handleOutWarehouseFilterChange();
+    outWarehouseSearch.value = '';
   };
 
-  const clearProductCategoryFilter = async () => {
+  const clearProductCategoryFilter = () => {
     selectedProductCategoryId.value = null;
-    await loadProductCategoryDDL('');
-    await handleProductCategoryFilterChange();
+    productCategorySearch.value = '';
   };
 
-  const clearProductBrandFilter = async () => {
+  const clearProductBrandFilter = () => {
     selectedProductBrandId.value = null;
-    await loadProductBrandDDL('');
-    await handleProductBrandFilterChange();
+    productBrandSearch.value = '';
   };
 
   const toggleAdvancedFilters = async () => {
@@ -587,7 +582,16 @@
                   </Table.Td>
                   <Table.Td>
                     <div class="font-medium whitespace-nowrap">
-                      {{ item.stock_adjustment?.code }}
+                      {{ item.stock_adjustment?.code ?? '-' }}
+                    </div>
+                    <div class="text-slate-500 text-xs whitespace-nowrap">
+                      {{ item.stock_adjustment?.date ? formatDate(item.stock_adjustment.date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+                    </div>
+                    <div class="text-slate-500 text-xs whitespace-nowrap">
+                      {{ item.stock_adjustment?.category?.name ?? '-' }}
+                    </div>
+                    <div class="text-slate-500 text-xs whitespace-nowrap">
+                      {{ item.stock_adjustment?.in_warehouse?.name ?? '-' }} → {{ item.stock_adjustment?.out_warehouse?.name ?? '-' }}
                     </div>
                   </Table.Td>
                   <Table.Td>

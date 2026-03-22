@@ -242,22 +242,19 @@
     }
   };
 
-  const clearCategoryFilter = async () => {
+  const clearCategoryFilter = () => {
     selectedCategoryId.value = null;
-    await loadCategoryDDL('');
-    await handleCategoryFilterChange();
+    categorySearch.value = '';
   };
 
-  const clearInWarehouseFilter = async () => {
+  const clearInWarehouseFilter = () => {
     selectedInWarehouseId.value = null;
-    await loadInWarehouseDDL('');
-    await handleInWarehouseFilterChange();
+    inWarehouseSearch.value = '';
   };
 
-  const clearOutWarehouseFilter = async () => {
+  const clearOutWarehouseFilter = () => {
     selectedOutWarehouseId.value = null;
-    await loadOutWarehouseDDL('');
-    await handleOutWarehouseFilterChange();
+    outWarehouseSearch.value = '';
   };
 
   const toggleAdvancedFilters = async () => {

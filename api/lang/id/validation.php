@@ -175,6 +175,15 @@ return [
         ],
     ],
 
+    'stock_adjustment_in_product' => [
+        'base_qty_must_be_integer' => 'Qty x nilai konversi satuan produk serial harus menghasilkan bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial harus sama dengan qty x nilai konversi satuan produk.',
+    ],
+    'stock_adjustment_out_product' => [
+        'base_qty_must_be_integer' => 'Qty x nilai konversi satuan produk serial harus menghasilkan bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial harus sama dengan qty x nilai konversi satuan produk.',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

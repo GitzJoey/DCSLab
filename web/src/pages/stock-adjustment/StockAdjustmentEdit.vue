@@ -368,7 +368,6 @@ const loadCategoryDDL = async (search = '') => {
 
 const clearCategory = () => {
   stockAdjustmentForm.setData({ category_id: '' });
-  loadCategoryDDL('');
   stockAdjustmentForm.forgetError('category_id');
   stockAdjustmentForm.validate('category_id');
 };
@@ -397,7 +396,6 @@ const loadInWarehouseDDL = async (search = '') => {
 
 const clearInWarehouse = () => {
   stockAdjustmentForm.setData({ in_warehouse_id: '' });
-  loadInWarehouseDDL('');
   stockAdjustmentForm.forgetError('in_warehouse_id');
   stockAdjustmentForm.validate('in_warehouse_id');
 };
@@ -426,7 +424,6 @@ const loadOutWarehouseDDL = async (search = '') => {
 
 const clearOutWarehouse = () => {
   stockAdjustmentForm.setData({ out_warehouse_id: '' });
-  loadOutWarehouseDDL('');
   stockAdjustmentForm.forgetError('out_warehouse_id');
   stockAdjustmentForm.validate('out_warehouse_id');
 };
@@ -643,6 +640,7 @@ const addInProductSerial = (index: number) => {
   const item = items[index];
   if (!item) return;
   item.serials.push({ id: null, serial: '' });
+  stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
 };
 
 const removeInProductSerial = (index: number, serialIndex: number) => {
@@ -656,6 +654,7 @@ const removeInProductSerial = (index: number, serialIndex: number) => {
   }
 
   item.serials.splice(serialIndex, 1);
+  stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
 };
 
 const removeInProduct = (index: number) => {
@@ -710,6 +709,7 @@ const addOutProductSerial = (index: number) => {
   const item = items[index];
   if (!item) return;
   item.serials.push({ id: null, serial: '' });
+  stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
 };
 
 const removeOutProductSerial = (index: number, serialIndex: number) => {
@@ -723,6 +723,7 @@ const removeOutProductSerial = (index: number, serialIndex: number) => {
   }
 
   item.serials.splice(serialIndex, 1);
+  stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
 };
 
 const removeOutProduct = (index: number) => {
@@ -989,7 +990,10 @@ const onSubmit = async () => {
                     {{ t('views.stock_adjustment_in_product.fields.qty') }}
                   </FormLabel>
                   <FormInputCurrency :id="`in-product-qty-${index}`" v-model="item.qty"
-                    @change="stockAdjustmentForm.validate(`in_products.${index}.qty` as any)" :class="[
+                    @change="
+                      stockAdjustmentForm.validate(`in_products.${index}.qty` as any);
+                      stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+                    " :class="[
                       'text-right',
                       {
                         'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any),
@@ -1038,7 +1042,10 @@ const onSubmit = async () => {
                     {{ t('views.stock_adjustment_in_product.fields.product_unit_conversion_value') }}
                   </FormLabel>
                   <FormInputCurrency v-model="item.product_unit_conversion_value" tabindex="-1"
-                    @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_conversion_value` as any)"
+                    @change="
+                      stockAdjustmentForm.validate(`in_products.${index}.product_unit_conversion_value` as any);
+                      stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+                    "
                     :class="[
                       'text-right',
                       {
@@ -1092,7 +1099,9 @@ const onSubmit = async () => {
                 <!-- serials -->
                 <div v-if="item.is_use_serial_number" class="col-span-12">
                   <div class="flex items-center justify-between mb-2">
-                    <FormLabel>
+                    <FormLabel :class="{
+                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.serials` as any),
+                    }">
                       {{ t('views.product.fields.serial_number') }}
                     </FormLabel>
                     <Button type="button" size="sm" variant="outline-primary" @click="addInProductSerial(index)">
@@ -1105,12 +1114,23 @@ const onSubmit = async () => {
                   </div>
                   <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
-                      <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
+                      <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" :class="{
+                        'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.serials.${sIdx}.serial` as any),
+                      }" @change="
+                        stockAdjustmentForm.validate(`in_products.${index}.serials.${sIdx}.serial` as any);
+                        stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+                      " />
                       <Button type="button" variant="outline-danger" @click="removeInProductSerial(index, sIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.serials`]" />
+                  <FormErrorMessages
+                    v-for="(_, sIdx) in item.serials"
+                    :key="`in-products-serial-error-${index}-${sIdx}`"
+                    :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.serials.${sIdx}.serial`]"
+                  />
                 </div>
 
                 <div v-if="inProductsRemarksExpanded[index]" class="col-span-12 space-y-3">
@@ -1176,7 +1196,10 @@ const onSubmit = async () => {
                     {{ t('views.stock_adjustment_out_product.fields.qty') }}
                   </FormLabel>
                   <FormInputCurrency :id="`out-product-qty-${index}`" v-model="item.qty"
-                    @change="stockAdjustmentForm.validate(`out_products.${index}.qty` as any)" :class="[
+                    @change="
+                      stockAdjustmentForm.validate(`out_products.${index}.qty` as any);
+                      stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+                    " :class="[
                       'text-right',
                       {
                         'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.qty` as any),
@@ -1223,7 +1246,10 @@ const onSubmit = async () => {
                     {{ t('views.stock_adjustment_out_product.fields.product_unit_conversion_value') }}
                   </FormLabel>
                   <FormInputCurrency v-model="item.product_unit_conversion_value" tabindex="-1"
-                    @change="stockAdjustmentForm.validate(`out_products.${index}.product_unit_conversion_value` as any)"
+                    @change="
+                      stockAdjustmentForm.validate(`out_products.${index}.product_unit_conversion_value` as any);
+                      stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+                    "
                     :class="[
                       'text-right',
                       {
@@ -1242,7 +1268,9 @@ const onSubmit = async () => {
                 <!-- serials -->
                 <div v-if="item.is_use_serial_number" class="col-span-12">
                   <div class="flex items-center justify-between mb-2">
-                    <FormLabel>
+                    <FormLabel :class="{
+                      'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.serials` as any),
+                    }">
                       {{ t('views.product.fields.serial_number') }}
                     </FormLabel>
                     <Button type="button" size="sm" variant="outline-primary" @click="addOutProductSerial(index)">
@@ -1255,12 +1283,23 @@ const onSubmit = async () => {
                   </div>
                   <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
-                      <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" />
+                      <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" :class="{
+                        'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.serials.${sIdx}.serial` as any),
+                      }" @change="
+                        stockAdjustmentForm.validate(`out_products.${index}.serials.${sIdx}.serial` as any);
+                        stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+                      " />
                       <Button type="button" variant="outline-danger" @click="removeOutProductSerial(index, sIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.serials`]" />
+                  <FormErrorMessages
+                    v-for="(_, sIdx) in item.serials"
+                    :key="`out-products-serial-error-${index}-${sIdx}`"
+                    :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.serials.${sIdx}.serial`]"
+                  />
                 </div>
 
                 <div v-if="outProductsRemarksExpanded[index]" class="col-span-12 space-y-3">

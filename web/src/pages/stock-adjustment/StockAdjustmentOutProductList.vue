@@ -326,34 +326,29 @@
     }
   };
 
-  const clearCategoryFilter = async () => {
+  const clearCategoryFilter = () => {
     selectedCategoryId.value = null;
-    await loadCategoryDDL('');
-    await handleCategoryFilterChange();
+    categorySearch.value = '';
   };
 
-  const clearInWarehouseFilter = async () => {
+  const clearInWarehouseFilter = () => {
     selectedInWarehouseId.value = null;
-    await loadInWarehouseDDL('');
-    await handleInWarehouseFilterChange();
+    inWarehouseSearch.value = '';
   };
 
-  const clearOutWarehouseFilter = async () => {
+  const clearOutWarehouseFilter = () => {
     selectedOutWarehouseId.value = null;
-    await loadOutWarehouseDDL('');
-    await handleOutWarehouseFilterChange();
+    outWarehouseSearch.value = '';
   };
 
-  const clearProductCategoryFilter = async () => {
+  const clearProductCategoryFilter = () => {
     selectedProductCategoryId.value = null;
-    await loadProductCategoryDDL('');
-    await handleProductCategoryFilterChange();
+    productCategorySearch.value = '';
   };
 
-  const clearProductBrandFilter = async () => {
+  const clearProductBrandFilter = () => {
     selectedProductBrandId.value = null;
-    await loadProductBrandDDL('');
-    await handleProductBrandFilterChange();
+    productBrandSearch.value = '';
   };
 
   const toggleAdvancedFilters = async () => {
@@ -557,6 +552,9 @@
                   {{ t('views.product.table.cols.image') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap">
+                  {{ t('views.stock_adjustment.page_title') }}
+                </Table.Th>
+                <Table.Th class="whitespace-nowrap">
                   {{ t('views.stock_adjustment_out_product.table.cols.product') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap text-right">
@@ -577,7 +575,7 @@
             <Table.Tbody v-if="stockAdjustmentOutProductLists !== null">
               <template v-if="stockAdjustmentOutProductLists.data.length === 0">
                 <Table.Tr class="intro-x">
-                  <Table.Td colspan="7">
+                  <Table.Td colspan="8">
                     <div class="flex justify-center italic">
                       {{ t('components.data-list.data_not_found') }}
                     </div>
@@ -590,6 +588,28 @@
                     <ProductImagePreview :image-url="getProductMainImageUrl(item)"
                       wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
                       icon-class="w-4 h-4 text-slate-400" />
+                  </Table.Td>
+                  <Table.Td>
+                    <div class="font-medium whitespace-nowrap">
+                      {{ t('views.stock_adjustment.fields.code') }}:
+                      {{ item.stock_adjustment?.code ?? '-' }}
+                    </div>
+                    <div class="text-slate-500 text-xs whitespace-nowrap">
+                      {{ t('views.stock_adjustment.fields.date') }}:
+                      {{ item.stock_adjustment?.date ? formatDate(item.stock_adjustment.date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+                    </div>
+                    <div class="text-slate-500 text-xs whitespace-nowrap">
+                      {{ t('views.stock_adjustment.fields.category_id') }}:
+                      {{ item.stock_adjustment?.category?.name ?? '-' }}
+                    </div>
+                    <div class="text-slate-500 text-xs whitespace-nowrap">
+                      {{ t('views.stock_adjustment.fields.in_warehouse_id') }}:
+                      {{ item.stock_adjustment?.in_warehouse?.name ?? '-' }}
+                    </div>
+                    <div class="text-slate-500 text-xs whitespace-nowrap">
+                      {{ t('views.stock_adjustment.fields.out_warehouse_id') }}:
+                      {{ item.stock_adjustment?.out_warehouse?.name ?? '-' }}
+                    </div>
                   </Table.Td>
                   <Table.Td>
                     <div class="font-medium whitespace-nowrap">

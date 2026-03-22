@@ -217,28 +217,19 @@ const handleSortFilterChange = async () => {
   await getProductsWithRemainingStock(filters.value.search, true, 1, perPage);
 };
 
-const clearCategoryFilter = async () => {
+const clearCategoryFilter = () => {
   filters.value.category_id = null;
   categorySearch.value = '';
-
-  const perPage = productLists.value?.meta.per_page || 10;
-  await getProductsWithRemainingStock(filters.value.search, true, 1, perPage);
 };
 
-const clearBrandFilter = async () => {
+const clearBrandFilter = () => {
   filters.value.brand_id = null;
   brandSearch.value = '';
-
-  const perPage = productLists.value?.meta.per_page || 10;
-  await getProductsWithRemainingStock(filters.value.search, true, 1, perPage);
 };
 
-const clearWarehouseFilter = async () => {
+const clearWarehouseFilter = () => {
   filters.value.warehouse_id = null;
   warehouseSearch.value = '';
-
-  const perPage = productLists.value?.meta.per_page || 10;
-  await getProductsWithRemainingStock(filters.value.search, true, 1, perPage);
 };
 
 const getPrimaryUnit = (product: Product) => {
