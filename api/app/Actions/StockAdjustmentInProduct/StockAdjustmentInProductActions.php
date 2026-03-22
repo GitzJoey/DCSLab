@@ -61,9 +61,13 @@ class StockAdjustmentInProductActions
                 'stockAdjustment.category',
                 'stockAdjustment.inWarehouse',
                 'stockAdjustment.outWarehouse',
-                'productUnit',
                 'productUnit.unit',
+                'productUnit.product.company',
+                'productUnit.product.category',
+                'productUnit.product.brand',
+                'productUnit.product.baseProductUnit.unit',
                 'productUnit.product.images',
+                'serials',
             ])
             ->join('companies', 'companies.id', '=', 'stock_adjustment_in_products.company_id')
             ->join('stock_adjustments', 'stock_adjustments.id', '=', 'stock_adjustment_in_products.stock_adjustment_id')

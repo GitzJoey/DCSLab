@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { computed, onMounted, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import DataList from '@/components/DataList';
-  import Table from '@/components/Base/Table';
+  import { DataListFlex } from '@/components/DataList';
   import Button from '@/components/Base/Button';
   import Lucide from '@/components/Base/Lucide';
   import { Dialog } from '@/components/Base/Headless';
@@ -424,6 +423,54 @@
 
     return images[0]?.url ?? null;
   };
+
+  const getBaseUnitName = (item: StockAdjustmentOutProduct): string => {
+    const baseUnitFromRelation = (item.product_unit?.product as any)?.base_product_unit?.unit?.name;
+    if (baseUnitFromRelation) return baseUnitFromRelation;
+
+    const units = item.product_unit?.product?.product_units ?? [];
+    const baseUnit =
+      units.find((unit) => unit.is_base) ??
+      units.find((unit) => Number(unit.conversion_value) === 1) ??
+      units.find((unit) => unit.is_primary_unit) ??
+      null;
+
+    return baseUnit?.unit?.name ?? '';
+  };
+
+  const getQtyDisplay = (item: StockAdjustmentOutProduct): string => {
+    const qty = formatCurrency(item.qty);
+    const unitName = item.product_unit?.unit?.name ?? '';
+    if (!unitName) return qty;
+
+    const conversionValue = Number(item.product_unit_conversion_value ?? 1);
+    if (conversionValue <= 1) return `${qty} ${unitName}`;
+
+    const baseUnitName = getBaseUnitName(item);
+    if (!baseUnitName || baseUnitName === unitName) return `${qty} ${unitName}`;
+
+    const baseQty = formatCurrency(item.qty * conversionValue);
+    return `${qty} ${unitName} (${baseQty} ${baseUnitName})`;
+  };
+
+  const getConversionValueDisplay = (item: StockAdjustmentOutProduct): string => {
+    const conversionValue = formatCurrency(item.product_unit_conversion_value);
+    const productUnit = item.product_unit;
+    if (!productUnit || productUnit.is_base) return conversionValue;
+
+    const baseUnitName = getBaseUnitName(item);
+    const currentUnitName = productUnit.unit?.name ?? '';
+    if (!baseUnitName || !currentUnitName) return conversionValue;
+
+    return `${conversionValue} ${baseUnitName} / ${currentUnitName}`;
+  };
+
+  const getSerialsDisplay = (item: StockAdjustmentOutProduct): string => {
+    const serials = item.serials ?? [];
+    if (serials.length === 0) return '-';
+
+    return serials.map((serialItem) => serialItem.serial).join(', ');
+  };
 </script>
 
 <template>
@@ -535,123 +582,110 @@
             </div>
           </div>
       </div>
-      <DataList
-        :title="t('views.stock_adjustment_out_product.table.title')"
+      <DataListFlex
         :data="stockAdjustmentOutProductLists"
         :enable-search="true"
         :can-print="true"
         :can-export="true"
+        :rows="stockAdjustmentOutProductLists?.data ?? []"
+        row-class="bg-white dark:bg-darkmode-600"
         :pagination="stockAdjustmentOutProductLists ? stockAdjustmentOutProductLists.meta : null"
         @dataListChanged="handleDataListChange"
       >
-        <template #content>
-          <Table class="mt-5" :hover="true">
-            <Table.Thead variant="light">
-              <Table.Tr>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product.table.cols.image') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment.page_title') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment_out_product.table.cols.product') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap text-right">
-                  {{ t('views.stock_adjustment_out_product.table.cols.qty') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment_out_product.table.cols.product_unit') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap text-right">
-                  {{ t('views.stock_adjustment_out_product.table.cols.product_unit_conversion_value') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment_out_product.table.cols.remarks') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap"></Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody v-if="stockAdjustmentOutProductLists !== null">
-              <template v-if="stockAdjustmentOutProductLists.data.length === 0">
-                <Table.Tr class="intro-x">
-                  <Table.Td colspan="8">
-                    <div class="flex justify-center italic">
-                      {{ t('components.data-list.data_not_found') }}
-                    </div>
-                  </Table.Td>
-                </Table.Tr>
-              </template>
-              <template v-for="(item, itemIdx) in stockAdjustmentOutProductLists.data" :key="item.ulid">
-                <Table.Tr class="intro-x">
-                  <Table.Td>
-                    <ProductImagePreview :image-url="getProductMainImageUrl(item)"
-                      wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
-                      icon-class="w-4 h-4 text-slate-400" />
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="font-medium whitespace-nowrap">
-                      {{ t('views.stock_adjustment.fields.code') }}:
-                      {{ item.stock_adjustment?.code ?? '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      {{ t('views.stock_adjustment.fields.date') }}:
-                      {{ item.stock_adjustment?.date ? formatDate(item.stock_adjustment.date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      {{ t('views.stock_adjustment.fields.category_id') }}:
-                      {{ item.stock_adjustment?.category?.name ?? '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      {{ t('views.stock_adjustment.fields.in_warehouse_id') }}:
-                      {{ item.stock_adjustment?.in_warehouse?.name ?? '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      {{ t('views.stock_adjustment.fields.out_warehouse_id') }}:
-                      {{ item.stock_adjustment?.out_warehouse?.name ?? '-' }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="font-medium whitespace-nowrap">
-                      {{ item.product_unit?.product?.name ?? '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      [{{ item.product_unit?.code ?? '-' }}]
-                    </div>
-                  </Table.Td>
-                  <Table.Td class="text-right">
-                    <div class="whitespace-nowrap">
-                      {{ formatCurrency(item.qty) }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="whitespace-nowrap">
-                      {{ item.product_unit?.unit?.name ?? '-' }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td class="text-right">
-                    <div class="whitespace-nowrap">
-                      {{ formatCurrency(item.product_unit_conversion_value) }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="whitespace-nowrap">
-                      {{ item.remarks ?? '-' }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="flex justify-end gap-1">
-                      <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
-                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                      </Button>
-                    </div>
-                  </Table.Td>
-                </Table.Tr>
-              </template>
-            </Table.Tbody>
-          </Table>
-        </template>
-      </DataList>
+        <template #row="{ item, index }">
+            <div class="col-span-12 lg:col-span-1 md:col-span-12 flex items-center justify-center md:justify-start">
+              <ProductImagePreview
+                :image-url="getProductMainImageUrl(item as StockAdjustmentOutProduct)"
+                wrapper-class="w-12 h-12 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
+                icon-class="w-4 h-4 text-slate-400"
+              />
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 md:col-span-5 self-start">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+                {{ t('views.stock_adjustment.page_title') }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.code') }}:
+                {{ (item as StockAdjustmentOutProduct).stock_adjustment?.code ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.date') }}:
+                {{ (item as StockAdjustmentOutProduct).stock_adjustment?.date ? formatDate((item as StockAdjustmentOutProduct).stock_adjustment.date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.category_id') }}:
+                {{ (item as StockAdjustmentOutProduct).stock_adjustment?.category?.name ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.in_warehouse_id') }}:
+                {{ (item as StockAdjustmentOutProduct).stock_adjustment?.in_warehouse?.name ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.out_warehouse_id') }}:
+                {{ (item as StockAdjustmentOutProduct).stock_adjustment?.out_warehouse?.name ?? '-' }}
+              </div>
+              <div v-if="(item as StockAdjustmentOutProduct).stock_adjustment?.remarks?.trim()" class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.remarks') }}:
+                {{ (item as StockAdjustmentOutProduct).stock_adjustment?.remarks }}
+              </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-3 md:col-span-4 self-start">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+                {{ t('views.product.page_title') }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.code') }}:
+                {{ (item as StockAdjustmentOutProduct).product_unit?.product?.code ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.name') }}:
+                {{ (item as StockAdjustmentOutProduct).product_unit?.product?.name ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.category_id') }}:
+                {{ (item as StockAdjustmentOutProduct).product_unit?.product?.category?.name ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.brand_id') }}:
+                {{ (item as StockAdjustmentOutProduct).product_unit?.product?.brand?.name ?? '-' }}
+              </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-3 md:col-span-3 self-start">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+                {{ t('views.stock_adjustment_out_product.table.cols.product_unit') }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.unit_code') }}:
+                {{ (item as StockAdjustmentOutProduct).product_unit?.code ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment_out_product.table.cols.qty') }}:
+                {{ getQtyDisplay(item as StockAdjustmentOutProduct) }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment_out_product.table.cols.product_unit_conversion_value') }}:
+                {{ getConversionValueDisplay(item as StockAdjustmentOutProduct) }}
+              </div>
+              <div v-if="(item as StockAdjustmentOutProduct).remarks?.trim()" class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment_out_product.table.cols.remarks') }}:
+                {{ (item as StockAdjustmentOutProduct).remarks }}
+              </div>
+              <div v-if="((item as StockAdjustmentOutProduct).serials?.length ?? 0) > 0" class="text-slate-500 text-xs mt-1">
+                <span class="font-medium">{{ t('views.product.fields.serial_number') }}:</span>
+                <span class="break-all"> {{ getSerialsDisplay(item as StockAdjustmentOutProduct) }}</span>
+              </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-1 md:col-span-12 flex justify-end items-center gap-2">
+              <Button size="sm" variant="outline-secondary" class="flex items-center gap-1" @click="deleteSelected(index)">
+                <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+              </Button>
+            </div>
+          </template>
+      </DataListFlex>
     </div>
   </div>
 

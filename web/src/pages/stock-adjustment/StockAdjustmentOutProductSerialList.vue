@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { computed, onMounted, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import DataList from '@/components/DataList';
-  import Table from '@/components/Base/Table';
+  import { DataListFlex } from '@/components/DataList';
   import Button from '@/components/Base/Button';
   import Lucide from '@/components/Base/Lucide';
   import { Dialog } from '@/components/Base/Headless';
@@ -46,7 +45,6 @@
 
   const deleteUlid = ref<string>('');
   const deleteModalShow = ref<boolean>(false);
-  const expandDetail = ref<number | null>(null);
   const startDate = ref<string | null>(null);
   const endDate = ref<string | null>(null);
   const searchText = ref<string>('');
@@ -535,91 +533,89 @@
             </div>
           </div>
       </div>
-      <DataList
-        :title="t('views.stock_adjustment_out_product_serial.table.title')"
+      <DataListFlex
         :data="stockAdjustmentOutProductSerialLists"
         :enable-search="true"
         :can-print="true"
         :can-export="true"
+        :rows="stockAdjustmentOutProductSerialLists?.data ?? []"
+        row-class="bg-white dark:bg-darkmode-600"
         :pagination="stockAdjustmentOutProductSerialLists ? stockAdjustmentOutProductSerialLists.meta : null"
         @dataListChanged="handleDataListChange"
       >
-        <template #content>
-          <Table class="mt-5" :hover="true">
-            <Table.Thead variant="light">
-              <Table.Tr>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product.table.cols.image') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment_out_product_serial.table.cols.stock_adjustment_code') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment_out_product_serial.table.cols.product_name') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment_out_product_serial.table.cols.serial') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap"></Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody v-if="stockAdjustmentOutProductSerialLists !== null">
-              <template v-if="stockAdjustmentOutProductSerialLists.data.length === 0">
-                <Table.Tr class="intro-x">
-                  <Table.Td colspan="5">
-                    <div class="flex justify-center italic">
-                      {{ t('components.data-list.data_not_found') }}
-                    </div>
-                  </Table.Td>
-                </Table.Tr>
-              </template>
-              <template v-for="(item, itemIdx) in stockAdjustmentOutProductSerialLists.data" :key="item.ulid">
-                <Table.Tr class="intro-x">
-                  <Table.Td>
-                    <ProductImagePreview :image-url="getProductMainImageUrl(item)"
-                      wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
-                      icon-class="w-4 h-4 text-slate-400" />
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="font-medium whitespace-nowrap">
-                      {{ item.stock_adjustment?.code ?? '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      {{ item.stock_adjustment?.date ? formatDate(item.stock_adjustment.date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      {{ item.stock_adjustment?.category?.name ?? '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      {{ item.stock_adjustment?.in_warehouse?.name ?? '-' }} → {{ item.stock_adjustment?.out_warehouse?.name ?? '-' }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="whitespace-nowrap">
-                      {{ item.stock_adjustment_out_product?.product_unit?.product?.name ?? '-' }}
-                    </div>
-                    <div class="text-slate-500 text-xs whitespace-nowrap">
-                      [{{ item.stock_adjustment_out_product?.product_unit?.code ?? '-' }}]
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="whitespace-nowrap">
-                      {{ item.serial }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="flex justify-end gap-1">
-                      <Button variant="outline-secondary" @click="deleteSelected(itemIdx)">
-                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                      </Button>
-                    </div>
-                  </Table.Td>
-                </Table.Tr>
-              </template>
-            </Table.Tbody>
-          </Table>
+        <template #row="{ item, index }">
+            <div class="col-span-12 lg:col-span-1 md:col-span-12 flex items-center justify-center md:justify-start">
+              <ProductImagePreview
+                :image-url="getProductMainImageUrl(item as StockAdjustmentOutProductSerial)"
+                wrapper-class="w-12 h-12 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
+                icon-class="w-4 h-4 text-slate-400"
+              />
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 md:col-span-5 self-start">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+                {{ t('views.stock_adjustment.page_title') }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.code') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment?.code ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.date') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment?.date ? formatDate(String((item as StockAdjustmentOutProductSerial).stock_adjustment?.date), 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.category_id') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment?.category?.name ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.in_warehouse_id') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment?.in_warehouse?.name ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.out_warehouse_id') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment?.out_warehouse?.name ?? '-' }}
+              </div>
+              <div v-if="(item as StockAdjustmentOutProductSerial).stock_adjustment?.remarks?.trim()" class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.stock_adjustment.fields.remarks') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment?.remarks }}
+              </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-4 md:col-span-4 self-start">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+                {{ t('views.product.page_title') }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.code') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment_out_product?.product_unit?.product?.code ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.name') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment_out_product?.product_unit?.product?.name ?? '-' }}
+              </div>
+              <div class="text-slate-500 text-xs whitespace-nowrap">
+                {{ t('views.product.fields.unit_code') }}:
+                {{ (item as StockAdjustmentOutProductSerial).stock_adjustment_out_product?.product_unit?.code ?? '-' }}
+              </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-2 md:col-span-2 self-start">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+                {{ t('views.product.fields.serial_number') }}
+              </div>
+              <div class="text-slate-500 text-xs break-all">
+                {{ (item as StockAdjustmentOutProductSerial).serial || '-' }}
+              </div>
+            </div>
+
+            <div class="col-span-12 lg:col-span-1 md:col-span-12 flex justify-end items-center gap-2">
+              <Button size="sm" variant="outline-secondary" class="flex items-center gap-1" @click="deleteSelected(index)">
+                <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+              </Button>
+            </div>
         </template>
-      </DataList>
+      </DataListFlex>
     </div>
   </div>
 

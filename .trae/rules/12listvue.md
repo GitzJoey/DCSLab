@@ -4,21 +4,20 @@ description: Standarisasi penulisan halaman List (EntityList.vue) di Frontend
 ---
 # Standarisasi Halaman List (EntityList.vue)
 
-Dokumen ini menjelaskan standar penulisan halaman `[Entity]List.vue` di frontend (`web/src/pages/[entity]/[Entity]List.vue`). Halaman List berfungsi untuk menampilkan data tabel dengan fitur pagination, pencarian, dan aksi CRUD dasar.
+Dokumen ini menjelaskan standar penulisan halaman `[Entity]List.vue` di frontend (`web/src/pages/[entity]/[Entity]List.vue`). Halaman List berfungsi untuk menampilkan data dengan fitur pagination, pencarian, dan aksi CRUD dasar.
 
 ## 1. Imports
 
-Hindari import library berat yang tidak perlu. Gunakan komponen standar `DataList` untuk wrapper tabel.
+Hindari import library berat yang tidak perlu. Untuk list bergaya kartu/responsif gunakan `DataListFlex`. Untuk list tabular klasik tetap boleh memakai `DataList`.
 
 ```typescript
 import { computed, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
-import DataList from "@/components/DataList";
+import { DataListFlex } from "@/components/DataList";
 import Button from "@/components/Base/Button";
 import Lucide from "@/components/Base/Lucide";
-import Table from "@/components/Base/Table";
 import { Dialog } from "@/components/Base/Headless";
 // ... Import Service & Types terkait
 ```
@@ -208,70 +207,47 @@ const editSelected = (idx: number) => {
 };
 ```
 
-## 9. Template Structure (DataList & Table)
+## 9. Template Structure (DataListFlex)
 
-Gunakan komponen `DataList` sebagai wrapper utama.
+Gunakan komponen `DataListFlex` sebagai wrapper utama untuk list produk dan list stock adjustment karena lebih konsisten di desktop/mobile.
 
-**Aturan Penting untuk Expandable Rows**:
-- Baris detail (`<Table.Tr>` untuk detail) **HARUS** berada di dalam loop `v-for`, tepat di bawah baris utama data.
-- Jangan meletakkan baris detail di luar loop atau di dalam blok `v-if` empty state.
+**Aturan Penting untuk pola Stock Adjustment Product List**:
+- Layout row wajib memakai grid `12 columns` dengan pemisahan blok: image, stock adjustment, product, product unit/serial, action.
+- Setiap blok informasi memakai judul section uppercase (`text-primary text-xs font-semibold uppercase tracking-wide`).
+- Detail value memakai `text-slate-500 text-xs`, dan field yang panjang (misal serial) wajib `break-all`.
+- Aksi delete berada di kolom paling kanan (`lg:col-span-1`) dengan tombol outline-secondary + icon trash.
 
 ```html
-<DataList
-    :title="t('views.entity.table.title')"
+<DataListFlex
     :data="lists"
     :enable-search="true"
+    :can-print="true"
+    :can-export="true"
+    :rows="lists?.data ?? []"
+    row-class="bg-white dark:bg-darkmode-600"
     :pagination="lists ? lists.meta : null"
     @dataListChanged="handleDataListChange"
 >
-    <template #content>
-        <Table class="mt-5" :hover="true">
-            <Table.Thead variant="light">
-                <!-- Header Columns -->
-            </Table.Thead>
-            <Table.Tbody v-if="lists !== null">
-                <!-- Empty State -->
-                <template v-if="lists.data.length === 0">
-                    <Table.Tr>
-                        <Table.Td colspan="5" class="text-center italic">
-                            {{ t("components.data-list.data_not_found") }}
-                        </Table.Td>
-                    </Table.Tr>
-                </template>
-                
-                <!-- Data Rows Loop -->
-                <template v-for="(item, itemIdx) in lists.data" :key="item.ulid">
-                    <!-- Main Row -->
-                    <Table.Tr class="intro-x">
-                        <!-- Columns -->
-                        <Table.Td>
-                            <!-- Actions -->
-                            <div class="flex justify-end gap-1">
-                                <Button variant="outline-secondary" @click="viewSelected(itemIdx)">
-                                    <Lucide icon="Info" />
-                                </Button>
-                                <Button variant="outline-secondary" @click="editSelected(itemIdx)">
-                                    <Lucide icon="Pen" />
-                                </Button>
-                            </div>
-                        </Table.Td>
-                    </Table.Tr>
-
-                    <!-- Expandable Detail Row (Must be INSIDE v-for) -->
-                    <Table.Tr :class="{ 'intro-x': true, 'hidden transition-all': expandDetail !== itemIdx }">
-                        <Table.Td colspan="5">
-                             <!-- Detail Content Here -->
-                             <div class="flex flex-row">
-                                <div class="ml-5 w-48 text-right pr-5">{{ t('views.entity.fields.name') }}</div>
-                                <div class="flex-1">{{ item.name }}</div>
-                             </div>
-                        </Table.Td>
-                    </Table.Tr>
-                </template>
-            </Table.Tbody>
-        </Table>
+    <template #row="{ item, index }">
+        <div class="col-span-12 lg:col-span-1 md:col-span-12 flex items-center justify-center md:justify-start">
+            <!-- image -->
+        </div>
+        <div class="col-span-12 lg:col-span-4 md:col-span-5 self-start">
+            <!-- stock adjustment info -->
+        </div>
+        <div class="col-span-12 lg:col-span-3 md:col-span-4 self-start">
+            <!-- product info -->
+        </div>
+        <div class="col-span-12 lg:col-span-3 md:col-span-3 self-start">
+            <!-- product unit / serial info -->
+        </div>
+        <div class="col-span-12 lg:col-span-1 md:col-span-12 flex justify-end items-center gap-2">
+            <Button size="sm" variant="outline-secondary" @click="deleteSelected(index)">
+                <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+            </Button>
+        </div>
     </template>
-</DataList>
+</DataListFlex>
 ```
 
 ## 10. Standard Translation Keys

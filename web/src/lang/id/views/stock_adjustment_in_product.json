@@ -10,6 +10,7 @@
       "product_unit_conversion_value": "Isi",
       "product_unit_cogs": "HPP Satuan",
       "product_unit_total_cogs": "Total HPP",
+      "product_unit_base_unit_cogs": "HPP Satuan Dasar",
       "remarks": "Catatan"
     }
   },
@@ -28,6 +29,7 @@
     "product_unit_conversion_value": "Isi",
     "product_unit_cogs": "HPP Satuan",
     "product_unit_total_cogs": "Total HPP",
+    "product_unit_base_unit_cogs": "HPP Satuan Dasar",
     "remarks": "Catatan"
   }
 }

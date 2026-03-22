@@ -37,6 +37,9 @@ class ProductResource extends JsonResource
                 isset($this->remaining_stock),
                 (float) $this->remaining_stock
             ),
+            'base_product_unit' => $this->when($this->relationLoaded('baseProductUnit'),
+                new ProductUnitResource($this->whenLoaded('baseProductUnit'))
+            ),
             $this->mergeWhen($this->relationLoaded('productUnits'), [
                 'product_units' => ProductUnitResource::collection($this->whenLoaded('productUnits')),
             ]),

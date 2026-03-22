@@ -10,6 +10,7 @@
       "product_unit_conversion_value": "C. Val",
       "product_unit_cogs": "Unit COGS",
       "product_unit_total_cogs": "Total COGS",
+      "product_unit_base_unit_cogs": "Base Unit COGS",
       "remarks": "Remarks"
     }
   },
@@ -28,6 +29,7 @@
     "product_unit_conversion_value": "C. Val",
     "product_unit_cogs": "Unit COGS",
     "product_unit_total_cogs": "Total COGS",
+    "product_unit_base_unit_cogs": "Base Unit COGS",
     "remarks": "Remarks"
   }
 }

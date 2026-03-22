@@ -5,8 +5,7 @@ import { useRouter } from 'vue-router';
 import { ViewMode } from '@/types/enums/ViewMode';
 import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
 import { ErrorCode } from '@/types/enums/ErrorCode';
-import DataList from '@/components/DataList';
-import Table from '@/components/Base/Table';
+import { DataListFlex } from '@/components/DataList';
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import { FormInput, FormInputDateTime, FormLabel, FormSelect, FormSelectSearch } from '@/components/Base/Form';
@@ -435,86 +434,57 @@ const toggleAdvancedFilters = () => {
         </div>
       </div>
 
-      <DataList :title="t('views.product.table.title') + ' - ' + t('views.product.with_remaining_stock_suffix')"
-        :data="productLists" :enable-search="true" :can-print="false" :can-export="false"
+      <DataListFlex :data="productLists" :enable-search="true" :can-print="false" :can-export="false"
+        :rows="productLists?.data ?? []" row-class="bg-white dark:bg-darkmode-600"
         :pagination="productLists ? productLists.meta : null" @dataListChanged="handleDataListChange">
-        <template #content>
-          <Table class="mt-5" :hover="true">
-            <Table.Thead variant="light">
-              <Table.Tr>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product.table.cols.image') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product.table.cols.code') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product.table.cols.category') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product.table.cols.brand') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.product.table.cols.name') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap text-right">
-                  {{ t('views.stock_adjustment_in_product.table.cols.remaining_stock') }}
-                </Table.Th>
-                <Table.Th class="whitespace-nowrap">
-                  {{ t('views.stock_adjustment_in_product.table.cols.product_unit') }}
-                </Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody v-if="productLists !== null">
-              <template v-if="productLists.data.length === 0">
-                <Table.Tr class="intro-x">
-                  <Table.Td colspan="7">
-                    <div class="flex justify-center italic">
-                      {{ t('components.data-list.data_not_found') }}
-                    </div>
-                  </Table.Td>
-                </Table.Tr>
-              </template>
-              <template v-for="item in productLists.data" :key="item.ulid">
-                <Table.Tr class="intro-x">
-                  <Table.Td>
-                    <ProductImagePreview :image-url="getProductMainImageUrl(item)" />
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="font-medium whitespace-nowrap">
-                      {{ item.code }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="font-medium whitespace-nowrap">
-                      {{ item.category.name }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="font-medium whitespace-nowrap">
-                      {{ item.brand?.name ?? '-' }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td>
-                    <div class="font-medium">
-                      {{ item.name }}
-                    </div>
-                  </Table.Td>
-                  <Table.Td class="text-right">
-                    {{ formatCurrency(getRemainingStockPrimaryQty(item) ?? 0) }}
-                  </Table.Td>
-                  <Table.Td>
-                    <span v-if="getPrimaryUnit(item)">
-                      {{ getPrimaryUnit(item)?.unit.name }}
-                    </span>
-                    <span v-else>-</span>
-                  </Table.Td>
-                </Table.Tr>
-              </template>
-            </Table.Tbody>
-          </Table>
+        <template #row="{ item }">
+          <div class="col-span-12 lg:col-span-1 sm:col-span-12 flex items-center justify-center md:justify-start">
+            <ProductImagePreview
+              :image-url="getProductMainImageUrl(item as Product)"
+              wrapper-class="w-12 h-12 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in"
+              icon-class="w-4 h-4 text-slate-400"
+            />
+          </div>
+          <div class="col-span-12 lg:col-span-5 sm:col-span-6 self-start">
+            <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+              {{ t('views.product.page_title') }}
+            </div>
+            <div class="text-slate-500 text-xs whitespace-nowrap">
+              {{ t('views.product.fields.code') }}:
+              {{ (item as Product).code ?? '-' }}
+            </div>
+            <div class="text-slate-500 text-xs">
+              {{ t('views.product.fields.name') }}:
+              {{ (item as Product).name ?? '-' }}
+            </div>
+            <div class="text-slate-500 text-xs whitespace-nowrap">
+              {{ t('views.product.fields.category_id') }}:
+              {{ (item as Product).category?.name ?? '-' }}
+            </div>
+            <div class="text-slate-500 text-xs whitespace-nowrap">
+              {{ t('views.product.fields.brand_id') }}:
+              {{ (item as Product).brand?.name ?? '-' }}
+            </div>
+          </div>
+          <div class="col-span-12 lg:col-span-6 sm:col-span-6 self-start">
+            <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
+              {{ t('views.product.with_remaining_stock_suffix') }}
+            </div>
+            <div class="text-slate-500 text-xs whitespace-nowrap">
+              {{ t('views.stock_adjustment_in_product.table.cols.remaining_stock') }}:
+              {{ formatCurrency(getRemainingStockPrimaryQty(item as Product) ?? 0) }}
+            </div>
+            <div class="text-slate-500 text-xs whitespace-nowrap">
+              {{ t('views.stock_adjustment_in_product.table.cols.product_unit') }}:
+              {{ getPrimaryUnit(item as Product)?.unit.name ?? '-' }}
+            </div>
+            <div class="text-slate-500 text-xs whitespace-nowrap">
+              {{ t('views.product.fields.with_remaining_stock_end_date') }}:
+              {{ filters.endDate ? formatDate(filters.endDate, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+            </div>
+          </div>
         </template>
-      </DataList>
+      </DataListFlex>
     </div>
   </div>
 </template>
