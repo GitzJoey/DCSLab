@@ -19,6 +19,7 @@ use App\Rules\IsValidCompany;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StockTransferProductUnitSerialController extends BaseController
 {
@@ -62,10 +63,11 @@ class StockTransferProductUnitSerialController extends BaseController
             'product_unit_product_brand_id' => ['nullable', 'integer', new ExistsForCompany('brands', $request->company_id)],
 
             'refresh' => ['required', 'boolean'],
-            'paginate' => ['required', 'boolean'],
-            'page' => ['nullable', 'required_if:paginate,true', 'integer', 'min:1'],
-            'per_page' => ['nullable', 'required_if:paginate,true', 'integer', 'min:10'],
-            'limit' => ['nullable', 'required_if:paginate,false', 'integer', 'min:1'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:1'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
         ]);
 
         $result = null;
@@ -90,13 +92,27 @@ class StockTransferProductUnitSerialController extends BaseController
 
                 execute: new ExecuteDTO(
                     useCache: ! $validated['refresh'],
-                    pagination: $validated['paginate'] ? new ExecutePaginationDTO(
-                        page: $validated['page'],
-                        perPage: $validated['per_page'],
-                    ) : null,
-                    get: ! $validated['paginate'] && ! is_null($validated['limit']) ? new ExecuteGetDTO(
-                        limit: $validated['limit'],
-                    ) : null,
+                    pagination: (function () use ($validated) {
+                        $pagination = null;
+                        if (isset($validated['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
+                                page: $validated['paginate']['page'],
+                                perPage: $validated['paginate']['per_page'],
+                            );
+                        }
+
+                        return $pagination;
+                    })(),
+                    get: (function () use ($validated) {
+                        $get = null;
+                        if (isset($validated['get'])) {
+                            $get = new ExecuteGetDTO(
+                                limit: $validated['get']['limit'],
+                            );
+                        }
+
+                        return $get;
+                    })(),
                 ),
             );
         } catch (Exception $e) {
@@ -143,6 +159,8 @@ class StockTransferProductUnitSerialController extends BaseController
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
+
             $data = new StockTransferProductUnitSerialCreateDTO(
                 companyId: $validated['company_id'],
                 branchId: $validated['branch_id'],
@@ -151,7 +169,10 @@ class StockTransferProductUnitSerialController extends BaseController
                 serial: $validated['serial'],
             );
             $result = $this->stockTransferProductUnitSerialActions->create($data);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
@@ -166,6 +187,8 @@ class StockTransferProductUnitSerialController extends BaseController
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
+
             $data = StockTransferProductUnitSerialUpdateDTO::fromStockTransferProductUnitSerial(
                 $stockTransferProductUnitSerial,
                 $validated['serial'],
@@ -174,7 +197,10 @@ class StockTransferProductUnitSerialController extends BaseController
                 stockTransferProductUnitSerial: $stockTransferProductUnitSerial,
                 data: $data
             );
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
@@ -190,8 +216,13 @@ class StockTransferProductUnitSerialController extends BaseController
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
+
             $result = $this->stockTransferProductUnitSerialActions->delete($stockTransferProductUnitSerial);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

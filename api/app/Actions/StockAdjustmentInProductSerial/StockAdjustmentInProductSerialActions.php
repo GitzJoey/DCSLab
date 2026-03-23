@@ -50,8 +50,10 @@ class StockAdjustmentInProductSerialActions
             ->with([
                 'company',
                 'branch',
-                'stockAdjustment',
+                'stockAdjustmentInProduct.stockAdjustment',
                 'stockAdjustmentInProduct.productUnit.unit',
+                'stockAdjustmentInProduct.productUnit.product.category',
+                'stockAdjustmentInProduct.productUnit.product.brand',
                 'stockAdjustmentInProduct.productUnit.product.images',
             ])
             ->join('companies', 'companies.id', '=', 'stock_adjustment_in_product_serials.company_id')

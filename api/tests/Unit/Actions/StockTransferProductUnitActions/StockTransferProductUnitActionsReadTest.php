@@ -3,6 +3,9 @@
 namespace Tests\Unit\Actions\StockTransferProductUnitActions;
 
 use App\Actions\StockTransferProductUnit\StockTransferProductUnitActions;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
 use App\Models\Company;
 use App\Models\StockTransferProductUnit;
 use App\Models\User;
@@ -19,7 +22,7 @@ class StockTransferProductUnitActionsReadTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->stockTransferProductUnitActions = new StockTransferProductUnitActions();
+        $this->stockTransferProductUnitActions = app(StockTransferProductUnitActions::class);
     }
 
     public function test_stock_transfer_product_unit_actions_call_read_any_with_paginate_true_expect_paginator_object()
@@ -32,16 +35,25 @@ class StockTransferProductUnitActionsReadTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $result = $this->stockTransferProductUnitActions->readAny(
-            companyId: $company->id,
-            useCache: true,
             withTrashed: false,
-
+            companyId: $company->id,
+            branchId: null,
             search: '',
 
-            paginate: true,
-            page: 1,
-            perPage: 10,
-            limit: null
+            stockTransferCode: null,
+            stockTransferStartDate: null,
+            stockTransferEndDate: null,
+            stockTransferSourceWarehouseId: null,
+            stockTransferDestinationWarehouseId: null,
+            productUnitCode: null,
+            productUnitProductName: null,
+            productUnitProductCategoryId: null,
+            productUnitProductBrandId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(page: 1, perPage: 10),
+                get: null,
+            )
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -57,16 +69,25 @@ class StockTransferProductUnitActionsReadTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $result = $this->stockTransferProductUnitActions->readAny(
-            companyId: $company->id,
-            useCache: true,
             withTrashed: false,
-
+            companyId: $company->id,
+            branchId: null,
             search: '',
 
-            paginate: false,
-            page: null,
-            perPage: null,
-            limit: 10
+            stockTransferCode: null,
+            stockTransferStartDate: null,
+            stockTransferEndDate: null,
+            stockTransferSourceWarehouseId: null,
+            stockTransferDestinationWarehouseId: null,
+            productUnitCode: null,
+            productUnitProductName: null,
+            productUnitProductCategoryId: null,
+            productUnitProductBrandId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: null,
+                get: new ExecuteGetDTO(limit: 10),
+            )
         );
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -77,16 +98,25 @@ class StockTransferProductUnitActionsReadTest extends ActionsTestCase
         $maxId = Company::max('id') + 1;
 
         $result = $this->stockTransferProductUnitActions->readAny(
-            companyId: $maxId,
-            useCache: true,
             withTrashed: false,
-
+            companyId: $maxId,
+            branchId: null,
             search: '',
 
-            paginate: false,
-            page: null,
-            perPage: null,
-            limit: 10
+            stockTransferCode: null,
+            stockTransferStartDate: null,
+            stockTransferEndDate: null,
+            stockTransferSourceWarehouseId: null,
+            stockTransferDestinationWarehouseId: null,
+            productUnitCode: null,
+            productUnitProductName: null,
+            productUnitProductCategoryId: null,
+            productUnitProductBrandId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: null,
+                get: new ExecuteGetDTO(limit: 10),
+            )
         );
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -97,15 +127,15 @@ class StockTransferProductUnitActionsReadTest extends ActionsTestCase
     {
         $stockTransferProductUnitCount = 4;
         $idxTest = random_int(0, $stockTransferProductUnitCount - 1);
-        $defaultName = StockTransferProductUnit::factory()->make()->name;
-        $testname = StockTransferProductUnit::factory()->insertStringInName('testing')->make()->name;
+        $defaultRemarks = 'default remarks';
+        $testRemarks = 'testing remarks';
 
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
                 ->has(StockTransferProductUnit::factory()->count($stockTransferProductUnitCount)
                     ->state(new Sequence(
                         fn (Sequence $sequence) => [
-                            'name' => $sequence->index == $idxTest ? $testname : $defaultName,
+                            'remarks' => $sequence->index == $idxTest ? $testRemarks : $defaultRemarks,
                         ]
                     ))
                 )
@@ -115,16 +145,25 @@ class StockTransferProductUnitActionsReadTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
 
         $result = $this->stockTransferProductUnitActions->readAny(
-            companyId: $company->id,
-            useCache: true,
             withTrashed: false,
-
+            companyId: $company->id,
+            branchId: null,
             search: 'testing',
 
-            paginate: true,
-            page: 1,
-            perPage: 10,
-            limit: null
+            stockTransferCode: null,
+            stockTransferStartDate: null,
+            stockTransferEndDate: null,
+            stockTransferSourceWarehouseId: null,
+            stockTransferDestinationWarehouseId: null,
+            productUnitCode: null,
+            productUnitProductName: null,
+            productUnitProductCategoryId: null,
+            productUnitProductBrandId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(page: 1, perPage: 10),
+                get: null,
+            )
         );
 
         $this->assertInstanceOf(Paginator::class, $result);

@@ -1,6 +1,5 @@
 ---
-alwaysApply: false
-description: Aturan eksekusi test oleh agent
+alwaysApply: true
 ---
 # Aturan Eksekusi Test oleh Agent
 

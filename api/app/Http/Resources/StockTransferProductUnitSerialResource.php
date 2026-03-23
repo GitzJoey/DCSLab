@@ -13,10 +13,18 @@ class StockTransferProductUnitSerialResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->whenLoaded('company')),
-            'branch' => new BranchResource($this->whenLoaded('branch')),
-            'stock_transfer' => new StockTransferResource($this->whenLoaded('stockTransfer')),
-            'stock_transfer_product_unit' => new StockTransferProductUnitResource($this->whenLoaded('stockTransferProductUnit')),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('stockTransfer'), [
+                'stock_transfer' => new StockTransferResource($this->whenLoaded('stockTransfer')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('stockTransferProductUnit'), [
+                'stock_transfer_product_unit' => new StockTransferProductUnitResource($this->whenLoaded('stockTransferProductUnit')),
+            ]),
             'serial' => $this->serial,
         ];
     }

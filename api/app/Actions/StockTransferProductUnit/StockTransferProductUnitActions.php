@@ -3,17 +3,18 @@
 namespace App\Actions\StockTransferProductUnit;
 
 use App\Actions\StockTransferProductUnitSerial\StockTransferProductUnitSerialActions;
+use App\DTOs\ExecuteDTO;
 use App\DTOs\StockTransferProductUnitCreateDTO;
 use App\DTOs\StockTransferProductUnitSerialCreateDTO;
 use App\DTOs\StockTransferProductUnitSerialUpdateDTO;
 use App\DTOs\StockTransferProductUnitUpdateDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\StockTransferProductUnit;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class StockTransferProductUnitActions
@@ -27,6 +28,189 @@ class StockTransferProductUnitActions
         StockTransferProductUnitSerialActions $stockTransferProductUnitSerialActions,
     ) {
         $this->stockTransferProductUnitSerialActions = $stockTransferProductUnitSerialActions;
+    }
+
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
+        ?string $search,
+
+        ?string $stockTransferCode,
+        ?string $stockTransferStartDate,
+        ?string $stockTransferEndDate,
+        ?int $stockTransferSourceWarehouseId,
+        ?int $stockTransferDestinationWarehouseId,
+        ?string $productUnitCode,
+        ?string $productUnitProductName,
+        ?int $productUnitProductCategoryId,
+        ?int $productUnitProductBrandId,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = StockTransferProductUnit::select('stock_transfer_product_units.*')
+            ->with([
+                'company',
+                'branch',
+                'stockTransfer.sourceWarehouse',
+                'stockTransfer.destinationWarehouse',
+                'productUnit.unit',
+                'productUnit.product.category',
+                'productUnit.product.brand',
+                'productUnit.product.baseProductUnit.unit',
+                'productUnit.product.images',
+                'serials',
+            ])
+            ->join('companies', 'companies.id', '=', 'stock_transfer_product_units.company_id')
+            ->join('stock_transfers', 'stock_transfers.id', '=', 'stock_transfer_product_units.stock_transfer_id')
+            ->join('product_units', 'product_units.id', '=', 'stock_transfer_product_units.product_unit_id')
+            ->join('products', 'products.id', '=', 'product_units.product_id')
+            ->join('product_categories', 'product_categories.id', '=', 'products.category_id')
+            ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
+            ->whereCompanyId('stock_transfer_product_units', $companyId)
+            ->whereBranchId('stock_transfer_product_units', $branchId)
+            ->withTrashed();
+
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $stockTransferCode,
+            $stockTransferStartDate,
+            $stockTransferEndDate,
+            $stockTransferSourceWarehouseId,
+            $stockTransferDestinationWarehouseId,
+            $productUnitCode,
+            $productUnitProductName,
+            $productUnitProductCategoryId,
+            $productUnitProductBrandId,
+        ) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->search($search);
+            }
+
+            $stockTransferStartDateUtc = $stockTransferStartDate ? TimezoneHelper::convertToUTC($stockTransferStartDate) : null;
+            if ($stockTransferStartDateUtc) {
+                $query->where('stock_transfers.date', '>=', $stockTransferStartDateUtc);
+            }
+
+            $stockTransferEndDateUtc = $stockTransferEndDate ? TimezoneHelper::convertToUTC($stockTransferEndDate) : null;
+            if ($stockTransferEndDateUtc) {
+                $query->where('stock_transfers.date', '<=', $stockTransferEndDateUtc);
+            }
+
+            if ($stockTransferCode) {
+                $query->where('stock_transfers.code', $stockTransferCode);
+            }
+
+            if ($stockTransferSourceWarehouseId) {
+                $query->where('stock_transfers.source_warehouse_id', $stockTransferSourceWarehouseId);
+            }
+
+            if ($stockTransferDestinationWarehouseId) {
+                $query->where('stock_transfers.destination_warehouse_id', $stockTransferDestinationWarehouseId);
+            }
+
+            if ($productUnitCode) {
+                $query->where('product_units.code', 'like', '%'.$productUnitCode.'%');
+            }
+
+            if ($productUnitProductName) {
+                $query->where('products.name', 'like', '%'.$productUnitProductName.'%');
+            }
+
+            if ($productUnitProductCategoryId) {
+                $query->where('products.category_id', $productUnitProductCategoryId);
+            }
+
+            if ($productUnitProductBrandId) {
+                $query->where('products.brand_id', $productUnitProductBrandId);
+            }
+        });
+
+        $query->orderBy('stock_transfers.date', 'desc')
+            ->orderBy('stock_transfer_product_units.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    $branchId ?? '[null]',
+                    empty($search) ? '[empty]' : $search,
+                    empty($stockTransferCode) ? '[empty]' : $stockTransferCode,
+                    $stockTransferStartDate ?? '[null]',
+                    $stockTransferEndDate ?? '[null]',
+                    $stockTransferSourceWarehouseId ?? '[null]',
+                    $stockTransferDestinationWarehouseId ?? '[null]',
+                    empty($productUnitCode) ? '[empty]' : $productUnitCode,
+                    empty($productUnitProductName) ? '[empty]' : $productUnitProductName,
+                    $productUnitProductCategoryId ?? '[null]',
+                    $productUnitProductBrandId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+                $cacheKey = 'read_any_stock_transfer_product_unit_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
+    }
+
+    public function read(StockTransferProductUnit $stockTransferProductUnit): StockTransferProductUnit
+    {
+        return $stockTransferProductUnit->load([
+            'company',
+            'branch',
+            'stockTransfer',
+            'productUnit.unit',
+            'productUnit.product.category',
+            'productUnit.product.brand',
+            'productUnit.product.images',
+            'serials',
+        ]);
     }
 
     public function create(StockTransferProductUnitCreateDTO $data): StockTransferProductUnit
@@ -53,148 +237,6 @@ class StockTransferProductUnitActions
             $this->flushCache();
 
             return $stockTransferProductUnit;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = StockTransferProductUnit::select('stock_transfer_product_units.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'stock_transfer_product_units.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('stock_transfer_product_units', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('stock_transfer_product_units.id', 'asc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(StockTransferProductUnit $stockTransferProductUnit): StockTransferProductUnit
-    {
-        return $stockTransferProductUnit->load('company', 'productUnit', 'productUnit.unit', 'productUnit.product.images')->first();
-    }
-
-    public function getAllActiveStockTransferProductUnit(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-
-                search: $search,
-                companyId: $companyId,
-
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -252,6 +294,11 @@ class StockTransferProductUnitActions
         $retval = false;
 
         try {
+            $stockTransferProductUnitSerials = $stockTransferProductUnit->serials()->get();
+            foreach ($stockTransferProductUnitSerials as $stockTransferProductUnitSerial) {
+                $this->stockTransferProductUnitSerialActions->delete($stockTransferProductUnitSerial);
+            }
+
             $retval = $stockTransferProductUnit->delete();
 
             DB::commit();

@@ -164,9 +164,9 @@ class StockAdjustmentInProductController extends BaseController
                 productUnitId: $validated['product_unit_id'],
                 productUnitConversionValue: $validated['product_unit_conversion_value'],
                 productUnitCogs: $validated['product_unit_cogs'],
-                remarks: $validated['remarks'] ?? null,
+                remarks: $validated['remarks'],
 
-                serials: $validated['serials'] ?? [],
+                serials: $validated['serials'],
             );
 
             $result = $this->stockAdjustmentInProductActions->create($data);
@@ -190,10 +190,10 @@ class StockAdjustmentInProductController extends BaseController
                 productUnitId: $validated['product_unit_id'],
                 productUnitConversionValue: $validated['product_unit_conversion_value'],
                 productUnitCogs: $validated['product_unit_cogs'],
-                remarks: $validated['remarks'] ?? null,
+                remarks: $validated['remarks'],
 
-                deleteSerialIds: $validated['delete_serial_ids'] ?? [],
-                serials: $validated['serials'] ?? [],
+                deleteSerialIds: $validated['delete_serial_ids'],
+                serials: $validated['serials'],
             );
 
             $result = $this->stockAdjustmentInProductActions->update(

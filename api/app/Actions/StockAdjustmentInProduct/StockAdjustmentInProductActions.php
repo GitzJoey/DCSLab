@@ -62,7 +62,6 @@ class StockAdjustmentInProductActions
                 'stockAdjustment.inWarehouse',
                 'stockAdjustment.outWarehouse',
                 'productUnit.unit',
-                'productUnit.product.company',
                 'productUnit.product.category',
                 'productUnit.product.brand',
                 'productUnit.product.baseProductUnit.unit',
@@ -220,8 +219,9 @@ class StockAdjustmentInProductActions
             'company',
             'branch',
             'stockAdjustment',
-            'productUnit',
             'productUnit.unit',
+            'productUnit.product.category',
+            'productUnit.product.brand',
             'productUnit.product.images',
             'serials',
         ]);

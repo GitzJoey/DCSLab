@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests\StockAdjustmentOutProduct;
+namespace App\Http\Requests\StockTransferProductUnit;
 
 use App\Helpers\HashidsHelper;
 use App\Models\ProductUnit;
-use App\Models\StockAdjustmentOutProduct;
-use App\Rules\ExistsForCompany;
+use App\Models\StockTransferProductUnit;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
+use App\Rules\IsValidProductUnit;
+use App\Rules\IsValidStockTransfer;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class StockAdjustmentOutProductStoreRequest extends FormRequest
+class StockTransferProductUnitStoreRequest extends FormRequest
 {
     public function authorize()
     {
@@ -22,7 +23,7 @@ class StockAdjustmentOutProductStoreRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        return $user->can('create', StockAdjustmentOutProduct::class) ? true : false;
+        return $user->can('create', StockTransferProductUnit::class) ? true : false;
     }
 
     public function rules()
@@ -30,9 +31,9 @@ class StockAdjustmentOutProductStoreRequest extends FormRequest
         return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
-            'stock_adjustment_id' => ['required', 'integer', new ExistsForCompany('stock_adjustments', $this->company_id)],
+            'stock_transfer_id' => ['required', 'integer', 'bail', new IsValidStockTransfer()],
             'qty' => ['required', 'numeric', 'min:1'],
-            'product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
+            'product_unit_id' => ['required', 'integer', 'bail', new IsValidProductUnit($this->company_id)],
             'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
 
@@ -44,13 +45,13 @@ class StockAdjustmentOutProductStoreRequest extends FormRequest
     public function attributes()
     {
         return [
-            'company_id' => trans('validation_attributes.stock_adjustment_out_product.company_id'),
-            'branch_id' => trans('validation_attributes.stock_adjustment_out_product.branch_id'),
-            'stock_adjustment_id' => trans('validation_attributes.stock_adjustment_out_product.stock_adjustment_id'),
-            'qty' => trans('validation_attributes.stock_adjustment_out_product.qty'),
-            'product_unit_id' => trans('validation_attributes.stock_adjustment_out_product.product_unit_id'),
-            'product_unit_conversion_value' => trans('validation_attributes.stock_adjustment_out_product.product_unit_conversion_value'),
-            'remarks' => trans('validation_attributes.stock_adjustment_out_product.remarks'),
+            'company_id' => trans('validation_attributes.stock_transfer_product_unit.company'),
+            'branch_id' => trans('validation_attributes.stock_transfer_product_unit.branch'),
+            'stock_transfer_id' => trans('validation_attributes.stock_transfer_product_unit.stock_transfer'),
+            'qty' => trans('validation_attributes.stock_transfer_product_unit.qty'),
+            'product_unit_id' => trans('validation_attributes.stock_transfer_product_unit.product_unit'),
+            'product_unit_conversion_value' => trans('validation_attributes.stock_adjustment_in_product.product_unit_conversion_value'),
+            'remarks' => trans('validation_attributes.stock_transfer_product_unit.remarks'),
         ];
     }
 
@@ -59,9 +60,10 @@ class StockAdjustmentOutProductStoreRequest extends FormRequest
         $this->merge([
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
             'branch_id' => $this->filled('branch_id') ? HashidsHelper::decodeId($this->branch_id) : null,
-            'stock_adjustment_id' => $this->filled('stock_adjustment_id') ? HashidsHelper::decodeId($this->stock_adjustment_id) : null,
+            'stock_transfer_id' => $this->filled('stock_transfer_id') ? HashidsHelper::decodeId($this->stock_transfer_id) : null,
             'product_unit_id' => $this->filled('product_unit_id') ? HashidsHelper::decodeId($this->product_unit_id) : null,
         ]);
+
     }
 
     public function withValidator($validator)
@@ -88,14 +90,14 @@ class StockAdjustmentOutProductStoreRequest extends FormRequest
             $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
             $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
             if (str_contains($normalizedBaseQty, '.')) {
-                $validator->errors()->add('serials', trans('validation.stock_adjustment_out_product.base_qty_must_be_integer'));
+                $validator->errors()->add('serials', 'Base qty harus bilangan bulat untuk product serial.');
 
                 return;
             }
 
             $serialCount = (string) count(is_array($serials) ? $serials : []);
             if (bccomp($serialCount, $baseQty, 8) !== 0) {
-                $validator->errors()->add('serials', trans('validation.stock_adjustment_out_product.serial_count_not_match_qty'));
+                $validator->errors()->add('serials', 'Jumlah serial harus sama dengan qty base.');
             }
         });
     }
