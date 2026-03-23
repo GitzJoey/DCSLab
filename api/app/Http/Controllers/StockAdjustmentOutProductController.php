@@ -87,9 +87,9 @@ class StockAdjustmentOutProductController extends BaseController
                 stockAdjustmentInWarehouseId: $validated['stock_adjustment_in_warehouse_id'] ?? null,
                 stockAdjustmentOutWarehouseId: $validated['stock_adjustment_out_warehouse_id'] ?? null,
                 stockAdjustmentProductUnitCode: $validated['product_unit_code'] ?? null,
-                stockAdjustmentProductName: $validated['product_unit_product_name'] ?? null,
-                stockAdjustmentProductCategoryId: $validated['product_unit_product_category_id'] ?? null,
-                stockAdjustmentProductBrandId: $validated['product_unit_product_brand_id'] ?? null,
+                stockAdjustmentProductUnitProductName: $validated['product_unit_product_name'] ?? null,
+                stockAdjustmentProductUnitProductCategoryId: $validated['product_unit_product_category_id'] ?? null,
+                stockAdjustmentProductUnitProductBrandId: $validated['product_unit_product_brand_id'] ?? null,
 
                 execute: new ExecuteDTO(
                     useCache: ! $validated['refresh'],

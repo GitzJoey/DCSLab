@@ -7,7 +7,6 @@ use App\Helpers\HashidsHelper;
 use App\Models\StockTransferProductUnit;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
-use App\Rules\IsValidProduct;
 use App\Rules\IsValidProductUnit;
 use App\Rules\IsValidStockTransfer;
 use Illuminate\Foundation\Http\FormRequest;
@@ -73,8 +72,8 @@ class StockTransferProductUnitRequest extends FormRequest
                     'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
                     'stock_transfer_id' => ['required', 'integer', 'bail', new IsValidStockTransfer()],
                     'qty' => ['required', 'numeric', 'min:1'],
-                    'product_id' => ['required', 'integer', 'bail', new IsValidProduct($this->company_id)],
                     'product_unit_id' => ['required', 'integer', 'bail', new IsValidProductUnit($this->company_id)],
+                    'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
                     'remarks' => ['nullable', 'string', 'max:255'],
                 ];
             case 'update':
@@ -83,8 +82,8 @@ class StockTransferProductUnitRequest extends FormRequest
                     'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
                     'stock_transfer_id' => ['required', 'integer', 'bail', new IsValidStockTransfer()],
                     'qty' => ['required', 'numeric', 'min:1'],
-                    'product_id' => ['required', 'integer', 'bail', new IsValidProduct($this->company_id)],
                     'product_unit_id' => ['required', 'integer', 'bail', new IsValidProductUnit($this->company_id)],
+                    'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
                     'remarks' => ['nullable', 'string', 'max:255'],
                 ];
             case 'delete':
@@ -105,8 +104,8 @@ class StockTransferProductUnitRequest extends FormRequest
             'branch_id' => trans('validation_attributes.stock_transfer_product_unit.branch'),
             'stock_transfer_id' => trans('validation_attributes.stock_transfer_product_unit.stock_transfer'),
             'qty' => trans('validation_attributes.stock_transfer_product_unit.qty'),
-            'product_id' => trans('validation_attributes.stock_transfer_product_unit.product'),
             'product_unit_id' => trans('validation_attributes.stock_transfer_product_unit.product_unit'),
+            'product_unit_conversion_value' => trans('validation_attributes.stock_adjustment_in_product.product_unit_conversion_value'),
             'remarks' => trans('validation_attributes.stock_transfer_product_unit.remarks'),
         ];
     }
@@ -141,6 +140,9 @@ class StockTransferProductUnitRequest extends FormRequest
             case 'update':
                 $this->merge([
                     'company_id' => $this->has('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
+                    'branch_id' => $this->has('branch_id') ? HashidsHelper::decodeId($this->branch_id) : null,
+                    'stock_transfer_id' => $this->has('stock_transfer_id') ? HashidsHelper::decodeId($this->stock_transfer_id) : null,
+                    'product_unit_id' => $this->has('product_unit_id') ? HashidsHelper::decodeId($this->product_unit_id) : null,
                     'remarks' => $this->has('remarks') ? $this['remarks'] : null,
                 ]);
                 break;

@@ -21,7 +21,7 @@ class StockTransferPolicy
             return true;
         }
 
-        if ($user->hasPermission('stockTransfer-readAny')) {
+        if ($user->hasPermission('stock_transfer-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class StockTransferPolicy
             return true;
         }
 
-        if ($user->hasPermission('stockTransfer-read')) {
+        if ($user->hasPermission('stock_transfer-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class StockTransferPolicy
             return true;
         }
 
-        if ($user->hasPermission('stockTransfer-create')) {
+        if ($user->hasPermission('stock_transfer-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class StockTransferPolicy
             return true;
         }
 
-        if ($user->hasPermission('stockTransfer-update')) {
+        if ($user->hasPermission('stock_transfer-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class StockTransferPolicy
             return true;
         }
 
-        if ($user->hasPermission('stockTransfer-delete')) {
+        if ($user->hasPermission('stock_transfer-delete')) {
             return true;
         }
     }

@@ -40,9 +40,9 @@ class StockAdjustmentInProductSerialActions
         ?int $stockAdjustmentInWarehouseId,
         ?int $stockAdjustmentOutWarehouseId,
         ?string $stockAdjustmentProductUnitCode,
-        ?string $stockAdjustmentProductName,
-        ?int $stockAdjustmentProductCategoryId,
-        ?int $stockAdjustmentProductBrandId,
+        ?string $stockAdjustmentProductUnitProductName,
+        ?int $stockAdjustmentProductUnitProductCategoryId,
+        ?int $stockAdjustmentProductUnitProductBrandId,
 
         ?ExecuteDTO $execute
     ) {
@@ -75,9 +75,9 @@ class StockAdjustmentInProductSerialActions
             $stockAdjustmentInWarehouseId,
             $stockAdjustmentOutWarehouseId,
             $stockAdjustmentProductUnitCode,
-            $stockAdjustmentProductName,
-            $stockAdjustmentProductCategoryId,
-            $stockAdjustmentProductBrandId,
+            $stockAdjustmentProductUnitProductName,
+            $stockAdjustmentProductUnitProductCategoryId,
+            $stockAdjustmentProductUnitProductBrandId,
         ) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
@@ -116,16 +116,16 @@ class StockAdjustmentInProductSerialActions
                 $query->where('product_units.code', 'like', '%'.$stockAdjustmentProductUnitCode.'%');
             }
 
-            if ($stockAdjustmentProductName) {
-                $query->where('products.name', 'like', '%'.$stockAdjustmentProductName.'%');
+            if ($stockAdjustmentProductUnitProductName) {
+                $query->where('products.name', 'like', '%'.$stockAdjustmentProductUnitProductName.'%');
             }
 
-            if ($stockAdjustmentProductCategoryId) {
-                $query->where('products.category_id', $stockAdjustmentProductCategoryId);
+            if ($stockAdjustmentProductUnitProductCategoryId) {
+                $query->where('products.category_id', $stockAdjustmentProductUnitProductCategoryId);
             }
 
-            if ($stockAdjustmentProductBrandId) {
-                $query->where('products.brand_id', $stockAdjustmentProductBrandId);
+            if ($stockAdjustmentProductUnitProductBrandId) {
+                $query->where('products.brand_id', $stockAdjustmentProductUnitProductBrandId);
             }
         });
 
@@ -149,9 +149,9 @@ class StockAdjustmentInProductSerialActions
                     $stockAdjustmentInWarehouseId ?? '[null]',
                     $stockAdjustmentOutWarehouseId ?? '[null]',
                     empty($stockAdjustmentProductUnitCode) ? '[empty]' : $stockAdjustmentProductUnitCode,
-                    empty($stockAdjustmentProductName) ? '[empty]' : $stockAdjustmentProductName,
-                    $stockAdjustmentProductCategoryId ?? '[null]',
-                    $stockAdjustmentProductBrandId ?? '[null]',
+                    empty($stockAdjustmentProductUnitProductName) ? '[empty]' : $stockAdjustmentProductUnitProductName,
+                    $stockAdjustmentProductUnitProductCategoryId ?? '[null]',
+                    $stockAdjustmentProductUnitProductBrandId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',
@@ -201,6 +201,19 @@ class StockAdjustmentInProductSerialActions
         return $query;
     }
 
+    public function read(StockAdjustmentInProductSerial $stockAdjustmentInProductSerial): StockAdjustmentInProductSerial
+    {
+        return $stockAdjustmentInProductSerial->load([
+            'company',
+            'branch',
+            'stockAdjustment',
+            'stockAdjustmentInProduct.stockAdjustment',
+            'stockAdjustmentInProduct.productUnit.unit',
+            'stockAdjustmentInProduct.productUnit.product.images',
+            'stockAdjustmentInProduct.stockTransaction',
+        ]);
+    }
+
     public function create(StockAdjustmentInProductSerialCreateDTO $data): StockAdjustmentInProductSerial
     {
         $timer_start = microtime(true);
@@ -230,19 +243,6 @@ class StockAdjustmentInProductSerialActions
             $execution_time = microtime(true) - $timer_start;
             $this->loggerPerformance(__METHOD__, $execution_time);
         }
-    }
-
-    public function read(StockAdjustmentInProductSerial $stockAdjustmentInProductSerial): StockAdjustmentInProductSerial
-    {
-        return $stockAdjustmentInProductSerial->load([
-            'company',
-            'branch',
-            'stockAdjustment',
-            'stockAdjustmentInProduct.stockAdjustment',
-            'stockAdjustmentInProduct.productUnit.unit',
-            'stockAdjustmentInProduct.productUnit.product.images',
-            'stockAdjustmentInProduct.stockTransaction',
-        ]);
     }
 
     public function update(StockAdjustmentInProductSerial $stockAdjustmentInProductSerial, StockAdjustmentInProductSerialUpdateDTO $data): StockAdjustmentInProductSerial

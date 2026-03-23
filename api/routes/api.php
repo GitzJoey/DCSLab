@@ -306,6 +306,45 @@ Route::prefix('stock_adjustment_out_product_serial')->middleware('auth:sanctum')
     });
 });
 
+Route::prefix('stock_transfer')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_transfer.')->group(function () {
+        Route::get('read', [StockTransferController::class, 'readAny'])->name('read_any');
+        Route::get('read/{stock_transfer:ulid}', [StockTransferController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_transfer.')->group(function () {
+        Route::post('save', [StockTransferController::class, 'store'])->name('save');
+        Route::post('edit/{stock_transfer:ulid}', [StockTransferController::class, 'update'])->name('edit');
+        Route::post('delete/{stock_transfer:ulid}', [StockTransferController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('stock_transfer_product_unit')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_transfer_product_unit.')->group(function () {
+        Route::get('read', [StockTransferProductUnitController::class, 'readAny'])->name('read_any');
+        Route::get('read/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_transfer_product_unit.')->group(function () {
+        Route::post('save', [StockTransferProductUnitController::class, 'store'])->name('save');
+        Route::post('edit/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'update'])->name('edit');
+        Route::post('delete/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('stock_transfer_product_unit_serial')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_transfer_product_unit_serial.')->group(function () {
+        Route::get('read', [StockTransferProductUnitSerialController::class, 'readAny'])->name('read_any');
+        Route::get('read/{stock_transfer_product_unit_serial:ulid}', [StockTransferProductUnitSerialController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_transfer_product_unit_serial.')->group(function () {
+        Route::post('save', [StockTransferProductUnitSerialController::class, 'store'])->name('save');
+        Route::post('edit/{stock_transfer_product_unit_serial:ulid}', [StockTransferProductUnitSerialController::class, 'update'])->name('edit');
+        Route::post('delete/{stock_transfer_product_unit_serial:ulid}', [StockTransferProductUnitSerialController::class, 'delete'])->name('delete');
+    });
+});
+
 Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,1'], 'as' => 'api.get'], function () {
     Route::group(['prefix' => 'dashboard', 'as' => '.db'], function () {
         /* #region Extensions */
@@ -426,21 +465,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             Route::group(['prefix' => 'receipt_product_unit_serial', 'as' => '.receipt_product_unit_serial'], function () {
                 Route::get('read', [PurchaseReturnProductUnitSerialController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{receipt_product_unit_serial:ulid}', [PurchaseReturnProductUnitSerialController::class, 'read'])->name('.read');
-            });
-        });
-
-        Route::group(['prefix' => 'stock_transfer', 'as' => '.stock_transfer'], function () {
-            Route::group(['prefix' => 'stock_transfer', 'as' => '.stock_transfer'], function () {
-                Route::get('read', [StockTransferController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{stock_transfer:ulid}', [StockTransferController::class, 'read'])->name('.read');
-            });
-            Route::group(['prefix' => 'stock_transfer_product_unit', 'as' => '.stock_transfer_product_unit'], function () {
-                Route::get('read', [StockTransferProductUnitController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'read'])->name('.read');
-            });
-            Route::group(['prefix' => 'stock_transfer_product_unit_serial', 'as' => '.stock_transfer_product_unit_serial'], function () {
-                Route::get('read', [StockTransferProductUnitSerialController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{stock_trf_product_unit_serial:ulid}', [StockTransferProductUnitSerialController::class, 'read'])->name('.read');
             });
         });
 
@@ -677,24 +701,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [PurchaseReturnProductUnitSerialController::class, 'store'])->name('.save');
                 Route::post('edit/{receipt_product_unit_serial:ulid}', [PurchaseReturnProductUnitSerialController::class, 'update'])->name('.edit');
                 Route::post('delete/{receipt_product_unit_serial:ulid}', [PurchaseReturnProductUnitSerialController::class, 'delete'])->name('.delete');
-            });
-        });
-
-        Route::group(['prefix' => 'stock_transfer', 'middleware' => ['precognitive'], 'as' => '.stock_transfer'], function () {
-            Route::group(['prefix' => 'stock_transfer', 'as' => '.stock_transfer'], function () {
-                Route::post('save', [StockTransferController::class, 'store'])->name('.save');
-                Route::post('edit/{stock_transfer:ulid}', [StockTransferController::class, 'update'])->name('.edit');
-                Route::post('delete/{stock_transfer:ulid}', [StockTransferController::class, 'delete'])->name('.delete');
-            });
-            Route::group(['prefix' => 'stock_transfer_product_unit', 'as' => '.stock_transfer_product_unit'], function () {
-                Route::post('save', [StockTransferProductUnitController::class, 'store'])->name('.save');
-                Route::post('edit/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'update'])->name('.edit');
-                Route::post('delete/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'delete'])->name('.delete');
-            });
-            Route::group(['prefix' => 'stock_transfer_product_unit_serial', 'as' => '.stock_transfer_product_unit_serial'], function () {
-                Route::post('save', [StockTransferProductUnitSerialController::class, 'store'])->name('.save');
-                Route::post('edit/{stock_trf_product_unit_serial:ulid}', [StockTransferProductUnitSerialController::class, 'update'])->name('.edit');
-                Route::post('delete/{stock_trf_product_unit_serial:ulid}', [StockTransferProductUnitSerialController::class, 'delete'])->name('.delete');
             });
         });
 

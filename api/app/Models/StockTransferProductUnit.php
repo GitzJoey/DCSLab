@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Traits\BootableModel;
+use App\Traits\ScopeableByBranch;
+use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +13,8 @@ class StockTransferProductUnit extends Model
 {
     use BootableModel;
     use HasFactory;
+    use ScopeableByBranch;
+    use ScopeableByCompany;
     use SoftDeletes;
 
     protected $fillable = [
@@ -18,42 +22,41 @@ class StockTransferProductUnit extends Model
         'branch_id',
         'stock_transfer_id',
         'qty',
-        'product_id',
         'product_unit_id',
-        'product_unit_amount_per_unit',
-        'product_unit_amount_total',
+        'product_unit_conversion_value',
+        'product_unit_qty_base',
         'remarks',
     ];
 
     protected $casts = [
-        'qty' => 'integer',
-        'product_unit_amount_per_unit' => 'decimal:8',
-        'product_unit_amount_total' => 'decimal:8',
+        'qty' => 'decimal:8',
+        'product_unit_conversion_value' => 'decimal:8',
+        'product_unit_qty_base' => 'decimal:8',
     ];
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class)->withTrashed();
     }
 
     public function stockTransfer()
     {
-        return $this->belongsTo(StockTransfer::class);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(StockTransfer::class)->withTrashed();
     }
 
     public function productUnit()
     {
-        return $this->belongsTo(ProductUnit::class);
+        return $this->belongsTo(ProductUnit::class)->withTrashed();
+    }
+
+    public function serials()
+    {
+        return $this->hasMany(StockTransferProductUnitSerial::class);
     }
 
     public function scopeSearch($query, string $search)

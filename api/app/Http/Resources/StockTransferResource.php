@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\TimezoneHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -13,14 +14,15 @@ class StockTransferResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
+            'company' => new CompanyResource($this->whenLoaded('company')),
+            'branch' => new BranchResource($this->whenLoaded('branch')),
             'code' => $this->code,
-            'date' => $this->date,
-            'source_warehouse' => new WarehouseResource($this->warehouse),
-            'destination_warehouse' => new WarehouseResource($this->warehouse),
+            'date' => TimezoneHelper::convertFromUTCIfValid($this->date),
+            'source_warehouse' => new WarehouseResource($this->whenLoaded('sourceWarehouse')),
+            'destination_warehouse' => new WarehouseResource($this->whenLoaded('destinationWarehouse')),
             'remarks' => $this->remarks,
             'is_posted' => $this->is_posted,
+            'product_units' => StockTransferProductUnitResource::collection($this->whenLoaded('stockTransferProductUnits')),
         ];
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Traits\BootableModel;
+use App\Traits\ScopeableByBranch;
+use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,6 +13,8 @@ class StockTransfer extends Model
 {
     use BootableModel;
     use HasFactory;
+    use ScopeableByBranch;
+    use ScopeableByCompany;
     use SoftDeletes;
 
     protected $fillable = [
@@ -31,22 +35,22 @@ class StockTransfer extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class)->withTrashed();
     }
 
     public function sourceWarehouse()
     {
-        return $this->belongsTo(Warehouse::class, 'source_warehouse_id');
+        return $this->belongsTo(Warehouse::class, 'source_warehouse_id')->withTrashed();
     }
 
     public function destinationWarehouse()
     {
-        return $this->belongsTo(Warehouse::class, 'destination_warehouse_id');
+        return $this->belongsTo(Warehouse::class, 'destination_warehouse_id')->withTrashed();
     }
 
     public function stockTransferProductUnits()
@@ -56,8 +60,9 @@ class StockTransfer extends Model
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('stock_transfers.code', 'like', '%'.$search.'%')
-            ->orWhere('stock_transfers.date', 'like', '%'.$search.'%')
-            ->orWhere('stock_transfers.remarks', 'like', '%'.$search.'%');
+        return $query->where(function ($query) use ($search) {
+            $query->where('stock_transfers.code', 'like', '%'.$search.'%')
+                ->orWhere('stock_transfers.remarks', 'like', '%'.$search.'%');
+        });
     }
 }

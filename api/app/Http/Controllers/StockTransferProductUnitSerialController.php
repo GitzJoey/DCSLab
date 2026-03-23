@@ -3,10 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Actions\StockTransferProductUnitSerial\StockTransferProductUnitSerialActions;
-use App\Http\Requests\StockTransferProductUnitSerialRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\StockTransferProductUnitSerialCreateDTO;
+use App\DTOs\StockTransferProductUnitSerialUpdateDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\StockTransferProductUnitSerial\StockTransferProductUnitSerialStoreRequest;
+use App\Http\Requests\StockTransferProductUnitSerial\StockTransferProductUnitSerialUpdateRequest;
 use App\Http\Resources\StockTransferProductUnitSerialResource;
 use App\Models\StockTransferProductUnitSerial;
+use App\Rules\ExistsForCompany;
+use App\Rules\IsValidBranch;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StockTransferProductUnitSerialController extends BaseController
 {
@@ -19,41 +31,73 @@ class StockTransferProductUnitSerialController extends BaseController
         $this->stockTransferProductUnitSerialActions = $stockTransferProductUnitSerialActions;
     }
 
-    public function store(StockTransferProductUnitSerialRequest $stockTransferProductUnitSerialRequest)
+    public function readAny(Request $request)
     {
-        $request = $stockTransferProductUnitSerialRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', StockTransferProductUnitSerial::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+            'branch_id' => $request->filled('branch_id') ? HashidsHelper::decodeId($request->branch_id) : null,
+            'stock_transfer_source_warehouse_id' => $request->filled('stock_transfer_source_warehouse_id') ? HashidsHelper::decodeId($request->stock_transfer_source_warehouse_id) : null,
+            'stock_transfer_destination_warehouse_id' => $request->filled('stock_transfer_destination_warehouse_id') ? HashidsHelper::decodeId($request->stock_transfer_destination_warehouse_id) : null,
+            'product_unit_product_category_id' => $request->filled('product_unit_product_category_id') ? HashidsHelper::decodeId($request->product_unit_product_category_id) : null,
+            'product_unit_product_brand_id' => $request->filled('product_unit_product_brand_id') ? HashidsHelper::decodeId($request->product_unit_product_brand_id) : null,
+        ]);
 
-        try {
-            $result = $this->stockTransferProductUnitSerialActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
+        $validated = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'branch_id' => ['nullable', 'integer', new IsValidBranch($request->company_id, false)],
+            'search' => ['nullable', 'string'],
 
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
+            'stock_transfer_code' => ['nullable', 'string'],
+            'stock_transfer_start_date' => ['nullable', 'date'],
+            'stock_transfer_end_date' => ['nullable', 'date', 'after_or_equal:stock_transfer_start_date'],
+            'stock_transfer_source_warehouse_id' => ['nullable', 'integer', new ExistsForCompany('warehouses', $request->company_id)],
+            'stock_transfer_destination_warehouse_id' => ['nullable', 'integer', new ExistsForCompany('warehouses', $request->company_id)],
+            'product_unit_code' => ['nullable', 'string'],
+            'product_unit_product_name' => ['nullable', 'string'],
+            'product_unit_product_category_id' => ['nullable', 'integer', new ExistsForCompany('product_categories', $request->company_id)],
+            'product_unit_product_brand_id' => ['nullable', 'integer', new ExistsForCompany('brands', $request->company_id)],
 
-    public function readAny(StockTransferProductUnitSerialRequest $stockTransferProductUnitSerialRequest)
-    {
-        $request = $stockTransferProductUnitSerialRequest->validated();
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['required', 'boolean'],
+            'page' => ['nullable', 'required_if:paginate,true', 'integer', 'min:1'],
+            'per_page' => ['nullable', 'required_if:paginate,true', 'integer', 'min:10'],
+            'limit' => ['nullable', 'required_if:paginate,false', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->stockTransferProductUnitSerialActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
+                withTrashed: $validated['with_trashed'],
+                companyId: $validated['company_id'],
+                branchId: $validated['branch_id'] ?? null,
+                search: $validated['search'] ?? null,
 
-                search: $request['search'],
-                companyId: $request['company_id'],
+                stockTransferCode: $validated['stock_transfer_code'] ?? null,
+                stockTransferStartDate: $validated['stock_transfer_start_date'] ?? null,
+                stockTransferEndDate: $validated['stock_transfer_end_date'] ?? null,
+                stockTransferSourceWarehouseId: $validated['stock_transfer_source_warehouse_id'] ?? null,
+                stockTransferDestinationWarehouseId: $validated['stock_transfer_destination_warehouse_id'] ?? null,
+                stockTransferProductUnitCode: $validated['product_unit_code'] ?? null,
+                stockTransferProductUnitProductName: $validated['product_unit_product_name'] ?? null,
+                stockTransferProductUnitProductCategoryId: $validated['product_unit_product_category_id'] ?? null,
+                stockTransferProductUnitProductBrandId: $validated['product_unit_product_brand_id'] ?? null,
 
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                execute: new ExecuteDTO(
+                    useCache: ! $validated['refresh'],
+                    pagination: $validated['paginate'] ? new ExecutePaginationDTO(
+                        page: $validated['page'],
+                        perPage: $validated['per_page'],
+                    ) : null,
+                    get: ! $validated['paginate'] && ! is_null($validated['limit']) ? new ExecuteGetDTO(
+                        limit: $validated['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -68,9 +112,10 @@ class StockTransferProductUnitSerialController extends BaseController
         }
     }
 
-    public function read(StockTransferProductUnitSerial $stockTransferProductUnitSerial, StockTransferProductUnitSerialRequest $stockTransferProductUnitSerialRequest)
+    public function read(StockTransferProductUnitSerial $stockTransferProductUnitSerial)
     {
-        $request = $stockTransferProductUnitSerialRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $stockTransferProductUnitSerial);
 
         $result = null;
         $errorMsg = '';
@@ -90,17 +135,44 @@ class StockTransferProductUnitSerialController extends BaseController
         }
     }
 
-    public function update(StockTransferProductUnitSerial $stockTransferProductUnitSerial, StockTransferProductUnitSerialRequest $stockTransferProductUnitSerialRequest)
+    public function store(StockTransferProductUnitSerialStoreRequest $request)
     {
-        $request = $stockTransferProductUnitSerialRequest->validated();
+        $validated = $request->validated();
 
         $result = null;
         $errorMsg = '';
 
         try {
+            $data = new StockTransferProductUnitSerialCreateDTO(
+                companyId: $validated['company_id'],
+                branchId: $validated['branch_id'],
+                stockTransferId: $validated['stock_transfer_id'],
+                stockTransferProductUnitId: $validated['stock_transfer_product_unit_id'],
+                serial: $validated['serial'],
+            );
+            $result = $this->stockTransferProductUnitSerialActions->create($data);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function update(StockTransferProductUnitSerial $stockTransferProductUnitSerial, StockTransferProductUnitSerialUpdateRequest $request)
+    {
+        $validated = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $data = StockTransferProductUnitSerialUpdateDTO::fromStockTransferProductUnitSerial(
+                $stockTransferProductUnitSerial,
+                $validated['serial'],
+            );
             $result = $this->stockTransferProductUnitSerialActions->update(
                 stockTransferProductUnitSerial: $stockTransferProductUnitSerial,
-                data: $request
+                data: $data
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -109,8 +181,11 @@ class StockTransferProductUnitSerialController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(StockTransferProductUnitSerial $stockTransferProductUnitSerial, StockTransferProductUnitSerialRequest $stockTransferProductUnitSerialRequest)
+    public function delete(StockTransferProductUnitSerial $stockTransferProductUnitSerial)
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $stockTransferProductUnitSerial);
+
         $result = false;
         $errorMsg = '';
 

@@ -13,10 +13,10 @@ class StockTransferProductUnitSerialResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
-            'stock_transfer' => new StockTransferResource($this->stock_transfer),
-            'stock_trasnfer_product_unit' => new StockTransferProductUnitResource($this->stock_trasnfer_produc_unit),
+            'company' => new CompanyResource($this->whenLoaded('company')),
+            'branch' => new BranchResource($this->whenLoaded('branch')),
+            'stock_transfer' => new StockTransferResource($this->whenLoaded('stockTransfer')),
+            'stock_transfer_product_unit' => new StockTransferProductUnitResource($this->whenLoaded('stockTransferProductUnit')),
             'serial' => $this->serial,
         ];
     }

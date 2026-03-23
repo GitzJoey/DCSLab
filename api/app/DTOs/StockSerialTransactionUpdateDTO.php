@@ -4,6 +4,7 @@ namespace App\DTOs;
 
 use App\Models\StockAdjustmentInProductSerial;
 use App\Models\StockAdjustmentOutProductSerial;
+use App\Models\StockTransferProductUnitSerial;
 
 final class StockSerialTransactionUpdateDTO
 {
@@ -40,6 +41,32 @@ final class StockSerialTransactionUpdateDTO
             warehouseId: $stockAdjustmentOutProductSerial->stockAdjustmentOutProduct->stockAdjustment->out_warehouse_id,
             productId: $stockAdjustmentOutProductSerial->stockAdjustmentOutProduct->productUnit->product_id,
             direction: -1,
+            serial: $serial,
+        );
+    }
+
+    public static function fromStockTransferProductUnitSerialSource(StockTransferProductUnitSerial $stockTransferProductUnitSerial, string $serial): self
+    {
+        return new self(
+            referableType: StockTransferProductUnitSerial::class,
+            referableId: $stockTransferProductUnitSerial->id,
+            date: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->date,
+            warehouseId: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->source_warehouse_id,
+            productId: $stockTransferProductUnitSerial->stockTransferProductUnit->productUnit->product_id,
+            direction: -1,
+            serial: $serial,
+        );
+    }
+
+    public static function fromStockTransferProductUnitSerialDestination(StockTransferProductUnitSerial $stockTransferProductUnitSerial, string $serial): self
+    {
+        return new self(
+            referableType: StockTransferProductUnitSerial::class,
+            referableId: $stockTransferProductUnitSerial->id,
+            date: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->date,
+            warehouseId: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->destination_warehouse_id,
+            productId: $stockTransferProductUnitSerial->stockTransferProductUnit->productUnit->product_id,
+            direction: 1,
             serial: $serial,
         );
     }

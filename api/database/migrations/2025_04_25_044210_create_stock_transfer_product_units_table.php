@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('stock_transfer_id')->references('id')->on('stock_transfers');
             $table->decimal('qty', 30, 8)->default(0);
-            $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('product_unit_id')->references('id')->on('product_units');
-            $table->decimal('product_unit_amount_per_unit', 30, 8)->default(0);
-            $table->decimal('product_unit_amount_total', 30, 8)->default(0);
+            $table->decimal('product_unit_conversion_value', 30, 8)->default(0);
+            $table->decimal('product_unit_qty_base', 30, 8)->default(0);
+            $table->string('remarks')->nullable();
 
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\StockTransferProductUnit\StockTransferProductUnitActions;
+use App\DTOs\StockTransferProductUnitCreateDTO;
+use App\DTOs\StockTransferProductUnitUpdateDTO;
 use App\Http\Requests\StockTransferProductUnitRequest;
 use App\Http\Resources\StockTransferProductUnitResource;
 use App\Models\StockTransferProductUnit;
@@ -27,7 +29,17 @@ class StockTransferProductUnitController extends BaseController
         $errorMsg = '';
 
         try {
-            $result = $this->stockTransferProductUnitActions->create($request);
+            $data = new StockTransferProductUnitCreateDTO(
+                companyId: $request['company_id'],
+                branchId: $request['branch_id'],
+                stockTransferId: $request['stock_transfer_id'],
+                qty: $request['qty'],
+                productUnitId: $request['product_unit_id'],
+                productUnitConversionValue: $request['product_unit_conversion_value'],
+                remarks: $request['remarks'] ?? null,
+                serials: [],
+            );
+            $result = $this->stockTransferProductUnitActions->create($data);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -98,9 +110,17 @@ class StockTransferProductUnitController extends BaseController
         $errorMsg = '';
 
         try {
+            $data = new StockTransferProductUnitUpdateDTO(
+                qty: $request['qty'],
+                productUnitId: $request['product_unit_id'],
+                productUnitConversionValue: $request['product_unit_conversion_value'],
+                remarks: $request['remarks'] ?? null,
+                deleteSerialIds: [],
+                serials: [],
+            );
             $result = $this->stockTransferProductUnitActions->update(
                 stockTransferProductUnit: $stockTransferProductUnit,
-                data: $request
+                data: $data
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();

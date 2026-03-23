@@ -2,189 +2,193 @@
 
 namespace App\Actions\StockTransfer;
 
+use App\Actions\StockTransferProductUnit\StockTransferProductUnitActions;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\StockTransferCreateDTO;
+use App\DTOs\StockTransferProductUnitCreateDTO;
+use App\DTOs\StockTransferProductUnitUpdateDTO;
+use App\DTOs\StockTransferUpdateDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\StockTransfer;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class StockTransferActions
 {
     use CacheHelper;
     use LoggerHelper;
 
-    public function __construct()
-    {
+    private $stockTransferProductUnitActions;
+
+    public function __construct(
+        StockTransferProductUnitActions $stockTransferProductUnitActions,
+    ) {
+        $this->stockTransferProductUnitActions = $stockTransferProductUnitActions;
     }
 
-    public function create(array $data): StockTransfer
-    {
-        DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $stockTransfer = new StockTransfer();
-            $stockTransfer->company_id = $data['company_id'];
-            $stockTransfer->branch_id = $data['branch_id'];
-            $stockTransfer->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $stockTransfer->date = $data['date'];
-            $stockTransfer->source_warehouse_id = $data['source_warehouse_id'];
-            $stockTransfer->destination_warehouse_id = $data['destination_warehouse_id'];
-            $stockTransfer->remarks = $data['remarks'];
-            $stockTransfer->is_posted = $data['is_posted'];
-            $stockTransfer->save();
-
-            DB::commit();
-
-            $this->flushCache();
-
-            return $stockTransfer;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
 
         ?string $search,
-        int $companyId,
+        ?string $startDate,
+        ?string $endDate,
+        ?int $sourceWarehouseId,
+        ?int $destinationWarehouseId,
 
-        ?int $limit
+        ?ExecuteDTO $execute
     ) {
-        $query = StockTransfer::select('stock_transfers.*')->withTrashed()
-            ->with(['company'])
+        $query = StockTransfer::select('stock_transfers.*')
+            ->with(['company', 'branch', 'sourceWarehouse', 'destinationWarehouse'])
+            ->when($execute?->pagination, function ($query) {
+                $query->with([
+                    'stockTransferProductUnits.productUnit.unit',
+                    'stockTransferProductUnits.productUnit.product.images',
+                    'stockTransferProductUnits.productUnit.product.baseProductUnit.unit',
+                    'stockTransferProductUnits.serials',
+                ]);
+            })
             ->join('companies', 'companies.id', '=', 'stock_transfers.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
+            ->whereCompanyId('stock_transfers', $companyId)
+            ->whereBranchId('stock_transfers', $branchId)
+            ->withTrashed();
+
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $startDate,
+            $endDate,
+            $sourceWarehouseId,
+            $destinationWarehouseId
+        ) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->search($search);
+            }
+
+            if ($startDate) {
+                $query->where('stock_transfers.date', '>=', TimezoneHelper::convertToUTC($startDate));
+            }
+
+            if ($endDate) {
+                $query->where('stock_transfers.date', '<=', TimezoneHelper::convertToUTC($endDate));
+            }
+
+            if ($sourceWarehouseId) {
+                $query->where('stock_transfers.source_warehouse_id', $sourceWarehouseId);
+            }
+
+            if ($destinationWarehouseId) {
+                $query->where('stock_transfers.destination_warehouse_id', $destinationWarehouseId);
+            }
+        });
+
+        $query->orderBy('stock_transfers.date', 'desc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    $branchId ?? '[null]',
+                    empty($search) ? '[empty]' : $search,
+                    $startDate ?? '[null]',
+                    $endDate ?? '[null]',
+                    $sourceWarehouseId ?? '[null]',
+                    $destinationWarehouseId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_stock_transfer_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
                 } else {
-                    $query->withoutTrashed();
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
                 }
 
-                if ($search) {
-                    $query->search($search);
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
                 }
 
-                $query->whereCompanyId('stock_transfers', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('stock_transfers.date', 'dsc');
-
-        if ($limit) {
-            $query->limit($limit);
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
         }
 
         return $query;
     }
 
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
     public function read(StockTransfer $stockTransfer): StockTransfer
     {
-        return $stockTransfer->load('company', 'branch', 'sourceWarehouse', 'destinationWarehouse')->first();
+        return $stockTransfer->load([
+            'company',
+            'branch',
+            'sourceWarehouse',
+            'destinationWarehouse',
+            'stockTransferProductUnits.productUnit',
+            'stockTransferProductUnits.productUnit.unit',
+            'stockTransferProductUnits.productUnit.product.images',
+            'stockTransferProductUnits.productUnit.product.baseProductUnit.unit',
+            'stockTransferProductUnits.serials',
+        ]);
     }
 
-    public function getAllActiveStockTransfer(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
+    public function create(StockTransferCreateDTO $data): StockTransfer
+    {
         $timer_start = microtime(true);
 
         try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
+            $stockTransfer = new StockTransfer();
+            $stockTransfer->company_id = $data->companyId;
+            $stockTransfer->branch_id = $data->branchId;
+            $stockTransfer->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $stockTransfer->date = $this->generateDate($data->date);
+            $stockTransfer->source_warehouse_id = $data->sourceWarehouseId;
+            $stockTransfer->destination_warehouse_id = $data->destinationWarehouseId;
+            $stockTransfer->remarks = $data->remarks;
+            $stockTransfer->is_posted = $data->isPosted;
+            $stockTransfer->save();
 
-                search: $search,
-                companyId: $companyId,
+            $this->saveProductUnits($stockTransfer, $data->productUnits);
 
-                limit: $limit
-            );
+            $this->flushCache();
 
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
+            return $stockTransfer;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -194,27 +198,44 @@ class StockTransferActions
         }
     }
 
-    public function update(StockTransfer $stockTransfer, array $data): StockTransfer
+    private function saveProductUnits(StockTransfer $stockTransfer, array $productUnits): void
     {
-        DB::beginTransaction();
+        foreach ($productUnits as $productUnit) {
+            $data = new StockTransferProductUnitCreateDTO(
+                companyId: $stockTransfer->company_id,
+                branchId: $stockTransfer->branch_id,
+                stockTransferId: $stockTransfer->id,
+                qty: $productUnit['qty'],
+                productUnitId: $productUnit['product_unit_id'],
+                productUnitConversionValue: $productUnit['product_unit_conversion_value'],
+                remarks: $productUnit['remarks'],
+                serials: $productUnit['serials'],
+            );
+            $this->stockTransferProductUnitActions->create($data);
+        }
+    }
+
+    public function update(StockTransfer $stockTransfer, StockTransferUpdateDTO $data): StockTransfer
+    {
         $timer_start = microtime(true);
 
         try {
-            $stockTransfer->code = $this->generateUniqueCode($stockTransfer->company_id, $data['code'], $stockTransfer->id);
-            $stockTransfer->date = $data['date'];
-            $stockTransfer->source_warehouse_id = $data['source_warehouse_id'];
-            $stockTransfer->destination_warehouse_id = $data['destination_warehouse_id'];
-            $stockTransfer->remarks = $data['remarks'];
-            $stockTransfer->is_posted = $data['is_posted'];
+            $stockTransfer->company_id = $data->companyId;
+            $stockTransfer->branch_id = $data->branchId;
+            $stockTransfer->code = $this->generateUniqueCode($data->companyId, $data->code, $stockTransfer->id);
+            $stockTransfer->date = $this->generateDate($data->date);
+            $stockTransfer->source_warehouse_id = $data->sourceWarehouseId;
+            $stockTransfer->destination_warehouse_id = $data->destinationWarehouseId;
+            $stockTransfer->remarks = $data->remarks;
+            $stockTransfer->is_posted = $data->isPosted;
             $stockTransfer->save();
 
-            DB::commit();
+            $this->updateProductUnits($stockTransfer, $data->deleteProductUnitIds, $data->productUnits);
 
             $this->flushCache();
 
             return $stockTransfer->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -223,9 +244,43 @@ class StockTransferActions
         }
     }
 
+    private function updateProductUnits(StockTransfer $stockTransfer, array $deleteIds, array $productUnits): void
+    {
+        foreach ($deleteIds as $deleteId) {
+            $stockTransferProductUnit = $stockTransfer->stockTransferProductUnits()->findOrFail($deleteId);
+            $this->stockTransferProductUnitActions->delete($stockTransferProductUnit);
+        }
+
+        foreach ($productUnits as $productUnit) {
+            if ($productUnit['id']) {
+                $stockTransferProductUnit = $stockTransfer->stockTransferProductUnits()->findOrFail($productUnit['id']);
+                $data = new StockTransferProductUnitUpdateDTO(
+                    qty: $productUnit['qty'],
+                    productUnitId: $productUnit['product_unit_id'],
+                    productUnitConversionValue: $productUnit['product_unit_conversion_value'],
+                    remarks: $productUnit['remarks'],
+                    deleteSerialIds: $productUnit['delete_serial_ids'],
+                    serials: $productUnit['serials'],
+                );
+                $this->stockTransferProductUnitActions->update($stockTransferProductUnit, $data);
+            } else {
+                $data = new StockTransferProductUnitCreateDTO(
+                    companyId: $stockTransfer->company_id,
+                    branchId: $stockTransfer->branch_id,
+                    stockTransferId: $stockTransfer->id,
+                    qty: $productUnit['qty'],
+                    productUnitId: $productUnit['product_unit_id'],
+                    productUnitConversionValue: $productUnit['product_unit_conversion_value'],
+                    remarks: $productUnit['remarks'],
+                    serials: $productUnit['serials'],
+                );
+                $this->stockTransferProductUnitActions->create($data);
+            }
+        }
+    }
+
     public function delete(StockTransfer $stockTransfer): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -233,19 +288,27 @@ class StockTransferActions
         try {
             $retval = $stockTransfer->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             $this->loggerPerformance(__METHOD__, $execution_time);
         }
+    }
+
+    public function generateDate(string $date): string
+    {
+        if ($date == config('dcslab.KEYWORDS.AUTO')) {
+            $nowLocal = now(TimezoneHelper::getUserTimezone())->toDateTimeString();
+
+            return TimezoneHelper::convertToUTC($nowLocal);
+        }
+
+        return TimezoneHelper::convertToUTC($date);
     }
 
     public function generateUniqueCode(int $companyId, string $code, ?int $exceptId): string
@@ -256,7 +319,7 @@ class StockTransferActions
             $tryCount = 0;
             do {
                 $count = $company->stockTransfers()->withTrashed()->count() + 1 + $tryCount;
-                $code = 'WH'.str_pad($count, 3, '0', STR_PAD_LEFT);
+                $code = 'ST'.str_pad($count, 3, '0', STR_PAD_LEFT);
                 $tryCount++;
             } while (! $this->isUniqueCode($companyId, $code, $exceptId));
 

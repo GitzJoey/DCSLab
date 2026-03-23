@@ -2,6 +2,11 @@
 
 namespace App\Actions\StockTransferProductUnit;
 
+use App\Actions\StockTransferProductUnitSerial\StockTransferProductUnitSerialActions;
+use App\DTOs\StockTransferProductUnitCreateDTO;
+use App\DTOs\StockTransferProductUnitSerialCreateDTO;
+use App\DTOs\StockTransferProductUnitSerialUpdateDTO;
+use App\DTOs\StockTransferProductUnitUpdateDTO;
 use App\Models\Company;
 use App\Models\StockTransferProductUnit;
 use App\Traits\CacheHelper;
@@ -16,35 +21,39 @@ class StockTransferProductUnitActions
     use CacheHelper;
     use LoggerHelper;
 
-    public function __construct()
-    {
+    private $stockTransferProductUnitSerialActions;
+
+    public function __construct(
+        StockTransferProductUnitSerialActions $stockTransferProductUnitSerialActions,
+    ) {
+        $this->stockTransferProductUnitSerialActions = $stockTransferProductUnitSerialActions;
     }
 
-    public function create(array $data): StockTransferProductUnit
+    public function create(StockTransferProductUnitCreateDTO $data): StockTransferProductUnit
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $stockTransferProductUnit = new StockTransferProductUnit();
-            $stockTransferProductUnit->company_id = $data['company_id'];
-            $stockTransferProductUnit->branch_id = $data['branch_id'];
-            $stockTransferProductUnit->stock_transfer_id = $data['stock_transfer_id'];
-            $stockTransferProductUnit->company_id = $data['company_id'];
-            $stockTransferProductUnit->qty = $data['qty'];
-            $stockTransferProductUnit->product_id = $data['product_id'];
-            $stockTransferProductUnit->product_unit_id = $data['product_unit_id'];
-            $stockTransferProductUnit->product_unit_amount_per_unit = $data['product_unit_amount_per_unit'];
-            $stockTransferProductUnit->product_unit_amount_total = $data['product_unit_amount_total'];
+            $stockTransferProductUnit->company_id = $data->companyId;
+            $stockTransferProductUnit->branch_id = $data->branchId;
+            $stockTransferProductUnit->stock_transfer_id = $data->stockTransferId;
+            $stockTransferProductUnit->qty = $data->qty;
+            $stockTransferProductUnit->product_unit_id = $data->productUnitId;
+            $stockTransferProductUnit->product_unit_conversion_value = $data->productUnitConversionValue;
+            $stockTransferProductUnit->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
+            $stockTransferProductUnit->remarks = $data->remarks;
             $stockTransferProductUnit->save();
 
-            DB::commit();
+            foreach ($data->serials as $serial) {
+                $dto = StockTransferProductUnitSerialCreateDTO::fromStockTransferProductUnit($stockTransferProductUnit, $serial['serial']);
+                $this->stockTransferProductUnitSerialActions->create($dto);
+            }
 
             $this->flushCache();
 
             return $stockTransferProductUnit;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -147,7 +156,7 @@ class StockTransferProductUnitActions
 
     public function read(StockTransferProductUnit $stockTransferProductUnit): StockTransferProductUnit
     {
-        return $stockTransferProductUnit->load('company', 'product', 'productUnit')->first();
+        return $stockTransferProductUnit->load('company', 'productUnit', 'productUnit.unit', 'productUnit.product.images')->first();
     }
 
     public function getAllActiveStockTransferProductUnit(
@@ -195,30 +204,38 @@ class StockTransferProductUnitActions
         }
     }
 
-    public function update(StockTransferProductUnit $stockTransferProductUnit, array $data): StockTransferProductUnit
+    public function update(StockTransferProductUnit $stockTransferProductUnit, StockTransferProductUnitUpdateDTO $data): StockTransferProductUnit
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $stockTransferProductUnit->company_id = $data['company_id'];
-            $stockTransferProductUnit->branch_id = $data['branch_id'];
-            $stockTransferProductUnit->stock_transfer_id = $data['stock_transfer_id'];
-            $stockTransferProductUnit->company_id = $data['company_id'];
-            $stockTransferProductUnit->qty = $data['qty'];
-            $stockTransferProductUnit->product_id = $data['product_id'];
-            $stockTransferProductUnit->product_unit_id = $data['product_unit_id'];
-            $stockTransferProductUnit->product_unit_amount_per_unit = $data['product_unit_amount_per_unit'];
-            $stockTransferProductUnit->product_unit_amount_total = $data['product_unit_amount_total'];
+            $stockTransferProductUnit->qty = $data->qty;
+            $stockTransferProductUnit->product_unit_id = $data->productUnitId;
+            $stockTransferProductUnit->product_unit_conversion_value = $data->productUnitConversionValue;
+            $stockTransferProductUnit->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
+            $stockTransferProductUnit->remarks = $data->remarks;
             $stockTransferProductUnit->save();
 
-            DB::commit();
+            foreach ($data->deleteSerialIds as $deleteId) {
+                $stockTransferProductUnitSerial = $stockTransferProductUnit->serials()->findOrFail($deleteId);
+                $this->stockTransferProductUnitSerialActions->delete($stockTransferProductUnitSerial);
+            }
+
+            foreach ($data->serials as $serial) {
+                if ($serial['id']) {
+                    $stockTransferProductUnitSerial = $stockTransferProductUnit->serials()->findOrFail($serial['id']);
+                    $dto = StockTransferProductUnitSerialUpdateDTO::fromStockTransferProductUnitSerial($stockTransferProductUnitSerial, $serial['serial']);
+                    $this->stockTransferProductUnitSerialActions->update($stockTransferProductUnitSerial, $dto);
+                } else {
+                    $dto = StockTransferProductUnitSerialCreateDTO::fromStockTransferProductUnit($stockTransferProductUnit, $serial['serial']);
+                    $this->stockTransferProductUnitSerialActions->create($dto);
+                }
+            }
 
             $this->flushCache();
 
             return $stockTransferProductUnit->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

@@ -8,10 +8,13 @@ class StockTransferProductUnitFactory extends Factory
 {
     public function definition(): array
     {
+        $qty = fake()->randomFloat(8, 1, 10000);
+        $conversionValue = fake()->randomFloat(8, 1, 10000);
+
         return [
-            'qty' => fake()->randomNumber(0, 10000),
-            'product_unit_amount_per_unit' => fake()->randomNumber(0, 10000),
-            'product_unit_amount_total' => fake()->randomNumber(0, 10000),
+            'qty' => $qty,
+            'product_unit_conversion_value' => $conversionValue,
+            'product_unit_qty_base' => bcmul((string) $qty, (string) $conversionValue, 8),
         ];
     }
 }
