@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\PurchaseProductUnitSerial\PurchaseProductUnitSerialActions;
-use App\Http\Requests\PurchaseProductUnitSerialRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\PurchaseProductUnitSerial\PurchaseProductUnitSerialStoreRequest;
+use App\Http\Requests\PurchaseProductUnitSerial\PurchaseProductUnitSerialUpdateRequest;
 use App\Http\Resources\PurchaseProductUnitSerialResource;
 use App\Models\PurchaseProductUnitSerial;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseProductUnitSerialController extends BaseController
 {
@@ -19,41 +28,50 @@ class PurchaseProductUnitSerialController extends BaseController
         $this->purchaseProductUnitSerialActions = $purchaseProductUnitSerialActions;
     }
 
-    public function store(PurchaseProductUnitSerialRequest $purchaseProductUnitSerialRequest)
+    public function readAny(Request $request)
     {
-        $request = $purchaseProductUnitSerialRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', PurchaseProductUnitSerial::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+        ]);
 
-        try {
-            $result = $this->purchaseProductUnitSerialActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(PurchaseProductUnitSerialRequest $purchaseProductUnitSerialRequest)
-    {
-        $request = $purchaseProductUnitSerialRequest->validated();
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->purchaseProductUnitSerialActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
 
-                search: $request['search'],
-                companyId: $request['company_id'],
+                purchaseId: $validatedRequest['purchase_id'] ?? null,
+                purchaseProductUnitId: $validatedRequest['purchase_product_unit_id'] ?? null,
 
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -61,16 +79,15 @@ class PurchaseProductUnitSerialController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = PurchaseProductUnitSerialResource::collection($result);
-
-            return $response;
         }
+
+        return PurchaseProductUnitSerialResource::collection($result);
     }
 
-    public function read(PurchaseProductUnitSerial $purchaseProductUnitSerial, PurchaseProductUnitSerialRequest $purchaseProductUnitSerialRequest)
+    public function read(PurchaseProductUnitSerial $purchaseProductUnitSerial)
     {
-        $request = $purchaseProductUnitSerialRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $purchaseProductUnitSerial);
 
         $result = null;
         $errorMsg = '';
@@ -83,40 +100,66 @@ class PurchaseProductUnitSerialController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new PurchaseProductUnitSerialResource($result);
-
-            return $response;
         }
+
+        return new PurchaseProductUnitSerialResource($result);
     }
 
-    public function update(PurchaseProductUnitSerial $purchaseProductUnitSerial, PurchaseProductUnitSerialRequest $purchaseProductUnitSerialRequest)
+    public function store(PurchaseProductUnitSerialStoreRequest $request)
     {
-        $request = $purchaseProductUnitSerialRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->purchaseProductUnitSerialActions->update(
-                purchaseProductUnitSerial: $purchaseProductUnitSerial,
-                data: $request
-            );
+            DB::beginTransaction();
+            $result = $this->purchaseProductUnitSerialActions->create($validatedRequest);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(PurchaseProductUnitSerial $purchaseProductUnitSerial, PurchaseProductUnitSerialRequest $purchaseProductUnitSerialRequest)
+    public function update(PurchaseProductUnitSerial $purchaseProductUnitSerial, PurchaseProductUnitSerialUpdateRequest $request)
     {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+            $result = $this->purchaseProductUnitSerialActions->update(
+                purchaseProductUnitSerial: $purchaseProductUnitSerial,
+                data: $validatedRequest
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function delete(PurchaseProductUnitSerial $purchaseProductUnitSerial)
+    {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $purchaseProductUnitSerial);
+
         $result = false;
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
             $result = $this->purchaseProductUnitSerialActions->delete($purchaseProductUnitSerial);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

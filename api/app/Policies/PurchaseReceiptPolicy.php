@@ -21,7 +21,7 @@ class PurchaseReceiptPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceipt-readAny')) {
+        if ($user->hasPermission('purchase_receipt-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class PurchaseReceiptPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceipt-read')) {
+        if ($user->hasPermission('purchase_receipt-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class PurchaseReceiptPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceipt-create')) {
+        if ($user->hasPermission('purchase_receipt-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class PurchaseReceiptPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceipt-update')) {
+        if ($user->hasPermission('purchase_receipt-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class PurchaseReceiptPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceipt-delete')) {
+        if ($user->hasPermission('purchase_receipt-delete')) {
             return true;
         }
     }

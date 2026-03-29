@@ -20,36 +20,6 @@ class BranchActions
     {
     }
 
-    public function create(array $data): Branch
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $branch = new Branch();
-            $branch->company_id = $data['company_id'];
-            $branch->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $branch->name = $data['name'];
-            $branch->address = $data['address'];
-            $branch->city = $data['city'];
-            $branch->contact = $data['contact'];
-            $branch->is_main = $data['is_main'];
-            $branch->remarks = $data['remarks'];
-            $branch->status = $data['status'];
-
-            $branch->save();
-
-            $this->flushCache();
-
-            return $branch;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -168,6 +138,36 @@ class BranchActions
         $result = $branch->is_main;
 
         return is_null($result) ? false : $result;
+    }
+
+    public function create(array $data): Branch
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $branch = new Branch();
+            $branch->company_id = $data['company_id'];
+            $branch->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $branch->name = $data['name'];
+            $branch->address = $data['address'];
+            $branch->city = $data['city'];
+            $branch->contact = $data['contact'];
+            $branch->is_main = $data['is_main'];
+            $branch->remarks = $data['remarks'];
+            $branch->status = $data['status'];
+
+            $branch->save();
+
+            $this->flushCache();
+
+            return $branch;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(

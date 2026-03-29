@@ -31,28 +31,30 @@ class SaleOrderDownPaymentApply extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class)->withTrashed();
     }
 
     public function saleOrder()
     {
-        return $this->belongsTo(SalesOrder::class);
+        return $this->belongsTo(SalesOrder::class)->withTrashed();
     }
 
     public function cashAccount()
     {
-        return $this->belongsTo(CashAccount::class);
+        return $this->belongsTo(CashAccount::class)->withTrashed();
     }
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('sale_order_down_payment_applies.code', 'like', '%'.$search.'%')
-            ->orWhere('sale_order_down_payment_applies.date', 'like', '%'.$search.'%')
-            ->orWhere('sale_order_down_payment_applies.remarks', 'like', '%'.$search.'%');
+        return $query->where(function ($query) use ($search) {
+            $query->where('sale_order_down_payment_applies.code', 'like', '%'.$search.'%')
+                ->orWhere('sale_order_down_payment_applies.date', 'like', '%'.$search.'%')
+                ->orWhere('sale_order_down_payment_applies.remarks', 'like', '%'.$search.'%');
+        });
     }
 }

@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\SaleReceiptProductUnit\SaleReceiptProductUnitActions;
-use App\Http\Requests\SaleReceiptProductUnitRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\SaleReceiptProductUnit\SaleReceiptProductUnitStoreRequest;
+use App\Http\Requests\SaleReceiptProductUnit\SaleReceiptProductUnitUpdateRequest;
 use App\Http\Resources\SaleReceiptProductUnitResource;
 use App\Models\SaleReceiptProductUnit;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SaleReceiptProductUnitController extends BaseController
 {
@@ -19,41 +28,49 @@ class SaleReceiptProductUnitController extends BaseController
         $this->saleReceiptProductUnitActions = $saleReceiptProductUnitActions;
     }
 
-    public function store(SaleReceiptProductUnitRequest $saleReceiptProductUnitRequest)
+    public function readAny(Request $request)
     {
-        $request = $saleReceiptProductUnitRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', SaleReceiptProductUnit::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+        ]);
 
-        try {
-            $result = $this->saleReceiptProductUnitActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(SaleReceiptProductUnitRequest $saleReceiptProductUnitRequest)
-    {
-        $request = $saleReceiptProductUnitRequest->validated();
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->saleReceiptProductUnitActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
-
-                search: $request['search'],
-                companyId: $request['company_id'],
-
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
+                saleReceiptId: $validatedRequest['sale_receipt_id'] ?? null,
+                productId: $validatedRequest['product_id'] ?? null,
+                productUnitId: $validatedRequest['product_unit_id'] ?? null,
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -61,16 +78,15 @@ class SaleReceiptProductUnitController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = SaleReceiptProductUnitResource::collection($result);
-
-            return $response;
         }
+
+        return SaleReceiptProductUnitResource::collection($result);
     }
 
-    public function read(SaleReceiptProductUnit $saleReceiptProductUnit, SaleReceiptProductUnitRequest $saleReceiptProductUnitRequest)
+    public function read(SaleReceiptProductUnit $saleReceiptProductUnit)
     {
-        $request = $saleReceiptProductUnitRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $saleReceiptProductUnit);
 
         $result = null;
         $errorMsg = '';
@@ -83,40 +99,72 @@ class SaleReceiptProductUnitController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new SaleReceiptProductUnitResource($result);
-
-            return $response;
         }
+
+        return new SaleReceiptProductUnitResource($result);
     }
 
-    public function update(SaleReceiptProductUnit $saleReceiptProductUnit, SaleReceiptProductUnitRequest $saleReceiptProductUnitRequest)
+    public function store(SaleReceiptProductUnitStoreRequest $request)
     {
-        $request = $saleReceiptProductUnitRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->saleReceiptProductUnitActions->update(
-                saleReceiptProductUnit: $saleReceiptProductUnit,
-                data: $request
-            );
+            DB::beginTransaction();
+
+            $result = $this->saleReceiptProductUnitActions->create($validatedRequest);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(SaleReceiptProductUnit $saleReceiptProductUnit, SaleReceiptProductUnitRequest $saleReceiptProductUnitRequest)
+    public function update(SaleReceiptProductUnit $saleReceiptProductUnit, SaleReceiptProductUnitUpdateRequest $request)
     {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            $result = $this->saleReceiptProductUnitActions->update(
+                saleReceiptProductUnit: $saleReceiptProductUnit,
+                data: $validatedRequest
+            );
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function delete(SaleReceiptProductUnit $saleReceiptProductUnit)
+    {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $saleReceiptProductUnit);
+
         $result = false;
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
+
             $result = $this->saleReceiptProductUnitActions->delete($saleReceiptProductUnit);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

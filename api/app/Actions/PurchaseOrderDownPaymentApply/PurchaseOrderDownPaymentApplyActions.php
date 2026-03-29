@@ -9,7 +9,6 @@ use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderDownPaymentApplyActions
 {
@@ -20,80 +19,14 @@ class PurchaseOrderDownPaymentApplyActions
     {
     }
 
-    public function create(array $data): PurchaseOrderDownPaymentApply
-    {
-        DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $purchaseOrderDownPaymentApply = new PurchaseOrderDownPaymentApply();
-            $purchaseOrderDownPaymentApply->company_id = $data['company_id'];
-            $purchaseOrderDownPaymentApply->branch_id = $data['branch_id'];
-            $purchaseOrderDownPaymentApply->purchase_order_id = $data['purchase_order_id'];
-            $purchaseOrderDownPaymentApply->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $purchaseOrderDownPaymentApply->date = $data['date'];
-            $purchaseOrderDownPaymentApply->cash_account_id = $data['cash_account_id'];
-            $purchaseOrderDownPaymentApply->amount = $data['amount'];
-            $purchaseOrderDownPaymentApply->remarks = $data['remarks'];
-            $purchaseOrderDownPaymentApply->save();
-
-            DB::commit();
-
-            $this->flushCache();
-
-            return $purchaseOrderDownPaymentApply;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = PurchaseOrderDownPaymentApply::select('purchase_order_down_payment_applies.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'purchase_order_down_payment_applies.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('purchase_order_down_payment_applies', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('purchase_order_down_payment_applies.date', 'dsc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
     public function readAny(
         ?bool $useCache,
         ?bool $withTrashed,
-
         ?string $search,
         int $companyId,
-
+        ?int $branchId,
+        ?int $purchaseOrderId,
+        ?int $cashAccountId,
         bool $paginate,
         ?int $page,
         ?int $perPage,
@@ -104,7 +37,17 @@ class PurchaseOrderDownPaymentApplyActions
 
         try {
             $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheKey = implode('-', [
+                'readAny_'.$companyId,
+                $cacheSearch,
+                $branchId ?? '[null]',
+                $purchaseOrderId ?? '[null]',
+                $cashAccountId ?? '[null]',
+                $paginate ? 'true' : 'false',
+                $page ?? '[null]',
+                $perPage ?? '[null]',
+                $limit ?? '[null]',
+            ]);
             if ($useCache === true) {
                 $cacheResult = $this->readFromCache($cacheKey);
 
@@ -113,20 +56,44 @@ class PurchaseOrderDownPaymentApplyActions
                 }
             }
 
-            $result = null;
+            $query = PurchaseOrderDownPaymentApply::select('purchase_order_down_payment_applies.*')->withTrashed()
+                ->with(['company'])
+                ->join('companies', 'companies.id', '=', 'purchase_order_down_payment_applies.company_id')
+                ->where(function ($query) use ($withTrashed, $search, $companyId, $branchId, $purchaseOrderId, $cashAccountId) {
+                    if ($withTrashed == true) {
+                        $query = $query->withTrashed();
+                    } else {
+                        $query = $query->withoutTrashed();
+                    }
 
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
+                    if ($search) {
+                        $query->search($search);
+                    }
 
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
+                    if ($branchId) {
+                        $query->where('purchase_order_down_payment_applies.branch_id', $branchId);
+                    }
+
+                    if ($purchaseOrderId) {
+                        $query->where('purchase_order_down_payment_applies.purchase_order_id', $purchaseOrderId);
+                    }
+
+                    if ($cashAccountId) {
+                        $query->where('purchase_order_down_payment_applies.cash_account_id', $cashAccountId);
+                    }
+
+                    $query->whereCompanyId('purchase_order_down_payment_applies', $companyId);
+                })
+                ->orderBy('companies.name', 'asc')
+                ->orderBy('purchase_order_down_payment_applies.date', 'desc');
+
+            if (! $paginate && $limit) {
+                $query->limit($limit);
             }
+
+            $result = $paginate
+                ? $query->paginate(perPage: $perPage, page: $page)
+                : $query->get();
 
             $recordsCount = $result->count();
 
@@ -149,42 +116,25 @@ class PurchaseOrderDownPaymentApplyActions
         return $purchaseOrderDownPaymentApply->load('company')->first();
     }
 
-    public function getAllActivePurchaseOrderDownPaymentApply(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
+    public function create(array $data): PurchaseOrderDownPaymentApply
+    {
         $timer_start = microtime(true);
 
         try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
+            $purchaseOrderDownPaymentApply = new PurchaseOrderDownPaymentApply();
+            $purchaseOrderDownPaymentApply->company_id = $data['company_id'];
+            $purchaseOrderDownPaymentApply->branch_id = $data['branch_id'];
+            $purchaseOrderDownPaymentApply->purchase_order_id = $data['purchase_order_id'];
+            $purchaseOrderDownPaymentApply->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $purchaseOrderDownPaymentApply->date = $data['date'];
+            $purchaseOrderDownPaymentApply->cash_account_id = $data['cash_account_id'];
+            $purchaseOrderDownPaymentApply->amount = $data['amount'];
+            $purchaseOrderDownPaymentApply->remarks = $data['remarks'];
+            $purchaseOrderDownPaymentApply->save();
 
-                search: $search,
-                companyId: $companyId,
+            $this->flushCache();
 
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
+            return $purchaseOrderDownPaymentApply;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -196,10 +146,10 @@ class PurchaseOrderDownPaymentApplyActions
 
     public function update(PurchaseOrderDownPaymentApply $purchaseOrderDownPaymentApply, array $data): PurchaseOrderDownPaymentApply
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
+            $purchaseOrderDownPaymentApply->cash_account_id = $data['cash_account_id'];
             $purchaseOrderDownPaymentApply->code = $this->generateUniqueCode($purchaseOrderDownPaymentApply->company_id, $data['code'], $purchaseOrderDownPaymentApply->id);
             $purchaseOrderDownPaymentApply->date = $data['date'];
             $purchaseOrderDownPaymentApply->cash_account_id = $data['cash_account_id'];
@@ -207,13 +157,10 @@ class PurchaseOrderDownPaymentApplyActions
             $purchaseOrderDownPaymentApply->remarks = $data['remarks'];
             $purchaseOrderDownPaymentApply->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $purchaseOrderDownPaymentApply->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -224,7 +171,6 @@ class PurchaseOrderDownPaymentApplyActions
 
     public function delete(PurchaseOrderDownPaymentApply $purchaseOrderDownPaymentApply): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -232,13 +178,10 @@ class PurchaseOrderDownPaymentApplyActions
         try {
             $retval = $purchaseOrderDownPaymentApply->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -260,9 +203,9 @@ class PurchaseOrderDownPaymentApplyActions
             } while (! $this->isUniqueCode($companyId, $code, $exceptId));
 
             return $code;
-        } else {
-            return $code;
         }
+
+        return $code;
     }
 
     public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
@@ -273,6 +216,6 @@ class PurchaseOrderDownPaymentApplyActions
             $result = $result->where('id', '<>', $exceptId);
         }
 
-        return $result->count() == 0 ? true : false;
+        return $result->count() == 0;
     }
 }

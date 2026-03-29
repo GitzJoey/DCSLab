@@ -108,6 +108,27 @@ class CashAccountController extends BaseController
         }
     }
 
+    public function read(CashAccount $cashAccount)
+    {
+        if (! Auth::check()) return response()->error(trans('rules.auth.unauthorized'), 401);
+        $this->authorize('view', $cashAccount);
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->cashAccountActions->read($cashAccount);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        if (is_null($result)) {
+            return response()->error($errorMsg);
+        } else {
+            return new CashAccountResource($result);
+        }
+    }
+
     public function store(CashAccountStoreRequest $request)
     {
         $validatedRequest = $request->validated();
@@ -139,27 +160,6 @@ class CashAccountController extends BaseController
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function read(CashAccount $cashAccount)
-    {
-        if (! Auth::check()) return response()->error(trans('rules.auth.unauthorized'), 401);
-        $this->authorize('view', $cashAccount);
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->cashAccountActions->read($cashAccount);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        if (is_null($result)) {
-            return response()->error($errorMsg);
-        } else {
-            return new CashAccountResource($result);
-        }
     }
 
     public function update(CashAccountUpdateRequest $request, CashAccount $cashAccount)

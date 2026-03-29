@@ -31,39 +31,6 @@ class WarehouseController extends BaseController
         $this->warehouseActions = $warehouseActions;
     }
 
-    public function store(WarehouseStoreRequest $request)
-    {
-        $validatedRequest = $request->validated();
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            DB::beginTransaction();
-
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->warehouseActions->isUniqueCode(
-                    $validatedRequest['company_id'], $validatedRequest['code'], null,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->warehouseActions->isUniqueName(
-                $validatedRequest['company_id'], $validatedRequest['name'], null,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            $result = $this->warehouseActions->create($validatedRequest);
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
     public function readAny(Request $request)
     {
         if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
@@ -99,10 +66,10 @@ class WarehouseController extends BaseController
         try {
             $result = $this->warehouseActions->readAny(
                 withTrashed: $validatedRequest['with_trashed'],
-
                 companyId: $validatedRequest['company_id'],
-                search: $validatedRequest['search'] ?? null,
                 branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
+
                 status: $validatedRequest['status'] ?? null,
                 includeId: $validatedRequest['include_id'] ?? null,
 
@@ -159,10 +126,41 @@ class WarehouseController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = new WarehouseResource($result);
-
-            return $response;
+            return new WarehouseResource($result);
         }
+    }
+
+    public function store(WarehouseStoreRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUnique = $this->warehouseActions->isUniqueCode(
+                    $validatedRequest['company_id'], $validatedRequest['code'], null,
+                );
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $isUniqueName = $this->warehouseActions->isUniqueName(
+                $validatedRequest['company_id'], $validatedRequest['name'], null,
+            );
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            $result = $this->warehouseActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Warehouse $warehouse, WarehouseUpdateRequest $request)

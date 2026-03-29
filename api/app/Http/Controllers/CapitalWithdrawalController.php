@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CapitalWithdrawal\CapitalWithdrawalActions;
-use App\Http\Requests\CapitalWithdrawalRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\CapitalWithdrawal\CapitalWithdrawalStoreRequest;
+use App\Http\Requests\CapitalWithdrawal\CapitalWithdrawalUpdateRequest;
 use App\Http\Resources\CapitalWithdrawalResource;
 use App\Models\CapitalWithdrawal;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CapitalWithdrawalController extends BaseController
@@ -20,41 +28,62 @@ class CapitalWithdrawalController extends BaseController
         $this->capitalWithdrawalActions = $capitalWithdrawalActions;
     }
 
-    public function store(CapitalWithdrawalRequest $capitalWithdrawalRequest)
+    public function readAny(Request $request)
     {
-        $request = $capitalWithdrawalRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', CapitalWithdrawal::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+        ]);
 
-        try {
-            $result = $this->capitalWithdrawalActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(CapitalWithdrawalRequest $capitalWithdrawalRequest)
-    {
-        $request = $capitalWithdrawalRequest->validated();
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:1'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->capitalWithdrawalActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
+                investorId: $validatedRequest['investor_id'] ?? null,
+                cashAccountId: $validatedRequest['cash_account_id'] ?? null,
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: (function () use ($validatedRequest) {
+                        $pagination = null;
+                        if (isset($validatedRequest['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
+                                page: $validatedRequest['paginate']['page'],
+                                perPage: $validatedRequest['paginate']['per_page'],
+                            );
+                        }
 
-                search: $request['search'],
-                companyId: $request['company_id'],
+                        return $pagination;
+                    })(),
+                    get: (function () use ($validatedRequest) {
+                        $get = null;
+                        if (isset($validatedRequest['get'])) {
+                            $get = new ExecuteGetDTO(
+                                limit: $validatedRequest['get']['limit'],
+                            );
+                        }
 
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                        return $get;
+                    })(),
+                )
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -62,16 +91,15 @@ class CapitalWithdrawalController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = CapitalWithdrawalResource::collection($result);
-
-            return $response;
         }
+
+        return CapitalWithdrawalResource::collection($result);
     }
 
-    public function read(CapitalWithdrawal $capitalWithdrawal, CapitalWithdrawalRequest $capitalWithdrawalRequest)
+    public function read(CapitalWithdrawal $capitalWithdrawal)
     {
-        $request = $capitalWithdrawalRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $capitalWithdrawal);
 
         $result = null;
         $errorMsg = '';
@@ -84,16 +112,14 @@ class CapitalWithdrawalController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new CapitalWithdrawalResource($result);
-
-            return $response;
         }
+
+        return new CapitalWithdrawalResource($result);
     }
 
-    public function update(CapitalWithdrawal $capitalWithdrawal, CapitalWithdrawalRequest $capitalWithdrawalRequest)
+    public function store(CapitalWithdrawalStoreRequest $request)
     {
-        $request = $capitalWithdrawalRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
@@ -101,20 +127,48 @@ class CapitalWithdrawalController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->capitalWithdrawalActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    null
+                );
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $result = $this->capitalWithdrawalActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function update(CapitalWithdrawal $capitalWithdrawal, CapitalWithdrawalUpdateRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUnique = $this->capitalWithdrawalActions->isUniqueCode(
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
                     $capitalWithdrawal->id
                 );
-                if (! $isUnique) {
-                    return response()->error(['code' => [trans('rules.unique_code')]], 422);
-                }
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
             $result = $this->capitalWithdrawalActions->update(
                 capitalWithdrawal: $capitalWithdrawal,
-                data: $request
+                data: $validatedRequest
             );
 
             DB::commit();
@@ -126,8 +180,11 @@ class CapitalWithdrawalController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(CapitalWithdrawal $capitalWithdrawal, CapitalWithdrawalRequest $capitalWithdrawalRequest)
+    public function delete(CapitalWithdrawal $capitalWithdrawal)
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $capitalWithdrawal);
+
         $result = false;
         $errorMsg = '';
 

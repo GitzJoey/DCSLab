@@ -29,39 +29,6 @@ class UnitController extends BaseController
         $this->unitActions = $unitActions;
     }
 
-    public function store(UnitStoreRequest $request)
-    {
-        $validatedRequest = $request->validated();
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            DB::beginTransaction();
-
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->unitActions->isUniqueCode(
-                    $validatedRequest['company_id'], $validatedRequest['code'], null,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->unitActions->isUniqueName(
-                $validatedRequest['company_id'], $validatedRequest['name'], null,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            $result = $this->unitActions->create($validatedRequest);
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
     public function readAny(Request $request)
     {
         if (! Auth::check()) {
@@ -150,6 +117,39 @@ class UnitController extends BaseController
         } else {
             return new UnitResource($result);
         }
+    }
+
+    public function store(UnitStoreRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUnique = $this->unitActions->isUniqueCode(
+                    $validatedRequest['company_id'], $validatedRequest['code'], null,
+                );
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $isUniqueName = $this->unitActions->isUniqueName(
+                $validatedRequest['company_id'], $validatedRequest['name'], null,
+            );
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            $result = $this->unitActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(UnitUpdateRequest $request, Unit $unit)

@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Actions\PurchaseReturnAdditionalCostCategory\PurchaseReturnAdditionalCostCategoryActions;
-use App\Http\Requests\PurchaseReturnAdditionalCostCategoryRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\PurchaseReturnAdditionalCostCategory\PurchaseReturnAdditionalCostCategoryStoreRequest;
+use App\Http\Requests\PurchaseReturnAdditionalCostCategory\PurchaseReturnAdditionalCostCategoryUpdateRequest;
 use App\Http\Resources\PurchaseReturnAdditionalCostCategoryResource;
 use App\Models\PurchaseReturnAdditionalCostCategory;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseReturnAdditionalCostCategoryController extends BaseController
@@ -20,9 +28,9 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
         $this->purchaseReturnAdditionalCostCategoryActions = $purchaseReturnAdditionalCostCategoryActions;
     }
 
-    public function store(PurchaseReturnAdditionalCostCategoryRequest $purchaseReturnAdditionalCostCategoryRequest)
+    public function store(PurchaseReturnAdditionalCostCategoryStoreRequest $request)
     {
-        $request = $purchaseReturnAdditionalCostCategoryRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
@@ -30,10 +38,10 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->purchaseReturnAdditionalCostCategoryActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
                     null
                 );
                 if (! $isUnique) {
@@ -41,7 +49,7 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
                 }
             }
 
-            $result = $this->purchaseReturnAdditionalCostCategoryActions->create($request);
+            $result = $this->purchaseReturnAdditionalCostCategoryActions->create($validatedRequest);
 
             DB::commit();
         } catch (Exception $e) {
@@ -52,25 +60,48 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function readAny(PurchaseReturnAdditionalCostCategoryRequest $purchaseReturnAdditionalCostCategoryRequest)
+    public function readAny(Request $request)
     {
-        $request = $purchaseReturnAdditionalCostCategoryRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', PurchaseReturnAdditionalCostCategory::class);
+
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+            'include_id' => $request->filled('include_id') ? HashidsHelper::decodeId($request->include_id) : null,
+        ]);
+
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'include_id' => ['nullable', 'integer', 'exists:purchase_return_additional_cost_categories,id'],
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->purchaseReturnAdditionalCostCategoryActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
-
-                search: $request['search'],
-                companyId: $request['company_id'],
-
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                search: $validatedRequest['search'] ?? null,
+                includeId: $validatedRequest['include_id'] ?? null,
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -78,16 +109,15 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = PurchaseReturnAdditionalCostCategoryResource::collection($result);
-
-            return $response;
         }
+
+        return PurchaseReturnAdditionalCostCategoryResource::collection($result);
     }
 
-    public function read(PurchaseReturnAdditionalCostCategory $purchaseReturnAdditionalCostCategory, PurchaseReturnAdditionalCostCategoryRequest $purchaseReturnAdditionalCostCategoryRequest)
+    public function read(PurchaseReturnAdditionalCostCategory $purchaseReturnAdditionalCostCategory)
     {
-        $request = $purchaseReturnAdditionalCostCategoryRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $purchaseReturnAdditionalCostCategory);
 
         $result = null;
         $errorMsg = '';
@@ -100,16 +130,14 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new PurchaseReturnAdditionalCostCategoryResource($result);
-
-            return $response;
         }
+
+        return new PurchaseReturnAdditionalCostCategoryResource($result);
     }
 
-    public function update(PurchaseReturnAdditionalCostCategory $purchaseReturnAdditionalCostCategory, PurchaseReturnAdditionalCostCategoryRequest $purchaseReturnAdditionalCostCategoryRequest)
+    public function update(PurchaseReturnAdditionalCostCategory $purchaseReturnAdditionalCostCategory, PurchaseReturnAdditionalCostCategoryUpdateRequest $request)
     {
-        $request = $purchaseReturnAdditionalCostCategoryRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
@@ -117,10 +145,10 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->purchaseReturnAdditionalCostCategoryActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
                     $purchaseReturnAdditionalCostCategory->id
                 );
                 if (! $isUnique) {
@@ -129,8 +157,8 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
             }
 
             $isUniqueName = $this->purchaseReturnAdditionalCostCategoryActions->isUniqueName(
-                $request['company_id'],
-                $request['name'],
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
                 $purchaseReturnAdditionalCostCategory->id
             );
             if (! $isUniqueName) {
@@ -139,7 +167,7 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
 
             $result = $this->purchaseReturnAdditionalCostCategoryActions->update(
                 purchaseReturnAdditionalCostCategory: $purchaseReturnAdditionalCostCategory,
-                data: $request
+                data: $validatedRequest
             );
 
             DB::commit();
@@ -151,8 +179,11 @@ class PurchaseReturnAdditionalCostCategoryController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(PurchaseReturnAdditionalCostCategory $purchaseReturnAdditionalCostCategory, PurchaseReturnAdditionalCostCategoryRequest $purchaseReturnAdditionalCostCategoryRequest)
+    public function delete(PurchaseReturnAdditionalCostCategory $purchaseReturnAdditionalCostCategory)
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $purchaseReturnAdditionalCostCategory);
+
         $result = false;
         $errorMsg = '';
 

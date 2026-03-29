@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\SaleReceiptProductUnitSerial\SaleReceiptProductUnitSerialActions;
-use App\Http\Requests\SaleReceiptProductUnitSerialRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\SaleReceiptProductUnitSerial\SaleReceiptProductUnitSerialStoreRequest;
+use App\Http\Requests\SaleReceiptProductUnitSerial\SaleReceiptProductUnitSerialUpdateRequest;
 use App\Http\Resources\SaleReceiptProductUnitSerialResource;
 use App\Models\SaleReceiptProductUnitSerial;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SaleReceiptProductUnitSerialController extends BaseController
 {
@@ -19,41 +28,48 @@ class SaleReceiptProductUnitSerialController extends BaseController
         $this->saleReceiptProductUnitSerialActions = $saleReceiptProductUnitSerialActions;
     }
 
-    public function store(SaleReceiptProductUnitSerialRequest $saleReceiptProductUnitSerialRequest)
+    public function readAny(Request $request)
     {
-        $request = $saleReceiptProductUnitSerialRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', SaleReceiptProductUnitSerial::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+        ]);
 
-        try {
-            $result = $this->saleReceiptProductUnitSerialActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(SaleReceiptProductUnitSerialRequest $saleReceiptProductUnitSerialRequest)
-    {
-        $request = $saleReceiptProductUnitSerialRequest->validated();
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->saleReceiptProductUnitSerialActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
-
-                search: $request['search'],
-                companyId: $request['company_id'],
-
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
+                saleReceiptId: $validatedRequest['sale_receipt_id'] ?? null,
+                saleReceiptProductUnitId: $validatedRequest['sale_receipt_product_unit_id'] ?? null,
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -61,16 +77,15 @@ class SaleReceiptProductUnitSerialController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = SaleReceiptProductUnitSerialResource::collection($result);
-
-            return $response;
         }
+
+        return SaleReceiptProductUnitSerialResource::collection($result);
     }
 
-    public function read(SaleReceiptProductUnitSerial $saleReceiptProductUnitSerial, SaleReceiptProductUnitSerialRequest $saleReceiptProductUnitSerialRequest)
+    public function read(SaleReceiptProductUnitSerial $saleReceiptProductUnitSerial)
     {
-        $request = $saleReceiptProductUnitSerialRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $saleReceiptProductUnitSerial);
 
         $result = null;
         $errorMsg = '';
@@ -83,40 +98,72 @@ class SaleReceiptProductUnitSerialController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new SaleReceiptProductUnitSerialResource($result);
-
-            return $response;
         }
+
+        return new SaleReceiptProductUnitSerialResource($result);
     }
 
-    public function update(SaleReceiptProductUnitSerial $saleReceiptProductUnitSerial, SaleReceiptProductUnitSerialRequest $saleReceiptProductUnitSerialRequest)
+    public function store(SaleReceiptProductUnitSerialStoreRequest $request)
     {
-        $request = $saleReceiptProductUnitSerialRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->saleReceiptProductUnitSerialActions->update(
-                saleReceiptProductUnitSerial: $saleReceiptProductUnitSerial,
-                data: $request
-            );
+            DB::beginTransaction();
+
+            $result = $this->saleReceiptProductUnitSerialActions->create($validatedRequest);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(SaleReceiptProductUnitSerial $saleReceiptProductUnitSerial, SaleReceiptProductUnitSerialRequest $saleReceiptProductUnitSerialRequest)
+    public function update(SaleReceiptProductUnitSerial $saleReceiptProductUnitSerial, SaleReceiptProductUnitSerialUpdateRequest $request)
     {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            $result = $this->saleReceiptProductUnitSerialActions->update(
+                saleReceiptProductUnitSerial: $saleReceiptProductUnitSerial,
+                data: $validatedRequest
+            );
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function delete(SaleReceiptProductUnitSerial $saleReceiptProductUnitSerial)
+    {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $saleReceiptProductUnitSerial);
+
         $result = false;
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
+
             $result = $this->saleReceiptProductUnitSerialActions->delete($saleReceiptProductUnitSerial);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

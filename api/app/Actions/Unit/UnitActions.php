@@ -19,31 +19,6 @@ class UnitActions
     {
     }
 
-    public function create(array $data): Unit
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $unit = new Unit();
-            $unit->company_id = $data['company_id'];
-            $unit->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $unit->name = $data['name'];
-            $unit->description = $data['description'];
-            $unit->type = $data['type'];
-            $unit->save();
-
-            $this->flushCache();
-
-            return $unit;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -140,6 +115,31 @@ class UnitActions
     public function read(Unit $unit): Unit
     {
         return $unit->load('company');
+    }
+
+    public function create(array $data): Unit
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $unit = new Unit();
+            $unit->company_id = $data['company_id'];
+            $unit->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $unit->name = $data['name'];
+            $unit->description = $data['description'];
+            $unit->type = $data['type'];
+            $unit->save();
+
+            $this->flushCache();
+
+            return $unit;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(Unit $unit, array $data): Unit

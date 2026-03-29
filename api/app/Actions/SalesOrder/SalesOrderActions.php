@@ -2,14 +2,13 @@
 
 namespace App\Actions\SalesOrder;
 
+use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\SalesOrder;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class SalesOrderActions
 {
@@ -20,9 +19,128 @@ class SalesOrderActions
     {
     }
 
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
+
+        ?string $search,
+        ?int $customerId,
+        ?int $customerAddressId,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = SalesOrder::select('sales_orders.*')
+            ->with([
+                'company',
+                'branch',
+                'customer',
+                'customerAddress',
+            ])
+            ->join('companies', 'companies.id', '=', 'sales_orders.company_id')
+            ->whereCompanyId('sales_orders', $companyId)
+            ->withTrashed();
+
+        $query->where(function ($query) use ($withTrashed, $search, $branchId, $customerId, $customerAddressId) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->search($search);
+            }
+
+            if ($branchId) {
+                $query->where('sales_orders.branch_id', $branchId);
+            }
+
+            if ($customerId) {
+                $query->where('sales_orders.customer_id', $customerId);
+            }
+
+            if ($customerAddressId) {
+                $query->where('sales_orders.customer_address_id', $customerAddressId);
+            }
+        });
+
+        $query->orderBy('companies.name', 'asc')
+            ->orderBy('sales_orders.date', 'desc')
+            ->orderBy('sales_orders.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    empty($search) ? '[empty]' : $search,
+                    $branchId ?? '[null]',
+                    $customerId ?? '[null]',
+                    $customerAddressId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_sales_order_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
+    }
+
+    public function read(SalesOrder $salesOrder): SalesOrder
+    {
+        return $salesOrder->load([
+            'company',
+            'branch',
+            'customer',
+            'customerAddress',
+            'saleOrderProductUnits',
+            'saleOrderDownPayments',
+            'saleOrderDownPaymentApplies',
+        ]);
+    }
+
     public function create(array $data): SalesOrder
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -30,8 +148,10 @@ class SalesOrderActions
             $salesOrder->company_id = $data['company_id'];
             $salesOrder->branch_id = $data['branch_id'];
             $salesOrder->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $salesOrder->date = $data['date'];
             $salesOrder->customer_id = $data['customer_id'];
             $salesOrder->customer_address_id = $data['customer_address_id'];
+            $salesOrder->shipping_date = $data['shipping_date'];
             $salesOrder->remarks = $data['remarks'];
             $salesOrder->is_has_invoice = $data['is_has_invoice'];
             $salesOrder->is_sent = $data['is_sent'];
@@ -46,154 +166,9 @@ class SalesOrderActions
             $salesOrder->is_down_payment_paid_off = $data['is_down_payment_paid_off'];
             $salesOrder->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $salesOrder;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = SalesOrder::select('sales_orders.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'sales_orders.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('sales_orders', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('sales_orders.remarks', 'asc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(SalesOrder $salesOrder): SalesOrder
-    {
-        return $salesOrder->load('company')->first();
-    }
-
-    public function getAllActiveSalesOrder(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-
-                search: $search,
-                companyId: $companyId,
-
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -205,13 +180,16 @@ class SalesOrderActions
 
     public function update(SalesOrder $salesOrder, array $data): SalesOrder
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
+            $salesOrder->company_id = $data['company_id'];
+            $salesOrder->branch_id = $data['branch_id'];
             $salesOrder->code = $this->generateUniqueCode($salesOrder->company_id, $data['code'], $salesOrder->id);
+            $salesOrder->date = $data['date'];
             $salesOrder->customer_id = $data['customer_id'];
             $salesOrder->customer_address_id = $data['customer_address_id'];
+            $salesOrder->shipping_date = $data['shipping_date'];
             $salesOrder->remarks = $data['remarks'];
             $salesOrder->is_has_invoice = $data['is_has_invoice'];
             $salesOrder->is_sent = $data['is_sent'];
@@ -224,16 +202,12 @@ class SalesOrderActions
             $salesOrder->down_payment_applied = $data['down_payment_applied'];
             $salesOrder->down_payment_remaining = $data['down_payment_remaining'];
             $salesOrder->is_down_payment_paid_off = $data['is_down_payment_paid_off'];
-            $salesOrder->remarks = $data['remarks'];
             $salesOrder->save();
-
-            DB::commit();
 
             $this->flushCache();
 
             return $salesOrder->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -244,21 +218,16 @@ class SalesOrderActions
 
     public function delete(SalesOrder $salesOrder): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
-
         $retval = false;
 
         try {
             $retval = $salesOrder->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

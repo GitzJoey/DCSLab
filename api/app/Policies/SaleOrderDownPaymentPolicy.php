@@ -21,7 +21,7 @@ class SaleOrderDownPaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPayment-readAny')) {
+        if ($user->hasPermission('sale_order_down_payment-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class SaleOrderDownPaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPayment-read')) {
+        if ($user->hasPermission('sale_order_down_payment-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class SaleOrderDownPaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPayment-create')) {
+        if ($user->hasPermission('sale_order_down_payment-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class SaleOrderDownPaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPayment-update')) {
+        if ($user->hasPermission('sale_order_down_payment-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class SaleOrderDownPaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPayment-delete')) {
+        if ($user->hasPermission('sale_order_down_payment-delete')) {
             return true;
         }
     }

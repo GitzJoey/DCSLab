@@ -2,14 +2,13 @@
 
 namespace App\Actions\NonCapitalAdditionCategory;
 
+use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\NonCapitalAdditionCategory;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class NonCapitalAdditionCategoryActions
 {
@@ -20,20 +19,106 @@ class NonCapitalAdditionCategoryActions
     {
     }
 
-    public function isUniqueName(int $companyId, string $name, ?int $exceptId = null): bool
-    {
-        $query = NonCapitalAdditionCategory::whereCompanyId('non_capital_addition_categories', $companyId)->whereName($name);
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
 
-        if ($exceptId) {
-            $query->where('id', '<>', $exceptId);
+        ?string $search,
+        ?int $includeId,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = NonCapitalAdditionCategory::select('non_capital_addition_categories.*')
+            ->with(['company'])
+            ->join('companies', 'companies.id', '=', 'non_capital_addition_categories.company_id')
+            ->whereCompanyId('non_capital_addition_categories', $companyId)
+            ->withTrashed();
+
+        $query->where(function ($query) use ($withTrashed, $search, $includeId) {
+            $query->where(function ($query) use ($withTrashed, $search) {
+                $query->withoutTrashed();
+                if ($withTrashed) $query->withTrashed();
+
+                if ($search) {
+                    $query->search($search);
+                }
+            });
+
+            if ($includeId) {
+                $query->orWhere('non_capital_addition_categories.id', $includeId);
+            }
+        });
+
+        if ($includeId) $query->orderByRaw('FIELD(non_capital_addition_categories.id, '.$includeId.') desc');
+        $query->orderBy('companies.name', 'asc')
+            ->orderBy('non_capital_addition_categories.name', 'asc')
+            ->orderBy('non_capital_addition_categories.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    empty($search) ? '[empty]' : $search,
+                    $includeId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_non_capital_addition_category_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
         }
 
-        return $query->doesntExist();
+        return $query;
+    }
+
+    public function read(NonCapitalAdditionCategory $nonCapitalAdditionCategory): NonCapitalAdditionCategory
+    {
+        return $nonCapitalAdditionCategory->load('company');
     }
 
     public function create(array $data): NonCapitalAdditionCategory
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -43,154 +128,9 @@ class NonCapitalAdditionCategoryActions
             $nonCapitalAdditionCategory->name = $data['name'];
             $nonCapitalAdditionCategory->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $nonCapitalAdditionCategory;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = NonCapitalAdditionCategory::select('non_capital_addition_categories.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'non_capital_addition_categories.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('non_capital_addition_categories', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('non_capital_addition_categories.name', 'asc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(NonCapitalAdditionCategory $nonCapitalAdditionCategory): NonCapitalAdditionCategory
-    {
-        return $nonCapitalAdditionCategory->load('company')->first();
-    }
-
-    public function getAllActiveNonCapitalAdditionCategory(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-
-                search: $search,
-                companyId: $companyId,
-
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -202,21 +142,18 @@ class NonCapitalAdditionCategoryActions
 
     public function update(NonCapitalAdditionCategory $nonCapitalAdditionCategory, array $data): NonCapitalAdditionCategory
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
+            $nonCapitalAdditionCategory->company_id = $data['company_id'];
             $nonCapitalAdditionCategory->code = $this->generateUniqueCode($nonCapitalAdditionCategory->company_id, $data['code'], $nonCapitalAdditionCategory->id);
             $nonCapitalAdditionCategory->name = $data['name'];
             $nonCapitalAdditionCategory->save();
-
-            DB::commit();
 
             $this->flushCache();
 
             return $nonCapitalAdditionCategory->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -227,7 +164,6 @@ class NonCapitalAdditionCategoryActions
 
     public function delete(NonCapitalAdditionCategory $nonCapitalAdditionCategory): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -235,13 +171,10 @@ class NonCapitalAdditionCategoryActions
         try {
             $retval = $nonCapitalAdditionCategory->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -277,5 +210,16 @@ class NonCapitalAdditionCategoryActions
         }
 
         return $result->count() == 0 ? true : false;
+    }
+
+    public function isUniqueName(int $companyId, string $name, ?int $exceptId = null): bool
+    {
+        $query = NonCapitalAdditionCategory::whereCompanyId('non_capital_addition_categories', $companyId)->whereName($name);
+
+        if ($exceptId) {
+            $query->where('id', '<>', $exceptId);
+        }
+
+        return $query->doesntExist();
     }
 }

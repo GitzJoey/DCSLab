@@ -19,33 +19,6 @@ class CompanyActions
     {
     }
 
-    public function create(User $user, array $data): Company
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $company = new Company();
-            $company->code = $this->generateUniqueCode($user, $data['code'], null);
-            $company->name = $data['name'];
-            $company->address = $data['address'];
-            $company->default = $data['default'];
-            $company->status = $data['status'];
-            $company->save();
-
-            $user->companies()->attach([$company->id]);
-
-            $this->flushCache();
-
-            return $company;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         User $user,
         bool $withTrashed,
@@ -152,6 +125,33 @@ class CompanyActions
     public function read(Company $company): Company
     {
         return $company->load('branches');
+    }
+
+    public function create(User $user, array $data): Company
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $company = new Company();
+            $company->code = $this->generateUniqueCode($user, $data['code'], null);
+            $company->name = $data['name'];
+            $company->address = $data['address'];
+            $company->default = $data['default'];
+            $company->status = $data['status'];
+            $company->save();
+
+            $user->companies()->attach([$company->id]);
+
+            $this->flushCache();
+
+            return $company;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function getById(int $companyId): Company

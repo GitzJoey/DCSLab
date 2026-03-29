@@ -16,7 +16,7 @@ class SaleOrderProductUnit extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'sale_order_id',
+        'sales_order_id',
 
         'qty',
         'product_id',
@@ -95,32 +95,37 @@ class SaleOrderProductUnit extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
     }
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class)->withTrashed();
     }
 
     public function saleOrder()
     {
-        return $this->belongsTo(SalesOrder::class);
+        return $this->belongsTo(SalesOrder::class, 'sales_order_id')->withTrashed();
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 
     public function productUnit()
     {
-        return $this->belongsTo(ProductUnit::class);
+        return $this->belongsTo(ProductUnit::class)->withTrashed();
     }
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('code', 'like', '%'.$search.'%')
-            ->orWhere('remarks', 'like', '%'.$search.'%');
+        return $query->where(function ($query) use ($search) {
+            $query->whereHas('product', fn ($q) => $q->search($search))
+                ->orWhereHas('productUnit', fn ($q) => $q->search($search))
+                ->orWhere('sale_order_product_units.qty', 'like', '%'.$search.'%')
+                ->orWhere('sale_order_product_units.product_unit_amount_total', 'like', '%'.$search.'%')
+                ->orWhere('sale_order_product_units.product_unit_grand_total', 'like', '%'.$search.'%');
+        });
     }
 }

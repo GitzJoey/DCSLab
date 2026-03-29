@@ -21,7 +21,7 @@ class PurchaseReturnAdditionalCostCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCostCategory-readAny')) {
+        if ($user->hasPermission('purchase_return_additional_cost_category-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class PurchaseReturnAdditionalCostCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCostCategory-read')) {
+        if ($user->hasPermission('purchase_return_additional_cost_category-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class PurchaseReturnAdditionalCostCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCostCategory-create')) {
+        if ($user->hasPermission('purchase_return_additional_cost_category-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class PurchaseReturnAdditionalCostCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCostCategory-update')) {
+        if ($user->hasPermission('purchase_return_additional_cost_category-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class PurchaseReturnAdditionalCostCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCostCategory-delete')) {
+        if ($user->hasPermission('purchase_return_additional_cost_category-delete')) {
             return true;
         }
     }

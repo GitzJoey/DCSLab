@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Actions\PurchaseOrderProductUnit\PurchaseOrderProductUnitActions;
-use App\Http\Requests\PurchaseOrderProductUnitRequest;
+use App\Enums\RecordStatusEnum;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\PurchaseOrderProductUnit\PurchaseOrderProductUnitStoreRequest;
+use App\Http\Requests\PurchaseOrderProductUnit\PurchaseOrderProductUnitUpdateRequest;
 use App\Http\Resources\PurchaseOrderProductUnitResource;
 use App\Models\PurchaseOrderProductUnit;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderProductUnitController extends BaseController
 {
@@ -19,41 +26,49 @@ class PurchaseOrderProductUnitController extends BaseController
         $this->purchaseOrderProductUnitActions = $purchaseOrderProductUnitActions;
     }
 
-    public function store(PurchaseOrderProductUnitRequest $purchaseOrderProductUnitRequest)
+    public function readAny(Request $request)
     {
-        $request = $purchaseOrderProductUnitRequest->validated();
+        if (! Auth::check()) {
+            return response()->error(trans('rules.auth.unauthorized'), 401);
+        }
+        $this->authorize('viewAny', PurchaseOrderProductUnit::class);
 
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->purchaseOrderProductUnitActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        if ($request->filled('company_id')) {
+            $request->merge(['company_id' => HashidsHelper::decodeId($request->company_id)]);
+        }
+        if ($request->filled('status')) {
+            $request->merge([
+                'status' => RecordStatusEnum::isValid($request->status)
+                    ? RecordStatusEnum::resolveToEnum($request->status)->value
+                    : -1,
+            ]);
         }
 
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(PurchaseOrderProductUnitRequest $purchaseOrderProductUnitRequest)
-    {
-        $request = $purchaseOrderProductUnitRequest->validated();
+        $validatedRequest = $request->validate([
+            'refresh' => ['required', 'boolean'],
+            'with_trashed' => ['required', 'boolean'],
+            'search' => ['nullable', 'string'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'status' => ['nullable', 'integer', 'in:'.implode(',', RecordStatusEnum::toArrayValue())],
+            'paginate' => ['required', 'boolean'],
+            'page' => ['nullable', 'required_if:paginate,true', 'numeric', 'min:1'],
+            'per_page' => ['nullable', 'required_if:paginate,true', 'numeric', 'min:10'],
+            'limit' => ['nullable', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->purchaseOrderProductUnitActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
-
-                search: $request['search'],
-                companyId: $request['company_id'],
-
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                useCache: $validatedRequest['refresh'],
+                withTrashed: $validatedRequest['with_trashed'],
+                search: $validatedRequest['search'],
+                companyId: $validatedRequest['company_id'],
+                paginate: $validatedRequest['paginate'],
+                page: $validatedRequest['page'],
+                perPage: $validatedRequest['per_page'],
+                limit: $validatedRequest['limit'],
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -68,9 +83,12 @@ class PurchaseOrderProductUnitController extends BaseController
         }
     }
 
-    public function read(PurchaseOrderProductUnit $purchaseOrderProductUnit, PurchaseOrderProductUnitRequest $purchaseOrderProductUnitRequest)
+    public function read(PurchaseOrderProductUnit $purchaseOrderProductUnit)
     {
-        $request = $purchaseOrderProductUnitRequest->validated();
+        if (! Auth::check()) {
+            return response()->error(trans('rules.auth.unauthorized'), 401);
+        }
+        $this->authorize('view', $purchaseOrderProductUnit);
 
         $result = null;
         $errorMsg = '';
@@ -90,7 +108,7 @@ class PurchaseOrderProductUnitController extends BaseController
         }
     }
 
-    public function update(PurchaseOrderProductUnit $purchaseOrderProductUnit, PurchaseOrderProductUnitRequest $purchaseOrderProductUnitRequest)
+    public function store(PurchaseOrderProductUnitStoreRequest $purchaseOrderProductUnitRequest)
     {
         $request = $purchaseOrderProductUnitRequest->validated();
 
@@ -98,25 +116,55 @@ class PurchaseOrderProductUnitController extends BaseController
         $errorMsg = '';
 
         try {
-            $result = $this->purchaseOrderProductUnitActions->update(
-                purchaseOrderProductUnit: $purchaseOrderProductUnit,
-                data: $request
-            );
+            DB::beginTransaction();
+            $result = $this->purchaseOrderProductUnitActions->create($request);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(PurchaseOrderProductUnit $purchaseOrderProductUnit, PurchaseOrderProductUnitRequest $purchaseOrderProductUnitRequest)
+    public function update(PurchaseOrderProductUnit $purchaseOrderProductUnit, PurchaseOrderProductUnitUpdateRequest $purchaseOrderProductUnitRequest)
     {
+        $request = $purchaseOrderProductUnitRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+            $result = $this->purchaseOrderProductUnitActions->update(
+                purchaseOrderProductUnit: $purchaseOrderProductUnit,
+                data: $request
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function delete(PurchaseOrderProductUnit $purchaseOrderProductUnit)
+    {
+        if (! Auth::check()) {
+            return response()->error(trans('rules.auth.unauthorized'), 401);
+        }
+        $this->authorize('delete', $purchaseOrderProductUnit);
+
         $result = false;
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
             $result = $this->purchaseOrderProductUnitActions->delete($purchaseOrderProductUnit);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

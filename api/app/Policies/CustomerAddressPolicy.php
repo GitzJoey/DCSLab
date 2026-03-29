@@ -21,7 +21,7 @@ class CustomerAddressPolicy
             return true;
         }
 
-        if ($user->hasPermission('customerAddress-readAny')) {
+        if ($user->hasPermission('customer_address-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class CustomerAddressPolicy
             return true;
         }
 
-        if ($user->hasPermission('customerAddress-read')) {
+        if ($user->hasPermission('customer_address-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class CustomerAddressPolicy
             return true;
         }
 
-        if ($user->hasPermission('customerAddress-create')) {
+        if ($user->hasPermission('customer_address-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class CustomerAddressPolicy
             return true;
         }
 
-        if ($user->hasPermission('customerAddress-update')) {
+        if ($user->hasPermission('customer_address-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class CustomerAddressPolicy
             return true;
         }
 
-        if ($user->hasPermission('customerAddress-delete')) {
+        if ($user->hasPermission('customer_address-delete')) {
             return true;
         }
     }

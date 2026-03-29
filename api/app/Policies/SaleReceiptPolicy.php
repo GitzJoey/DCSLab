@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\SaleReceipt;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,11 +17,11 @@ class SaleReceiptPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceipt-readAny')) {
+        if ($user->hasPermission('sale_receipt-readAny')) {
             return true;
         }
     }
@@ -32,11 +32,11 @@ class SaleReceiptPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceipt-read')) {
+        if ($user->hasPermission('sale_receipt-read')) {
             return true;
         }
     }
@@ -47,11 +47,11 @@ class SaleReceiptPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceipt-create')) {
+        if ($user->hasPermission('sale_receipt-create')) {
             return true;
         }
     }
@@ -62,11 +62,11 @@ class SaleReceiptPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceipt-update')) {
+        if ($user->hasPermission('sale_receipt-update')) {
             return true;
         }
     }
@@ -77,11 +77,11 @@ class SaleReceiptPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceipt-delete')) {
+        if ($user->hasPermission('sale_receipt-delete')) {
             return true;
         }
     }

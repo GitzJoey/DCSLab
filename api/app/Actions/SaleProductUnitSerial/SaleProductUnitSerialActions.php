@@ -2,14 +2,13 @@
 
 namespace App\Actions\SaleProductUnitSerial;
 
+use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\SaleProductUnitSerial;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class SaleProductUnitSerialActions
 {
@@ -20,9 +19,124 @@ class SaleProductUnitSerialActions
     {
     }
 
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
+        ?string $search,
+
+        ?int $saleId,
+        ?int $saleProductUnitId,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = SaleProductUnitSerial::select('sale_product_unit_serials.*')
+            ->with([
+                'company',
+                'branch',
+                'sale',
+                'saleProductUnit',
+            ])
+            ->join('companies', 'companies.id', '=', 'sale_product_unit_serials.company_id')
+            ->whereCompanyId('sale_product_unit_serials', $companyId)
+            ->withTrashed();
+
+        $query->where(function ($query) use ($withTrashed, $search, $branchId, $saleId, $saleProductUnitId) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->search($search);
+            }
+
+            if ($branchId) {
+                $query->where('sale_product_unit_serials.branch_id', $branchId);
+            }
+
+            if ($saleId) {
+                $query->where('sale_product_unit_serials.sale_id', $saleId);
+            }
+
+            if ($saleProductUnitId) {
+                $query->where('sale_product_unit_serials.sale_product_unit_id', $saleProductUnitId);
+            }
+        });
+
+        $query->orderBy('companies.name', 'asc')
+            ->orderBy('sale_product_unit_serials.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    empty($search) ? '[empty]' : $search,
+                    $branchId ?? '[null]',
+                    $saleId ?? '[null]',
+                    $saleProductUnitId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_sale_product_unit_serial_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
+    }
+
+    public function read(SaleProductUnitSerial $saleProductUnitSerial): SaleProductUnitSerial
+    {
+        return $saleProductUnitSerial->load([
+            'company',
+            'branch',
+            'sale',
+            'saleProductUnit',
+        ]);
+    }
+
     public function create(array $data): SaleProductUnitSerial
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -34,154 +148,9 @@ class SaleProductUnitSerialActions
             $saleProductUnitSerial->serial = $data['serial'];
             $saleProductUnitSerial->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $saleProductUnitSerial;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = SaleProductUnitSerial::select('sale_product_unit_serials.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'sale_product_unit_serials.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('sale_product_unit_serials', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('sale_product_unit_serials.id', 'asc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(SaleProductUnitSerial $saleProductUnitSerial): SaleProductUnitSerial
-    {
-        return $saleProductUnitSerial->load('company')->first();
-    }
-
-    public function getAllActiveSaleProductUnitSerial(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-
-                search: $search,
-                companyId: $companyId,
-
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -193,7 +162,6 @@ class SaleProductUnitSerialActions
 
     public function update(SaleProductUnitSerial $saleProductUnitSerial, array $data): SaleProductUnitSerial
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -204,13 +172,10 @@ class SaleProductUnitSerialActions
             $saleProductUnitSerial->serial = $data['serial'];
             $saleProductUnitSerial->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $saleProductUnitSerial->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -221,7 +186,6 @@ class SaleProductUnitSerialActions
 
     public function delete(SaleProductUnitSerial $saleProductUnitSerial): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -229,13 +193,10 @@ class SaleProductUnitSerialActions
         try {
             $retval = $saleProductUnitSerial->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Actions\PurchaseOrderDownPayment\PurchaseOrderDownPaymentActions;
-use App\Http\Requests\PurchaseOrderDownPaymentRequest;
+use App\Enums\RecordStatusEnum;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\PurchaseOrderDownPayment\PurchaseOrderDownPaymentStoreRequest;
+use App\Http\Requests\PurchaseOrderDownPayment\PurchaseOrderDownPaymentUpdateRequest;
 use App\Http\Resources\PurchaseOrderDownPaymentResource;
 use App\Models\PurchaseOrderDownPayment;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderDownPaymentController extends BaseController
@@ -20,41 +26,49 @@ class PurchaseOrderDownPaymentController extends BaseController
         $this->purchaseOrderDownPaymentActions = $purchaseOrderDownPaymentActions;
     }
 
-    public function store(PurchaseOrderDownPaymentRequest $purchaseOrderDownPaymentRequest)
+    public function readAny(Request $request)
     {
-        $request = $purchaseOrderDownPaymentRequest->validated();
+        if (! Auth::check()) {
+            return response()->error(trans('rules.auth.unauthorized'), 401);
+        }
+        $this->authorize('viewAny', PurchaseOrderDownPayment::class);
 
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            $result = $this->purchaseOrderDownPaymentActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        if ($request->filled('company_id')) {
+            $request->merge(['company_id' => HashidsHelper::decodeId($request->company_id)]);
+        }
+        if ($request->filled('status')) {
+            $request->merge([
+                'status' => RecordStatusEnum::isValid($request->status)
+                    ? RecordStatusEnum::resolveToEnum($request->status)->value
+                    : -1,
+            ]);
         }
 
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(PurchaseOrderDownPaymentRequest $purchaseOrderDownPaymentRequest)
-    {
-        $request = $purchaseOrderDownPaymentRequest->validated();
+        $validatedRequest = $request->validate([
+            'refresh' => ['required', 'boolean'],
+            'with_trashed' => ['required', 'boolean'],
+            'search' => ['nullable', 'string'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'status' => ['nullable', 'integer', 'in:'.implode(',', RecordStatusEnum::toArrayValue())],
+            'paginate' => ['required', 'boolean'],
+            'page' => ['nullable', 'required_if:paginate,true', 'numeric', 'min:1'],
+            'per_page' => ['nullable', 'required_if:paginate,true', 'numeric', 'min:10'],
+            'limit' => ['nullable', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->purchaseOrderDownPaymentActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
-
-                search: $request['search'],
-                companyId: $request['company_id'],
-
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                useCache: $validatedRequest['refresh'],
+                withTrashed: $validatedRequest['with_trashed'],
+                search: $validatedRequest['search'],
+                companyId: $validatedRequest['company_id'],
+                paginate: $validatedRequest['paginate'],
+                page: $validatedRequest['page'],
+                perPage: $validatedRequest['per_page'],
+                limit: $validatedRequest['limit'],
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -69,9 +83,12 @@ class PurchaseOrderDownPaymentController extends BaseController
         }
     }
 
-    public function read(PurchaseOrderDownPayment $purchaseOrderDownPayment, PurchaseOrderDownPaymentRequest $purchaseOrderDownPaymentRequest)
+    public function read(PurchaseOrderDownPayment $purchaseOrderDownPayment)
     {
-        $request = $purchaseOrderDownPaymentRequest->validated();
+        if (! Auth::check()) {
+            return response()->error(trans('rules.auth.unauthorized'), 401);
+        }
+        $this->authorize('view', $purchaseOrderDownPayment);
 
         $result = null;
         $errorMsg = '';
@@ -91,7 +108,23 @@ class PurchaseOrderDownPaymentController extends BaseController
         }
     }
 
-    public function update(PurchaseOrderDownPayment $purchaseOrderDownPayment, PurchaseOrderDownPaymentRequest $purchaseOrderDownPaymentRequest)
+    public function store(PurchaseOrderDownPaymentStoreRequest $purchaseOrderDownPaymentRequest)
+    {
+        $request = $purchaseOrderDownPaymentRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            $result = $this->purchaseOrderDownPaymentActions->create($request);
+        } catch (Exception $e) {
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function update(PurchaseOrderDownPayment $purchaseOrderDownPayment, PurchaseOrderDownPaymentUpdateRequest $purchaseOrderDownPaymentRequest)
     {
         $request = $purchaseOrderDownPaymentRequest->validated();
 
@@ -110,8 +143,13 @@ class PurchaseOrderDownPaymentController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(PurchaseOrderDownPayment $purchaseOrderDownPayment, PurchaseOrderDownPaymentRequest $purchaseOrderDownPaymentRequest)
+    public function delete(PurchaseOrderDownPayment $purchaseOrderDownPayment)
     {
+        if (! Auth::check()) {
+            return response()->error(trans('rules.auth.unauthorized'), 401);
+        }
+        $this->authorize('delete', $purchaseOrderDownPayment);
+
         $result = false;
         $errorMsg = '';
 

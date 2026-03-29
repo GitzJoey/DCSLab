@@ -19,30 +19,6 @@ class ProductCategoryActions
     {
     }
 
-    public function create(array $data): ProductCategory
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $productCategory = new ProductCategory();
-            $productCategory->company_id = $data['company_id'];
-            $productCategory->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $productCategory->name = $data['name'];
-            $productCategory->type = $data['type'];
-            $productCategory->save();
-
-            $this->flushCache();
-
-            return $productCategory;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -145,6 +121,30 @@ class ProductCategoryActions
     public function read(ProductCategory $productCategory): ProductCategory
     {
         return $productCategory->load('company');
+    }
+
+    public function create(array $data): ProductCategory
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $productCategory = new ProductCategory();
+            $productCategory->company_id = $data['company_id'];
+            $productCategory->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $productCategory->name = $data['name'];
+            $productCategory->type = $data['type'];
+            $productCategory->save();
+
+            $this->flushCache();
+
+            return $productCategory;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(ProductCategory $productCategory, array $data): ProductCategory

@@ -8,7 +8,6 @@ use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderProductUnitActions
 {
@@ -19,108 +18,15 @@ class PurchaseOrderProductUnitActions
     {
     }
 
-    public function create(array $data): PurchaseOrderProductUnit
-    {
-        DB::beginTransaction();
-        $timer_start = microtime(true);
-
-        try {
-            $purchaseOrderProductUnit = new PurchaseOrderProductUnit();
-            $purchaseOrderProductUnit->company_id = $data['company_id'];
-            $purchaseOrderProductUnit->branch_id = $data['branch_id'];
-            $purchaseOrderProductUnit->purchase_order_id = $data['purchase_order_id'];
-            $purchaseOrderProductUnit->qty = $data['qty'];
-            $purchaseOrderProductUnit->product_id = $data['product_id'];
-            $purchaseOrderProductUnit->product_unit_id = $data['product_unit_id'];
-            $purchaseOrderProductUnit->product_unit_amount_per_unit = $data['product_unit_amount_per_unit'];
-            $purchaseOrderProductUnit->product_unit_amount_total = $data['product_unit_amount_total'];
-            $purchaseOrderProductUnit->product_unit_initial_price = $data['product_unit_initial_price'];
-            $purchaseOrderProductUnit->product_unit_discount_rate1 = $data['product_unit_discount_rate1'];
-            $purchaseOrderProductUnit->product_unit_discount_rate2 = $data['product_unit_discount_rate2'];
-            $purchaseOrderProductUnit->product_unit_discount_rate3 = $data['product_unit_discount_rate3'];
-            $purchaseOrderProductUnit->product_unit_discount_rate4 = $data['product_unit_discount_rate4'];
-            $purchaseOrderProductUnit->product_unit_discount_rate5 = $data['product_unit_discount_rate5'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed1 = $data['product_unit_discount_fixed1'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed2 = $data['product_unit_discount_fixed2'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed3 = $data['product_unit_discount_fixed3'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed4 = $data['product_unit_discount_fixed4'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed5 = $data['product_unit_discount_fixed5'];
-            $purchaseOrderProductUnit->product_unit_net_price = $data['product_unit_net_price'];
-            $purchaseOrderProductUnit->product_unit_subtotal = $data['product_unit_subtotal'];
-            $purchaseOrderProductUnit->product_unit_subtotal_discount_rate = $data['product_unit_subtotal_discount_rate'];
-            $purchaseOrderProductUnit->product_unit_subtotal_discount_fixed = $data['product_unit_subtotal_discount_fixed'];
-            $purchaseOrderProductUnit->product_unit_total = $data['product_unit_total'];
-            $purchaseOrderProductUnit->product_unit_global_discount_rate = $data['product_unit_global_discount_rate'];
-            $purchaseOrderProductUnit->product_unit_global_discount_fixed = $data['product_unit_global_discount_fixed'];
-            $purchaseOrderProductUnit->product_unit_grand_total = $data['product_unit_grand_total'];
-            $purchaseOrderProductUnit->product_is_taxable = $data['product_is_taxable'];
-            $purchaseOrderProductUnit->product_vat_rate = $data['product_vat_rate'];
-            $purchaseOrderProductUnit->product_price_include_vat = $data['product_price_include_vat'];
-            $purchaseOrderProductUnit->product_vat_base = $data['product_vat_base'];
-            $purchaseOrderProductUnit->product_vat = $data['product_vat'];
-            $purchaseOrderProductUnit->product_unit_final_price = $data['product_unit_final_price'];
-            $purchaseOrderProductUnit->is_received = $data['is_received'];
-            $purchaseOrderProductUnit->is_valid = $data['is_valid'];
-
-            $purchaseOrderProductUnit->save();
-
-            DB::commit();
-
-            $this->flushCache();
-
-            return $purchaseOrderProductUnit;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = PurchaseOrderProductUnit::select('purchase_order_product_units.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'purchase_order_product_units.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('purchase_order_product_units', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('purchase_order_product_units.id', 'asc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
     public function readAny(
         ?bool $useCache,
         ?bool $withTrashed,
-
         ?string $search,
         int $companyId,
-
+        ?int $branchId,
+        ?int $purchaseOrderId,
+        ?int $productId,
+        ?int $productUnitId,
         bool $paginate,
         ?int $page,
         ?int $perPage,
@@ -131,7 +37,18 @@ class PurchaseOrderProductUnitActions
 
         try {
             $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
+            $cacheKey = implode('-', [
+                'readAny_'.$companyId,
+                $cacheSearch,
+                $branchId ?? '[null]',
+                $purchaseOrderId ?? '[null]',
+                $productId ?? '[null]',
+                $productUnitId ?? '[null]',
+                $paginate ? 'true' : 'false',
+                $page ?? '[null]',
+                $perPage ?? '[null]',
+                $limit ?? '[null]',
+            ]);
             if ($useCache === true) {
                 $cacheResult = $this->readFromCache($cacheKey);
 
@@ -140,20 +57,55 @@ class PurchaseOrderProductUnitActions
                 }
             }
 
-            $result = null;
+            $query = PurchaseOrderProductUnit::select('purchase_order_product_units.*')->withTrashed()
+                ->with([
+                    'company',
+                    'branch',
+                    'purchaseOrder',
+                    'product',
+                    'productUnit',
+                    'discounts',
+                ])
+                ->join('companies', 'companies.id', '=', 'purchase_order_product_units.company_id')
+                ->where(function ($query) use ($withTrashed, $search, $companyId, $branchId, $purchaseOrderId, $productId, $productUnitId) {
+                    if ($withTrashed == true) {
+                        $query->withTrashed();
+                    } else {
+                        $query->withoutTrashed();
+                    }
 
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
+                    if ($search) {
+                        $query->search($search);
+                    }
 
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
+                    if ($branchId) {
+                        $query->where('purchase_order_product_units.branch_id', $branchId);
+                    }
+
+                    if ($purchaseOrderId) {
+                        $query->where('purchase_order_product_units.purchase_order_id', $purchaseOrderId);
+                    }
+
+                    if ($productId) {
+                        $query->where('purchase_order_product_units.product_id', $productId);
+                    }
+
+                    if ($productUnitId) {
+                        $query->where('purchase_order_product_units.product_unit_id', $productUnitId);
+                    }
+
+                    $query->whereCompanyId('purchase_order_product_units', $companyId);
+                })
+                ->orderBy('companies.name', 'asc')
+                ->orderBy('purchase_order_product_units.id', 'asc');
+
+            if (! $paginate && $limit) {
+                $query->limit($limit);
             }
+
+            $result = $paginate
+                ? $query->paginate(perPage: $perPage, page: $page)
+                : $query->get();
 
             $recordsCount = $result->count();
 
@@ -173,45 +125,36 @@ class PurchaseOrderProductUnitActions
 
     public function read(PurchaseOrderProductUnit $purchaseOrderProductUnit): PurchaseOrderProductUnit
     {
-        return $purchaseOrderProductUnit->load('company')->first();
+        return $purchaseOrderProductUnit->load([
+            'company',
+            'branch',
+            'purchaseOrder',
+            'product',
+            'productUnit',
+            'discounts',
+        ]);
     }
 
-    public function getAllActivePurchaseOrderProductUnit(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
+    public function create(array $data): PurchaseOrderProductUnit
+    {
         $timer_start = microtime(true);
 
         try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
+            $purchaseOrderProductUnit = new PurchaseOrderProductUnit();
+            $this->fillPurchaseOrderProductUnit($purchaseOrderProductUnit, $data);
+            $purchaseOrderProductUnit->save();
+            $this->syncDiscounts($purchaseOrderProductUnit, $data['discounts']);
 
-                search: $search,
-                companyId: $companyId,
+            $this->flushCache();
 
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
+            return $purchaseOrderProductUnit->load([
+                'company',
+                'branch',
+                'purchaseOrder',
+                'product',
+                'productUnit',
+                'discounts',
+            ]);
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -221,56 +164,95 @@ class PurchaseOrderProductUnitActions
         }
     }
 
+    private function fillPurchaseOrderProductUnit(PurchaseOrderProductUnit $purchaseOrderProductUnit, array $data): void
+    {
+        $purchaseOrderProductUnit->company_id = $data['company_id'];
+        $purchaseOrderProductUnit->branch_id = $data['branch_id'];
+        $purchaseOrderProductUnit->purchase_order_id = $data['purchase_order_id'];
+        $purchaseOrderProductUnit->qty = $data['qty'];
+        $purchaseOrderProductUnit->product_id = $data['product_id'];
+        $purchaseOrderProductUnit->product_unit_id = $data['product_unit_id'];
+        $purchaseOrderProductUnit->product_unit_amount_per_unit = $data['product_unit_amount_per_unit'];
+        $purchaseOrderProductUnit->product_unit_amount_total = $data['product_unit_amount_total'];
+        $purchaseOrderProductUnit->product_unit_initial_price = $data['product_unit_initial_price'];
+        $purchaseOrderProductUnit->product_unit_net_price = $data['product_unit_net_price'];
+        $purchaseOrderProductUnit->product_unit_subtotal = $data['product_unit_subtotal'];
+        $purchaseOrderProductUnit->product_unit_subtotal_discount_rate = $data['product_unit_subtotal_discount_rate'];
+        $purchaseOrderProductUnit->product_unit_subtotal_discount_fixed = $data['product_unit_subtotal_discount_fixed'];
+        $purchaseOrderProductUnit->product_unit_total = $data['product_unit_total'];
+        $purchaseOrderProductUnit->product_unit_global_discount_rate = $data['product_unit_global_discount_rate'];
+        $purchaseOrderProductUnit->product_unit_global_discount_fixed = $data['product_unit_global_discount_fixed'];
+        $purchaseOrderProductUnit->product_unit_grand_total = $data['product_unit_grand_total'];
+        $purchaseOrderProductUnit->product_is_taxable = $data['product_is_taxable'];
+        $purchaseOrderProductUnit->product_vat_rate = $data['product_vat_rate'];
+        $purchaseOrderProductUnit->product_is_price_include_vat = $data['product_price_include_vat'];
+        $purchaseOrderProductUnit->product_vat_base = $data['product_vat_base'];
+        $purchaseOrderProductUnit->product_vat = $data['product_vat'];
+        $purchaseOrderProductUnit->product_unit_final_price = $data['product_unit_final_price'];
+        $purchaseOrderProductUnit->product_final_price_base_unit = $data['product_final_price_base_unit'];
+        $purchaseOrderProductUnit->remarks = $data['remarks'];
+    }
+
+    private function syncDiscounts(PurchaseOrderProductUnit $purchaseOrderProductUnit, array $discounts): void
+    {
+        $sequences = collect($discounts)
+            ->pluck('sequence')
+            ->map(fn ($sequence) => (int) $sequence)
+            ->values();
+
+        if ($sequences->isEmpty()) {
+            $purchaseOrderProductUnit->discounts()->delete();
+
+            return;
+        }
+
+        $purchaseOrderProductUnit->discounts()
+            ->whereNotIn('sequence', $sequences->all())
+            ->delete();
+
+        $existingDiscounts = $purchaseOrderProductUnit->discounts()
+            ->withTrashed()
+            ->get()
+            ->keyBy('sequence');
+
+        foreach ($discounts as $discount) {
+            $purchaseOrderProductUnitDiscount = $existingDiscounts->get((int) $discount['sequence']);
+
+            if (is_null($purchaseOrderProductUnitDiscount)) {
+                $purchaseOrderProductUnitDiscount = $purchaseOrderProductUnit->discounts()->make();
+            } elseif ($purchaseOrderProductUnitDiscount->trashed()) {
+                $purchaseOrderProductUnitDiscount->restore();
+            }
+
+            $purchaseOrderProductUnitDiscount->company_id = $purchaseOrderProductUnit->company_id;
+            $purchaseOrderProductUnitDiscount->branch_id = $purchaseOrderProductUnit->branch_id;
+            $purchaseOrderProductUnitDiscount->sequence = $discount['sequence'];
+            $purchaseOrderProductUnitDiscount->rate = $discount['rate'];
+            $purchaseOrderProductUnitDiscount->fixed = $discount['fixed'];
+            $purchaseOrderProductUnitDiscount->save();
+        }
+    }
+
     public function update(PurchaseOrderProductUnit $purchaseOrderProductUnit, array $data): PurchaseOrderProductUnit
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
-            $purchaseOrderProductUnit->company_id = $data['company_id'];
-            $purchaseOrderProductUnit->branch_id = $data['branch_id'];
-            $purchaseOrderProductUnit->purchase_order_id = $data['purchase_order_id'];
-            $purchaseOrderProductUnit->qty = $data['qty'];
-            $purchaseOrderProductUnit->product_id = $data['product_id'];
-            $purchaseOrderProductUnit->product_unit_id = $data['product_unit_id'];
-            $purchaseOrderProductUnit->product_unit_amount_per_unit = $data['product_unit_amount_per_unit'];
-            $purchaseOrderProductUnit->product_unit_amount_total = $data['product_unit_amount_total'];
-            $purchaseOrderProductUnit->product_unit_initial_price = $data['product_unit_initial_price'];
-            $purchaseOrderProductUnit->product_unit_discount_rate1 = $data['product_unit_discount_rate1'];
-            $purchaseOrderProductUnit->product_unit_discount_rate2 = $data['product_unit_discount_rate2'];
-            $purchaseOrderProductUnit->product_unit_discount_rate3 = $data['product_unit_discount_rate3'];
-            $purchaseOrderProductUnit->product_unit_discount_rate4 = $data['product_unit_discount_rate4'];
-            $purchaseOrderProductUnit->product_unit_discount_rate5 = $data['product_unit_discount_rate5'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed1 = $data['product_unit_discount_fixed1'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed2 = $data['product_unit_discount_fixed2'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed3 = $data['product_unit_discount_fixed3'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed4 = $data['product_unit_discount_fixed4'];
-            $purchaseOrderProductUnit->product_unit_discount_fixed5 = $data['product_unit_discount_fixed5'];
-            $purchaseOrderProductUnit->product_unit_net_price = $data['product_unit_net_price'];
-            $purchaseOrderProductUnit->product_unit_subtotal = $data['product_unit_subtotal'];
-            $purchaseOrderProductUnit->product_unit_subtotal_discount_rate = $data['product_unit_subtotal_discount_rate'];
-            $purchaseOrderProductUnit->product_unit_subtotal_discount_fixed = $data['product_unit_subtotal_discount_fixed'];
-            $purchaseOrderProductUnit->product_unit_total = $data['product_unit_total'];
-            $purchaseOrderProductUnit->product_unit_global_discount_rate = $data['product_unit_global_discount_rate'];
-            $purchaseOrderProductUnit->product_unit_global_discount_fixed = $data['product_unit_global_discount_fixed'];
-            $purchaseOrderProductUnit->product_unit_grand_total = $data['product_unit_grand_total'];
-            $purchaseOrderProductUnit->product_is_taxable = $data['product_is_taxable'];
-            $purchaseOrderProductUnit->product_vat_rate = $data['product_vat_rate'];
-            $purchaseOrderProductUnit->product_price_include_vat = $data['product_price_include_vat'];
-            $purchaseOrderProductUnit->product_vat_base = $data['product_vat_base'];
-            $purchaseOrderProductUnit->product_vat = $data['product_vat'];
-            $purchaseOrderProductUnit->product_unit_final_price = $data['product_unit_final_price'];
-            $purchaseOrderProductUnit->is_received = $data['is_received'];
-            $purchaseOrderProductUnit->is_valid = $data['is_valid'];
+            $this->fillPurchaseOrderProductUnit($purchaseOrderProductUnit, $data);
             $purchaseOrderProductUnit->save();
-
-            DB::commit();
+            $this->syncDiscounts($purchaseOrderProductUnit, $data['discounts']);
 
             $this->flushCache();
 
-            return $purchaseOrderProductUnit->refresh();
+            return $purchaseOrderProductUnit->refresh()->load([
+                'company',
+                'branch',
+                'purchaseOrder',
+                'product',
+                'productUnit',
+                'discounts',
+            ]);
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -281,21 +263,18 @@ class PurchaseOrderProductUnitActions
 
     public function delete(PurchaseOrderProductUnit $purchaseOrderProductUnit): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
 
         try {
+            $purchaseOrderProductUnit->discounts()->delete();
             $retval = $purchaseOrderProductUnit->delete();
-
-            DB::commit();
 
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

@@ -22,43 +22,6 @@ class CustomerActions
     {
     }
 
-    public function create(array $data): Customer
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $customer = new Customer();
-            $customer->company_id = $data['company_id'];
-            $customer->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $customer->is_member = $data['is_member'];
-            $customer->name = $data['name'];
-            $customer->group_id = $data['group_id'];
-            $customer->zone = $data['zone'];
-            $customer->max_open_invoice = $data['max_open_invoice'];
-            $customer->max_outstanding_invoice = $data['max_outstanding_invoice'];
-            $customer->max_invoice_age = $data['max_invoice_age'];
-            $customer->payment_term_type = $data['payment_term_type'];
-            $customer->payment_term = $data['payment_term'];
-            $customer->taxable_enterprise = $data['taxable_enterprise'];
-            $customer->tax_id = $data['tax_id'];
-            $customer->status = $data['status'];
-            $customer->remarks = $data['remarks'];
-            $customer->save();
-
-            // save user (not yet implemented)
-
-            $this->flushCache();
-
-            return $customer;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -98,7 +61,7 @@ class CustomerActions
             $taxableEnterprise,
             $taxId,
             $status,
-            $includeId
+            $includeId,
         ) {
             $query->where(function ($query) use (
                 $withTrashed,
@@ -200,6 +163,7 @@ class CustomerActions
                     is_null($taxId) || $taxId === '' ? '[empty]' : $taxId,
                     $status ?? '[null]',
                     $includeId ?? '[null]',
+                    $userId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',
@@ -252,6 +216,43 @@ class CustomerActions
     public function read(Customer $customer): Customer
     {
         return $customer->load('company', 'user', 'group');
+    }
+
+    public function create(array $data): Customer
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $customer = new Customer();
+            $customer->company_id = $data['company_id'];
+            $customer->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $customer->is_member = $data['is_member'];
+            $customer->name = $data['name'];
+            $customer->group_id = $data['group_id'];
+            $customer->zone = $data['zone'];
+            $customer->max_open_invoice = $data['max_open_invoice'];
+            $customer->max_outstanding_invoice = $data['max_outstanding_invoice'];
+            $customer->max_invoice_age = $data['max_invoice_age'];
+            $customer->payment_term_type = $data['payment_term_type'];
+            $customer->payment_term = $data['payment_term'];
+            $customer->taxable_enterprise = $data['taxable_enterprise'];
+            $customer->tax_id = $data['tax_id'];
+            $customer->status = $data['status'];
+            $customer->remarks = $data['remarks'];
+            $customer->save();
+
+            // save user (not yet implemented)
+
+            $this->flushCache();
+
+            return $customer;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(Customer $customer, array $data): Customer

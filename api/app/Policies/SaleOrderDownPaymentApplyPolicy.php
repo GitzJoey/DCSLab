@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\SaleOrderDownPaymentApply;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,11 +17,11 @@ class SaleOrderDownPaymentApplyPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPaymentApply-readAny')) {
+        if ($user->hasPermission('sale_order_down_payment_apply-readAny')) {
             return true;
         }
     }
@@ -32,11 +32,11 @@ class SaleOrderDownPaymentApplyPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPaymentApply-read')) {
+        if ($user->hasPermission('sale_order_down_payment_apply-read')) {
             return true;
         }
     }
@@ -47,11 +47,11 @@ class SaleOrderDownPaymentApplyPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPaymentApply-create')) {
+        if ($user->hasPermission('sale_order_down_payment_apply-create')) {
             return true;
         }
     }
@@ -62,11 +62,11 @@ class SaleOrderDownPaymentApplyPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPaymentApply-update')) {
+        if ($user->hasPermission('sale_order_down_payment_apply-update')) {
             return true;
         }
     }
@@ -77,11 +77,11 @@ class SaleOrderDownPaymentApplyPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleOrderDownPaymentApply-delete')) {
+        if ($user->hasPermission('sale_order_down_payment_apply-delete')) {
             return true;
         }
     }

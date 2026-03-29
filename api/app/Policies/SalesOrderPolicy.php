@@ -21,7 +21,7 @@ class SalesOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('salesOrder-readAny')) {
+        if ($user->hasPermission('sales_order-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class SalesOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('salesOrder-read')) {
+        if ($user->hasPermission('sales_order-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class SalesOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('salesOrder-create')) {
+        if ($user->hasPermission('sales_order-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class SalesOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('salesOrder-update')) {
+        if ($user->hasPermission('sales_order-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class SalesOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('salesOrder-delete')) {
+        if ($user->hasPermission('sales_order-delete')) {
             return true;
         }
     }

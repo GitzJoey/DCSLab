@@ -47,7 +47,8 @@ class PurchaseReceiptProductUnitSerial extends Model
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('code', 'like', '%'.$search.'%')
-            ->orWhere('remarks', 'like', '%'.$search.'%');
+        return $query->where(function ($query) use ($search) {
+            $query->where('purchase_receipt_product_unit_serials.serial', 'like', '%'.$search.'%');
+        });
     }
 }

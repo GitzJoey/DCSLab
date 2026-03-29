@@ -21,7 +21,7 @@ class NonCapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAddition-readAny')) {
+        if ($user->hasPermission('non_capital_addition-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class NonCapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAddition-read')) {
+        if ($user->hasPermission('non_capital_addition-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class NonCapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAddition-create')) {
+        if ($user->hasPermission('non_capital_addition-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class NonCapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAddition-update')) {
+        if ($user->hasPermission('non_capital_addition-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class NonCapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAddition-delete')) {
+        if ($user->hasPermission('non_capital_addition-delete')) {
             return true;
         }
     }

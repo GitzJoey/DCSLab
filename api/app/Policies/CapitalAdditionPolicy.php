@@ -21,7 +21,7 @@ class CapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalAddition-readAny')) {
+        if ($user->hasPermission('capital_addition-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class CapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalAddition-read')) {
+        if ($user->hasPermission('capital_addition-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class CapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalAddition-create')) {
+        if ($user->hasPermission('capital_addition-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class CapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalAddition-update')) {
+        if ($user->hasPermission('capital_addition-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class CapitalAdditionPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalAddition-delete')) {
+        if ($user->hasPermission('capital_addition-delete')) {
             return true;
         }
     }

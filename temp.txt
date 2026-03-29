@@ -1,0 +1,62 @@
+purchase_requisitions
+- id
+- ulid
+- company_id
+- branch_id
+- code
+- date
+- required_date
+- priority
+- requestor_user_id
+- purpose
+- remarks
+- is_closed
+- closed_at
+- created_by
+- updated_by
+- deleted_by
+- created_at
+- updated_at
+- deleted_at
+
+purchase_requisition_product_units
+- id
+- ulid
+- company_id
+- branch_id
+- purchase_requisition_id
+- product_unit_id
+- qty
+- product_unit_conversion_value
+- product_unit_qty_base
+- needed_date
+- remarks
+- created_by
+- updated_by
+- deleted_by
+- created_at
+- updated_at
+- deleted_at
+
+purchase_requisition_approvals
+- id
+- ulid
+- company_id
+- branch_id
+- purchase_requisition_id
+- approval_code
+- approval_level
+- approver_user_id
+- requested_at
+- is_mandatory
+- is_approved
+- approved_at
+- is_rejected
+- rejected_at
+- remarks
+- created_by
+- updated_by
+- deleted_by
+- created_at
+- updated_at
+- deleted_at

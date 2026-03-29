@@ -2,14 +2,13 @@
 
 namespace App\Actions\PurchasePayment;
 
+use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\PurchasePayment;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class PurchasePaymentActions
 {
@@ -20,9 +19,135 @@ class PurchasePaymentActions
     {
     }
 
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
+        ?string $search,
+
+        ?string $startDate,
+        ?string $endDate,
+        ?int $purchaseId,
+        ?int $cashAccountId,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = PurchasePayment::select('purchase_payments.*')
+            ->with(['company', 'branch', 'purchase', 'cashAccount'])
+            ->join('companies', 'companies.id', '=', 'purchase_payments.company_id')
+            ->whereCompanyId('purchase_payments', $companyId)
+            ->whereBranchId('purchase_payments', $branchId)
+            ->withTrashed();
+
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $startDate,
+            $endDate,
+            $purchaseId,
+            $cashAccountId,
+        ) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->search($search);
+            }
+
+            if ($startDate) {
+                $query->where('purchase_payments.date', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $query->where('purchase_payments.date', '<=', $endDate);
+            }
+
+            if ($purchaseId) {
+                $query->where('purchase_payments.purchase_id', $purchaseId);
+            }
+
+            if ($cashAccountId) {
+                $query->where('purchase_payments.cash_account_id', $cashAccountId);
+            }
+        });
+
+        $query->orderBy('purchase_payments.date', 'desc')
+            ->orderBy('purchase_payments.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    $branchId ?? '[null]',
+                    empty($search) ? '[empty]' : $search,
+                    $startDate ?? '[null]',
+                    $endDate ?? '[null]',
+                    $purchaseId ?? '[null]',
+                    $cashAccountId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_purchase_payment_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page,
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
+    }
+
+    public function read(PurchasePayment $purchasePayment): PurchasePayment
+    {
+        return $purchasePayment->load([
+            'company',
+            'branch',
+            'purchase',
+            'cashAccount',
+        ]);
+    }
+
     public function create(array $data): PurchasePayment
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -37,154 +162,9 @@ class PurchasePaymentActions
             $purchasePayment->remarks = $data['remarks'];
             $purchasePayment->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $purchasePayment;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = PurchasePayment::select('purchase_payments.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'purchase_payments.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('purchase_payments', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('purchase_payments.id', 'asc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(PurchasePayment $purchasePayment): PurchasePayment
-    {
-        return $purchasePayment->load('company')->first();
-    }
-
-    public function getAllActivePurchasePayment(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-
-                search: $search,
-                companyId: $companyId,
-
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -196,27 +176,23 @@ class PurchasePaymentActions
 
     public function update(PurchasePayment $purchasePayment, array $data): PurchasePayment
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $purchasePayment->company_id = $data['company_id'];
             $purchasePayment->branch_id = $data['branch_id'];
             $purchasePayment->purchase_id = $data['purchase_id'];
-            $purchasePayment->code = $this->generateUniqueCode($purchasePayment->company_id, $data['code'], $purchasePayment->id);
+            $purchasePayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], $purchasePayment->id);
             $purchasePayment->date = $data['date'];
             $purchasePayment->cash_account_id = $data['cash_account_id'];
             $purchasePayment->amount = $data['amount'];
             $purchasePayment->remarks = $data['remarks'];
             $purchasePayment->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $purchasePayment->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -227,7 +203,6 @@ class PurchasePaymentActions
 
     public function delete(PurchasePayment $purchasePayment): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -235,13 +210,10 @@ class PurchasePaymentActions
         try {
             $retval = $purchasePayment->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

@@ -13,13 +13,22 @@ class SaleOrderProductUnitResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch_id' => new BranchResource($this->branch),
-            'sale_order_id' => new SalesOrderResource($this->saleOrder),
-
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('saleOrder'), [
+                'sales_order' => new SalesOrderResource($this->whenLoaded('saleOrder')),
+            ]),
             'qty' => $this->qty,
-            'product_id' => new ProductResource($this->product),
-            'product_unit_id' => new ProductUnitResource($this->productUnit),
+            $this->mergeWhen($this->relationLoaded('product'), [
+                'product' => new ProductResource($this->whenLoaded('product')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('productUnit'), [
+                'product_unit' => new ProductUnitResource($this->whenLoaded('productUnit')),
+            ]),
             'product_unit_amount_per_unit' => $this->product_unit_amount_per_unit,
             'product_unit_amount_total' => $this->product_unit_amount_total,
             'product_unit_initial_price' => $this->product_unit_initial_price,

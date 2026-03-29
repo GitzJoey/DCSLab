@@ -33,10 +33,11 @@ class RepToPascalThisAPIReadTest extends APITestCase
         $api = $this->getJson(route('api.get.db.product.RepToSnakeThis.read_any', [
             'company_id' => Hashids::encode($company->id),
             'search' => '',
-            'paginate' => true,
-            'page' => 1,
-            'per_page' => 10,
+
             'refresh' => true,
+            'with_trashed' => false,
+            'paginate[page]' => 1,
+            'paginate[per_page]' => 10,
         ]));
 
         $api->assertStatus(401);
@@ -57,10 +58,10 @@ class RepToPascalThisAPIReadTest extends APITestCase
         $api = $this->getJson(route('api.get.db.product.RepToSnakeThis.read_any', [
             'company_id' => Hashids::encode($company->id),
             'search' => '',
-            'paginate' => true,
-            'page' => 1,
-            'per_page' => 10,
             'refresh' => true,
+            'with_trashed' => false,
+            'paginate[page]' => 1,
+            'paginate[per_page]' => 10,
         ]));
 
         $api->assertStatus(403);
@@ -216,11 +217,8 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => $injections[$testIdx],
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => true,
-            'page' => 1,
-            'per_page' => 10,
+            'paginate[page]' => 1,
+            'paginate[per_page]' => 10,
         ]));
 
         $api->assertSuccessful();
@@ -247,10 +245,7 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => $injections[$testIdx],
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => false,
-            'limit' => 10,
+            'get[limit]' => 10,
         ]));
 
         $api->assertSuccessful();
@@ -279,11 +274,8 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => '',
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => true,
-            'page' => 1,
-            'per_page' => 10,
+            'paginate[page]' => 1,
+            'paginate[per_page]' => 10,
         ]));
 
         $api->assertSuccessful();
@@ -303,9 +295,7 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => '',
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => false,
+            'get[limit]' => 10,
         ]));
 
         $api->assertSuccessful();
@@ -330,11 +320,8 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => '',
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => true,
-            'page' => 1,
-            'per_page' => 25,
+            'paginate[page]' => 1,
+            'paginate[per_page]' => 25,
         ]));
 
         $api->assertSuccessful();
@@ -369,8 +356,10 @@ class RepToPascalThisAPIReadTest extends APITestCase
             ->count(2)->create();
 
         RepToPascalThis::factory()->for($company)
-            ->insertStringInName('testing')
-            ->count(3)->create();
+            ->count(3)
+            ->state(fn () => [
+                'code' => 'testing-'.Str::upper(Str::random(6)),
+            ])->create();
 
         $api = $this->getJson(route('api.get.db.product.RepToSnakeThis.read_any', [
             'refresh' => true,
@@ -378,11 +367,8 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => 'testing',
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => true,
-            'page' => 1,
-            'per_page' => 25,
+            'paginate[page]' => 1,
+            'paginate[per_page]' => 25,
         ]));
 
         $api->assertSuccessful();
@@ -440,11 +426,8 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~",
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => true,
-            'page' => 1,
-            'per_page' => 25,
+            'paginate[page]' => 1,
+            'paginate[per_page]' => 25,
         ]));
 
         $api->assertSuccessful();
@@ -478,11 +461,8 @@ class RepToPascalThisAPIReadTest extends APITestCase
 
             'search' => '',
             'company_id' => Hashids::encode($company->id),
-            'status' => null,
-
-            'paginate' => true,
-            'page' => -1,
-            'per_page' => -25,
+            'paginate[page]' => -1,
+            'paginate[per_page]' => -25,
         ]));
 
         $api->assertStatus(422);

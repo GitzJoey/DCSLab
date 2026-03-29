@@ -2,14 +2,13 @@
 
 namespace App\Actions\PurchaseReceiptProductUnit;
 
+use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\PurchaseReceiptProductUnit;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class PurchaseReceiptProductUnitActions
 {
@@ -20,9 +19,140 @@ class PurchaseReceiptProductUnitActions
     {
     }
 
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
+        ?string $search,
+
+        ?int $purchaseReceiptId,
+        ?int $purchaseId,
+        ?int $productId,
+        ?int $productUnitId,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = PurchaseReceiptProductUnit::select('purchase_receipt_product_units.*')
+            ->with([
+                'company',
+                'branch',
+                'purchaseReceipt',
+                'purchase',
+                'product',
+                'productUnit',
+            ])
+            ->join('companies', 'companies.id', '=', 'purchase_receipt_product_units.company_id')
+            ->whereCompanyId('purchase_receipt_product_units', $companyId)
+            ->withTrashed();
+
+        $query->where(function ($query) use ($withTrashed, $search, $branchId, $purchaseReceiptId, $purchaseId, $productId, $productUnitId) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->search($search);
+            }
+
+            if ($branchId) {
+                $query->where('purchase_receipt_product_units.branch_id', $branchId);
+            }
+
+            if ($purchaseReceiptId) {
+                $query->where('purchase_receipt_product_units.purchase_receipt_id', $purchaseReceiptId);
+            }
+
+            if ($purchaseId) {
+                $query->where('purchase_receipt_product_units.purchase_id', $purchaseId);
+            }
+
+            if ($productId) {
+                $query->where('purchase_receipt_product_units.product_id', $productId);
+            }
+
+            if ($productUnitId) {
+                $query->where('purchase_receipt_product_units.product_unit_id', $productUnitId);
+            }
+        });
+
+        $query->orderBy('companies.name', 'asc')
+            ->orderBy('purchase_receipt_product_units.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    empty($search) ? '[empty]' : $search,
+                    $branchId ?? '[null]',
+                    $purchaseReceiptId ?? '[null]',
+                    $purchaseId ?? '[null]',
+                    $productId ?? '[null]',
+                    $productUnitId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_purchase_receipt_product_unit_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
+    }
+
+    public function read(PurchaseReceiptProductUnit $purchaseReceiptProductUnit): PurchaseReceiptProductUnit
+    {
+        return $purchaseReceiptProductUnit->load([
+            'company',
+            'branch',
+            'purchaseReceipt',
+            'purchase',
+            'product',
+            'productUnit',
+        ]);
+    }
+
     public function create(array $data): PurchaseReceiptProductUnit
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -39,154 +169,9 @@ class PurchaseReceiptProductUnitActions
             $purchaseReceiptProductUnit->is_has_purchase = $data['is_has_purchase'];
             $purchaseReceiptProductUnit->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $purchaseReceiptProductUnit;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = PurchaseReceiptProductUnit::select('purchase_receipt_product_units.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'purchase_receipt_product_units.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('purchase_receipt_product_units', $companyId);
-            });
-
-        $query->orderBy('company_name', 'asc')
-            ->orderBy('name', 'asc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(PurchaseReceiptProductUnit $purchaseReceiptProductUnit): PurchaseReceiptProductUnit
-    {
-        return $purchaseReceiptProductUnit->load('company')->first();
-    }
-
-    public function getAllActivePurchaseReceiptProductUnit(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-
-                search: $search,
-                companyId: $companyId,
-
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -198,7 +183,6 @@ class PurchaseReceiptProductUnitActions
 
     public function update(PurchaseReceiptProductUnit $purchaseReceiptProductUnit, array $data): PurchaseReceiptProductUnit
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -214,13 +198,10 @@ class PurchaseReceiptProductUnitActions
             $purchaseReceiptProductUnit->is_has_purchase = $data['is_has_purchase'];
             $purchaseReceiptProductUnit->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $purchaseReceiptProductUnit->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -231,7 +212,6 @@ class PurchaseReceiptProductUnitActions
 
     public function delete(PurchaseReceiptProductUnit $purchaseReceiptProductUnit): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -239,13 +219,10 @@ class PurchaseReceiptProductUnitActions
         try {
             $retval = $purchaseReceiptProductUnit->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

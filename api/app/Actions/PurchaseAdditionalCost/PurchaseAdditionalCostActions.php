@@ -2,14 +2,13 @@
 
 namespace App\Actions\PurchaseAdditionalCost;
 
+use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\PurchaseAdditionalCost;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Config;
 
 class PurchaseAdditionalCostActions
 {
@@ -20,9 +19,135 @@ class PurchaseAdditionalCostActions
     {
     }
 
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
+        ?string $search,
+
+        ?string $startDate,
+        ?string $endDate,
+        ?int $purchaseId,
+        ?int $categoryId,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = PurchaseAdditionalCost::select('purchase_additional_costs.*')
+            ->with(['company', 'branch', 'purchase', 'category'])
+            ->join('companies', 'companies.id', '=', 'purchase_additional_costs.company_id')
+            ->whereCompanyId('purchase_additional_costs', $companyId)
+            ->whereBranchId('purchase_additional_costs', $branchId)
+            ->withTrashed();
+
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $startDate,
+            $endDate,
+            $purchaseId,
+            $categoryId,
+        ) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->search($search);
+            }
+
+            if ($startDate) {
+                $query->where('purchase_additional_costs.date', '>=', $startDate);
+            }
+
+            if ($endDate) {
+                $query->where('purchase_additional_costs.date', '<=', $endDate);
+            }
+
+            if ($purchaseId) {
+                $query->where('purchase_additional_costs.purchase_id', $purchaseId);
+            }
+
+            if ($categoryId) {
+                $query->where('purchase_additional_costs.category_id', $categoryId);
+            }
+        });
+
+        $query->orderBy('purchase_additional_costs.date', 'desc')
+            ->orderBy('purchase_additional_costs.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    $branchId ?? '[null]',
+                    empty($search) ? '[empty]' : $search,
+                    $startDate ?? '[null]',
+                    $endDate ?? '[null]',
+                    $purchaseId ?? '[null]',
+                    $categoryId ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_purchase_additional_cost_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page,
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
+    }
+
+    public function read(PurchaseAdditionalCost $purchaseAdditionalCost): PurchaseAdditionalCost
+    {
+        return $purchaseAdditionalCost->load([
+            'company',
+            'branch',
+            'purchase',
+            'category',
+        ]);
+    }
+
     public function create(array $data): PurchaseAdditionalCost
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
@@ -37,154 +162,9 @@ class PurchaseAdditionalCostActions
             $purchaseAdditionalCost->remarks = $data['remarks'];
             $purchaseAdditionalCost->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $purchaseAdditionalCost;
-        } catch (Exception $e) {
-            DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    private function readAnyQuery(
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        ?int $limit
-    ) {
-        $query = PurchaseAdditionalCost::select('purchase_additional_costs.*')->withTrashed()
-            ->with(['company'])
-            ->join('companies', 'companies.id', '=', 'purchase_additional_costs.company_id')
-            ->where(function ($query) use ($withTrashed, $search, $companyId) {
-                if ($withTrashed == true) {
-                    $query->withTrashed();
-                } else {
-                    $query->withoutTrashed();
-                }
-
-                if ($search) {
-                    $query->search($search);
-                }
-
-                $query->whereCompanyId('purchase_additional_costs', $companyId);
-            });
-
-        $query->orderBy('companies.name', 'asc')
-            ->orderBy('purchase_additional_costs.date', 'dsc');
-
-        if ($limit) {
-            $query->limit($limit);
-        }
-
-        return $query;
-    }
-
-    public function readAny(
-        ?bool $useCache,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-
-        bool $paginate,
-        ?int $page,
-        ?int $perPage,
-        ?int $limit
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheSearch = empty($search) ? '[empty]' : $search;
-            $cacheKey = 'readAny_'.$companyId.'-'.$cacheSearch.'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache === true) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-                search: $search,
-                companyId: $companyId,
-                limit: $paginate ? null : $limit
-            );
-
-            if ($paginate) {
-                $result = $query->paginate(perPage: $perPage, page: $page);
-            } else {
-                $result = $query->get();
-            }
-
-            $recordsCount = $result->count();
-
-            if ($useCache === true) {
-                $this->saveToCache($cacheKey, $result);
-            }
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(PurchaseAdditionalCost $purchaseAdditionalCost): PurchaseAdditionalCost
-    {
-        return $purchaseAdditionalCost->load('company')->first();
-    }
-
-    public function getAllActivePurchaseAdditionalCost(
-        ?array $with,
-        ?bool $withTrashed,
-
-        ?string $search,
-        int $companyId,
-        ?array $includeIds,
-
-        ?int $limit
-    ) {
-        $timer_start = microtime(true);
-
-        try {
-            $query = $this->readAnyQuery(
-                withTrashed: $withTrashed,
-
-                search: $search,
-                companyId: $companyId,
-
-                limit: $limit
-            );
-
-            if ($includeIds) {
-                $query = $query->orWhereIn('id', $includeIds);
-
-                $orders = $query->getQuery()->orders;
-                $query->reorder();
-                $query->orderByRaw('FIELD(id, '.implode(',', $includeIds).') desc');
-                if (! empty($orders)) {
-                    foreach ($orders as $order) {
-                        $query->orderBy($order['column'], $order['direction']);
-                    }
-                }
-            }
-
-            return $query->get();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -196,27 +176,23 @@ class PurchaseAdditionalCostActions
 
     public function update(PurchaseAdditionalCost $purchaseAdditionalCost, array $data): PurchaseAdditionalCost
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         try {
             $purchaseAdditionalCost->company_id = $data['company_id'];
             $purchaseAdditionalCost->branch_id = $data['branch_id'];
             $purchaseAdditionalCost->purchase_id = $data['purchase_id'];
-            $purchaseAdditionalCost->code = $this->generateUniqueCode($purchaseAdditionalCost->company_id, $data['code'], $purchaseAdditionalCost->id);
+            $purchaseAdditionalCost->code = $this->generateUniqueCode($data['company_id'], $data['code'], $purchaseAdditionalCost->id);
             $purchaseAdditionalCost->date = $data['date'];
             $purchaseAdditionalCost->category_id = $data['category_id'];
             $purchaseAdditionalCost->amount = $data['amount'];
             $purchaseAdditionalCost->remarks = $data['remarks'];
             $purchaseAdditionalCost->save();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $purchaseAdditionalCost->refresh();
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
@@ -227,7 +203,6 @@ class PurchaseAdditionalCostActions
 
     public function delete(PurchaseAdditionalCost $purchaseAdditionalCost): bool
     {
-        DB::beginTransaction();
         $timer_start = microtime(true);
 
         $retval = false;
@@ -235,13 +210,10 @@ class PurchaseAdditionalCostActions
         try {
             $retval = $purchaseAdditionalCost->delete();
 
-            DB::commit();
-
             $this->flushCache();
 
             return $retval;
         } catch (Exception $e) {
-            DB::rollBack();
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

@@ -17,7 +17,7 @@ class PurchaseReturnProductUnitSerial extends Model
         'company_id',
         'branch_id',
         'purchase_id',
-        'purchase_product_id',
+        'purchase_return_product_unit_id',
         'serial',
     ];
 

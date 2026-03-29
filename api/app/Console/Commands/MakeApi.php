@@ -305,7 +305,8 @@ class MakeApi extends Command
         }, $files);
 
         $files = array_filter($files, function ($file) use ($name) {
-            return Str::contains($file, $name.'Request.php');
+            return Str::contains($file, $name.'StoreRequest.php')
+                || Str::contains($file, $name.'UpdateRequest.php');
         });
 
         if (count($files) > 0) {
@@ -314,13 +315,26 @@ class MakeApi extends Command
             return;
         }
 
-        // Create Request
-        Artisan::call('make:request', ['name' => $name.'Request']);
+        // Create Store Request
+        Artisan::call('make:request', ['name' => $name.'/'.$name.'StoreRequest']);
         $output = Artisan::output();
         preg_match('/\[(.*?)\]/', $output, $matches);
         $path = $matches[1] ?? null;
 
-        $content = File::get(__DIR__.'/MakeAPIFiles/request.ignore.php');
+        $content = File::get(__DIR__.'/MakeAPIFiles/requestStore.ignore.php');
+        $content = $this->replaceNameInContent($content, $name);
+
+        file_put_contents($path, $content);
+
+        $this->openInVSCode($path);
+
+        // Create Update Request
+        Artisan::call('make:request', ['name' => $name.'/'.$name.'UpdateRequest']);
+        $output = Artisan::output();
+        preg_match('/\[(.*?)\]/', $output, $matches);
+        $path = $matches[1] ?? null;
+
+        $content = File::get(__DIR__.'/MakeAPIFiles/requestUpdate.ignore.php');
         $content = $this->replaceNameInContent($content, $name);
 
         file_put_contents($path, $content);

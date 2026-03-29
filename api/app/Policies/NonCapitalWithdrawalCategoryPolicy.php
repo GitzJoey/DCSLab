@@ -21,7 +21,7 @@ class NonCapitalWithdrawalCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawalCategory-readAny')) {
+        if ($user->hasPermission('non_capital_withdrawal_category-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class NonCapitalWithdrawalCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawalCategory-read')) {
+        if ($user->hasPermission('non_capital_withdrawal_category-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class NonCapitalWithdrawalCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawalCategory-create')) {
+        if ($user->hasPermission('non_capital_withdrawal_category-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class NonCapitalWithdrawalCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawalCategory-update')) {
+        if ($user->hasPermission('non_capital_withdrawal_category-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class NonCapitalWithdrawalCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawalCategory-delete')) {
+        if ($user->hasPermission('non_capital_withdrawal_category-delete')) {
             return true;
         }
     }

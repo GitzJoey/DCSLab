@@ -19,36 +19,12 @@ class BrandActions
     {
     }
 
-    public function create(array $data): Brand
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $brand = new Brand();
-            $brand->company_id = $data['company_id'];
-            $brand->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $brand->name = $data['name'];
-            $brand->save();
-
-            $this->flushCache();
-
-            return $brand;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
-
         ?string $search,
-        ?int $includeId,
 
+        ?int $includeId,
         ?ExecuteDTO $execute
     ) {
         $query = Brand::with('company')->select('brands.*')
@@ -138,6 +114,29 @@ class BrandActions
     public function read(Brand $brand): Brand
     {
         return $brand->load('company');
+    }
+
+    public function create(array $data): Brand
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $brand = new Brand();
+            $brand->company_id = $data['company_id'];
+            $brand->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $brand->name = $data['name'];
+            $brand->save();
+
+            $this->flushCache();
+
+            return $brand;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(Brand $brand, array $data): Brand

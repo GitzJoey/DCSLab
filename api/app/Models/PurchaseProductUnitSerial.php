@@ -18,6 +18,7 @@ class PurchaseProductUnitSerial extends Model
         'branch_id',
         'purchase_id',
         'purchase_product_unit_id',
+        'serial',
     ];
 
     protected $casts = [
@@ -46,17 +47,8 @@ class PurchaseProductUnitSerial extends Model
 
     public function scopeSearch($query, string $search)
     {
-        return $query->whereHas('company', function ($query) use ($search) {
-            $query->search($search);
-        })
-            ->orWhereHas('branch', function ($query) use ($search) {
-                $query->search($search);
-            })
-            ->orWhereHas('purchase', function ($query) use ($search) {
-                $query->search($search);
-            })
-            ->orWhereHas('purchaseProductUnit', function ($query) use ($search) {
-                $query->search($search);
-            });
+        return $query->where(function ($query) use ($search) {
+            $query->where('purchase_product_unit_serials.serial', 'like', '%'.$search.'%');
+        });
     }
 }

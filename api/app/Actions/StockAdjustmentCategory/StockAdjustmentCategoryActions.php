@@ -19,33 +19,6 @@ class StockAdjustmentCategoryActions
     {
     }
 
-    public function create(array $data): StockAdjustmentCategory
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $stockAdjustmentCategory = new StockAdjustmentCategory();
-            $stockAdjustmentCategory->company_id = $data['company_id'];
-            $stockAdjustmentCategory->code = $this->generateUniqueCode(
-                $data['company_id'],
-                $data['code'],
-                null,
-            );
-            $stockAdjustmentCategory->name = $data['name'];
-            $stockAdjustmentCategory->save();
-
-            $this->flushCache();
-
-            return $stockAdjustmentCategory;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         ?string $search,
@@ -147,6 +120,33 @@ class StockAdjustmentCategoryActions
     public function read(StockAdjustmentCategory $stockAdjustmentCategory): StockAdjustmentCategory
     {
         return $stockAdjustmentCategory->load('company');
+    }
+
+    public function create(array $data): StockAdjustmentCategory
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $stockAdjustmentCategory = new StockAdjustmentCategory();
+            $stockAdjustmentCategory->company_id = $data['company_id'];
+            $stockAdjustmentCategory->code = $this->generateUniqueCode(
+                $data['company_id'],
+                $data['code'],
+                null,
+            );
+            $stockAdjustmentCategory->name = $data['name'];
+            $stockAdjustmentCategory->save();
+
+            $this->flushCache();
+
+            return $stockAdjustmentCategory;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(StockAdjustmentCategory $stockAdjustmentCategory, array $data): StockAdjustmentCategory

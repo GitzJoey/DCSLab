@@ -160,6 +160,21 @@ class Company extends Model
         return $this->hasMany(PurchaseOrder::class);
     }
 
+    public function purchaseOrderProductUnits()
+    {
+        return $this->hasMany(PurchaseOrderProductUnit::class);
+    }
+
+    public function purchaseOrderDownPayments()
+    {
+        return $this->hasMany(PurchaseOrderDownPayment::class);
+    }
+
+    public function purchaseOrderDownPaymentApplies()
+    {
+        return $this->hasMany(PurchaseOrderDownPaymentApply::class);
+    }
+
     public function purchases()
     {
         return $this->hasMany(Purchase::class);

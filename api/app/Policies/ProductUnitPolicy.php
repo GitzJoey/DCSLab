@@ -21,7 +21,7 @@ class ProductUnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('productUnit-readAny')) {
+        if ($user->hasPermission('product_unit-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class ProductUnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('productUnit-read')) {
+        if ($user->hasPermission('product_unit-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class ProductUnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('productUnit-create')) {
+        if ($user->hasPermission('product_unit-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class ProductUnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('productUnit-update')) {
+        if ($user->hasPermission('product_unit-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class ProductUnitPolicy
             return true;
         }
 
-        if ($user->hasPermission('productUnit-delete')) {
+        if ($user->hasPermission('product_unit-delete')) {
             return true;
         }
     }

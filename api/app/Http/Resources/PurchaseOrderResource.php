@@ -13,9 +13,9 @@ class PurchaseOrderResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
-            'supplier' => new SupplierResource($this->supplier),
+            'company' => new CompanyResource($this->whenLoaded('company')),
+            'branch' => new BranchResource($this->whenLoaded('branch')),
+            'supplier' => new SupplierResource($this->whenLoaded('supplier')),
             'code' => $this->code,
             'date' => $this->date,
             'shipping_date' => $this->shipping_date,
@@ -32,6 +32,8 @@ class PurchaseOrderResource extends JsonResource
             'down_payment_applied' => $this->down_payment_applied,
             'down_payment_remaining' => $this->down_payment_remaining,
             'is_down_payment_paid_off' => $this->is_down_payment_paid_off,
+            'purchase_order_product_units' => PurchaseOrderProductUnitResource::collection($this->whenLoaded('purchaseOrderProductUnits')),
+            'purchase_order_down_payments' => PurchaseOrderDownPaymentResource::collection($this->whenLoaded('purchaseOrderDownPayments')),
         ];
     }
 }

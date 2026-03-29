@@ -21,16 +21,6 @@ return new class extends Migration
             $table->decimal('product_unit_amount_per_unit', 30, 8)->default(0);
             $table->decimal('product_unit_amount_total', 30, 8)->default(0);
             $table->decimal('product_unit_initial_price', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_rate1', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_rate2', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_rate3', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_rate4', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_rate5', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_fixed1', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_fixed2', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_fixed3', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_fixed4', 30, 8)->default(0);
-            $table->decimal('product_unit_discount_fixed5', 30, 8)->default(0);
             $table->decimal('product_unit_net_price', 30, 8)->default(0);
             $table->decimal('product_unit_subtotal', 30, 8)->default(0);
             $table->decimal('product_unit_subtotal_discount_rate', 30, 8)->default(0);
@@ -54,6 +44,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
     }
 
     public function down(): void

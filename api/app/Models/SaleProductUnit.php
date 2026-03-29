@@ -120,7 +120,12 @@ class SaleProductUnit extends Model
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('code', 'like', '%'.$search.'%')
-            ->orWhere('remarks', 'like', '%'.$search.'%');
+        return $query->where(function ($query) use ($search) {
+            $query->whereHas('product', fn ($q) => $q->search($search))
+                ->orWhereHas('productUnit', fn ($q) => $q->search($search))
+                ->orWhere('sale_product_units.qty', 'like', '%'.$search.'%')
+                ->orWhere('sale_product_units.product_unit_amount_total', 'like', '%'.$search.'%')
+                ->orWhere('sale_product_units.product_unit_total', 'like', '%'.$search.'%');
+        });
     }
 }

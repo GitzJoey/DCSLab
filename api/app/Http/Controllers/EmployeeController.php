@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Employee\EmployeeActions;
-use App\Http\Requests\EmployeeRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\Employee\EmployeeStoreRequest;
+use App\Http\Requests\Employee\EmployeeUpdateRequest;
 use App\Http\Resources\EmployeeResource;
 use App\Models\Employee;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends BaseController
@@ -20,66 +28,51 @@ class EmployeeController extends BaseController
         $this->employeeActions = $employeeActions;
     }
 
-    public function store(EmployeeRequest $employeeRequest)
+    public function readAny(Request $request)
     {
-        $request = $employeeRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', Employee::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+            'include_id' => $request->filled('include_id') ? HashidsHelper::decodeId($request->include_id) : null,
+        ]);
 
-        try {
-            DB::beginTransaction();
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUniqueCode = $this->employeeActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
-                    null
-                );
-                if (! $isUniqueCode) {
-                    return response()->error(['code' => [trans('rules.unique_code')]], 422);
-                }
-            }
+            'include_id' => ['nullable', 'integer', 'exists:employees,id'],
 
-            $isUniqueName = $this->employeeActions->isUniqueName(
-                $request['company_id'],
-                $request['name'],
-                null
-            );
-            if (! $isUniqueName) {
-                return response()->error(['name' => [trans('rules.unique_name')]], 422);
-            }
-
-            $result = $this->employeeActions->create($request);
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(EmployeeRequest $employeeRequest)
-    {
-        $request = $employeeRequest->validated();
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->employeeActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
-
-                search: $request['search'],
-                companyId: $request['company_id'],
-
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                search: $validatedRequest['search'] ?? null,
+                userId: null,
+                includeId: $validatedRequest['include_id'] ?? null,
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -87,16 +80,15 @@ class EmployeeController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = EmployeeResource::collection($result);
-
-            return $response;
         }
+
+        return EmployeeResource::collection($result);
     }
 
-    public function read(Employee $employee, EmployeeRequest $employeeRequest)
+    public function read(Employee $employee)
     {
-        $request = $employeeRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $employee);
 
         $result = null;
         $errorMsg = '';
@@ -109,16 +101,14 @@ class EmployeeController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new EmployeeResource($result);
-
-            return $response;
         }
+
+        return new EmployeeResource($result);
     }
 
-    public function update(Employee $employee, EmployeeRequest $employeeRequest)
+    public function store(EmployeeStoreRequest $request)
     {
-        $request = $employeeRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
@@ -126,29 +116,62 @@ class EmployeeController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->employeeActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
-                    $employee->id
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    null
                 );
-                if (! $isUniqueCode) {
-                    return response()->error(['code' => [trans('rules.unique_code')]], 422);
-                }
+                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
             $isUniqueName = $this->employeeActions->isUniqueName(
-                $request['company_id'],
-                $request['name'],
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
+                null
+            );
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            $result = $this->employeeActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function update(Employee $employee, EmployeeUpdateRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUniqueCode = $this->employeeActions->isUniqueCode(
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    $employee->id
+                );
+                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $isUniqueName = $this->employeeActions->isUniqueName(
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
                 $employee->id
             );
-            if (! $isUniqueName) {
-                return response()->error(['name' => [trans('rules.unique_name')]], 422);
-            }
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
             $result = $this->employeeActions->update(
                 employee: $employee,
-                data: $request
+                data: $validatedRequest
             );
 
             DB::commit();
@@ -160,8 +183,11 @@ class EmployeeController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Employee $employee, EmployeeRequest $employeeRequest)
+    public function delete(Employee $employee)
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $employee);
+
         $result = false;
         $errorMsg = '';
 

@@ -15,10 +15,10 @@ class PurchaseOrderDownPaymentApplyResource extends JsonResource
             'ulid' => $this->ulid,
             'company' => new CompanyResource($this->company),
             'branch' => new BranchResource($this->branch),
-            'purchase_order' => new PurchaseOrderResource($this->purchase_order),
+            'purchase_order' => new PurchaseOrderResource($this->purchaseOrder),
             'code' => $this->code,
             'date' => $this->date,
-            'cash_account' => new CashAccountResource($this->cash_account),
+            'cash_account' => new CashAccountResource($this->cashAccount),
             'amount' => $this->amount,
             'remarks' => $this->remarks,
         ];

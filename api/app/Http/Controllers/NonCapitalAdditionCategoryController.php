@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\NonCapitalAdditionCategory\NonCapitalAdditionCategoryActions;
-use App\Http\Requests\NonCapitalAdditionCategoryRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\NonCapitalAdditionCategory\NonCapitalAdditionCategoryStoreRequest;
+use App\Http\Requests\NonCapitalAdditionCategory\NonCapitalAdditionCategoryUpdateRequest;
 use App\Http\Resources\NonCapitalAdditionCategoryResource;
 use App\Models\NonCapitalAdditionCategory;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NonCapitalAdditionCategoryController extends BaseController
 {
@@ -19,41 +28,48 @@ class NonCapitalAdditionCategoryController extends BaseController
         $this->nonCapitalAdditionCategoryActions = $nonCapitalAdditionCategoryActions;
     }
 
-    public function store(NonCapitalAdditionCategoryRequest $nonCapitalAdditionCategoryRequest)
+    public function readAny(Request $request)
     {
-        $request = $nonCapitalAdditionCategoryRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', NonCapitalAdditionCategory::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+            'include_id' => $request->filled('include_id') ? HashidsHelper::decodeId($request->include_id) : null,
+        ]);
 
-        try {
-            $result = $this->nonCapitalAdditionCategoryActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(NonCapitalAdditionCategoryRequest $nonCapitalAdditionCategoryRequest)
-    {
-        $request = $nonCapitalAdditionCategoryRequest->validated();
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'include_id' => ['nullable', 'integer', 'exists:non_capital_addition_categories,id'],
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->nonCapitalAdditionCategoryActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
-
-                search: $request['search'],
-                companyId: $request['company_id'],
-
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                search: $validatedRequest['search'] ?? null,
+                includeId: $validatedRequest['include_id'] ?? null,
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -61,16 +77,15 @@ class NonCapitalAdditionCategoryController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = NonCapitalAdditionCategoryResource::collection($result);
-
-            return $response;
         }
+
+        return NonCapitalAdditionCategoryResource::collection($result);
     }
 
-    public function read(NonCapitalAdditionCategory $nonCapitalAdditionCategory, NonCapitalAdditionCategoryRequest $nonCapitalAdditionCategoryRequest)
+    public function read(NonCapitalAdditionCategory $nonCapitalAdditionCategory)
     {
-        $request = $nonCapitalAdditionCategoryRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $nonCapitalAdditionCategory);
 
         $result = null;
         $errorMsg = '';
@@ -83,16 +98,14 @@ class NonCapitalAdditionCategoryController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new NonCapitalAdditionCategoryResource($result);
-
-            return $response;
         }
+
+        return new NonCapitalAdditionCategoryResource($result);
     }
 
-    public function update(NonCapitalAdditionCategory $nonCapitalAdditionCategory, NonCapitalAdditionCategoryRequest $nonCapitalAdditionCategoryRequest)
+    public function store(NonCapitalAdditionCategoryStoreRequest $request)
     {
-        $request = $nonCapitalAdditionCategoryRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
@@ -100,29 +113,62 @@ class NonCapitalAdditionCategoryController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->nonCapitalAdditionCategoryActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
-                    $nonCapitalAdditionCategory->id
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    null
                 );
-                if (! $isUnique) {
-                    return response()->error(['code' => [trans('rules.unique_code')]], 422);
-                }
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
             $isUniqueName = $this->nonCapitalAdditionCategoryActions->isUniqueName(
-                $request['company_id'],
-                $request['name'],
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
+                null
+            );
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            $result = $this->nonCapitalAdditionCategoryActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function update(NonCapitalAdditionCategory $nonCapitalAdditionCategory, NonCapitalAdditionCategoryUpdateRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUnique = $this->nonCapitalAdditionCategoryActions->isUniqueCode(
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    $nonCapitalAdditionCategory->id
+                );
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $isUniqueName = $this->nonCapitalAdditionCategoryActions->isUniqueName(
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
                 $nonCapitalAdditionCategory->id
             );
-            if (! $isUniqueName) {
-                return response()->error(['name' => [trans('rules.unique_name')]], 422);
-            }
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
             $result = $this->nonCapitalAdditionCategoryActions->update(
                 $nonCapitalAdditionCategory,
-                $request
+                $validatedRequest
             );
 
             DB::commit();
@@ -134,14 +180,22 @@ class NonCapitalAdditionCategoryController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(NonCapitalAdditionCategory $nonCapitalAdditionCategory, NonCapitalAdditionCategoryRequest $nonCapitalAdditionCategoryRequest)
+    public function delete(NonCapitalAdditionCategory $nonCapitalAdditionCategory)
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $nonCapitalAdditionCategory);
+
         $result = false;
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
+
             $result = $this->nonCapitalAdditionCategoryActions->delete($nonCapitalAdditionCategory);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

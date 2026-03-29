@@ -28,44 +28,6 @@ class SupplierController extends BaseController
         $this->supplierActions = $supplierActions;
     }
 
-    public function store(SupplierStoreRequest $request)
-    {
-        $validatedRequest = $request->validated();
-        $validatedRequest['user_id'] = Auth::id();
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            DB::beginTransaction();
-
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUniqueCode = $this->supplierActions->isUniqueCode(
-                    $validatedRequest['company_id'],
-                    $validatedRequest['code'],
-                    null
-                );
-                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->supplierActions->isUniqueName(
-                $validatedRequest['company_id'],
-                $validatedRequest['name'],
-                null
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            $result = $this->supplierActions->create($validatedRequest);
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
     public function readAny(Request $request)
     {
         if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
@@ -157,6 +119,44 @@ class SupplierController extends BaseController
         }
 
         return new SupplierResource($result);
+    }
+
+    public function store(SupplierStoreRequest $request)
+    {
+        $validatedRequest = $request->validated();
+        $validatedRequest['user_id'] = Auth::id();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUniqueCode = $this->supplierActions->isUniqueCode(
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    null
+                );
+                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $isUniqueName = $this->supplierActions->isUniqueName(
+                $validatedRequest['company_id'],
+                $validatedRequest['name'],
+                null
+            );
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            $result = $this->supplierActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Supplier $supplier, SupplierUpdateRequest $request)

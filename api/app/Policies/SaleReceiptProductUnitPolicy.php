@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\SaleReceiptProductUnit;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,11 +17,11 @@ class SaleReceiptProductUnitPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceiptProductUnit-readAny')) {
+        if ($user->hasPermission('sale_receipt_product_unit-readAny')) {
             return true;
         }
     }
@@ -32,11 +32,11 @@ class SaleReceiptProductUnitPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceiptProductUnit-read')) {
+        if ($user->hasPermission('sale_receipt_product_unit-read')) {
             return true;
         }
     }
@@ -47,11 +47,11 @@ class SaleReceiptProductUnitPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceiptProductUnit-create')) {
+        if ($user->hasPermission('sale_receipt_product_unit-create')) {
             return true;
         }
     }
@@ -62,11 +62,11 @@ class SaleReceiptProductUnitPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceiptProductUnit-update')) {
+        if ($user->hasPermission('sale_receipt_product_unit-update')) {
             return true;
         }
     }
@@ -77,11 +77,11 @@ class SaleReceiptProductUnitPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleReceiptProductUnit-delete')) {
+        if ($user->hasPermission('sale_receipt_product_unit-delete')) {
             return true;
         }
     }

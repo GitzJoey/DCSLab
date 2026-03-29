@@ -21,7 +21,7 @@ class NonCapitalAdditionCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAdditionCategory-readAny')) {
+        if ($user->hasPermission('non_capital_addition_category-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class NonCapitalAdditionCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAdditionCategory-read')) {
+        if ($user->hasPermission('non_capital_addition_category-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class NonCapitalAdditionCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAdditionCategory-create')) {
+        if ($user->hasPermission('non_capital_addition_category-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class NonCapitalAdditionCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAdditionCategory-update')) {
+        if ($user->hasPermission('non_capital_addition_category-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class NonCapitalAdditionCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalAdditionCategory-delete')) {
+        if ($user->hasPermission('non_capital_addition_category-delete')) {
             return true;
         }
     }

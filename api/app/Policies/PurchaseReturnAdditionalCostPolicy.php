@@ -21,7 +21,7 @@ class PurchaseReturnAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCost-readAny')) {
+        if ($user->hasPermission('purchase_return_additional_cost-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class PurchaseReturnAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCost-read')) {
+        if ($user->hasPermission('purchase_return_additional_cost-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class PurchaseReturnAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCost-create')) {
+        if ($user->hasPermission('purchase_return_additional_cost-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class PurchaseReturnAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCost-update')) {
+        if ($user->hasPermission('purchase_return_additional_cost-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class PurchaseReturnAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReturnAdditionalCost-delete')) {
+        if ($user->hasPermission('purchase_return_additional_cost-delete')) {
             return true;
         }
     }

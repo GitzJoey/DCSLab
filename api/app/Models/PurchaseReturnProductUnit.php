@@ -16,7 +16,8 @@ class PurchaseReturnProductUnit extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'purchase_order_id',
+        'purchase_id',
+        'warehouse_id',
 
         'qty',
         'product_id',
@@ -45,11 +46,11 @@ class PurchaseReturnProductUnit extends Model
 
         'product_is_taxable',
         'product_vat_rate',
-        'product_price_include_vat',
+        'product_price_includes_vat',
         'product_vat_base',
         'product_vat',
 
-        'product_unit_final_price',
+        'product_base_unit_final_price',
 
         'is_sent',
         'is_valid',
@@ -98,9 +99,14 @@ class PurchaseReturnProductUnit extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseOrder()
+    public function purchase()
     {
-        return $this->belongsTo(PurchaseOrder::class)->withTrashed();
+        return $this->belongsTo(Purchase::class)->withTrashed();
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class)->withTrashed();
     }
 
     public function product()
@@ -120,7 +126,12 @@ class PurchaseReturnProductUnit extends Model
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('code', 'like', '%'.$search.'%')
-            ->orWhere('remarks', 'like', '%'.$search.'%');
+        return $query->where(function ($query) use ($search) {
+            $query->whereHas('product', fn ($q) => $q->search($search))
+                ->orWhereHas('productUnit', fn ($q) => $q->search($search))
+                ->orWhere('purchase_return_product_units.qty', 'like', '%'.$search.'%')
+                ->orWhere('purchase_return_product_units.product_unit_amount_total', 'like', '%'.$search.'%')
+                ->orWhere('purchase_return_product_units.product_unit_grand_total', 'like', '%'.$search.'%');
+        });
     }
 }

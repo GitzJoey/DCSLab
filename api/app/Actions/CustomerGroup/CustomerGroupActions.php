@@ -19,44 +19,6 @@ class CustomerGroupActions
     {
     }
 
-    public function create(array $data): CustomerGroup
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $customerGroup = new CustomerGroup();
-            $customerGroup->company_id = $data['company_id'];
-            $customerGroup->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $customerGroup->name = $data['name'];
-            $customerGroup->max_open_invoice = $data['max_open_invoice'];
-            $customerGroup->max_outstanding_invoice = $data['max_outstanding_invoice'];
-            $customerGroup->max_invoice_age = $data['max_invoice_age'];
-            $customerGroup->payment_term_type = $data['payment_term_type'];
-            $customerGroup->payment_term = $data['payment_term'];
-            $customerGroup->selling_point = $data['selling_point'];
-            $customerGroup->selling_point_multiple = $data['selling_point_multiple'];
-            $customerGroup->sell_at_cost = $data['sell_at_cost'];
-            $customerGroup->price_markup_percent = $data['price_markup_percent'];
-            $customerGroup->price_markup_nominal = $data['price_markup_nominal'];
-            $customerGroup->price_markdown_percent = $data['price_markdown_percent'];
-            $customerGroup->price_markdown_nominal = $data['price_markdown_nominal'];
-            $customerGroup->rounding_type = $data['rounding_type'];
-            $customerGroup->rounding_digit = $data['rounding_digit'];
-            $customerGroup->remarks = $data['remarks'];
-            $customerGroup->save();
-
-            $this->flushCache();
-
-            return $customerGroup;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -160,6 +122,44 @@ class CustomerGroupActions
     public function read(CustomerGroup $customerGroup): CustomerGroup
     {
         return $customerGroup->load('company');
+    }
+
+    public function create(array $data): CustomerGroup
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $customerGroup = new CustomerGroup();
+            $customerGroup->company_id = $data['company_id'];
+            $customerGroup->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $customerGroup->name = $data['name'];
+            $customerGroup->max_open_invoice = $data['max_open_invoice'];
+            $customerGroup->max_outstanding_invoice = $data['max_outstanding_invoice'];
+            $customerGroup->max_invoice_age = $data['max_invoice_age'];
+            $customerGroup->payment_term_type = $data['payment_term_type'];
+            $customerGroup->payment_term = $data['payment_term'];
+            $customerGroup->selling_point = $data['selling_point'];
+            $customerGroup->selling_point_multiple = $data['selling_point_multiple'];
+            $customerGroup->sell_at_cost = $data['sell_at_cost'];
+            $customerGroup->price_markup_percent = $data['price_markup_percent'];
+            $customerGroup->price_markup_nominal = $data['price_markup_nominal'];
+            $customerGroup->price_markdown_percent = $data['price_markdown_percent'];
+            $customerGroup->price_markdown_nominal = $data['price_markdown_nominal'];
+            $customerGroup->rounding_type = $data['rounding_type'];
+            $customerGroup->rounding_digit = $data['rounding_digit'];
+            $customerGroup->remarks = $data['remarks'];
+            $customerGroup->save();
+
+            $this->flushCache();
+
+            return $customerGroup;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(CustomerGroup $customerGroup, array $data): CustomerGroup

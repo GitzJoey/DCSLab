@@ -30,43 +30,6 @@ class BranchController extends BaseController
         $this->branchActions = $branchActions;
     }
 
-    public function store(BranchStoreRequest $request)
-    {
-        $validatedRequest = $request->validated();
-
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            DB::beginTransaction();
-
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->branchActions->isUniqueCode(
-                    $validatedRequest['company_id'], $validatedRequest['code'], null,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->branchActions->isUniqueName(
-                $validatedRequest['company_id'], $validatedRequest['name'], null,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            if ($validatedRequest['is_main']) {
-                $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
-            }
-
-            $result = $this->branchActions->create($validatedRequest);
-
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollBack();
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
     public function readAny(Request $request)
     {
         if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
@@ -163,10 +126,45 @@ class BranchController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = new BranchResource($result);
-
-            return $response;
+            return new BranchResource($result);
         }
+    }
+
+    public function store(BranchStoreRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUnique = $this->branchActions->isUniqueCode(
+                    $validatedRequest['company_id'], $validatedRequest['code'], null,
+                );
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $isUniqueName = $this->branchActions->isUniqueName(
+                $validatedRequest['company_id'], $validatedRequest['name'], null,
+            );
+            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            if ($validatedRequest['is_main']) {
+                $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
+            }
+
+            $result = $this->branchActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
     public function update(Branch $branch, BranchUpdateRequest $request)

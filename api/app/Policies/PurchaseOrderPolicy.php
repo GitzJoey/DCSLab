@@ -21,7 +21,7 @@ class PurchaseOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseOrder-readAny')) {
+        if ($user->hasPermission('purchase_order-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class PurchaseOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseOrder-read')) {
+        if ($user->hasPermission('purchase_order-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class PurchaseOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseOrder-create')) {
+        if ($user->hasPermission('purchase_order-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class PurchaseOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseOrder-update')) {
+        if ($user->hasPermission('purchase_order-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class PurchaseOrderPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseOrder-delete')) {
+        if ($user->hasPermission('purchase_order-delete')) {
             return true;
         }
     }

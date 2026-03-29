@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\PurchaseProductUnit\PurchaseProductUnitActions;
-use App\Http\Requests\PurchaseProductUnitRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\PurchaseProductUnit\PurchaseProductUnitStoreRequest;
+use App\Http\Requests\PurchaseProductUnit\PurchaseProductUnitUpdateRequest;
 use App\Http\Resources\PurchaseProductUnitResource;
 use App\Models\PurchaseProductUnit;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PurchaseProductUnitController extends BaseController
 {
@@ -19,41 +28,52 @@ class PurchaseProductUnitController extends BaseController
         $this->purchaseProductUnitActions = $purchaseProductUnitActions;
     }
 
-    public function store(PurchaseProductUnitRequest $purchaseProductUnitRequest)
+    public function readAny(Request $request)
     {
-        $request = $purchaseProductUnitRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', PurchaseProductUnit::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+        ]);
 
-        try {
-            $result = $this->purchaseProductUnitActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(PurchaseProductUnitRequest $purchaseProductUnitRequest)
-    {
-        $request = $purchaseProductUnitRequest->validated();
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->purchaseProductUnitActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
 
-                search: $request['search'],
-                companyId: $request['company_id'],
+                purchaseId: $validatedRequest['purchase_id'] ?? null,
+                warehouseId: $validatedRequest['warehouse_id'] ?? null,
+                productId: $validatedRequest['product_id'] ?? null,
+                productUnitId: $validatedRequest['product_unit_id'] ?? null,
 
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(
+                        page: $validatedRequest['paginate']['page'],
+                        perPage: $validatedRequest['paginate']['per_page'],
+                    ) : null,
+                    get: isset($validatedRequest['get']) ? new ExecuteGetDTO(
+                        limit: $validatedRequest['get']['limit'],
+                    ) : null,
+                ),
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -61,16 +81,15 @@ class PurchaseProductUnitController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = PurchaseProductUnitResource::collection($result);
-
-            return $response;
         }
+
+        return PurchaseProductUnitResource::collection($result);
     }
 
-    public function read(PurchaseProductUnit $purchaseProductUnit, PurchaseProductUnitRequest $purchaseProductUnitRequest)
+    public function read(PurchaseProductUnit $purchaseProductUnit)
     {
-        $request = $purchaseProductUnitRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $purchaseProductUnit);
 
         $result = null;
         $errorMsg = '';
@@ -83,40 +102,66 @@ class PurchaseProductUnitController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new PurchaseProductUnitResource($result);
-
-            return $response;
         }
+
+        return new PurchaseProductUnitResource($result);
     }
 
-    public function update(PurchaseProductUnit $purchaseProductUnit, PurchaseProductUnitRequest $purchaseProductUnitRequest)
+    public function store(PurchaseProductUnitStoreRequest $request)
     {
-        $request = $purchaseProductUnitRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
 
         try {
-            $result = $this->purchaseProductUnitActions->update(
-                purchaseProductUnit: $purchaseProductUnit,
-                data: $request
-            );
+            DB::beginTransaction();
+            $result = $this->purchaseProductUnitActions->create($validatedRequest);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(PurchaseProductUnit $purchaseProductUnit, PurchaseProductUnitRequest $purchaseProductUnitRequest)
+    public function update(PurchaseProductUnit $purchaseProductUnit, PurchaseProductUnitUpdateRequest $request)
     {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+            $result = $this->purchaseProductUnitActions->update(
+                purchaseProductUnit: $purchaseProductUnit,
+                data: $validatedRequest
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function delete(PurchaseProductUnit $purchaseProductUnit)
+    {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $purchaseProductUnit);
+
         $result = false;
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
             $result = $this->purchaseProductUnitActions->delete($purchaseProductUnit);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

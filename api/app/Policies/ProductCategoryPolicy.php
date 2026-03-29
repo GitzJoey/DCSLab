@@ -21,7 +21,7 @@ class ProductCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('productCategory-readAny')) {
+        if ($user->hasPermission('product_category-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class ProductCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('productCategory-read')) {
+        if ($user->hasPermission('product_category-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class ProductCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('productCategory-create')) {
+        if ($user->hasPermission('product_category-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class ProductCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('productCategory-update')) {
+        if ($user->hasPermission('product_category-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class ProductCategoryPolicy
             return true;
         }
 
-        if ($user->hasPermission('productCategory-delete')) {
+        if ($user->hasPermission('product_category-delete')) {
             return true;
         }
     }

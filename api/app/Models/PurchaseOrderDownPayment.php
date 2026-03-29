@@ -31,23 +31,27 @@ class PurchaseOrderDownPayment extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class)->withTrashed();
+        return $this->belongsTo(Company::class);
     }
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class)->withTrashed();
+        return $this->belongsTo(Branch::class);
+    }
+
+    public function purchaseOrder()
+    {
+        return $this->belongsTo(PurchaseOrder::class);
     }
 
     public function cashAccount()
     {
-        return $this->belongsTo(CashAccount::class)->withTrashed();
+        return $this->belongsTo(CashAccount::class);
     }
 
     public function scopeSearch($query, string $search)
     {
         return $query->where('purchase_order_down_payments.code', 'like', '%'.$search.'%')
-            ->orWhere('purchase_order_down_payments.date', 'like', '%'.$search.'%')
             ->orWhere('purchase_order_down_payments.remarks', 'like', '%'.$search.'%');
     }
 }

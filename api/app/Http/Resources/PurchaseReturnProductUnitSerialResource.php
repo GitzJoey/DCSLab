@@ -13,12 +13,19 @@ class PurchaseReturnProductUnitSerialResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
-            'purchase' => new PurchaseResource($this->purchase),
-            'purchase_return_product_unit' => new PurchaseReturnProductUnitResource($this->purchaseReturnProductUnit),
-            'code' => $this->code,
-            'remarks' => $this->remarks,
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('purchase'), [
+                'purchase' => new PurchaseResource($this->whenLoaded('purchase')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('purchaseReturnProductUnit'), [
+                'purchase_return_product_unit' => new PurchaseReturnProductUnitResource($this->whenLoaded('purchaseReturnProductUnit')),
+            ]),
+            'serial' => $this->serial,
         ];
     }
 }

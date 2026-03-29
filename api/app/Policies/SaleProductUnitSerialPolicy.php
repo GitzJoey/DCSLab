@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\SaleProductUnitSerial;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,11 +17,11 @@ class SaleProductUnitSerialPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleProductUnitSerial-readAny')) {
+        if ($user->hasPermission('sale_product_unit_serial-readAny')) {
             return true;
         }
     }
@@ -32,11 +32,11 @@ class SaleProductUnitSerialPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleProductUnitSerial-read')) {
+        if ($user->hasPermission('sale_product_unit_serial-read')) {
             return true;
         }
     }
@@ -47,11 +47,11 @@ class SaleProductUnitSerialPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleProductUnitSerial-create')) {
+        if ($user->hasPermission('sale_product_unit_serial-create')) {
             return true;
         }
     }
@@ -62,11 +62,11 @@ class SaleProductUnitSerialPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleProductUnitSerial-update')) {
+        if ($user->hasPermission('sale_product_unit_serial-update')) {
             return true;
         }
     }
@@ -77,11 +77,11 @@ class SaleProductUnitSerialPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('saleProductUnitSerial-delete')) {
+        if ($user->hasPermission('sale_product_unit_serial-delete')) {
             return true;
         }
     }

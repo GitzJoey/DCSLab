@@ -13,12 +13,20 @@ class SaleOrderDownPaymentApplyResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch' => new BranchResource($this->branch),
-            'sale_order' => new SalesOrderResource($this->sale_order),
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('saleOrder'), [
+                'sale_order' => new SalesOrderResource($this->whenLoaded('saleOrder')),
+            ]),
             'code' => $this->code,
             'date' => $this->date,
-            'cash_account' => new CashAccountResource($this->cash_account),
+            $this->mergeWhen($this->relationLoaded('cashAccount'), [
+                'cash_account' => new CashAccountResource($this->whenLoaded('cashAccount')),
+            ]),
             'amount' => $this->amount,
             'remarks' => $this->remarks,
         ];

@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\SalePayment;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -17,11 +17,11 @@ class SalePaymentPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('salePayment-readAny')) {
+        if ($user->hasPermission('sale_payment-readAny')) {
             return true;
         }
     }
@@ -32,11 +32,11 @@ class SalePaymentPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('salePayment-read')) {
+        if ($user->hasPermission('sale_payment-read')) {
             return true;
         }
     }
@@ -47,11 +47,11 @@ class SalePaymentPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('salePayment-create')) {
+        if ($user->hasPermission('sale_payment-create')) {
             return true;
         }
     }
@@ -62,11 +62,11 @@ class SalePaymentPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('salePayment-update')) {
+        if ($user->hasPermission('sale_payment-update')) {
             return true;
         }
     }
@@ -77,11 +77,11 @@ class SalePaymentPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
-        if ($user->hasPermission('salePayment-delete')) {
+        if ($user->hasPermission('sale_payment-delete')) {
             return true;
         }
     }

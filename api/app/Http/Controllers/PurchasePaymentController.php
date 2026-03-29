@@ -3,10 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Actions\PurchasePayment\PurchasePaymentActions;
-use App\Http\Requests\PurchasePaymentRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\PurchasePayment\PurchasePaymentStoreRequest;
+use App\Http\Requests\PurchasePayment\PurchasePaymentUpdateRequest;
 use App\Http\Resources\PurchasePaymentResource;
 use App\Models\PurchasePayment;
+use App\Rules\ExistsForCompany;
+use App\Rules\IsValidBranch;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PurchasePaymentController extends BaseController
@@ -20,41 +30,76 @@ class PurchasePaymentController extends BaseController
         $this->purchasePaymentActions = $purchasePaymentActions;
     }
 
-    public function store(PurchasePaymentRequest $purchasePaymentRequest)
+    public function readAny(Request $request)
     {
-        $request = $purchasePaymentRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', PurchasePayment::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+            'branch_id' => $request->filled('branch_id') ? HashidsHelper::decodeId($request->branch_id) : null,
+            'purchase_id' => $request->filled('purchase_id') ? HashidsHelper::decodeId($request->purchase_id) : null,
+            'cash_account_id' => $request->filled('cash_account_id') ? HashidsHelper::decodeId($request->cash_account_id) : null,
+        ]);
 
-        try {
-            $result = $this->purchasePaymentActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'branch_id' => ['nullable', 'integer', new IsValidBranch($request->company_id, false)],
+            'search' => ['nullable', 'string'],
 
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+            'purchase_id' => ['nullable', 'integer', new ExistsForCompany('purchases', $request->company_id)],
+            'cash_account_id' => ['nullable', 'integer', new ExistsForCompany('cash_accounts', $request->company_id)],
 
-    public function readAny(PurchasePaymentRequest $purchasePaymentRequest)
-    {
-        $request = $purchasePaymentRequest->validated();
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:1'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->purchasePaymentActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
 
-                search: $request['search'],
-                companyId: $request['company_id'],
+                startDate: $validatedRequest['start_date'] ?? null,
+                endDate: $validatedRequest['end_date'] ?? null,
+                purchaseId: $validatedRequest['purchase_id'] ?? null,
+                cashAccountId: $validatedRequest['cash_account_id'] ?? null,
 
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: (function () use ($validatedRequest) {
+                        $pagination = null;
+                        if (isset($validatedRequest['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
+                                page: $validatedRequest['paginate']['page'],
+                                perPage: $validatedRequest['paginate']['per_page'],
+                            );
+                        }
+
+                        return $pagination;
+                    })(),
+                    get: (function () use ($validatedRequest) {
+                        $get = null;
+                        if (isset($validatedRequest['get'])) {
+                            $get = new ExecuteGetDTO(
+                                limit: $validatedRequest['get']['limit'],
+                            );
+                        }
+
+                        return $get;
+                    })(),
+                )
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -62,16 +107,15 @@ class PurchasePaymentController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = PurchasePaymentResource::collection($result);
-
-            return $response;
         }
+
+        return PurchasePaymentResource::collection($result);
     }
 
-    public function read(PurchasePayment $purchasePayment, PurchasePaymentRequest $purchasePaymentRequest)
+    public function read(PurchasePayment $purchasePayment)
     {
-        $request = $purchasePaymentRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $purchasePayment);
 
         $result = null;
         $errorMsg = '';
@@ -84,14 +128,12 @@ class PurchasePaymentController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new PurchasePaymentResource($result);
-
-            return $response;
         }
+
+        return new PurchasePaymentResource($result);
     }
 
-    public function update(PurchasePayment $purchasePayment, PurchasePaymentRequest $purchasePaymentRequest)
+    public function store(PurchasePaymentStoreRequest $purchasePaymentRequest)
     {
         $request = $purchasePaymentRequest->validated();
 
@@ -99,19 +141,44 @@ class PurchasePaymentController extends BaseController
         $errorMsg = '';
 
         try {
-            $result = $this->purchasePaymentActions->update(
-                purchasePayment: $purchasePayment,
-                data: $request
-            );
+            DB::beginTransaction();
+            $result = $this->purchasePaymentActions->create($request);
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(PurchasePayment $purchasePayment, PurchasePaymentRequest $purchasePaymentRequest)
+    public function update(PurchasePayment $purchasePayment, PurchasePaymentUpdateRequest $purchasePaymentRequest)
     {
+        $request = $purchasePaymentRequest->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+            $result = $this->purchasePaymentActions->update(
+                purchasePayment: $purchasePayment,
+                data: $request
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function delete(PurchasePayment $purchasePayment)
+    {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $purchasePayment);
+
         $result = false;
         $errorMsg = '';
 

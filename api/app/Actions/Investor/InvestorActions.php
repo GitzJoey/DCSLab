@@ -19,30 +19,6 @@ class InvestorActions
     {
     }
 
-    public function create(array $data): Investor
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $investor = new Investor();
-            $investor->company_id = $data['company_id'];
-            $investor->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $investor->name = $data['name'];
-            $investor->remarks = $data['remarks'];
-            $investor->save();
-
-            $this->flushCache();
-
-            return $investor;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -146,6 +122,30 @@ class InvestorActions
     public function read(Investor $investor): Investor
     {
         return $investor->load('company');
+    }
+
+    public function create(array $data): Investor
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $investor = new Investor();
+            $investor->company_id = $data['company_id'];
+            $investor->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $investor->name = $data['name'];
+            $investor->remarks = $data['remarks'];
+            $investor->save();
+
+            $this->flushCache();
+
+            return $investor;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(Investor $investor, array $data): Investor

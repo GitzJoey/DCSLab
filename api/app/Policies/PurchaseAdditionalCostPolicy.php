@@ -21,7 +21,7 @@ class PurchaseAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseAdditionalCost-readAny')) {
+        if ($user->hasPermission('purchase_additional_cost-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class PurchaseAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseAdditionalCost-read')) {
+        if ($user->hasPermission('purchase_additional_cost-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class PurchaseAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseAdditionalCost-create')) {
+        if ($user->hasPermission('purchase_additional_cost-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class PurchaseAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseAdditionalCost-update')) {
+        if ($user->hasPermission('purchase_additional_cost-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class PurchaseAdditionalCostPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseAdditionalCost-delete')) {
+        if ($user->hasPermission('purchase_additional_cost-delete')) {
             return true;
         }
     }

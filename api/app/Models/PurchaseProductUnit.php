@@ -91,7 +91,32 @@ class PurchaseProductUnit extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Company::class)->withTrashed();
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class)->withTrashed();
+    }
+
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class)->withTrashed();
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class)->withTrashed();
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
+    }
+
+    public function productUnit()
+    {
+        return $this->belongsTo(ProductUnit::class)->withTrashed();
     }
 
     public function purchaseProductUnitSerials()
@@ -101,7 +126,12 @@ class PurchaseProductUnit extends Model
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('code', 'like', '%'.$search.'%')
-            ->orWhere('remarks', 'like', '%'.$search.'%');
+        return $query->where(function ($query) use ($search) {
+            $query->whereHas('product', fn ($q) => $q->search($search))
+                ->orWhereHas('productUnit', fn ($q) => $q->search($search))
+                ->orWhere('purchase_product_units.qty', 'like', '%'.$search.'%')
+                ->orWhere('purchase_product_units.product_unit_amount_total', 'like', '%'.$search.'%')
+                ->orWhere('purchase_product_units.product_unit_grand_total', 'like', '%'.$search.'%');
+        });
     }
 }

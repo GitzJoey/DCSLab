@@ -19,37 +19,6 @@ class SupplierActions
     {
     }
 
-    public function create(array $data): Supplier
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $supplier = new Supplier();
-            $supplier->company_id = $data['company_id'];
-            $supplier->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $supplier->name = $data['name'];
-            $supplier->address = $data['address'];
-            $supplier->city = $data['city'];
-            $supplier->payment_term_type = $data['payment_term_type'];
-            $supplier->payment_term = $data['payment_term'];
-            $supplier->taxable_enterprise = $data['taxable_enterprise'];
-            $supplier->tax_id = $data['tax_id'];
-            $supplier->status = $data['status'];
-            $supplier->remarks = $data['remarks'];
-            $supplier->save();
-
-            $this->flushCache();
-
-            return $supplier;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -144,6 +113,37 @@ class SupplierActions
     public function read(Supplier $supplier): Supplier
     {
         return $supplier->load('company');
+    }
+
+    public function create(array $data): Supplier
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $supplier = new Supplier();
+            $supplier->company_id = $data['company_id'];
+            $supplier->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $supplier->name = $data['name'];
+            $supplier->address = $data['address'];
+            $supplier->city = $data['city'];
+            $supplier->payment_term_type = $data['payment_term_type'];
+            $supplier->payment_term = $data['payment_term'];
+            $supplier->taxable_enterprise = $data['taxable_enterprise'];
+            $supplier->tax_id = $data['tax_id'];
+            $supplier->status = $data['status'];
+            $supplier->remarks = $data['remarks'];
+            $supplier->save();
+
+            $this->flushCache();
+
+            return $supplier;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(Supplier $supplier, array $data): Supplier

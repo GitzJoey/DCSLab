@@ -19,41 +19,12 @@ class WarehouseActions
     {
     }
 
-    public function create(array $data): Warehouse
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $warehouse = new Warehouse();
-            $warehouse->company_id = $data['company_id'];
-            $warehouse->branch_id = $data['branch_id'];
-            $warehouse->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $warehouse->name = $data['name'];
-            $warehouse->address = $data['address'];
-            $warehouse->city = $data['city'];
-            $warehouse->contact = $data['contact'];
-            $warehouse->remarks = $data['remarks'];
-            $warehouse->status = $data['status'];
-            $warehouse->save();
-
-            $this->flushCache();
-
-            return $warehouse;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
+        ?int $branchId,
 
         ?string $search,
-        ?int $branchId,
         ?int $status,
         ?int $includeId,
 
@@ -150,6 +121,35 @@ class WarehouseActions
     public function read(Warehouse $warehouse): Warehouse
     {
         return $warehouse->load('company', 'branch');
+    }
+
+    public function create(array $data): Warehouse
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $warehouse = new Warehouse();
+            $warehouse->company_id = $data['company_id'];
+            $warehouse->branch_id = $data['branch_id'];
+            $warehouse->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
+            $warehouse->name = $data['name'];
+            $warehouse->address = $data['address'];
+            $warehouse->city = $data['city'];
+            $warehouse->contact = $data['contact'];
+            $warehouse->remarks = $data['remarks'];
+            $warehouse->status = $data['status'];
+            $warehouse->save();
+
+            $this->flushCache();
+
+            return $warehouse;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function update(Warehouse $warehouse, array $data): Warehouse

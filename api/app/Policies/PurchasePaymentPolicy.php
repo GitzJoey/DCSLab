@@ -21,7 +21,7 @@ class PurchasePaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchasePayment-readAny')) {
+        if ($user->hasPermission('purchase_payment-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class PurchasePaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchasePayment-read')) {
+        if ($user->hasPermission('purchase_payment-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class PurchasePaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchasePayment-create')) {
+        if ($user->hasPermission('purchase_payment-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class PurchasePaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchasePayment-update')) {
+        if ($user->hasPermission('purchase_payment-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class PurchasePaymentPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchasePayment-delete')) {
+        if ($user->hasPermission('purchase_payment-delete')) {
             return true;
         }
     }

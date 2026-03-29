@@ -21,7 +21,7 @@ class PurchaseReceiptProductUnitSerialPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceiptProductUnitSerial-readAny')) {
+        if ($user->hasPermission('purchase_receipt_product_unit_serial-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class PurchaseReceiptProductUnitSerialPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceiptProductUnitSerial-read')) {
+        if ($user->hasPermission('purchase_receipt_product_unit_serial-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class PurchaseReceiptProductUnitSerialPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceiptProductUnitSerial-create')) {
+        if ($user->hasPermission('purchase_receipt_product_unit_serial-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class PurchaseReceiptProductUnitSerialPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceiptProductUnitSerial-update')) {
+        if ($user->hasPermission('purchase_receipt_product_unit_serial-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class PurchaseReceiptProductUnitSerialPolicy
             return true;
         }
 
-        if ($user->hasPermission('purchaseReceiptProductUnitSerial-delete')) {
+        if ($user->hasPermission('purchase_receipt_product_unit_serial-delete')) {
             return true;
         }
     }

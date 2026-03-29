@@ -17,23 +17,12 @@ class PurchaseOrderProductUnit extends Model
         'company_id',
         'branch_id',
         'purchase_order_id',
-
         'qty',
         'product_id',
         'product_unit_id',
         'product_unit_amount_per_unit',
         'product_unit_amount_total',
         'product_unit_initial_price',
-        'product_unit_discount_rate1',
-        'product_unit_discount_rate2',
-        'product_unit_discount_rate3',
-        'product_unit_discount_rate4',
-        'product_unit_discount_rate5',
-        'product_unit_discount_fixed1',
-        'product_unit_discount_fixed2',
-        'product_unit_discount_fixed3',
-        'product_unit_discount_fixed4',
-        'product_unit_discount_fixed5',
         'product_unit_net_price',
         'product_unit_subtotal',
         'product_unit_subtotal_discount_rate',
@@ -42,17 +31,14 @@ class PurchaseOrderProductUnit extends Model
         'product_unit_global_discount_rate',
         'product_unit_global_discount_fixed',
         'product_unit_grand_total',
-
         'product_is_taxable',
         'product_vat_rate',
-        'product_price_include_vat',
+        'product_is_price_include_vat',
         'product_vat_base',
         'product_vat',
-
         'product_unit_final_price',
-
-        'is_received',
-        'is_valid',
+        'product_final_price_base_unit',
+        'remarks',
     ];
 
     protected $casts = [
@@ -60,16 +46,6 @@ class PurchaseOrderProductUnit extends Model
         'product_unit_amount_per_unit' => 'decimal:8',
         'product_unit_amount_total' => 'decimal:8',
         'product_unit_initial_price' => 'decimal:8',
-        'product_unit_discount_rate1' => 'decimal:8',
-        'product_unit_discount_rate2' => 'decimal:8',
-        'product_unit_discount_rate3' => 'decimal:8',
-        'product_unit_discount_rate4' => 'decimal:8',
-        'product_unit_discount_rate5' => 'decimal:8',
-        'product_unit_discount_fixed1' => 'decimal:8',
-        'product_unit_discount_fixed2' => 'decimal:8',
-        'product_unit_discount_fixed3' => 'decimal:8',
-        'product_unit_discount_fixed4' => 'decimal:8',
-        'product_unit_discount_fixed5' => 'decimal:8',
         'product_unit_net_price' => 'decimal:8',
         'product_unit_subtotal' => 'decimal:8',
         'product_unit_subtotal_discount_rate' => 'decimal:8',
@@ -80,12 +56,11 @@ class PurchaseOrderProductUnit extends Model
         'product_unit_grand_total' => 'decimal:8',
         'product_is_taxable' => 'boolean',
         'product_vat_rate' => 'decimal:8',
-        'product_price_include_vat' => 'boolean',
+        'product_is_price_include_vat' => 'boolean',
         'product_vat_base' => 'decimal:8',
         'product_vat' => 'decimal:8',
-        'product_base_unit_final_price' => 'decimal:8',
-        'is_received' => 'boolean',
-        'is_valid' => 'boolean',
+        'product_unit_final_price' => 'decimal:8',
+        'product_final_price_base_unit' => 'decimal:8',
     ];
 
     public function company()
@@ -93,9 +68,33 @@ class PurchaseOrderProductUnit extends Model
         return $this->belongsTo(Company::class)->withTrashed();
     }
 
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class)->withTrashed();
+    }
+
+    public function purchaseOrder()
+    {
+        return $this->belongsTo(PurchaseOrder::class)->withTrashed();
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
+    }
+
+    public function productUnit()
+    {
+        return $this->belongsTo(ProductUnit::class)->withTrashed();
+    }
+
+    public function discounts()
+    {
+        return $this->hasMany(PurchaseOrderProductUnitDiscount::class)->orderBy('sequence', 'asc');
+    }
+
     public function scopeSearch($query, string $search)
     {
-        return $query->where('code', 'like', '%'.$search.'%')
-            ->orWhere('remarks', 'like', '%'.$search.'%');
+        return $query->where('purchase_order_product_units.remarks', 'like', '%'.$search.'%');
     }
 }

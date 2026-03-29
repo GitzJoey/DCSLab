@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Actions\NonCapitalWithdrawal\NonCapitalWithdrawalActions;
-use App\Http\Requests\NonCapitalWithdrawalRequest;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\NonCapitalWithdrawal\NonCapitalWithdrawalStoreRequest;
+use App\Http\Requests\NonCapitalWithdrawal\NonCapitalWithdrawalUpdateRequest;
 use App\Http\Resources\NonCapitalWithdrawalResource;
 use App\Models\NonCapitalWithdrawal;
+use App\Rules\IsValidCompany;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NonCapitalWithdrawalController extends BaseController
 {
@@ -19,41 +28,63 @@ class NonCapitalWithdrawalController extends BaseController
         $this->nonCapitalWithdrawalActions = $nonCapitalWithdrawalActions;
     }
 
-    public function store(NonCapitalWithdrawalRequest $nonCapitalWithdrawalRequest)
+    public function readAny(Request $request)
     {
-        $request = $nonCapitalWithdrawalRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', NonCapitalWithdrawal::class);
 
-        $result = null;
-        $errorMsg = '';
+        $request->merge([
+            'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
+        ]);
 
-        try {
-            $result = $this->nonCapitalWithdrawalActions->create($request);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
+            'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
+            'search' => ['nullable', 'string'],
+            'refresh' => ['required', 'boolean'],
 
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(NonCapitalWithdrawalRequest $nonCapitalWithdrawalRequest)
-    {
-        $request = $nonCapitalWithdrawalRequest->validated();
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:1'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->nonCapitalWithdrawalActions->readAny(
-                useCache: $request['refresh'],
-                withTrashed: $request['with_trashed'],
+                withTrashed: $validatedRequest['with_trashed'],
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
+                search: $validatedRequest['search'] ?? null,
+                categoryId: $validatedRequest['category_id'] ?? null,
+                cashAccountId: $validatedRequest['cash_account_id'] ?? null,
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: (function () use ($validatedRequest) {
+                        $pagination = null;
+                        if (isset($validatedRequest['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
+                                page: $validatedRequest['paginate']['page'],
+                                perPage: $validatedRequest['paginate']['per_page'],
+                            );
+                        }
 
-                search: $request['search'],
-                companyId: $request['company_id'],
+                        return $pagination;
+                    })(),
+                    get: (function () use ($validatedRequest) {
+                        $get = null;
+                        if (isset($validatedRequest['get'])) {
+                            $get = new ExecuteGetDTO(
+                                limit: $validatedRequest['get']['limit'],
+                            );
+                        }
 
-                paginate: $request['paginate'],
-                page: $request['page'],
-                perPage: $request['per_page'],
-                limit: $request['limit'],
+                        return $get;
+                    })(),
+                )
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -61,16 +92,15 @@ class NonCapitalWithdrawalController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = NonCapitalWithdrawalResource::collection($result);
-
-            return $response;
         }
+
+        return NonCapitalWithdrawalResource::collection($result);
     }
 
-    public function read(NonCapitalWithdrawal $nonCapitalWithdrawal, NonCapitalWithdrawalRequest $nonCapitalWithdrawalRequest)
+    public function read(NonCapitalWithdrawal $nonCapitalWithdrawal)
     {
-        $request = $nonCapitalWithdrawalRequest->validated();
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('view', $nonCapitalWithdrawal);
 
         $result = null;
         $errorMsg = '';
@@ -83,16 +113,14 @@ class NonCapitalWithdrawalController extends BaseController
 
         if (is_null($result)) {
             return response()->error($errorMsg);
-        } else {
-            $response = new NonCapitalWithdrawalResource($result);
-
-            return $response;
         }
+
+        return new NonCapitalWithdrawalResource($result);
     }
 
-    public function update(NonCapitalWithdrawal $nonCapitalWithdrawal, NonCapitalWithdrawalRequest $nonCapitalWithdrawalRequest)
+    public function store(NonCapitalWithdrawalStoreRequest $request)
     {
-        $request = $nonCapitalWithdrawalRequest->validated();
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
@@ -100,20 +128,48 @@ class NonCapitalWithdrawalController extends BaseController
         try {
             DB::beginTransaction();
 
-            if ($request['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->nonCapitalWithdrawalActions->isUniqueCode(
-                    $request['company_id'],
-                    $request['code'],
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    null
+                );
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            $result = $this->nonCapitalWithdrawalActions->create($validatedRequest);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function update(NonCapitalWithdrawal $nonCapitalWithdrawal, NonCapitalWithdrawalUpdateRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUnique = $this->nonCapitalWithdrawalActions->isUniqueCode(
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
                     $nonCapitalWithdrawal->id
                 );
-                if (! $isUnique) {
-                    return response()->error(['code' => [trans('rules.unique_code')]], 422);
-                }
+                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
             $result = $this->nonCapitalWithdrawalActions->update(
                 $nonCapitalWithdrawal,
-                $request
+                $validatedRequest
             );
 
             DB::commit();
@@ -125,14 +181,22 @@ class NonCapitalWithdrawalController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(NonCapitalWithdrawal $nonCapitalWithdrawal, NonCapitalWithdrawalRequest $nonCapitalWithdrawalRequest)
+    public function delete(NonCapitalWithdrawal $nonCapitalWithdrawal)
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('delete', $nonCapitalWithdrawal);
+
         $result = false;
         $errorMsg = '';
 
         try {
+            DB::beginTransaction();
+
             $result = $this->nonCapitalWithdrawalActions->delete($nonCapitalWithdrawal);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

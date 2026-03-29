@@ -36,6 +36,8 @@ class PurchaseOrder extends Model
     ];
 
     protected $casts = [
+        'date' => 'datetime',
+        'shipping_date' => 'datetime',
         'is_has_invoice' => 'boolean',
         'is_received' => 'boolean',
         'total' => 'decimal:8',
@@ -51,28 +53,37 @@ class PurchaseOrder extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class)->withTrashed();
+        return $this->belongsTo(Company::class);
     }
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class)->withTrashed();
+        return $this->belongsTo(Branch::class);
     }
 
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class)->withTrashed();
+        return $this->belongsTo(Supplier::class);
     }
 
-    public function purchaseReturnProductUnits()
+    public function purchaseOrderProductUnits()
     {
-        return $this->hasMany(PurchaseReturnProductUnit::class);
+        return $this->hasMany(PurchaseOrderProductUnit::class);
+    }
+
+    public function purchaseOrderDownPayments()
+    {
+        return $this->hasMany(PurchaseOrderDownPayment::class);
+    }
+
+    public function purchaseOrderDownPaymentApplies()
+    {
+        return $this->hasMany(PurchaseOrderDownPaymentApply::class);
     }
 
     public function scopeSearch($query, string $search)
     {
-        return $query->where('purchases.code', 'like', '%'.$search.'%')
-            ->orWhere('purchases.date', 'like', '%'.$search.'%')
-            ->orWhere('purchases.remarks', 'like', '%'.$search.'%');
+        return $query->where('purchase_orders.code', 'like', '%'.$search.'%')
+            ->orWhere('purchase_orders.remarks', 'like', '%'.$search.'%');
     }
 }

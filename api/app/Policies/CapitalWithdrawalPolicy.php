@@ -21,7 +21,7 @@ class CapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalWithdrawal-readAny')) {
+        if ($user->hasPermission('capital_withdrawal-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class CapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalWithdrawal-read')) {
+        if ($user->hasPermission('capital_withdrawal-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class CapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalWithdrawal-create')) {
+        if ($user->hasPermission('capital_withdrawal-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class CapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalWithdrawal-update')) {
+        if ($user->hasPermission('capital_withdrawal-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class CapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('capitalWithdrawal-delete')) {
+        if ($user->hasPermission('capital_withdrawal-delete')) {
             return true;
         }
     }

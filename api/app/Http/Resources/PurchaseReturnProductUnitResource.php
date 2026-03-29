@@ -13,14 +13,25 @@ class PurchaseReturnProductUnitResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
-            'company' => new CompanyResource($this->company),
-            'branch_id' => new BranchResource($this->branch),
-            'purchase_id' => new PurchaseResource($this->purchase),
-            'warehouse_id' => new WarehouseResource($this->warehouse),
-
+            $this->mergeWhen($this->relationLoaded('company'), [
+                'company' => new CompanyResource($this->whenLoaded('company')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('branch'), [
+                'branch' => new BranchResource($this->whenLoaded('branch')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('purchase'), [
+                'purchase' => new PurchaseResource($this->whenLoaded('purchase')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('warehouse'), [
+                'warehouse' => new WarehouseResource($this->whenLoaded('warehouse')),
+            ]),
             'qty' => $this->qty,
-            'product_id' => new ProductResource($this->product),
-            'product_unit_id' => new ProductUnitResource($this->productUnit),
+            $this->mergeWhen($this->relationLoaded('product'), [
+                'product' => new ProductResource($this->whenLoaded('product')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('productUnit'), [
+                'product_unit' => new ProductUnitResource($this->whenLoaded('productUnit')),
+            ]),
             'product_unit_amount_per_unit' => $this->product_unit_amount_per_unit,
             'product_unit_amount_total' => $this->product_unit_amount_total,
             'product_unit_initial_price' => $this->product_unit_initial_price,
@@ -45,7 +56,7 @@ class PurchaseReturnProductUnitResource extends JsonResource
 
             'product_is_taxable' => $this->product_is_taxable,
             'product_vat_rate' => $this->product_vat_rate,
-            'product_price_include_vat' => $this->product_price_include_vat,
+            'product_price_includes_vat' => $this->product_price_includes_vat,
             'product_vat_base' => $this->product_vat_base,
             'product_vat' => $this->product_vat,
 

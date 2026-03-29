@@ -30,8 +30,8 @@ class SaleProductUnitResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('product'), [
                 'product_id' => new ProductResource($this->whenLoaded('product')),
             ]),
-            $this->mergeWhen($this->relationLoaded('product_unit'), [
-                'product_unit_id' => new ProductUnitResource($this->whenLoaded('product_unit')),
+            $this->mergeWhen($this->relationLoaded('productUnit'), [
+                'product_unit_id' => new ProductUnitResource($this->whenLoaded('productUnit')),
             ]),
             'product_unit_amount_per_unit' => $this->product_unit_amount_per_unit,
             'product_unit_amount_total' => $this->product_unit_amount_total,

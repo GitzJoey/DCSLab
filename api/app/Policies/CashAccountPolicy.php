@@ -21,7 +21,7 @@ class CashAccountPolicy
             return true;
         }
 
-        if ($user->hasPermission('cashAccount-readAny')) {
+        if ($user->hasPermission('cash_account-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class CashAccountPolicy
             return true;
         }
 
-        if ($user->hasPermission('cashAccount-read')) {
+        if ($user->hasPermission('cash_account-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class CashAccountPolicy
             return true;
         }
 
-        if ($user->hasPermission('cashAccount-create')) {
+        if ($user->hasPermission('cash_account-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class CashAccountPolicy
             return true;
         }
 
-        if ($user->hasPermission('cashAccount-update')) {
+        if ($user->hasPermission('cash_account-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class CashAccountPolicy
             return true;
         }
 
-        if ($user->hasPermission('cashAccount-delete')) {
+        if ($user->hasPermission('cash_account-delete')) {
             return true;
         }
     }

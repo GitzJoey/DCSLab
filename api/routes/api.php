@@ -33,6 +33,8 @@ use App\Http\Controllers\PurchasePaymentController;
 use App\Http\Controllers\PurchaseProductUnitController;
 use App\Http\Controllers\PurchaseProductUnitSerialController;
 use App\Http\Controllers\PurchaseReceiptController;
+use App\Http\Controllers\PurchaseReceiptProductUnitController;
+use App\Http\Controllers\PurchaseReceiptProductUnitSerialController;
 use App\Http\Controllers\PurchaseReturnAdditionalCostCategoryController;
 use App\Http\Controllers\PurchaseReturnAdditionalCostController;
 use App\Http\Controllers\PurchaseReturnProductUnitController;
@@ -394,7 +396,7 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
             });
         });
 
-        Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+        Route::group(['prefix' => 'purchase', 'as' => '.purchase'], function () {
             Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
                 Route::get('read', [PurchaseOrderController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{purchase_order:ulid}', [PurchaseOrderController::class, 'read'])->name('.read');
@@ -407,13 +409,10 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read', [PurchaseOrderDownPaymentController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{purchase_order_down_payment:ulid}', [PurchaseOrderDownPaymentController::class, 'read'])->name('.read');
             });
-            Route::group(['prefix' => 'po_down_payment_apply', 'as' => '.po_down_payment_apply'], function () {
+            Route::group(['prefix' => 'purchase_order_down_payment_apply', 'as' => '.purchase_order_down_payment_apply'], function () {
                 Route::get('read', [PurchaseOrderDownPaymentApplyController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{po_down_payment_apply:ulid}', [PurchaseOrderDownPaymentApplyController::class, 'read'])->name('.read');
+                Route::get('read/{purchase_order_down_payment_apply:ulid}', [PurchaseOrderDownPaymentApplyController::class, 'read'])->name('.read');
             });
-        });
-
-        Route::group(['prefix' => 'purchase', 'as' => '.purchase'], function () {
             Route::group(['prefix' => 'purchase', 'as' => '.purchase'], function () {
                 Route::get('read', [PurchaseController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{purchase:ulid}', [PurchaseController::class, 'read'])->name('.read');
@@ -459,12 +458,12 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
                 Route::get('read/{purchase_receipt:ulid}', [PurchaseReceiptController::class, 'read'])->name('.read');
             });
             Route::group(['prefix' => 'purchase_receipt_product_unit', 'as' => '.purchase_receipt_product_unit'], function () {
-                Route::get('read', [PurchaseReturnProductUnitController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{purchase_receipt_product_unit:ulid}', [PurchaseReturnProductUnitController::class, 'read'])->name('.read');
+                Route::get('read', [PurchaseReceiptProductUnitController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{purchase_receipt_product_unit:ulid}', [PurchaseReceiptProductUnitController::class, 'read'])->name('.read');
             });
-            Route::group(['prefix' => 'receipt_product_unit_serial', 'as' => '.receipt_product_unit_serial'], function () {
-                Route::get('read', [PurchaseReturnProductUnitSerialController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{receipt_product_unit_serial:ulid}', [PurchaseReturnProductUnitSerialController::class, 'read'])->name('.read');
+            Route::group(['prefix' => 'purchase_receipt_product_unit_serial', 'as' => '.purchase_receipt_product_unit_serial'], function () {
+                Route::get('read', [PurchaseReceiptProductUnitSerialController::class, 'readAny'])->name('.read_any');
+                Route::get('read/{purchase_receipt_product_unit_serial:ulid}', [PurchaseReceiptProductUnitSerialController::class, 'read'])->name('.read');
             });
         });
 
@@ -613,29 +612,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
             });
         });
 
-        Route::group(['prefix' => 'purcase_order', 'middleware' => ['precognitive'], 'as' => '.purcase_order'], function () {
-            Route::group(['prefix' => 'purcase_order', 'as' => '.purcase_order'], function () {
-                Route::post('save', [PurchaseOrderController::class, 'store'])->name('.save');
-                Route::post('edit/{purcase_order:ulid}', [PurchaseOrderController::class, 'update'])->name('.edit');
-                Route::post('delete/{purcase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('.delete');
-            });
-            Route::group(['prefix' => 'purcase_order_product_unit', 'as' => '.purcase_order_product_unit'], function () {
-                Route::post('save', [PurchaseOrderProductUnitController::class, 'store'])->name('.save');
-                Route::post('edit/{purcase_order_product_unit:ulid}', [PurchaseOrderProductUnitController::class, 'update'])->name('.edit');
-                Route::post('delete/{purcase_order_product_unit:ulid}', [PurchaseOrderProductUnitController::class, 'delete'])->name('.delete');
-            });
-            Route::group(['prefix' => 'purcase_order_down_payment', 'as' => '.purcase_order_down_payment'], function () {
-                Route::post('save', [PurchaseOrderDownPaymentController::class, 'store'])->name('.save');
-                Route::post('edit/{purcase_order_down_payment:ulid}', [PurchaseOrderDownPaymentController::class, 'update'])->name('.edit');
-                Route::post('delete/{purcase_order_down_payment:ulid}', [PurchaseOrderDownPaymentController::class, 'delete'])->name('.delete');
-            });
-            Route::group(['prefix' => 'purcase_order_down_payment_apply', 'as' => '.purcase_order_down_payment_apply'], function () {
-                Route::post('save', [PurchaseOrderDownPaymentApplyController::class, 'store'])->name('.save');
-                Route::post('edit/{purcase_order_down_payment_apply:ulid}', [PurchaseOrderDownPaymentApplyController::class, 'update'])->name('.edit');
-                Route::post('delete/{purcase_order_down_payment_apply:ulid}', [PurchaseOrderDownPaymentApplyController::class, 'delete'])->name('.delete');
-            });
-        });
-
         Route::group(['prefix' => 'purchase', 'middleware' => ['precognitive'], 'as' => '.purchase'], function () {
             Route::group(['prefix' => 'purchase', 'as' => '.purchase'], function () {
                 Route::post('save', [PurchaseController::class, 'store'])->name('.save');
@@ -693,14 +669,14 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('delete/{purchase_receipt:ulid}', [PurchaseReceiptController::class, 'delete'])->name('.delete');
             });
             Route::group(['prefix' => 'purchase_receipt_product_unit', 'as' => '.purchase_receipt_product_unit'], function () {
-                Route::post('save', [PurchaseReturnProductUnitController::class, 'store'])->name('.save');
-                Route::post('edit/{purchase_receipt_product_unit:ulid}', [PurchaseReturnProductUnitController::class, 'update'])->name('.edit');
-                Route::post('delete/{purchase_receipt_product_unit:ulid}', [PurchaseReturnProductUnitController::class, 'delete'])->name('.delete');
+                Route::post('save', [PurchaseReceiptProductUnitController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_receipt_product_unit:ulid}', [PurchaseReceiptProductUnitController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_receipt_product_unit:ulid}', [PurchaseReceiptProductUnitController::class, 'delete'])->name('.delete');
             });
-            Route::group(['prefix' => 'receipt_product_unit_serial', 'as' => '.receipt_product_unit_serial'], function () {
-                Route::post('save', [PurchaseReturnProductUnitSerialController::class, 'store'])->name('.save');
-                Route::post('edit/{receipt_product_unit_serial:ulid}', [PurchaseReturnProductUnitSerialController::class, 'update'])->name('.edit');
-                Route::post('delete/{receipt_product_unit_serial:ulid}', [PurchaseReturnProductUnitSerialController::class, 'delete'])->name('.delete');
+            Route::group(['prefix' => 'purchase_receipt_product_unit_serial', 'as' => '.purchase_receipt_product_unit_serial'], function () {
+                Route::post('save', [PurchaseReceiptProductUnitSerialController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_receipt_product_unit_serial:ulid}', [PurchaseReceiptProductUnitSerialController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_receipt_product_unit_serial:ulid}', [PurchaseReceiptProductUnitSerialController::class, 'delete'])->name('.delete');
             });
         });
 
@@ -759,6 +735,29 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
                 Route::post('save', [SaleReceiptProductUnitSerialController::class, 'store'])->name('.save');
                 Route::post('edit/{sale_receipt_product_unit_serial:ulid}', [SaleReceiptProductUnitSerialController::class, 'update'])->name('.edit');
                 Route::post('delete/{sale_receipt_product_unit_serial:ulid}', [SaleReceiptProductUnitSerialController::class, 'delete'])->name('.delete');
+            });
+        });
+
+        Route::group(['prefix' => 'purchase', 'middleware' => ['precognitive'], 'as' => '.purchase'], function () {
+            Route::group(['prefix' => 'purchase_order', 'as' => '.purchase_order'], function () {
+                Route::post('save', [PurchaseOrderController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_order:ulid}', [PurchaseOrderController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'purchase_order_product_unit', 'as' => '.purchase_order_product_unit'], function () {
+                Route::post('save', [PurchaseOrderProductUnitController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_order_product_unit:ulid}', [PurchaseOrderProductUnitController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_order_product_unit:ulid}', [PurchaseOrderProductUnitController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'purchase_order_down_payment', 'as' => '.purchase_order_down_payment'], function () {
+                Route::post('save', [PurchaseOrderDownPaymentController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_order_down_payment:ulid}', [PurchaseOrderDownPaymentController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_order_down_payment:ulid}', [PurchaseOrderDownPaymentController::class, 'delete'])->name('.delete');
+            });
+            Route::group(['prefix' => 'purchase_order_down_payment_apply', 'as' => '.purchase_order_down_payment_apply'], function () {
+                Route::post('save', [PurchaseOrderDownPaymentApplyController::class, 'store'])->name('.save');
+                Route::post('edit/{purchase_order_down_payment_apply:ulid}', [PurchaseOrderDownPaymentApplyController::class, 'update'])->name('.edit');
+                Route::post('delete/{purchase_order_down_payment_apply:ulid}', [PurchaseOrderDownPaymentApplyController::class, 'delete'])->name('.delete');
             });
         });
 

@@ -56,6 +56,11 @@ return [
             'stock_transfer_product_unit' => 'c,r,ra,u,d',
             'stock_transfer_product_unit_serial' => 'c,r,ra,u,d',
 
+            'purchase_order' => 'c,r,ra,u,d',
+            'purchase_order_product_unit' => 'c,r,ra,u,d',
+            'purchase_order_down_payment' => 'c,r,ra,u,d',
+            'purchase_order_down_payment_apply' => 'c,r,ra,u,d',
+
             // -------------------------------------------------------
 
 
@@ -66,10 +71,7 @@ return [
             'non_capital_withdrawal_category' => 'c,r,ra,u,d',
             'non_capital_withdrawal' => 'c,r,ra,u,d',
 
-            'purchase_order' => 'c,r,ra,u,d',
-            'purchase_order_unit' => 'c,r,ra,u,d',
-            'purchase_order_down_payment' => 'c,r,ra,u,d',
-            'purchase_order_down_payment_apply' => 'c,r,ra,u,d',
+
             'purchase' => 'c,r,ra,u,d',
             'purchase_product_unit' => 'c,r,ra,u,d',
             'purchase_product_unit_serial' => 'c,r,ra,u,d',

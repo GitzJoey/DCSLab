@@ -21,7 +21,7 @@ class NonCapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawal-readAny')) {
+        if ($user->hasPermission('non_capital_withdrawal-readAny')) {
             return true;
         }
     }
@@ -36,7 +36,7 @@ class NonCapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawal-read')) {
+        if ($user->hasPermission('non_capital_withdrawal-read')) {
             return true;
         }
     }
@@ -51,7 +51,7 @@ class NonCapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawal-create')) {
+        if ($user->hasPermission('non_capital_withdrawal-create')) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ class NonCapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawal-update')) {
+        if ($user->hasPermission('non_capital_withdrawal-update')) {
             return true;
         }
     }
@@ -81,7 +81,7 @@ class NonCapitalWithdrawalPolicy
             return true;
         }
 
-        if ($user->hasPermission('nonCapitalWithdrawal-delete')) {
+        if ($user->hasPermission('non_capital_withdrawal-delete')) {
             return true;
         }
     }

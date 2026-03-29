@@ -58,7 +58,7 @@ Untuk konsistensi navigasi dan kemudahan membaca, urutan method public di setiap
     *   Untuk semua modul Stock Adjustment Product (`StockAdjustmentInProductActions`, `StockAdjustmentOutProductActions`, `StockAdjustmentInProductSerialActions`, `StockAdjustmentOutProductSerialActions`), parameter `readAny` wajib dibagi menjadi 3 blok dengan linebreak:
         1. Blok basis: `withTrashed`, `companyId`, `branchId`, `search`
         2. Blok filter: `stockAdjustmentId`/`stockAdjustmentCode` (sesuai kebutuhan modul), `stockAdjustmentStartDate`, `stockAdjustmentEndDate`, `stockAdjustmentCategoryId`, `stockAdjustmentInWarehouseId`, `stockAdjustmentOutWarehouseId`, `...ProductUnitCode`, `...ProductName`, `...ProductCategoryId`, `...ProductBrandId`
-        3. Blok eksekusi: `execute`
+        3. Blok eksekusi: `includeId`, `execute`
     *   Urutan ini wajib konsisten pada:
         *   signature method `readAny`
         *   daftar variable di closure `use (...)`
