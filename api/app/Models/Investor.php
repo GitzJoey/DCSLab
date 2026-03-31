@@ -33,16 +33,6 @@ class Investor extends Model
         return $this->belongsTo(Company::class)->withTrashed();
     }
 
-    public function capitalAdditions()
-    {
-        return $this->hasMany(CapitalAddition::class);
-    }
-
-    public function capitalWithdrawals()
-    {
-        return $this->hasMany(CapitalWithdrawal::class);
-    }
-
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {

@@ -125,16 +125,6 @@ class Company extends Model
         return $this->hasMany(CashAccount::class);
     }
 
-    public function capitalAdditions()
-    {
-        return $this->hasMany(CapitalAddition::class);
-    }
-
-    public function capitalWithdrawals()
-    {
-        return $this->hasMany(CapitalWithdrawal::class);
-    }
-
     public function nonCapitalAdditionCategories()
     {
         return $this->hasMany(NonCapitalAdditionCategory::class);

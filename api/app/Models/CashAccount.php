@@ -46,16 +46,6 @@ class CashAccount extends Model
         return $this->hasMany(PurchasePayment::class);
     }
 
-    public function capitalAdditions()
-    {
-        return $this->hasMany(CapitalAddition::class);
-    }
-
-    public function capitalWithdrawals()
-    {
-        return $this->hasMany(CapitalWithdrawal::class);
-    }
-
     public function nonCapitalAdditions()
     {
         return $this->hasMany(NonCapitalAddition::class);

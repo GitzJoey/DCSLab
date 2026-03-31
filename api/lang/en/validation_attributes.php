@@ -216,26 +216,6 @@ return [
         'serial' => 'Serial',
     ],
 
-    'capital_addition' => [
-        'company' => 'Company',
-        'branch' => 'Branch',
-        'code' => 'Code',
-        'date' => 'Date',
-        'investor' => 'Investor',
-        'cash_account' => 'Cash Account',
-        'amount' => 'Amount',
-        'remarks' => 'Remarks',
-    ],
-    'capital_withdrawal' => [
-        'company' => 'Company',
-        'branch' => 'Branch',
-        'code' => 'Code',
-        'date' => 'Date',
-        'investor' => 'Investor',
-        'cash_account' => 'Cash Account',
-        'amount' => 'Amount',
-        'remarks' => 'Remarks',
-    ],
     'non_capital_addition_category' => [
         'company' => 'Company',
         'code' => 'Code',

@@ -3,8 +3,6 @@
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\CapitalAdditionController;
-use App\Http\Controllers\CapitalWithdrawalController;
 use App\Http\Controllers\CashAccountController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
@@ -358,14 +356,6 @@ Route::group(['prefix' => 'get', 'middleware' => ['auth:sanctum', 'throttle:100,
         });
 
         Route::group(['prefix' => 'capital', 'as' => '.capital'], function () {
-            Route::group(['prefix' => 'capital_addition', 'as' => '.capital_addition'], function () {
-                Route::get('read', [CapitalAdditionController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{capital_addition:ulid}', [CapitalAdditionController::class, 'read'])->name('.read');
-            });
-            Route::group(['prefix' => 'capital_withdrawal', 'as' => '.capital_withdrawal'], function () {
-                Route::get('read', [CapitalWithdrawalController::class, 'readAny'])->name('.read_any');
-                Route::get('read/{capital_withdrawal:ulid}', [CapitalWithdrawalController::class, 'read'])->name('.read');
-            });
             Route::group(['prefix' => 'non_capital_addition_category', 'as' => '.non_capital_addition_category'], function () {
                 Route::get('read', [NonCapitalAdditionCategoryController::class, 'readAny'])->name('.read_any');
                 Route::get('read/{non_capital_addition_category:ulid}', [NonCapitalAdditionCategoryController::class, 'read'])->name('.read');
@@ -567,16 +557,6 @@ Route::group(['prefix' => 'post', 'middleware' => ['auth:sanctum', 'throttle:50,
         });
 
         Route::group(['prefix' => 'capital', 'middleware' => ['precognitive'], 'as' => '.capital'], function () {
-            Route::group(['prefix' => 'capital_addition', 'as' => '.capital_addition'], function () {
-                Route::post('save', [CapitalAdditionController::class, 'store'])->name('.save');
-                Route::post('edit/{capital_addition:ulid}', [CapitalAdditionController::class, 'update'])->name('.edit');
-                Route::post('delete/{capital_addition:ulid}', [CapitalAdditionController::class, 'delete'])->name('.delete');
-            });
-            Route::group(['prefix' => 'capital_withdrawal', 'as' => '.capital_withdrawal'], function () {
-                Route::post('save', [CapitalWithdrawalController::class, 'store'])->name('.save');
-                Route::post('edit/{capital_withdrawal:ulid}', [CapitalWithdrawalController::class, 'update'])->name('.edit');
-                Route::post('delete/{capital_withdrawal:ulid}', [CapitalWithdrawalController::class, 'delete'])->name('.delete');
-            });
             Route::group(['prefix' => 'non_capital_addition_category', 'as' => '.non_capital_addition_category'], function () {
                 Route::post('save', [NonCapitalAdditionCategoryController::class, 'store'])->name('.save');
                 Route::post('edit/{non_capital_addition_category:ulid}', [NonCapitalAdditionCategoryController::class, 'update'])->name('.edit');
