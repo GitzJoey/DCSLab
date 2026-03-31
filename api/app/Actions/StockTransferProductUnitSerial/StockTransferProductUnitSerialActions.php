@@ -49,8 +49,12 @@ class StockTransferProductUnitSerialActions
             ->with([
                 'company',
                 'branch',
-                'stockTransfer',
+                'stockTransfer.sourceWarehouse',
+                'stockTransfer.destinationWarehouse',
                 'stockTransferProductUnit.productUnit.unit',
+                'stockTransferProductUnit.productUnit.product.category',
+                'stockTransferProductUnit.productUnit.product.brand',
+                'stockTransferProductUnit.productUnit.product.baseProductUnit.unit',
                 'stockTransferProductUnit.productUnit.product.images',
             ])
             ->join('companies', 'companies.id', '=', 'stock_transfer_product_unit_serials.company_id')

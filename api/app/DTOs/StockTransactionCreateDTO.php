@@ -4,6 +4,7 @@ namespace App\DTOs;
 
 use App\Models\StockAdjustmentInProduct;
 use App\Models\StockAdjustmentOutProduct;
+use App\Models\StockTransferProductUnit;
 
 final class StockTransactionCreateDTO
 {
@@ -38,6 +39,30 @@ final class StockTransactionCreateDTO
             warehouseId: $stockAdjustmentOutProduct->stockAdjustment->out_warehouse_id,
             productId: $stockAdjustmentOutProduct->productUnit->product_id,
             baseQty: $stockAdjustmentOutProduct->product_unit_qty_base * -1,
+        );
+    }
+
+    public static function fromStockTransferProductUnitSource(StockTransferProductUnit $stockTransferProductUnit): self
+    {
+        return new self(
+            referableType: StockTransferProductUnit::class,
+            referableId: $stockTransferProductUnit->id,
+            date: $stockTransferProductUnit->stockTransfer->date,
+            warehouseId: $stockTransferProductUnit->stockTransfer->source_warehouse_id,
+            productId: $stockTransferProductUnit->productUnit->product_id,
+            baseQty: $stockTransferProductUnit->product_unit_qty_base * -1,
+        );
+    }
+
+    public static function fromStockTransferProductUnitDestination(StockTransferProductUnit $stockTransferProductUnit): self
+    {
+        return new self(
+            referableType: StockTransferProductUnit::class,
+            referableId: $stockTransferProductUnit->id,
+            date: $stockTransferProductUnit->stockTransfer->date,
+            warehouseId: $stockTransferProductUnit->stockTransfer->destination_warehouse_id,
+            productId: $stockTransferProductUnit->productUnit->product_id,
+            baseQty: $stockTransferProductUnit->product_unit_qty_base,
         );
     }
 }

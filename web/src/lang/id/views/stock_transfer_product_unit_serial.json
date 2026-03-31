@@ -1,0 +1,22 @@
+{
+  "page_title": "Transfer Stok per Serial Produk",
+  "table": {
+    "title": "Daftar Transfer Stok per Serial Produk",
+    "cols": {
+      "stock_transfer_code": "Kode",
+      "product_name": "Produk",
+      "serial": "Serial"
+    }
+  },
+  "actions": {
+    "create": "Tambah Serial",
+    "edit": "Ubah Serial",
+    "show": "Lihat Serial",
+    "delete": "Hapus Serial"
+  },
+  "fields": {
+    "stock_transfer_id": "Transfer Stok",
+    "stock_transfer_product_unit_id": "Unit Produk",
+    "serial": "Serial"
+  }
+}

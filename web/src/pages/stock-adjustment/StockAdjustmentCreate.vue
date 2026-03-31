@@ -1095,8 +1095,8 @@ const onSubmit = async () => {
                         stockAdjustmentForm.validate(`in_products.${index}.serials.${sIdx}.serial` as any);
                         stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
                       " />
-                      <Button type="button" variant="outline-danger" @click="removeInProductSerial(index, sIdx)">
-                        <Lucide icon="Trash2" class="w-4 h-4" />
+                      <Button type="button" variant="outline-secondary" @click="removeInProductSerial(index, sIdx)">
+                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
                   </div>
@@ -1270,8 +1270,8 @@ const onSubmit = async () => {
                         stockAdjustmentForm.validate(`out_products.${index}.serials.${sIdx}.serial` as any);
                         stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
                       " />
-                      <Button type="button" variant="outline-danger" @click="removeOutProductSerial(index, sIdx)">
-                        <Lucide icon="Trash2" class="w-4 h-4" />
+                      <Button type="button" variant="outline-secondary" @click="removeOutProductSerial(index, sIdx)">
+                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
                   </div>

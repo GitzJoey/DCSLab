@@ -56,11 +56,11 @@ class StockTransferController extends BaseController
             'destination_warehouse_id' => ['nullable', 'integer', new IsValidWarehouse($request->company_id, false)],
 
             'refresh' => ['required', 'boolean'],
-            'paginate' => ['required', 'array'],
-            'paginate.page' => ['required_with:paginate', 'nullable', 'integer', 'min:1'],
-            'paginate.per_page' => ['required_with:paginate', 'nullable', 'integer', 'min:1'],
-            'get' => ['required', 'array'],
-            'get.limit' => ['required_with:get', 'nullable', 'integer', 'min:1'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:1'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:1'],
         ]);
 
         $result = null;
@@ -70,34 +70,36 @@ class StockTransferController extends BaseController
             $result = $this->stockTransferActions->readAny(
                 withTrashed: $validatedRequest['with_trashed'],
                 companyId: $validatedRequest['company_id'],
-                branchId: $validatedRequest['branch_id'],
+                branchId: $validatedRequest['branch_id'] ?? null,
 
-                search: $validatedRequest['search'],
-                startDate: $validatedRequest['start_date'],
-                endDate: $validatedRequest['end_date'],
-                sourceWarehouseId: $validatedRequest['source_warehouse_id'],
-                destinationWarehouseId: $validatedRequest['destination_warehouse_id'],
+                search: $validatedRequest['search'] ?? null,
+                startDate: $validatedRequest['start_date'] ?? null,
+                endDate: $validatedRequest['end_date'] ?? null,
+                sourceWarehouseId: $validatedRequest['source_warehouse_id'] ?? null,
+                destinationWarehouseId: $validatedRequest['destination_warehouse_id'] ?? null,
 
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {
-                        if (! is_null($validatedRequest['paginate']['page']) && ! is_null($validatedRequest['paginate']['per_page'])) {
-                            return new ExecutePaginationDTO(
+                        $pagination = null;
+                        if (isset($validatedRequest['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
                                 page: $validatedRequest['paginate']['page'],
                                 perPage: $validatedRequest['paginate']['per_page']
                             );
                         }
 
-                        return null;
+                        return $pagination;
                     })(),
                     get: (function () use ($validatedRequest) {
-                        if (! is_null($validatedRequest['get']['limit'])) {
-                            return new ExecuteGetDTO(
+                        $get = null;
+                        if (isset($validatedRequest['get'])) {
+                            $get = new ExecuteGetDTO(
                                 limit: $validatedRequest['get']['limit']
                             );
                         }
 
-                        return null;
+                        return $get;
                     })()
                 )
             );

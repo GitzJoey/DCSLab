@@ -59,6 +59,18 @@ class StockTransferProductUnit extends Model
         return $this->hasMany(StockTransferProductUnitSerial::class);
     }
 
+    public function sourceStockTransaction()
+    {
+        return $this->morphOne(StockTransaction::class, 'referable')
+            ->where('warehouse_id', $this->stockTransfer->source_warehouse_id);
+    }
+
+    public function destinationStockTransaction()
+    {
+        return $this->morphOne(StockTransaction::class, 'referable')
+            ->where('warehouse_id', $this->stockTransfer->destination_warehouse_id);
+    }
+
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {

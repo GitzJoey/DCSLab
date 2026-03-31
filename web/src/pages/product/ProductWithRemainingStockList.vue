@@ -343,13 +343,13 @@ const toggleAdvancedFilters = () => {
 <template>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
-      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3 relative z-50">
+      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
         <div class="col-span-12 lg:col-span-2 md:col-span-6">
           <FormLabel>
             {{ t('views.product.fields.category_id') }}
           </FormLabel>
           <div class="flex items-center gap-2">
-            <div class="flex-1 relative z-30">
+            <div class="flex-1">
               <FormSelectSearch v-model="filters.category_id" v-model:search="categorySearch"
                 :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')"
                 @change="handleCategoryFilterChange" @search="getCategoryDDL" @clear="clearCategoryFilter" />
@@ -361,7 +361,7 @@ const toggleAdvancedFilters = () => {
             {{ t('views.product.fields.brand_id') }}
           </FormLabel>
           <div class="flex items-center gap-2">
-            <div class="flex-1 relative z-30">
+            <div class="flex-1">
               <FormSelectSearch v-model="filters.brand_id" v-model:search="brandSearch" :options="brandOptions"
                 :placeholder="t('components.dropdown.placeholder')" @change="handleBrandFilterChange"
                 @search="getBrandDDL" @clear="clearBrandFilter" />
@@ -380,7 +380,7 @@ const toggleAdvancedFilters = () => {
             {{ t('views.warehouse.page_title') }}
           </FormLabel>
           <div class="flex items-center gap-2">
-            <div class="flex-1 relative z-30">
+            <div class="flex-1">
               <FormSelectSearch v-model="filters.warehouse_id" v-model:search="warehouseSearch"
                 :options="warehouseOptions" :placeholder="t('components.dropdown.placeholder')"
                 @change="handleWarehouseFilterChange" @search="getWarehouseDDL" @clear="clearWarehouseFilter" />
@@ -397,7 +397,7 @@ const toggleAdvancedFilters = () => {
           </Button>
         </div>
       </div>
-      <div v-if="showAdvancedFilters" class="grid grid-cols-12 gap-4 gap-y-3 mb-3 relative z-50">
+      <div v-if="showAdvancedFilters" class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
         <div class="col-span-12 lg:col-span-2 md:col-span-6">
           <FormLabel>
             Filter Stok
@@ -453,10 +453,6 @@ const toggleAdvancedFilters = () => {
               {{ t('views.product.fields.code') }}:
               {{ (item as Product).code ?? '-' }}
             </div>
-            <div class="text-slate-500 text-xs">
-              {{ t('views.product.fields.name') }}:
-              {{ (item as Product).name ?? '-' }}
-            </div>
             <div class="text-slate-500 text-xs whitespace-nowrap">
               {{ t('views.product.fields.category_id') }}:
               {{ (item as Product).category?.name ?? '-' }}
@@ -465,6 +461,10 @@ const toggleAdvancedFilters = () => {
               {{ t('views.product.fields.brand_id') }}:
               {{ (item as Product).brand?.name ?? '-' }}
             </div>
+            <div class="text-slate-500 text-xs">
+              {{ t('views.product.fields.name') }}:
+              {{ (item as Product).name ?? '-' }}
+            </div>
           </div>
           <div class="col-span-12 lg:col-span-6 sm:col-span-6 self-start">
             <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
@@ -472,15 +472,7 @@ const toggleAdvancedFilters = () => {
             </div>
             <div class="text-slate-500 text-xs whitespace-nowrap">
               {{ t('views.stock_adjustment_in_product.table.cols.remaining_stock') }}:
-              {{ formatCurrency(getRemainingStockPrimaryQty(item as Product) ?? 0) }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ t('views.stock_adjustment_in_product.table.cols.product_unit') }}:
-              {{ getPrimaryUnit(item as Product)?.unit.name ?? '-' }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ t('views.product.fields.with_remaining_stock_end_date') }}:
-              {{ filters.endDate ? formatDate(filters.endDate, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+              {{ formatCurrency(getRemainingStockPrimaryQty(item as Product) ?? 0) }} {{ getPrimaryUnit(item as Product)?.unit.name ?? '-' }}
             </div>
           </div>
         </template>

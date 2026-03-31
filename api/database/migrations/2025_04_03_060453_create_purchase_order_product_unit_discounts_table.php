@@ -14,7 +14,8 @@ return new class extends Migration
 
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
-            $table->foreignId('purchase_order_product_unit_id')->references('id')->on('purchase_order_product_units');
+            $table->foreignId('purchase_order_product_unit_id');
+            $table->foreign('purchase_order_product_unit_id', 'fk_popu_discounts_popu_id')->references('id')->on('purchase_order_product_units');
             $table->unsignedInteger('sequence');
             $table->decimal('rate', 30, 8)->default(0);
             $table->decimal('fixed', 30, 8)->default(0);

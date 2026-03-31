@@ -476,7 +476,7 @@
 <template>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
-      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3 relative z-50">
+      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
         <div class="col-span-12 lg:col-span-3">
           <FormLabel>
             {{ t('views.stock_adjustment.fields.start_date') }}
@@ -499,7 +499,7 @@
           </Button>
         </div>
       </div>
-      <div v-if="showAdvancedFilters" class="grid grid-cols-12 gap-4 gap-y-3 mb-3 relative z-50">
+      <div v-if="showAdvancedFilters" class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
           <div class="col-span-12 md:col-span-6 lg:col-span-2">
             <FormLabel>
               {{ t('views.stock_adjustment.fields.stock_adjustment_code') }}
@@ -511,7 +511,7 @@
               {{ t('views.stock_adjustment.fields.category_id') }}
             </FormLabel>
             <div class="flex items-center gap-2">
-              <div class="flex-1 relative z-30">
+              <div class="flex-1">
                 <FormSelectSearch v-model="selectedCategoryId" v-model:search="categorySearch" :options="categoryOptions"
                   :placeholder="t('components.dropdown.placeholder')" @change="handleCategoryFilterChange"
                   @search="loadCategoryDDL" @clear="clearCategoryFilter" />
@@ -523,7 +523,7 @@
               {{ t('views.stock_adjustment.fields.in_warehouse_id') }}
             </FormLabel>
             <div class="flex items-center gap-2">
-              <div class="flex-1 relative z-30">
+              <div class="flex-1">
                 <FormSelectSearch v-model="selectedInWarehouseId" v-model:search="inWarehouseSearch"
                   :options="inWarehouseOptions" :placeholder="t('components.dropdown.placeholder')"
                   @change="handleInWarehouseFilterChange" @search="loadInWarehouseDDL" @clear="clearInWarehouseFilter" />
@@ -535,7 +535,7 @@
               {{ t('views.stock_adjustment.fields.out_warehouse_id') }}
             </FormLabel>
             <div class="flex items-center gap-2">
-              <div class="flex-1 relative z-30">
+              <div class="flex-1">
                 <FormSelectSearch v-model="selectedOutWarehouseId" v-model:search="outWarehouseSearch"
                   :options="outWarehouseOptions" :placeholder="t('components.dropdown.placeholder')"
                   @change="handleOutWarehouseFilterChange" @search="loadOutWarehouseDDL"
@@ -560,7 +560,7 @@
               {{ t('views.product.fields.category_id') }}
             </FormLabel>
             <div class="flex items-center gap-2">
-              <div class="flex-1 relative z-30">
+              <div class="flex-1">
                 <FormSelectSearch v-model="selectedProductCategoryId" v-model:search="productCategorySearch"
                   :options="productCategoryOptions" :placeholder="t('components.dropdown.placeholder')"
                   @change="handleProductCategoryFilterChange" @search="loadProductCategoryDDL"
@@ -573,7 +573,7 @@
               {{ t('views.product.fields.brand_id') }}
             </FormLabel>
             <div class="flex items-center gap-2">
-              <div class="flex-1 relative z-30">
+              <div class="flex-1">
                 <FormSelectSearch v-model="selectedProductBrandId" v-model:search="productBrandSearch"
                   :options="productBrandOptions" :placeholder="t('components.dropdown.placeholder')"
                   @change="handleProductBrandFilterChange" @search="loadProductBrandDDL"

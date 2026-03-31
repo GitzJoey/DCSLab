@@ -2,8 +2,11 @@
 
 namespace App\Actions\StockTransferProductUnit;
 
+use App\Actions\StockTransaction\StockTransactionActions;
 use App\Actions\StockTransferProductUnitSerial\StockTransferProductUnitSerialActions;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\StockTransactionCreateDTO;
+use App\DTOs\StockTransactionUpdateDTO;
 use App\DTOs\StockTransferProductUnitCreateDTO;
 use App\DTOs\StockTransferProductUnitSerialCreateDTO;
 use App\DTOs\StockTransferProductUnitSerialUpdateDTO;
@@ -24,10 +27,14 @@ class StockTransferProductUnitActions
 
     private $stockTransferProductUnitSerialActions;
 
+    private $stockTransactionActions;
+
     public function __construct(
         StockTransferProductUnitSerialActions $stockTransferProductUnitSerialActions,
+        StockTransactionActions $stockTransactionActions,
     ) {
         $this->stockTransferProductUnitSerialActions = $stockTransferProductUnitSerialActions;
+        $this->stockTransactionActions = $stockTransactionActions;
     }
 
     public function readAny(
@@ -234,6 +241,13 @@ class StockTransferProductUnitActions
                 $this->stockTransferProductUnitSerialActions->create($dto);
             }
 
+            $this->stockTransactionActions->create(
+                data: StockTransactionCreateDTO::fromStockTransferProductUnitSource($stockTransferProductUnit)
+            );
+            $this->stockTransactionActions->create(
+                data: StockTransactionCreateDTO::fromStockTransferProductUnitDestination($stockTransferProductUnit)
+            );
+
             $this->flushCache();
 
             return $stockTransferProductUnit;
@@ -274,6 +288,24 @@ class StockTransferProductUnitActions
                 }
             }
 
+            $stockTransactionSource = $stockTransferProductUnit->sourceStockTransaction;
+            if (! $stockTransactionSource) {
+                $dto = StockTransactionCreateDTO::fromStockTransferProductUnitSource($stockTransferProductUnit);
+                $this->stockTransactionActions->create($dto);
+            } else {
+                $dto = StockTransactionUpdateDTO::fromStockTransferProductUnitSource($stockTransferProductUnit);
+                $this->stockTransactionActions->update($stockTransactionSource, $dto);
+            }
+
+            $stockTransactionDestination = $stockTransferProductUnit->destinationStockTransaction;
+            if (! $stockTransactionDestination) {
+                $dto = StockTransactionCreateDTO::fromStockTransferProductUnitDestination($stockTransferProductUnit);
+                $this->stockTransactionActions->create($dto);
+            } else {
+                $dto = StockTransactionUpdateDTO::fromStockTransferProductUnitDestination($stockTransferProductUnit);
+                $this->stockTransactionActions->update($stockTransactionDestination, $dto);
+            }
+
             $this->flushCache();
 
             return $stockTransferProductUnit->refresh();
@@ -297,6 +329,16 @@ class StockTransferProductUnitActions
             $stockTransferProductUnitSerials = $stockTransferProductUnit->serials()->get();
             foreach ($stockTransferProductUnitSerials as $stockTransferProductUnitSerial) {
                 $this->stockTransferProductUnitSerialActions->delete($stockTransferProductUnitSerial);
+            }
+
+            $stockTransactionSource = $stockTransferProductUnit->sourceStockTransaction;
+            if ($stockTransactionSource) {
+                $this->stockTransactionActions->delete($stockTransactionSource);
+            }
+
+            $stockTransactionDestination = $stockTransferProductUnit->destinationStockTransaction;
+            if ($stockTransactionDestination) {
+                $this->stockTransactionActions->delete($stockTransactionDestination);
             }
 
             $retval = $stockTransferProductUnit->delete();

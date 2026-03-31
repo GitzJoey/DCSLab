@@ -1,0 +1,55 @@
+{
+  "page_title": "Stock Transfer",
+  "table": {
+    "title": "Stock Transfer List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "source_warehouse": "Source Warehouse",
+      "destination_warehouse": "Destination Warehouse",
+      "is_posted": "Posted",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Create Stock Transfer",
+    "edit": "Edit Stock Transfer",
+    "show": "Show Stock Transfer",
+    "delete": "Delete Stock Transfer"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "stock_transfer_data": "Stock Transfer Data",
+    "product_units": "Product Units"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "stock_transfer_code": "Stock Transfer Code",
+    "product_name": "Product Name",
+    "product_unit_code": "Product Code",
+    "source_warehouse_id": "Source Warehouse",
+    "destination_warehouse_id": "Destination Warehouse",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "product_units": "Product Units"
+  },
+  "alert": {
+    "create": {
+      "title": "Create Stock Transfer",
+      "message": "Stock Transfer created successfully"
+    },
+    "update": {
+      "title": "Edit Stock Transfer",
+      "message": "Stock Transfer updated successfully"
+    },
+    "delete": {
+      "title": "Delete Stock Transfer",
+      "message": "Stock Transfer deleted successfully"
+    }
+  }
+}

@@ -84,6 +84,12 @@ import StockAdjustmentInProductSerialIndex from '@/pages/stock-adjustment/StockA
 import StockAdjustmentInProductSerialList from '@/pages/stock-adjustment/StockAdjustmentInProductSerialList.vue';
 import StockAdjustmentOutProductSerialIndex from '@/pages/stock-adjustment/StockAdjustmentOutProductSerialIndex.vue';
 import StockAdjustmentOutProductSerialList from '@/pages/stock-adjustment/StockAdjustmentOutProductSerialList.vue';
+import StockTransferIndex from '@/pages/stock-transfer/StockTransferIndex.vue';
+import StockTransferList from '@/pages/stock-transfer/StockTransferList.vue';
+import StockTransferCreate from '@/pages/stock-transfer/StockTransferCreate.vue';
+import StockTransferEdit from '@/pages/stock-transfer/StockTransferEdit.vue';
+import StockTransferProductUnitList from '@/pages/stock-transfer/StockTransferProductUnitList.vue';
+import StockTransferProductUnitSerialList from '@/pages/stock-transfer/StockTransferProductUnitSerialList.vue';
 import ProductWithRemainingStockIndex from '@/pages/product/ProductWithRemainingStockIndex.vue';
 import ProductWithRemainingStockList from '@/pages/product/ProductWithRemainingStockList.vue';
 
@@ -640,34 +646,160 @@ export default [
           },
         ],
       },
-      
-      // Stock Adjustment
+      // Transaction
       {
-        path: '/dashboard/stock-adjustment',
-        name: 'side-menu-stock-adjustment',
-        redirect: '/dashboard/stock-adjustment/list',
-        component: StockAdjustmentIndex,
+        path: '/dashboard/transaction',
+        name: 'side-menu-transaction',
         children: [
+          // Stock Adjustment
           {
-            path: '/dashboard/stock-adjustment/list',
-            name: 'side-menu-stock-adjustment-list',
-            component: StockAdjustmentList,
+            path: '/dashboard/stock-adjustment',
+            name: 'side-menu-stock-adjustment',
+            redirect: '/dashboard/stock-adjustment/list',
+            component: StockAdjustmentIndex,
+            children: [
+              {
+                path: '/dashboard/stock-adjustment/list',
+                name: 'side-menu-stock-adjustment-list',
+                component: StockAdjustmentList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/stock-adjustment/create',
+                name: 'side-menu-stock-adjustment-create',
+                component: StockAdjustmentCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/stock-adjustment/edit/:ulid',
+                name: 'side-menu-stock-adjustment-edit',
+                component: StockAdjustmentEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+
+          // Stock Transfer
+          {
+            path: '/dashboard/stock-transfer',
+            name: 'side-menu-stock-transfer',
+            redirect: '/dashboard/stock-transfer/list',
+            component: StockTransferIndex,
+            children: [
+              {
+                path: '/dashboard/stock-transfer/list',
+                name: 'side-menu-stock-transfer-list',
+                component: StockTransferList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/stock-transfer/create',
+                name: 'side-menu-stock-transfer-create',
+                component: StockTransferCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/stock-transfer/edit/:ulid',
+                name: 'side-menu-stock-transfer-edit',
+                component: StockTransferEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Stock Adjustment In Product
+          {
+            path: '/dashboard/stock-adjustment-in-product',
+            name: 'side-menu-stock-adjustment-in-product',
+            redirect: '/dashboard/stock-adjustment-in-product/list',
+            component: StockAdjustmentInProductIndex,
+            children: [
+              {
+                path: '/dashboard/stock-adjustment-in-product/list',
+                name: 'side-menu-stock-adjustment-in-product-list',
+                component: StockAdjustmentInProductList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Stock Adjustment In Product Serial
+          {
+            path: '/dashboard/stock-adjustment-in-product-serial',
+            name: 'side-menu-stock-adjustment-in-product-serial',
+            redirect: '/dashboard/stock-adjustment-in-product-serial/list',
+            component: StockAdjustmentInProductSerialIndex,
+            children: [
+              {
+                path: '/dashboard/stock-adjustment-in-product-serial/list',
+                name: 'side-menu-stock-adjustment-in-product-serial-list',
+                component: StockAdjustmentInProductSerialList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Stock Adjustment Out Product
+          {
+            path: '/dashboard/stock-adjustment-out-product',
+            name: 'side-menu-stock-adjustment-out-product',
+            redirect: '/dashboard/stock-adjustment-out-product/list',
+            component: StockAdjustmentOutProductIndex,
+            children: [
+              {
+                path: '/dashboard/stock-adjustment-out-product/list',
+                name: 'side-menu-stock-adjustment-out-product-list',
+                component: StockAdjustmentOutProductList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Stock Adjustment Out Product Serial
+          {
+            path: '/dashboard/stock-adjustment-out-product-serial',
+            name: 'side-menu-stock-adjustment-out-product-serial',
+            redirect: '/dashboard/stock-adjustment-out-product-serial/list',
+            component: StockAdjustmentOutProductSerialIndex,
+            children: [
+              {
+                path: '/dashboard/stock-adjustment-out-product-serial/list',
+                name: 'side-menu-stock-adjustment-out-product-serial-list',
+                component: StockAdjustmentOutProductSerialList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Stock Transfer Product Unit
+          {
+            path: '/dashboard/stock-transfer-product-unit',
+            name: 'side-menu-stock-transfer-product-unit',
+            component: StockTransferProductUnitList,
             meta: {
               remember: true,
             },
           },
+          // Stock Transfer Product Unit Serial
           {
-            path: '/dashboard/stock-adjustment/create',
-            name: 'side-menu-stock-adjustment-create',
-            component: StockAdjustmentCreate,
-            meta: {
-              remember: true,
-            },
-          },
-          {
-            path: '/dashboard/stock-adjustment/edit/:ulid',
-            name: 'side-menu-stock-adjustment-edit',
-            component: StockAdjustmentEdit,
+            path: '/dashboard/stock-transfer-product-unit-serial',
+            name: 'side-menu-stock-transfer-product-unit-serial',
+            component: StockTransferProductUnitSerialList,
             meta: {
               remember: true,
             },
@@ -692,75 +824,6 @@ export default [
           },
         ],
       },
-      // Stock Adjustment In Product
-      {
-        path: '/dashboard/stock-adjustment-in-product',
-        name: 'side-menu-stock-adjustment-in-product',
-        redirect: '/dashboard/stock-adjustment-in-product/list',
-        component: StockAdjustmentInProductIndex,
-        children: [
-          {
-            path: '/dashboard/stock-adjustment-in-product/list',
-            name: 'side-menu-stock-adjustment-in-product-list',
-            component: StockAdjustmentInProductList,
-            meta: {
-              remember: true,
-            },
-          },
-        ],
-      },
-      // Stock Adjustment In Product Serial
-      {
-        path: '/dashboard/stock-adjustment-in-product-serial',
-        name: 'side-menu-stock-adjustment-in-product-serial',
-        redirect: '/dashboard/stock-adjustment-in-product-serial/list',
-        component: StockAdjustmentInProductSerialIndex,
-        children: [
-          {
-            path: '/dashboard/stock-adjustment-in-product-serial/list',
-            name: 'side-menu-stock-adjustment-in-product-serial-list',
-            component: StockAdjustmentInProductSerialList,
-            meta: {
-              remember: true,
-            },
-          },
-        ],
-      },
-      // Stock Adjustment Out Product
-      {
-        path: '/dashboard/stock-adjustment-out-product',
-        name: 'side-menu-stock-adjustment-out-product',
-        redirect: '/dashboard/stock-adjustment-out-product/list',
-        component: StockAdjustmentOutProductIndex,
-        children: [
-          {
-            path: '/dashboard/stock-adjustment-out-product/list',
-            name: 'side-menu-stock-adjustment-out-product-list',
-            component: StockAdjustmentOutProductList,
-            meta: {
-              remember: true,
-            },
-          },
-        ],
-      },
-      // Stock Adjustment Out Product Serial
-      {
-        path: '/dashboard/stock-adjustment-out-product-serial',
-        name: 'side-menu-stock-adjustment-out-product-serial',
-        redirect: '/dashboard/stock-adjustment-out-product-serial/list',
-        component: StockAdjustmentOutProductSerialIndex,
-        children: [
-          {
-            path: '/dashboard/stock-adjustment-out-product-serial/list',
-            name: 'side-menu-stock-adjustment-out-product-serial-list',
-            component: StockAdjustmentOutProductSerialList,
-            meta: {
-              remember: true,
-            },
-          },
-        ],
-      },
-
       // user
       {
         path: '/dashboard/administrator',

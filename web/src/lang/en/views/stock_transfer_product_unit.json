@@ -1,0 +1,30 @@
+{
+  "page_title": "Stock Transfer by Product",
+  "table": {
+    "title": "Stock Transfer by Product List",
+    "cols": {
+      "product": "Product",
+      "qty": "Qty",
+      "product_unit": "Product Unit",
+      "product_unit_conversion_value": "C. Value",
+      "product_unit_qty_base": "Base Qty",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Add Product",
+    "edit": "Edit Product",
+    "show": "Product Detail",
+    "delete": "Delete Product"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "stock_transfer_id": "Stock Transfer",
+    "qty": "Qty",
+    "product_unit_id": "Product Unit",
+    "product_unit_conversion_value": "C. Value",
+    "product_unit_qty_base": "Base Qty",
+    "remarks": "Remarks"
+  }
+}

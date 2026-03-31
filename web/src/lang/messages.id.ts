@@ -36,6 +36,9 @@ import stock_adjustment_in_product from './id/views/stock_adjustment_in_product.
 import stock_adjustment_in_product_serial from './id/views/stock_adjustment_in_product_serial.json';
 import stock_adjustment_out_product from './id/views/stock_adjustment_out_product.json';
 import stock_adjustment_out_product_serial from './id/views/stock_adjustment_out_product_serial.json';
+import stock_transfer from './id/views/stock_transfer.json';
+import stock_transfer_product_unit from './id/views/stock_transfer_product_unit.json';
+import stock_transfer_product_unit_serial from './id/views/stock_transfer_product_unit_serial.json';
 import error from './id/views/error.json';
 
 export default {
@@ -79,6 +82,9 @@ export default {
     stock_adjustment_in_product_serial: stock_adjustment_in_product_serial,
     stock_adjustment_out_product: stock_adjustment_out_product,
     stock_adjustment_out_product_serial: stock_adjustment_out_product_serial,
+    stock_transfer: stock_transfer,
+    stock_transfer_product_unit: stock_transfer_product_unit,
+    stock_transfer_product_unit_serial: stock_transfer_product_unit_serial,
     error: error,
   },
 };

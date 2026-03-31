@@ -7,7 +7,7 @@
 <script setup lang="ts">
   import _ from 'lodash';
   import { twMerge } from 'tailwind-merge';
-  import { computed, ref, watch, type InputHTMLAttributes, useAttrs, inject } from 'vue';
+  import { computed, nextTick, onBeforeUnmount, ref, watch, type CSSProperties, type InputHTMLAttributes, useAttrs, inject } from 'vue';
   import { type ProvideFormInline } from './FormInline.vue';
   import { type ProvideInputGroup } from './InputGroup/InputGroup.vue';
   import Lucide from '@/components/Base/Lucide';
@@ -39,10 +39,16 @@
   const formInline = inject<ProvideFormInline>('formInline', false);
   const inputGroup = inject<ProvideInputGroup>('inputGroup', false);
 
+  const wrapperRef = ref<HTMLDivElement | null>(null);
   const inputRef = ref<HTMLInputElement | null>(null);
   const isFocused = ref(false);
   const isOpen = ref(false);
   const displayValue = ref('');
+  const dropdownStyle = ref<CSSProperties>({
+    top: '0px',
+    left: '0px',
+    width: '0px',
+  });
 
   const computedClass = computed(() =>
     twMerge([
@@ -88,6 +94,28 @@
     emit('search', value);
   }, 300);
 
+  const updateDropdownPosition = () => {
+    const target = wrapperRef.value ?? inputRef.value;
+    if (!target) return;
+
+    const rect = target.getBoundingClientRect();
+    dropdownStyle.value = {
+      top: `${rect.bottom + 4}px`,
+      left: `${rect.left}px`,
+      width: `${rect.width}px`,
+    };
+  };
+
+  const attachDropdownListeners = () => {
+    window.addEventListener('resize', updateDropdownPosition);
+    window.addEventListener('scroll', updateDropdownPosition, true);
+  };
+
+  const detachDropdownListeners = () => {
+    window.removeEventListener('resize', updateDropdownPosition);
+    window.removeEventListener('scroll', updateDropdownPosition, true);
+  };
+
   const handleInput = (event: Event) => {
     if (isLocked.value) return;
     const target = event.target as HTMLInputElement;
@@ -95,13 +123,16 @@
 
     displayValue.value = value;
     isOpen.value = true;
+    updateDropdownPosition();
     emitSearchDebounced(value);
   };
 
-  const handleFocus = () => {
+  const handleFocus = async () => {
     if (isLocked.value) return;
     isFocused.value = true;
     isOpen.value = true;
+    await nextTick();
+    updateDropdownPosition();
   };
 
   const handleBlur = () => {
@@ -128,10 +159,26 @@
     emit('search', '');
     emit('clear');
   };
+
+  watch(isOpen, async (open) => {
+    if (open) {
+      await nextTick();
+      updateDropdownPosition();
+      attachDropdownListeners();
+      return;
+    }
+
+    detachDropdownListeners();
+  });
+
+  onBeforeUnmount(() => {
+    detachDropdownListeners();
+    emitSearchDebounced.cancel();
+  });
 </script>
 
 <template>
-  <div class="relative">
+  <div ref="wrapperRef" class="relative">
     <input
       ref="inputRef"
       :class="computedClass"
@@ -151,18 +198,21 @@
     >
       <Lucide icon="X" class="w-4 h-4" />
     </button>
-    <ul
-      v-if="isOpen && displayedOptions.length > 0"
-      class="absolute z-20 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white text-sm shadow-lg dark:border-slate-600 dark:bg-darkmode-800"
-    >
-      <li
-        v-for="option in displayedOptions"
-        :key="option.value"
-        class="cursor-pointer px-3 py-2 hover:bg-slate-100 dark:hover:bg-darkmode-700"
-        @mousedown.prevent="handleSelect(option)"
+    <Teleport to="body">
+      <ul
+        v-if="isOpen && displayedOptions.length > 0"
+        :style="dropdownStyle"
+        class="fixed z-[9999] max-h-60 overflow-auto rounded-md border border-slate-200 bg-white text-sm shadow-lg dark:border-slate-600 dark:bg-darkmode-800"
       >
-        {{ option.label }}
-      </li>
-    </ul>
+        <li
+          v-for="option in displayedOptions"
+          :key="option.value"
+          class="cursor-pointer px-3 py-2 hover:bg-slate-100 dark:hover:bg-darkmode-700"
+          @mousedown.prevent="handleSelect(option)"
+        >
+          {{ option.label }}
+        </li>
+      </ul>
+    </Teleport>
   </div>
 </template>

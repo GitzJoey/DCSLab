@@ -230,19 +230,25 @@ class DashboardActions
         }
 
         $root_array = [
-            'icon' => 'Cpu',
+            'icon' => 'ArrowLeftRight',
             'pageName' => 'side-menu-transaction',
             'title' => 'components.menu.transaction',
             'subMenu' => [],
         ];
 
         $stockAdjustment = [
-            'icon' => 'ChevronRight',
+            'icon' => 'SlidersHorizontal',
             'pageName' => 'side-menu-stock-adjustment',
             'title' => 'components.menu.stock-adjustment',
         ];
 
-        array_push($root_array['subMenu'], $stockAdjustment);
+        $stockTransfer = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-stock-transfer',
+            'title' => 'components.menu.stock-transfer',
+        ];
+
+        array_push($root_array['subMenu'], $stockAdjustment, $stockTransfer);
 
         array_push($menu, $root_array);
 
@@ -256,7 +262,7 @@ class DashboardActions
         }
 
         $root_array = [
-            'icon' => 'Cpu',
+            'icon' => 'BarChart3',
             'pageName' => 'side-menu-report',
             'title' => 'components.menu.report',
             'subMenu' => [],
@@ -270,7 +276,7 @@ class DashboardActions
         ];
 
         $productWithRemainingStock = [
-            'icon' => 'ChevronRight',
+            'icon' => 'Boxes',
             'pageName' => 'side-menu-product-with-remaining-stock',
             'title' => 'components.menu.product-with-remaining-stock',
         ];
@@ -278,34 +284,53 @@ class DashboardActions
         array_push($product['subMenu'], $productWithRemainingStock);
 
         $stockAdjustment = [
-            'icon' => 'ChevronRight',
+            'icon' => 'SlidersHorizontal',
             'pageName' => 'side-menu-stock-adjustment',
             'title' => 'components.menu.stock-adjustment',
             'subMenu' => [],
         ];
 
         $stockAdjustmentInProduct = [
-            'icon' => 'ChevronRight',
+            'icon' => 'PackagePlus',
             'pageName' => 'side-menu-stock-adjustment-in-product',
             'title' => 'components.menu.stock-adjustment-in-product',
         ];
 
         $stockAdjustmentInProductSerial = [
-            'icon' => 'ChevronRight',
+            'icon' => 'ScanLine',
             'pageName' => 'side-menu-stock-adjustment-in-product-serial',
             'title' => 'components.menu.stock-adjustment-in-product-serial',
         ];
 
         $stockAdjustmentOutProduct = [
-            'icon' => 'ChevronRight',
+            'icon' => 'PackageMinus',
             'pageName' => 'side-menu-stock-adjustment-out-product',
             'title' => 'components.menu.stock-adjustment-out-product',
         ];
 
         $stockAdjustmentOutProductSerial = [
-            'icon' => 'ChevronRight',
+            'icon' => 'ScanLine',
             'pageName' => 'side-menu-stock-adjustment-out-product-serial',
             'title' => 'components.menu.stock-adjustment-out-product-serial',
+        ];
+
+        $stockTransfer = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-report-stock-transfer',
+            'title' => 'components.menu.stock-transfer',
+            'subMenu' => [],
+        ];
+
+        $stockTransferProductUnit = [
+            'icon' => 'Boxes',
+            'pageName' => 'side-menu-stock-transfer-product-unit',
+            'title' => 'components.menu.stock-transfer-product-unit',
+        ];
+
+        $stockTransferProductUnitSerial = [
+            'icon' => 'ScanLine',
+            'pageName' => 'side-menu-stock-transfer-product-unit-serial',
+            'title' => 'components.menu.stock-transfer-product-unit-serial',
         ];
 
         array_push(
@@ -316,7 +341,13 @@ class DashboardActions
             $stockAdjustmentOutProductSerial
         );
 
-        array_push($root_array['subMenu'], $product, $stockAdjustment);
+        array_push(
+            $stockTransfer['subMenu'],
+            $stockTransferProductUnit,
+            $stockTransferProductUnitSerial
+        );
+
+        array_push($root_array['subMenu'], $product, $stockAdjustment, $stockTransfer);
 
         array_push($menu, $root_array);
 
