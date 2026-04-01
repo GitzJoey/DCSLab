@@ -216,21 +216,6 @@ return [
         'serial' => 'Serial',
     ],
 
-    'non_capital_addition_category' => [
-        'company' => 'Company',
-        'code' => 'Code',
-        'name' => 'Name',
-    ],
-    'non_capital_addition' => [
-        'company' => 'Company',
-        'branch' => 'Branch',
-        'code' => 'Code',
-        'date' => 'Date',
-        'category' => 'Category Id',
-        'cash_account' => 'Cash Account',
-        'amount' => 'Amount',
-        'remarks' => 'Remarks',
-    ],
     'capital_opening' => [
         'company' => 'Company',
         'branch' => 'Branch',
@@ -249,21 +234,6 @@ return [
         'investor' => 'Investor',
         'cash_account' => 'Cash Account',
         'type' => 'Type',
-        'amount' => 'Amount',
-        'remarks' => 'Remarks',
-    ],
-    'non_capital_withdrawal_category' => [
-        'company' => 'Company',
-        'code' => 'Code',
-        'name' => 'Name',
-    ],
-    'non_capital_withdrawal' => [
-        'company' => 'Company',
-        'branch' => 'Branch',
-        'code' => 'Code',
-        'date' => 'Date',
-        'category' => 'Category Id',
-        'cash_account' => 'Cash Account',
         'amount' => 'Amount',
         'remarks' => 'Remarks',
     ],
