@@ -59,9 +59,20 @@ export default class CashAccountService {
       if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
+      if (args.is_bank !== undefined && args.is_bank !== null) queryParams['is_bank'] = args.is_bank;
 
       if (args.search) queryParams['search'] = args.search;
       if (args.include_id) queryParams['include_id'] = args.include_id;
+
+      if (args.with_remaining_balance !== undefined && args.with_remaining_balance !== null) {
+        const withRemainingBalanceQuery: Record<string, any> = {};
+
+        if (args.with_remaining_balance.end_date !== undefined && args.with_remaining_balance.end_date !== null) {
+          withRemainingBalanceQuery['end_date'] = args.with_remaining_balance.end_date;
+        }
+
+        queryParams['with_remaining_balance'] = withRemainingBalanceQuery;
+      }
 
       queryParams['refresh'] = args.refresh;
       queryParams['paginate'] = {
@@ -109,9 +120,20 @@ export default class CashAccountService {
       if (args.with_trashed !== undefined) queryParams['with_trashed'] = args.with_trashed;
       if (args.company_id) queryParams['company_id'] = args.company_id;
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
+      if (args.is_bank !== undefined && args.is_bank !== null) queryParams['is_bank'] = args.is_bank;
 
       if (args.search) queryParams['search'] = args.search;
       if (args.include_id) queryParams['include_id'] = args.include_id;
+
+      if (args.with_remaining_balance !== undefined && args.with_remaining_balance !== null) {
+        const withRemainingBalanceQuery: Record<string, any> = {};
+
+        if (args.with_remaining_balance.end_date !== undefined && args.with_remaining_balance.end_date !== null) {
+          withRemainingBalanceQuery['end_date'] = args.with_remaining_balance.end_date;
+        }
+
+        queryParams['with_remaining_balance'] = withRemainingBalanceQuery;
+      }
 
       queryParams['refresh'] = args.refresh;
       queryParams['get'] = {

@@ -36,6 +36,8 @@ import CashAccountIndex from '@/pages/cash-account/CashAccountIndex.vue';
 import CashAccountList from '@/pages/cash-account/CashAccountList.vue';
 import CashAccountCreate from '@/pages/cash-account/CashAccountCreate.vue';
 import CashAccountEdit from '@/pages/cash-account/CashAccountEdit.vue';
+import CashAccountWithRemainingBalanceIndex from '@/pages/cash-account/CashAccountWithRemainingBalanceIndex.vue';
+import CashAccountWithRemainingBalanceList from '@/pages/cash-account/CashAccountWithRemainingBalanceList.vue';
 import CapitalOpeningIndex from '@/pages/capital-opening/CapitalOpeningIndex.vue';
 import CapitalOpeningList from '@/pages/capital-opening/CapitalOpeningList.vue';
 import CapitalOpeningCreate from '@/pages/capital-opening/CapitalOpeningCreate.vue';
@@ -881,6 +883,23 @@ export default [
         ],
       },
 
+      // Cash Account With Remaining Balance
+      {
+        path: '/dashboard/finance/cash-account-with-remaining-balance',
+        name: 'side-menu-cash-account-with-remaining-balance',
+        redirect: '/dashboard/finance/cash-account-with-remaining-balance/list',
+        component: CashAccountWithRemainingBalanceIndex,
+        children: [
+          {
+            path: '/dashboard/finance/cash-account-with-remaining-balance/list',
+            name: 'side-menu-cash-account-with-remaining-balance-list',
+            component: CashAccountWithRemainingBalanceList,
+            meta: {
+              remember: true,
+            },
+          },
+        ],
+      },
       // Product With Remaining Stock
       {
         path: '/dashboard/product/product-with-remaining-stock',

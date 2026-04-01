@@ -46,17 +46,17 @@ class CashAccountController extends BaseController
         }
 
         $validatedRequest = $request->validate([
-            'refresh' => ['required', 'boolean'],
             'with_trashed' => ['required', 'boolean'],
-
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['nullable', 'integer', 'bail', new IsValidBranch($request->company_id, true)],
             'search' => ['nullable', 'string'],
-            'include_id' => ['nullable', 'integer', 'exists:cash_accounts,id'],
 
+            'is_bank' => ['nullable', 'boolean'],
+            'include_id' => ['nullable', 'integer', 'exists:cash_accounts,id'],
             'with_remaining_balance' => ['nullable', 'array'],
             'with_remaining_balance.end_date' => ['nullable', 'date'],
 
+            'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
             'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
             'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
@@ -83,8 +83,9 @@ class CashAccountController extends BaseController
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'] ?? null,
                 search: $validatedRequest['search'] ?? null,
-                includeId: $validatedRequest['include_id'] ?? null,
+                isBank: isset($validatedRequest['is_bank']) ? (bool) $validatedRequest['is_bank'] : null,
                 withRemainingBalance: $withRemainingBalanceDTO,
+                includeId: $validatedRequest['include_id'] ?? null,
 
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],

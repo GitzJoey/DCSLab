@@ -63,11 +63,19 @@ $this->mergeWhen($this->relationLoaded('cashTransaction'), [
 4. Jika belum ada, buat class pendukung sesuai pola proyek.
 5. Baru integrasikan ke file utama.
 
-## 7. Prinsip Review Diri
+## 7. Aturan Urutan Field
+- Untuk tampilan field di UI, payload request, resource, DTO, form, dan detail card, urutan field wajib mengikuti urutan field bisnis pada migration tabel yang menjadi sumber data.
+- Jika hanya sebagian field yang ditampilkan, pertahankan urutan relatifnya sesuai migration. Jangan menyusun ulang hanya karena terasa lebih enak dilihat.
+- Contoh: jika migration berurutan `company_id`, `branch_id`, `code`, `name`, `is_bank`, maka saat menampilkan subset field, urutan yang benar adalah `branch`, lalu `code`, lalu `name`, lalu `is_bank`.
+- Pengecualian hanya boleh dilakukan jika user secara eksplisit meminta urutan berbeda.
+- Agent dilarang mengutamakan preferensi pribadi dalam penyusunan urutan field.
+
+## 8. Prinsip Review Diri
 - Sebelum finalizing perubahan, agent wajib memeriksa:
   - apakah field atau relasi ini benar-benar perlu tampil di response,
   - apakah implementasi ini konsisten dengan pola modul lain,
   - apakah ada class dedicated yang seharusnya dibuat,
-  - apakah ada shortcut manual yang mestinya dihindari.
+  - apakah ada shortcut manual yang mestinya dihindari,
+  - apakah urutan field sudah mengikuti migration kecuali user meminta sebaliknya.
 
 Jika jawaban terhadap salah satu poin di atas adalah ya, maka implementasi harus diperbaiki sebelum diserahkan.

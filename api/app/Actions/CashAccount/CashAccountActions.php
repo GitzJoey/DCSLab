@@ -23,18 +23,23 @@ class CashAccountActions
 
     public function readAny(
         bool $withTrashed,
-
         int $companyId,
         ?int $branchId,
         ?string $search,
-        ?int $includeId,
+
+        ?bool $isBank,
         ?CashAccountWithRemainingBalanceDTO $withRemainingBalance,
+        ?int $includeId,
 
         ?ExecuteDTO $execute
     ) {
         $query = CashAccount::with('company', 'branch')->select('cash_accounts.*')
             ->whereCompanyId('cash_accounts', $companyId)
             ->withTrashed();
+
+        if ($branchId) {
+            $query->where('cash_accounts.branch_id', $branchId);
+        }
 
         if ($withRemainingBalance) {
             $endDate = $withRemainingBalance->endDate ? TimezoneHelper::convertToUTC($withRemainingBalance->endDate) : null;
@@ -44,12 +49,8 @@ class CashAccountActions
             );
         }
 
-        if ($branchId) {
-            $query->where('cash_accounts.branch_id', $branchId);
-        }
-
-        $query->where(function ($query) use ($withTrashed, $search, $includeId) {
-            $query->where(function ($query) use ($withTrashed, $search) {
+        $query->where(function ($query) use ($withTrashed, $search, $includeId, $isBank) {
+            $query->where(function ($query) use ($withTrashed, $search, $isBank) {
                 $query->withoutTrashed();
                 if ($withTrashed) {
                     $query->withTrashed();
@@ -57,6 +58,10 @@ class CashAccountActions
 
                 if ($search) {
                     $query->search($search);
+                }
+
+                if (! is_null($isBank)) {
+                    $query->where('cash_accounts.is_bank', $isBank);
                 }
             });
 
@@ -81,6 +86,8 @@ class CashAccountActions
                     empty($search) ? '[empty]' : $search,
                     $companyId,
                     $branchId ?? '[null]',
+                    is_null($isBank) ? '[null]' : ($isBank ? 'true' : 'false'),
+                    $withRemainingBalance?->endDate ?? '[null]',
                     $includeId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',

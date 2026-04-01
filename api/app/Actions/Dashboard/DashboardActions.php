@@ -280,6 +280,21 @@ class DashboardActions
             'subMenu' => [],
         ];
 
+        $cashAccount = [
+            'icon' => 'Wallet',
+            'pageName' => 'side-menu-report-cash-account',
+            'title' => 'components.menu.cash-account',
+            'subMenu' => [],
+        ];
+
+        $cashAccountWithRemainingBalance = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-cash-account-with-remaining-balance',
+            'title' => 'components.menu.cash-account-with-remaining-balance',
+        ];
+
+        array_push($cashAccount['subMenu'], $cashAccountWithRemainingBalance);
+
         $product = [
             'icon' => 'Package',
             'pageName' => 'side-menu-report-product',
@@ -359,7 +374,7 @@ class DashboardActions
             $stockTransferProductUnitSerial
         );
 
-        array_push($root_array['subMenu'], $product, $stockAdjustment, $stockTransfer);
+        array_push($root_array['subMenu'], $cashAccount, $product, $stockAdjustment, $stockTransfer);
 
         array_push($menu, $root_array);
 

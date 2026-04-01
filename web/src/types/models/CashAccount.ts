@@ -11,4 +11,5 @@ export interface CashAccount {
   is_bank: boolean;
   is_active: boolean;
   remarks: string;
+  remaining_balance?: number | null;
 }

@@ -1,5 +1,8 @@
 {
   "page_title": "Cash Account",
+  "page_title_with_remaining_balance": "Cash Accounts With Remaining Balance",
+  "balance_suffix": "Balance",
+  "with_remaining_balance_suffix": "Remaining Balance",
   "table": {
     "title": "Cash Account List",
     "cols": {
@@ -8,7 +11,8 @@
       "name": "Name",
       "is_bank": "Bank",
       "is_active": "Is Active",
-      "remarks": "Remarks"
+      "remarks": "Remarks",
+      "remaining_balance": "Remaining Balance"
     }
   },
   "actions": {
@@ -23,11 +27,17 @@
     "name": "Name",
     "is_bank": "Bank",
     "is_active": "Is Active",
-    "remarks": "Remarks"
+    "remarks": "Remarks",
+    "remaining_balance": "Remaining Balance",
+    "with_remaining_balance_end_date": "Balance as of date"
   },
   "field_groups": {
     "company_info": "Company Info",
     "cash_account_data": "Cash Account Data"
+  },
+  "types": {
+    "bank": "Bank",
+    "cash": "Cash"
   },
   "alert": {
     "delete_cash_account": {
