@@ -79,12 +79,22 @@ Untuk semua controller CRUD di bawah menu Master Data, urutan method public utam
     - Syntax: `useCache: ! $validatedRequest['refresh']`.
 4.  **Pagination/Get Logic**:
     - Gunakan *Immediately Invoked Function Expression (IIFE)* atau closure untuk memisahkan logika `ExecutePaginationDTO` dan `ExecuteGetDTO`.
-5.  **Grouping Named Argument `readAny` (Wajib 3 Blok untuk Stock Adjustment Product)**:
+5.  **Grouping Named Argument `readAny` (Wajib 3 Blok untuk Non-Outlier)**:
     - Pada pemanggilan Action `readAny`, susun named argument menjadi 3 blok dengan linebreak:
-      1. Blok basis: `withTrashed`, `companyId`, `branchId`, `search`
-      2. Blok filter: `stockAdjustmentId`, `stockAdjustmentStartDate`, `stockAdjustmentEndDate`, `stockAdjustmentCategoryId`, `stockAdjustmentInWarehouseId`, `stockAdjustmentOutWarehouseId`, `product_unit_code`, `product_name`, `product_category_id`, `product_brand_id`
+      1. Blok basis/konteks: parameter seperti `withTrashed`, `companyId`, `branchId`, `search`, atau konteks utama lain seperti `referableType` dan `referableId`
+      2. Blok filter: semua filter spesifik modul seperti `includeId`, `categoryId`, `brandId`, `warehouseId`, `cashAccountId`, `productId`, `productUnitId`, `serial`, `withRemainingStock`, dan filter bisnis lain
       3. Blok eksekusi: `execute`
-    - Terapkan konsisten pada controller:
+    - Untuk controller yang memakai `companyId`, urutan basis yang diutamakan adalah `withTrashed`, `companyId`, `branchId` (jika ada), lalu `search`.
+    - `includeId` tetap masuk ke blok filter.
+    - Named argument wajib mengikuti urutan pada signature Action agar mapping tetap mudah dibaca saat review.
+    - Aturan ini berlaku untuk seluruh controller non-legacy yang memanggil `readAny(..., execute: new ExecuteDTO(...))`, termasuk controller master data dan transaksi.
+    - Controller legacy/outlier berikut dikecualikan dan tidak boleh dipaksa ke pola ini kecuali diminta eksplisit:
+      - `UserController`
+      - `RoleController`
+      - `PurchaseOrderProductUnitController`
+      - `PurchaseOrderDownPaymentApplyController`
+      - `PurchaseOrderDownPaymentController`
+    - Controller Stock Adjustment Product tetap wajib mengikuti pola ini secara ketat:
       - `StockAdjustmentInProductController`
       - `StockAdjustmentOutProductController`
       - `StockAdjustmentInProductSerialController`

@@ -58,8 +58,10 @@ class CustomerAddressController extends BaseController
                 withTrashed: $validatedRequest['with_trashed'],
                 companyId: $validatedRequest['company_id'],
                 search: $validatedRequest['search'] ?? null,
+
                 customerId: null,
                 includeId: $validatedRequest['include_id'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {

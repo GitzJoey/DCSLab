@@ -23,8 +23,8 @@ class BranchActions
     public function readAny(
         bool $withTrashed,
         int $companyId,
-
         ?string $search,
+
         ?bool $isMain,
         ?int $status,
         ?int $includeId,

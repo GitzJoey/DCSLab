@@ -24,6 +24,7 @@ class SalePaymentActions
         int $companyId,
         ?int $branchId,
         ?string $search,
+
         ?int $saleId,
         ?int $cashAccountId,
 

@@ -25,6 +25,7 @@ class StockTransactionActions
         ?int $referableId,
         ?int $warehouseId,
         ?int $productId,
+
         ?ExecuteDTO $execute
     ) {
         $query = StockTransaction::select('stock_transactions.*')

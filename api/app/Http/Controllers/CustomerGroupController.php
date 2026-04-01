@@ -61,9 +61,11 @@ class CustomerGroupController extends BaseController
         try {
             $result = $this->customerGroupActions->readAny(
                 withTrashed: $validatedRequest['with_trashed'],
-                search: $validatedRequest['search'] ?? null,
                 companyId: $validatedRequest['company_id'],
+                search: $validatedRequest['search'] ?? null,
+
                 includeId: $validatedRequest['include_id'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(

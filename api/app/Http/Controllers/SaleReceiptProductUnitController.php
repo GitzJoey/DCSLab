@@ -58,9 +58,11 @@ class SaleReceiptProductUnitController extends BaseController
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'] ?? null,
                 search: $validatedRequest['search'] ?? null,
+
                 saleReceiptId: $validatedRequest['sale_receipt_id'] ?? null,
                 productId: $validatedRequest['product_id'] ?? null,
                 productUnitId: $validatedRequest['product_unit_id'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: isset($validatedRequest['paginate']) ? new ExecutePaginationDTO(

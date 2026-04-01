@@ -26,6 +26,7 @@ class StockSerialTransactionActions
         ?int $warehouseId,
         ?int $productId,
         ?string $serial,
+
         ?ExecuteDTO $execute
     ) {
         $query = StockSerialTransaction::select('stock_serial_transactions.*')

@@ -25,6 +25,7 @@ class BrandActions
         ?string $search,
 
         ?int $includeId,
+
         ?ExecuteDTO $execute
     ) {
         $query = Brand::with('company')->select('brands.*')

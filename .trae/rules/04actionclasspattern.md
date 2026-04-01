@@ -54,16 +54,25 @@ Untuk konsistensi navigasi dan kemudahan membaca, urutan method public di setiap
 
 ### B. Method `readAny`
 *   **Signature**: `public function readAny(bool $withTrashed, int $companyId, ?int $branchId, ..., ?ExecuteDTO $execute)`
-*   **Grouping Parameter (Wajib 3 Blok)**:
-    *   Untuk semua modul Stock Adjustment Product (`StockAdjustmentInProductActions`, `StockAdjustmentOutProductActions`, `StockAdjustmentInProductSerialActions`, `StockAdjustmentOutProductSerialActions`), parameter `readAny` wajib dibagi menjadi 3 blok dengan linebreak:
-        1. Blok basis: `withTrashed`, `companyId`, `branchId`, `search`
-        2. Blok filter: `stockAdjustmentId`/`stockAdjustmentCode` (sesuai kebutuhan modul), `stockAdjustmentStartDate`, `stockAdjustmentEndDate`, `stockAdjustmentCategoryId`, `stockAdjustmentInWarehouseId`, `stockAdjustmentOutWarehouseId`, `...ProductUnitCode`, `...ProductName`, `...ProductCategoryId`, `...ProductBrandId`
-        3. Blok eksekusi: `includeId`, `execute`
-    *   Urutan ini wajib konsisten pada:
-        *   signature method `readAny`
-        *   daftar variable di closure `use (...)`
-        *   urutan filter `if (...)` di query
-        *   array `$cacheParams`
+*   **Grouping Parameter (Wajib 3 Blok Visual untuk Non-Outlier)**:
+*   Untuk semua Action class non-legacy yang memakai `?ExecuteDTO $execute`, signature `readAny` wajib dibagi menjadi 3 blok dengan linebreak:
+*       1. Blok basis/konteks: parameter scope utama seperti `withTrashed`, `companyId`, `branchId`, `search`, atau parameter konteks lain seperti `referableType` dan `referableId` bila modul tidak memakai company scope
+*       2. Blok filter: seluruh filter spesifik modul seperti `includeId`, `categoryId`, `brandId`, `warehouseId`, `cashAccountId`, `productId`, `productUnitId`, `serial`, `withRemainingStock`, dan filter bisnis lain
+*       3. Blok eksekusi: `execute`
+*   Urutan umum yang harus diutamakan adalah scope/konteks dulu, lalu filter, lalu `execute` terakhir.
+*   Untuk action yang memakai `companyId`, letakkan `companyId` sebelum `search`.
+*   `includeId` dianggap bagian dari blok filter, bukan blok eksekusi.
+*   Urutan dan grouping ini wajib konsisten pada:
+*       *   signature method `readAny`
+*       *   daftar variable di closure `use (...)`
+*       *   urutan filter `if (...)` di query
+*       *   array `$cacheParams`
+*   Action legacy/outlier berikut tidak boleh dirapikan ke pola ini kecuali diminta eksplisit:
+*       *   `UserActions`
+*       *   `RoleActions`
+*       *   `PurchaseOrderProductUnitActions`
+*       *   `PurchaseOrderDownPaymentApplyActions`
+*       *   `PurchaseOrderDownPaymentActions`
 *   **Alur Logika**:
     1.  **Build Query (Mandatory Filters)**:
         *   Inisialisasi query dengan filter wajib di level utama (bukan di dalam closure).

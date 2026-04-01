@@ -94,9 +94,9 @@ class ProductUnitActions
 
     public function readAny(
         bool $withTrashed,
-
-        ?string $search,
         int $companyId,
+        ?string $search,
+
         ?int $productId,
         ?int $unitId,
         ?bool $isBase,

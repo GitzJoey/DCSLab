@@ -74,11 +74,13 @@ class StockAdjustmentController extends BaseController
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'] ?? null,
                 search: $validatedRequest['search'] ?? null,
+
                 startDate: $validatedRequest['start_date'] ?? null,
                 endDate: $validatedRequest['end_date'] ?? null,
                 categoryId: $validatedRequest['category_id'] ?? null,
                 inWarehouseId: $validatedRequest['in_warehouse_id'] ?? null,
                 outWarehouseId: $validatedRequest['out_warehouse_id'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {

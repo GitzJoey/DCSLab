@@ -24,9 +24,11 @@ class PurchaseOrderProductUnitActions
         ?string $search,
         int $companyId,
         ?int $branchId,
+
         ?int $purchaseOrderId,
         ?int $productId,
         ?int $productUnitId,
+
         bool $paginate,
         ?int $page,
         ?int $perPage,

@@ -27,6 +27,7 @@ class ProductActions
         bool $withTrashed,
         int $companyId,
         ?string $search,
+
         ?int $categoryId,
         ?int $brandId,
         ?bool $isTaxable,
@@ -38,6 +39,7 @@ class ProductActions
         ?int $status,
         ?int $includeId,
         ?ProductWithRemainingStockDTO $withRemainingStock,
+
         ?ExecuteDTO $execute
     ) {
         $query = Product::select('products.*')->withTrashed();

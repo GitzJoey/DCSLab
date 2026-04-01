@@ -122,6 +122,7 @@ class ProductController extends BaseController
                 withTrashed: $validatedRequest['with_trashed'],
                 companyId: $validatedRequest['company_id'],
                 search: $validatedRequest['search'] ?? null,
+
                 categoryId: $validatedRequest['category_id'] ?? null,
                 brandId: $validatedRequest['brand_id'] ?? null,
                 isTaxable: $validatedRequest['is_taxable'] ?? null,

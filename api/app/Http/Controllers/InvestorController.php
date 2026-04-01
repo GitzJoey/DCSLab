@@ -107,9 +107,11 @@ class InvestorController extends BaseController
         try {
             $result = $this->investorActions->readAny(
                 withTrashed: $validatedRequest['with_trashed'],
-                search: $validatedRequest['search'] ?? null,
                 companyId: $validatedRequest['company_id'],
+                search: $validatedRequest['search'] ?? null,
+
                 includeId: $validatedRequest['include_id'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {

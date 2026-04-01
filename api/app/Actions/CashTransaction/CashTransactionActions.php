@@ -24,6 +24,7 @@ class CashTransactionActions
         ?string $referableType,
         ?int $referableId,
         ?int $cashAccountId,
+
         ?ExecuteDTO $execute
     ) {
         $query = CashTransaction::select('cash_transactions.*')

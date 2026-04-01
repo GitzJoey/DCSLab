@@ -58,8 +58,10 @@ class SalesOrderController extends BaseController
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'] ?? null,
                 search: $validatedRequest['search'] ?? null,
+
                 customerId: $validatedRequest['customer_id'] ?? null,
                 customerAddressId: $validatedRequest['customer_address_id'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {

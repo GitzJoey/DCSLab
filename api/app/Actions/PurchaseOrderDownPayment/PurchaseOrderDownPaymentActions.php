@@ -25,8 +25,10 @@ class PurchaseOrderDownPaymentActions
         ?string $search,
         int $companyId,
         ?int $branchId,
+
         ?int $purchaseOrderId,
         ?int $cashAccountId,
+
         bool $paginate,
         ?int $page,
         ?int $perPage,

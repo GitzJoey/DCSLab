@@ -68,8 +68,10 @@ class CapitalOpeningController extends BaseController
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'] ?? null,
                 search: $validatedRequest['search'] ?? null,
+
                 investorId: $validatedRequest['investor_id'] ?? null,
                 cashAccountId: $validatedRequest['cash_account_id'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {

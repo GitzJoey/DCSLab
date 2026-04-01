@@ -21,9 +21,11 @@ class StockAdjustmentCategoryActions
 
     public function readAny(
         bool $withTrashed,
-        ?string $search,
         int $companyId,
+        ?string $search,
+
         ?int $includeId,
+
         ?ExecuteDTO $execute
     ) {
         $query = StockAdjustmentCategory::with(['company'])->select('stock_adjustment_categories.*')
