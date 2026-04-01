@@ -125,26 +125,6 @@ class Company extends Model
         return $this->hasMany(CashAccount::class);
     }
 
-    public function nonCapitalAdditionCategories()
-    {
-        return $this->hasMany(NonCapitalAdditionCategory::class);
-    }
-
-    public function nonCapitalAdditions()
-    {
-        return $this->hasMany(NonCapitalAddition::class);
-    }
-
-    public function nonCapitalWithdrawalCategories()
-    {
-        return $this->hasMany(NonCapitalWithdrawalCategory::class);
-    }
-
-    public function nonCapitalWithdrawals()
-    {
-        return $this->hasMany(NonCapitalWithdrawal::class);
-    }
-
     public function purchaseOrders()
     {
         return $this->hasMany(PurchaseOrder::class);

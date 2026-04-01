@@ -101,16 +101,6 @@ class Branch extends Model
         return $this->hasMany(PurchaseReceiptProductUnitSerial::class);
     }
 
-    public function nonCapitalAdditions()
-    {
-        return $this->hasMany(NonCapitalAddition::class);
-    }
-
-    public function nonCapitalWithdrawals()
-    {
-        return $this->hasMany(NonCapitalWithdrawal::class);
-    }
-
     public function stockTransfers()
     {
         return $this->hasMany(StockTransfer::class);

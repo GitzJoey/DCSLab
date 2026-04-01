@@ -200,21 +200,6 @@ return [
         'serial' => 'Serial',
     ],
 
-    'non_capital_addition_category' => [
-        'company' => 'Perusahaan',
-        'code' => 'Kode',
-        'name' => 'Nama',
-    ],
-    'non_capital_addition' => [
-        'company' => 'Perusahaan',
-        'branch' => 'Cabang',
-        'code' => 'Kode',
-        'date' => 'Tanggal',
-        'category' => 'Category Id',
-        'cash_account' => 'Akun Kas',
-        'amount' => 'Jumlah',
-        'remarks' => 'Catatan',
-    ],
     'capital_opening' => [
         'company' => 'Perusahaan',
         'branch' => 'Cabang',
@@ -233,21 +218,6 @@ return [
         'investor' => 'Investor',
         'cash_account' => 'Akun Kas',
         'type' => 'Tipe',
-        'amount' => 'Jumlah',
-        'remarks' => 'Catatan',
-    ],
-    'non_capital_withdrawal_category' => [
-        'company' => 'Perusahaan',
-        'code' => 'Kode',
-        'name' => 'Nama',
-    ],
-    'non_capital_withdrawal' => [
-        'company' => 'Perusahaan',
-        'branch' => 'Cabang',
-        'code' => 'Kode',
-        'date' => 'Tanggal',
-        'category' => 'Category Id',
-        'cash_account' => 'Akun Kas',
         'amount' => 'Jumlah',
         'remarks' => 'Catatan',
     ],
