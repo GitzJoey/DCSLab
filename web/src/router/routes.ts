@@ -36,6 +36,14 @@ import CashAccountIndex from '@/pages/cash-account/CashAccountIndex.vue';
 import CashAccountList from '@/pages/cash-account/CashAccountList.vue';
 import CashAccountCreate from '@/pages/cash-account/CashAccountCreate.vue';
 import CashAccountEdit from '@/pages/cash-account/CashAccountEdit.vue';
+import CapitalOpeningIndex from '@/pages/capital-opening/CapitalOpeningIndex.vue';
+import CapitalOpeningList from '@/pages/capital-opening/CapitalOpeningList.vue';
+import CapitalOpeningCreate from '@/pages/capital-opening/CapitalOpeningCreate.vue';
+import CapitalOpeningEdit from '@/pages/capital-opening/CapitalOpeningEdit.vue';
+import CapitalTransactionIndex from '@/pages/capital-transaction/CapitalTransactionIndex.vue';
+import CapitalTransactionList from '@/pages/capital-transaction/CapitalTransactionList.vue';
+import CapitalTransactionCreate from '@/pages/capital-transaction/CapitalTransactionCreate.vue';
+import CapitalTransactionEdit from '@/pages/capital-transaction/CapitalTransactionEdit.vue';
 import ProductCategoryIndex from '@/pages/product-category/ProductCategoryIndex.vue';
 import ProductCategoryList from '@/pages/product-category/ProductCategoryList.vue';
 import ProductCategoryCreate from '@/pages/product-category/ProductCategoryCreate.vue';
@@ -678,6 +686,72 @@ export default [
                 path: '/dashboard/stock-adjustment/edit/:ulid',
                 name: 'side-menu-stock-adjustment-edit',
                 component: StockAdjustmentEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Capital Opening
+          {
+            path: '/dashboard/finance/capital-opening',
+            name: 'side-menu-finance-capital-opening',
+            redirect: '/dashboard/finance/capital-opening/list',
+            component: CapitalOpeningIndex,
+            children: [
+              {
+                path: '/dashboard/finance/capital-opening/list',
+                name: 'side-menu-finance-capital-opening-list',
+                component: CapitalOpeningList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/finance/capital-opening/create',
+                name: 'side-menu-finance-capital-opening-create',
+                component: CapitalOpeningCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/finance/capital-opening/edit/:ulid',
+                name: 'side-menu-finance-capital-opening-edit',
+                component: CapitalOpeningEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Capital Transaction
+          {
+            path: '/dashboard/finance/capital-transaction',
+            name: 'side-menu-finance-capital-transaction',
+            redirect: '/dashboard/finance/capital-transaction/list',
+            component: CapitalTransactionIndex,
+            children: [
+              {
+                path: '/dashboard/finance/capital-transaction/list',
+                name: 'side-menu-finance-capital-transaction-list',
+                component: CapitalTransactionList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/finance/capital-transaction/create',
+                name: 'side-menu-finance-capital-transaction-create',
+                component: CapitalTransactionCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/finance/capital-transaction/edit/:ulid',
+                name: 'side-menu-finance-capital-transaction-edit',
+                component: CapitalTransactionEdit,
                 meta: {
                   remember: true,
                 },

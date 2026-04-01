@@ -22,6 +22,8 @@
   "supplier": "Supplier",
   "finance": "Finance Management",
   "transaction": "Transaction",
+  "capital-opening": "Capital Opening",
+  "capital-transaction": "Capital Transaction",
   "stock-adjustment": "Stock Adjustment",
   "stock-transfer": "Stock Transfer",
   "stock-transfer-product-unit": "Stock Transfer by Product",

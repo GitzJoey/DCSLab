@@ -1,0 +1,39 @@
+{
+  "page_title": "Modal Awal",
+  "table": {
+    "title": "Daftar Modal Awal",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "investor": "Investor",
+      "cash_account": "Akun Kas",
+      "amount": "Jumlah"
+    }
+  },
+  "actions": {
+    "create": "Buat Modal Awal",
+    "edit": "Ubah Modal Awal",
+    "show": "Lihat Modal Awal",
+    "delete": "Hapus Modal Awal"
+  },
+  "fields": {
+    "code": "Kode",
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "date": "Tanggal",
+    "investor": "Investor",
+    "cash_account": "Akun Kas",
+    "amount": "Jumlah",
+    "remarks": "Keterangan"
+  },
+  "field_groups": {
+    "company_info": "Info Perusahaan",
+    "capital_opening_data": "Data Modal Awal"
+  },
+  "alert": {
+    "delete_capital_opening": {
+      "title": "Hapus Modal Awal",
+      "content": "Modal Awal Berhasil Dihapus"
+    }
+  }
+}

@@ -153,8 +153,26 @@ Untuk konsistensi navigasi dan kemudahan membaca, urutan method public di setiap
         // ...
         $model->save();
         ```
-    4.  `$this->flushCache()`.
-    5.  Return `$model->refresh()`.
+    4.  **Jangan Ubah Foreign Key Konteks yang Immutable**:
+        *   Jika `company_id`, `branch_id`, atau foreign key konteks lain ditetapkan saat create dan secara bisnis tidak boleh berpindah konteks, maka field tersebut **tidak boleh** di-assign ulang pada method `update`.
+        *   Untuk kebutuhan seperti generate unique code saat update, gunakan nilai yang sudah ada di model (contoh: `$model->company_id`), bukan dari payload update.
+        *   Contoh yang benar:
+            ```php
+            $model->code = $this->generateUniqueCode($model->company_id, $data['code'], $model->id);
+            $model->date = $data['date'];
+            $model->remarks = $data['remarks'];
+            $model->save();
+            ```
+    5.  **Style Kondisional Singkat**:
+        *   Jika conditional hanya berisi satu statement pendek, utamakan *one-line if* tanpa kurung kurawal agar konsisten dengan style project pada action class.
+        *   Cocok dipakai untuk sinkronisasi atau delete relasi internal yang sederhana.
+        *   Contoh:
+            ```php
+            $cashTransaction = $model->cashTransaction;
+            if ($cashTransaction) $this->cashTransactionActions->delete($cashTransaction);
+            ```
+    6.  `$this->flushCache()`.
+    7.  Return `$model->refresh()`.
 
 ### E. Method `delete`
 *   **Signature**: `public function delete(Model $model): bool`

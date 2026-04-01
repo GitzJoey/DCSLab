@@ -1,0 +1,45 @@
+{
+  "page_title": "Transaksi Modal",
+  "table": {
+    "title": "Daftar Transaksi Modal",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "investor": "Investor",
+      "type": "Tipe",
+      "cash_account": "Akun Kas",
+      "amount": "Jumlah"
+    }
+  },
+  "actions": {
+    "create": "Buat Transaksi Modal",
+    "edit": "Ubah Transaksi Modal",
+    "show": "Lihat Transaksi Modal",
+    "delete": "Hapus Transaksi Modal"
+  },
+  "fields": {
+    "code": "Kode",
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "date": "Tanggal",
+    "investor": "Investor",
+    "type": "Tipe",
+    "cash_account": "Akun Kas",
+    "amount": "Jumlah",
+    "remarks": "Keterangan"
+  },
+  "field_groups": {
+    "company_info": "Info Perusahaan",
+    "capital_transaction_data": "Data Transaksi Modal"
+  },
+  "types": {
+    "in": "Masuk",
+    "out": "Keluar"
+  },
+  "alert": {
+    "delete_capital_transaction": {
+      "title": "Hapus Transaksi Modal",
+      "content": "Transaksi Modal Berhasil Dihapus"
+    }
+  }
+}

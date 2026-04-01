@@ -242,13 +242,25 @@ class DashboardActions
             'title' => 'components.menu.stock-adjustment',
         ];
 
+        $capitalOpening = [
+            'icon' => 'Wallet',
+            'pageName' => 'side-menu-finance-capital-opening',
+            'title' => 'components.menu.capital-opening',
+        ];
+
+        $capitalTransaction = [
+            'icon' => 'ArrowLeftRight',
+            'pageName' => 'side-menu-finance-capital-transaction',
+            'title' => 'components.menu.capital-transaction',
+        ];
+
         $stockTransfer = [
             'icon' => 'Truck',
             'pageName' => 'side-menu-stock-transfer',
             'title' => 'components.menu.stock-transfer',
         ];
 
-        array_push($root_array['subMenu'], $stockAdjustment, $stockTransfer);
+        array_push($root_array['subMenu'], $capitalOpening, $capitalTransaction, $stockAdjustment, $stockTransfer);
 
         array_push($menu, $root_array);
 

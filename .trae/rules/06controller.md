@@ -42,6 +42,15 @@ Untuk semua controller CRUD di bawah menu Master Data, urutan method public utam
     - *Syntax*: `if (! $isUnique) return response()->error(['field' => [trans('rules.unique_...')]], 422);`
 4.  **Action Execution**: Panggil method `create` pada Action Class.
     - *Input*: Kirimkan `array` data (Default).
+    - Jika Action menerima DTO, gunakan named argument pada pemanggilan Action dan constructor DTO agar mapping field eksplisit dan mudah dibaca.
+      ```php
+      $result = $this->entityActions->create(
+          data: new EntityCreateDTO(
+              companyId: $validatedRequest['company_id'],
+              branchId: $validatedRequest['branch_id'],
+          )
+      );
+      ```
 5.  **Response**:
     - Success: `response()->success()`
     - Failure: `response()->error($errorMsg)`
@@ -103,6 +112,16 @@ Untuk semua controller CRUD di bawah menu Master Data, urutan method public utam
 3.  **Unique Validation**: Sertakan ID model saat ini untuk pengecualian (`ignore current id`).
     - Gunakan *One-line Guard Clause* untuk pengecekan validasi.
 4.  **Action Execution**: Panggil method `update` pada Action Class.
+    - Jika Action menerima DTO, gunakan named argument baik untuk entity utama maupun `data`.
+      ```php
+      $result = $this->entityActions->update(
+          entity: $entity,
+          data: new EntityUpdateDTO(
+              code: $validatedRequest['code'],
+              remarks: $validatedRequest['remarks'],
+          )
+      );
+      ```
 5.  **Response**:
     - Gunakan ternary operator untuk return response (sama seperti `store`).
 

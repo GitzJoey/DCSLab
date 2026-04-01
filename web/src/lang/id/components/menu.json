@@ -22,6 +22,8 @@
   "supplier": "Pemasok",
   "finance": "Manajemen Keuangan",
   "transaction": "Transaksi",
+  "capital-opening": "Saldo Awal Modal",
+  "capital-transaction": "Transaksi Modal",
   "stock-adjustment": "Penyesuaian Stok",
   "stock-adjustment-in-product": "Penyesuaian Stok Masuk per Produk",
   "stock-adjustment-in-product-serial": "Penyesuaian Stok Masuk per Serial",

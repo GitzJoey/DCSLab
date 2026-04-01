@@ -27,6 +27,8 @@ import customer_group from './id/views/customer_group.json';
 import customer from './id/views/customer.json';
 import investor from './id/views/investor.json';
 import cash_account from './id/views/cash_account.json';
+import capital_opening from './id/views/capital_opening.json';
+import capital_transaction from './id/views/capital_transaction.json';
 import product_service from './id/views/product_service.json';
 import product from './id/views/product.json';
 import supplier from './id/views/supplier.json';
@@ -76,6 +78,8 @@ export default {
     customer: customer,
     investor: investor,
     cash_account: cash_account,
+    capital_opening: capital_opening,
+    capital_transaction: capital_transaction,
     stock_adjustment_category: stock_adjustment_category,
     stock_adjustment: stock_adjustment,
     stock_adjustment_in_product: stock_adjustment_in_product,

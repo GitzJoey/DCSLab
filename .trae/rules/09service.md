@@ -46,6 +46,52 @@ Gunakan nama method berikut untuk operasi standar CRUD:
 | Form Create | `use[Entity]CreateForm` | `(): Form<...>` |
 | Form Edit | `use[Entity]EditForm` | `(ulid: string): Form<...>` |
 
+## 2.1. Urutan Method dalam Class Service
+Setelah `constructor()`, urutan method di dalam class service wajib konsisten seperti berikut:
+
+1. `readAnyPaginate`
+2. `readAnyGet`
+3. `read`
+4. `use[Entity]CreateForm`
+5. `use[Entity]EditForm`
+6. `delete`
+
+Contoh urutan yang benar:
+
+```typescript
+export default class ExampleService {
+  constructor() {
+    // ...
+  }
+
+  public async readAnyPaginate(...) {
+    // ...
+  }
+
+  public async readAnyGet(...) {
+    // ...
+  }
+
+  public async read(...) {
+    // ...
+  }
+
+  public useExampleCreateForm() {
+    // ...
+  }
+
+  public useExampleEditForm(ulid: string) {
+    // ...
+  }
+
+  public async delete(ulid: string) {
+    // ...
+  }
+}
+```
+
+Urutan ini dipakai agar service mudah dipindai: method baca data ditempatkan lebih dulu, form builder di tengah, dan aksi destruktif `delete` diletakkan paling akhir.
+
 ## 3. Penanganan Parameter Request (Query Params)
 Pastikan parameter diproses dengan benar sebelum dikirim ke API:
 

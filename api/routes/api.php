@@ -3,6 +3,8 @@
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CapitalOpeningController;
+use App\Http\Controllers\CapitalTransactionController;
 use App\Http\Controllers\CashAccountController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
@@ -238,6 +240,33 @@ Route::prefix('stock_adjustment_category')->middleware('auth:sanctum')->group(fu
         Route::post('save', [StockAdjustmentCategoryController::class, 'store'])->name('save');
         Route::post('edit/{stock_adjustment_category:ulid}', [StockAdjustmentCategoryController::class, 'update'])->name('edit');
         Route::post('delete/{stock_adjustment_category:ulid}', [StockAdjustmentCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('capital_opening')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.capital_opening.')->group(function () {
+        Route::get('read', [CapitalOpeningController::class, 'readAny'])->name('read_any');
+        Route::get('read/{capital_opening:ulid}', [CapitalOpeningController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.capital_opening.')->group(function () {
+        Route::post('save', [CapitalOpeningController::class, 'store'])->name('save');
+        Route::post('edit/{capital_opening:ulid}', [CapitalOpeningController::class, 'update'])->name('edit');
+        Route::post('delete/{capital_opening:ulid}', [CapitalOpeningController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('capital_transaction')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.capital_transaction.')->group(function () {
+        Route::get('read', [CapitalTransactionController::class, 'readAny'])->name('read_any');
+        Route::get('read/types', [CapitalTransactionController::class, 'getTypes'])->name('read_types');
+        Route::get('read/{capital_transaction:ulid}', [CapitalTransactionController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.capital_transaction.')->group(function () {
+        Route::post('save', [CapitalTransactionController::class, 'store'])->name('save');
+        Route::post('edit/{capital_transaction:ulid}', [CapitalTransactionController::class, 'update'])->name('edit');
+        Route::post('delete/{capital_transaction:ulid}', [CapitalTransactionController::class, 'delete'])->name('delete');
     });
 });
 
