@@ -55,34 +55,9 @@ class ProductUnit extends Model
         return $this->belongsTo(Unit::class)->withTrashed();
     }
 
-    public function purchaseReturnProductUnits()
-    {
-        return $this->hasMany(PurchaseReturnProductUnit::class);
-    }
-
-    public function purchaseReceiptProductUnits()
-    {
-        return $this->hasMany(PurchaseReceiptProductUnit::class);
-    }
-
     public function stockTransferProductUnits()
     {
         return $this->hasMany(StockTransferProductUnit::class);
-    }
-
-    public function saleOrderProductUnits()
-    {
-        return $this->hasMany(SaleOrderProductUnit::class);
-    }
-
-    public function saleProductUnits()
-    {
-        return $this->hasMany(SaleProductUnit::class);
-    }
-
-    public function saleReceiptProductUnits()
-    {
-        return $this->hasMany(SaleReceiptProductUnit::class);
     }
 
     public function scopeSearch($query, string $search)

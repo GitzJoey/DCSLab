@@ -41,26 +41,6 @@ class CashAccount extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchasePayments()
-    {
-        return $this->hasMany(PurchasePayment::class);
-    }
-
-    public function saleOrderDownPayments()
-    {
-        return $this->hasMany(SaleOrderDownPayment::class);
-    }
-
-    public function saleOrderDownPaymentApplies()
-    {
-        return $this->hasMany(SaleOrderDownPaymentApply::class);
-    }
-
-    public function salePayments()
-    {
-        return $this->hasMany(SalePayment::class);
-    }
-
     public function scopeWithRemainingBalance($query, ?string $endDate)
     {
         $cashAccountsWithRemainingBalanceQuery = CashTransaction::select(

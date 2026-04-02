@@ -41,11 +41,6 @@ class Supplier extends Model
         return $this->belongsTo(Company::class)->withTrashed();
     }
 
-    public function purchaseOrders()
-    {
-        return $this->hasMany(PurchaseOrder::class);
-    }
-
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {

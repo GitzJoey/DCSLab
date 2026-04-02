@@ -42,11 +42,6 @@ class Warehouse extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseReceipts()
-    {
-        return $this->hasMany(PurchaseReceipt::class);
-    }
-
     public function stockTransferSource()
     {
         return $this->hasMany(StockTransfer::class, 'source_warehouse_id');
@@ -55,21 +50,6 @@ class Warehouse extends Model
     public function stockTransferDestination()
     {
         return $this->hasMany(StockTransfer::class, 'destination_warehouse_id');
-    }
-
-    public function sales()
-    {
-        return $this->hasMany(Sale::class);
-    }
-
-    public function saleProductUnits()
-    {
-        return $this->hasMany(SaleProductUnit::class);
-    }
-
-    public function saleReceipts()
-    {
-        return $this->hasMany(SaleReceipt::class);
     }
 
     public function stockTransactions()

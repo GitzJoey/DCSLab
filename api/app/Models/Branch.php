@@ -46,59 +46,9 @@ class Branch extends Model
         return $this->hasMany(Warehouse::class);
     }
 
-    public function purchaseOrders()
-    {
-        return $this->hasMany(PurchaseOrder::class);
-    }
-
     public function cashAccounts()
     {
         return $this->hasMany(CashAccount::class);
-    }
-
-    public function purchaseProductUnitSerials()
-    {
-        return $this->hasMany(PurchaseProductUnitSerial::class);
-    }
-
-    public function purchaseAdditionalCosts()
-    {
-        return $this->hasMany(PurchaseAdditionalCost::class);
-    }
-
-    public function purchaseReturnProductUnits()
-    {
-        return $this->hasMany(PurchaseReturnProductUnit::class);
-    }
-
-    public function purchaseReturnProductUnitSerials()
-    {
-        return $this->hasMany(PurchaseReturnProductUnitSerial::class);
-    }
-
-    public function purchaseReturnAdditionalCosts()
-    {
-        return $this->hasMany(PurchaseReturnAdditionalCost::class);
-    }
-
-    public function purchasePayments()
-    {
-        return $this->hasMany(PurchasePayment::class);
-    }
-
-    public function purchaseReceipts()
-    {
-        return $this->hasMany(PurchaseReceipt::class);
-    }
-
-    public function purchaseReceiptProductUnits()
-    {
-        return $this->hasMany(PurchaseReceiptProductUnit::class);
-    }
-
-    public function purchaseReceiptProductUnitSerials()
-    {
-        return $this->hasMany(PurchaseReceiptProductUnitSerial::class);
     }
 
     public function stockTransfers()
@@ -114,61 +64,6 @@ class Branch extends Model
     public function stockTransferProductUnitSerials()
     {
         return $this->hasMany(StockTransferProductUnitSerial::class);
-    }
-
-    public function salesOrders()
-    {
-        return $this->hasMany(SalesOrder::class);
-    }
-
-    public function saleOrderProductUnits()
-    {
-        return $this->hasMany(SaleOrderProductUnit::class);
-    }
-
-    public function saleOrderDownPayments()
-    {
-        return $this->hasMany(SaleOrderDownPayment::class);
-    }
-
-    public function saleOrderDownPaymentApplies()
-    {
-        return $this->hasMany(SaleOrderDownPaymentApply::class);
-    }
-
-    public function sales()
-    {
-        return $this->hasMany(Sale::class);
-    }
-
-    public function saleProductUnits()
-    {
-        return $this->hasMany(SaleProductUnit::class);
-    }
-
-    public function saleProductUnitSerials()
-    {
-        return $this->hasMany(SaleProductUnitSerial::class);
-    }
-
-    public function salePayments()
-    {
-        return $this->hasMany(SalePayment::class);
-    }
-
-    public function saleReceipts()
-    {
-        return $this->hasMany(SaleReceipt::class);
-    }
-
-    public function saleReceiptProductUnits()
-    {
-        return $this->hasMany(SaleReceiptProductUnit::class);
-    }
-
-    public function saleReceiptProductUnitSerials()
-    {
-        return $this->hasMany(SaleReceiptProductUnitSerial::class);
     }
 
     public function scopeSearch($query, string $search)
