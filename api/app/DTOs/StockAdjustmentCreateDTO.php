@@ -14,8 +14,8 @@ final class StockAdjustmentCreateDTO
         public readonly ?int $outWarehouseId,
         public readonly ?string $remarks,
         public readonly bool $isPosted,
-        public readonly array $inProducts,
-        public readonly array $outProducts,
+        public readonly array $inItems,
+        public readonly array $outItems,
     ) {
     }
 }

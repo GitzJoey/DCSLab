@@ -859,7 +859,7 @@ const onSubmit = async () => {
                   {{ t('views.stock_transfer_item.table.cols.product') }}
                 </th>
                 <th class="px-3 py-2 text-right">
-                  {{ t('views.stock_adjustment_out_product.table.cols.remaining_stock') }}
+                  {{ t('views.stock_adjustment_out_item.table.cols.remaining_stock') }}
                 </th>
                 <th class="px-3 py-2 text-left">
                   {{ t('views.product.table.cols.unit') }}
@@ -868,7 +868,7 @@ const onSubmit = async () => {
                   {{ t('views.product.fields.conversion_value') }}
                 </th>
                 <th class="px-3 py-2 text-right">
-                  {{ t('views.stock_adjustment_in_product.table.cols.product_unit_cogs') }}
+                  {{ t('views.stock_adjustment_in_item.table.cols.product_unit_cogs') }}
                 </th>
                 <th class="px-3 py-2"></th>
               </tr>

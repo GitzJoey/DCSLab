@@ -1,0 +1,31 @@
+{
+  "page_title": "Penyesuaian Stok Keluar per Item",
+  "table": {
+    "title": "Daftar Penyesuaian Stok Keluar per Item",
+    "cols": {
+      "product": "Produk",
+      "qty": "Qty",
+      "product_unit": "Satuan Produk",
+      "remaining_stock": "Sisa Stok",
+      "product_unit_conversion_value": "Nilai Konversi",
+      "product_unit_cogs": "HPP Satuan",
+      "remarks": "Catatan"
+    }
+  },
+  "actions": {
+    "create": "Tambah Item Keluar",
+    "edit": "Ubah Item Keluar",
+    "show": "Detail Item Keluar",
+    "delete": "Hapus Item Keluar"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "stock_adjustment_id": "Penyesuaian Stok",
+    "qty": "Qty",
+    "product_id": "Produk",
+    "product_unit_id": "Satuan Produk",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "remarks": "Catatan"
+  }
+}

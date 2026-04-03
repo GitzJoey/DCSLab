@@ -34,10 +34,10 @@ import product from './id/views/product.json';
 import supplier from './id/views/supplier.json';
 import stock_adjustment_category from './id/views/stock_adjustment_category.json';
 import stock_adjustment from './id/views/stock_adjustment.json';
-import stock_adjustment_in_product from './id/views/stock_adjustment_in_product.json';
-import stock_adjustment_in_product_serial from './id/views/stock_adjustment_in_product_serial.json';
-import stock_adjustment_out_product from './id/views/stock_adjustment_out_product.json';
-import stock_adjustment_out_product_serial from './id/views/stock_adjustment_out_product_serial.json';
+import stock_adjustment_in_item from './id/views/stock_adjustment_in_item.json';
+import stock_adjustment_in_item_serial from './id/views/stock_adjustment_in_item_serial.json';
+import stock_adjustment_out_item from './id/views/stock_adjustment_out_item.json';
+import stock_adjustment_out_item_serial from './id/views/stock_adjustment_out_item_serial.json';
 import stock_transfer from './id/views/stock_transfer.json';
 import stock_transfer_item from './id/views/stock_transfer_item.json';
 import stock_transfer_item_serial from './id/views/stock_transfer_item_serial.json';
@@ -82,10 +82,10 @@ export default {
     capital_transaction: capital_transaction,
     stock_adjustment_category: stock_adjustment_category,
     stock_adjustment: stock_adjustment,
-    stock_adjustment_in_product: stock_adjustment_in_product,
-    stock_adjustment_in_product_serial: stock_adjustment_in_product_serial,
-    stock_adjustment_out_product: stock_adjustment_out_product,
-    stock_adjustment_out_product_serial: stock_adjustment_out_product_serial,
+    stock_adjustment_in_item: stock_adjustment_in_item,
+    stock_adjustment_in_item_serial: stock_adjustment_in_item_serial,
+    stock_adjustment_out_item: stock_adjustment_out_item,
+    stock_adjustment_out_item_serial: stock_adjustment_out_item_serial,
     stock_transfer: stock_transfer,
     stock_transfer_item: stock_transfer_item,
     stock_transfer_item_serial: stock_transfer_item_serial,

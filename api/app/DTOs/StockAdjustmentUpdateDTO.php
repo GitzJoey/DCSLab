@@ -15,10 +15,10 @@ final class StockAdjustmentUpdateDTO
         public readonly ?string $remarks,
         public readonly bool $isPosted,
 
-        public readonly array $deleteInProductIds,
-        public readonly array $inProducts,
-        public readonly array $deleteOutProductIds,
-        public readonly array $outProducts,
+        public readonly array $deleteInItemIds,
+        public readonly array $inItems,
+        public readonly array $deleteOutItemIds,
+        public readonly array $outItems,
     ) {
     }
 }

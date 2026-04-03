@@ -176,11 +176,11 @@ return [
         ],
     ],
 
-    'stock_adjustment_in_product' => [
+    'stock_adjustment_in_item' => [
         'base_qty_must_be_integer' => 'Qty x product unit conversion value for serialized product must be an integer.',
         'serial_count_not_match_qty' => 'The number of serials must match qty x product unit conversion value.',
     ],
-    'stock_adjustment_out_product' => [
+    'stock_adjustment_out_item' => [
         'base_qty_must_be_integer' => 'Qty x product unit conversion value for serialized product must be an integer.',
         'serial_count_not_match_qty' => 'The number of serials must match qty x product unit conversion value.',
     ],

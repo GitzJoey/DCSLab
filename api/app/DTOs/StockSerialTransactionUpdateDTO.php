@@ -2,8 +2,8 @@
 
 namespace App\DTOs;
 
-use App\Models\StockAdjustmentInProductSerial;
-use App\Models\StockAdjustmentOutProductSerial;
+use App\Models\StockAdjustmentInItemSerial;
+use App\Models\StockAdjustmentOutItemSerial;
 use App\Models\StockTransferItemSerial;
 
 final class StockSerialTransactionUpdateDTO
@@ -19,27 +19,27 @@ final class StockSerialTransactionUpdateDTO
     ) {
     }
 
-    public static function fromStockAdjustmentInProductSerial(StockAdjustmentInProductSerial $stockAdjustmentInProductSerial, string $serial): self
+    public static function fromStockAdjustmentInItemSerial(StockAdjustmentInItemSerial $stockAdjustmentInItemSerial, string $serial): self
     {
         return new self(
-            referableType: StockAdjustmentInProductSerial::class,
-            referableId: $stockAdjustmentInProductSerial->id,
-            date: $stockAdjustmentInProductSerial->stockAdjustmentInProduct->stockAdjustment->date,
-            warehouseId: $stockAdjustmentInProductSerial->stockAdjustmentInProduct->stockAdjustment->in_warehouse_id,
-            productId: $stockAdjustmentInProductSerial->stockAdjustmentInProduct->productUnit->product_id,
+            referableType: StockAdjustmentInItemSerial::class,
+            referableId: $stockAdjustmentInItemSerial->id,
+            date: $stockAdjustmentInItemSerial->stockAdjustmentInItem->stockAdjustment->date,
+            warehouseId: $stockAdjustmentInItemSerial->stockAdjustmentInItem->stockAdjustment->in_warehouse_id,
+            productId: $stockAdjustmentInItemSerial->stockAdjustmentInItem->productUnit->product_id,
             direction: 1,
             serial: $serial,
         );
     }
 
-    public static function fromStockAdjustmentOutProductSerial(StockAdjustmentOutProductSerial $stockAdjustmentOutProductSerial, string $serial): self
+    public static function fromStockAdjustmentOutItemSerial(StockAdjustmentOutItemSerial $stockAdjustmentOutItemSerial, string $serial): self
     {
         return new self(
-            referableType: StockAdjustmentOutProductSerial::class,
-            referableId: $stockAdjustmentOutProductSerial->id,
-            date: $stockAdjustmentOutProductSerial->stockAdjustmentOutProduct->stockAdjustment->date,
-            warehouseId: $stockAdjustmentOutProductSerial->stockAdjustmentOutProduct->stockAdjustment->out_warehouse_id,
-            productId: $stockAdjustmentOutProductSerial->stockAdjustmentOutProduct->productUnit->product_id,
+            referableType: StockAdjustmentOutItemSerial::class,
+            referableId: $stockAdjustmentOutItemSerial->id,
+            date: $stockAdjustmentOutItemSerial->stockAdjustmentOutItem->stockAdjustment->date,
+            warehouseId: $stockAdjustmentOutItemSerial->stockAdjustmentOutItem->stockAdjustment->out_warehouse_id,
+            productId: $stockAdjustmentOutItemSerial->stockAdjustmentOutItem->productUnit->product_id,
             direction: -1,
             serial: $serial,
         );

@@ -8,6 +8,8 @@ return [
     'valid_company' => 'Invalid company value',
     'valid_branch' => 'Invalid branch value',
     'valid_warehouse' => 'Invalid warehouse value',
+    'valid_stock_adjustment_in_item' => 'Invalid stock adjustment in item value',
+    'valid_stock_adjustment_out_item' => 'Invalid stock adjustment out item value',
     'valid_customer_group' => 'Invalid customer group value',
     'valid_customer' => 'Invalid customer value',
     'too_many_tokens' => 'Too many token request',

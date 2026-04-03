@@ -2,14 +2,14 @@
 
 namespace App\Actions\StockAdjustment;
 
-use App\Actions\StockAdjustmentInProduct\StockAdjustmentInProductActions;
-use App\Actions\StockAdjustmentOutProduct\StockAdjustmentOutProductActions;
+use App\Actions\StockAdjustmentInItem\StockAdjustmentInItemActions;
+use App\Actions\StockAdjustmentOutItem\StockAdjustmentOutItemActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\StockAdjustmentCreateDTO;
-use App\DTOs\StockAdjustmentInProductCreateDTO;
-use App\DTOs\StockAdjustmentInProductUpdateDTO;
-use App\DTOs\StockAdjustmentOutProductCreateDTO;
-use App\DTOs\StockAdjustmentOutProductUpdateDTO;
+use App\DTOs\StockAdjustmentInItemCreateDTO;
+use App\DTOs\StockAdjustmentInItemUpdateDTO;
+use App\DTOs\StockAdjustmentOutItemCreateDTO;
+use App\DTOs\StockAdjustmentOutItemUpdateDTO;
 use App\DTOs\StockAdjustmentUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
@@ -24,16 +24,16 @@ class StockAdjustmentActions
     use CacheHelper;
     use LoggerHelper;
 
-    private $stockAdjustmentInProductActions;
+    private $stockAdjustmentInItemActions;
 
-    private $stockAdjustmentOutProductActions;
+    private $stockAdjustmentOutItemActions;
 
     public function __construct(
-        StockAdjustmentInProductActions $stockAdjustmentInProductActions,
-        StockAdjustmentOutProductActions $stockAdjustmentOutProductActions,
+        StockAdjustmentInItemActions $stockAdjustmentInItemActions,
+        StockAdjustmentOutItemActions $stockAdjustmentOutItemActions,
     ) {
-        $this->stockAdjustmentInProductActions = $stockAdjustmentInProductActions;
-        $this->stockAdjustmentOutProductActions = $stockAdjustmentOutProductActions;
+        $this->stockAdjustmentInItemActions = $stockAdjustmentInItemActions;
+        $this->stockAdjustmentOutItemActions = $stockAdjustmentOutItemActions;
     }
 
     public function readAny(
@@ -54,12 +54,12 @@ class StockAdjustmentActions
             ->with(['company', 'branch', 'category', 'inWarehouse', 'outWarehouse'])
             ->when($execute?->pagination, function ($query) {
                 $query->with([
-                    'inProducts.productUnit.product.images',
-                    'inProducts.productUnit.unit',
-                    'inProducts.serials',
-                    'outProducts.productUnit.product.images',
-                    'outProducts.productUnit.unit',
-                    'outProducts.serials',
+                    'inItems.productUnit.product.images',
+                    'inItems.productUnit.unit',
+                    'inItems.serials',
+                    'outItems.productUnit.product.images',
+                    'outItems.productUnit.unit',
+                    'outItems.serials',
                 ]);
             })
             ->join('companies', 'companies.id', '=', 'stock_adjustments.company_id')
@@ -177,14 +177,14 @@ class StockAdjustmentActions
             'category',
             'inWarehouse',
             'outWarehouse',
-            'inProducts.productUnit',
-            'inProducts.productUnit.unit',
-            'inProducts.productUnit.product.images',
-            'inProducts.serials',
-            'outProducts.productUnit',
-            'outProducts.productUnit.unit',
-            'outProducts.productUnit.product.images',
-            'outProducts.serials',
+            'inItems.productUnit',
+            'inItems.productUnit.unit',
+            'inItems.productUnit.product.images',
+            'inItems.serials',
+            'outItems.productUnit',
+            'outItems.productUnit.unit',
+            'outItems.productUnit.product.images',
+            'outItems.serials',
         ]);
     }
 
@@ -205,12 +205,12 @@ class StockAdjustmentActions
             $stockAdjustment->is_posted = $data->isPosted;
             $stockAdjustment->save();
 
-            $this->saveInProducts($stockAdjustment, $data->inProducts);
-            $this->saveOutProducts($stockAdjustment, $data->outProducts);
+            $this->saveInItems($stockAdjustment, $data->inItems);
+            $this->saveOutItems($stockAdjustment, $data->outItems);
 
-            $stockAdjustment->total_incoming_product_qty = $stockAdjustment->inProducts()->sum('qty');
-            $stockAdjustment->total_incoming_product_cogs = $stockAdjustment->inProducts()->sum('product_unit_total_cogs');
-            $stockAdjustment->total_outgoing_product_qty = $stockAdjustment->outProducts()->sum('qty');
+            $stockAdjustment->total_incoming_item_qty = $stockAdjustment->inItems()->sum('qty');
+            $stockAdjustment->total_incoming_item_cogs = $stockAdjustment->inItems()->sum('product_unit_total_cogs');
+            $stockAdjustment->total_outgoing_item_qty = $stockAdjustment->outItems()->sum('qty');
             $stockAdjustment->save();
 
             $this->flushCache();
@@ -225,38 +225,38 @@ class StockAdjustmentActions
         }
     }
 
-    private function saveInProducts(StockAdjustment $stockAdjustment, array $inProducts): void
+    private function saveInItems(StockAdjustment $stockAdjustment, array $inItems): void
     {
-        foreach ($inProducts as $inProduct) {
-            $data = new StockAdjustmentInProductCreateDTO(
+        foreach ($inItems as $inItem) {
+            $data = new StockAdjustmentInItemCreateDTO(
                 companyId: $stockAdjustment->company_id,
                 branchId: $stockAdjustment->branch_id,
                 stockAdjustmentId: $stockAdjustment->id,
-                qty: $inProduct['qty'],
-                productUnitId: $inProduct['product_unit_id'],
-                productUnitConversionValue: $inProduct['product_unit_conversion_value'],
-                productUnitCogs: $inProduct['product_unit_cogs'],
-                remarks: $inProduct['remarks'],
-                serials: $inProduct['serials'],
+                qty: $inItem['qty'],
+                productUnitId: $inItem['product_unit_id'],
+                productUnitConversionValue: $inItem['product_unit_conversion_value'],
+                productUnitCogs: $inItem['product_unit_cogs'],
+                remarks: $inItem['remarks'],
+                serials: $inItem['serials'],
             );
-            $this->stockAdjustmentInProductActions->create($data);
+            $this->stockAdjustmentInItemActions->create($data);
         }
     }
 
-    private function saveOutProducts(StockAdjustment $stockAdjustment, array $outProducts): void
+    private function saveOutItems(StockAdjustment $stockAdjustment, array $outItems): void
     {
-        foreach ($outProducts as $outProduct) {
-            $data = new StockAdjustmentOutProductCreateDTO(
+        foreach ($outItems as $outItem) {
+            $data = new StockAdjustmentOutItemCreateDTO(
                 companyId: $stockAdjustment->company_id,
                 branchId: $stockAdjustment->branch_id,
                 stockAdjustmentId: $stockAdjustment->id,
-                qty: $outProduct['qty'],
-                productUnitId: $outProduct['product_unit_id'],
-                productUnitConversionValue: $outProduct['product_unit_conversion_value'],
-                remarks: $outProduct['remarks'],
-                serials: $outProduct['serials'],
+                qty: $outItem['qty'],
+                productUnitId: $outItem['product_unit_id'],
+                productUnitConversionValue: $outItem['product_unit_conversion_value'],
+                remarks: $outItem['remarks'],
+                serials: $outItem['serials'],
             );
-            $this->stockAdjustmentOutProductActions->create($data);
+            $this->stockAdjustmentOutItemActions->create($data);
         }
     }
 
@@ -276,12 +276,12 @@ class StockAdjustmentActions
             $stockAdjustment->is_posted = $data->isPosted;
             $stockAdjustment->save();
 
-            $this->updateInProducts($stockAdjustment, $data->deleteInProductIds, $data->inProducts);
-            $this->updateOutProducts($stockAdjustment, $data->deleteOutProductIds, $data->outProducts);
+            $this->updateInItems($stockAdjustment, $data->deleteInItemIds, $data->inItems);
+            $this->updateOutItems($stockAdjustment, $data->deleteOutItemIds, $data->outItems);
 
-            $stockAdjustment->total_incoming_product_qty = $stockAdjustment->inProducts()->sum('qty');
-            $stockAdjustment->total_incoming_product_cogs = $stockAdjustment->inProducts()->sum('product_unit_total_cogs');
-            $stockAdjustment->total_outgoing_product_qty = $stockAdjustment->outProducts()->sum('qty');
+            $stockAdjustment->total_incoming_item_qty = $stockAdjustment->inItems()->sum('qty');
+            $stockAdjustment->total_incoming_item_cogs = $stockAdjustment->inItems()->sum('product_unit_total_cogs');
+            $stockAdjustment->total_outgoing_item_qty = $stockAdjustment->outItems()->sum('qty');
             $stockAdjustment->save();
 
             $this->flushCache();
@@ -296,82 +296,82 @@ class StockAdjustmentActions
         }
     }
 
-    private function updateInProducts(StockAdjustment $stockAdjustment, array $deleteIds, array $inProducts): void
+    private function updateInItems(StockAdjustment $stockAdjustment, array $deleteIds, array $inItems): void
     {
         foreach ($deleteIds as $deleteId) {
-            $stockAdjustmentInProduct = $stockAdjustment->inProducts()->findOrFail($deleteId);
-            $this->stockAdjustmentInProductActions->delete($stockAdjustmentInProduct);
+            $stockAdjustmentInItem = $stockAdjustment->inItems()->findOrFail($deleteId);
+            $this->stockAdjustmentInItemActions->delete($stockAdjustmentInItem);
         }
 
-        foreach ($inProducts as $inProduct) {
-            if ($inProduct['id']) {
-                $stockAdjustmentInProduct = $stockAdjustment->inProducts()->findOrFail($inProduct['id']);
+        foreach ($inItems as $inItem) {
+            if ($inItem['id']) {
+                $stockAdjustmentInItem = $stockAdjustment->inItems()->findOrFail($inItem['id']);
 
-                $data = new StockAdjustmentInProductUpdateDTO(
-                    qty: $inProduct['qty'],
-                    productUnitId: $inProduct['product_unit_id'],
-                    productUnitConversionValue: $inProduct['product_unit_conversion_value'],
-                    productUnitCogs: $inProduct['product_unit_cogs'],
-                    remarks: $inProduct['remarks'],
+                $data = new StockAdjustmentInItemUpdateDTO(
+                    qty: $inItem['qty'],
+                    productUnitId: $inItem['product_unit_id'],
+                    productUnitConversionValue: $inItem['product_unit_conversion_value'],
+                    productUnitCogs: $inItem['product_unit_cogs'],
+                    remarks: $inItem['remarks'],
 
-                    deleteSerialIds: $inProduct['delete_serial_ids'],
-                    serials: $inProduct['serials'],
+                    deleteSerialIds: $inItem['delete_serial_ids'],
+                    serials: $inItem['serials'],
                 );
 
-                $this->stockAdjustmentInProductActions->update($stockAdjustmentInProduct, $data);
+                $this->stockAdjustmentInItemActions->update($stockAdjustmentInItem, $data);
             } else {
-                $data = new StockAdjustmentInProductCreateDTO(
+                $data = new StockAdjustmentInItemCreateDTO(
                     companyId: $stockAdjustment->company_id,
                     branchId: $stockAdjustment->branch_id,
                     stockAdjustmentId: $stockAdjustment->id,
-                    qty: $inProduct['qty'],
-                    productUnitId: $inProduct['product_unit_id'],
-                    productUnitConversionValue: $inProduct['product_unit_conversion_value'],
-                    productUnitCogs: $inProduct['product_unit_cogs'],
-                    remarks: $inProduct['remarks'],
+                    qty: $inItem['qty'],
+                    productUnitId: $inItem['product_unit_id'],
+                    productUnitConversionValue: $inItem['product_unit_conversion_value'],
+                    productUnitCogs: $inItem['product_unit_cogs'],
+                    remarks: $inItem['remarks'],
 
-                    serials: $inProduct['serials'],
+                    serials: $inItem['serials'],
                 );
-                $this->stockAdjustmentInProductActions->create($data);
+                $this->stockAdjustmentInItemActions->create($data);
             }
         }
     }
 
-    private function updateOutProducts(StockAdjustment $stockAdjustment, array $deleteIds, array $outProducts): void
+    private function updateOutItems(StockAdjustment $stockAdjustment, array $deleteIds, array $outItems): void
     {
         foreach ($deleteIds as $deleteId) {
-            $stockAdjustmentOutProduct = $stockAdjustment->outProducts()->findOrFail($deleteId);
-            $this->stockAdjustmentOutProductActions->delete($stockAdjustmentOutProduct);
+            $stockAdjustmentOutItem = $stockAdjustment->outItems()->findOrFail($deleteId);
+            $this->stockAdjustmentOutItemActions->delete($stockAdjustmentOutItem);
         }
 
-        foreach ($outProducts as $outProduct) {
-            if ($outProduct['id']) {
-                $stockAdjustmentOutProduct = $stockAdjustment->outProducts()->findOrFail($outProduct['id']);
+        foreach ($outItems as $outItem) {
+            if ($outItem['id']) {
+                $stockAdjustmentOutItem = $stockAdjustment->outItems()->findOrFail($outItem['id']);
 
-                $data = new StockAdjustmentOutProductUpdateDTO(
-                    qty: $outProduct['qty'],
-                    productUnitId: $outProduct['product_unit_id'],
-                    productUnitConversionValue: $outProduct['product_unit_conversion_value'],
-                    remarks: $outProduct['remarks'],
+                $data = new StockAdjustmentOutItemUpdateDTO(
+                    qty: $outItem['qty'],
+                    productUnitId: $outItem['product_unit_id'],
+                    productUnitConversionValue: $outItem['product_unit_conversion_value'],
+                    remarks: $outItem['remarks'],
 
-                    deleteSerialIds: $outProduct['delete_serial_ids'],
-                    serials: $outProduct['serials'],
+                    deleteSerialIds: $outItem['delete_serial_ids'],
+                    serials: $outItem['serials'],
                 );
 
-                $this->stockAdjustmentOutProductActions->update($stockAdjustmentOutProduct, $data);
+                $this->stockAdjustmentOutItemActions->update($stockAdjustmentOutItem, $data);
             } else {
-                $data = new StockAdjustmentOutProductCreateDTO(
+                $data = new StockAdjustmentOutItemCreateDTO(
                     companyId: $stockAdjustment->company_id,
                     branchId: $stockAdjustment->branch_id,
                     stockAdjustmentId: $stockAdjustment->id,
-                    qty: $outProduct['qty'],
-                    productUnitId: $outProduct['product_unit_id'],
-                    productUnitConversionValue: $outProduct['product_unit_conversion_value'],
-                    remarks: $outProduct['remarks'],
+                    qty: $outItem['qty'],
+                    productUnitId: $outItem['product_unit_id'],
+                    productUnitConversionValue: $outItem['product_unit_conversion_value'],
+                    remarks: $outItem['remarks'],
 
-                    serials: $outProduct['serials'],
+                    serials: $outItem['serials'],
                 );
-                $this->stockAdjustmentOutProductActions->create($data);
+                $this->stockAdjustmentOutItemActions->create($data);
             }
         }
     }

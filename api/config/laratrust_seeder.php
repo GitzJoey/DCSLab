@@ -50,10 +50,10 @@ return [
             'capital_transaction' => 'c,r,ra,u,d',
 
             'stock_adjustment' => 'c,r,ra,u,d',
-            'stock_adjustment_in_product' => 'c,r,ra,u,d',
-            'stock_adjustment_in_product_serial' => 'c,r,ra,u,d',
-            'stock_adjustment_out_product' => 'c,r,ra,u,d',
-            'stock_adjustment_out_product_serial' => 'c,r,ra,u,d',
+            'stock_adjustment_in_item' => 'c,r,ra,u,d',
+            'stock_adjustment_in_item_serial' => 'c,r,ra,u,d',
+            'stock_adjustment_out_item' => 'c,r,ra,u,d',
+            'stock_adjustment_out_item_serial' => 'c,r,ra,u,d',
 
             'stock_transfer' => 'c,r,ra,u,d',
             'stock_transfer_item' => 'c,r,ra,u,d',

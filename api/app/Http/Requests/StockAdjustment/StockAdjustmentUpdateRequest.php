@@ -41,36 +41,36 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
             'is_posted' => ['required', 'boolean'],
 
-            'delete_in_product_ids' => ['present', 'array'],
-            'delete_in_product_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)],
-            'in_products' => ['array', 'required_with:in_warehouse_id'],
-            'in_products.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_in_products', $this->company_id)],
-            'in_products.*.qty' => ['required', 'numeric', 'min:1'],
-            'in_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
-            'in_products.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
-            'in_products.*.product_unit_cogs' => ['required', 'numeric', 'min:0'],
-            'in_products.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'delete_in_item_ids' => ['present', 'array'],
+            'delete_in_item_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_items', $this->company_id)],
+            'in_items' => ['array', 'required_with:in_warehouse_id'],
+            'in_items.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_in_items', $this->company_id)],
+            'in_items.*.qty' => ['required', 'numeric', 'min:1'],
+            'in_items.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
+            'in_items.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
+            'in_items.*.product_unit_cogs' => ['required', 'numeric', 'min:0'],
+            'in_items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'in_products.*.delete_serial_ids' => ['present', 'array'],
-            'in_products.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
-            'in_products.*.serials' => ['present', 'array'],
-            'in_products.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_in_product_serials', $this->company_id)],
-            'in_products.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
+            'in_items.*.delete_serial_ids' => ['present', 'array'],
+            'in_items.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_in_item_serials', $this->company_id)],
+            'in_items.*.serials' => ['present', 'array'],
+            'in_items.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_in_item_serials', $this->company_id)],
+            'in_items.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
 
-            'delete_out_product_ids' => ['present', 'array'],
-            'delete_out_product_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_products', $this->company_id)],
-            'out_products' => ['array', 'required_with:out_warehouse_id'],
-            'out_products.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_out_products', $this->company_id)],
-            'out_products.*.qty' => ['required', 'numeric', 'min:1'],
-            'out_products.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
-            'out_products.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
-            'out_products.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'delete_out_item_ids' => ['present', 'array'],
+            'delete_out_item_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)],
+            'out_items' => ['array', 'required_with:out_warehouse_id'],
+            'out_items.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_out_items', $this->company_id)],
+            'out_items.*.qty' => ['required', 'numeric', 'min:1'],
+            'out_items.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
+            'out_items.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
+            'out_items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'out_products.*.delete_serial_ids' => ['present', 'array'],
-            'out_products.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
-            'out_products.*.serials' => ['present', 'array'],
-            'out_products.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_out_product_serials', $this->company_id)],
-            'out_products.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
+            'out_items.*.delete_serial_ids' => ['present', 'array'],
+            'out_items.*.delete_serial_ids.*' => ['required', 'integer', 'distinct', new ExistsForCompany('stock_adjustment_out_item_serials', $this->company_id)],
+            'out_items.*.serials' => ['present', 'array'],
+            'out_items.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('stock_adjustment_out_item_serials', $this->company_id)],
+            'out_items.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
         ];
     }
 
@@ -99,17 +99,17 @@ class StockAdjustmentUpdateRequest extends FormRequest
             'category_id' => $this->filled('category_id') ? HashidsHelper::decodeId($this->category_id) : null,
         ]);
 
-        if (is_array($this->input('delete_in_product_ids'))) {
-            $deleteInProductIds = [];
-            foreach ($this->input('delete_in_product_ids') as $deleteInProductId) {
-                $deleteInProductIds[] = HashidsHelper::decodeId($deleteInProductId);
+        if (is_array($this->input('delete_in_item_ids'))) {
+            $deleteInItemIds = [];
+            foreach ($this->input('delete_in_item_ids') as $deleteInItemId) {
+                $deleteInItemIds[] = HashidsHelper::decodeId($deleteInItemId);
             }
-            $this->merge(['delete_in_product_ids' => $deleteInProductIds]);
+            $this->merge(['delete_in_item_ids' => $deleteInItemIds]);
         }
 
-        if (is_array($this->input('in_products'))) {
-            $inProducts = [];
-            foreach ($this->input('in_products') as $item) {
+        if (is_array($this->input('in_items'))) {
+            $inItems = [];
+            foreach ($this->input('in_items') as $item) {
                 if (! empty($item['id'])) {
                     $item['id'] = HashidsHelper::decodeId($item['id']);
                 }
@@ -136,22 +136,22 @@ class StockAdjustmentUpdateRequest extends FormRequest
                     $item['serials'] = $serials;
                 }
 
-                $inProducts[] = $item;
+                $inItems[] = $item;
             }
-            $this->merge(['in_products' => $inProducts]);
+            $this->merge(['in_items' => $inItems]);
         }
 
-        if (is_array($this->input('delete_out_product_ids'))) {
-            $deleteOutProductIds = [];
-            foreach ($this->input('delete_out_product_ids') as $deleteOutProductId) {
-                $deleteOutProductIds[] = HashidsHelper::decodeId($deleteOutProductId);
+        if (is_array($this->input('delete_out_item_ids'))) {
+            $deleteOutItemIds = [];
+            foreach ($this->input('delete_out_item_ids') as $deleteOutItemId) {
+                $deleteOutItemIds[] = HashidsHelper::decodeId($deleteOutItemId);
             }
-            $this->merge(['delete_out_product_ids' => $deleteOutProductIds]);
+            $this->merge(['delete_out_item_ids' => $deleteOutItemIds]);
         }
 
-        if (is_array($this->input('out_products'))) {
-            $outProducts = [];
-            foreach ($this->input('out_products') as $item) {
+        if (is_array($this->input('out_items'))) {
+            $outItems = [];
+            foreach ($this->input('out_items') as $item) {
                 if (! empty($item['id'])) {
                     $item['id'] = HashidsHelper::decodeId($item['id']);
                 }
@@ -178,27 +178,27 @@ class StockAdjustmentUpdateRequest extends FormRequest
                     $item['serials'] = $serials;
                 }
 
-                $outProducts[] = $item;
+                $outItems[] = $item;
             }
-            $this->merge(['out_products' => $outProducts]);
+            $this->merge(['out_items' => $outItems]);
         }
     }
 
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            // in_products
-            $inProducts = $validator->getData()['in_products'] ?? [];
-            if ($validator->errors()->isNotEmpty() || ! is_array($inProducts) || empty($inProducts)) {
+            // in_items
+            $inItems = $validator->getData()['in_items'] ?? [];
+            if ($validator->errors()->isNotEmpty() || ! is_array($inItems) || empty($inItems)) {
                 return;
             }
 
-            $inProductUnits = ProductUnit::with('product')
-                ->whereIn('id', collect($inProducts)->pluck('product_unit_id')->filter()->unique()->values()->all())
+            $inItemUnits = ProductUnit::with('product')
+                ->whereIn('id', collect($inItems)->pluck('product_unit_id')->filter()->unique()->values()->all())
                 ->get()
                 ->keyBy('id');
 
-            foreach ($inProducts as $i => $item) {
+            foreach ($inItems as $i => $item) {
                 if (! is_array($item)) {
                     continue;
                 }
@@ -208,7 +208,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
                     continue;
                 }
 
-                $product = $inProductUnits->get((int) $productUnitId)?->product;
+                $product = $inItemUnits->get((int) $productUnitId)?->product;
                 if ($product?->is_use_serial_number) {
                     $qty = $item['qty'] ?? null;
                     $conversionValue = $item['product_unit_conversion_value'] ?? null;
@@ -219,30 +219,30 @@ class StockAdjustmentUpdateRequest extends FormRequest
                     $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
                     $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
                     if (str_contains($normalizedBaseQty, '.')) {
-                        $validator->errors()->add('in_products.'.$i.'.serials', trans('validation.stock_adjustment_in_product.base_qty_must_be_integer'));
+                        $validator->errors()->add('in_items.'.$i.'.serials', trans('validation.stock_adjustment_in_item.base_qty_must_be_integer'));
 
                         continue;
                     }
 
                     $serialCount = (string) count($item['serials'] ?? []);
                     if (bccomp($serialCount, $baseQty, 8) !== 0) {
-                        $validator->errors()->add('in_products.'.$i.'.serials', trans('validation.stock_adjustment_in_product.serial_count_not_match_qty'));
+                        $validator->errors()->add('in_items.'.$i.'.serials', trans('validation.stock_adjustment_in_item.serial_count_not_match_qty'));
                     }
                 }
             }
 
-            // out_products
-            $outProducts = $validator->getData()['out_products'] ?? [];
-            if (! is_array($outProducts) || empty($outProducts)) {
+            // out_items
+            $outItems = $validator->getData()['out_items'] ?? [];
+            if (! is_array($outItems) || empty($outItems)) {
                 return;
             }
 
-            $outProductUnits = ProductUnit::with('product')
-                ->whereIn('id', collect($outProducts)->pluck('product_unit_id')->filter()->unique()->values()->all())
+            $outItemUnits = ProductUnit::with('product')
+                ->whereIn('id', collect($outItems)->pluck('product_unit_id')->filter()->unique()->values()->all())
                 ->get()
                 ->keyBy('id');
 
-            foreach ($outProducts as $i => $item) {
+            foreach ($outItems as $i => $item) {
                 if (! is_array($item)) {
                     continue;
                 }
@@ -252,7 +252,7 @@ class StockAdjustmentUpdateRequest extends FormRequest
                     continue;
                 }
 
-                $product = $outProductUnits->get((int) $productUnitId)?->product;
+                $product = $outItemUnits->get((int) $productUnitId)?->product;
                 if ($product?->is_use_serial_number) {
                     $qty = $item['qty'] ?? null;
                     $conversionValue = $item['product_unit_conversion_value'] ?? null;
@@ -263,14 +263,14 @@ class StockAdjustmentUpdateRequest extends FormRequest
                     $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
                     $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
                     if (str_contains($normalizedBaseQty, '.')) {
-                        $validator->errors()->add('out_products.'.$i.'.serials', trans('validation.stock_adjustment_out_product.base_qty_must_be_integer'));
+                        $validator->errors()->add('out_items.'.$i.'.serials', trans('validation.stock_adjustment_out_item.base_qty_must_be_integer'));
 
                         continue;
                     }
 
                     $serialCount = (string) count($item['serials'] ?? []);
                     if (bccomp($serialCount, $baseQty, 8) !== 0) {
-                        $validator->errors()->add('out_products.'.$i.'.serials', trans('validation.stock_adjustment_out_product.serial_count_not_match_qty'));
+                        $validator->errors()->add('out_items.'.$i.'.serials', trans('validation.stock_adjustment_out_item.serial_count_not_match_qty'));
                     }
                 }
             }

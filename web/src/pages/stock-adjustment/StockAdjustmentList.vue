@@ -472,21 +472,21 @@ const showAlertPlaceholder = (
           <div v-if="expandDetail === index"
             class="col-span-12 border-t border-slate-200 dark:border-darkmode-400 mt-2 pt-3">
             <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
-              {{ t('views.stock_adjustment.field_groups.in_products') }}
+              {{ t('views.stock_adjustment.field_groups.in_items') }}
             </div>
-            <div v-if="((item as StockAdjustment).in_products?.length ?? 0) === 0"
+            <div v-if="((item as StockAdjustment).in_items?.length ?? 0) === 0"
               class="text-slate-500 text-xs italic">
               {{ t('components.data-list.data_not_found') }}
             </div>
             <div v-else class="space-y-2 text-xs mb-3">
-              <div v-for="(p, productIdx) in (item as StockAdjustment).in_products" :key="p.ulid" class="flex gap-2">
+              <div v-for="(p, productIdx) in (item as StockAdjustment).in_items" :key="p.ulid" class="flex gap-2">
                 <div class="w-6 text-right text-slate-500">{{ productIdx + 1 }}.</div>
                 <div class="flex-1">
                   <div class="font-medium break-all">
                     [{{ p.product_unit.code }}] {{ p.product_unit.product.name }}
                   </div>
                   <div class="text-slate-500">
-                    {{ t('views.stock_adjustment_in_product.fields.qty') }}:
+                    {{ t('views.stock_adjustment_in_item.fields.qty') }}:
                     <span class="font-medium">{{ formatCurrency(p.qty) }} {{ p.product_unit.unit.name }}</span>
                   </div>
                   <div v-if="p.product_unit?.product?.is_use_serial_number" class="text-slate-500 mt-0.5">
@@ -499,21 +499,21 @@ const showAlertPlaceholder = (
               </div>
             </div>
             <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
-              {{ t('views.stock_adjustment.field_groups.out_products') }}
+              {{ t('views.stock_adjustment.field_groups.out_items') }}
             </div>
-            <div v-if="((item as StockAdjustment).out_products?.length ?? 0) === 0"
+            <div v-if="((item as StockAdjustment).out_items?.length ?? 0) === 0"
               class="text-slate-500 text-xs italic">
               {{ t('components.data-list.data_not_found') }}
             </div>
             <div v-else class="space-y-2 text-xs">
-              <div v-for="(p, productIdx) in (item as StockAdjustment).out_products" :key="p.ulid" class="flex gap-2">
+              <div v-for="(p, productIdx) in (item as StockAdjustment).out_items" :key="p.ulid" class="flex gap-2">
                 <div class="w-6 text-right text-slate-500">{{ productIdx + 1 }}.</div>
                 <div class="flex-1">
                   <div class="font-medium break-all">
                     [{{ p.product_unit.code }}] {{ p.product_unit.product.name }}
                   </div>
                   <div class="text-slate-500">
-                    {{ t('views.stock_adjustment_in_product.fields.qty') }}:
+                    {{ t('views.stock_adjustment_in_item.fields.qty') }}:
                     <span class="font-medium">{{ formatCurrency(p.qty) }} {{ p.product_unit.unit.name }}</span>
                   </div>
                   <div v-if="p.product_unit?.product?.is_use_serial_number" class="text-slate-500 mt-0.5">

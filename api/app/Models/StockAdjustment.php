@@ -27,17 +27,17 @@ class StockAdjustment extends Model
         'out_warehouse_id',
         'remarks',
         'is_posted',
-        'total_incoming_product_qty',
-        'total_incoming_product_cogs',
-        'total_outgoing_product_qty',
+        'total_incoming_item_qty',
+        'total_incoming_item_cogs',
+        'total_outgoing_item_qty',
     ];
 
     protected $casts = [
         'is_posted' => 'boolean',
         'date' => 'datetime',
-        'total_incoming_product_qty' => 'decimal:8',
-        'total_incoming_product_cogs' => 'decimal:8',
-        'total_outgoing_product_qty' => 'decimal:8',
+        'total_incoming_item_qty' => 'decimal:8',
+        'total_incoming_item_cogs' => 'decimal:8',
+        'total_outgoing_item_qty' => 'decimal:8',
     ];
 
     public function company()
@@ -65,14 +65,14 @@ class StockAdjustment extends Model
         return $this->belongsTo(Warehouse::class, 'out_warehouse_id')->withTrashed();
     }
 
-    public function inProducts()
+    public function inItems()
     {
-        return $this->hasMany(StockAdjustmentInProduct::class);
+        return $this->hasMany(StockAdjustmentInItem::class);
     }
 
-    public function outProducts()
+    public function outItems()
     {
-        return $this->hasMany(StockAdjustmentOutProduct::class);
+        return $this->hasMany(StockAdjustmentOutItem::class);
     }
 
     public function scopeSearch($query, string $search)

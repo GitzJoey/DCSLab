@@ -167,8 +167,8 @@ class StockAdjustmentController extends BaseController
                 outWarehouseId: $validatedRequest['out_warehouse_id'] ?? null,
                 remarks: $validatedRequest['remarks'] ?? null,
                 isPosted: $validatedRequest['is_posted'],
-                inProducts: $validatedRequest['in_products'] ?? [],
-                outProducts: $validatedRequest['out_products'] ?? [],
+                inItems: $validatedRequest['in_items'] ?? [],
+                outItems: $validatedRequest['out_items'] ?? [],
             );
 
             $result = $this->stockAdjustmentActions->create($data);
@@ -213,10 +213,10 @@ class StockAdjustmentController extends BaseController
                     outWarehouseId: $validatedRequest['out_warehouse_id'] ?? null,
                     remarks: $validatedRequest['remarks'] ?? null,
                     isPosted: $validatedRequest['is_posted'],
-                    deleteInProductIds: $validatedRequest['delete_in_product_ids'] ?? [],
-                    inProducts: $validatedRequest['in_products'] ?? [],
-                    deleteOutProductIds: $validatedRequest['delete_out_product_ids'] ?? [],
-                    outProducts: $validatedRequest['out_products'] ?? [],
+                    deleteInItemIds: $validatedRequest['delete_in_item_ids'] ?? [],
+                    inItems: $validatedRequest['in_items'] ?? [],
+                    deleteOutItemIds: $validatedRequest['delete_out_item_ids'] ?? [],
+                    outItems: $validatedRequest['out_items'] ?? [],
                 )
             );
 

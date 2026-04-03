@@ -44,8 +44,8 @@ export default class StockAdjustmentService {
       out_warehouse_id: '',
       remarks: '',
       is_posted: true,
-      in_products: [] as NonNullable<StockAdjustmentStoreRequest['in_products']>,
-      out_products: [] as NonNullable<StockAdjustmentStoreRequest['out_products']>,
+      in_items: [] as NonNullable<StockAdjustmentStoreRequest['in_items']>,
+      out_items: [] as NonNullable<StockAdjustmentStoreRequest['out_items']>,
     });
 
     return form;
@@ -74,10 +74,10 @@ export default class StockAdjustmentService {
       out_warehouse_id: '',
       remarks: '',
       is_posted: false,
-      delete_in_product_ids: [] as NonNullable<StockAdjustmentUpdateRequest['delete_in_product_ids']>,
-      in_products: [] as NonNullable<StockAdjustmentUpdateRequest['in_products']>,
-      delete_out_product_ids: [] as NonNullable<StockAdjustmentUpdateRequest['delete_out_product_ids']>,
-      out_products: [] as NonNullable<StockAdjustmentUpdateRequest['out_products']>,
+      delete_in_item_ids: [] as NonNullable<StockAdjustmentUpdateRequest['delete_in_item_ids']>,
+      in_items: [] as NonNullable<StockAdjustmentUpdateRequest['in_items']>,
+      delete_out_item_ids: [] as NonNullable<StockAdjustmentUpdateRequest['delete_out_item_ids']>,
+      out_items: [] as NonNullable<StockAdjustmentUpdateRequest['out_items']>,
     });
 
     return form;

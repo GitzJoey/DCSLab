@@ -161,7 +161,7 @@ return [
         'name' => 'Nama',
     ],
 
-    'stock_adjustment_in_product' => [
+    'stock_adjustment_in_item' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
         'stock_adjustment_id' => 'Penyesuaian Stok',
@@ -173,15 +173,15 @@ return [
         'remarks' => 'Catatan',
     ],
 
-    'stock_adjustment_in_product_serial' => [
+    'stock_adjustment_in_item_serial' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
         'stock_adjustment_id' => 'Penyesuaian Stok',
-        'stock_adjustment_in_product_id' => 'Produk Masuk',
+        'stock_adjustment_in_item_id' => 'Penyesuaian Stok Masuk per Item',
         'serial' => 'Serial',
     ],
 
-    'stock_adjustment_out_product' => [
+    'stock_adjustment_out_item' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
         'stock_adjustment_id' => 'Penyesuaian Stok',
@@ -192,11 +192,11 @@ return [
         'remarks' => 'Catatan',
     ],
 
-    'stock_adjustment_out_product_serial' => [
+    'stock_adjustment_out_item_serial' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
         'stock_adjustment_id' => 'Penyesuaian Stok',
-        'stock_adjustment_out_product_id' => 'Produk Keluar',
+        'stock_adjustment_out_item_id' => 'Penyesuaian Stok Keluar per Item',
         'serial' => 'Serial',
     ],
 
@@ -257,11 +257,11 @@ return [
         'category_id' => 'Kategori',
         'remarks' => 'Catatan',
         'is_posted' => 'Diposting',
-        'total_incoming_product_qty' => 'Total Qty Masuk',
-        'total_incoming_product_cogs' => 'Total HPP Masuk',
-        'total_outgoing_product_qty' => 'Total Qty Keluar',
+        'total_incoming_item_qty' => 'Total Qty Masuk',
+        'total_incoming_item_cogs' => 'Total HPP Masuk',
+        'total_outgoing_item_qty' => 'Total Qty Keluar',
     ],
-    'stock_adjustment_in_product' => [
+    'stock_adjustment_in_item' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
         'stock_adjustment_id' => 'Penyesuaian Stok',
@@ -272,7 +272,7 @@ return [
         'product_unit_total_cogs' => 'Total HPP',
         'remarks' => 'Catatan',
     ],
-    'stock_adjustment_out_product' => [
+    'stock_adjustment_out_item' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
         'stock_adjustment_id' => 'Penyesuaian Stok',

@@ -55,7 +55,7 @@ class StockTransferItemUpdateRequest extends FormRequest
             'stock_transfer_id' => trans('validation_attributes.stock_transfer_item.stock_transfer'),
             'qty' => trans('validation_attributes.stock_transfer_item.qty'),
             'product_unit_id' => trans('validation_attributes.stock_transfer_item.product_unit'),
-            'product_unit_conversion_value' => trans('validation_attributes.stock_adjustment_in_product.product_unit_conversion_value'),
+            'product_unit_conversion_value' => trans('validation_attributes.stock_adjustment_in_item.product_unit_conversion_value'),
             'remarks' => trans('validation_attributes.stock_transfer_item.remarks'),
         ];
     }

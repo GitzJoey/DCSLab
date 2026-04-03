@@ -21,8 +21,8 @@
   "field_groups": {
     "company_info": "Informasi Perusahaan",
     "stock_adjustment_data": "Data Penyesuaian Stok",
-    "in_products": "Produk Masuk",
-    "out_products": "Produk Keluar"
+    "in_items": "Item Masuk",
+    "out_items": "Item Keluar"
   },
   "fields": {
     "company_id": "Perusahaan",
@@ -39,8 +39,8 @@
     "out_warehouse_id": "Gudang Keluar",
     "remarks": "Catatan",
     "is_posted": "Diposting",
-    "in_products": "Produk Masuk",
-    "out_products": "Produk Keluar"
+    "in_items": "Item Masuk",
+    "out_items": "Item Keluar"
   },
   "alert": {
     "create": {

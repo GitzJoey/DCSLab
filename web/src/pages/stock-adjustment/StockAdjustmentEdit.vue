@@ -32,8 +32,8 @@ import CacheService from '@/services/CacheService';
 import { ErrorCode } from '@/types/enums/ErrorCode';
 import { type DropDownOption } from '@/types/models/DropDownOption';
 import {
-  type StockAdjustmentInProductNestedUpdateRequest,
-  type StockAdjustmentOutProductNestedUpdateRequest,
+  type StockAdjustmentInItemNestedUpdateRequest,
+  type StockAdjustmentOutItemNestedUpdateRequest,
 } from '@/types/services/stock-adjustment/StockAdjustmentRequest';
 import type { StockAdjustment } from '@/types/models/StockAdjustment';
 import { debounce } from 'lodash';
@@ -43,33 +43,33 @@ import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertP
 // #region Declarations
 const stockAdjustmentData = ref<StockAdjustment | null>(null);
 
-type StockAdjustmentInProductFormItem = {
-  id: StockAdjustmentInProductNestedUpdateRequest['id'];
-  qty: StockAdjustmentInProductNestedUpdateRequest['qty'];
-  product_unit_id: StockAdjustmentInProductNestedUpdateRequest['product_unit_id'];
+type StockAdjustmentInItemFormItem = {
+  id: StockAdjustmentInItemNestedUpdateRequest['id'];
+  qty: StockAdjustmentInItemNestedUpdateRequest['qty'];
+  product_unit_id: StockAdjustmentInItemNestedUpdateRequest['product_unit_id'];
   product_unit_product_code?: string | null;
   product_unit_product_name?: string | null;
   product_unit_unit_name?: string | null;
   product_unit_base_unit_name?: string | null;
-  product_unit_conversion_value: StockAdjustmentInProductNestedUpdateRequest['product_unit_conversion_value'];
-  product_unit_cogs: StockAdjustmentInProductNestedUpdateRequest['product_unit_cogs'];
+  product_unit_conversion_value: StockAdjustmentInItemNestedUpdateRequest['product_unit_conversion_value'];
+  product_unit_cogs: StockAdjustmentInItemNestedUpdateRequest['product_unit_cogs'];
   product_unit_total_cogs?: number | null;
-  remarks: StockAdjustmentInProductNestedUpdateRequest['remarks'];
+  remarks: StockAdjustmentInItemNestedUpdateRequest['remarks'];
   is_use_serial_number?: boolean;
   serials: { id: string | null; serial: string }[];
   delete_serial_ids: string[];
 };
 
-type StockAdjustmentOutProductFormItem = {
-  id: StockAdjustmentOutProductNestedUpdateRequest['id'];
-  qty: StockAdjustmentOutProductNestedUpdateRequest['qty'];
-  product_unit_id: StockAdjustmentOutProductNestedUpdateRequest['product_unit_id'];
+type StockAdjustmentOutItemFormItem = {
+  id: StockAdjustmentOutItemNestedUpdateRequest['id'];
+  qty: StockAdjustmentOutItemNestedUpdateRequest['qty'];
+  product_unit_id: StockAdjustmentOutItemNestedUpdateRequest['product_unit_id'];
   product_unit_product_code?: string | null;
   product_unit_product_name?: string | null;
   product_unit_unit_name?: string | null;
   product_unit_base_unit_name?: string | null;
-  product_unit_conversion_value: StockAdjustmentOutProductNestedUpdateRequest['product_unit_conversion_value'];
-  remarks: StockAdjustmentOutProductNestedUpdateRequest['remarks'];
+  product_unit_conversion_value: StockAdjustmentOutItemNestedUpdateRequest['product_unit_conversion_value'];
+  remarks: StockAdjustmentOutItemNestedUpdateRequest['remarks'];
   is_use_serial_number?: boolean;
   serials: { id: string | null; serial: string }[];
   delete_serial_ids: string[];
@@ -89,8 +89,8 @@ type ProductUnitOption = {
   is_use_serial_number: boolean;
 };
 
-const inProductsRemarksExpanded = ref<boolean[]>([]);
-const outProductsRemarksExpanded = ref<boolean[]>([]);
+const inItemsRemarksExpanded = ref<boolean[]>([]);
+const outItemsRemarksExpanded = ref<boolean[]>([]);
 
 const { t } = useI18n();
 const router = useRouter();
@@ -140,9 +140,9 @@ const productSearchText = ref<string>('');
 const isSearchingProductUnit = ref<boolean>(false);
 const productUnitOptions = ref<Array<ProductUnitOption>>([]);
 const editingInProductIndex = ref<number | null>(null);
-const inProductQtyToFocus = ref<number | null>(null);
+const inItemQtyToFocus = ref<number | null>(null);
 const editingOutProductIndex = ref<number | null>(null);
-const outProductQtyToFocus = ref<number | null>(null);
+const outItemQtyToFocus = ref<number | null>(null);
 const productUnitSelectionTarget = ref<'in' | 'out'>('in');
 
 const cards = ref<Array<TwoColumnsLayoutCards>>([
@@ -155,21 +155,21 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     state: CardState.Expanded,
   },
   {
-    title: 'views.stock_adjustment.field_groups.in_products',
+    title: 'views.stock_adjustment.field_groups.in_items',
     state: CardState.Collapsed,
   },
   {
-    title: 'views.stock_adjustment.field_groups.out_products',
+    title: 'views.stock_adjustment.field_groups.out_items',
     state: CardState.Collapsed,
   },
   { title: '', state: CardState.Hidden, id: 'button' },
 ]);
 
-const inProductsForm = computed<StockAdjustmentInProductFormItem[]>(
-  () => stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[],
+const inItemsForm = computed<StockAdjustmentInItemFormItem[]>(
+  () => stockAdjustmentForm.in_items as StockAdjustmentInItemFormItem[],
 );
-const outProductsForm = computed<StockAdjustmentOutProductFormItem[]>(
-  () => stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[],
+const outItemsForm = computed<StockAdjustmentOutItemFormItem[]>(
+  () => stockAdjustmentForm.out_items as StockAdjustmentOutItemFormItem[],
 );
 // #endregion
 
@@ -193,10 +193,10 @@ const handleExpandCard = (index: number) => {
 };
 
 watch(
-  () => stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[],
-  (items: StockAdjustmentInProductFormItem[]) => {
+  () => stockAdjustmentForm.in_items as StockAdjustmentInItemFormItem[],
+  (items: StockAdjustmentInItemFormItem[]) => {
     if (!items) return;
-    items.forEach((item: StockAdjustmentInProductFormItem) => {
+    items.forEach((item: StockAdjustmentInItemFormItem) => {
       const qty = Number(item.qty ?? 0);
       const cogs = Number(item.product_unit_cogs ?? 0);
       item.product_unit_total_cogs = qty * cogs;
@@ -254,7 +254,7 @@ const loadData = async () => {
 
     stockAdjustmentData.value = data;
 
-    const inProducts: StockAdjustmentInProductFormItem[] = (data.in_products || []).map((item: any) => {
+    const inItems: StockAdjustmentInItemFormItem[] = (data.in_items || []).map((item: any) => {
       const productUnit = item.product_unit;
       const unit = productUnit?.unit;
       const product = (productUnit as any)?.product;
@@ -277,7 +277,7 @@ const loadData = async () => {
       };
     });
 
-    const outProducts: StockAdjustmentOutProductFormItem[] = (data.out_products || []).map((item: any) => {
+    const outItems: StockAdjustmentOutItemFormItem[] = (data.out_items || []).map((item: any) => {
       const productUnit = item.product_unit;
       const unit = productUnit?.unit;
       const product = (productUnit as any)?.product;
@@ -308,26 +308,26 @@ const loadData = async () => {
       out_warehouse_id: data.out_warehouse?.id ?? '',
       remarks: data.remarks ?? '',
       is_posted: data.is_posted,
-      delete_in_product_ids: [],
-      in_products: inProducts as any,
-      delete_out_product_ids: [],
-      out_products: outProducts as any,
+      delete_in_item_ids: [],
+      in_items: inItems as any,
+      delete_out_item_ids: [],
+      out_items: outItems as any,
     } as any);
 
-    inProductsRemarksExpanded.value = inProducts.map(() => false);
-    outProductsRemarksExpanded.value = outProducts.map(() => false);
+    inItemsRemarksExpanded.value = inItems.map(() => false);
+    outItemsRemarksExpanded.value = outItems.map(() => false);
 
-    if (inProducts.length > 0) {
+    if (inItems.length > 0) {
       cards.value = cards.value.map((card) =>
-        card.title === 'views.stock_adjustment.field_groups.in_products'
+        card.title === 'views.stock_adjustment.field_groups.in_items'
           ? { ...card, state: CardState.Expanded }
           : card,
       );
     }
 
-    if (outProducts.length > 0) {
+    if (outItems.length > 0) {
       cards.value = cards.value.map((card) =>
-        card.title === 'views.stock_adjustment.field_groups.out_products'
+        card.title === 'views.stock_adjustment.field_groups.out_items'
           ? { ...card, state: CardState.Expanded }
           : card,
       );
@@ -429,9 +429,9 @@ const clearOutWarehouse = () => {
 };
 // #endregion
 
-// #region Methods - In Products
+// #region Methods - In Items
 const selectProductUnitForIn = (option: ProductUnitOption) => {
-  const baseData: Partial<StockAdjustmentInProductFormItem> = {
+  const baseData: Partial<StockAdjustmentInItemFormItem> = {
     product_unit_id: option.product_unit_id,
     product_unit_product_code: option.product_unit_code,
     product_unit_product_name: option.product_name,
@@ -446,21 +446,21 @@ const selectProductUnitForIn = (option: ProductUnitOption) => {
   let targetIndex: number;
 
   if (editingInProductIndex.value === null) {
-    const item: StockAdjustmentInProductFormItem = {
+    const item: StockAdjustmentInItemFormItem = {
       id: null,
       qty: 0,
       remarks: '',
       delete_serial_ids: [],
       ...baseData,
-    } as StockAdjustmentInProductFormItem;
+    } as StockAdjustmentInItemFormItem;
 
-    stockAdjustmentForm.in_products.push(item);
-    inProductsRemarksExpanded.value.push(false);
-    targetIndex = stockAdjustmentForm.in_products.length - 1;
+    stockAdjustmentForm.in_items.push(item);
+    inItemsRemarksExpanded.value.push(false);
+    targetIndex = stockAdjustmentForm.in_items.length - 1;
   } else {
     const index = editingInProductIndex.value;
-    const current = stockAdjustmentForm.in_products[index] as StockAdjustmentInProductFormItem;
-    stockAdjustmentForm.in_products[index] = {
+    const current = stockAdjustmentForm.in_items[index] as StockAdjustmentInItemFormItem;
+    stockAdjustmentForm.in_items[index] = {
       ...current,
       ...baseData,
     };
@@ -469,17 +469,17 @@ const selectProductUnitForIn = (option: ProductUnitOption) => {
 
   showProductUnitModal.value = false;
   editingInProductIndex.value = null;
-  inProductQtyToFocus.value = targetIndex;
+  inItemQtyToFocus.value = targetIndex;
 
   Object.keys(stockAdjustmentForm.errors).forEach((key) => {
-    if (key.startsWith('in_products.')) {
+    if (key.startsWith('in_items.')) {
       stockAdjustmentForm.forgetError(key as any);
     }
   });
 };
 
 const selectProductUnitForOut = (option: ProductUnitOption) => {
-  const baseData: Partial<StockAdjustmentOutProductFormItem> = {
+  const baseData: Partial<StockAdjustmentOutItemFormItem> = {
     product_unit_id: option.product_unit_id,
     product_unit_product_code: option.product_unit_code,
     product_unit_product_name: option.product_name,
@@ -493,21 +493,21 @@ const selectProductUnitForOut = (option: ProductUnitOption) => {
   let targetIndex: number;
 
   if (editingOutProductIndex.value === null) {
-    const item: StockAdjustmentOutProductFormItem = {
+    const item: StockAdjustmentOutItemFormItem = {
       id: null,
       qty: 0,
       remarks: '',
       delete_serial_ids: [],
       ...baseData,
-    } as StockAdjustmentOutProductFormItem;
+    } as StockAdjustmentOutItemFormItem;
 
-    stockAdjustmentForm.out_products.push(item);
-    outProductsRemarksExpanded.value.push(false);
-    targetIndex = stockAdjustmentForm.out_products.length - 1;
+    stockAdjustmentForm.out_items.push(item);
+    outItemsRemarksExpanded.value.push(false);
+    targetIndex = stockAdjustmentForm.out_items.length - 1;
   } else {
     const index = editingOutProductIndex.value;
-    const current = stockAdjustmentForm.out_products[index] as StockAdjustmentOutProductFormItem;
-    stockAdjustmentForm.out_products[index] = {
+    const current = stockAdjustmentForm.out_items[index] as StockAdjustmentOutItemFormItem;
+    stockAdjustmentForm.out_items[index] = {
       ...current,
       ...baseData,
     };
@@ -516,10 +516,10 @@ const selectProductUnitForOut = (option: ProductUnitOption) => {
 
   showProductUnitModal.value = false;
   editingOutProductIndex.value = null;
-  outProductQtyToFocus.value = targetIndex;
+  outItemQtyToFocus.value = targetIndex;
 
   Object.keys(stockAdjustmentForm.errors).forEach((key) => {
-    if (key.startsWith('out_products.')) {
+    if (key.startsWith('out_items.')) {
       stockAdjustmentForm.forgetError(key as any);
     }
   });
@@ -534,11 +534,11 @@ const selectProductUnit = (option: ProductUnitOption) => {
 };
 
 const handleProductUnitModalAfterLeave = () => {
-  const inIndex = inProductQtyToFocus.value;
-  const outIndex = outProductQtyToFocus.value;
+  const inIndex = inItemQtyToFocus.value;
+  const outIndex = outItemQtyToFocus.value;
 
-  inProductQtyToFocus.value = null;
-  outProductQtyToFocus.value = null;
+  inItemQtyToFocus.value = null;
+  outItemQtyToFocus.value = null;
 
   if (inIndex === null && outIndex === null) return;
 
@@ -631,20 +631,20 @@ const changeInProductProductUnit = (index: number) => {
 };
 
 const toggleInProductRemarks = (index: number) => {
-  const current = inProductsRemarksExpanded.value[index] ?? false;
-  inProductsRemarksExpanded.value[index] = !current;
+  const current = inItemsRemarksExpanded.value[index] ?? false;
+  inItemsRemarksExpanded.value[index] = !current;
 };
 
 const addInProductSerial = (index: number) => {
-  const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+  const items = stockAdjustmentForm.in_items as StockAdjustmentInItemFormItem[];
   const item = items[index];
   if (!item) return;
   item.serials.push({ id: null, serial: '' });
-  stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+  stockAdjustmentForm.validate(`in_items.${index}.serials` as any);
 };
 
 const removeInProductSerial = (index: number, serialIndex: number) => {
-  const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+  const items = stockAdjustmentForm.in_items as StockAdjustmentInItemFormItem[];
   const item = items[index];
   if (!item) return;
   const serial = item.serials[serialIndex];
@@ -654,29 +654,29 @@ const removeInProductSerial = (index: number, serialIndex: number) => {
   }
 
   item.serials.splice(serialIndex, 1);
-  stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+  stockAdjustmentForm.validate(`in_items.${index}.serials` as any);
 };
 
 const removeInProduct = (index: number) => {
-  const items = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
+  const items = stockAdjustmentForm.in_items as StockAdjustmentInItemFormItem[];
   const item = items[index];
 
   if (item && item.id) {
-    stockAdjustmentForm.delete_in_product_ids.push(item.id);
+    stockAdjustmentForm.delete_in_item_ids.push(item.id);
   }
 
   items.splice(index, 1);
-  inProductsRemarksExpanded.value.splice(index, 1);
+  inItemsRemarksExpanded.value.splice(index, 1);
 
   Object.keys(stockAdjustmentForm.errors).forEach((key) => {
-    if (key.startsWith('in_products.')) {
+    if (key.startsWith('in_items.')) {
       stockAdjustmentForm.forgetError(key as any);
     }
   });
 };
 // #endregion
 
-// #region Methods - Out Products
+// #region Methods - Out Items
 const addOutProduct = () => {
   productSearchText.value = '';
   productUnitOptions.value = [];
@@ -696,24 +696,24 @@ const changeOutProductProductUnit = (index: number) => {
 };
 
 const toggleOutProductRemarks = (index: number) => {
-  const current = outProductsRemarksExpanded.value[index] ?? false;
-  outProductsRemarksExpanded.value = [
-    ...outProductsRemarksExpanded.value.slice(0, index),
+  const current = outItemsRemarksExpanded.value[index] ?? false;
+  outItemsRemarksExpanded.value = [
+    ...outItemsRemarksExpanded.value.slice(0, index),
     !current,
-    ...outProductsRemarksExpanded.value.slice(index + 1),
+    ...outItemsRemarksExpanded.value.slice(index + 1),
   ];
 };
 
 const addOutProductSerial = (index: number) => {
-  const items = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+  const items = stockAdjustmentForm.out_items as StockAdjustmentOutItemFormItem[];
   const item = items[index];
   if (!item) return;
   item.serials.push({ id: null, serial: '' });
-  stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+  stockAdjustmentForm.validate(`out_items.${index}.serials` as any);
 };
 
 const removeOutProductSerial = (index: number, serialIndex: number) => {
-  const items = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+  const items = stockAdjustmentForm.out_items as StockAdjustmentOutItemFormItem[];
   const item = items[index];
   if (!item) return;
   const serial = item.serials[serialIndex];
@@ -723,22 +723,22 @@ const removeOutProductSerial = (index: number, serialIndex: number) => {
   }
 
   item.serials.splice(serialIndex, 1);
-  stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+  stockAdjustmentForm.validate(`out_items.${index}.serials` as any);
 };
 
 const removeOutProduct = (index: number) => {
-  const items = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
+  const items = stockAdjustmentForm.out_items as StockAdjustmentOutItemFormItem[];
   const item = items[index];
 
   if (item && item.id) {
-    stockAdjustmentForm.delete_out_product_ids.push(item.id);
+    stockAdjustmentForm.delete_out_item_ids.push(item.id);
   }
 
   items.splice(index, 1);
-  outProductsRemarksExpanded.value.splice(index, 1);
+  outItemsRemarksExpanded.value.splice(index, 1);
 
   Object.keys(stockAdjustmentForm.errors).forEach((key) => {
-    if (key.startsWith('out_products.')) {
+    if (key.startsWith('out_items.')) {
       stockAdjustmentForm.forgetError(key as any);
     }
   });
@@ -755,8 +755,8 @@ const scrollToError = (id: string): void => {
 const resetForm = async () => {
   stockAdjustmentForm.reset();
   stockAdjustmentForm.setErrors({});
-  inProductsRemarksExpanded.value = [];
-  outProductsRemarksExpanded.value = [];
+  inItemsRemarksExpanded.value = [];
+  outItemsRemarksExpanded.value = [];
   await loadData();
 };
 
@@ -782,9 +782,9 @@ const onSubmit = async () => {
     return;
   }
 
-  const originalInProducts = stockAdjustmentForm.in_products as StockAdjustmentInProductFormItem[];
-  const cleanedInProducts: StockAdjustmentInProductNestedUpdateRequest[] = originalInProducts.map(
-    (item: StockAdjustmentInProductFormItem) => ({
+  const originalInProducts = stockAdjustmentForm.in_items as StockAdjustmentInItemFormItem[];
+  const cleanedInProducts: StockAdjustmentInItemNestedUpdateRequest[] = originalInProducts.map(
+    (item: StockAdjustmentInItemFormItem) => ({
       id: item.id,
       qty: item.qty,
       product_unit_id: item.product_unit_id,
@@ -799,9 +799,9 @@ const onSubmit = async () => {
     }),
   );
 
-  const originalOutProducts = stockAdjustmentForm.out_products as StockAdjustmentOutProductFormItem[];
-  const cleanedOutProducts: StockAdjustmentOutProductNestedUpdateRequest[] = originalOutProducts.map(
-    (item: StockAdjustmentOutProductFormItem) => ({
+  const originalOutProducts = stockAdjustmentForm.out_items as StockAdjustmentOutItemFormItem[];
+  const cleanedOutProducts: StockAdjustmentOutItemNestedUpdateRequest[] = originalOutProducts.map(
+    (item: StockAdjustmentOutItemFormItem) => ({
       id: item.id,
       qty: item.qty,
       product_unit_id: item.product_unit_id,
@@ -818,8 +818,8 @@ const onSubmit = async () => {
   const backupInProducts = [...originalInProducts];
   const backupOutProducts = [...originalOutProducts];
 
-  stockAdjustmentForm.in_products = cleanedInProducts as any;
-  stockAdjustmentForm.out_products = cleanedOutProducts as any;
+  stockAdjustmentForm.in_items = cleanedInProducts as any;
+  stockAdjustmentForm.out_items = cleanedOutProducts as any;
 
   emits('loading-state', true);
 
@@ -829,8 +829,8 @@ const onSubmit = async () => {
     emits('update-profile');
     router.push({ name: 'side-menu-stock-adjustment-list' });
   } catch (error) {
-    stockAdjustmentForm.in_products = backupInProducts as any;
-    stockAdjustmentForm.out_products = backupOutProducts as any;
+    stockAdjustmentForm.in_items = backupInProducts as any;
+    stockAdjustmentForm.out_items = backupOutProducts as any;
     const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
     showAlertPlaceholder('danger', '', errorList);
   } finally {
@@ -956,23 +956,23 @@ const onSubmit = async () => {
       <!-- in_product -->
       <template #card-items-2>
         <div class="p-5">
-          <div v-if="stockAdjustmentForm.in_products.length === 0" class="text-slate-500 text-sm">
+          <div v-if="stockAdjustmentForm.in_items.length === 0" class="text-slate-500 text-sm">
             {{ t('components.data-list.data_not_found') }}
           </div>
 
           <!-- in_product list -->
           <div v-else class="space-y-5">
-            <div v-for="(item, index) in inProductsForm" :key="index"
+            <div v-for="(item, index) in inItemsForm" :key="index"
               class="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-4">
               <!-- in_product actions -->
               <div class="flex items-center justify-between mb-3">
                 <div class="font-medium text-sm">
-                  {{ t('views.stock_adjustment_in_product.page_title') }} #{{ index + 1 }}
+                  {{ t('views.stock_adjustment_in_item.page_title') }} #{{ index + 1 }}
                 </div>
                 <div class="flex items-center gap-2">
                   <Button type="button" class="text-xs text-slate-500 hover:text-primary"
                     @click="toggleInProductRemarks(index)">
-                    {{ inProductsRemarksExpanded[index] ? '▲' : '▼' }}
+                    {{ inItemsRemarksExpanded[index] ? '▲' : '▼' }}
                   </Button>
                   <Button type="button" variant="outline-secondary" @click="removeInProduct(index)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
@@ -985,21 +985,21 @@ const onSubmit = async () => {
                 <!-- qty -->
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel :class="{
-                    'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any),
+                    'text-danger': stockAdjustmentForm.invalid(`in_items.${index}.qty` as any),
                   }">
-                    {{ t('views.stock_adjustment_in_product.fields.qty') }}
+                    {{ t('views.stock_adjustment_in_item.fields.qty') }}
                   </FormLabel>
                   <FormInputCurrency :id="`in-product-qty-${index}`" v-model="item.qty"
                     @change="
-                      stockAdjustmentForm.validate(`in_products.${index}.qty` as any);
-                      stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+                      stockAdjustmentForm.validate(`in_items.${index}.qty` as any);
+                      stockAdjustmentForm.validate(`in_items.${index}.serials` as any);
                     " :class="[
                       'text-right',
                       {
-                        'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.qty` as any),
+                        'border-danger': stockAdjustmentForm.invalid(`in_items.${index}.qty` as any),
                       },
                     ]" />
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.qty`]" />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_items.${index}.qty`]" />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_unit_name }}
                   </div>
@@ -1008,9 +1008,9 @@ const onSubmit = async () => {
                 <!-- product description (name + code) -->
                 <div class="col-span-12 lg:col-span-5">
                   <FormLabel :class="{
-                    'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_id` as any),
+                    'text-danger': stockAdjustmentForm.invalid(`in_items.${index}.product_unit_id` as any),
                   }">
-                    {{ t('views.stock_adjustment_in_product.table.cols.product') }}
+                    {{ t('views.stock_adjustment_in_item.table.cols.product') }}
                   </FormLabel>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
@@ -1026,7 +1026,7 @@ const onSubmit = async () => {
                     </Button>
                   </div>
                   <FormErrorMessages
-                    :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_id`]" />
+                    :messages="(stockAdjustmentForm.errors as any)[`in_items.${index}.product_unit_id`]" />
                   <div class="text-sm text-slate-500 font-bold mt-1">
                     {{ item.product_unit_product_code }}
                   </div>
@@ -1036,25 +1036,25 @@ const onSubmit = async () => {
                 <div class="col-span-12 lg:col-span-1">
                   <FormLabel :class="{
                     'text-danger': stockAdjustmentForm.invalid(
-                      `in_products.${index}.product_unit_conversion_value` as any,
+                      `in_items.${index}.product_unit_conversion_value` as any,
                     ),
                   }">
-                    {{ t('views.stock_adjustment_in_product.fields.product_unit_conversion_value') }}
+                    {{ t('views.stock_adjustment_in_item.fields.product_unit_conversion_value') }}
                   </FormLabel>
                   <FormInputCurrency v-model="item.product_unit_conversion_value" tabindex="-1"
                     @change="
-                      stockAdjustmentForm.validate(`in_products.${index}.product_unit_conversion_value` as any);
-                      stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+                      stockAdjustmentForm.validate(`in_items.${index}.product_unit_conversion_value` as any);
+                      stockAdjustmentForm.validate(`in_items.${index}.serials` as any);
                     "
                     :class="[
                       'text-right',
                       {
                         'border-danger': stockAdjustmentForm.invalid(
-                          `in_products.${index}.product_unit_conversion_value` as any,
+                          `in_items.${index}.product_unit_conversion_value` as any,
                         ),
                       },
                     ]" />
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_conversion_value`]
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_items.${index}.product_unit_conversion_value`]
                     " />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_base_unit_name }}
@@ -1064,19 +1064,19 @@ const onSubmit = async () => {
                 <!-- product_unit_cogs -->
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel :class="{
-                    'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_cogs` as any),
+                    'text-danger': stockAdjustmentForm.invalid(`in_items.${index}.product_unit_cogs` as any),
                   }">
-                    {{ t('views.stock_adjustment_in_product.fields.product_unit_cogs') }}
+                    {{ t('views.stock_adjustment_in_item.fields.product_unit_cogs') }}
                   </FormLabel>
                   <FormInputCurrency v-model="item.product_unit_cogs"
-                    @change="stockAdjustmentForm.validate(`in_products.${index}.product_unit_cogs` as any)" :class="[
+                    @change="stockAdjustmentForm.validate(`in_items.${index}.product_unit_cogs` as any)" :class="[
                       'text-right',
                       {
-                        'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.product_unit_cogs` as any),
+                        'border-danger': stockAdjustmentForm.invalid(`in_items.${index}.product_unit_cogs` as any),
                       },
                     ]" />
                   <FormErrorMessages
-                    :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.product_unit_cogs`]" />
+                    :messages="(stockAdjustmentForm.errors as any)[`in_items.${index}.product_unit_cogs`]" />
                   <div v-if="
                     item.product_unit_conversion_value > 1 &&
                     item.product_unit_cogs &&
@@ -1090,7 +1090,7 @@ const onSubmit = async () => {
                 <!-- product_unit_total_cogs -->
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel>
-                    {{ t('views.stock_adjustment_in_product.fields.product_unit_total_cogs') }}
+                    {{ t('views.stock_adjustment_in_item.fields.product_unit_total_cogs') }}
                   </FormLabel>
                   <FormInputCurrency :model-value="item.product_unit_total_cogs ?? 0" readonly tabindex="-1"
                     class="text-right" />
@@ -1100,7 +1100,7 @@ const onSubmit = async () => {
                 <div v-if="item.is_use_serial_number" class="col-span-12">
                   <div class="flex items-center justify-between mb-2">
                     <FormLabel :class="{
-                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.serials` as any),
+                      'text-danger': stockAdjustmentForm.invalid(`in_items.${index}.serials` as any),
                     }">
                       {{ t('views.product.fields.serial_number') }}
                     </FormLabel>
@@ -1115,36 +1115,36 @@ const onSubmit = async () => {
                   <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
                       <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" :class="{
-                        'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.serials.${sIdx}.serial` as any),
+                        'border-danger': stockAdjustmentForm.invalid(`in_items.${index}.serials.${sIdx}.serial` as any),
                       }" @change="
-                        stockAdjustmentForm.validate(`in_products.${index}.serials.${sIdx}.serial` as any);
-                        stockAdjustmentForm.validate(`in_products.${index}.serials` as any);
+                        stockAdjustmentForm.validate(`in_items.${index}.serials.${sIdx}.serial` as any);
+                        stockAdjustmentForm.validate(`in_items.${index}.serials` as any);
                       " />
                       <Button type="button" variant="outline-secondary" @click="removeInProductSerial(index, sIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
                   </div>
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.serials`]" />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`in_items.${index}.serials`]" />
                   <FormErrorMessages
                     v-for="(_, sIdx) in item.serials"
                     :key="`in-products-serial-error-${index}-${sIdx}`"
-                    :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.serials.${sIdx}.serial`]"
+                    :messages="(stockAdjustmentForm.errors as any)[`in_items.${index}.serials.${sIdx}.serial`]"
                   />
                 </div>
 
-                <div v-if="inProductsRemarksExpanded[index]" class="col-span-12 space-y-3">
+                <div v-if="inItemsRemarksExpanded[index]" class="col-span-12 space-y-3">
                   <div>
                     <FormLabel :class="{
-                      'text-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
+                      'text-danger': stockAdjustmentForm.invalid(`in_items.${index}.remarks` as any),
                     }">
-                      {{ t('views.stock_adjustment_in_product.fields.remarks') }}
+                      {{ t('views.stock_adjustment_in_item.fields.remarks') }}
                     </FormLabel>
-                    <FormTextarea rows="2" v-model="stockAdjustmentForm.in_products[index].remarks" :class="{
-                      'border-danger': stockAdjustmentForm.invalid(`in_products.${index}.remarks` as any),
-                    }" @change="stockAdjustmentForm.validate(`in_products.${index}.remarks` as any)" />
+                    <FormTextarea rows="2" v-model="stockAdjustmentForm.in_items[index].remarks" :class="{
+                      'border-danger': stockAdjustmentForm.invalid(`in_items.${index}.remarks` as any),
+                    }" @change="stockAdjustmentForm.validate(`in_items.${index}.remarks` as any)" />
                     <FormErrorMessages
-                      :messages="(stockAdjustmentForm.errors as any)[`in_products.${index}.remarks`]" />
+                      :messages="(stockAdjustmentForm.errors as any)[`in_items.${index}.remarks`]" />
                   </div>
                 </div>
               </div>
@@ -1155,7 +1155,7 @@ const onSubmit = async () => {
           <div class="flex items-center justify-between mt-4">
             <FormLabel></FormLabel>
             <Button type="button" variant="primary" class="shadow-md" @click="addInProduct">
-              {{ t('views.stock_adjustment_in_product.actions.create') }}
+              {{ t('views.stock_adjustment_in_item.actions.create') }}
             </Button>
           </div>
         </div>
@@ -1164,22 +1164,22 @@ const onSubmit = async () => {
       <!-- out_product -->
       <template #card-items-3>
         <div class="p-5">
-          <div v-if="stockAdjustmentForm.out_products.length === 0" class="text-slate-500 text-sm">
+          <div v-if="stockAdjustmentForm.out_items.length === 0" class="text-slate-500 text-sm">
             {{ t('components.data-list.data_not_found') }}
           </div>
 
           <!-- out_product list -->
           <div v-else class="space-y-5">
-            <div v-for="(item, index) in outProductsForm" :key="index"
+            <div v-for="(item, index) in outItemsForm" :key="index"
               class="border border-slate-200/60 dark:border-darkmode-400 rounded-md p-4">
               <div class="flex items-center justify-between mb-3">
                 <div class="font-medium text-sm">
-                  {{ t('views.stock_adjustment_out_product.page_title') }} #{{ index + 1 }}
+                  {{ t('views.stock_adjustment_out_item.page_title') }} #{{ index + 1 }}
                 </div>
                 <div class="flex items-center gap-2">
                   <Button type="button" class="text-xs text-slate-500 hover:text-primary"
                     @click="toggleOutProductRemarks(index)">
-                    {{ outProductsRemarksExpanded[index] ? '▲' : '▼' }}
+                    {{ outItemsRemarksExpanded[index] ? '▲' : '▼' }}
                   </Button>
                   <Button type="button" variant="outline-secondary" @click="removeOutProduct(index)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
@@ -1191,21 +1191,21 @@ const onSubmit = async () => {
               <div class="grid grid-cols-12 gap-4 gap-y-3">
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel :class="{
-                    'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.qty` as any),
+                    'text-danger': stockAdjustmentForm.invalid(`out_items.${index}.qty` as any),
                   }">
-                    {{ t('views.stock_adjustment_out_product.fields.qty') }}
+                    {{ t('views.stock_adjustment_out_item.fields.qty') }}
                   </FormLabel>
                   <FormInputCurrency :id="`out-product-qty-${index}`" v-model="item.qty"
                     @change="
-                      stockAdjustmentForm.validate(`out_products.${index}.qty` as any);
-                      stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+                      stockAdjustmentForm.validate(`out_items.${index}.qty` as any);
+                      stockAdjustmentForm.validate(`out_items.${index}.serials` as any);
                     " :class="[
                       'text-right',
                       {
-                        'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.qty` as any),
+                        'border-danger': stockAdjustmentForm.invalid(`out_items.${index}.qty` as any),
                       },
                     ]" />
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.qty`]" />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_items.${index}.qty`]" />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_unit_name }}
                   </div>
@@ -1213,9 +1213,9 @@ const onSubmit = async () => {
 
                 <div class="col-span-12 lg:col-span-5">
                   <FormLabel :class="{
-                    'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.product_unit_id` as any),
+                    'text-danger': stockAdjustmentForm.invalid(`out_items.${index}.product_unit_id` as any),
                   }">
-                    {{ t('views.stock_adjustment_out_product.table.cols.product') }}
+                    {{ t('views.stock_adjustment_out_item.table.cols.product') }}
                   </FormLabel>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
@@ -1231,7 +1231,7 @@ const onSubmit = async () => {
                     </Button>
                   </div>
                   <FormErrorMessages
-                    :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.product_unit_id`]" />
+                    :messages="(stockAdjustmentForm.errors as any)[`out_items.${index}.product_unit_id`]" />
                   <div class="text-sm text-slate-500 font-bold mt-1">
                     {{ item.product_unit_product_code }}
                   </div>
@@ -1240,25 +1240,25 @@ const onSubmit = async () => {
                 <div class="col-span-12 lg:col-span-3">
                   <FormLabel :class="{
                     'text-danger': stockAdjustmentForm.invalid(
-                      `out_products.${index}.product_unit_conversion_value` as any,
+                      `out_items.${index}.product_unit_conversion_value` as any,
                     ),
                   }">
-                    {{ t('views.stock_adjustment_out_product.fields.product_unit_conversion_value') }}
+                    {{ t('views.stock_adjustment_out_item.fields.product_unit_conversion_value') }}
                   </FormLabel>
                   <FormInputCurrency v-model="item.product_unit_conversion_value" tabindex="-1"
                     @change="
-                      stockAdjustmentForm.validate(`out_products.${index}.product_unit_conversion_value` as any);
-                      stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+                      stockAdjustmentForm.validate(`out_items.${index}.product_unit_conversion_value` as any);
+                      stockAdjustmentForm.validate(`out_items.${index}.serials` as any);
                     "
                     :class="[
                       'text-right',
                       {
                         'border-danger': stockAdjustmentForm.invalid(
-                          `out_products.${index}.product_unit_conversion_value` as any,
+                          `out_items.${index}.product_unit_conversion_value` as any,
                         ),
                       },
                     ]" />
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.product_unit_conversion_value`]
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_items.${index}.product_unit_conversion_value`]
                     " />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_base_unit_name }}
@@ -1269,7 +1269,7 @@ const onSubmit = async () => {
                 <div v-if="item.is_use_serial_number" class="col-span-12">
                   <div class="flex items-center justify-between mb-2">
                     <FormLabel :class="{
-                      'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.serials` as any),
+                      'text-danger': stockAdjustmentForm.invalid(`out_items.${index}.serials` as any),
                     }">
                       {{ t('views.product.fields.serial_number') }}
                     </FormLabel>
@@ -1284,36 +1284,36 @@ const onSubmit = async () => {
                   <div v-else class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     <div v-for="(serial, sIdx) in item.serials" :key="sIdx" class="flex gap-2">
                       <FormInput v-model="serial.serial" :placeholder="t('views.product.fields.serial_number')" :class="{
-                        'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.serials.${sIdx}.serial` as any),
+                        'border-danger': stockAdjustmentForm.invalid(`out_items.${index}.serials.${sIdx}.serial` as any),
                       }" @change="
-                        stockAdjustmentForm.validate(`out_products.${index}.serials.${sIdx}.serial` as any);
-                        stockAdjustmentForm.validate(`out_products.${index}.serials` as any);
+                        stockAdjustmentForm.validate(`out_items.${index}.serials.${sIdx}.serial` as any);
+                        stockAdjustmentForm.validate(`out_items.${index}.serials` as any);
                       " />
                       <Button type="button" variant="outline-secondary" @click="removeOutProductSerial(index, sIdx)">
                         <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                       </Button>
                     </div>
                   </div>
-                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.serials`]" />
+                  <FormErrorMessages :messages="(stockAdjustmentForm.errors as any)[`out_items.${index}.serials`]" />
                   <FormErrorMessages
                     v-for="(_, sIdx) in item.serials"
                     :key="`out-products-serial-error-${index}-${sIdx}`"
-                    :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.serials.${sIdx}.serial`]"
+                    :messages="(stockAdjustmentForm.errors as any)[`out_items.${index}.serials.${sIdx}.serial`]"
                   />
                 </div>
 
-                <div v-if="outProductsRemarksExpanded[index]" class="col-span-12 space-y-3">
+                <div v-if="outItemsRemarksExpanded[index]" class="col-span-12 space-y-3">
                   <div>
                     <FormLabel :class="{
-                      'text-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
+                      'text-danger': stockAdjustmentForm.invalid(`out_items.${index}.remarks` as any),
                     }">
-                      {{ t('views.stock_adjustment_out_product.fields.remarks') }}
+                      {{ t('views.stock_adjustment_out_item.fields.remarks') }}
                     </FormLabel>
-                    <FormTextarea rows="2" v-model="stockAdjustmentForm.out_products[index].remarks" :class="{
-                      'border-danger': stockAdjustmentForm.invalid(`out_products.${index}.remarks` as any),
-                    }" @change="stockAdjustmentForm.validate(`out_products.${index}.remarks` as any)" />
+                    <FormTextarea rows="2" v-model="stockAdjustmentForm.out_items[index].remarks" :class="{
+                      'border-danger': stockAdjustmentForm.invalid(`out_items.${index}.remarks` as any),
+                    }" @change="stockAdjustmentForm.validate(`out_items.${index}.remarks` as any)" />
                     <FormErrorMessages
-                      :messages="(stockAdjustmentForm.errors as any)[`out_products.${index}.remarks`]" />
+                      :messages="(stockAdjustmentForm.errors as any)[`out_items.${index}.remarks`]" />
                   </div>
                 </div>
               </div>
@@ -1324,7 +1324,7 @@ const onSubmit = async () => {
           <div class="flex items-center justify-between mt-4">
             <FormLabel></FormLabel>
             <Button type="button" variant="primary" class="shadow-md" @click="addOutProduct">
-              {{ t('views.stock_adjustment_out_product.actions.create') }}
+              {{ t('views.stock_adjustment_out_item.actions.create') }}
             </Button>
           </div>
         </div>
@@ -1357,7 +1357,7 @@ const onSubmit = async () => {
           <!-- modal header -->
           <div class="flex items-center justify-between mb-4">
             <FormLabel>
-              {{ t('views.stock_adjustment_in_product.table.title') }}
+              {{ t('views.stock_adjustment_in_item.table.title') }}
             </FormLabel>
             <button type="button" class="text-slate-500 hover:text-danger" @click="showProductUnitModal = false">
               <Lucide icon="X" class="w-4 h-4" />
@@ -1389,7 +1389,7 @@ const onSubmit = async () => {
                   </th>
                   <!-- product -->
                   <th class="px-3 py-2 text-left">
-                    {{ t('views.stock_adjustment_in_product.table.cols.product') }}
+                    {{ t('views.stock_adjustment_in_item.table.cols.product') }}
                   </th>
                   <!-- unit -->
                   <th class="px-3 py-2 text-left">
@@ -1401,7 +1401,7 @@ const onSubmit = async () => {
                   </th>
                   <!-- product_unit_cogs -->
                   <th class="px-3 py-2 text-right">
-                    {{ t('views.stock_adjustment_in_product.table.cols.product_unit_cogs') }}
+                    {{ t('views.stock_adjustment_in_item.table.cols.product_unit_cogs') }}
                   </th>
                   <!-- actions -->
                   <th class="px-3 py-2"></th>

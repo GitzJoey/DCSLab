@@ -25,9 +25,9 @@ return new class extends Migration
             $table->string('remarks')->nullable();
             $table->boolean('is_posted')->default(false);
 
-            $table->decimal('total_incoming_product_qty', 30, 8)->default(0);
-            $table->decimal('total_incoming_product_cogs', 30, 8)->default(0);
-            $table->decimal('total_outgoing_product_qty', 30, 8)->default(0);
+            $table->decimal('total_incoming_item_qty', 30, 8)->default(0);
+            $table->decimal('total_incoming_item_cogs', 30, 8)->default(0);
+            $table->decimal('total_outgoing_item_qty', 30, 8)->default(0);
 
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);

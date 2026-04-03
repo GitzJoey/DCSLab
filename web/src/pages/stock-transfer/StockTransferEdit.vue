@@ -921,7 +921,7 @@ const onSubmit = async () => {
                   {{ t('views.product.fields.conversion_value') }}
                 </th>
                 <th class="px-3 py-2 text-right">
-                  {{ t('views.stock_adjustment_in_product.table.cols.product_unit_cogs') }}
+                  {{ t('views.stock_adjustment_in_item.table.cols.product_unit_cogs') }}
                 </th>
                 <th class="px-3 py-2"></th>
               </tr>

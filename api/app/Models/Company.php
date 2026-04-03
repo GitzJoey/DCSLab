@@ -85,14 +85,14 @@ class Company extends Model
         return $this->hasMany(StockAdjustment::class);
     }
 
-    public function stockAdjustmentInProducts()
+    public function stockAdjustmentInItems()
     {
-        return $this->hasMany(StockAdjustmentInProduct::class);
+        return $this->hasMany(StockAdjustmentInItem::class);
     }
 
-    public function stockAdjustmentOutProducts()
+    public function stockAdjustmentOutItems()
     {
-        return $this->hasMany(StockAdjustmentOutProduct::class);
+        return $this->hasMany(StockAdjustmentOutItem::class);
     }
 
     public function customers()

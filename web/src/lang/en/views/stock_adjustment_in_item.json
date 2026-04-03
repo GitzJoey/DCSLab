@@ -1,0 +1,35 @@
+{
+  "page_title": "Stock Adjustment (In Items)",
+  "table": {
+    "title": "Stock Adjustment In Items",
+    "cols": {
+      "product": "Product",
+      "qty": "Qty",
+      "product_unit": "Product Unit",
+      "remaining_stock": "Remaining Stock",
+      "product_unit_conversion_value": "C. Val",
+      "product_unit_cogs": "Unit COGS",
+      "product_unit_total_cogs": "Total COGS",
+      "product_unit_base_unit_cogs": "Base Unit COGS",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Add In Item",
+    "edit": "Edit In Item",
+    "show": "Show In Item",
+    "delete": "Delete In Item"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "stock_adjustment_id": "Stock Adjustment",
+    "qty": "Qty",
+    "product_unit_id": "Product Unit",
+    "product_unit_conversion_value": "C. Val",
+    "product_unit_cogs": "Unit COGS",
+    "product_unit_total_cogs": "Total COGS",
+    "product_unit_base_unit_cogs": "Base Unit COGS",
+    "remarks": "Remarks"
+  }
+}

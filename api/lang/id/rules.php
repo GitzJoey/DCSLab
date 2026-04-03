@@ -8,6 +8,8 @@ return [
     'valid_company' => 'Perusahaan tidak valid',
     'valid_branch' => 'Cabang tidak valid',
     'valid_warehouse' => 'Gudang tidak valid',
+    'valid_stock_adjustment_in_item' => 'Penyesuaian stok masuk per item tidak valid',
+    'valid_stock_adjustment_out_item' => 'Penyesuaian stok keluar per item tidak valid',
     'valid_customer_group' => 'Kelompok pelanggan tidak valid',
     'valid_customer' => 'Pelanggan tidak valid',
     'too_many_tokens' => 'Terlalu banyak permintaan token',

@@ -21,8 +21,8 @@
   "field_groups": {
     "company_info": "Company Information",
     "stock_adjustment_data": "Stock Adjustment Data",
-    "in_products": "In Products",
-    "out_products": "Out Products"
+    "in_items": "In Items",
+    "out_items": "Out Items"
   },
   "fields": {
     "company_id": "Company",
@@ -39,8 +39,8 @@
     "out_warehouse_id": "Out Warehouse",
     "remarks": "Remarks",
     "is_posted": "Posted",
-    "in_products": "In Products",
-    "out_products": "Out Products"
+    "in_items": "In Items",
+    "out_items": "Out Items"
   },
   "alert": {
     "create": {

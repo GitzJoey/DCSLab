@@ -28,12 +28,12 @@ class StockAdjustmentResource extends JsonResource
             'out_warehouse' => new WarehouseResource($this->whenLoaded('outWarehouse')),
             'remarks' => $this->remarks,
             'is_posted' => $this->is_posted,
-            'total_incoming_product_qty' => $this->total_incoming_product_qty,
-            'total_incoming_product_cogs' => $this->total_incoming_product_cogs,
-            'total_outgoing_product_qty' => $this->total_outgoing_product_qty,
+            'total_incoming_item_qty' => $this->total_incoming_item_qty,
+            'total_incoming_item_cogs' => $this->total_incoming_item_cogs,
+            'total_outgoing_item_qty' => $this->total_outgoing_item_qty,
 
-            'in_products' => StockAdjustmentInProductResource::collection($this->whenLoaded('inProducts')),
-            'out_products' => StockAdjustmentOutProductResource::collection($this->whenLoaded('outProducts')),
+            'in_items' => StockAdjustmentInItemResource::collection($this->whenLoaded('inItems')),
+            'out_items' => StockAdjustmentOutItemResource::collection($this->whenLoaded('outItems')),
         ];
     }
 }

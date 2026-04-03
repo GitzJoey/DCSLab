@@ -27,7 +27,7 @@ export interface StockAdjustmentReadAnyGetRequest {
   limit: number;
 }
 
-export interface StockAdjustmentInProductNestedStoreRequest {
+export interface StockAdjustmentInItemNestedStoreRequest {
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
@@ -36,7 +36,7 @@ export interface StockAdjustmentInProductNestedStoreRequest {
   serials: { serial: string }[];
 }
 
-export interface StockAdjustmentOutProductNestedStoreRequest {
+export interface StockAdjustmentOutItemNestedStoreRequest {
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
@@ -54,11 +54,11 @@ export interface StockAdjustmentStoreRequest {
   out_warehouse_id: string | null;
   remarks: string | null;
   is_posted: boolean;
-  in_products?: StockAdjustmentInProductNestedStoreRequest[];
-  out_products?: StockAdjustmentOutProductNestedStoreRequest[];
+  in_items?: StockAdjustmentInItemNestedStoreRequest[];
+  out_items?: StockAdjustmentOutItemNestedStoreRequest[];
 }
 
-export interface StockAdjustmentInProductNestedUpdateRequest {
+export interface StockAdjustmentInItemNestedUpdateRequest {
   id: string | null;
   qty: number;
   product_unit_id: string;
@@ -69,7 +69,7 @@ export interface StockAdjustmentInProductNestedUpdateRequest {
   serials: { id: string | null; serial: string }[];
 }
 
-export interface StockAdjustmentOutProductNestedUpdateRequest {
+export interface StockAdjustmentOutItemNestedUpdateRequest {
   id: string | null;
   qty: number;
   product_unit_id: string;
@@ -89,8 +89,8 @@ export interface StockAdjustmentUpdateRequest {
   out_warehouse_id: string | null;
   remarks: string | null;
   is_posted: boolean;
-  delete_in_product_ids: string[];
-  in_products?: StockAdjustmentInProductNestedUpdateRequest[];
-  delete_out_product_ids: string[];
-  out_products?: StockAdjustmentOutProductNestedUpdateRequest[];
+  delete_in_item_ids: string[];
+  in_items?: StockAdjustmentInItemNestedUpdateRequest[];
+  delete_out_item_ids: string[];
+  out_items?: StockAdjustmentOutItemNestedUpdateRequest[];
 }

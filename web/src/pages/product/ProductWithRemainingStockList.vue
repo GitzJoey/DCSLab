@@ -471,7 +471,7 @@ const toggleAdvancedFilters = () => {
               {{ t('views.product.with_remaining_stock_suffix') }}
             </div>
             <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ t('views.stock_adjustment_in_product.table.cols.remaining_stock') }}:
+              {{ t('views.stock_adjustment_in_item.table.cols.remaining_stock') }}:
               {{ formatCurrency(getRemainingStockPrimaryQty(item as Product) ?? 0) }} {{ getPrimaryUnit(item as Product)?.unit.name ?? '-' }}
             </div>
           </div>

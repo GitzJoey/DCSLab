@@ -1,0 +1,31 @@
+{
+  "page_title": "Stock Adjustment (Out Items)",
+  "table": {
+    "title": "Stock Adjustment Out Items",
+    "cols": {
+      "product": "Product",
+      "qty": "Qty",
+      "product_unit": "Product Unit",
+      "remaining_stock": "Remaining Stock",
+      "product_unit_conversion_value": "C. Value",
+      "product_unit_cogs": "Unit COGS",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Add Out Item",
+    "edit": "Edit Out Item",
+    "show": "Show Out Item",
+    "delete": "Delete Out Item"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "stock_adjustment_id": "Stock Adjustment",
+    "qty": "Qty",
+    "product_id": "Product",
+    "product_unit_id": "Product Unit",
+    "product_unit_conversion_value": "C. Value",
+    "remarks": "Remarks"
+  }
+}

@@ -172,12 +172,12 @@ return [
         'category_id' => 'Category',
         'remarks' => 'Remarks',
         'is_posted' => 'Is Posted',
-        'total_incoming_product_qty' => 'Total Incoming Product Qty',
-        'total_incoming_product_cogs' => 'Total Incoming Product COGS',
-        'total_outgoing_product_qty' => 'Total Outgoing Product Qty',
+        'total_incoming_item_qty' => 'Total Incoming Product Qty',
+        'total_incoming_item_cogs' => 'Total Incoming Product COGS',
+        'total_outgoing_item_qty' => 'Total Outgoing Product Qty',
     ],
 
-    'stock_adjustment_in_product' => [
+    'stock_adjustment_in_item' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
         'stock_adjustment_id' => 'Stock Adjustment',
@@ -189,15 +189,15 @@ return [
         'remarks' => 'Remarks',
     ],
 
-    'stock_adjustment_in_product_serial' => [
+    'stock_adjustment_in_item_serial' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
         'stock_adjustment_id' => 'Stock Adjustment',
-        'stock_adjustment_in_product_id' => 'Stock Adjustment In Product',
+        'stock_adjustment_in_item_id' => 'Stock Adjustment In Item',
         'serial' => 'Serial',
     ],
 
-    'stock_adjustment_out_product' => [
+    'stock_adjustment_out_item' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
         'stock_adjustment_id' => 'Stock Adjustment',
@@ -208,11 +208,11 @@ return [
         'remarks' => 'Remarks',
     ],
 
-    'stock_adjustment_out_product_serial' => [
+    'stock_adjustment_out_item_serial' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
         'stock_adjustment_id' => 'Stock Adjustment',
-        'stock_adjustment_out_product_id' => 'Stock Adjustment Out Product',
+        'stock_adjustment_out_item_id' => 'Stock Adjustment Out Item',
         'serial' => 'Serial',
     ],
 

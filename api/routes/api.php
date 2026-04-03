@@ -20,10 +20,10 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StockAdjustmentCategoryController;
 use App\Http\Controllers\StockAdjustmentController;
-use App\Http\Controllers\StockAdjustmentInProductController;
-use App\Http\Controllers\StockAdjustmentInProductSerialController;
-use App\Http\Controllers\StockAdjustmentOutProductController;
-use App\Http\Controllers\StockAdjustmentOutProductSerialController;
+use App\Http\Controllers\StockAdjustmentInItemController;
+use App\Http\Controllers\StockAdjustmentInItemSerialController;
+use App\Http\Controllers\StockAdjustmentOutItemController;
+use App\Http\Controllers\StockAdjustmentOutItemSerialController;
 use App\Http\Controllers\StockTransferController;
 use App\Http\Controllers\StockTransferItemController;
 use App\Http\Controllers\StockTransferItemSerialController;
@@ -249,55 +249,55 @@ Route::prefix('stock_adjustment')->middleware('auth:sanctum')->group(function ()
     });
 });
 
-Route::prefix('stock_adjustment_in_product')->middleware('auth:sanctum')->group(function () {
-    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_in_product.')->group(function () {
-        Route::get('read', [StockAdjustmentInProductController::class, 'readAny'])->name('read_any');
-        Route::get('read/{stock_adjustment_in_product:ulid}', [StockAdjustmentInProductController::class, 'read'])->name('read');
+Route::prefix('stock_adjustment_in_item')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_in_item.')->group(function () {
+        Route::get('read', [StockAdjustmentInItemController::class, 'readAny'])->name('read_any');
+        Route::get('read/{stock_adjustment_in_item:ulid}', [StockAdjustmentInItemController::class, 'read'])->name('read');
     });
 
-    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_in_product.')->group(function () {
-        Route::post('save', [StockAdjustmentInProductController::class, 'store'])->name('save');
-        Route::post('edit/{stock_adjustment_in_product:ulid}', [StockAdjustmentInProductController::class, 'update'])->name('edit');
-        Route::post('delete/{stock_adjustment_in_product:ulid}', [StockAdjustmentInProductController::class, 'delete'])->name('delete');
-    });
-});
-
-Route::prefix('stock_adjustment_in_product_serial')->middleware('auth:sanctum')->group(function () {
-    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_in_product_serial.')->group(function () {
-        Route::get('read', [StockAdjustmentInProductSerialController::class, 'readAny'])->name('read_any');
-        Route::get('read/{saip_serial:ulid}', [StockAdjustmentInProductSerialController::class, 'read'])->name('read');
-    });
-
-    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_in_product_serial.')->group(function () {
-        Route::post('save', [StockAdjustmentInProductSerialController::class, 'store'])->name('save');
-        Route::post('edit/{saip_serial:ulid}', [StockAdjustmentInProductSerialController::class, 'update'])->name('edit');
-        Route::post('delete/{saip_serial:ulid}', [StockAdjustmentInProductSerialController::class, 'delete'])->name('delete');
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_in_item.')->group(function () {
+        Route::post('save', [StockAdjustmentInItemController::class, 'store'])->name('save');
+        Route::post('edit/{stock_adjustment_in_item:ulid}', [StockAdjustmentInItemController::class, 'update'])->name('edit');
+        Route::post('delete/{stock_adjustment_in_item:ulid}', [StockAdjustmentInItemController::class, 'delete'])->name('delete');
     });
 });
 
-Route::prefix('stock_adjustment_out_product')->middleware('auth:sanctum')->group(function () {
-    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_out_product.')->group(function () {
-        Route::get('read', [StockAdjustmentOutProductController::class, 'readAny'])->name('read_any');
-        Route::get('read/{stock_adjustment_out_product:ulid}', [StockAdjustmentOutProductController::class, 'read'])->name('read');
+Route::prefix('stock_adjustment_in_item_serial')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_in_item_serial.')->group(function () {
+        Route::get('read', [StockAdjustmentInItemSerialController::class, 'readAny'])->name('read_any');
+        Route::get('read/{saii_serial:ulid}', [StockAdjustmentInItemSerialController::class, 'read'])->name('read');
     });
 
-    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_out_product.')->group(function () {
-        Route::post('save', [StockAdjustmentOutProductController::class, 'store'])->name('save');
-        Route::post('edit/{stock_adjustment_out_product:ulid}', [StockAdjustmentOutProductController::class, 'update'])->name('edit');
-        Route::post('delete/{stock_adjustment_out_product:ulid}', [StockAdjustmentOutProductController::class, 'delete'])->name('delete');
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_in_item_serial.')->group(function () {
+        Route::post('save', [StockAdjustmentInItemSerialController::class, 'store'])->name('save');
+        Route::post('edit/{saii_serial:ulid}', [StockAdjustmentInItemSerialController::class, 'update'])->name('edit');
+        Route::post('delete/{saii_serial:ulid}', [StockAdjustmentInItemSerialController::class, 'delete'])->name('delete');
     });
 });
 
-Route::prefix('stock_adjustment_out_product_serial')->middleware('auth:sanctum')->group(function () {
-    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_out_product_serial.')->group(function () {
-        Route::get('read', [StockAdjustmentOutProductSerialController::class, 'readAny'])->name('read_any');
-        Route::get('read/{saop_serial:ulid}', [StockAdjustmentOutProductSerialController::class, 'read'])->name('read');
+Route::prefix('stock_adjustment_out_item')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_out_item.')->group(function () {
+        Route::get('read', [StockAdjustmentOutItemController::class, 'readAny'])->name('read_any');
+        Route::get('read/{stock_adjustment_out_item:ulid}', [StockAdjustmentOutItemController::class, 'read'])->name('read');
     });
 
-    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_out_product_serial.')->group(function () {
-        Route::post('save', [StockAdjustmentOutProductSerialController::class, 'store'])->name('save');
-        Route::post('edit/{saop_serial:ulid}', [StockAdjustmentOutProductSerialController::class, 'update'])->name('edit');
-        Route::post('delete/{saop_serial:ulid}', [StockAdjustmentOutProductSerialController::class, 'delete'])->name('delete');
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_out_item.')->group(function () {
+        Route::post('save', [StockAdjustmentOutItemController::class, 'store'])->name('save');
+        Route::post('edit/{stock_adjustment_out_item:ulid}', [StockAdjustmentOutItemController::class, 'update'])->name('edit');
+        Route::post('delete/{stock_adjustment_out_item:ulid}', [StockAdjustmentOutItemController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('stock_adjustment_out_item_serial')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_adjustment_out_item_serial.')->group(function () {
+        Route::get('read', [StockAdjustmentOutItemSerialController::class, 'readAny'])->name('read_any');
+        Route::get('read/{saoi_serial:ulid}', [StockAdjustmentOutItemSerialController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_adjustment_out_item_serial.')->group(function () {
+        Route::post('save', [StockAdjustmentOutItemSerialController::class, 'store'])->name('save');
+        Route::post('edit/{saoi_serial:ulid}', [StockAdjustmentOutItemSerialController::class, 'update'])->name('edit');
+        Route::post('delete/{saoi_serial:ulid}', [StockAdjustmentOutItemSerialController::class, 'delete'])->name('delete');
     });
 });
 

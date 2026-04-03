@@ -86,14 +86,14 @@ import StockAdjustmentIndex from '@/pages/stock-adjustment/StockAdjustmentIndex.
 import StockAdjustmentList from '@/pages/stock-adjustment/StockAdjustmentList.vue';
 import StockAdjustmentCreate from '@/pages/stock-adjustment/StockAdjustmentCreate.vue';
 import StockAdjustmentEdit from '@/pages/stock-adjustment/StockAdjustmentEdit.vue';
-import StockAdjustmentInProductIndex from '@/pages/stock-adjustment/StockAdjustmentInProductIndex.vue';
-import StockAdjustmentInProductList from '@/pages/stock-adjustment/StockAdjustmentInProductList.vue';
-import StockAdjustmentOutProductIndex from '@/pages/stock-adjustment/StockAdjustmentOutProductIndex.vue';
-import StockAdjustmentOutProductList from '@/pages/stock-adjustment/StockAdjustmentOutProductList.vue';
-import StockAdjustmentInProductSerialIndex from '@/pages/stock-adjustment/StockAdjustmentInProductSerialIndex.vue';
-import StockAdjustmentInProductSerialList from '@/pages/stock-adjustment/StockAdjustmentInProductSerialList.vue';
-import StockAdjustmentOutProductSerialIndex from '@/pages/stock-adjustment/StockAdjustmentOutProductSerialIndex.vue';
-import StockAdjustmentOutProductSerialList from '@/pages/stock-adjustment/StockAdjustmentOutProductSerialList.vue';
+import StockAdjustmentInItemIndex from '@/pages/stock-adjustment/StockAdjustmentInItemIndex.vue';
+import StockAdjustmentInItemList from '@/pages/stock-adjustment/StockAdjustmentInItemList.vue';
+import StockAdjustmentOutItemIndex from '@/pages/stock-adjustment/StockAdjustmentOutItemIndex.vue';
+import StockAdjustmentOutItemList from '@/pages/stock-adjustment/StockAdjustmentOutItemList.vue';
+import StockAdjustmentInItemSerialIndex from '@/pages/stock-adjustment/StockAdjustmentInItemSerialIndex.vue';
+import StockAdjustmentInItemSerialList from '@/pages/stock-adjustment/StockAdjustmentInItemSerialList.vue';
+import StockAdjustmentOutItemSerialIndex from '@/pages/stock-adjustment/StockAdjustmentOutItemSerialIndex.vue';
+import StockAdjustmentOutItemSerialList from '@/pages/stock-adjustment/StockAdjustmentOutItemSerialList.vue';
 import StockTransferIndex from '@/pages/stock-transfer/StockTransferIndex.vue';
 import StockTransferList from '@/pages/stock-transfer/StockTransferList.vue';
 import StockTransferCreate from '@/pages/stock-transfer/StockTransferCreate.vue';
@@ -794,68 +794,68 @@ export default [
               },
             ],
           },
-          // Stock Adjustment In Product
+          // Stock Adjustment In Item
           {
-            path: '/dashboard/stock-adjustment-in-product',
-            name: 'side-menu-stock-adjustment-in-product',
-            redirect: '/dashboard/stock-adjustment-in-product/list',
-            component: StockAdjustmentInProductIndex,
+            path: '/dashboard/stock-adjustment-in-item',
+            name: 'side-menu-stock-adjustment-in-item',
+            redirect: '/dashboard/stock-adjustment-in-item/list',
+            component: StockAdjustmentInItemIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-in-product/list',
-                name: 'side-menu-stock-adjustment-in-product-list',
-                component: StockAdjustmentInProductList,
+                path: '/dashboard/stock-adjustment-in-item/list',
+                name: 'side-menu-stock-adjustment-in-item-list',
+                component: StockAdjustmentInItemList,
                 meta: {
                   remember: true,
                 },
               },
             ],
           },
-          // Stock Adjustment In Product Serial
+          // Stock Adjustment In Item Serial
           {
-            path: '/dashboard/stock-adjustment-in-product-serial',
-            name: 'side-menu-stock-adjustment-in-product-serial',
-            redirect: '/dashboard/stock-adjustment-in-product-serial/list',
-            component: StockAdjustmentInProductSerialIndex,
+            path: '/dashboard/stock-adjustment-in-item-serial',
+            name: 'side-menu-stock-adjustment-in-item-serial',
+            redirect: '/dashboard/stock-adjustment-in-item-serial/list',
+            component: StockAdjustmentInItemSerialIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-in-product-serial/list',
-                name: 'side-menu-stock-adjustment-in-product-serial-list',
-                component: StockAdjustmentInProductSerialList,
+                path: '/dashboard/stock-adjustment-in-item-serial/list',
+                name: 'side-menu-stock-adjustment-in-item-serial-list',
+                component: StockAdjustmentInItemSerialList,
                 meta: {
                   remember: true,
                 },
               },
             ],
           },
-          // Stock Adjustment Out Product
+          // Stock Adjustment Out Item
           {
-            path: '/dashboard/stock-adjustment-out-product',
-            name: 'side-menu-stock-adjustment-out-product',
-            redirect: '/dashboard/stock-adjustment-out-product/list',
-            component: StockAdjustmentOutProductIndex,
+            path: '/dashboard/stock-adjustment-out-item',
+            name: 'side-menu-stock-adjustment-out-item',
+            redirect: '/dashboard/stock-adjustment-out-item/list',
+            component: StockAdjustmentOutItemIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-out-product/list',
-                name: 'side-menu-stock-adjustment-out-product-list',
-                component: StockAdjustmentOutProductList,
+                path: '/dashboard/stock-adjustment-out-item/list',
+                name: 'side-menu-stock-adjustment-out-item-list',
+                component: StockAdjustmentOutItemList,
                 meta: {
                   remember: true,
                 },
               },
             ],
           },
-          // Stock Adjustment Out Product Serial
+          // Stock Adjustment Out Item Serial
           {
-            path: '/dashboard/stock-adjustment-out-product-serial',
-            name: 'side-menu-stock-adjustment-out-product-serial',
-            redirect: '/dashboard/stock-adjustment-out-product-serial/list',
-            component: StockAdjustmentOutProductSerialIndex,
+            path: '/dashboard/stock-adjustment-out-item-serial',
+            name: 'side-menu-stock-adjustment-out-item-serial',
+            redirect: '/dashboard/stock-adjustment-out-item-serial/list',
+            component: StockAdjustmentOutItemSerialIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-out-product-serial/list',
-                name: 'side-menu-stock-adjustment-out-product-serial-list',
-                component: StockAdjustmentOutProductSerialList,
+                path: '/dashboard/stock-adjustment-out-item-serial/list',
+                name: 'side-menu-stock-adjustment-out-item-serial-list',
+                component: StockAdjustmentOutItemSerialList,
                 meta: {
                   remember: true,
                 },

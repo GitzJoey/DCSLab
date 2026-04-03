@@ -2,8 +2,8 @@
 
 namespace App\DTOs;
 
-use App\Models\StockAdjustmentInProduct;
-use App\Models\StockAdjustmentOutProduct;
+use App\Models\StockAdjustmentInItem;
+use App\Models\StockAdjustmentOutItem;
 use App\Models\StockTransferItem;
 
 final class StockTransactionCreateDTO
@@ -18,27 +18,27 @@ final class StockTransactionCreateDTO
     ) {
     }
 
-    public static function fromStockAdjustmentInProduct(StockAdjustmentInProduct $stockAdjustmentInProduct): self
+    public static function fromStockAdjustmentInItem(StockAdjustmentInItem $stockAdjustmentInItem): self
     {
         return new self(
-            referableType: StockAdjustmentInProduct::class,
-            referableId: $stockAdjustmentInProduct->id,
-            date: $stockAdjustmentInProduct->stockAdjustment->date,
-            warehouseId: $stockAdjustmentInProduct->stockAdjustment->in_warehouse_id,
-            productId: $stockAdjustmentInProduct->productUnit->product_id,
-            baseQty: $stockAdjustmentInProduct->product_unit_qty_base,
+            referableType: StockAdjustmentInItem::class,
+            referableId: $stockAdjustmentInItem->id,
+            date: $stockAdjustmentInItem->stockAdjustment->date,
+            warehouseId: $stockAdjustmentInItem->stockAdjustment->in_warehouse_id,
+            productId: $stockAdjustmentInItem->productUnit->product_id,
+            baseQty: $stockAdjustmentInItem->product_unit_qty_base,
         );
     }
 
-    public static function fromStockAdjustmentOutProduct(StockAdjustmentOutProduct $stockAdjustmentOutProduct): self
+    public static function fromStockAdjustmentOutItem(StockAdjustmentOutItem $stockAdjustmentOutItem): self
     {
         return new self(
-            referableType: StockAdjustmentOutProduct::class,
-            referableId: $stockAdjustmentOutProduct->id,
-            date: $stockAdjustmentOutProduct->stockAdjustment->date,
-            warehouseId: $stockAdjustmentOutProduct->stockAdjustment->out_warehouse_id,
-            productId: $stockAdjustmentOutProduct->productUnit->product_id,
-            baseQty: $stockAdjustmentOutProduct->product_unit_qty_base * -1,
+            referableType: StockAdjustmentOutItem::class,
+            referableId: $stockAdjustmentOutItem->id,
+            date: $stockAdjustmentOutItem->stockAdjustment->date,
+            warehouseId: $stockAdjustmentOutItem->stockAdjustment->out_warehouse_id,
+            productId: $stockAdjustmentOutItem->productUnit->product_id,
+            baseQty: $stockAdjustmentOutItem->product_unit_qty_base * -1,
         );
     }
 

@@ -1,0 +1,22 @@
+{
+  "page_title": "Serial Penyesuaian Stok Keluar per Item",
+  "table": {
+    "title": "Daftar Serial Penyesuaian Stok Keluar per Item",
+    "cols": {
+      "stock_adjustment_code": "Kode",
+      "product_name": "Produk",
+      "serial": "Serial"
+    }
+  },
+  "actions": {
+    "create": "Tambah Serial",
+    "edit": "Ubah Serial",
+    "show": "Lihat Serial",
+    "delete": "Hapus Serial"
+  },
+  "fields": {
+    "stock_adjustment_id": "Penyesuaian Stok",
+    "stock_adjustment_out_item_id": "Item Keluar",
+    "serial": "Serial"
+  }
+}

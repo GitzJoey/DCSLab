@@ -317,28 +317,28 @@ class DashboardActions
             'subMenu' => [],
         ];
 
-        $stockAdjustmentInProduct = [
+        $stockAdjustmentInItem = [
             'icon' => 'PackagePlus',
-            'pageName' => 'side-menu-stock-adjustment-in-product',
-            'title' => 'components.menu.stock-adjustment-in-product',
+            'pageName' => 'side-menu-stock-adjustment-in-item',
+            'title' => 'components.menu.stock-adjustment-in-item',
         ];
 
-        $stockAdjustmentInProductSerial = [
+        $stockAdjustmentInItemSerial = [
             'icon' => 'ScanLine',
-            'pageName' => 'side-menu-stock-adjustment-in-product-serial',
-            'title' => 'components.menu.stock-adjustment-in-product-serial',
+            'pageName' => 'side-menu-stock-adjustment-in-item-serial',
+            'title' => 'components.menu.stock-adjustment-in-item-serial',
         ];
 
-        $stockAdjustmentOutProduct = [
+        $stockAdjustmentOutItem = [
             'icon' => 'PackageMinus',
-            'pageName' => 'side-menu-stock-adjustment-out-product',
-            'title' => 'components.menu.stock-adjustment-out-product',
+            'pageName' => 'side-menu-stock-adjustment-out-item',
+            'title' => 'components.menu.stock-adjustment-out-item',
         ];
 
-        $stockAdjustmentOutProductSerial = [
+        $stockAdjustmentOutItemSerial = [
             'icon' => 'ScanLine',
-            'pageName' => 'side-menu-stock-adjustment-out-product-serial',
-            'title' => 'components.menu.stock-adjustment-out-product-serial',
+            'pageName' => 'side-menu-stock-adjustment-out-item-serial',
+            'title' => 'components.menu.stock-adjustment-out-item-serial',
         ];
 
         $stockTransfer = [
@@ -362,10 +362,10 @@ class DashboardActions
 
         array_push(
             $stockAdjustment['subMenu'],
-            $stockAdjustmentInProduct,
-            $stockAdjustmentInProductSerial,
-            $stockAdjustmentOutProduct,
-            $stockAdjustmentOutProductSerial
+            $stockAdjustmentInItem,
+            $stockAdjustmentInItemSerial,
+            $stockAdjustmentOutItem,
+            $stockAdjustmentOutItemSerial
         );
 
         array_push(
