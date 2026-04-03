@@ -20,7 +20,7 @@
   "field_groups": {
     "company_info": "Informasi Perusahaan",
     "stock_transfer_data": "Data Transfer Stok",
-    "product_units": "Produk-produk"
+    "items": "Item-item"
   },
   "fields": {
     "company_id": "Perusahaan",
@@ -36,7 +36,7 @@
     "destination_warehouse_id": "Gudang Tujuan",
     "remarks": "Catatan",
     "is_posted": "Diposting",
-    "product_units": "Produk-produk"
+    "items": "Item-item"
   },
   "alert": {
     "create": {

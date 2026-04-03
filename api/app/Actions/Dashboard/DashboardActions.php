@@ -348,16 +348,16 @@ class DashboardActions
             'subMenu' => [],
         ];
 
-        $stockTransferProductUnit = [
+        $stockTransferItem = [
             'icon' => 'Boxes',
-            'pageName' => 'side-menu-stock-transfer-product-unit',
-            'title' => 'components.menu.stock-transfer-product-unit',
+            'pageName' => 'side-menu-stock-transfer-item',
+            'title' => 'components.menu.stock-transfer-item',
         ];
 
-        $stockTransferProductUnitSerial = [
+        $stockTransferItemSerial = [
             'icon' => 'ScanLine',
-            'pageName' => 'side-menu-stock-transfer-product-unit-serial',
-            'title' => 'components.menu.stock-transfer-product-unit-serial',
+            'pageName' => 'side-menu-stock-transfer-item-serial',
+            'title' => 'components.menu.stock-transfer-item-serial',
         ];
 
         array_push(
@@ -370,8 +370,8 @@ class DashboardActions
 
         array_push(
             $stockTransfer['subMenu'],
-            $stockTransferProductUnit,
-            $stockTransferProductUnitSerial
+            $stockTransferItem,
+            $stockTransferItemSerial
         );
 
         array_push($root_array['subMenu'], $cashAccount, $product, $stockAdjustment, $stockTransfer);

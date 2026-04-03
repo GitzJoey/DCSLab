@@ -30,20 +30,20 @@ import CacheService from '@/services/CacheService';
 import { ErrorCode } from '@/types/enums/ErrorCode';
 import { type DropDownOption } from '@/types/models/DropDownOption';
 import {
-  type StockTransferProductUnitNestedStoreRequest,
+  type StockTransferItemNestedStoreRequest,
 } from '@/types/services/stock-transfer/StockTransferRequest';
 import { debounce } from 'lodash';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
 
-type StockTransferProductUnitFormItem = {
-  qty: StockTransferProductUnitNestedStoreRequest['qty'];
-  product_unit_id: StockTransferProductUnitNestedStoreRequest['product_unit_id'];
+type StockTransferItemFormItem = {
+  qty: StockTransferItemNestedStoreRequest['qty'];
+  product_unit_id: StockTransferItemNestedStoreRequest['product_unit_id'];
   product_unit_product_code?: string | null;
   product_unit_product_name?: string | null;
   product_unit_unit_name?: string | null;
   product_unit_base_unit_name?: string | null;
-  product_unit_conversion_value: StockTransferProductUnitNestedStoreRequest['product_unit_conversion_value'];
-  remarks: StockTransferProductUnitNestedStoreRequest['remarks'];
+  product_unit_conversion_value: StockTransferItemNestedStoreRequest['product_unit_conversion_value'];
+  remarks: StockTransferItemNestedStoreRequest['remarks'];
   is_use_serial_number?: boolean;
   serials: { serial: string }[];
 };
@@ -114,14 +114,14 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     state: CardState.Expanded,
   },
   {
-    title: 'views.stock_transfer.field_groups.product_units',
+    title: 'views.stock_transfer.field_groups.items',
     state: CardState.Expanded,
   },
   { title: '', state: CardState.Hidden, id: 'button' },
 ]);
 
-const productUnitsForm = computed<StockTransferProductUnitFormItem[]>(
-  () => stockTransferForm.product_units as StockTransferProductUnitFormItem[],
+const productUnitsForm = computed<StockTransferItemFormItem[]>(
+  () => stockTransferForm.items as StockTransferItemFormItem[],
 );
 
 const invalidStockTransferField = (field: string) => stockTransferForm.invalid(field as any);
@@ -247,7 +247,7 @@ const loadFromCache = () => {
   const data = cacheServices.getLastEntity('STOCK_TRANSFER_CREATE') as Record<string, unknown>;
   if (!data) return;
   stockTransferForm.setData(data);
-  productUnitsRemarksExpanded.value = ((data.product_units as unknown[]) ?? []).map(() => false);
+  productUnitsRemarksExpanded.value = ((data.items as unknown[]) ?? []).map(() => false);
 };
 
 const searchProductUnits = async () => {
@@ -352,7 +352,7 @@ const changeProductUnit = (index: number) => {
 };
 
 const selectProductUnit = (option: ProductUnitOption) => {
-  const baseData: Partial<StockTransferProductUnitFormItem> = {
+  const baseData: Partial<StockTransferItemFormItem> = {
     product_unit_id: option.product_unit_id,
     product_unit_product_code: option.product_unit_code,
     product_unit_product_name: option.product_name,
@@ -366,19 +366,19 @@ const selectProductUnit = (option: ProductUnitOption) => {
   let targetIndex: number;
 
   if (editingProductUnitIndex.value === null) {
-    const item: StockTransferProductUnitFormItem = {
+    const item: StockTransferItemFormItem = {
       qty: 0,
       remarks: '',
       ...baseData,
-    } as StockTransferProductUnitFormItem;
+    } as StockTransferItemFormItem;
 
-    stockTransferForm.product_units.push(item as any);
+    stockTransferForm.items.push(item as any);
     productUnitsRemarksExpanded.value.push(false);
-    targetIndex = stockTransferForm.product_units.length - 1;
+    targetIndex = stockTransferForm.items.length - 1;
   } else {
     const index = editingProductUnitIndex.value;
-    const current = stockTransferForm.product_units[index] as StockTransferProductUnitFormItem;
-    stockTransferForm.product_units[index] = {
+    const current = stockTransferForm.items[index] as StockTransferItemFormItem;
+    stockTransferForm.items[index] = {
       ...current,
       ...baseData,
     } as any;
@@ -390,7 +390,7 @@ const selectProductUnit = (option: ProductUnitOption) => {
   productUnitQtyToFocus.value = targetIndex;
 
   Object.keys(stockTransferForm.errors).forEach((key) => {
-    if (key.startsWith('product_units.')) {
+    if (key.startsWith('items.')) {
       stockTransferForm.forgetError(key as any);
     }
   });
@@ -420,14 +420,14 @@ const addProductUnitSerial = (index: number) => {
   const item = productUnitsForm.value[index];
   if (!item) return;
   item.serials.push({ serial: '' });
-  stockTransferForm.validate(`product_units.${index}.serials` as any);
+  stockTransferForm.validate(`items.${index}.serials` as any);
 };
 
 const removeProductUnitSerial = (index: number, serialIndex: number) => {
   const item = productUnitsForm.value[index];
   if (!item) return;
   item.serials.splice(serialIndex, 1);
-  stockTransferForm.validate(`product_units.${index}.serials` as any);
+  stockTransferForm.validate(`items.${index}.serials` as any);
 };
 
 const removeProductUnit = (index: number) => {
@@ -435,7 +435,7 @@ const removeProductUnit = (index: number) => {
   productUnitsRemarksExpanded.value.splice(index, 1);
 
   Object.keys(stockTransferForm.errors).forEach((key) => {
-    if (key.startsWith('product_units.')) {
+    if (key.startsWith('items.')) {
       stockTransferForm.forgetError(key as any);
     }
   });
@@ -469,9 +469,9 @@ const onSubmit = async () => {
     return;
   }
 
-  const originalProductUnits = stockTransferForm.product_units as StockTransferProductUnitFormItem[];
-  const cleanedProductUnits: StockTransferProductUnitNestedStoreRequest[] = originalProductUnits.map(
-    (item: StockTransferProductUnitFormItem) => ({
+  const originalProductUnits = stockTransferForm.items as StockTransferItemFormItem[];
+  const cleanedProductUnits: StockTransferItemNestedStoreRequest[] = originalProductUnits.map(
+    (item: StockTransferItemFormItem) => ({
       qty: item.qty,
       product_unit_id: item.product_unit_id,
       product_unit_conversion_value: item.product_unit_conversion_value,
@@ -483,7 +483,7 @@ const onSubmit = async () => {
   );
 
   const backupProductUnits = [...originalProductUnits];
-  stockTransferForm.product_units = cleanedProductUnits as any;
+  stockTransferForm.items = cleanedProductUnits as any;
 
   emits('loading-state', true);
 
@@ -493,7 +493,7 @@ const onSubmit = async () => {
     emits('update-profile');
     router.push({ name: 'side-menu-stock-transfer-list' });
   } catch (error) {
-    stockTransferForm.product_units = backupProductUnits as any;
+    stockTransferForm.items = backupProductUnits as any;
     const errorList: Record<string, Array<string>> = convertErrorTypeToAlertListType(error);
     showAlertPlaceholder('danger', '', errorList);
   } finally {
@@ -615,7 +615,7 @@ const onSubmit = async () => {
 
       <template #card-items-2>
         <div class="p-5">
-          <FormErrorMessages :messages="stockTransferForm.errors.product_units" />
+          <FormErrorMessages :messages="stockTransferForm.errors.items" />
 
           <div v-if="productUnitsForm.length === 0" class="text-slate-500 text-sm">
             {{ t('components.data-list.data_not_found') }}
@@ -629,7 +629,7 @@ const onSubmit = async () => {
             >
               <div class="flex items-center justify-between mb-3">
                 <div class="font-medium text-sm">
-                  {{ t('views.stock_transfer_product_unit.page_title') }} #{{ index + 1 }}
+                  {{ t('views.stock_transfer_item.page_title') }} #{{ index + 1 }}
                 </div>
                 <div class="flex items-center gap-2">
                   <Button
@@ -647,8 +647,8 @@ const onSubmit = async () => {
 
               <div class="grid grid-cols-12 gap-4 gap-y-3">
                 <div class="col-span-12 lg:col-span-2">
-                  <FormLabel :class="{ 'text-danger': invalidStockTransferField(`product_units.${index}.qty`) }">
-                    {{ t('views.stock_transfer_product_unit.fields.qty') }}
+                  <FormLabel :class="{ 'text-danger': invalidStockTransferField(`items.${index}.qty`) }">
+                    {{ t('views.stock_transfer_item.fields.qty') }}
                   </FormLabel>
                   <FormInputCurrency
                     :id="`product-units-qty-${index}`"
@@ -657,24 +657,24 @@ const onSubmit = async () => {
                     :class="[
                       'text-right',
                       {
-                        'border-danger': invalidStockTransferField(`product_units.${index}.qty`),
+                        'border-danger': invalidStockTransferField(`items.${index}.qty`),
                       },
                     ]"
                     @change="
-                      validateStockTransferField(`product_units.${index}.qty`);
-                      validateStockTransferField(`product_units.${index}.serials`);
+                      validateStockTransferField(`items.${index}.qty`);
+                      validateStockTransferField(`items.${index}.serials`);
                     "
                   />
-                  <FormErrorMessages :messages="getStockTransferFieldErrors(`product_units.${index}.qty`)" />
+                  <FormErrorMessages :messages="getStockTransferFieldErrors(`items.${index}.qty`)" />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_unit_name }}
                   </div>
                 </div>
                 <div class="col-span-12 lg:col-span-8">
                   <FormLabel
-                    :class="{ 'text-danger': invalidStockTransferField(`product_units.${index}.product_unit_id`) }"
+                    :class="{ 'text-danger': invalidStockTransferField(`items.${index}.product_unit_id`) }"
                   >
-                    {{ t('views.stock_transfer_product_unit.table.cols.product') }}
+                    {{ t('views.stock_transfer_item.table.cols.product') }}
                   </FormLabel>
                   <div class="flex items-center gap-2">
                     <div class="flex-1">
@@ -694,7 +694,7 @@ const onSubmit = async () => {
                       <Lucide icon="Search" class="w-4 h-4" />
                     </Button>
                   </div>
-                  <FormErrorMessages :messages="getStockTransferFieldErrors(`product_units.${index}.product_unit_id`)" />
+                  <FormErrorMessages :messages="getStockTransferFieldErrors(`items.${index}.product_unit_id`)" />
                   <div class="text-sm text-slate-500 font-bold mt-1">
                     {{ item.product_unit_product_code }}
                   </div>
@@ -702,10 +702,10 @@ const onSubmit = async () => {
                 <div class="col-span-12 lg:col-span-2">
                   <FormLabel
                     :class="{
-                      'text-danger': invalidStockTransferField(`product_units.${index}.product_unit_conversion_value`),
+                      'text-danger': invalidStockTransferField(`items.${index}.product_unit_conversion_value`),
                     }"
                   >
-                    {{ t('views.stock_transfer_product_unit.fields.product_unit_conversion_value') }}
+                    {{ t('views.stock_transfer_item.fields.product_unit_conversion_value') }}
                   </FormLabel>
                   <FormInputCurrency
                     v-model="item.product_unit_conversion_value"
@@ -713,16 +713,16 @@ const onSubmit = async () => {
                     :class="[
                       'text-right',
                       {
-                        'border-danger': invalidStockTransferField(`product_units.${index}.product_unit_conversion_value`),
+                        'border-danger': invalidStockTransferField(`items.${index}.product_unit_conversion_value`),
                       },
                     ]"
                     @change="
-                      validateStockTransferField(`product_units.${index}.product_unit_conversion_value`);
-                      validateStockTransferField(`product_units.${index}.serials`);
+                      validateStockTransferField(`items.${index}.product_unit_conversion_value`);
+                      validateStockTransferField(`items.${index}.serials`);
                     "
                   />
                   <FormErrorMessages
-                    :messages="getStockTransferFieldErrors(`product_units.${index}.product_unit_conversion_value`)"
+                    :messages="getStockTransferFieldErrors(`items.${index}.product_unit_conversion_value`)"
                   />
                   <div class="text-sm text-slate-500 text-right font-bold mt-1">
                     {{ item.product_unit_base_unit_name }}
@@ -731,7 +731,7 @@ const onSubmit = async () => {
 
                 <div v-if="item.is_use_serial_number" class="col-span-12">
                   <div class="flex items-center justify-between mb-2">
-                    <FormLabel :class="{ 'text-danger': invalidStockTransferField(`product_units.${index}.serials`) }">
+                    <FormLabel :class="{ 'text-danger': invalidStockTransferField(`items.${index}.serials`) }">
                       {{ t('views.product.fields.serial_number') }}
                     </FormLabel>
                     <Button type="button" size="sm" variant="outline-primary" @click="addProductUnitSerial(index)">
@@ -749,15 +749,15 @@ const onSubmit = async () => {
                       class="flex gap-2"
                     >
                       <FormInput
-                        :id="`product_units.${index}.serials.${serialIndex}.serial`"
+                        :id="`items.${index}.serials.${serialIndex}.serial`"
                         v-model="serialItem.serial"
                         :placeholder="t('views.product.fields.serial_number')"
                         :class="{
-                          'border-danger': invalidStockTransferField(`product_units.${index}.serials.${serialIndex}.serial`),
+                          'border-danger': invalidStockTransferField(`items.${index}.serials.${serialIndex}.serial`),
                         }"
                         @change="
-                          validateStockTransferField(`product_units.${index}.serials.${serialIndex}.serial`);
-                          validateStockTransferField(`product_units.${index}.serials`);
+                          validateStockTransferField(`items.${index}.serials.${serialIndex}.serial`);
+                          validateStockTransferField(`items.${index}.serials`);
                         "
                       />
                       <Button type="button" variant="outline-secondary" @click="removeProductUnitSerial(index, serialIndex)">
@@ -765,26 +765,26 @@ const onSubmit = async () => {
                       </Button>
                     </div>
                   </div>
-                  <FormErrorMessages :messages="getStockTransferFieldErrors(`product_units.${index}.serials`)" />
+                  <FormErrorMessages :messages="getStockTransferFieldErrors(`items.${index}.serials`)" />
                   <FormErrorMessages
                     v-for="(_, serialIndex) in item.serials"
                     :key="`product-units-serial-error-${index}-${serialIndex}`"
-                    :messages="getStockTransferFieldErrors(`product_units.${index}.serials.${serialIndex}.serial`)"
+                    :messages="getStockTransferFieldErrors(`items.${index}.serials.${serialIndex}.serial`)"
                   />
                 </div>
 
                 <div v-if="productUnitsRemarksExpanded[index]" class="col-span-12 space-y-3">
                   <div>
-                    <FormLabel :class="{ 'text-danger': invalidStockTransferField(`product_units.${index}.remarks`) }">
-                      {{ t('views.stock_transfer_product_unit.fields.remarks') }}
+                    <FormLabel :class="{ 'text-danger': invalidStockTransferField(`items.${index}.remarks`) }">
+                      {{ t('views.stock_transfer_item.fields.remarks') }}
                     </FormLabel>
                     <FormTextarea
                       v-model="item.remarks"
                       rows="2"
-                      :class="{ 'border-danger': invalidStockTransferField(`product_units.${index}.remarks`) }"
-                      @change="validateStockTransferField(`product_units.${index}.remarks`)"
+                      :class="{ 'border-danger': invalidStockTransferField(`items.${index}.remarks`) }"
+                      @change="validateStockTransferField(`items.${index}.remarks`)"
                     />
-                    <FormErrorMessages :messages="getStockTransferFieldErrors(`product_units.${index}.remarks`)" />
+                    <FormErrorMessages :messages="getStockTransferFieldErrors(`items.${index}.remarks`)" />
                   </div>
                 </div>
               </div>
@@ -794,7 +794,7 @@ const onSubmit = async () => {
           <div class="flex items-center justify-between mt-4">
             <FormLabel />
             <Button type="button" variant="primary" class="shadow-md" @click="addProductUnit">
-              {{ t('views.stock_transfer_product_unit.actions.create') }}
+              {{ t('views.stock_transfer_item.actions.create') }}
             </Button>
           </div>
         </div>
@@ -816,7 +816,7 @@ const onSubmit = async () => {
       <div class="p-5">
         <div class="flex items-center justify-between mb-4">
           <FormLabel>
-            {{ t('views.stock_transfer.field_groups.product_units') }}
+            {{ t('views.stock_transfer.field_groups.items') }}
           </FormLabel>
           <button type="button" class="text-slate-500 hover:text-danger" @click="showProductUnitModal = false">
             <Lucide icon="X" class="w-4 h-4" />
@@ -856,7 +856,7 @@ const onSubmit = async () => {
                   {{ t('views.product.table.cols.image') }}
                 </th>
                 <th class="px-3 py-2 text-left">
-                  {{ t('views.stock_transfer_product_unit.table.cols.product') }}
+                  {{ t('views.stock_transfer_item.table.cols.product') }}
                 </th>
                 <th class="px-3 py-2 text-right">
                   {{ t('views.stock_adjustment_out_product.table.cols.remaining_stock') }}

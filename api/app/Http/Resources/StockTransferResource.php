@@ -22,7 +22,7 @@ class StockTransferResource extends JsonResource
             'destination_warehouse' => new WarehouseResource($this->whenLoaded('destinationWarehouse')),
             'remarks' => $this->remarks,
             'is_posted' => $this->is_posted,
-            'product_units' => StockTransferProductUnitResource::collection($this->whenLoaded('stockTransferProductUnits')),
+            'items' => StockTransferItemResource::collection($this->whenLoaded('stockTransferItems')),
         ];
     }
 }

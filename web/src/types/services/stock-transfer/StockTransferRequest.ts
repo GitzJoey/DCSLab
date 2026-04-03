@@ -25,16 +25,16 @@ export interface StockTransferReadAnyGetRequest {
   limit: number;
 }
 
-export interface StockTransferProductUnitSerialNestedStoreRequest {
+export interface StockTransferItemSerialNestedStoreRequest {
   serial: string;
 }
 
-export interface StockTransferProductUnitNestedStoreRequest {
+export interface StockTransferItemNestedStoreRequest {
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
   remarks: string | null;
-  serials: StockTransferProductUnitSerialNestedStoreRequest[];
+  serials: StockTransferItemSerialNestedStoreRequest[];
 }
 
 export interface StockTransferStoreRequest {
@@ -46,22 +46,22 @@ export interface StockTransferStoreRequest {
   destination_warehouse_id: string;
   remarks: string | null;
   is_posted: boolean;
-  product_units?: StockTransferProductUnitNestedStoreRequest[];
+  items?: StockTransferItemNestedStoreRequest[];
 }
 
-export interface StockTransferProductUnitSerialNestedUpdateRequest {
+export interface StockTransferItemSerialNestedUpdateRequest {
   id: string | null;
   serial: string;
 }
 
-export interface StockTransferProductUnitNestedUpdateRequest {
+export interface StockTransferItemNestedUpdateRequest {
   id: string | null;
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
   remarks: string | null;
   delete_serial_ids: string[];
-  serials: StockTransferProductUnitSerialNestedUpdateRequest[];
+  serials: StockTransferItemSerialNestedUpdateRequest[];
 }
 
 export interface StockTransferUpdateRequest {
@@ -73,6 +73,6 @@ export interface StockTransferUpdateRequest {
   destination_warehouse_id: string;
   remarks: string | null;
   is_posted: boolean;
-  delete_product_unit_ids: string[];
-  product_units?: StockTransferProductUnitNestedUpdateRequest[];
+  delete_item_ids: string[];
+  items?: StockTransferItemNestedUpdateRequest[];
 }

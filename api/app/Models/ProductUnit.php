@@ -55,16 +55,16 @@ class ProductUnit extends Model
         return $this->belongsTo(Unit::class)->withTrashed();
     }
 
-    public function stockTransferProductUnits()
+    public function stockTransferItems()
     {
-        return $this->hasMany(StockTransferProductUnit::class);
+        return $this->hasMany(StockTransferItem::class);
     }
 
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('product_units.code', 'like', '%'.$search.'%')
-                ->orWhere('product_units.remarks', 'like', '%'.$search.'%');
+            $query->where('items.code', 'like', '%'.$search.'%')
+                ->orWhere('items.remarks', 'like', '%'.$search.'%');
         });
     }
 }

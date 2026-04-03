@@ -56,8 +56,8 @@ return [
             'stock_adjustment_out_product_serial' => 'c,r,ra,u,d',
 
             'stock_transfer' => 'c,r,ra,u,d',
-            'stock_transfer_product_unit' => 'c,r,ra,u,d',
-            'stock_transfer_product_unit_serial' => 'c,r,ra,u,d',
+            'stock_transfer_item' => 'c,r,ra,u,d',
+            'stock_transfer_item_serial' => 'c,r,ra,u,d',
         ],
         /* #endregion */
     ],

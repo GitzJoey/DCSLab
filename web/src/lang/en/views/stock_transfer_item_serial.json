@@ -1,0 +1,22 @@
+{
+  "page_title": "Stock Transfer Serial by Item",
+  "table": {
+    "title": "Stock Transfer Serial by Item List",
+    "cols": {
+      "stock_transfer_code": "Code",
+      "product_name": "Product",
+      "serial": "Serial"
+    }
+  },
+  "actions": {
+    "create": "Create Serial",
+    "edit": "Edit Serial",
+    "show": "Show Serial",
+    "delete": "Delete Serial"
+  },
+  "fields": {
+    "stock_transfer_id": "Stock Transfer",
+    "stock_transfer_item_id": "Stock Transfer by Item",
+    "serial": "Serial"
+  }
+}

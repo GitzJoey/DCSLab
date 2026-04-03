@@ -98,8 +98,8 @@ import StockTransferIndex from '@/pages/stock-transfer/StockTransferIndex.vue';
 import StockTransferList from '@/pages/stock-transfer/StockTransferList.vue';
 import StockTransferCreate from '@/pages/stock-transfer/StockTransferCreate.vue';
 import StockTransferEdit from '@/pages/stock-transfer/StockTransferEdit.vue';
-import StockTransferProductUnitList from '@/pages/stock-transfer/StockTransferProductUnitList.vue';
-import StockTransferProductUnitSerialList from '@/pages/stock-transfer/StockTransferProductUnitSerialList.vue';
+import StockTransferItemList from '@/pages/stock-transfer/StockTransferItemList.vue';
+import StockTransferItemSerialList from '@/pages/stock-transfer/StockTransferItemSerialList.vue';
 import ProductWithRemainingStockIndex from '@/pages/product/ProductWithRemainingStockIndex.vue';
 import ProductWithRemainingStockList from '@/pages/product/ProductWithRemainingStockList.vue';
 
@@ -864,18 +864,18 @@ export default [
           },
           // Stock Transfer Product Unit
           {
-            path: '/dashboard/stock-transfer-product-unit',
-            name: 'side-menu-stock-transfer-product-unit',
-            component: StockTransferProductUnitList,
+            path: '/dashboard/stock-transfer-item',
+            name: 'side-menu-stock-transfer-item',
+            component: StockTransferItemList,
             meta: {
               remember: true,
             },
           },
           // Stock Transfer Product Unit Serial
           {
-            path: '/dashboard/stock-transfer-product-unit-serial',
-            name: 'side-menu-stock-transfer-product-unit-serial',
-            component: StockTransferProductUnitSerialList,
+            path: '/dashboard/stock-transfer-item-serial',
+            name: 'side-menu-stock-transfer-item-serial',
+            component: StockTransferItemSerialList,
             meta: {
               remember: true,
             },

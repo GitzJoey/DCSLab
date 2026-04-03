@@ -1,0 +1,22 @@
+{
+  "page_title": "Serial Transfer Stok per Item",
+  "table": {
+    "title": "Daftar Serial Transfer Stok per Item",
+    "cols": {
+      "stock_transfer_code": "Kode",
+      "product_name": "Produk",
+      "serial": "Serial"
+    }
+  },
+  "actions": {
+    "create": "Tambah Serial",
+    "edit": "Ubah Serial",
+    "show": "Lihat Serial",
+    "delete": "Hapus Serial"
+  },
+  "fields": {
+    "stock_transfer_id": "Transfer Stok",
+    "stock_transfer_item_id": "Transfer Stok per Item",
+    "serial": "Serial"
+  }
+}

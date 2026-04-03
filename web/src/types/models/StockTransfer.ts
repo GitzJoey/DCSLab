@@ -1,7 +1,7 @@
 import { Company } from './Company';
 import { Branch } from './Branch';
 import { Warehouse } from './Warehouse';
-import { StockTransferProductUnit } from './StockTransferProductUnit';
+import { StockTransferItem } from './StockTransferItem';
 
 export interface StockTransfer {
   id: string;
@@ -14,5 +14,5 @@ export interface StockTransfer {
   destination_warehouse: Warehouse | null;
   remarks: string | null;
   is_posted: boolean;
-  product_units: StockTransferProductUnit[];
+  items: StockTransferItem[];
 }

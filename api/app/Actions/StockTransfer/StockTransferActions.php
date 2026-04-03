@@ -2,11 +2,11 @@
 
 namespace App\Actions\StockTransfer;
 
-use App\Actions\StockTransferProductUnit\StockTransferProductUnitActions;
+use App\Actions\StockTransferItem\StockTransferItemActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\StockTransferCreateDTO;
-use App\DTOs\StockTransferProductUnitCreateDTO;
-use App\DTOs\StockTransferProductUnitUpdateDTO;
+use App\DTOs\StockTransferItemCreateDTO;
+use App\DTOs\StockTransferItemUpdateDTO;
 use App\DTOs\StockTransferUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
@@ -21,12 +21,12 @@ class StockTransferActions
     use CacheHelper;
     use LoggerHelper;
 
-    private $stockTransferProductUnitActions;
+    private $stockTransferItemActions;
 
     public function __construct(
-        StockTransferProductUnitActions $stockTransferProductUnitActions,
+        StockTransferItemActions $stockTransferItemActions,
     ) {
-        $this->stockTransferProductUnitActions = $stockTransferProductUnitActions;
+        $this->stockTransferItemActions = $stockTransferItemActions;
     }
 
     public function readAny(
@@ -46,10 +46,10 @@ class StockTransferActions
             ->with(['company', 'branch', 'sourceWarehouse', 'destinationWarehouse'])
             ->when($execute?->pagination, function ($query) {
                 $query->with([
-                    'stockTransferProductUnits.productUnit.unit',
-                    'stockTransferProductUnits.productUnit.product.images',
-                    'stockTransferProductUnits.productUnit.product.baseProductUnit.unit',
-                    'stockTransferProductUnits.serials',
+                    'stockTransferItems.productUnit.unit',
+                    'stockTransferItems.productUnit.product.images',
+                    'stockTransferItems.productUnit.product.baseProductUnit.unit',
+                    'stockTransferItems.serials',
                 ]);
             })
             ->join('companies', 'companies.id', '=', 'stock_transfers.company_id')
@@ -160,11 +160,11 @@ class StockTransferActions
             'branch',
             'sourceWarehouse',
             'destinationWarehouse',
-            'stockTransferProductUnits.productUnit',
-            'stockTransferProductUnits.productUnit.unit',
-            'stockTransferProductUnits.productUnit.product.images',
-            'stockTransferProductUnits.productUnit.product.baseProductUnit.unit',
-            'stockTransferProductUnits.serials',
+            'stockTransferItems.productUnit',
+            'stockTransferItems.productUnit.unit',
+            'stockTransferItems.productUnit.product.images',
+            'stockTransferItems.productUnit.product.baseProductUnit.unit',
+            'stockTransferItems.serials',
         ]);
     }
 
@@ -184,7 +184,7 @@ class StockTransferActions
             $stockTransfer->is_posted = $data->isPosted;
             $stockTransfer->save();
 
-            $this->saveProductUnits($stockTransfer, $data->productUnits);
+            $this->saveItems($stockTransfer, $data->items);
 
             $this->flushCache();
 
@@ -198,20 +198,20 @@ class StockTransferActions
         }
     }
 
-    private function saveProductUnits(StockTransfer $stockTransfer, array $productUnits): void
+    private function saveItems(StockTransfer $stockTransfer, array $items): void
     {
-        foreach ($productUnits as $productUnit) {
-            $data = new StockTransferProductUnitCreateDTO(
+        foreach ($items as $item) {
+            $data = new StockTransferItemCreateDTO(
                 companyId: $stockTransfer->company_id,
                 branchId: $stockTransfer->branch_id,
                 stockTransferId: $stockTransfer->id,
-                qty: $productUnit['qty'],
-                productUnitId: $productUnit['product_unit_id'],
-                productUnitConversionValue: $productUnit['product_unit_conversion_value'],
-                remarks: $productUnit['remarks'],
-                serials: $productUnit['serials'],
+                qty: $item['qty'],
+                productUnitId: $item['product_unit_id'],
+                productUnitConversionValue: $item['product_unit_conversion_value'],
+                remarks: $item['remarks'],
+                serials: $item['serials'],
             );
-            $this->stockTransferProductUnitActions->create($data);
+            $this->stockTransferItemActions->create($data);
         }
     }
 
@@ -230,7 +230,7 @@ class StockTransferActions
             $stockTransfer->is_posted = $data->isPosted;
             $stockTransfer->save();
 
-            $this->updateProductUnits($stockTransfer, $data->deleteProductUnitIds, $data->productUnits);
+            $this->updateItems($stockTransfer, $data->deleteItemIds, $data->items);
 
             $this->flushCache();
 
@@ -244,37 +244,37 @@ class StockTransferActions
         }
     }
 
-    private function updateProductUnits(StockTransfer $stockTransfer, array $deleteIds, array $productUnits): void
+    private function updateItems(StockTransfer $stockTransfer, array $deleteIds, array $items): void
     {
         foreach ($deleteIds as $deleteId) {
-            $stockTransferProductUnit = $stockTransfer->stockTransferProductUnits()->findOrFail($deleteId);
-            $this->stockTransferProductUnitActions->delete($stockTransferProductUnit);
+            $stockTransferItem = $stockTransfer->stockTransferItems()->findOrFail($deleteId);
+            $this->stockTransferItemActions->delete($stockTransferItem);
         }
 
-        foreach ($productUnits as $productUnit) {
-            if ($productUnit['id']) {
-                $stockTransferProductUnit = $stockTransfer->stockTransferProductUnits()->findOrFail($productUnit['id']);
-                $data = new StockTransferProductUnitUpdateDTO(
-                    qty: $productUnit['qty'],
-                    productUnitId: $productUnit['product_unit_id'],
-                    productUnitConversionValue: $productUnit['product_unit_conversion_value'],
-                    remarks: $productUnit['remarks'],
-                    deleteSerialIds: $productUnit['delete_serial_ids'],
-                    serials: $productUnit['serials'],
+        foreach ($items as $item) {
+            if ($item['id']) {
+                $stockTransferItem = $stockTransfer->stockTransferItems()->findOrFail($item['id']);
+                $data = new StockTransferItemUpdateDTO(
+                    qty: $item['qty'],
+                    productUnitId: $item['product_unit_id'],
+                    productUnitConversionValue: $item['product_unit_conversion_value'],
+                    remarks: $item['remarks'],
+                    deleteSerialIds: $item['delete_serial_ids'],
+                    serials: $item['serials'],
                 );
-                $this->stockTransferProductUnitActions->update($stockTransferProductUnit, $data);
+                $this->stockTransferItemActions->update($stockTransferItem, $data);
             } else {
-                $data = new StockTransferProductUnitCreateDTO(
+                $data = new StockTransferItemCreateDTO(
                     companyId: $stockTransfer->company_id,
                     branchId: $stockTransfer->branch_id,
                     stockTransferId: $stockTransfer->id,
-                    qty: $productUnit['qty'],
-                    productUnitId: $productUnit['product_unit_id'],
-                    productUnitConversionValue: $productUnit['product_unit_conversion_value'],
-                    remarks: $productUnit['remarks'],
-                    serials: $productUnit['serials'],
+                    qty: $item['qty'],
+                    productUnitId: $item['product_unit_id'],
+                    productUnitConversionValue: $item['product_unit_conversion_value'],
+                    remarks: $item['remarks'],
+                    serials: $item['serials'],
                 );
-                $this->stockTransferProductUnitActions->create($data);
+                $this->stockTransferItemActions->create($data);
             }
         }
     }

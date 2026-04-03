@@ -1,0 +1,30 @@
+{
+  "page_title": "Transfer Stok per Item",
+  "table": {
+    "title": "Daftar Transfer Stok per Item",
+    "cols": {
+      "product": "Produk",
+      "qty": "Qty",
+      "product_unit": "Satuan Produk",
+      "product_unit_conversion_value": "Nilai Konversi",
+      "product_unit_qty_base": "Qty Dasar",
+      "remarks": "Catatan"
+    }
+  },
+  "actions": {
+    "create": "Tambah Item",
+    "edit": "Ubah Item",
+    "show": "Detail Item",
+    "delete": "Hapus Item"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "stock_transfer_id": "Transfer Stok",
+    "qty": "Qty",
+    "product_unit_id": "Satuan Produk",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_qty_base": "Qty Dasar",
+    "remarks": "Catatan"
+  }
+}

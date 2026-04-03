@@ -20,7 +20,7 @@
   "field_groups": {
     "company_info": "Company Information",
     "stock_transfer_data": "Stock Transfer Data",
-    "product_units": "Product Units"
+    "items": "Items"
   },
   "fields": {
     "company_id": "Company",
@@ -36,7 +36,7 @@
     "destination_warehouse_id": "Destination Warehouse",
     "remarks": "Remarks",
     "is_posted": "Posted",
-    "product_units": "Product Units"
+    "items": "Items"
   },
   "alert": {
     "create": {

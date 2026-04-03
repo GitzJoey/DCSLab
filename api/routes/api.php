@@ -25,8 +25,8 @@ use App\Http\Controllers\StockAdjustmentInProductSerialController;
 use App\Http\Controllers\StockAdjustmentOutProductController;
 use App\Http\Controllers\StockAdjustmentOutProductSerialController;
 use App\Http\Controllers\StockTransferController;
-use App\Http\Controllers\StockTransferProductUnitController;
-use App\Http\Controllers\StockTransferProductUnitSerialController;
+use App\Http\Controllers\StockTransferItemController;
+use App\Http\Controllers\StockTransferItemSerialController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
@@ -314,29 +314,29 @@ Route::prefix('stock_transfer')->middleware('auth:sanctum')->group(function () {
     });
 });
 
-Route::prefix('stock_transfer_product_unit')->middleware('auth:sanctum')->group(function () {
-    Route::middleware('throttle:100,1')->name('api.get.stock_transfer_product_unit.')->group(function () {
-        Route::get('read', [StockTransferProductUnitController::class, 'readAny'])->name('read_any');
-        Route::get('read/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'read'])->name('read');
+Route::prefix('stock_transfer_item')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_transfer_item.')->group(function () {
+        Route::get('read', [StockTransferItemController::class, 'readAny'])->name('read_any');
+        Route::get('read/{stock_transfer_item:ulid}', [StockTransferItemController::class, 'read'])->name('read');
     });
 
-    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_transfer_product_unit.')->group(function () {
-        Route::post('save', [StockTransferProductUnitController::class, 'store'])->name('save');
-        Route::post('edit/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'update'])->name('edit');
-        Route::post('delete/{stock_transfer_product_unit:ulid}', [StockTransferProductUnitController::class, 'delete'])->name('delete');
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_transfer_item.')->group(function () {
+        Route::post('save', [StockTransferItemController::class, 'store'])->name('save');
+        Route::post('edit/{stock_transfer_item:ulid}', [StockTransferItemController::class, 'update'])->name('edit');
+        Route::post('delete/{stock_transfer_item:ulid}', [StockTransferItemController::class, 'delete'])->name('delete');
     });
 });
 
-Route::prefix('stock_transfer_product_unit_serial')->middleware('auth:sanctum')->group(function () {
-    Route::middleware('throttle:100,1')->name('api.get.stock_transfer_product_unit_serial.')->group(function () {
-        Route::get('read', [StockTransferProductUnitSerialController::class, 'readAny'])->name('read_any');
-        Route::get('read/{stpu_serial:ulid}', [StockTransferProductUnitSerialController::class, 'read'])->name('read');
+Route::prefix('stock_transfer_item_serial')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.stock_transfer_item_serial.')->group(function () {
+        Route::get('read', [StockTransferItemSerialController::class, 'readAny'])->name('read_any');
+        Route::get('read/{stock_transfer_item_serial:ulid}', [StockTransferItemSerialController::class, 'read'])->name('read');
     });
 
-    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_transfer_product_unit_serial.')->group(function () {
-        Route::post('save', [StockTransferProductUnitSerialController::class, 'store'])->name('save');
-        Route::post('edit/{stpu_serial:ulid}', [StockTransferProductUnitSerialController::class, 'update'])->name('edit');
-        Route::post('delete/{stpu_serial:ulid}', [StockTransferProductUnitSerialController::class, 'delete'])->name('delete');
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.stock_transfer_item_serial.')->group(function () {
+        Route::post('save', [StockTransferItemSerialController::class, 'store'])->name('save');
+        Route::post('edit/{stock_transfer_item_serial:ulid}', [StockTransferItemSerialController::class, 'update'])->name('edit');
+        Route::post('delete/{stock_transfer_item_serial:ulid}', [StockTransferItemSerialController::class, 'delete'])->name('delete');
     });
 });
 

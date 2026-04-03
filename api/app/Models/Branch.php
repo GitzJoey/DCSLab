@@ -56,14 +56,14 @@ class Branch extends Model
         return $this->hasMany(StockTransfer::class);
     }
 
-    public function stockTransferProductUnits()
+    public function stockTransferItems()
     {
-        return $this->hasMany(StockTransferProductUnit::class);
+        return $this->hasMany(StockTransferItem::class);
     }
 
-    public function stockTransferProductUnitSerials()
+    public function stockTransferItemSerials()
     {
-        return $this->hasMany(StockTransferProductUnitSerial::class);
+        return $this->hasMany(StockTransferItemSerial::class);
     }
 
     public function scopeSearch($query, string $search)

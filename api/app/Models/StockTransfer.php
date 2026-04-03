@@ -53,9 +53,9 @@ class StockTransfer extends Model
         return $this->belongsTo(Warehouse::class, 'destination_warehouse_id')->withTrashed();
     }
 
-    public function stockTransferProductUnits()
+    public function stockTransferItems()
     {
-        return $this->hasMany(StockTransferProductUnit::class);
+        return $this->hasMany(StockTransferItem::class);
     }
 
     public function scopeSearch($query, string $search)

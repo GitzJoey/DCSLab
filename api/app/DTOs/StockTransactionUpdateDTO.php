@@ -4,7 +4,7 @@ namespace App\DTOs;
 
 use App\Models\StockAdjustmentInProduct;
 use App\Models\StockAdjustmentOutProduct;
-use App\Models\StockTransferProductUnit;
+use App\Models\StockTransferItem;
 
 final class StockTransactionUpdateDTO
 {
@@ -42,27 +42,27 @@ final class StockTransactionUpdateDTO
         );
     }
 
-    public static function fromStockTransferProductUnitSource(StockTransferProductUnit $stockTransferProductUnit): self
+    public static function fromStockTransferItemSource(StockTransferItem $stockTransferItem): self
     {
         return new self(
-            referableType: StockTransferProductUnit::class,
-            referableId: $stockTransferProductUnit->id,
-            date: $stockTransferProductUnit->stockTransfer->date,
-            warehouseId: $stockTransferProductUnit->stockTransfer->source_warehouse_id,
-            productId: $stockTransferProductUnit->productUnit->product_id,
-            baseQty: $stockTransferProductUnit->product_unit_qty_base * -1,
+            referableType: StockTransferItem::class,
+            referableId: $stockTransferItem->id,
+            date: $stockTransferItem->stockTransfer->date,
+            warehouseId: $stockTransferItem->stockTransfer->source_warehouse_id,
+            productId: $stockTransferItem->productUnit->product_id,
+            baseQty: $stockTransferItem->product_unit_qty_base * -1,
         );
     }
 
-    public static function fromStockTransferProductUnitDestination(StockTransferProductUnit $stockTransferProductUnit): self
+    public static function fromStockTransferItemDestination(StockTransferItem $stockTransferItem): self
     {
         return new self(
-            referableType: StockTransferProductUnit::class,
-            referableId: $stockTransferProductUnit->id,
-            date: $stockTransferProductUnit->stockTransfer->date,
-            warehouseId: $stockTransferProductUnit->stockTransfer->destination_warehouse_id,
-            productId: $stockTransferProductUnit->productUnit->product_id,
-            baseQty: $stockTransferProductUnit->product_unit_qty_base,
+            referableType: StockTransferItem::class,
+            referableId: $stockTransferItem->id,
+            date: $stockTransferItem->stockTransfer->date,
+            warehouseId: $stockTransferItem->stockTransfer->destination_warehouse_id,
+            productId: $stockTransferItem->productUnit->product_id,
+            baseQty: $stockTransferItem->product_unit_qty_base,
         );
     }
 }

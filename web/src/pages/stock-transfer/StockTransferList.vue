@@ -425,17 +425,17 @@ const showAlertPlaceholder = (
             class="col-span-12 border-t border-slate-200 dark:border-darkmode-400 mt-2 pt-3"
           >
             <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
-              {{ t('views.stock_transfer.field_groups.product_units') }}
+              {{ t('views.stock_transfer.field_groups.items') }}
             </div>
             <div
-              v-if="((item as StockTransfer).product_units?.length ?? 0) === 0"
+              v-if="((item as StockTransfer).items?.length ?? 0) === 0"
               class="text-slate-500 text-xs italic"
             >
               {{ t('components.data-list.data_not_found') }}
             </div>
             <div v-else class="space-y-2 text-xs">
               <div
-                v-for="(productUnit, productIdx) in (item as StockTransfer).product_units"
+                v-for="(productUnit, productIdx) in (item as StockTransfer).items"
                 :key="productUnit.ulid"
                 class="flex gap-2"
               >
@@ -445,17 +445,17 @@ const showAlertPlaceholder = (
                     [{{ productUnit.product_unit.code }}] {{ productUnit.product_unit.product.name }}
                   </div>
                   <div class="text-slate-500">
-                    {{ t('views.stock_transfer_product_unit.fields.qty') }}:
+                    {{ t('views.stock_transfer_item.fields.qty') }}:
                     <span class="font-medium">
                       {{ formatCurrency(productUnit.qty) }} {{ productUnit.product_unit.unit.name }}
                     </span>
                   </div>
                   <div v-if="Number(productUnit.product_unit_conversion_value ?? 1) > 1" class="text-slate-500">
-                    {{ t('views.stock_transfer_product_unit.fields.product_unit_conversion_value') }}:
+                    {{ t('views.stock_transfer_item.fields.product_unit_conversion_value') }}:
                     <span class="font-medium">{{ formatCurrency(productUnit.product_unit_conversion_value) }}</span>
                   </div>
                   <div v-if="productUnit.remarks?.trim()" class="text-slate-500">
-                    {{ t('views.stock_transfer_product_unit.fields.remarks') }}:
+                    {{ t('views.stock_transfer_item.fields.remarks') }}:
                     <span class="font-medium">{{ productUnit.remarks }}</span>
                   </div>
                   <div v-if="productUnit.product_unit?.product?.is_use_serial_number" class="text-slate-500 mt-0.5">

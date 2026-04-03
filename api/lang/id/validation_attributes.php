@@ -231,6 +231,22 @@ return [
         'remarks' => 'Catatan',
         'is_posted' => 'Diposting',
     ],
+    'stock_transfer_item' => [
+        'company' => 'Perusahaan',
+        'branch' => 'Cabang',
+        'stock_transfer' => 'Transfer Stok',
+        'qty' => 'Qty',
+        'product_unit' => 'Satuan Produk',
+        'product_unit_conversion_value' => 'Nilai Konversi Satuan',
+        'remarks' => 'Catatan',
+    ],
+    'stock_transfer_item_serial' => [
+        'company' => 'Perusahaan',
+        'branch' => 'Cabang',
+        'stock_transfer' => 'Transfer Stok',
+        'stock_transfer_item' => 'Transfer Stok per Item',
+        'serial' => 'Serial',
+    ],
     'stock_adjustment' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',

@@ -163,7 +163,7 @@ class StockTransferController extends BaseController
                     destinationWarehouseId: $validatedRequest['destination_warehouse_id'],
                     remarks: $validatedRequest['remarks'],
                     isPosted: $validatedRequest['is_posted'],
-                    productUnits: $validatedRequest['product_units'],
+                    items: $validatedRequest['items'],
                 )
             );
 
@@ -205,8 +205,8 @@ class StockTransferController extends BaseController
                     destinationWarehouseId: $validatedRequest['destination_warehouse_id'],
                     remarks: $validatedRequest['remarks'],
                     isPosted: $validatedRequest['is_posted'],
-                    deleteProductUnitIds: $validatedRequest['delete_product_unit_ids'],
-                    productUnits: $validatedRequest['product_units'],
+                    deleteItemIds: $validatedRequest['delete_item_ids'],
+                    items: $validatedRequest['items'],
                 )
             );
 

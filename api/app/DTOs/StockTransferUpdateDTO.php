@@ -13,8 +13,8 @@ final class StockTransferUpdateDTO
         public readonly int $destinationWarehouseId,
         public readonly ?string $remarks,
         public readonly bool $isPosted,
-        public readonly array $deleteProductUnitIds,
-        public readonly array $productUnits,
+        public readonly array $deleteItemIds,
+        public readonly array $items,
     ) {
     }
 }

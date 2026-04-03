@@ -43,7 +43,7 @@ export default class StockTransferService {
       destination_warehouse_id: '',
       remarks: '',
       is_posted: true,
-      product_units: [] as NonNullable<StockTransferStoreRequest['product_units']>,
+      items: [] as NonNullable<StockTransferStoreRequest['items']>,
     });
 
     return form;
@@ -71,8 +71,8 @@ export default class StockTransferService {
       destination_warehouse_id: '',
       remarks: '',
       is_posted: false,
-      delete_product_unit_ids: [] as NonNullable<StockTransferUpdateRequest['delete_product_unit_ids']>,
-      product_units: [] as NonNullable<StockTransferUpdateRequest['product_units']>,
+      delete_item_ids: [] as NonNullable<StockTransferUpdateRequest['delete_item_ids']>,
+      items: [] as NonNullable<StockTransferUpdateRequest['items']>,
     });
 
     return form;

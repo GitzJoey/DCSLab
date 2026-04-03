@@ -247,4 +247,20 @@ return [
         'remarks' => 'Remarks',
         'is_posted' => 'Is Posted',
     ],
+    'stock_transfer_item' => [
+        'company' => 'Company',
+        'branch' => 'Branch',
+        'stock_transfer' => 'Stock Transfer',
+        'qty' => 'Qty',
+        'product_unit' => 'Product Unit',
+        'product_unit_conversion_value' => 'Product Unit Conversion Value',
+        'remarks' => 'Remarks',
+    ],
+    'stock_transfer_item_serial' => [
+        'company' => 'Company',
+        'branch' => 'Branch',
+        'stock_transfer' => 'Stock Transfer',
+        'stock_transfer_item' => 'Stock Transfer by Item',
+        'serial' => 'Serial',
+    ],
 ];

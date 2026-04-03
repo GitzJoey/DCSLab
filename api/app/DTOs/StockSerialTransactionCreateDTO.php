@@ -4,7 +4,7 @@ namespace App\DTOs;
 
 use App\Models\StockAdjustmentInProductSerial;
 use App\Models\StockAdjustmentOutProductSerial;
-use App\Models\StockTransferProductUnitSerial;
+use App\Models\StockTransferItemSerial;
 
 final class StockSerialTransactionCreateDTO
 {
@@ -45,27 +45,27 @@ final class StockSerialTransactionCreateDTO
         );
     }
 
-    public static function fromStockTransferProductUnitSerialSource(StockTransferProductUnitSerial $stockTransferProductUnitSerial, string $serial): self
+    public static function fromStockTransferItemSerialSource(StockTransferItemSerial $stockTransferItemSerial, string $serial): self
     {
         return new self(
-            referableType: StockTransferProductUnitSerial::class,
-            referableId: $stockTransferProductUnitSerial->id,
-            date: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->date,
-            warehouseId: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->source_warehouse_id,
-            productId: $stockTransferProductUnitSerial->stockTransferProductUnit->productUnit->product_id,
+            referableType: StockTransferItemSerial::class,
+            referableId: $stockTransferItemSerial->id,
+            date: $stockTransferItemSerial->stockTransferItem->stockTransfer->date,
+            warehouseId: $stockTransferItemSerial->stockTransferItem->stockTransfer->source_warehouse_id,
+            productId: $stockTransferItemSerial->stockTransferItem->productUnit->product_id,
             direction: -1,
             serial: $serial,
         );
     }
 
-    public static function fromStockTransferProductUnitSerialDestination(StockTransferProductUnitSerial $stockTransferProductUnitSerial, string $serial): self
+    public static function fromStockTransferItemSerialDestination(StockTransferItemSerial $stockTransferItemSerial, string $serial): self
     {
         return new self(
-            referableType: StockTransferProductUnitSerial::class,
-            referableId: $stockTransferProductUnitSerial->id,
-            date: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->date,
-            warehouseId: $stockTransferProductUnitSerial->stockTransferProductUnit->stockTransfer->destination_warehouse_id,
-            productId: $stockTransferProductUnitSerial->stockTransferProductUnit->productUnit->product_id,
+            referableType: StockTransferItemSerial::class,
+            referableId: $stockTransferItemSerial->id,
+            date: $stockTransferItemSerial->stockTransferItem->stockTransfer->date,
+            warehouseId: $stockTransferItemSerial->stockTransferItem->stockTransfer->destination_warehouse_id,
+            productId: $stockTransferItemSerial->stockTransferItem->productUnit->product_id,
             direction: 1,
             serial: $serial,
         );

@@ -39,13 +39,13 @@ class StockTransferStoreRequest extends FormRequest
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
             'is_posted' => ['required', 'boolean'],
 
-            'product_units' => ['required', 'array', 'min:1'],
-            'product_units.*.qty' => ['required', 'numeric', 'min:1'],
-            'product_units.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
-            'product_units.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
-            'product_units.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
-            'product_units.*.serials' => ['present', 'array'],
-            'product_units.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.qty' => ['required', 'numeric', 'min:1'],
+            'items.*.product_unit_id' => ['required', 'integer', 'distinct', new ExistsForCompany('product_units', $this->company_id)],
+            'items.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
+            'items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'items.*.serials' => ['present', 'array'],
+            'items.*.serials.*.serial' => ['required', 'distinct', 'string', 'max:255'],
         ];
     }
 
@@ -73,9 +73,9 @@ class StockTransferStoreRequest extends FormRequest
             'remarks' => $this->filled('remarks') ? $this['remarks'] : null,
         ]);
 
-        if (is_array($this->input('product_units'))) {
+        if (is_array($this->input('items'))) {
             $productUnits = [];
-            foreach ($this->input('product_units') as $item) {
+            foreach ($this->input('items') as $item) {
                 if (isset($item['product_unit_id'])) {
                     $item['product_unit_id'] = HashidsHelper::decodeId($item['product_unit_id']);
                 }
@@ -83,7 +83,7 @@ class StockTransferStoreRequest extends FormRequest
                 $item['serials'] = $item['serials'] ?? [];
                 $productUnits[] = $item;
             }
-            $this->merge(['product_units' => $productUnits]);
+            $this->merge(['items' => $productUnits]);
         }
     }
 
@@ -94,7 +94,7 @@ class StockTransferStoreRequest extends FormRequest
                 return;
             }
 
-            foreach (($validator->getData()['product_units'] ?? []) as $index => $productUnit) {
+            foreach (($validator->getData()['items'] ?? []) as $index => $productUnit) {
                 $productUnitId = $productUnit['product_unit_id'] ?? null;
                 $qty = $productUnit['qty'] ?? null;
                 $conversionValue = $productUnit['product_unit_conversion_value'] ?? null;
@@ -112,14 +112,14 @@ class StockTransferStoreRequest extends FormRequest
                 $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
                 $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
                 if (str_contains($normalizedBaseQty, '.')) {
-                    $validator->errors()->add('product_units.'.$index.'.serials', 'Base qty harus bilangan bulat untuk product serial.');
+                    $validator->errors()->add('items.'.$index.'.serials', 'Base qty harus bilangan bulat untuk product serial.');
 
                     continue;
                 }
 
                 $serialCount = (string) count(is_array($serials) ? $serials : []);
                 if (bccomp($serialCount, $baseQty, 8) !== 0) {
-                    $validator->errors()->add('product_units.'.$index.'.serials', 'Jumlah serial harus sama dengan qty base.');
+                    $validator->errors()->add('items.'.$index.'.serials', 'Jumlah serial harus sama dengan qty base.');
                 }
             }
         });
