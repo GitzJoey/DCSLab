@@ -30,8 +30,6 @@ class ProductActions
 
         ?int $categoryId,
         ?int $brandId,
-        ?bool $isTaxable,
-        ?float $vatRate,
         ?bool $isPriceIncludeVat,
         ?bool $isUseSerialNumber,
         ?bool $isExpirable,
@@ -70,8 +68,6 @@ class ProductActions
             $search,
             $categoryId,
             $brandId,
-            $isTaxable,
-            $vatRate,
             $isPriceIncludeVat,
             $isUseSerialNumber,
             $isExpirable,
@@ -85,8 +81,6 @@ class ProductActions
                 $search,
                 $categoryId,
                 $brandId,
-                $isTaxable,
-                $vatRate,
                 $isPriceIncludeVat,
                 $isUseSerialNumber,
                 $isExpirable,
@@ -109,14 +103,6 @@ class ProductActions
 
                 if ($brandId) {
                     $query->where('products.brand_id', $brandId);
-                }
-
-                if (! is_null($isTaxable)) {
-                    $query->where('products.is_taxable', $isTaxable);
-                }
-
-                if (! is_null($vatRate)) {
-                    $query->where('products.vat_rate', $vatRate);
                 }
 
                 if (! is_null($isPriceIncludeVat)) {
@@ -206,8 +192,6 @@ class ProductActions
                     empty($search) ? '[empty]' : $search,
                     $categoryId ?? '[null]',
                     $brandId ?? '[null]',
-                    is_null($isTaxable) ? '[null]' : ($isTaxable ? 'true' : 'false'),
-                    $vatRate ?? '[null]',
                     is_null($isPriceIncludeVat) ? '[null]' : ($isPriceIncludeVat ? 'true' : 'false'),
                     is_null($isUseSerialNumber) ? '[null]' : ($isUseSerialNumber ? 'true' : 'false'),
                     is_null($isExpirable) ? '[null]' : ($isExpirable ? 'true' : 'false'),

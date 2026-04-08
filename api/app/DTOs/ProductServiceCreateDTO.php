@@ -9,8 +9,6 @@ final class ProductServiceCreateDTO
         public readonly string $code,
         public readonly int $categoryId,
         public readonly string $name,
-        public readonly bool $isTaxable,
-        public readonly float $vatRate,
         public readonly bool $isPriceIncludeVat,
         public readonly ?string $remarks,
         public readonly int $status,

@@ -5,6 +5,7 @@ namespace App\DTOs;
 use App\Enums\CapitalTransactionTypeEnum;
 use App\Models\CapitalOpening;
 use App\Models\CapitalTransaction;
+use App\Models\PurchaseOrderDownPayment;
 
 final class CashTransactionCreateDTO
 {
@@ -39,6 +40,17 @@ final class CashTransactionCreateDTO
             date: $capitalTransaction->date,
             cashAccountId: $capitalTransaction->cash_account_id,
             amount: $amount,
+        );
+    }
+
+    public static function fromPurchaseOrderDownPayment(PurchaseOrderDownPayment $purchaseOrderDownPayment): self
+    {
+        return new self(
+            referableType: PurchaseOrderDownPayment::class,
+            referableId: $purchaseOrderDownPayment->id,
+            date: $purchaseOrderDownPayment->date,
+            cashAccountId: $purchaseOrderDownPayment->cash_account_id,
+            amount: (float) $purchaseOrderDownPayment->amount,
         );
     }
 }

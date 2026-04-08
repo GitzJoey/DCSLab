@@ -32,8 +32,6 @@
     "unit_id": "Satuan",
     "price": "Harga",
     "point": "Poin",
-    "is_taxable": "Kena Pajak",
-    "vat_rate": "Tarif PPN",
     "is_price_include_vat": "Harga Termasuk PPN",
     "status": "Status",
     "remarks": "Keterangan"

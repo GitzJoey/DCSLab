@@ -324,8 +324,6 @@ const searchProductUnits = async () => {
     search: productSearchText.value,
     category_id: undefined,
     brand_id: undefined,
-    is_taxable: undefined,
-    vat_rate: undefined,
     is_price_include_vat: undefined,
     is_use_serial_number: undefined,
     is_expirable: undefined,

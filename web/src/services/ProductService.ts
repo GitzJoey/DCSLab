@@ -42,8 +42,6 @@ export default class ProductService {
       if (args.search) queryParams['search'] = args.search;
       if (args.category_id) queryParams['category_id'] = args.category_id;
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
-      if (args.is_taxable !== undefined && args.is_taxable !== null) queryParams['is_taxable'] = args.is_taxable;
-      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
       if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat;
       if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
@@ -117,9 +115,6 @@ export default class ProductService {
       queryParams['search'] = args.search ? args.search : '';
       if (args.category_id) queryParams['category_id'] = args.category_id;
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
-      if (args.is_taxable !== undefined && args.is_taxable !== null)
-        queryParams['is_taxable'] = args.is_taxable ? 1 : 0;
-      if (args.vat_rate !== undefined && args.vat_rate !== null) queryParams['vat_rate'] = args.vat_rate;
       if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat ? 1 : 0;
       if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
@@ -224,8 +219,6 @@ export default class ProductService {
       category_id: '',
       brand_id: null,
       name: '',
-      is_taxable: false,
-      vat_rate: 0,
       is_price_include_vat: false,
       is_use_serial_number: false,
       is_expirable: false,
@@ -262,8 +255,6 @@ export default class ProductService {
       category_id: '',
       brand_id: null,
       name: '',
-      is_taxable: false,
-      vat_rate: 0,
       is_price_include_vat: false,
       is_use_serial_number: false,
       is_expirable: false,
@@ -294,8 +285,6 @@ export default class ProductService {
       code: '_AUTO_',
       category_id: '',
       name: '',
-      is_taxable: false,
-      vat_rate: 0,
       is_price_include_vat: false,
       remarks: null,
       status: '',
@@ -329,8 +318,6 @@ export default class ProductService {
       code: '',
       category_id: '',
       name: '',
-      is_taxable: false,
-      vat_rate: 0,
       is_price_include_vat: false,
       remarks: null,
       status: '',

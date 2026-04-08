@@ -53,8 +53,6 @@
     "is_manufacturer_sku": "Is Manufacture SKU",
     "price": "Price",
     "point": "Point",
-    "is_taxable": "Taxable",
-    "vat_rate": "VAT Rate",
     "is_price_include_vat": "Price Include VAT",
     "is_use_serial_number": "Use Serial Number",
     "serial_number": "Serial Number",

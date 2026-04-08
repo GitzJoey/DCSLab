@@ -38,8 +38,6 @@ class ProductServiceActions
             $product->category_id = $data->categoryId;
             $product->brand_id = null;
             $product->name = $data->name;
-            $product->is_taxable = $data->isTaxable;
-            $product->vat_rate = $data->vatRate;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
             $product->is_use_serial_number = false;
             $product->is_expirable = false;
@@ -89,8 +87,6 @@ class ProductServiceActions
             $product->category_id = $data->categoryId;
             $product->brand_id = null;
             $product->name = $data->name;
-            $product->is_taxable = $data->isTaxable;
-            $product->vat_rate = $data->vatRate;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
             $product->is_use_serial_number = false;
             $product->is_expirable = false;

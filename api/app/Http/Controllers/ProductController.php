@@ -74,8 +74,6 @@ class ProductController extends BaseController
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'category_id' => ['nullable', 'integer', new ExistsForCompany('product_categories', $request->company_id)],
             'brand_id' => ['nullable', 'integer', new ExistsForCompany('brands', $request->company_id)],
-            'is_taxable' => ['nullable', 'boolean'],
-            'vat_rate' => ['nullable', 'numeric', 'min:0'],
             'is_price_include_vat' => ['nullable', 'boolean'],
             'is_use_serial_number' => ['nullable', 'boolean'],
             'is_expirable' => ['nullable', 'boolean'],
@@ -125,8 +123,6 @@ class ProductController extends BaseController
 
                 categoryId: $validatedRequest['category_id'] ?? null,
                 brandId: $validatedRequest['brand_id'] ?? null,
-                isTaxable: $validatedRequest['is_taxable'] ?? null,
-                vatRate: $validatedRequest['vat_rate'] ?? null,
                 isPriceIncludeVat: $validatedRequest['is_price_include_vat'] ?? null,
                 isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? null,
                 isExpirable: $validatedRequest['is_expirable'] ?? null,
@@ -214,10 +210,6 @@ class ProductController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
-                return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
-            }
-
             $units = $validatedRequest['product_units'];
 
             $unitCodes = array_map(fn ($u) => $u['code'], $units);
@@ -265,8 +257,6 @@ class ProductController extends BaseController
                     categoryId: $validatedRequest['category_id'],
                     brandId: $validatedRequest['brand_id'] ?? null,
                     name: $validatedRequest['name'],
-                    isTaxable: $validatedRequest['is_taxable'],
-                    vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? false,
                     isExpirable: $validatedRequest['is_expirable'] ?? false,
@@ -310,24 +300,12 @@ class ProductController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
-                return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
-            }
-            if ((bool) $validatedRequest['is_taxable']) {
-                $vat = (float) $validatedRequest['vat_rate'];
-                if ($vat < 0 || $vat > 100) {
-                    return response()->error(['vat_rate' => [trans('rules.product.vat.out_of_range')]], 422);
-                }
-            }
-
             $result = $this->productServiceActions->create(
                 new ProductServiceCreateDTO(
                     companyId: $validatedRequest['company_id'],
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
                     name: $validatedRequest['name'],
-                    isTaxable: $validatedRequest['is_taxable'],
-                    vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     remarks: $validatedRequest['remarks'] ?? null,
                     status: $validatedRequest['status'],
@@ -369,16 +347,6 @@ class ProductController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $product->id
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
-            if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
-                return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
-            }
-            if ((bool) $validatedRequest['is_taxable']) {
-                $vat = (float) $validatedRequest['vat_rate'];
-                if ($vat < 0 || $vat > 100) {
-                    return response()->error(['vat_rate' => [trans('rules.product.vat.out_of_range')]], 422);
-                }
-            }
 
             if (! array_key_exists('delete_product_unit_ids', $validatedRequest)) $validatedRequest['delete_product_unit_ids'] = null;
 
@@ -439,8 +407,6 @@ class ProductController extends BaseController
                     categoryId: $validatedRequest['category_id'],
                     brandId: $validatedRequest['brand_id'] ?? null,
                     name: $validatedRequest['name'],
-                    isTaxable: $validatedRequest['is_taxable'],
-                    vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? false,
                     isExpirable: $validatedRequest['is_expirable'] ?? false,
@@ -487,16 +453,6 @@ class ProductController extends BaseController
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
-            if (! (bool) $validatedRequest['is_taxable'] && (float) $validatedRequest['vat_rate'] > 0) {
-                return response()->error(['vat_rate' => [trans('rules.product.vat.must_be_zero_if_not_taxable')]], 422);
-            }
-            if ((bool) $validatedRequest['is_taxable']) {
-                $vat = (float) $validatedRequest['vat_rate'];
-                if ($vat < 0 || $vat > 100) {
-                    return response()->error(['vat_rate' => [trans('rules.product.vat.out_of_range')]], 422);
-                }
-            }
-
             $result = $this->productServiceActions->update(
                 product: $product,
                 data: new ProductServiceUpdateDTO(
@@ -504,8 +460,6 @@ class ProductController extends BaseController
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
                     name: $validatedRequest['name'],
-                    isTaxable: $validatedRequest['is_taxable'],
-                    vatRate: $validatedRequest['vat_rate'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     remarks: $validatedRequest['remarks'] ?? null,
                     status: $validatedRequest['status'],

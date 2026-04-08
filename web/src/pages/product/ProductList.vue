@@ -378,24 +378,6 @@ const getProductMainImageUrl = (item: Product): string | null => {
                         <div class="grid grid-cols-1 gap-y-2">
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
-                              {{ t('views.product.fields.is_taxable') }}
-                            </div>
-                            <div class="flex-1 font-medium">
-                              {{
-                                item.is_taxable
-                                  ? t('components.dropdown.values.switch.on')
-                                  : t('components.dropdown.values.switch.off')
-                              }}
-                            </div>
-                          </div>
-                          <div class="flex flex-row">
-                            <div class="w-48 text-slate-500">
-                              {{ t('views.product.fields.vat_rate') }}
-                            </div>
-                            <div class="flex-1 font-medium">{{ formatCurrency(item.vat_rate) }}%</div>
-                          </div>
-                          <div class="flex flex-row">
-                            <div class="w-48 text-slate-500">
                               {{ t('views.product.fields.is_price_include_vat') }}
                             </div>
                             <div class="flex-1 font-medium">

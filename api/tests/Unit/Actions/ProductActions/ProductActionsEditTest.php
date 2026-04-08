@@ -71,8 +71,6 @@ class ProductActionsEditTest extends ActionsTestCase
             'code' => $productArr['code'],
             'name' => $productArr['name'],
             'type' => $productArr['type'],
-            'is_taxable' => $productArr['is_taxable'],
-            'vat_rate' => $productArr['vat_rate'],
             'is_price_include_vat' => $productArr['is_price_include_vat'],
             'is_use_serial_number' => $productArr['is_use_serial_number'],
             'is_expirable' => $productArr['is_expirable'],

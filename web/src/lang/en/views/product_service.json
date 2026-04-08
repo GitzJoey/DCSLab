@@ -32,8 +32,6 @@
     "unit_id": "Unit",
     "price": "Price",
     "point": "Point",
-    "is_taxable": "Taxable",
-    "vat_rate": "VAT Rate",
     "is_price_include_vat": "Price Include VAT",
     "status": "Status",
     "remarks": "Remarks"

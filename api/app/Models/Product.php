@@ -24,8 +24,6 @@ class Product extends Model
         'category_id',
         'brand_id',
         'name',
-        'is_taxable',
-        'vat_rate',
         'is_price_include_vat',
         'is_use_serial_number',
         'is_expirable',
@@ -37,8 +35,6 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'is_taxable' => 'boolean',
-            'vat_rate' => 'decimal:8',
             'is_price_include_vat' => 'boolean',
             'is_use_serial_number' => 'boolean',
             'is_expirable' => 'boolean',

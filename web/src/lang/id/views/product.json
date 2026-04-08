@@ -51,8 +51,6 @@
     "is_manufacturer_sku": "SKU Pabrik",
     "price": "Harga",
     "point": "Poin",
-    "is_taxable": "Kena Pajak",
-    "vat_rate": "Tarif PPN",
     "is_price_include_vat": "Harga Termasuk PPN",
     "is_use_serial_number": "Gunakan Nomor Seri",
     "serial_number": "Nomor Seri",

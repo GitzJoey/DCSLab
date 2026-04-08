@@ -25,8 +25,6 @@ class ProductResource extends JsonResource
                 'brand' => new BrandResource($this->whenLoaded('brand')),
             ]),
             'name' => $this->name,
-            'is_taxable' => $this->is_taxable,
-            'vat_rate' => $this->vat_rate,
             'is_price_include_vat' => $this->is_price_include_vat,
             'is_use_serial_number' => $this->is_use_serial_number,
             'is_expirable' => $this->is_expirable,

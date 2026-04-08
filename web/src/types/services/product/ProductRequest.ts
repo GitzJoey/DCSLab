@@ -20,8 +20,6 @@ export interface ProductReadAnyPaginateRequest {
 
   category_id?: string | null;
   brand_id?: string | null;
-  is_taxable?: boolean | null;
-  vat_rate?: number | null;
   is_price_include_vat?: boolean | null;
   is_use_serial_number?: boolean | null;
   is_expirable?: boolean | null;
@@ -42,8 +40,6 @@ export interface ProductReadAnyGetRequest {
 
   category_id?: string | null;
   brand_id?: string | null;
-  is_taxable?: boolean | null;
-  vat_rate?: number | null;
   is_price_include_vat?: boolean | null;
   is_use_serial_number?: boolean | null;
   is_expirable?: boolean | null;
@@ -62,8 +58,6 @@ export interface ProductPhysicalStoreRequest {
   category_id: string;
   brand_id: string;
   name: string;
-  is_taxable: boolean;
-  vat_rate: number;
   is_price_include_vat: boolean;
   is_use_serial_number: boolean;
   is_expirable: boolean;
@@ -84,8 +78,6 @@ export interface ProductPhysicalUpdateRequest {
   category_id: string;
   brand_id: string;
   name: string;
-  is_taxable: boolean;
-  vat_rate: number;
   is_price_include_vat: boolean;
   is_use_serial_number: boolean;
   is_expirable: boolean;
@@ -107,8 +99,6 @@ export interface ProductServiceStoreRequest {
   code: string;
   category_id: string;
   name: string;
-  is_taxable: boolean;
-  vat_rate: number;
   is_price_include_vat: boolean;
   remarks?: string | null;
   status: number;
@@ -127,8 +117,6 @@ export interface ProductServiceUpdateRequest {
   code: string;
   category_id: string;
   name: string;
-  is_taxable: boolean;
-  vat_rate: number;
   is_price_include_vat: boolean;
   remarks?: string | null;
   status: number;

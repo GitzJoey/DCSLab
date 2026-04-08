@@ -147,8 +147,6 @@ const loadData = async () => {
       category_id: result.data.category?.id ?? '',
       brand_id: result.data.brand?.id ?? '',
       name: result.data.name,
-      is_taxable: result.data.is_taxable,
-      vat_rate: result.data.vat_rate,
       is_price_include_vat: result.data.is_price_include_vat,
       is_use_serial_number: result.data.is_use_serial_number,
       is_expirable: result.data.is_expirable,
@@ -501,29 +499,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.name" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
-              <FormLabel :class="{ 'text-danger': productForm.invalid('is_taxable') }">
-                {{ t('views.product.fields.is_taxable') }}
-              </FormLabel>
-              <FormSwitch class="mt-2">
-                <FormSwitch.Input v-model="productForm.is_taxable" type="checkbox" :class="{
-                  'border-danger': productForm.invalid('is_taxable'),
-                }" @change="productForm.validate('is_taxable')" />
-              </FormSwitch>
-              <FormErrorMessages :messages="productForm.errors.is_taxable" />
-            </div>
-
-            <div class="col-span-12 sm:col-span-2" v-if="productForm.is_taxable">
-              <FormLabel :class="{ 'text-danger': productForm.invalid('vat_rate') }">
-                {{ t('views.product.fields.vat_rate') }}
-              </FormLabel>
-              <FormInputCurrency v-model="productForm.vat_rate"
-                :class="{ 'border-danger': productForm.invalid('vat_rate') }"
-                :placeholder="t('views.product.fields.vat_rate')" @change="productForm.validate('vat_rate')" />
-              <FormErrorMessages :messages="productForm.errors.vat_rate" />
-            </div>
-
-            <div class="col-span-12 sm:col-span-2" v-if="productForm.is_taxable">
+            <div class="col-span-12 sm:col-span-2">
               <FormLabel :class="{
                 'text-danger': productForm.invalid('is_price_include_vat'),
               }">

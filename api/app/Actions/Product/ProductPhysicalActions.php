@@ -38,8 +38,6 @@ class ProductPhysicalActions
             $product->category_id = $data->categoryId;
             $product->brand_id = $data->brandId;
             $product->name = $data->name;
-            $product->is_taxable = $data->isTaxable;
-            $product->vat_rate = $data->vatRate;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
             $product->is_use_serial_number = $data->isUseSerialNumber;
             $product->is_expirable = $data->isExpirable;
@@ -95,8 +93,6 @@ class ProductPhysicalActions
             $product->category_id = $data->categoryId;
             $product->brand_id = $data->brandId;
             $product->name = $data->name;
-            $product->is_taxable = $data->isTaxable;
-            $product->vat_rate = $data->vatRate;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
             $product->is_use_serial_number = $data->isUseSerialNumber;
             $product->is_expirable = $data->isExpirable;

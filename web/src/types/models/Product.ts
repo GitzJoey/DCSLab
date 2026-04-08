@@ -12,8 +12,6 @@ export interface Product {
   category: ProductCategory;
   brand: Brand | null;
   name: string;
-  is_taxable: boolean;
-  vat_rate: number;
   is_price_include_vat: boolean;
   is_use_serial_number: boolean;
   is_expirable: boolean;

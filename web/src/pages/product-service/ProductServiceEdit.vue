@@ -121,8 +121,6 @@
         code: result.data.code,
         category_id: result.data.category.id,
         name: result.data.name,
-        is_taxable: result.data.is_taxable,
-        vat_rate: result.data.vat_rate,
         is_price_include_vat: result.data.is_price_include_vat,
         remarks: result.data.remarks,
         status: result.data.status,
@@ -389,42 +387,6 @@
             </div>
 
             <div class="col-span-12 lg:col-span-2">
-              <FormLabel
-                :class="{
-                  'text-danger': productServiceForm.invalid('is_taxable'),
-                }"
-              >
-                {{ t('views.product_service.fields.is_taxable') }}
-              </FormLabel>
-              <FormSwitch class="mt-2">
-                <FormSwitch.Input
-                  v-model="productServiceForm.is_taxable"
-                  type="checkbox"
-                  :class="{
-                    'border-danger': productServiceForm.invalid('is_taxable'),
-                  }"
-                  @change="productServiceForm.validate('is_taxable')"
-                />
-              </FormSwitch>
-              <FormErrorMessages :messages="productServiceForm.errors.is_taxable" />
-            </div>
-
-            <div class="col-span-12 lg:col-span-2" v-if="productServiceForm.is_taxable">
-              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('vat_rate') }">
-                {{ t('views.product_service.fields.vat_rate') }}
-              </FormLabel>
-              <FormInputCurrency
-                v-model="productServiceForm.vat_rate"
-                :class="{
-                  'border-danger': productServiceForm.invalid('vat_rate'),
-                }"
-                :placeholder="t('views.product_service.fields.vat_rate')"
-                @change="productServiceForm.validate('vat_rate')"
-              />
-              <FormErrorMessages :messages="productServiceForm.errors.vat_rate" />
-            </div>
-
-            <div class="col-span-12 lg:col-span-2" v-if="productServiceForm.is_taxable">
               <FormLabel
                 :class="{
                   'text-danger': productServiceForm.invalid('is_price_include_vat'),
