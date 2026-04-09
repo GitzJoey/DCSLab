@@ -185,7 +185,7 @@ class PurchaseOrderActions
 
             $this->flushCache();
 
-            return $purchaseOrder;
+            return $purchaseOrder->refresh();
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -242,18 +242,16 @@ class PurchaseOrderActions
     {
         $timer_start = microtime(true);
 
-        $retval = false;
-
         try {
             $this->purchaseOrderService->deleteGlobalDiscounts($purchaseOrder);
             $this->purchaseOrderService->deleteDownPayments($purchaseOrder);
             $this->purchaseOrderService->deleteItems($purchaseOrder);
 
-            $retval = $purchaseOrder->delete();
+            $result = $purchaseOrder->delete();
 
             $this->flushCache();
 
-            return $retval;
+            return $result;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
