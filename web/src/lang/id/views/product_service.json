@@ -29,6 +29,7 @@
     "code": "Kode",
     "name": "Nama",
     "category_id": "Kategori",
+    "default_vat_profile_id": "Profil PPN",
     "unit_id": "Satuan",
     "price": "Harga",
     "point": "Poin",

@@ -58,6 +58,10 @@ import UnitIndex from '@/pages/unit/UnitIndex.vue';
 import UnitList from '@/pages/unit/UnitList.vue';
 import UnitCreate from '@/pages/unit/UnitCreate.vue';
 import UnitEdit from '@/pages/unit/UnitEdit.vue';
+import VatProfileIndex from '@/pages/vat-profile/VatProfileIndex.vue';
+import VatProfileList from '@/pages/vat-profile/VatProfileList.vue';
+import VatProfileCreate from '@/pages/vat-profile/VatProfileCreate.vue';
+import VatProfileEdit from '@/pages/vat-profile/VatProfileEdit.vue';
 import ProductIndex from '@/pages/product/ProductIndex.vue';
 import ProductList from '@/pages/product/ProductList.vue';
 import ProductCreate from '@/pages/product/ProductCreate.vue';
@@ -436,6 +440,38 @@ export default [
                 path: '/dashboard/product/unit/edit/:ulid',
                 name: 'side-menu-product-unit-edit',
                 component: UnitEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/product/vat-profile',
+            name: 'side-menu-product-vat-profile',
+            redirect: '/dashboard/product/vat-profile/list',
+            component: VatProfileIndex,
+            children: [
+              {
+                path: '/dashboard/product/vat-profile/list',
+                name: 'side-menu-product-vat-profile-list',
+                component: VatProfileList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/product/vat-profile/create',
+                name: 'side-menu-product-vat-profile-create',
+                component: VatProfileCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/product/vat-profile/edit/:ulid',
+                name: 'side-menu-product-vat-profile-edit',
+                component: VatProfileEdit,
                 meta: {
                   remember: true,
                 },

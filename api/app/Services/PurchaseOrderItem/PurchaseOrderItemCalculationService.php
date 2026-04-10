@@ -34,7 +34,8 @@ class PurchaseOrderItemCalculationService
             $poItem,
             $grossTotal,
         );
-        $poItem->product_unit_vat_base = $poItem->product_unit_total_before_vat * $poItem->vat_base_factor;
+        $vatBaseFactor = $poItem->getVatBaseFactorValue();
+        $poItem->product_unit_vat_base = $poItem->product_unit_total_before_vat * $vatBaseFactor;
         $poItem->product_unit_vat = $poItem->product_unit_vat_base * $poItem->vat_rate;
         $poItem->product_unit_rounding = 0;
         $poItem->product_unit_grand_total = $poItem->product_unit_total_before_vat
@@ -101,7 +102,7 @@ class PurchaseOrderItemCalculationService
         PurchaseOrderItem $poItem,
         float $grossTotal,
     ): float {
-        $vatMultiplier = 1 + ($poItem->vat_base_factor * $poItem->vat_rate);
+        $vatMultiplier = 1 + ($poItem->getVatBaseFactorValue() * $poItem->vat_rate);
 
         if ($poItem->is_vat_included && $vatMultiplier > 0) {
             return $grossTotal / $vatMultiplier;

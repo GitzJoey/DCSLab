@@ -31,7 +31,8 @@ return new class extends Migration
             $table->boolean('is_vat_included')->default(false);
             $table->foreignId('vat_profile_id')->nullable()->references('id')->on('vat_profiles');
             $table->decimal('vat_rate', 30, 8)->default(0);
-            $table->decimal('vat_base_factor', 30, 8)->default(1);
+            $table->unsignedInteger('vat_base_numerator')->default(1);
+            $table->unsignedInteger('vat_base_denominator')->default(1);
             $table->decimal('product_unit_vat_base', 30, 8)->default(0);
             $table->decimal('product_unit_vat', 30, 8)->default(0);
             $table->decimal('product_unit_rounding', 30, 8)->default(0);

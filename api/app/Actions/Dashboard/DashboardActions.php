@@ -170,6 +170,12 @@ class DashboardActions
             'title' => 'components.menu.unit',
         ];
 
+        $vatProfile = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-vat-profile',
+            'title' => 'components.menu.vat-profile',
+        ];
+
         $productService = [
             'icon' => 'ChevronRight',
             'pageName' => 'side-menu-product-product-service',
@@ -182,7 +188,7 @@ class DashboardActions
             'title' => 'components.menu.product',
         ];
 
-        array_push($productManagement['subMenu'], $productCategory, $brand, $unit, $product, $productService);
+        array_push($productManagement['subMenu'], $productCategory, $brand, $unit, $vatProfile, $product, $productService);
 
         $supplier = [
             'icon' => 'Users',

@@ -238,7 +238,8 @@ class PurchaseOrderItemActions
             $poItem->is_vat_included = $data->isVatIncluded;
             $poItem->vat_profile_id = $data->vatProfileId;
             $poItem->vat_rate = $data->vatRate;
-            $poItem->vat_base_factor = $data->vatBaseFactor;
+            $poItem->vat_base_numerator = $data->vatBaseNumerator;
+            $poItem->vat_base_denominator = $data->vatBaseDenominator;
             $poItem->remarks = $data->remarks;
             $poItem->save();
 
@@ -275,7 +276,8 @@ class PurchaseOrderItemActions
             $poItem->is_vat_included = $data->isVatIncluded;
             $poItem->vat_profile_id = $data->vatProfileId;
             $poItem->vat_rate = $data->vatRate;
-            $poItem->vat_base_factor = $data->vatBaseFactor;
+            $poItem->vat_base_numerator = $data->vatBaseNumerator;
+            $poItem->vat_base_denominator = $data->vatBaseDenominator;
             $poItem->remarks = $data->remarks;
 
             $this->purchaseOrderItemDiscountService->syncProductUnitPriceDiscounts($poItem, $data->deleteProductUnitPriceDiscountIds, $data->productUnitPriceDiscounts);

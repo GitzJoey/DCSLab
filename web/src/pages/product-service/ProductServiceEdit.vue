@@ -6,6 +6,7 @@
   import ProductService from '@/services/ProductService';
   import ProductCategoryService from '@/services/ProductCategoryService';
   import UnitService from '@/services/UnitService';
+  import VatProfileService from '@/services/VatProfileService';
   import DashboardService from '@/services/DashboardService';
   import CacheService from '@/services/CacheService';
   import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
@@ -44,6 +45,7 @@
   const productService = new ProductService();
   const productCategoryService = new ProductCategoryService();
   const unitService = new UnitService();
+  const vatProfileService = new VatProfileService();
   const dashboardServices = new DashboardService();
   const cacheServices = new CacheService();
   // #endregion
@@ -83,6 +85,15 @@
     })),
   );
 
+  const vatProfileDDL = ref<Array<DropDownOption> | null>(null);
+  const vatProfileSearch = ref<string>('');
+  const vatProfileOptions = computed(() =>
+    (vatProfileDDL.value ?? []).map((item) => ({
+      value: item.code,
+      label: item.name,
+    })),
+  );
+
   const statusDDL = ref<Array<DropDownOption> | null>(null);
 
   const productServiceForm = productService.useProductServiceUpdateForm(route.params.ulid.toString());
@@ -106,6 +117,7 @@
     }
     await Promise.all([getCategoryDDL(), getUnitDDL(), getStatusDDL()]);
     await loadData();
+    await getVatProfileDDL();
   });
   // #endregion
 
@@ -121,6 +133,7 @@
         code: result.data.code,
         category_id: result.data.category.id,
         name: result.data.name,
+        default_vat_profile_id: result.data.default_vat_profile?.id ?? null,
         is_price_include_vat: result.data.is_price_include_vat,
         remarks: result.data.remarks,
         status: result.data.status,
@@ -184,6 +197,24 @@
 
     if (result.success && result.data) {
       unitDDL.value = result.data.data.map((item: any) => ({
+        code: item.id,
+        name: item.name,
+      }));
+    }
+  };
+
+  const getVatProfileDDL = async (search = ''): Promise<void> => {
+    const result = await vatProfileService.readAnyGet({
+      with_trashed: false,
+      search: search,
+      company_id: selectedUserLocation.value.company.id,
+      include_id: productServiceForm.default_vat_profile_id ?? undefined,
+      refresh: false,
+      limit: 10,
+    });
+
+    if (result.success && result.data) {
+      vatProfileDDL.value = result.data.data.map((item: any) => ({
         code: item.id,
         name: item.name,
       }));
@@ -291,7 +322,7 @@
       <template #card-items-1>
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-2 lg:col-span-3">
               <FormLabel :class="{ 'text-danger': productServiceForm.invalid('code') }">
                 {{ t('views.product_service.fields.code') }}
               </FormLabel>
@@ -305,7 +336,7 @@
               <FormErrorMessages :messages="productServiceForm.errors.code" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-2 lg:col-span-2">
               <FormLabel
                 :class="{
                   'text-danger': productServiceForm.invalid('category_id'),
@@ -327,7 +358,7 @@
               <FormErrorMessages :messages="productServiceForm.errors.category_id" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-2 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productServiceForm.invalid('unit_id') }">
                 {{ t('views.product_service.fields.unit_id') }}
               </FormLabel>
@@ -345,7 +376,7 @@
               <FormErrorMessages :messages="productServiceForm.errors.unit_id" />
             </div>
 
-            <div class="col-span-12 lg:col-span-6">
+            <div class="col-span-12 md:col-span-6 lg:col-span-5">
               <FormLabel :class="{ 'text-danger': productServiceForm.invalid('name') }">
                 {{ t('views.product_service.fields.name') }}
               </FormLabel>
@@ -359,34 +390,25 @@
               <FormErrorMessages :messages="productServiceForm.errors.name" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
-              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('price') }">
-                {{ t('views.product_service.fields.price') }}
+            <div class="col-span-12 md:col-span-2 lg:col-span-3">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('default_vat_profile_id') }">
+                {{ t('views.product_service.fields.default_vat_profile_id') }}
               </FormLabel>
-              <FormInputCurrency
-                v-model="productServiceForm.price"
-                :class="{ 'border-danger': productServiceForm.invalid('price') }"
-                :placeholder="t('views.product_service.fields.price')"
-                @change="productServiceForm.validate('price')"
+              <FormSelectSearch
+                v-model="productServiceForm.default_vat_profile_id"
+                v-model:search="vatProfileSearch"
+                :options="vatProfileOptions"
+                :placeholder="t('components.dropdown.placeholder')"
+                :class="{
+                  'border-danger': productServiceForm.invalid('default_vat_profile_id'),
+                }"
+                @change="productServiceForm.validate('default_vat_profile_id')"
+                @search="getVatProfileDDL"
               />
-              <FormErrorMessages :messages="productServiceForm.errors.price" />
+              <FormErrorMessages :messages="productServiceForm.errors.default_vat_profile_id" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
-              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('point') }">
-                {{ t('views.product_service.fields.point') }}
-              </FormLabel>
-              <FormInput
-                v-model="productServiceForm.point"
-                type="number"
-                :class="{ 'border-danger': productServiceForm.invalid('point') }"
-                :placeholder="t('views.product_service.fields.point')"
-                @change="productServiceForm.validate('point')"
-              />
-              <FormErrorMessages :messages="productServiceForm.errors.point" />
-            </div>
-
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-2 lg:col-span-2">
               <FormLabel
                 :class="{
                   'text-danger': productServiceForm.invalid('is_price_include_vat'),
@@ -407,22 +429,34 @@
               <FormErrorMessages :messages="productServiceForm.errors.is_price_include_vat" />
             </div>
 
-            <div class="col-span-12">
-              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('remarks') }">
-                {{ t('views.product_service.fields.remarks') }}
+            <div class="col-span-12 md:col-span-2 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('price') }">
+                {{ t('views.product_service.fields.price') }}
               </FormLabel>
-              <FormTextarea
-                v-model="productServiceForm.remarks"
-                :class="{
-                  'border-danger': productServiceForm.invalid('remarks'),
-                }"
-                :placeholder="t('views.product_service.fields.remarks')"
-                @change="productServiceForm.validate('remarks')"
+              <FormInputCurrency
+                v-model="productServiceForm.price"
+                :class="{ 'border-danger': productServiceForm.invalid('price') }"
+                :placeholder="t('views.product_service.fields.price')"
+                @change="productServiceForm.validate('price')"
               />
-              <FormErrorMessages :messages="productServiceForm.errors.remarks" />
+              <FormErrorMessages :messages="productServiceForm.errors.price" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-2 lg:col-span-2">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('point') }">
+                {{ t('views.product_service.fields.point') }}
+              </FormLabel>
+              <FormInput
+                v-model="productServiceForm.point"
+                type="number"
+                :class="{ 'border-danger': productServiceForm.invalid('point') }"
+                :placeholder="t('views.product_service.fields.point')"
+                @change="productServiceForm.validate('point')"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.point" />
+            </div>
+
+            <div class="col-span-12 md:col-span-2 lg:col-span-3">
               <FormLabel :class="{ 'text-danger': productServiceForm.invalid('status') }">
                 {{ t('views.product_service.fields.status') }}
               </FormLabel>
@@ -439,6 +473,21 @@
                 </option>
               </FormSelect>
               <FormErrorMessages :messages="productServiceForm.errors.status" />
+            </div>
+
+            <div class="col-span-12 md:col-span-12 lg:col-span-12">
+              <FormLabel :class="{ 'text-danger': productServiceForm.invalid('remarks') }">
+                {{ t('views.product_service.fields.remarks') }}
+              </FormLabel>
+              <FormTextarea
+                v-model="productServiceForm.remarks"
+                :class="{
+                  'border-danger': productServiceForm.invalid('remarks'),
+                }"
+                :placeholder="t('views.product_service.fields.remarks')"
+                @change="productServiceForm.validate('remarks')"
+              />
+              <FormErrorMessages :messages="productServiceForm.errors.remarks" />
             </div>
 
             <div class="col-span-12">

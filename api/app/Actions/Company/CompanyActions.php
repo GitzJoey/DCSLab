@@ -5,6 +5,7 @@ namespace App\Actions\Company;
 use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\User;
+use App\Services\Company\CompanyInitializationService;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -15,8 +16,9 @@ class CompanyActions
     use CacheHelper;
     use LoggerHelper;
 
-    public function __construct()
-    {
+    public function __construct(
+        private CompanyInitializationService $companyInitializationService,
+    ) {
     }
 
     public function readAny(
@@ -141,6 +143,7 @@ class CompanyActions
             $company->save();
 
             $user->companies()->attach([$company->id]);
+            $this->companyInitializationService->initializeDefaultData($company);
 
             $this->flushCache();
 

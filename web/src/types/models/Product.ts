@@ -3,6 +3,7 @@ import { Brand } from './Brand';
 import { ProductCategory } from './ProductCategory';
 import { ProductUnit } from './ProductUnit';
 import { ProductImage } from './ProductImage';
+import { VatProfile } from './VatProfile';
 
 export interface Product {
   id: string;
@@ -11,6 +12,7 @@ export interface Product {
   code: string;
   category: ProductCategory;
   brand: Brand | null;
+  default_vat_profile?: VatProfile | null;
   name: string;
   is_price_include_vat: boolean;
   is_use_serial_number: boolean;

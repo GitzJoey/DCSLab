@@ -24,6 +24,9 @@ class ProductResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('brand'), [
                 'brand' => new BrandResource($this->whenLoaded('brand')),
             ]),
+            $this->mergeWhen($this->relationLoaded('defaultVatProfile'), [
+                'default_vat_profile' => new VatProfileResource($this->whenLoaded('defaultVatProfile')),
+            ]),
             'name' => $this->name,
             'is_price_include_vat' => $this->is_price_include_vat,
             'is_use_serial_number' => $this->is_use_serial_number,

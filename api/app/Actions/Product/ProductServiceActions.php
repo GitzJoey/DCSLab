@@ -37,6 +37,7 @@ class ProductServiceActions
             $product->code = $this->generateUniqueCode($data->companyId, $data->code, null);
             $product->category_id = $data->categoryId;
             $product->brand_id = null;
+            $product->default_vat_profile_id = $data->defaultVatProfileId;
             $product->name = $data->name;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
             $product->is_use_serial_number = false;
@@ -86,6 +87,7 @@ class ProductServiceActions
             $product->code = $this->generateUniqueCode($product->company_id, $data->code, $product->id);
             $product->category_id = $data->categoryId;
             $product->brand_id = null;
+            $product->default_vat_profile_id = $data->defaultVatProfileId;
             $product->name = $data->name;
             $product->is_price_include_vat = $data->isPriceIncludeVat;
             $product->is_use_serial_number = false;

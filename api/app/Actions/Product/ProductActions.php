@@ -30,6 +30,7 @@ class ProductActions
 
         ?int $categoryId,
         ?int $brandId,
+        ?int $defaultVatProfileId,
         ?bool $isPriceIncludeVat,
         ?bool $isUseSerialNumber,
         ?bool $isExpirable,
@@ -45,6 +46,7 @@ class ProductActions
             'company',
             'category',
             'brand',
+            'defaultVatProfile',
             'productUnits.unit',
             'images',
         ]);
@@ -68,6 +70,7 @@ class ProductActions
             $search,
             $categoryId,
             $brandId,
+            $defaultVatProfileId,
             $isPriceIncludeVat,
             $isUseSerialNumber,
             $isExpirable,
@@ -81,6 +84,7 @@ class ProductActions
                 $search,
                 $categoryId,
                 $brandId,
+                $defaultVatProfileId,
                 $isPriceIncludeVat,
                 $isUseSerialNumber,
                 $isExpirable,
@@ -103,6 +107,10 @@ class ProductActions
 
                 if ($brandId) {
                     $query->where('products.brand_id', $brandId);
+                }
+
+                if ($defaultVatProfileId) {
+                    $query->where('products.default_vat_profile_id', $defaultVatProfileId);
                 }
 
                 if (! is_null($isPriceIncludeVat)) {
@@ -248,7 +256,7 @@ class ProductActions
 
     public function read(Product $product): Product
     {
-        return $product->load('company', 'category', 'brand', 'productUnits.unit', 'images');
+        return $product->load('company', 'category', 'brand', 'defaultVatProfile', 'productUnits.unit', 'images');
     }
 
     public function delete(Product $product): bool

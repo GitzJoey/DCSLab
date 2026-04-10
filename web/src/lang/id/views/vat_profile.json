@@ -1,0 +1,39 @@
+{
+  "page_title": "Profil PPN",
+  "table": {
+    "title": "Daftar Profil PPN",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama",
+      "vat_rate": "Tarif PPN",
+      "vat_base_fraction": "Fraksi Dasar PPN",
+      "is_active": "Aktif"
+    }
+  },
+  "actions": {
+    "create": "Buat Profil PPN",
+    "edit": "Ubah Profil PPN",
+    "show": "Lihat Profil PPN",
+    "delete": "Hapus Profil PPN"
+  },
+  "field_groups": {
+    "company_info": "Info Perusahaan",
+    "vat_profile_data": "Data Profil PPN"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "code": "Kode",
+    "name": "Nama",
+    "vat_rate": "Tarif PPN",
+    "vat_base_numerator": "Pembilang Dasar PPN",
+    "vat_base_denominator": "Penyebut Dasar PPN",
+    "remarks": "Catatan",
+    "is_active": "Aktif"
+  },
+  "alert": {
+    "delete_vat_profile": {
+      "title": "Hapus Profil PPN",
+      "content": "Profil PPN berhasil dihapus"
+    }
+  }
+}

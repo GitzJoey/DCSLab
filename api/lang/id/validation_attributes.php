@@ -78,6 +78,7 @@ return [
         'company' => 'Perusahaan',
         'product_category' => 'Product Category',
         'brand' => 'Brand',
+        'default_vat_profile' => 'Profil PPN',
         'code' => 'Kode',
         'name' => 'Nama',
         'product_type' => 'Product Type',
@@ -159,6 +160,17 @@ return [
         'company' => 'Perusahaan',
         'code' => 'Kode',
         'name' => 'Nama',
+    ],
+
+    'vat_profile' => [
+        'company' => 'Perusahaan',
+        'code' => 'Kode',
+        'name' => 'Nama',
+        'vat_rate' => 'Tarif PPN',
+        'vat_base_numerator' => 'Pembilang Dasar PPN',
+        'vat_base_denominator' => 'Penyebut Dasar PPN',
+        'remarks' => 'Catatan',
+        'is_active' => 'Status Aktif',
     ],
 
     'stock_adjustment_in_item' => [

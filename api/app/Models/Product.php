@@ -24,6 +24,7 @@ class Product extends Model
         'category_id',
         'brand_id',
         'name',
+        'default_vat_profile_id',
         'is_price_include_vat',
         'is_use_serial_number',
         'is_expirable',
@@ -56,6 +57,11 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class)->withTrashed();
+    }
+
+    public function defaultVatProfile()
+    {
+        return $this->belongsTo(VatProfile::class, 'default_vat_profile_id')->withTrashed();
     }
 
     public function baseProductUnit()

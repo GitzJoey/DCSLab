@@ -33,11 +33,11 @@ use Illuminate\Validation\Rules\Enum;
 
 class ProductController extends BaseController
 {
-    private $productActions;
+    private ProductActions $productActions;
 
-    private $productPhysicalActions;
+    private ProductPhysicalActions $productPhysicalActions;
 
-    private $productServiceActions;
+    private ProductServiceActions $productServiceActions;
 
     public function __construct(
         ProductActions $productActions,
@@ -60,6 +60,7 @@ class ProductController extends BaseController
         if ($request->filled('include_id')) $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
         if ($request->filled('category_id')) $request->merge(['category_id' => HashidsHelper::decodeId($request->category_id)]);
         if ($request->filled('brand_id')) $request->merge(['brand_id' => HashidsHelper::decodeId($request->brand_id)]);
+        if ($request->filled('default_vat_profile_id')) $request->merge(['default_vat_profile_id' => HashidsHelper::decodeId($request->default_vat_profile_id)]);
         if ($request->filled('with_remaining_stock.warehouse_id')) {
             $withRemainingStock = $request->input('with_remaining_stock', []);
             $withRemainingStock['warehouse_id'] = HashidsHelper::decodeId($request->input('with_remaining_stock.warehouse_id'));
@@ -74,6 +75,7 @@ class ProductController extends BaseController
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'category_id' => ['nullable', 'integer', new ExistsForCompany('product_categories', $request->company_id)],
             'brand_id' => ['nullable', 'integer', new ExistsForCompany('brands', $request->company_id)],
+            'default_vat_profile_id' => ['nullable', 'integer', new ExistsForCompany('vat_profiles', $request->company_id)],
             'is_price_include_vat' => ['nullable', 'boolean'],
             'is_use_serial_number' => ['nullable', 'boolean'],
             'is_expirable' => ['nullable', 'boolean'],
@@ -123,6 +125,7 @@ class ProductController extends BaseController
 
                 categoryId: $validatedRequest['category_id'] ?? null,
                 brandId: $validatedRequest['brand_id'] ?? null,
+                defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
                 isPriceIncludeVat: $validatedRequest['is_price_include_vat'] ?? null,
                 isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? null,
                 isExpirable: $validatedRequest['is_expirable'] ?? null,
@@ -256,6 +259,7 @@ class ProductController extends BaseController
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
                     brandId: $validatedRequest['brand_id'] ?? null,
+                    defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
                     name: $validatedRequest['name'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? false,
@@ -305,6 +309,7 @@ class ProductController extends BaseController
                     companyId: $validatedRequest['company_id'],
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
+                    defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
                     name: $validatedRequest['name'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     remarks: $validatedRequest['remarks'] ?? null,
@@ -406,6 +411,7 @@ class ProductController extends BaseController
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
                     brandId: $validatedRequest['brand_id'] ?? null,
+                    defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
                     name: $validatedRequest['name'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? false,
@@ -459,6 +465,7 @@ class ProductController extends BaseController
                     companyId: $validatedRequest['company_id'],
                     code: $validatedRequest['code'],
                     categoryId: $validatedRequest['category_id'],
+                    defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
                     name: $validatedRequest['name'],
                     isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
                     remarks: $validatedRequest['remarks'] ?? null,

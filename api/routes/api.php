@@ -30,6 +30,7 @@ use App\Http\Controllers\StockTransferItemSerialController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VatProfileController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
@@ -138,6 +139,19 @@ Route::prefix('unit')->middleware('auth:sanctum')->group(function () {
         Route::post('save', [UnitController::class, 'store'])->name('save');
         Route::post('edit/{unit:ulid}', [UnitController::class, 'update'])->name('edit');
         Route::post('delete/{unit:ulid}', [UnitController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('vat_profile')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.vat_profile.')->group(function () {
+        Route::get('read', [VatProfileController::class, 'readAny'])->name('read_any');
+        Route::get('read/{vat_profile:ulid}', [VatProfileController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.vat_profile.')->group(function () {
+        Route::post('save', [VatProfileController::class, 'store'])->name('save');
+        Route::post('edit/{vat_profile:ulid}', [VatProfileController::class, 'update'])->name('edit');
+        Route::post('delete/{vat_profile:ulid}', [VatProfileController::class, 'delete'])->name('delete');
     });
 });
 

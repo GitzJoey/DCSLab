@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\Company\CompanyActions;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -16,24 +17,28 @@ class CompanySeeder extends Seeder
     public function run(?int $companiesPerUser = null, ?int $userId = null)
     {
         $companiesPerUser = $companiesPerUser ?? 1;
+        $companyActions = app(CompanyActions::class);
 
         $users = $userId ? User::where('id', $userId)->get() : User::all();
 
         foreach ($users as $user) {
-            Company::factory()
-                ->hasAttached($user)
+            $defaultCompanyData = Company::factory()
                 ->setIsDefault()
                 ->setStatusActive()
-                ->create();
+                ->make()
+                ->toArray();
+
+            $companyActions->resetDefault($user);
+            $companyActions->create($user, $defaultCompanyData);
 
             $remaining = max(0, $companiesPerUser - 1);
 
             for ($i = 0; $i < $remaining; $i++) {
-                $company = Company::factory()->hasAttached($user);
+                $company = Company::factory();
 
                 random_int(0, 1) ? $company->setStatusActive() : $company->setStatusInactive();
 
-                $company->create();
+                $companyActions->create($user, $company->make()->toArray());
             }
         }
     }

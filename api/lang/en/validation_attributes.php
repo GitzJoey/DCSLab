@@ -79,6 +79,7 @@ return [
         'company' => 'Company',
         'product_category' => 'Product Category',
         'brand' => 'Brand',
+        'default_vat_profile' => 'VAT Profile',
         'code' => 'Code',
         'name' => 'Name',
         'product_type' => 'Product Type',
@@ -160,6 +161,17 @@ return [
         'company' => 'Company',
         'code' => 'Code',
         'name' => 'Name',
+    ],
+
+    'vat_profile' => [
+        'company' => 'Company',
+        'code' => 'Code',
+        'name' => 'Name',
+        'vat_rate' => 'VAT Rate',
+        'vat_base_numerator' => 'VAT Base Numerator',
+        'vat_base_denominator' => 'VAT Base Denominator',
+        'remarks' => 'Remarks',
+        'is_active' => 'Active Status',
     ],
 
     'stock_adjustment' => [

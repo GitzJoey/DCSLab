@@ -34,6 +34,7 @@ class ProductPhysicalStoreRequest extends FormRequest
             'code' => ['required', 'string', 'max:255'],
             'category_id' => ['required', 'integer', new ExistsForCompany('product_categories', $this->company_id)],
             'brand_id' => ['present', 'nullable', 'integer', new ExistsForCompany('brands', $this->company_id)],
+            'default_vat_profile_id' => ['present', 'nullable', 'integer', new ExistsForCompany('vat_profiles', $this->company_id)],
             'name' => ['required', 'string', 'max:255'],
             'is_price_include_vat' => ['required', 'boolean'],
             'is_use_serial_number' => ['required', 'boolean'],
@@ -65,6 +66,7 @@ class ProductPhysicalStoreRequest extends FormRequest
             'code' => trans('validation_attributes.product.code'),
             'category_id' => trans('validation_attributes.product.product_category'),
             'brand_id' => trans('validation_attributes.product.brand'),
+            'default_vat_profile_id' => trans('validation_attributes.product.default_vat_profile'),
             'name' => trans('validation_attributes.product.name'),
             'is_price_include_vat' => trans('validation_attributes.product.is_price_include_vat'),
             'is_use_serial_number' => trans('validation_attributes.product.is_use_serial_number'),
@@ -86,6 +88,7 @@ class ProductPhysicalStoreRequest extends FormRequest
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
             'category_id' => $this->filled('category_id') ? HashidsHelper::decodeId($this->category_id) : null,
             'brand_id' => $this->filled('brand_id') ? HashidsHelper::decodeId($this->brand_id) : null,
+            'default_vat_profile_id' => $this->filled('default_vat_profile_id') ? HashidsHelper::decodeId($this->default_vat_profile_id) : null,
             'status' => RecordStatusEnum::isValid($this->status) ? RecordStatusEnum::resolveToEnum($this->status)->value : null,
         ]);
 

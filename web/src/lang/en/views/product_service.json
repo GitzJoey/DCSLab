@@ -29,6 +29,7 @@
     "code": "Code",
     "name": "Name",
     "category_id": "Category",
+    "default_vat_profile_id": "VAT Profile",
     "unit_id": "Unit",
     "price": "Price",
     "point": "Point",

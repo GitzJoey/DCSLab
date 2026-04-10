@@ -65,6 +65,11 @@ class Company extends Model
         return $this->hasMany(Unit::class);
     }
 
+    public function vatProfiles()
+    {
+        return $this->hasMany(VatProfile::class);
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

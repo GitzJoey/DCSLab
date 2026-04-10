@@ -39,6 +39,7 @@ return [
             'product_category' => 'c,r,ra,u,d',
             'brand' => 'c,r,ra,u,d',
             'unit' => 'c,r,ra,u,d',
+            'vat_profile' => 'c,r,ra,u,d',
             'product' => 'c,r,ra,u,d',
             'supplier' => 'c,r,ra,u,d',
             'customer_group' => 'c,r,ra,u,d',

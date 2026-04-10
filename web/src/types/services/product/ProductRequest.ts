@@ -20,6 +20,7 @@ export interface ProductReadAnyPaginateRequest {
 
   category_id?: string | null;
   brand_id?: string | null;
+  default_vat_profile_id?: string | null;
   is_price_include_vat?: boolean | null;
   is_use_serial_number?: boolean | null;
   is_expirable?: boolean | null;
@@ -40,6 +41,7 @@ export interface ProductReadAnyGetRequest {
 
   category_id?: string | null;
   brand_id?: string | null;
+  default_vat_profile_id?: string | null;
   is_price_include_vat?: boolean | null;
   is_use_serial_number?: boolean | null;
   is_expirable?: boolean | null;

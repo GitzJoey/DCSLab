@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('code');
             $table->string('name');
             $table->decimal('vat_rate', 30, 8)->default(0);
-            $table->decimal('vat_base_factor', 30, 8)->default(1);
+            $table->unsignedInteger('vat_base_numerator')->default(1);
+            $table->unsignedInteger('vat_base_denominator')->default(1);
             $table->text('remarks')->nullable();
             $table->boolean('is_active')->default(true);
 

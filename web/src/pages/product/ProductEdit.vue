@@ -6,6 +6,7 @@ import ProductService from '@/services/ProductService';
 import ProductCategoryService from '@/services/ProductCategoryService';
 import BrandService from '@/services/BrandService';
 import UnitService from '@/services/UnitService';
+import VatProfileService from '@/services/VatProfileService';
 import DashboardService from '@/services/DashboardService';
 import CacheService from '@/services/CacheService';
 import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
@@ -47,6 +48,7 @@ const productService = new ProductService();
 const productCategoryService = new ProductCategoryService();
 const brandService = new BrandService();
 const unitService = new UnitService();
+const vatProfileService = new VatProfileService();
 const dashboardServices = new DashboardService();
 const cacheServices = new CacheService();
 // #endregion
@@ -94,6 +96,15 @@ const brandOptions = computed(() =>
   })),
 );
 
+const vatProfileDDL = ref<Array<DropDownOption> | null>(null);
+const vatProfileSearch = ref<string>('');
+const vatProfileOptions = computed(() =>
+  (vatProfileDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
+
 const unitDDL = ref<Record<number, Array<DropDownOption>>>({});
 const unitSearch = ref<string[]>([]);
 const getUnitOptions = (index: number) =>
@@ -129,7 +140,7 @@ onMounted(async () => {
   await loadData();
 
   await Promise.all(
-    productForm.product_units.map((_, index) => getUnitDDL(index, '')),
+    [...productForm.product_units.map((_, index) => getUnitDDL(index, '')), getVatProfileDDL()],
   );
 });
 // #endregion
@@ -147,6 +158,7 @@ const loadData = async () => {
       category_id: result.data.category?.id ?? '',
       brand_id: result.data.brand?.id ?? '',
       name: result.data.name,
+      default_vat_profile_id: result.data.default_vat_profile?.id ?? null,
       is_price_include_vat: result.data.is_price_include_vat,
       is_use_serial_number: result.data.is_use_serial_number,
       is_expirable: result.data.is_expirable,
@@ -270,6 +282,24 @@ const getUnitDDL = async (index: number, search = ''): Promise<void> => {
     }
   } else {
     unitDDL.value[index] = [];
+  }
+};
+
+const getVatProfileDDL = async (search = ''): Promise<void> => {
+  const result = await vatProfileService.readAnyGet({
+    with_trashed: false,
+    search: search,
+    company_id: selectedUserLocation.value.company.id,
+    include_id: productForm.default_vat_profile_id ?? undefined,
+    refresh: false,
+    limit: 10,
+  });
+
+  if (result.success && result.data) {
+    vatProfileDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
   }
 };
 
@@ -457,7 +487,7 @@ watch(
       <template #card-items-1>
         <div class="p-5">
           <div class="grid grid-cols-12 gap-4 gap-y-3">
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-12 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('code') }">
                 {{ t('views.product.fields.code') }}
               </FormLabel>
@@ -467,7 +497,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.code" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-6 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('category_id') }">
                 {{ t('views.product.fields.category_id') }}
               </FormLabel>
@@ -478,7 +508,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.category_id" />
             </div>
 
-            <div class="col-span-12 lg:col-span-2">
+            <div class="col-span-12 md:col-span-6 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('brand_id') }">
                 {{ t('views.product.fields.brand_id') }}
               </FormLabel>
@@ -489,7 +519,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.brand_id" />
             </div>
 
-            <div class="col-span-12 lg:col-span-6">
+            <div class="col-span-12 md:col-span-12 lg:col-span-6">
               <FormLabel :class="{ 'text-danger': productForm.invalid('name') }">
                 {{ t('views.product.fields.name') }}
               </FormLabel>
@@ -499,7 +529,23 @@ watch(
               <FormErrorMessages :messages="productForm.errors.name" />
             </div>
 
-            <div class="col-span-12 sm:col-span-2">
+            <div class="col-span-12 md:col-span-8 lg:col-span-3">
+              <FormLabel :class="{ 'text-danger': productForm.invalid('default_vat_profile_id') }">
+                {{ t('views.product.fields.default_vat_profile_id') }}
+              </FormLabel>
+              <FormSelectSearch
+                v-model="productForm.default_vat_profile_id"
+                v-model:search="vatProfileSearch"
+                :options="vatProfileOptions"
+                :placeholder="t('components.dropdown.placeholder')"
+                :class="{ 'border-danger': productForm.invalid('default_vat_profile_id') }"
+                @change="productForm.validate('default_vat_profile_id')"
+                @search="getVatProfileDDL"
+              />
+              <FormErrorMessages :messages="productForm.errors.default_vat_profile_id" />
+            </div>
+
+            <div class="col-span-12 md:col-span-4 lg:col-span-2">
               <FormLabel :class="{
                 'text-danger': productForm.invalid('is_price_include_vat'),
               }">
@@ -513,7 +559,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.is_price_include_vat" />
             </div>
 
-            <div class="col-span-12 sm:col-span-2">
+            <div class="col-span-12 md:col-span-4 lg:col-span-2">
               <FormLabel :class="{
                 'text-danger': productForm.invalid('is_use_serial_number'),
               }">
@@ -527,7 +573,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.is_use_serial_number" />
             </div>
 
-            <div class="col-span-12 sm:col-span-2">
+            <div class="col-span-12 md:col-span-4 lg:col-span-2">
               <FormLabel :class="{ 'text-danger': productForm.invalid('is_expirable') }">
                 {{ t('views.product.fields.is_expirable') }}
               </FormLabel>
@@ -539,16 +585,7 @@ watch(
               <FormErrorMessages :messages="productForm.errors.is_expirable" />
             </div>
 
-            <div class="col-span-12">
-              <FormLabel :class="{ 'text-danger': productForm.invalid('remarks') }">
-                {{ t('views.product.fields.remarks') }}
-              </FormLabel>
-              <FormTextarea v-model="productForm.remarks" :class="{ 'border-danger': productForm.invalid('remarks') }"
-                :placeholder="t('views.product.fields.remarks')" @change="productForm.validate('remarks')" />
-              <FormErrorMessages :messages="productForm.errors.remarks" />
-            </div>
-
-            <div class="col-span-12 sm:col-span-2">
+            <div class="col-span-12 md:col-span-4 lg:col-span-3">
               <FormLabel :class="{ 'text-danger': productForm.invalid('status') }">
                 {{ t('views.product.fields.status') }}
               </FormLabel>
@@ -562,6 +599,15 @@ watch(
                 </option>
               </FormSelect>
               <FormErrorMessages :messages="productForm.errors.status" />
+            </div>
+
+            <div class="col-span-12 md:col-span-12 lg:col-span-12">
+              <FormLabel :class="{ 'text-danger': productForm.invalid('remarks') }">
+                {{ t('views.product.fields.remarks') }}
+              </FormLabel>
+              <FormTextarea v-model="productForm.remarks" :class="{ 'border-danger': productForm.invalid('remarks') }"
+                :placeholder="t('views.product.fields.remarks')" @change="productForm.validate('remarks')" />
+              <FormErrorMessages :messages="productForm.errors.remarks" />
             </div>
 
           </div>

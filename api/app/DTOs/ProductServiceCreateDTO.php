@@ -8,6 +8,7 @@ final class ProductServiceCreateDTO
         public readonly int $companyId,
         public readonly string $code,
         public readonly int $categoryId,
+        public readonly ?int $defaultVatProfileId,
         public readonly string $name,
         public readonly bool $isPriceIncludeVat,
         public readonly ?string $remarks,

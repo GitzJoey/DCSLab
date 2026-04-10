@@ -36,7 +36,8 @@ class PurchaseOrderItem extends Model
         'is_vat_included', // user_input
         'vat_profile_id', // user_input
         'vat_rate', // user_input
-        'vat_base_factor', // user_input
+        'vat_base_numerator', // user_input
+        'vat_base_denominator', // user_input
         'product_unit_vat_base', // calculated_after_save_discount_rows
         'product_unit_vat', // calculated_after_save_discount_rows
         'product_unit_rounding', // calculated_after_save_discount_rows
@@ -61,7 +62,8 @@ class PurchaseOrderItem extends Model
         'product_unit_total_before_vat' => 'decimal:8',
         'is_vat_included' => 'boolean',
         'vat_rate' => 'decimal:8',
-        'vat_base_factor' => 'decimal:8',
+        'vat_base_numerator' => 'integer',
+        'vat_base_denominator' => 'integer',
         'product_unit_vat_base' => 'decimal:8',
         'product_unit_vat' => 'decimal:8',
         'product_unit_rounding' => 'decimal:8',
@@ -70,6 +72,15 @@ class PurchaseOrderItem extends Model
         'product_unit_total_cogs' => 'decimal:8',
         'product_unit_base_unit_cogs' => 'decimal:8',
     ];
+
+    public function getVatBaseFactorValue(): float
+    {
+        if ($this->vat_base_denominator <= 0) {
+            return 0;
+        }
+
+        return (float) $this->vat_base_numerator / (float) $this->vat_base_denominator;
+    }
 
     public function company()
     {

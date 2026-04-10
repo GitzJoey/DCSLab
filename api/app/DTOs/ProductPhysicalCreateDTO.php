@@ -9,6 +9,7 @@ final class ProductPhysicalCreateDTO
         public readonly string $code,
         public readonly int $categoryId,
         public readonly ?int $brandId,
+        public readonly ?int $defaultVatProfileId,
         public readonly string $name,
         public readonly bool $isPriceIncludeVat,
         public readonly bool $isUseSerialNumber,

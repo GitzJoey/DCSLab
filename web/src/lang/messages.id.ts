@@ -23,6 +23,7 @@ import warehouse from './id/views/warehouse.json';
 import product_category from './id/views/product_category.json';
 import brand from './id/views/brand.json';
 import unit from './id/views/unit.json';
+import vat_profile from './id/views/vat_profile.json';
 import customer_group from './id/views/customer_group.json';
 import customer from './id/views/customer.json';
 import investor from './id/views/investor.json';
@@ -71,6 +72,7 @@ export default {
     product_category: product_category,
     brand: brand,
     unit: unit,
+    vat_profile: vat_profile,
     product_service: product_service,
     product: product,
     supplier: supplier,

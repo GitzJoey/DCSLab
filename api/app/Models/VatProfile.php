@@ -20,7 +20,8 @@ class VatProfile extends Model
         'code',
         'name',
         'vat_rate',
-        'vat_base_factor',
+        'vat_base_numerator',
+        'vat_base_denominator',
         'remarks',
         'is_active',
     ];
@@ -29,9 +30,19 @@ class VatProfile extends Model
     {
         return [
             'vat_rate' => 'decimal:8',
-            'vat_base_factor' => 'decimal:8',
+            'vat_base_numerator' => 'integer',
+            'vat_base_denominator' => 'integer',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function getVatBaseFactorValue(): float
+    {
+        if ($this->vat_base_denominator <= 0) {
+            return 0;
+        }
+
+        return (float) $this->vat_base_numerator / (float) $this->vat_base_denominator;
     }
 
     public function company()
@@ -49,15 +60,15 @@ class VatProfile extends Model
         return $this->hasMany(PurchaseOrderItem::class);
     }
 
-    public function purchaseItems()
-    {
-        return $this->hasMany(PurchaseItem::class);
-    }
+    // public function purchaseItems()
+    // {
+    //     return $this->hasMany(PurchaseItem::class);
+    // }
 
-    public function purchaseReturnItems()
-    {
-        return $this->hasMany(PurchaseReturnItem::class);
-    }
+    // public function purchaseReturnItems()
+    // {
+    //     return $this->hasMany(PurchaseReturnItem::class);
+    // }
 
     public function scopeSearch($query, string $search)
     {

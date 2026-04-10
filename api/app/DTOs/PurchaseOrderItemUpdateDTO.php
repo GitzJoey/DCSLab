@@ -16,7 +16,8 @@ final class PurchaseOrderItemUpdateDTO
         public readonly bool $isVatIncluded,
         public readonly ?int $vatProfileId,
         public readonly float $vatRate,
-        public readonly float $vatBaseFactor,
+        public readonly int $vatBaseNumerator,
+        public readonly int $vatBaseDenominator,
         public readonly ?string $remarks,
     ) {
     }

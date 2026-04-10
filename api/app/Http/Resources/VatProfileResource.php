@@ -19,7 +19,8 @@ class VatProfileResource extends JsonResource
             'code' => $this->code,
             'name' => $this->name,
             'vat_rate' => $this->vat_rate,
-            'vat_base_factor' => $this->vat_base_factor,
+            'vat_base_numerator' => $this->vat_base_numerator,
+            'vat_base_denominator' => $this->vat_base_denominator,
             'remarks' => $this->remarks,
             'is_active' => $this->is_active,
         ];

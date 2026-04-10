@@ -92,7 +92,8 @@ class PurchaseOrderService
                 isVatIncluded: $item['is_vat_included'],
                 vatProfileId: $item['vat_profile_id'],
                 vatRate: $item['vat_rate'],
-                vatBaseFactor: $item['vat_base_factor'],
+                vatBaseNumerator: $item['vat_base_numerator'],
+                vatBaseDenominator: $item['vat_base_denominator'],
                 remarks: $item['remarks'] ?? null,
             );
 
@@ -221,7 +222,8 @@ class PurchaseOrderService
                     isVatIncluded: $item['is_vat_included'],
                     vatProfileId: $item['vat_profile_id'],
                     vatRate: $item['vat_rate'],
-                    vatBaseFactor: $item['vat_base_factor'],
+                    vatBaseNumerator: $item['vat_base_numerator'],
+                    vatBaseDenominator: $item['vat_base_denominator'],
                     remarks: $item['remarks'],
                 );
 
@@ -240,7 +242,8 @@ class PurchaseOrderService
                     isVatIncluded: $item['is_vat_included'],
                     vatProfileId: $item['vat_profile_id'],
                     vatRate: $item['vat_rate'],
-                    vatBaseFactor: $item['vat_base_factor'],
+                    vatBaseNumerator: $item['vat_base_numerator'],
+                    vatBaseDenominator: $item['vat_base_denominator'],
                     remarks: $item['remarks'] ?? null,
                 );
 

@@ -19,6 +19,12 @@ import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
 import { ErrorCode } from '@/types/enums/ErrorCode';
 import { NotificationData } from '@/types/models/NotificationData';
 import { type AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
+import { FormLabel, FormSelectSearch, FormSelect } from '@/components/Base/Form';
+import { DropDownOption } from '@/types/models/DropDownOption';
+import ProductCategoryService from '@/services/ProductCategoryService';
+import BrandService from '@/services/BrandService';
+import VatProfileService from '@/services/VatProfileService';
+import DashboardService from '@/services/DashboardService';
 import { formatCurrency } from '@/utils/helper';
 import ProductImagePreview from '@/components/Product/ProductImagePreview.vue';
 // #endregion
@@ -27,6 +33,10 @@ import ProductImagePreview from '@/components/Product/ProductImagePreview.vue';
 const { t } = useI18n();
 const router = useRouter();
 const productServices = new ProductService();
+const productCategoryService = new ProductCategoryService();
+const brandService = new BrandService();
+const vatProfileService = new VatProfileService();
+const dashboardServices = new DashboardService();
 const selectedUserLocationStore = useSelectedUserLocationStore();
 // #endregion
 
@@ -39,6 +49,17 @@ const emits = defineEmits([
   'show-notification',
 ]);
 // #endregion
+
+interface ProductListFilters {
+  search: string;
+  category_id: string | null;
+  brand_id: string | null;
+  default_vat_profile_id: string | null;
+  is_price_include_vat: string | null;
+  is_use_serial_number: string | null;
+  is_expirable: string | null;
+  status: string | null;
+}
 
 // #region Refs
 const deleteUlid = ref<string>('');
@@ -62,11 +83,58 @@ const productLists = ref<Collection<Array<Product>> | null>({
     next: null,
   },
 });
+
+const showAdvancedFilters = ref<boolean>(false);
+
+const filters = ref<ProductListFilters>({
+  search: '',
+  category_id: null,
+  brand_id: null,
+  default_vat_profile_id: null,
+  is_price_include_vat: null,
+  is_use_serial_number: null,
+  is_expirable: null,
+  status: null,
+});
+
+const categoryDDL = ref<Array<DropDownOption> | null>(null);
+const categorySearch = ref<string>('');
+const categoryOptions = computed(() =>
+  (categoryDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
+
+const brandDDL = ref<Array<DropDownOption> | null>(null);
+const brandSearch = ref<string>('');
+const brandOptions = computed(() =>
+  (brandDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
+
+const vatProfileDDL = ref<Array<DropDownOption> | null>(null);
+const vatProfileSearch = ref<string>('');
+const vatProfileOptions = computed(() =>
+  (vatProfileDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
+
+const statusDDL = ref<Array<DropDownOption> | null>(null);
 // #endregion
 
 // #region Computed
 const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
 const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
+
+const booleanOptions = computed<Array<DropDownOption>>(() => [
+  { code: 'true', name: t('components.dropdown.values.switch.on') },
+  { code: 'false', name: t('components.dropdown.values.switch.off') },
+]);
 // #endregion
 
 // #region Lifecycle Hooks
@@ -78,7 +146,12 @@ onMounted(async () => {
       name: 'side-menu-error-code',
       params: { code: ErrorCode.USERLOCATION_REQUIRED },
     });
+    return;
   }
+
+  filters.value.search = '';
+
+  await Promise.all([loadCategoryDDL(), loadBrandDDL(), loadVatProfileDDL(), loadStatusDDL()]);
 
   await getProducts('', true, 1, 10);
 });
@@ -95,7 +168,30 @@ const getProducts = async (search: string, refresh: boolean, page: number, per_p
 
     company_id: company_id,
     search: search,
+    category_id: filters.value.category_id || undefined,
+    brand_id: filters.value.brand_id || undefined,
+    default_vat_profile_id: filters.value.default_vat_profile_id || undefined,
+    is_price_include_vat:
+      filters.value.is_price_include_vat === 'true'
+        ? true
+        : filters.value.is_price_include_vat === 'false'
+          ? false
+          : undefined,
+    is_use_serial_number:
+      filters.value.is_use_serial_number === 'true'
+        ? true
+        : filters.value.is_use_serial_number === 'false'
+          ? false
+          : undefined,
+    is_expirable:
+      filters.value.is_expirable === 'true'
+        ? true
+        : filters.value.is_expirable === 'false'
+          ? false
+          : undefined,
     type: 1, // Physical Product
+    status: filters.value.status || undefined,
+
     include_id: undefined,
 
     refresh: refresh,
@@ -116,7 +212,135 @@ const getProducts = async (search: string, refresh: boolean, page: number, per_p
 };
 
 const handleDataListChange = async (data: DataListEmittedData) => {
+  filters.value.search = data.search.text;
   await getProducts(data.search.text, false, data.pagination.page, data.pagination.per_page);
+};
+
+const handleCategoryFilterChange = async () => {
+  const perPage = productLists.value?.meta.per_page || 10;
+
+  await getProducts(filters.value.search, true, 1, perPage);
+};
+
+const handleBrandFilterChange = async () => {
+  const perPage = productLists.value?.meta.per_page || 10;
+
+  await getProducts(filters.value.search, true, 1, perPage);
+};
+
+const handleDefaultVatProfileFilterChange = async () => {
+  const perPage = productLists.value?.meta.per_page || 10;
+
+  await getProducts(filters.value.search, true, 1, perPage);
+};
+
+const handleIsPriceIncludeVatFilterChange = async () => {
+  const perPage = productLists.value?.meta.per_page || 10;
+
+  await getProducts(filters.value.search, true, 1, perPage);
+};
+
+const handleIsUseSerialNumberFilterChange = async () => {
+  const perPage = productLists.value?.meta.per_page || 10;
+
+  await getProducts(filters.value.search, true, 1, perPage);
+};
+
+const handleIsExpirableFilterChange = async () => {
+  const perPage = productLists.value?.meta.per_page || 10;
+
+  await getProducts(filters.value.search, true, 1, perPage);
+};
+
+const handleStatusFilterChange = async () => {
+  const perPage = productLists.value?.meta.per_page || 10;
+
+  await getProducts(filters.value.search, true, 1, perPage);
+};
+
+const clearCategoryFilter = () => {
+  filters.value.category_id = null;
+  categorySearch.value = '';
+};
+
+const clearBrandFilter = () => {
+  filters.value.brand_id = null;
+  brandSearch.value = '';
+};
+
+const clearDefaultVatProfileFilter = () => {
+  filters.value.default_vat_profile_id = null;
+  vatProfileSearch.value = '';
+};
+
+const toggleAdvancedFilters = () => {
+  showAdvancedFilters.value = !showAdvancedFilters.value;
+};
+
+const loadCategoryDDL = async (search = '') => {
+  if (!selectedUserLocation.value) return;
+
+  const result = await productCategoryService.readAnyGet({
+    with_trashed: false,
+    company_id: selectedUserLocation.value.company.id,
+    search,
+    type: 1, // Product Type
+    refresh: false,
+    limit: 20,
+  });
+
+  if (result.success && result.data) {
+    categoryDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
+  }
+};
+
+const loadBrandDDL = async (search = '') => {
+  if (!selectedUserLocation.value) return;
+
+  const result = await brandService.readAnyGet({
+    with_trashed: false,
+    company_id: selectedUserLocation.value.company.id,
+    search,
+    refresh: false,
+    limit: 20,
+  });
+
+  if (result.success && result.data) {
+    brandDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
+  }
+};
+
+const loadVatProfileDDL = async (search = '') => {
+  if (!selectedUserLocation.value) return;
+
+  const result = await vatProfileService.readAnyGet({
+    with_trashed: false,
+    company_id: selectedUserLocation.value.company.id,
+    search,
+    include_id: filters.value.default_vat_profile_id || undefined,
+    refresh: false,
+    limit: 20,
+  });
+
+  if (result.success && result.data) {
+    vatProfileDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
+  }
+};
+
+const loadStatusDDL = async () => {
+  const result = await dashboardServices.getStatusDDL(false);
+  if (result) {
+    statusDDL.value = result;
+  }
 };
 
 const viewSelected = (idx: number) => {
@@ -153,7 +377,7 @@ const confirmDelete = async () => {
   emits('loading-state', false);
 
   if (result.success) {
-    await getProducts('', true, 1, 10);
+    await getProducts(filters.value.search, true, 1, productLists.value?.meta.per_page || 10);
     showAlertPlaceholder('hidden', '', null);
     showNotification(t('views.product.alert.delete.title'), t('views.product.alert.delete.message'));
   } else {
@@ -198,6 +422,94 @@ const getProductMainImageUrl = (item: Product): string | null => {
 <template>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
+      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+          <FormLabel>
+            {{ t('views.product.fields.category_id') }}
+          </FormLabel>
+          <div class="flex items-center gap-2">
+            <div class="flex-1">
+              <FormSelectSearch v-model="filters.category_id" v-model:search="categorySearch"
+                :options="categoryOptions" :placeholder="t('components.dropdown.placeholder')"
+                @change="handleCategoryFilterChange" @search="loadCategoryDDL" @clear="clearCategoryFilter" />
+            </div>
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+          <FormLabel>
+            {{ t('views.product.fields.brand_id') }}
+          </FormLabel>
+          <div class="flex items-center gap-2">
+            <div class="flex-1">
+              <FormSelectSearch v-model="filters.brand_id" v-model:search="brandSearch"
+                :options="brandOptions" :placeholder="t('components.dropdown.placeholder')"
+                @change="handleBrandFilterChange" @search="loadBrandDDL" @clear="clearBrandFilter" />
+            </div>
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-2">
+          <FormLabel>
+            {{ t('views.product.fields.status') }}
+          </FormLabel>
+          <FormSelect v-model="filters.status" @change="handleStatusFilterChange">
+            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+            <option v-for="item in statusDDL ?? []" :key="item.code" :value="item.code">{{ t(item.name) }}</option>
+          </FormSelect>
+        </div>
+        <div class="col-span-12 md:col-span-12 lg:col-span-2 flex items-end">
+          <Button
+            variant="soft-secondary"
+            class="shadow-sm border-slate-300 bg-slate-100/80 hover:bg-slate-200 hover:border-slate-400 dark:border-darkmode-300 dark:bg-darkmode-300/40 dark:hover:bg-darkmode-300"
+            @click="toggleAdvancedFilters"
+          >
+            <Lucide icon="Filter" class="w-4 h-5" />
+          </Button>
+        </div>
+      </div>
+
+      <div v-if="showAdvancedFilters" class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+          <FormLabel>
+            {{ t('views.product.fields.default_vat_profile_id') }}
+          </FormLabel>
+          <div class="flex items-center gap-2">
+            <div class="flex-1">
+              <FormSelectSearch v-model="filters.default_vat_profile_id" v-model:search="vatProfileSearch"
+                :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
+                @change="handleDefaultVatProfileFilterChange" @search="loadVatProfileDDL"
+                @clear="clearDefaultVatProfileFilter" />
+            </div>
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-2">
+          <FormLabel>
+            {{ t('views.product.fields.is_price_include_vat') }}
+          </FormLabel>
+          <FormSelect v-model="filters.is_price_include_vat" @change="handleIsPriceIncludeVatFilterChange">
+            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+            <option v-for="item in booleanOptions" :key="item.code" :value="item.code">{{ item.name }}</option>
+          </FormSelect>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-2">
+          <FormLabel>
+            {{ t('views.product.fields.is_use_serial_number') }}
+          </FormLabel>
+          <FormSelect v-model="filters.is_use_serial_number" @change="handleIsUseSerialNumberFilterChange">
+            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+            <option v-for="item in booleanOptions" :key="item.code" :value="item.code">{{ item.name }}</option>
+          </FormSelect>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-2">
+          <FormLabel>
+            {{ t('views.product.fields.is_expirable') }}
+          </FormLabel>
+          <FormSelect v-model="filters.is_expirable" @change="handleIsExpirableFilterChange">
+            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+            <option v-for="item in booleanOptions" :key="item.code" :value="item.code">{{ item.name }}</option>
+          </FormSelect>
+        </div>
+      </div>
+
       <DataList :title="t('views.product.table.title')" :data="productLists" :enable-search="true" :can-print="true"
         :can-export="true" :pagination="productLists ? productLists.meta : null"
         @dataListChanged="handleDataListChange">
@@ -215,6 +527,9 @@ const getProductMainImageUrl = (item: Product): string | null => {
                   {{ t('views.product.table.cols.name') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap">
+                  {{ t('views.product.table.cols.vat_profile') }}
+                </Table.Th>
+                <Table.Th class="whitespace-nowrap">
                   {{ t('views.product.table.cols.unit') }}
                 </Table.Th>
                 <Table.Th class="whitespace-nowrap text-right">
@@ -227,7 +542,7 @@ const getProductMainImageUrl = (item: Product): string | null => {
               <!-- Product list: empty state -->
               <template v-if="productLists.data.length === 0">
                 <Table.Tr class="intro-x">
-                  <Table.Td colspan="6">
+                  <Table.Td colspan="7">
                     <div class="flex justify-center italic">
                       {{ t('components.data-list.data_not_found') }}
                     </div>
@@ -266,6 +581,9 @@ const getProductMainImageUrl = (item: Product): string | null => {
                     <div class="font-medium">
                       {{ item.name }}
                     </div>
+                  </Table.Td>
+                  <Table.Td>
+                    {{ item.default_vat_profile?.name || '-' }}
                   </Table.Td>
                   <Table.Td>
                     <div class="flex flex-col gap-0">
@@ -307,7 +625,7 @@ const getProductMainImageUrl = (item: Product): string | null => {
                   'intro-x': true,
                   'hidden transition-all': expandDetail !== itemIdx,
                 }">
-                  <Table.Td colspan="6" class="p-5">
+                  <Table.Td colspan="7" class="p-5">
                     <div class="grid grid-cols-12 gap-6">
                       <!-- Product detail: basic information -->
                       <div class="col-span-12 lg:col-span-6">
@@ -376,6 +694,14 @@ const getProductMainImageUrl = (item: Product): string | null => {
                           {{ t('views.product.detail.settings_title') }}
                         </div>
                         <div class="grid grid-cols-1 gap-y-2">
+                          <div class="flex flex-row">
+                            <div class="w-48 text-slate-500">
+                              {{ t('views.product.fields.default_vat_profile_id') }}
+                            </div>
+                            <div class="flex-1 font-medium">
+                              {{ item.default_vat_profile?.name || '-' }}
+                            </div>
+                          </div>
                           <div class="flex flex-row">
                             <div class="w-48 text-slate-500">
                               {{ t('views.product.fields.is_price_include_vat') }}

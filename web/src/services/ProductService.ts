@@ -42,6 +42,7 @@ export default class ProductService {
       if (args.search) queryParams['search'] = args.search;
       if (args.category_id) queryParams['category_id'] = args.category_id;
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
+      if (args.default_vat_profile_id) queryParams['default_vat_profile_id'] = args.default_vat_profile_id;
       if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat;
       if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
@@ -115,6 +116,7 @@ export default class ProductService {
       queryParams['search'] = args.search ? args.search : '';
       if (args.category_id) queryParams['category_id'] = args.category_id;
       if (args.brand_id) queryParams['brand_id'] = args.brand_id;
+      if (args.default_vat_profile_id) queryParams['default_vat_profile_id'] = args.default_vat_profile_id;
       if (args.is_price_include_vat !== undefined && args.is_price_include_vat !== null)
         queryParams['is_price_include_vat'] = args.is_price_include_vat ? 1 : 0;
       if (args.is_use_serial_number !== undefined && args.is_use_serial_number !== null)
@@ -217,8 +219,9 @@ export default class ProductService {
       company_id: '',
       code: '_AUTO_',
       category_id: '',
-      brand_id: null,
       name: '',
+      brand_id: null,
+      default_vat_profile_id: null,
       is_price_include_vat: false,
       is_use_serial_number: false,
       is_expirable: false,
@@ -253,8 +256,9 @@ export default class ProductService {
       company_id: '',
       code: '',
       category_id: '',
-      brand_id: null,
       name: '',
+      brand_id: null,
+      default_vat_profile_id: null,
       is_price_include_vat: false,
       is_use_serial_number: false,
       is_expirable: false,
@@ -285,6 +289,7 @@ export default class ProductService {
       code: '_AUTO_',
       category_id: '',
       name: '',
+      default_vat_profile_id: null,
       is_price_include_vat: false,
       remarks: null,
       status: '',
@@ -318,6 +323,7 @@ export default class ProductService {
       code: '',
       category_id: '',
       name: '',
+      default_vat_profile_id: null,
       is_price_include_vat: false,
       remarks: null,
       status: '',
