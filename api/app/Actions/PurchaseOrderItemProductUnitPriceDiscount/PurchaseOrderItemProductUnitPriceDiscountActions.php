@@ -5,7 +5,9 @@ namespace App\Actions\PurchaseOrderItemProductUnitPriceDiscount;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderItemProductUnitPriceDiscountCreateDTO;
 use App\DTOs\PurchaseOrderItemProductUnitPriceDiscountUpdateDTO;
+use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
+use App\Models\PurchaseOrderItem;
 use App\Models\PurchaseOrderItemProductUnitPriceDiscount;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -193,6 +195,35 @@ class PurchaseOrderItemProductUnitPriceDiscountActions
             'purchaseOrderItem.productUnit.product.baseProductUnit.unit',
             'purchaseOrderItem.productUnit.product.images',
         ]);
+    }
+
+    public function getAmountByPurchaseOrderItemId(int $purchaseOrderItemId): float
+    {
+        $purchaseOrderItem = PurchaseOrderItem::query()
+            ->with(['productUnitPriceDiscounts' => fn ($query) => $query->orderBy('sequence')->orderBy('id')])
+            ->findOrFail($purchaseOrderItemId);
+
+        $beforeDiscount = (float) $purchaseOrderItem->product_unit_price;
+        $afterDiscount = $beforeDiscount;
+
+        foreach ($purchaseOrderItem->productUnitPriceDiscounts as $discount) {
+            $discountType = $discount->discount_type instanceof DiscountTypeEnum
+                ? $discount->discount_type
+                : DiscountTypeEnum::resolveToEnum($discount->discount_type);
+            $discountValue = (float) $discount->discount_value;
+
+            if ($discountType === DiscountTypeEnum::PERCENTAGE) {
+                $afterDiscount -= $afterDiscount * $discountValue / 100;
+            } else {
+                $afterDiscount -= $discountValue;
+            }
+
+            if ($afterDiscount < 0) {
+                $afterDiscount = 0;
+            }
+        }
+
+        return $beforeDiscount - $afterDiscount;
     }
 
     public function create(PurchaseOrderItemProductUnitPriceDiscountCreateDTO $data): PurchaseOrderItemProductUnitPriceDiscount

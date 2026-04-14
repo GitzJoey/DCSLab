@@ -57,6 +57,7 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'items.*.product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
             'items.*.product_unit_price' => ['required', 'numeric', 'min:0'],
+            'items.*.product_unit_is_price_include_vat' => ['required', 'boolean'],
 
             'items.*.delete_product_unit_price_discount_ids' => ['present', 'array'],
             'items.*.delete_product_unit_price_discount_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_item_product_unit_price_discounts', $this->company_id)],
@@ -73,8 +74,6 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'items.*.subtotal_discounts.*.sequence' => ['required', 'integer', 'min:1'],
             'items.*.subtotal_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'items.*.subtotal_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
-
-            'items.*.is_vat_included' => ['required', 'boolean'],
             'items.*.vat_profile_id' => ['present', 'nullable', 'integer', new ExistsForCompany('vat_profiles', $this->company_id)],
             'items.*.vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'items.*.vat_base_numerator' => ['required', 'integer', 'min:1'],
@@ -113,7 +112,7 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'items.*.product_unit_id' => trans('validation_attributes.purchase_order_item.product_unit_id'),
             'items.*.product_unit_conversion_value' => trans('validation_attributes.purchase_order_item.product_unit_conversion_value'),
             'items.*.product_unit_price' => trans('validation_attributes.purchase_order_item.product_unit_price'),
-            'items.*.is_vat_included' => trans('validation_attributes.purchase_order_item.is_vat_included'),
+            'items.*.product_unit_is_price_include_vat' => trans('validation_attributes.purchase_order_item.product_unit_is_price_include_vat'),
             'items.*.vat_profile_id' => trans('validation_attributes.purchase_order_item.vat_profile_id'),
             'items.*.vat_rate' => trans('validation_attributes.purchase_order_item.vat_rate'),
             'items.*.vat_base_numerator' => trans('validation_attributes.purchase_order_item.vat_base_numerator'),

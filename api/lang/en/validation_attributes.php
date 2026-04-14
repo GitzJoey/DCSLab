@@ -293,7 +293,7 @@ return [
         'product_unit_id' => 'Product Unit',
         'product_unit_conversion_value' => 'Product Unit Conversion Value',
         'product_unit_price' => 'Product Unit Price',
-        'is_vat_included' => 'VAT Included',
+        'product_unit_is_price_include_vat' => 'VAT Included',
         'vat_profile_id' => 'VAT Profile',
         'vat_rate' => 'VAT Rate',
         'vat_base_numerator' => 'VAT Base Numerator',

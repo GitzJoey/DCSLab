@@ -12,9 +12,7 @@ use App\DTOs\PurchaseOrderGlobalDiscountUpdateDTO;
 use App\DTOs\PurchaseOrderItemCreateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\Enums\DiscountTypeEnum;
-use App\Helpers\TimezoneHelper;
 use App\Models\PurchaseOrder;
-use App\Services\PurchaseOrderItem\PurchaseOrderItemCalculationService;
 
 class PurchaseOrderService
 {
@@ -22,19 +20,7 @@ class PurchaseOrderService
         private PurchaseOrderGlobalDiscountActions $purchaseOrderGlobalDiscountActions,
         private PurchaseOrderItemActions $purchaseOrderItemActions,
         private PurchaseOrderDownPaymentActions $purchaseOrderDownPaymentActions,
-        private PurchaseOrderItemCalculationService $purchaseOrderItemCalculationService,
     ) {
-    }
-
-    public function generateDate(string $date): string
-    {
-        if ($date == config('dcslab.KEYWORDS.AUTO')) {
-            $nowLocal = now(TimezoneHelper::getUserTimezone())->toDateTimeString();
-
-            return TimezoneHelper::convertToUTC($nowLocal);
-        }
-
-        return TimezoneHelper::convertToUTC($date);
     }
 
     public function createGlobalDiscounts(
@@ -68,9 +54,9 @@ class PurchaseOrderService
                 productUnitId: $item['product_unit_id'],
                 productUnitConversionValue: $item['product_unit_conversion_value'],
                 productUnitPrice: $item['product_unit_price'],
+                productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
                 productUnitPriceDiscounts: $item['product_unit_price_discounts'],
                 subtotalDiscounts: $item['subtotal_discounts'],
-                isVatIncluded: $item['is_vat_included'],
                 vatProfileId: $item['vat_profile_id'],
                 vatRate: $item['vat_rate'],
                 vatBaseNumerator: $item['vat_base_numerator'],
@@ -105,8 +91,8 @@ class PurchaseOrderService
     public function updateSummary(PurchaseOrder $purchaseOrder): void
     {
         $poItems = $purchaseOrder->items()->orderBy('id')->get();
-        $totalBeforeGlobalDiscount = (float) $poItems->sum('product_unit_subtotal_after_discount');
-        $globalDiscount = $this->calculateGlobalDiscountAmount($purchaseOrder, $totalBeforeGlobalDiscount);
+        $itemTotalBeforeGlobalDiscount = (float) $poItems->sum('subtotal_after_discount');
+        $globalDiscount = $this->calculateGlobalDiscountAmount($purchaseOrder, $itemTotalBeforeGlobalDiscount);
 
         $allocatedGlobalDiscount = 0.0;
         $lastItemId = $poItems->last()?->id;
@@ -114,27 +100,23 @@ class PurchaseOrderService
         foreach ($poItems as $poItem) {
             if ($lastItemId && $poItem->id === $lastItemId) {
                 $productUnitGlobalDiscount = $globalDiscount - $allocatedGlobalDiscount;
-            } elseif ($totalBeforeGlobalDiscount > 0) {
-                $productUnitGlobalDiscount = $globalDiscount * ($poItem->product_unit_subtotal_after_discount / $totalBeforeGlobalDiscount);
+            } elseif ($itemTotalBeforeGlobalDiscount > 0) {
+                $productUnitGlobalDiscount = $globalDiscount * ($poItem->subtotal_after_discount / $itemTotalBeforeGlobalDiscount);
                 $allocatedGlobalDiscount += $productUnitGlobalDiscount;
             } else {
                 $productUnitGlobalDiscount = 0;
             }
 
-            $this->purchaseOrderItemCalculationService->fillCalculatedFieldsAfterSaveDiscountRows(
-                $poItem,
-                productUnitGlobalDiscount: $productUnitGlobalDiscount,
-            );
             $poItem->save();
         }
 
-        $purchaseOrder->total_before_global_discount = $totalBeforeGlobalDiscount;
-        $purchaseOrder->global_discount = (float) $poItems->sum('product_unit_global_discount');
-        $purchaseOrder->total_before_vat = (float) $poItems->sum('product_unit_total_before_vat');
-        $purchaseOrder->vat_base = (float) $poItems->sum('product_unit_vat_base');
-        $purchaseOrder->vat = (float) $poItems->sum('product_unit_vat');
+        $purchaseOrder->item_total_before_global_discount = $itemTotalBeforeGlobalDiscount;
+        $purchaseOrder->global_discount = (float) $poItems->sum('global_discount');
+        $purchaseOrder->item_total_after_global_discount = (float) $poItems->sum('total_before_vat');
+        $purchaseOrder->vat_base = (float) $poItems->sum('vat_base');
+        $purchaseOrder->vat = (float) $poItems->sum('vat');
         $purchaseOrder->rounding = (float) $purchaseOrder->rounding;
-        $purchaseOrder->grand_total = $purchaseOrder->total_before_vat
+        $purchaseOrder->grand_total = $purchaseOrder->item_total_after_global_discount
             + $purchaseOrder->vat
             + $purchaseOrder->rounding;
         $purchaseOrder->amount_paid_down_payment = (float) $purchaseOrder->downPayments()->sum('amount');
@@ -196,11 +178,11 @@ class PurchaseOrderService
                     productUnitId: $item['product_unit_id'],
                     productUnitConversionValue: $item['product_unit_conversion_value'],
                     productUnitPrice: $item['product_unit_price'],
+                    productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
                     deleteProductUnitPriceDiscountIds: $item['delete_product_unit_price_discount_ids'],
                     productUnitPriceDiscounts: $item['product_unit_price_discounts'],
                     deleteSubtotalDiscountIds: $item['delete_subtotal_discount_ids'],
                     subtotalDiscounts: $item['subtotal_discounts'],
-                    isVatIncluded: $item['is_vat_included'],
                     vatProfileId: $item['vat_profile_id'],
                     vatRate: $item['vat_rate'],
                     vatBaseNumerator: $item['vat_base_numerator'],
@@ -218,9 +200,9 @@ class PurchaseOrderService
                     productUnitId: $item['product_unit_id'],
                     productUnitConversionValue: $item['product_unit_conversion_value'],
                     productUnitPrice: $item['product_unit_price'],
+                    productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
                     productUnitPriceDiscounts: $item['product_unit_price_discounts'],
                     subtotalDiscounts: $item['subtotal_discounts'],
-                    isVatIncluded: $item['is_vat_included'],
                     vatProfileId: $item['vat_profile_id'],
                     vatRate: $item['vat_rate'],
                     vatBaseNumerator: $item['vat_base_numerator'],

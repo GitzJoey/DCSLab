@@ -8,8 +8,8 @@ use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderItemCreateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\Helpers\TimezoneHelper;
+use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
-use App\Services\PurchaseOrderItem\PurchaseOrderItemCalculationService;
 use App\Services\PurchaseOrderItem\PurchaseOrderItemDiscountService;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -27,18 +27,14 @@ class PurchaseOrderItemActions
 
     private $purchaseOrderItemDiscountService;
 
-    private $purchaseOrderItemCalculationService;
-
     public function __construct(
         PurchaseOrderItemProductUnitPriceDiscountActions $purchaseOrderItemProductUnitPriceDiscountActions,
         PurchaseOrderItemSubtotalDiscountActions $purchaseOrderItemSubtotalDiscountActions,
         PurchaseOrderItemDiscountService $purchaseOrderItemDiscountService,
-        PurchaseOrderItemCalculationService $purchaseOrderItemCalculationService,
     ) {
         $this->purchaseOrderItemProductUnitPriceDiscountActions = $purchaseOrderItemProductUnitPriceDiscountActions;
         $this->purchaseOrderItemSubtotalDiscountActions = $purchaseOrderItemSubtotalDiscountActions;
         $this->purchaseOrderItemDiscountService = $purchaseOrderItemDiscountService;
-        $this->purchaseOrderItemCalculationService = $purchaseOrderItemCalculationService;
     }
 
     public function readAny(
@@ -222,6 +218,13 @@ class PurchaseOrderItemActions
         ]);
     }
 
+    public function getSubtotalAfterDiscountAmountByPurchaseOrderId(int $purchaseOrderId): float
+    {
+        return (float) PurchaseOrderItem::query()
+            ->where('purchase_order_id', $purchaseOrderId)
+            ->sum('subtotal_after_discount');
+    }
+
     public function create(PurchaseOrderItemCreateDTO $data): PurchaseOrderItem
     {
         $timer_start = microtime(true);
@@ -234,8 +237,9 @@ class PurchaseOrderItemActions
             $poItem->qty = $data->qty;
             $poItem->product_unit_id = $data->productUnitId;
             $poItem->product_unit_conversion_value = $data->productUnitConversionValue;
+            $poItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $poItem->product_unit_price = $data->productUnitPrice;
-            $poItem->is_vat_included = $data->isVatIncluded;
+            $poItem->product_unit_is_price_include_vat = $data->productUnitIsPriceIncludeVat;
             $poItem->vat_profile_id = $data->vatProfileId;
             $poItem->vat_rate = $data->vatRate;
             $poItem->vat_base_numerator = $data->vatBaseNumerator;
@@ -245,11 +249,13 @@ class PurchaseOrderItemActions
 
             $this->purchaseOrderItemDiscountService->createProductUnitPriceDiscounts($poItem, $data->productUnitPriceDiscounts);
             $this->purchaseOrderItemDiscountService->createSubtotalDiscounts($poItem, $data->subtotalDiscounts);
-            $this->purchaseOrderItemCalculationService->fillCalculatedFieldsAfterSaveItemRow($poItem);
-            $this->purchaseOrderItemCalculationService->fillCalculatedFieldsAfterSaveDiscountRows(
-                $poItem,
-                productUnitGlobalDiscount: 0,
-            );
+
+            $poItem->price_discount = $this->purchaseOrderItemProductUnitPriceDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->price_after_discount = $poItem->product_unit_price - $poItem->price_discount;
+            $poItem->subtotal = $poItem->qty * $poItem->price_after_discount;
+            $poItem->subtotal_discount = $this->purchaseOrderItemSubtotalDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->subtotal_after_discount = $poItem->subtotal - $poItem->subtotal_discount;
+
             $poItem->save();
 
             $this->flushCache();
@@ -273,7 +279,7 @@ class PurchaseOrderItemActions
             $poItem->product_unit_id = $data->productUnitId;
             $poItem->product_unit_conversion_value = $data->productUnitConversionValue;
             $poItem->product_unit_price = $data->productUnitPrice;
-            $poItem->is_vat_included = $data->isVatIncluded;
+            $poItem->product_unit_is_price_include_vat = $data->productUnitIsPriceIncludeVat;
             $poItem->vat_profile_id = $data->vatProfileId;
             $poItem->vat_rate = $data->vatRate;
             $poItem->vat_base_numerator = $data->vatBaseNumerator;
@@ -283,11 +289,6 @@ class PurchaseOrderItemActions
             $this->purchaseOrderItemDiscountService->syncProductUnitPriceDiscounts($poItem, $data->deleteProductUnitPriceDiscountIds, $data->productUnitPriceDiscounts);
             $this->purchaseOrderItemDiscountService->syncSubtotalDiscounts($poItem, $data->deleteSubtotalDiscountIds, $data->subtotalDiscounts);
 
-            $this->purchaseOrderItemCalculationService->fillCalculatedFieldsAfterSaveItemRow($poItem);
-            $this->purchaseOrderItemCalculationService->fillCalculatedFieldsAfterSaveDiscountRows(
-                $poItem,
-                productUnitGlobalDiscount: 0,
-            );
             $poItem->save();
 
             $this->flushCache();
@@ -299,6 +300,30 @@ class PurchaseOrderItemActions
         } finally {
             $execution_time = microtime(true) - $timer_start;
             $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function updateProductUnitGlobalDiscountByPurchaseOrderId(int $purchaseOrderId): void
+    {
+        $purchaseOrder = PurchaseOrder::query()
+            ->with('items')
+            ->findOrFail($purchaseOrderId);
+
+        $itemTotalBeforeGlobalDiscount = (float) $purchaseOrder->item_total_before_global_discount;
+        $globalDiscount = (float) $purchaseOrder->global_discount;
+
+        foreach ($purchaseOrder->items as $poItem) {
+            if ($itemTotalBeforeGlobalDiscount <= 0 || $globalDiscount <= 0) {
+                $poItem->global_discount = 0;
+            } else {
+                $poItem->global_discount = ($poItem->subtotal_after_discount / $itemTotalBeforeGlobalDiscount) * $globalDiscount;
+            }
+
+            if ($poItem->global_discount < 0) {
+                $poItem->global_discount = 0;
+            }
+
+            $poItem->save();
         }
     }
 

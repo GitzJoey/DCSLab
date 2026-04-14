@@ -312,7 +312,7 @@ return [
         'product_unit_id' => 'Satuan Produk',
         'product_unit_conversion_value' => 'Nilai Konversi Satuan',
         'product_unit_price' => 'Harga Satuan',
-        'is_vat_included' => 'Harga Termasuk PPN',
+        'product_unit_is_price_include_vat' => 'Harga Termasuk PPN',
         'vat_profile_id' => 'Profil PPN',
         'vat_rate' => 'Tarif PPN',
         'vat_base_numerator' => 'Pembilang Dasar PPN',

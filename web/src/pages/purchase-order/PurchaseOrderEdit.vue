@@ -58,7 +58,7 @@ type ProductUnitOption = {
   unit_name: string;
   conversion_value: number;
   price: number;
-  is_vat_included: boolean;
+  product_unit_is_price_include_vat: boolean;
   vat_profile_id: string | null;
   vat_profile_name: string | null;
   vat_rate: number;
@@ -371,7 +371,7 @@ const loadData = async () => {
         discount_type: discount.discount_type,
         discount_value: discount.discount_value,
       })),
-      is_vat_included: item.is_vat_included,
+      product_unit_is_price_include_vat: item.product_unit_is_price_include_vat,
       vat_profile_id: item.vat_profile?.id ?? null,
       vat_profile_name: item.vat_profile?.name ?? null,
       vat_rate: item.vat_rate,
@@ -449,7 +449,7 @@ const searchProductUnits = async () => {
         unit_name: unit.unit?.name ?? '',
         conversion_value: Number(unit.conversion_value ?? 1),
         price: Number(unit.price ?? 0),
-        is_vat_included: Boolean(product.is_price_include_vat),
+        product_unit_is_price_include_vat: Boolean(product.is_price_include_vat),
         vat_profile_id: product.default_vat_profile?.id ?? null,
         vat_profile_name: product.default_vat_profile?.name ?? null,
         vat_rate: Number(product.default_vat_profile?.vat_rate ?? 0),
@@ -485,7 +485,7 @@ const selectProductUnit = (option: ProductUnitOption) => {
     product_unit_unit_name: option.unit_name,
     product_unit_conversion_value: option.conversion_value,
     product_unit_price: option.price,
-    is_vat_included: option.is_vat_included,
+    product_unit_is_price_include_vat: option.product_unit_is_price_include_vat,
     vat_profile_id: option.vat_profile_id,
     vat_profile_name: option.vat_profile_name,
     vat_rate: option.vat_rate,
@@ -510,7 +510,7 @@ const selectProductUnit = (option: ProductUnitOption) => {
       product_unit_price_discounts: [],
       delete_subtotal_discount_ids: [],
       subtotal_discounts: [],
-      is_vat_included: option.is_vat_included,
+      product_unit_is_price_include_vat: option.product_unit_is_price_include_vat,
       vat_profile_id: option.vat_profile_id,
       vat_profile_name: option.vat_profile_name,
       vat_rate: option.vat_rate,
@@ -735,7 +735,7 @@ const getItemTotalBeforeVatPreview = (item: PurchaseOrderItemFormItem, itemIndex
     : 0;
   const vatMultiplier = 1 + (vatBaseFactor * Number(item.vat_rate || 0));
 
-  if (item.is_vat_included && vatMultiplier > 0) {
+  if (item.product_unit_is_price_include_vat && vatMultiplier > 0) {
     return subtotalAfterGlobalDiscount / vatMultiplier;
   }
 
@@ -833,7 +833,7 @@ const onSubmit = async () => {
       discount_type: discount.discount_type,
       discount_value: discount.discount_value,
     })),
-    is_vat_included: item.is_vat_included,
+    product_unit_is_price_include_vat: item.product_unit_is_price_include_vat,
     vat_profile_id: item.vat_profile_id,
     vat_rate: item.vat_rate,
     vat_base_numerator: item.vat_base_numerator,
@@ -1044,7 +1044,7 @@ const onSubmit = async () => {
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
                 <div class="col-span-12">
-                  <FormLabel>{{ t('views.purchase_order.fields.product_unit_grand_total') }}</FormLabel>
+                  <FormLabel>{{ t('views.purchase_order.fields.item_grand_total') }}</FormLabel>
                   <div class="flex items-start gap-2">
                     <div class="flex-1 min-w-0">
                       <FormInputCurrency :model-value="getItemGrandTotalPreview(item)" readonly />
@@ -1140,7 +1140,7 @@ const onSubmit = async () => {
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
                 <div class="col-span-12 md:col-span-4">
-                  <FormLabel>{{ t('views.purchase_order.fields.product_unit_grand_total') }}</FormLabel>
+                  <FormLabel>{{ t('views.purchase_order.fields.item_grand_total') }}</FormLabel>
                   <div class="flex items-start gap-2">
                     <div class="flex-1 min-w-0">
                       <FormInputCurrency :model-value="getItemGrandTotalPreview(item)" readonly />
@@ -1240,7 +1240,7 @@ const onSubmit = async () => {
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
                 <div class="col-span-12 lg:col-span-3">
-                  <FormLabel>{{ t('views.purchase_order.fields.product_unit_grand_total') }}</FormLabel>
+                  <FormLabel>{{ t('views.purchase_order.fields.item_grand_total') }}</FormLabel>
                   <div class="flex items-start gap-2">
                     <div class="flex-1 min-w-0">
                       <FormInputCurrency :model-value="getItemGrandTotalPreview(item)" readonly />
@@ -1311,7 +1311,7 @@ const onSubmit = async () => {
                     </div>
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
-                        {{ t('views.purchase_order.fields.product_unit_price_after_discount') }}
+                        {{ t('views.purchase_order.fields.price_after_discount') }}
                       </div>
                       <div class="col-span-12 md:col-span-8">
                         <FormInputCurrency :model-value="getItemUnitPriceAfterDiscountPreview(item)" readonly />
@@ -1319,7 +1319,7 @@ const onSubmit = async () => {
                     </div>
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
-                        {{ t('views.purchase_order.fields.product_unit_subtotal') }}
+                        {{ t('views.purchase_order.fields.subtotal') }}
                       </div>
                       <div class="col-span-12 md:col-span-8">
                         <FormInputCurrency :model-value="getItemUnitPriceSubtotalAfterDiscountPreview(item)" readonly />
@@ -1371,7 +1371,7 @@ const onSubmit = async () => {
                     </div>
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
-                        {{ t('views.purchase_order.fields.product_unit_subtotal_after_discount') }}
+                        {{ t('views.purchase_order.fields.subtotal_after_discount') }}
                       </div>
                       <div class="col-span-12 md:col-span-8">
                         <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
@@ -1384,9 +1384,9 @@ const onSubmit = async () => {
                   <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_additional_details') }}</div>
                   <div class="grid grid-cols-12 gap-4 gap-y-3">
                     <div class="col-span-12 md:col-span-4">
-                      <FormLabel>{{ t('views.purchase_order.fields.is_vat_included') }}</FormLabel>
+                      <FormLabel>{{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}</FormLabel>
                       <FormSwitch>
-                        <FormSwitch.Input v-model="item.is_vat_included" type="checkbox" />
+                        <FormSwitch.Input v-model="item.product_unit_is_price_include_vat" type="checkbox" />
                       </FormSwitch>
                     </div>
                     <div class="col-span-12 md:col-span-8">
@@ -1490,7 +1490,7 @@ const onSubmit = async () => {
                       </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
-                          {{ t('views.purchase_order.fields.product_unit_price_after_discount') }}
+                          {{ t('views.purchase_order.fields.price_after_discount') }}
                         </div>
                         <div class="col-span-12 md:col-span-8">
                           <FormInputCurrency :model-value="getItemUnitPriceAfterDiscountPreview(item)" readonly />
@@ -1498,7 +1498,7 @@ const onSubmit = async () => {
                       </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
-                          {{ t('views.purchase_order.fields.product_unit_subtotal') }}
+                          {{ t('views.purchase_order.fields.subtotal') }}
                         </div>
                         <div class="col-span-12 md:col-span-8">
                           <FormInputCurrency :model-value="getItemUnitPriceSubtotalAfterDiscountPreview(item)" readonly />
@@ -1550,7 +1550,7 @@ const onSubmit = async () => {
                       </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
-                          {{ t('views.purchase_order.fields.product_unit_subtotal_after_discount') }}
+                          {{ t('views.purchase_order.fields.subtotal_after_discount') }}
                         </div>
                         <div class="col-span-12 md:col-span-8">
                           <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
@@ -1564,9 +1564,9 @@ const onSubmit = async () => {
                     <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_additional_details') }}</div>
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
                       <div class="col-span-12 md:col-span-4">
-                        <FormLabel class="flex min-h-[40px] items-start">{{ t('views.purchase_order.fields.is_vat_included') }}</FormLabel>
+                        <FormLabel class="flex min-h-[40px] items-start">{{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}</FormLabel>
                         <FormSwitch>
-                          <FormSwitch.Input v-model="item.is_vat_included" type="checkbox" />
+                          <FormSwitch.Input v-model="item.product_unit_is_price_include_vat" type="checkbox" />
                         </FormSwitch>
                       </div>
                       <div class="col-span-12 md:col-span-8">
@@ -1637,7 +1637,7 @@ const onSubmit = async () => {
             <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
               <div class="col-span-12 lg:col-span-9"></div>
               <div class="col-span-12 lg:col-span-3">
-                <FormLabel>{{ t('views.purchase_order.fields.product_unit_grand_total') }}</FormLabel>
+                <FormLabel>{{ t('views.purchase_order.fields.items_grand_total_after_discount') }}</FormLabel>
                 <FormInputCurrency :model-value="getItemsGrandTotalPreview()" readonly />
               </div>
             </div>

@@ -2,6 +2,8 @@
 
 namespace App\Actions\PurchaseOrder;
 
+use App\Actions\PurchaseOrderGlobalDiscount\PurchaseOrderGlobalDiscountActions;
+use App\Actions\PurchaseOrderItem\PurchaseOrderItemActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
@@ -19,11 +21,19 @@ class PurchaseOrderActions
     use CacheHelper;
     use LoggerHelper;
 
+    private $purchaseOrderItemActions;
+
+    private $purchaseOrderGlobalDiscountActions;
+
     private $purchaseOrderService;
 
     public function __construct(
+        PurchaseOrderItemActions $purchaseOrderItemActions,
+        PurchaseOrderGlobalDiscountActions $purchaseOrderGlobalDiscountActions,
         PurchaseOrderService $purchaseOrderService,
     ) {
+        $this->purchaseOrderItemActions = $purchaseOrderItemActions;
+        $this->purchaseOrderGlobalDiscountActions = $purchaseOrderGlobalDiscountActions;
         $this->purchaseOrderService = $purchaseOrderService;
     }
 
@@ -183,6 +193,17 @@ class PurchaseOrderActions
         return $result->count() == 0;
     }
 
+    private function generateDate(string $date): string
+    {
+        if ($date == config('dcslab.KEYWORDS.AUTO')) {
+            $nowLocal = now(TimezoneHelper::getUserTimezone())->toDateTimeString();
+
+            return TimezoneHelper::convertToUTC($nowLocal);
+        }
+
+        return TimezoneHelper::convertToUTC($date);
+    }
+
     public function create(PurchaseOrderCreateDTO $data): PurchaseOrder
     {
         $timer_start = microtime(true);
@@ -192,26 +213,32 @@ class PurchaseOrderActions
             $purchaseOrder->company_id = $data->companyId;
             $purchaseOrder->branch_id = $data->branchId;
             $purchaseOrder->code = $this->generateUniqueCode($data->companyId, $data->code, null);
-            $purchaseOrder->date = $this->purchaseOrderService->generateDate($data->date);
+            $purchaseOrder->date = $this->generateDate($data->date);
             $purchaseOrder->due_days = $data->dueDays;
             $purchaseOrder->supplier_id = $data->supplierId;
             $purchaseOrder->remarks = $data->remarks;
             $purchaseOrder->rounding = $data->rounding;
             $purchaseOrder->save();
 
-            $this->purchaseOrderService->createGlobalDiscounts(
-                purchaseOrder: $purchaseOrder,
-                globalDiscounts: $data->globalDiscounts,
-            );
             $this->purchaseOrderService->createItems(
                 purchaseOrder: $purchaseOrder,
                 items: $data->items,
+            );
+            $this->purchaseOrderService->createGlobalDiscounts(
+                purchaseOrder: $purchaseOrder,
+                globalDiscounts: $data->globalDiscounts,
             );
             $this->purchaseOrderService->createDownPayments(
                 purchaseOrder: $purchaseOrder,
                 downPayments: $data->downPayments,
             );
-            $this->purchaseOrderService->updateSummary($purchaseOrder);
+
+            $purchaseOrder->item_total_before_global_discount = $this->purchaseOrderItemActions->getSubtotalAfterDiscountAmountByPurchaseOrderId($purchaseOrder->id);
+            $purchaseOrder->global_discount = $this->purchaseOrderGlobalDiscountActions->getAmountByPurchaseOrderId($purchaseOrder->id);
+            $purchaseOrder->item_total_after_global_discount = $purchaseOrder->item_total_before_global_discount - $purchaseOrder->global_discount;
+            $purchaseOrder->save();
+
+            $this->purchaseOrderItemActions->updateProductUnitGlobalDiscountByPurchaseOrderId($purchaseOrder->id);
 
             $this->flushCache();
 
@@ -233,7 +260,7 @@ class PurchaseOrderActions
             $purchaseOrder->company_id = $data->companyId;
             $purchaseOrder->branch_id = $data->branchId;
             $purchaseOrder->code = $this->generateUniqueCode($data->companyId, $data->code, $purchaseOrder->id);
-            $purchaseOrder->date = $this->purchaseOrderService->generateDate($data->date);
+            $purchaseOrder->date = $this->generateDate($data->date);
             $purchaseOrder->due_days = $data->dueDays;
             $purchaseOrder->supplier_id = $data->supplierId;
             $purchaseOrder->remarks = $data->remarks;

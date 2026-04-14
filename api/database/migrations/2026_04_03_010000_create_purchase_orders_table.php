@@ -20,9 +20,9 @@ return new class extends Migration
             $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers');
             $table->text('remarks')->nullable();
 
-            $table->decimal('total_before_global_discount', 30, 8)->default(0);
+            $table->decimal('item_total_before_global_discount', 30, 8)->default(0);
             $table->decimal('global_discount', 30, 8)->default(0);
-            $table->decimal('total_before_vat', 30, 8)->default(0);
+            $table->decimal('item_total_after_global_discount', 30, 8)->default(0);
             $table->decimal('vat_base', 30, 8)->default(0);
             $table->decimal('vat', 30, 8)->default(0);
             $table->decimal('rounding', 30, 8)->default(0);

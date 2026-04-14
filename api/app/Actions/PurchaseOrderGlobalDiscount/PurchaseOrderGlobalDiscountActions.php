@@ -5,7 +5,9 @@ namespace App\Actions\PurchaseOrderGlobalDiscount;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderGlobalDiscountCreateDTO;
 use App\DTOs\PurchaseOrderGlobalDiscountUpdateDTO;
+use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
+use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderGlobalDiscount;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -147,6 +149,35 @@ class PurchaseOrderGlobalDiscountActions
             'branch',
             'purchaseOrder.supplier',
         ]);
+    }
+
+    public function getAmountByPurchaseOrderId(int $purchaseOrderId): float
+    {
+        $purchaseOrder = PurchaseOrder::query()
+            ->with(['globalDiscounts' => fn ($query) => $query->orderBy('sequence')->orderBy('id')])
+            ->findOrFail($purchaseOrderId);
+
+        $beforeDiscount = (float) $purchaseOrder->item_total_before_global_discount;
+        $afterDiscount = $beforeDiscount;
+
+        foreach ($purchaseOrder->globalDiscounts as $globalDiscount) {
+            $discountType = $globalDiscount->discount_type instanceof DiscountTypeEnum
+                ? $globalDiscount->discount_type
+                : DiscountTypeEnum::resolveToEnum($globalDiscount->discount_type);
+            $discountValue = (float) $globalDiscount->discount_value;
+
+            if ($discountType === DiscountTypeEnum::PERCENTAGE) {
+                $afterDiscount -= $afterDiscount * $discountValue / 100;
+            } else {
+                $afterDiscount -= $discountValue;
+            }
+
+            if ($afterDiscount < 0) {
+                $afterDiscount = 0;
+            }
+        }
+
+        return $beforeDiscount - $afterDiscount;
     }
 
     public function create(PurchaseOrderGlobalDiscountCreateDTO $data): PurchaseOrderGlobalDiscount

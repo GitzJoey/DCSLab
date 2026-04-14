@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('product_unit_conversion_value', 30, 8)->default(0);
             $table->decimal('product_unit_qty_base', 30, 8)->default(0);
             $table->decimal('product_unit_price', 30, 8)->default(0);
+            $table->boolean('product_unit_is_price_include_vat')->default(false);
             $table->decimal('product_unit_price_discount', 30, 8)->default(0);
             $table->decimal('product_unit_price_after_discount', 30, 8)->default(0);
             $table->decimal('product_unit_subtotal', 30, 8)->default(0);
@@ -29,7 +30,6 @@ return new class extends Migration
             $table->decimal('product_unit_global_discount', 30, 8)->default(0);
             $table->decimal('product_unit_total_before_vat', 30, 8)->default(0);
 
-            $table->boolean('is_vat_included')->default(false);
             $table->foreignId('vat_profile_id')->nullable()->references('id')->on('vat_profiles');
             $table->decimal('vat_rate', 30, 8)->default(0);
             $table->unsignedInteger('vat_base_numerator')->default(1);

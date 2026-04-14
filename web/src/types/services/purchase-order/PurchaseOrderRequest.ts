@@ -42,7 +42,7 @@ export interface PurchaseOrderItemNestedStoreRequest {
   product_unit_price: number;
   product_unit_price_discounts: PurchaseOrderItemDiscountNestedStoreRequest[];
   subtotal_discounts: PurchaseOrderItemDiscountNestedStoreRequest[];
-  is_vat_included: boolean;
+  product_unit_is_price_include_vat: boolean;
   vat_profile_id: string | null;
   vat_rate: number;
   vat_base_numerator: number;
@@ -96,7 +96,7 @@ export interface PurchaseOrderItemNestedUpdateRequest {
   product_unit_price_discounts: PurchaseOrderItemDiscountNestedUpdateRequest[];
   delete_subtotal_discount_ids: string[];
   subtotal_discounts: PurchaseOrderItemDiscountNestedUpdateRequest[];
-  is_vat_included: boolean;
+  product_unit_is_price_include_vat: boolean;
   vat_profile_id: string | null;
   vat_rate: number;
   vat_base_numerator: number;

@@ -26,9 +26,9 @@ class PurchaseOrder extends Model
         'supplier_id',
         'remarks',
 
-        'total_before_global_discount',
+        'item_total_before_global_discount',
         'global_discount',
-        'total_before_vat',
+        'item_total_after_global_discount',
         'vat_base',
         'vat',
         'rounding',
@@ -41,9 +41,9 @@ class PurchaseOrder extends Model
     protected $casts = [
         'date' => 'datetime',
         'due_days' => 'integer',
-        'total_before_global_discount' => 'decimal:8',
+        'item_total_before_global_discount' => 'decimal:8',
         'global_discount' => 'decimal:8',
-        'total_before_vat' => 'decimal:8',
+        'item_total_after_global_discount' => 'decimal:8',
         'vat_base' => 'decimal:8',
         'vat' => 'decimal:8',
         'rounding' => 'decimal:8',

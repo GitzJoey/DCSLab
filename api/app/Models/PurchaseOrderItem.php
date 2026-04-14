@@ -24,27 +24,29 @@ class PurchaseOrderItem extends Model
         'qty', // user_input
         'product_unit_id', // user_input
         'product_unit_conversion_value', // user_input
-        'product_unit_qty_base', // calculated_after_save_item_row
+        'product_unit_qty_base', // calculated_when_saving_item_row
         'product_unit_price', // user_input
-        'product_unit_price_discount', // calculated_after_save_item_row
-        'product_unit_price_after_discount', // calculated_after_save_item_row
-        'product_unit_subtotal', // calculated_after_save_item_row
-        'product_unit_subtotal_discount', // calculated_after_save_item_row
-        'product_unit_subtotal_after_discount', // calculated_after_save_item_row
-        'product_unit_global_discount', // calculated_after_save_discount_rows
-        'product_unit_total_before_vat', // calculated_after_save_discount_rows
-        'is_vat_included', // user_input
+        'product_unit_is_price_include_vat', // user_input
+        'price_discount', // calculated_after_save_item_row
+        'price_after_discount', // calculated_after_save_item_row
+        'subtotal', // calculated_after_save_item_row
+        'subtotal_discount', // calculated_after_save_item_row
+        'subtotal_after_discount', // calculated_after_save_item_row
+
+        'global_discount', // calculated_after_save_discount_rows
+        'total_before_vat', // calculated_after_save_discount_rows
+
         'vat_profile_id', // user_input
         'vat_rate', // user_input
         'vat_base_numerator', // user_input
         'vat_base_denominator', // user_input
-        'product_unit_vat_base', // calculated_after_save_discount_rows
-        'product_unit_vat', // calculated_after_save_discount_rows
-        'product_unit_rounding', // calculated_after_save_discount_rows
-        'product_unit_grand_total', // calculated_after_save_discount_rows
-        'product_unit_cogs', // calculated_after_save_discount_rows
-        'product_unit_total_cogs', // calculated_after_save_discount_rows
-        'product_unit_base_unit_cogs', // calculated_after_save_discount_rows
+        'vat_base', // calculated_after_save_discount_rows
+        'vat', // calculated_after_save_discount_rows
+        'rounding', // calculated_after_save_discount_rows
+        'grand_total', // calculated_after_save_discount_rows
+        'cogs', // calculated_after_save_discount_rows
+        'total_cogs', // calculated_after_save_discount_rows
+        'base_unit_cogs', // calculated_after_save_discount_rows
         'remarks', // user_input
     ];
 
@@ -53,24 +55,24 @@ class PurchaseOrderItem extends Model
         'product_unit_conversion_value' => 'decimal:8',
         'product_unit_qty_base' => 'decimal:8',
         'product_unit_price' => 'decimal:8',
-        'product_unit_price_discount' => 'decimal:8',
-        'product_unit_price_after_discount' => 'decimal:8',
-        'product_unit_subtotal' => 'decimal:8',
-        'product_unit_subtotal_discount' => 'decimal:8',
-        'product_unit_subtotal_after_discount' => 'decimal:8',
-        'product_unit_global_discount' => 'decimal:8',
-        'product_unit_total_before_vat' => 'decimal:8',
-        'is_vat_included' => 'boolean',
+        'product_unit_is_price_include_vat' => 'boolean',
+        'price_discount' => 'decimal:8',
+        'price_after_discount' => 'decimal:8',
+        'subtotal' => 'decimal:8',
+        'subtotal_discount' => 'decimal:8',
+        'subtotal_after_discount' => 'decimal:8',
+        'global_discount' => 'decimal:8',
+        'total_before_vat' => 'decimal:8',
         'vat_rate' => 'decimal:8',
         'vat_base_numerator' => 'integer',
         'vat_base_denominator' => 'integer',
-        'product_unit_vat_base' => 'decimal:8',
-        'product_unit_vat' => 'decimal:8',
-        'product_unit_rounding' => 'decimal:8',
-        'product_unit_grand_total' => 'decimal:8',
-        'product_unit_cogs' => 'decimal:8',
-        'product_unit_total_cogs' => 'decimal:8',
-        'product_unit_base_unit_cogs' => 'decimal:8',
+        'vat_base' => 'decimal:8',
+        'vat' => 'decimal:8',
+        'rounding' => 'decimal:8',
+        'grand_total' => 'decimal:8',
+        'cogs' => 'decimal:8',
+        'total_cogs' => 'decimal:8',
+        'base_unit_cogs' => 'decimal:8',
     ];
 
     public function getVatBaseFactorValue(): float
