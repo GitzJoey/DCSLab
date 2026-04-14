@@ -12,6 +12,8 @@ return [
     'valid_stock_adjustment_out_item' => 'Invalid stock adjustment out item value',
     'valid_customer_group' => 'Invalid customer group value',
     'valid_customer' => 'Invalid customer value',
+    'valid_supplier' => 'Invalid supplier value',
+    'valid_cash_account' => 'Invalid cash account value',
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
     'inactive_user' => 'Your profile status is inactive',

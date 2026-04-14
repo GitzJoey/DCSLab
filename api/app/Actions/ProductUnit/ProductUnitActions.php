@@ -24,74 +24,6 @@ class ProductUnitActions
     {
     }
 
-    public function createPhysical(ProductUnitCreatePhysicalDTO $data): ProductUnit
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $isBase = $data->conversionValue == 1;
-            if ($isBase) $this->resetBaseUnit($data->companyId, $data->productId);
-            if ($data->isPrimaryUnit) $this->resetPrimaryUnit($data->companyId, $data->productId);
-
-            $productUnit = new ProductUnit();
-            $productUnit->company_id = $data->companyId;
-            $productUnit->product_id = $data->productId;
-            $productUnit->code = $this->generateUniqueCode($data->companyId, $data->code, null);
-            $productUnit->is_manufacturer_sku = $data->isManufacturerSKU;
-            $productUnit->unit_id = $data->unitId;
-            $productUnit->price = $data->price;
-            $productUnit->is_base = $isBase;
-            $productUnit->conversion_value = $data->conversionValue;
-            $productUnit->is_primary_unit = $data->isPrimaryUnit;
-            $productUnit->point = $data->point;
-            $productUnit->remarks = $data->remarks;
-            $productUnit->save();
-
-            $this->flushCache();
-
-            return $productUnit;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    public function createService(ProductUnitCreateServiceDTO $data): ProductUnit
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $product = Product::findOrFail($data->productId);
-
-            $productUnit = new ProductUnit();
-            $productUnit->company_id = $data->companyId;
-            $productUnit->product_id = $data->productId;
-            $productUnit->code = $product->code;
-            $productUnit->is_manufacturer_sku = false;
-            $productUnit->unit_id = $data->unitId;
-            $productUnit->price = $data->price;
-            $productUnit->is_base = true;
-            $productUnit->conversion_value = 1;
-            $productUnit->is_primary_unit = true;
-            $productUnit->point = $data->point;
-            $productUnit->remarks = $data->remarks;
-            $productUnit->save();
-
-            $this->flushCache();
-
-            return $productUnit;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -212,6 +144,74 @@ class ProductUnitActions
     public function read(ProductUnit $productUnit): ProductUnit
     {
         return $productUnit->load('company', 'unit', 'product');
+    }
+
+    public function createPhysical(ProductUnitCreatePhysicalDTO $data): ProductUnit
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $isBase = $data->conversionValue == 1;
+            if ($isBase) $this->resetBaseUnit($data->companyId, $data->productId);
+            if ($data->isPrimaryUnit) $this->resetPrimaryUnit($data->companyId, $data->productId);
+
+            $productUnit = new ProductUnit();
+            $productUnit->company_id = $data->companyId;
+            $productUnit->product_id = $data->productId;
+            $productUnit->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $productUnit->is_manufacturer_sku = $data->isManufacturerSKU;
+            $productUnit->unit_id = $data->unitId;
+            $productUnit->price = $data->price;
+            $productUnit->is_base = $isBase;
+            $productUnit->conversion_value = $data->conversionValue;
+            $productUnit->is_primary_unit = $data->isPrimaryUnit;
+            $productUnit->point = $data->point;
+            $productUnit->remarks = $data->remarks;
+            $productUnit->save();
+
+            $this->flushCache();
+
+            return $productUnit;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function createService(ProductUnitCreateServiceDTO $data): ProductUnit
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $product = Product::findOrFail($data->productId);
+
+            $productUnit = new ProductUnit();
+            $productUnit->company_id = $data->companyId;
+            $productUnit->product_id = $data->productId;
+            $productUnit->code = $product->code;
+            $productUnit->is_manufacturer_sku = false;
+            $productUnit->unit_id = $data->unitId;
+            $productUnit->price = $data->price;
+            $productUnit->is_base = true;
+            $productUnit->conversion_value = 1;
+            $productUnit->is_primary_unit = true;
+            $productUnit->point = $data->point;
+            $productUnit->remarks = $data->remarks;
+            $productUnit->save();
+
+            $this->flushCache();
+
+            return $productUnit;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function updatePhysical(ProductUnit $productUnit, ProductUnitUpdatePhysicalDTO $data): ProductUnit

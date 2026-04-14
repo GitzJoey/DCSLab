@@ -47,6 +47,9 @@ class ProductResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('images'), [
                 'product_images' => ProductImageResource::collection($this->whenLoaded('images')),
             ]),
+            $this->mergeWhen($this->relationLoaded('mainImage'), [
+                'main_product_image' => new ProductImageResource($this->whenLoaded('mainImage')),
+            ]),
         ];
     }
 

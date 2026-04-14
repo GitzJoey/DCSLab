@@ -39,6 +39,7 @@ import stock_adjustment_in_item from './en/views/stock_adjustment_in_item.json';
 import stock_adjustment_in_item_serial from './en/views/stock_adjustment_in_item_serial.json';
 import stock_adjustment_out_item from './en/views/stock_adjustment_out_item.json';
 import stock_adjustment_out_item_serial from './en/views/stock_adjustment_out_item_serial.json';
+import purchase_order from './en/views/purchase_order.json';
 import stock_transfer from './en/views/stock_transfer.json';
 import stock_transfer_item from './en/views/stock_transfer_item.json';
 import stock_transfer_item_serial from './en/views/stock_transfer_item_serial.json';
@@ -88,6 +89,7 @@ export default {
     stock_adjustment_in_item_serial: stock_adjustment_in_item_serial,
     stock_adjustment_out_item: stock_adjustment_out_item,
     stock_adjustment_out_item_serial: stock_adjustment_out_item_serial,
+    purchase_order: purchase_order,
     stock_transfer: stock_transfer,
     stock_transfer_item: stock_transfer_item,
     stock_transfer_item_serial: stock_transfer_item_serial,

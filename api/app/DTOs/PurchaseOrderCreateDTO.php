@@ -12,6 +12,7 @@ final class PurchaseOrderCreateDTO
         public readonly int $dueDays,
         public readonly ?int $supplierId,
         public readonly ?string $remarks,
+        public readonly float $rounding,
         public readonly array $globalDiscounts,
 
         public readonly array $items,

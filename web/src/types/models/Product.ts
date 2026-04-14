@@ -23,4 +23,5 @@ export interface Product {
   remaining_stock_base_unit?: number;
   product_units: ProductUnit[];
   product_images?: ProductImage[];
+  main_product_image?: ProductImage | null;
 }

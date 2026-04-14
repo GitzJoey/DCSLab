@@ -39,7 +39,8 @@ const onlyNumber = (string: string) => {
 const formatCurrency = (number: number | string) => {
   if (number !== null && number !== undefined && number !== '') {
     // Convert to string and handle decimals
-    let numStr = number.toString();
+    let numStr = number.toString().trim();
+    const isNegative = numStr.startsWith('-');
 
     // Split integer and decimal parts if exists
     let [integerPart, decimalPart] = numStr.split('.');
@@ -66,7 +67,7 @@ const formatCurrency = (number: number | string) => {
       }
     }
 
-    return currency;
+    return isNegative && currency !== '' ? `-${currency}` : currency;
   } else {
     return '';
   }

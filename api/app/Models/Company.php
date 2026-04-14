@@ -100,6 +100,11 @@ class Company extends Model
         return $this->hasMany(StockAdjustmentOutItem::class);
     }
 
+    public function purchaseOrders()
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
+
     public function customers()
     {
         return $this->hasMany(Customer::class);

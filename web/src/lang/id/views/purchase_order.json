@@ -1,0 +1,86 @@
+{
+  "page_title": "Purchase Order",
+  "table": {
+    "title": "Daftar Purchase Order",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "supplier": "Pemasok",
+      "due_days": "Jatuh Tempo (Hari)",
+      "grand_total": "Grand Total",
+      "remarks": "Catatan"
+    }
+  },
+  "actions": {
+    "create": "Tambah Purchase Order",
+    "edit": "Ubah Purchase Order",
+    "show": "Tampilkan Purchase Order",
+    "delete": "Hapus Purchase Order"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "purchase_order_data": "Data Purchase Order",
+    "items": "Item-item",
+    "summary": "Ringkasan",
+    "global_discounts": "Diskon Global",
+    "down_payments": "Uang Muka"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "due_days": "Jatuh Tempo (Hari)",
+    "supplier_id": "Pemasok",
+    "remarks": "Catatan",
+    "grand_total": "Grand Total",
+    "global_discount": "Diskon Global",
+    "down_payment": "Uang Muka",
+    "amount_paid_down_payment": "Jumlah Uang Muka",
+    "product_unit_id": "Produk",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_price": "Harga Satuan",
+    "product_unit_grand_total": "Grand Total Item Setelah Diskon",
+    "product_unit_price_discounts": "Diskon Harga Satuan",
+    "product_unit_price_discounts_empty": "Belum ada data diskon harga satuan",
+    "product_unit_price_after_discount": "Harga Satuan Setelah Diskon",
+    "product_unit_subtotal": "Subtotal Setelah Diskon Harga Satuan",
+    "subtotal_discounts_empty": "Belum ada data diskon subtotal",
+    "product_unit_subtotal_after_discount": "Subtotal Setelah Diskon",
+    "item_price_breakdown": "Rincian Harga Item",
+    "item_additional_details": "Detail Tambahan Item",
+    "items_grand_total_after_discount": "Total Grand Total Item Setelah Diskon",
+    "global_discounts_summary_hint": "Atur diskon global untuk total semua item.",
+    "global_discount_total": "Total Diskon Global",
+    "amount_payable_preview": "Total Setelah Diskon Global",
+    "rounding": "Pembulatan",
+    "subtotal_discounts": "Diskon Subtotal",
+    "is_vat_included": "Harga Termasuk PPN",
+    "vat_profile_id": "Profil PPN",
+    "vat_rate": "Tarif PPN",
+    "vat_base_numerator": "Pembilang Dasar PPN",
+    "vat_base_denominator": "Penyebut Dasar PPN",
+    "sequence": "Urutan",
+    "discount_type": "Tipe Diskon",
+    "discount_value": "Nilai Diskon",
+    "cash_account_id": "Akun Kas",
+    "amount": "Jumlah"
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Purchase Order",
+      "message": "Purchase Order berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Purchase Order",
+      "message": "Purchase Order berhasil diperbarui"
+    },
+    "delete": {
+      "title": "Hapus Purchase Order",
+      "message": "Purchase Order berhasil dihapus"
+    }
+  }
+}

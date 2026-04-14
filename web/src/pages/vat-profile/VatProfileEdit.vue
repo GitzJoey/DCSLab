@@ -254,17 +254,15 @@ watch(
               <FormLabel :class="{ 'text-danger': vatProfileForm.invalid('is_active') }">
                 {{ t('views.vat_profile.fields.is_active') }}
               </FormLabel>
-              <div class="flex items-center min-h-[38px]">
-                <FormSwitch>
-                  <FormSwitch.Input
-                    id="is_active"
-                    v-model="vatProfileForm.is_active"
-                    type="checkbox"
-                    :class="{ 'border-danger': vatProfileForm.invalid('is_active') }"
-                    @change="vatProfileForm.validate('is_active')"
-                  />
-                </FormSwitch>
-              </div>
+              <FormSwitch>
+                <FormSwitch.Input
+                  id="is_active"
+                  v-model="vatProfileForm.is_active"
+                  type="checkbox"
+                  :class="{ 'border-danger': vatProfileForm.invalid('is_active') }"
+                  @change="vatProfileForm.validate('is_active')"
+                />
+              </FormSwitch>
               <FormErrorMessages :messages="vatProfileForm.errors.is_active" />
             </div>
             <div class="col-span-12">

@@ -6,6 +6,7 @@ use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
 use App\Helpers\TimezoneHelper;
+use App\Models\Company;
 use App\Models\PurchaseOrder;
 use App\Services\PurchaseOrder\PurchaseOrderService;
 use App\Traits\CacheHelper;
@@ -147,11 +148,39 @@ class PurchaseOrderActions
             'items.productUnit.product.brand',
             'items.productUnit.product.baseProductUnit.unit',
             'items.productUnit.product.images',
+            'items.productUnit.product.mainImage',
             'items.vatProfile',
             'items.productUnitPriceDiscounts',
             'items.subtotalDiscounts',
             'downPayments.cashAccount',
         ]);
+    }
+
+    public function generateUniqueCode(int $companyId, string $code, ?int $exceptId): string
+    {
+        if ($code != Config::get('dcslab.KEYWORDS.AUTO')) return $code;
+
+        $company = Company::find($companyId);
+
+        $tryCount = 0;
+        do {
+            $count = $company->purchaseOrders()->withTrashed()->count() + 1 + $tryCount;
+            $code = 'PO'.str_pad($count, 5, '0', STR_PAD_LEFT);
+            $tryCount++;
+        } while (! $this->isUniqueCode($companyId, $code, $exceptId));
+
+        return $code;
+    }
+
+    public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
+    {
+        $result = PurchaseOrder::where('company_id', $companyId)->where('code', '=', $code);
+
+        if ($exceptId) {
+            $result = $result->where('id', '<>', $exceptId);
+        }
+
+        return $result->count() == 0;
     }
 
     public function create(PurchaseOrderCreateDTO $data): PurchaseOrder
@@ -162,11 +191,12 @@ class PurchaseOrderActions
             $purchaseOrder = new PurchaseOrder();
             $purchaseOrder->company_id = $data->companyId;
             $purchaseOrder->branch_id = $data->branchId;
-            $purchaseOrder->code = $this->purchaseOrderService->generateUniqueCode($data->companyId, $data->code, null);
+            $purchaseOrder->code = $this->generateUniqueCode($data->companyId, $data->code, null);
             $purchaseOrder->date = $this->purchaseOrderService->generateDate($data->date);
             $purchaseOrder->due_days = $data->dueDays;
             $purchaseOrder->supplier_id = $data->supplierId;
             $purchaseOrder->remarks = $data->remarks;
+            $purchaseOrder->rounding = $data->rounding;
             $purchaseOrder->save();
 
             $this->purchaseOrderService->createGlobalDiscounts(
@@ -202,11 +232,12 @@ class PurchaseOrderActions
         try {
             $purchaseOrder->company_id = $data->companyId;
             $purchaseOrder->branch_id = $data->branchId;
-            $purchaseOrder->code = $this->purchaseOrderService->generateUniqueCode($data->companyId, $data->code, $purchaseOrder->id);
+            $purchaseOrder->code = $this->generateUniqueCode($data->companyId, $data->code, $purchaseOrder->id);
             $purchaseOrder->date = $this->purchaseOrderService->generateDate($data->date);
             $purchaseOrder->due_days = $data->dueDays;
             $purchaseOrder->supplier_id = $data->supplierId;
             $purchaseOrder->remarks = $data->remarks;
+            $purchaseOrder->rounding = $data->rounding;
             $purchaseOrder->save();
 
             $this->purchaseOrderService->syncGlobalDiscounts(

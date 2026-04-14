@@ -1,0 +1,86 @@
+{
+  "page_title": "Purchase Order",
+  "table": {
+    "title": "Purchase Order List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "supplier": "Supplier",
+      "due_days": "Due Days",
+      "grand_total": "Grand Total",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Create Purchase Order",
+    "edit": "Edit Purchase Order",
+    "show": "Show Purchase Order",
+    "delete": "Delete Purchase Order"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "purchase_order_data": "Purchase Order Data",
+    "items": "Items",
+    "summary": "Summary",
+    "global_discounts": "Global Discounts",
+    "down_payments": "Down Payments"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "due_days": "Due Days",
+    "supplier_id": "Supplier",
+    "remarks": "Remarks",
+    "grand_total": "Grand Total",
+    "global_discount": "Global Discount",
+    "down_payment": "Down Payment",
+    "amount_paid_down_payment": "Down Payment Amount",
+    "product_unit_id": "Product",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_price": "Unit Price",
+    "product_unit_grand_total": "Item Grand Total After Discount",
+    "product_unit_price_discounts": "Unit Price Discounts",
+    "product_unit_price_discounts_empty": "No unit price discount data yet",
+    "product_unit_price_after_discount": "Unit Price After Discount",
+    "product_unit_subtotal": "Subtotal After Unit Price Discount",
+    "subtotal_discounts_empty": "No subtotal discount data yet",
+    "product_unit_subtotal_after_discount": "Subtotal After Discount",
+    "item_price_breakdown": "Item Price Breakdown",
+    "item_additional_details": "Item Additional Details",
+    "items_grand_total_after_discount": "Total Item Grand Total After Discount",
+    "global_discounts_summary_hint": "Configure global discounts for the total of all items.",
+    "global_discount_total": "Global Discount Total",
+    "amount_payable_preview": "Total After Global Discount",
+    "rounding": "Rounding",
+    "subtotal_discounts": "Subtotal Discounts",
+    "is_vat_included": "VAT Included",
+    "vat_profile_id": "VAT Profile",
+    "vat_rate": "VAT Rate",
+    "vat_base_numerator": "VAT Base Numerator",
+    "vat_base_denominator": "VAT Base Denominator",
+    "sequence": "Sequence",
+    "discount_type": "Discount Type",
+    "discount_value": "Discount Value",
+    "cash_account_id": "Cash Account",
+    "amount": "Amount"
+  },
+  "alert": {
+    "create": {
+      "title": "Create Purchase Order",
+      "message": "Purchase Order has been created"
+    },
+    "update": {
+      "title": "Edit Purchase Order",
+      "message": "Purchase Order has been updated"
+    },
+    "delete": {
+      "title": "Delete Purchase Order",
+      "message": "Purchase Order has been deleted"
+    }
+  }
+}

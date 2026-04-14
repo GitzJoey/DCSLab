@@ -13,7 +13,6 @@ use App\DTOs\PurchaseOrderItemCreateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
-use App\Models\Company;
 use App\Models\PurchaseOrder;
 use App\Services\PurchaseOrderItem\PurchaseOrderItemCalculationService;
 
@@ -36,24 +35,6 @@ class PurchaseOrderService
         }
 
         return TimezoneHelper::convertToUTC($date);
-    }
-
-    public function generateUniqueCode(int $companyId, string $code, ?int $exceptId): string
-    {
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            $company = Company::find($companyId);
-
-            $tryCount = 0;
-            do {
-                $count = $company->purchaseOrders()->withTrashed()->count() + 1 + $tryCount;
-                $code = 'PO'.str_pad($count, 5, '0', STR_PAD_LEFT);
-                $tryCount++;
-            } while (! $this->isUniqueCode($companyId, $code, $exceptId));
-
-            return $code;
-        }
-
-        return $code;
     }
 
     public function createGlobalDiscounts(
@@ -152,7 +133,7 @@ class PurchaseOrderService
         $purchaseOrder->total_before_vat = (float) $poItems->sum('product_unit_total_before_vat');
         $purchaseOrder->vat_base = (float) $poItems->sum('product_unit_vat_base');
         $purchaseOrder->vat = (float) $poItems->sum('product_unit_vat');
-        $purchaseOrder->rounding = (float) $poItems->sum('product_unit_rounding');
+        $purchaseOrder->rounding = (float) $purchaseOrder->rounding;
         $purchaseOrder->grand_total = $purchaseOrder->total_before_vat
             + $purchaseOrder->vat
             + $purchaseOrder->rounding;
@@ -334,16 +315,5 @@ class PurchaseOrderService
         }
 
         return $beforeDiscount - $afterDiscount;
-    }
-
-    public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
-    {
-        $result = PurchaseOrder::where('company_id', $companyId)->where('code', '=', $code);
-
-        if ($exceptId) {
-            $result = $result->where('id', '<>', $exceptId);
-        }
-
-        return $result->count() == 0;
     }
 }

@@ -4,8 +4,10 @@ namespace App\Services\Company;
 
 use App\Actions\Branch\BranchActions;
 use App\Actions\CashAccount\CashAccountActions;
+use App\Actions\Supplier\SupplierActions;
 use App\Actions\VatProfile\VatProfileActions;
 use App\Actions\Warehouse\WarehouseActions;
+use App\Enums\PaymentTermTypeEnum;
 use App\Enums\RecordStatusEnum;
 use App\Models\Branch;
 use App\Models\Company;
@@ -17,6 +19,7 @@ class CompanyInitializationService
         private WarehouseActions $warehouseActions,
         private CashAccountActions $cashAccountActions,
         private VatProfileActions $vatProfileActions,
+        private SupplierActions $supplierActions,
     ) {
     }
 
@@ -26,6 +29,7 @@ class CompanyInitializationService
         $this->createDefaultWarehouses($company, $mainBranch);
         $this->createDefaultCashAccounts($company, $mainBranch);
         $this->createDefaultVatProfiles($company);
+        $this->createDefaultSuppliers($company);
     }
 
     private function createMainBranch(Company $company): Branch
@@ -129,6 +133,29 @@ class CompanyInitializationService
 
         foreach ($defaultVatProfiles as $defaultVatProfile) {
             $this->vatProfileActions->create($defaultVatProfile);
+        }
+    }
+
+    private function createDefaultSuppliers(Company $company): void
+    {
+        $defaultSuppliers = [
+            [
+                'company_id' => $company->id,
+                'code' => config('dcslab.KEYWORDS.AUTO'),
+                'name' => 'Supplier Umum',
+                'address' => null,
+                'city' => null,
+                'payment_term_type' => PaymentTermTypeEnum::CASH_ON_DELIVERY,
+                'payment_term' => 0,
+                'taxable_enterprise' => false,
+                'tax_id' => null,
+                'status' => RecordStatusEnum::ACTIVE,
+                'remarks' => 'Supplier default saat perusahaan dibuat',
+            ],
+        ];
+
+        foreach ($defaultSuppliers as $defaultSupplier) {
+            $this->supplierActions->create($defaultSupplier);
         }
     }
 }

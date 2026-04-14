@@ -10,6 +10,7 @@
     modelValue?: number | string;
     formInputSize?: 'sm' | 'lg';
     rounded?: boolean;
+    allowNegative?: boolean;
   }
 
   interface FormInputCurrencyEmit {
@@ -17,7 +18,9 @@
     (e: 'change', value: number): void;
   }
 
-  const props = defineProps<FormInputCurrencyProps>();
+  const props = withDefaults(defineProps<FormInputCurrencyProps>(), {
+    allowNegative: true,
+  });
   const emit = defineEmits<FormInputCurrencyEmit>();
   const attrs = useAttrs();
   const formInline = inject<ProvideFormInline>('formInline', false);
@@ -54,52 +57,76 @@
     { immediate: true },
   );
 
+  const parseCurrencyInput = (value: string) => {
+    const trimmedValue = value.trim();
+    if (trimmedValue === '' || trimmedValue === '-') return 0;
+
+    const isNegative = trimmedValue.startsWith('-') && props.allowNegative;
+    const unsignedValue = trimmedValue.replace(/-/g, '').replace(/\s/g, '');
+    const separators = unsignedValue.match(/[.,]/g) ?? [];
+
+    let normalizedValue = unsignedValue;
+
+    if (separators.length > 0) {
+      const lastDotIndex = unsignedValue.lastIndexOf('.');
+      const lastCommaIndex = unsignedValue.lastIndexOf(',');
+      const decimalIndex = Math.max(lastDotIndex, lastCommaIndex);
+      const decimalSeparator = decimalIndex >= 0 ? unsignedValue[decimalIndex] : '';
+      const separatorCount = separators.length;
+
+      if (separatorCount === 1 && decimalIndex >= 0) {
+        const decimalPartLength = unsignedValue.length - decimalIndex - 1;
+        normalizedValue = decimalPartLength === 3
+          ? unsignedValue.replace(/[.,]/g, '')
+          : unsignedValue.replace(decimalSeparator, '#DECIMAL#').replace(/[.,]/g, '').replace('#DECIMAL#', '.');
+      } else if (separatorCount > 1) {
+        const parts = unsignedValue.split(decimalSeparator);
+        const groupsAfterFirst = parts.slice(1);
+        const isThousandsPattern = groupsAfterFirst.every((part) => part.length === 3);
+
+        normalizedValue = isThousandsPattern
+          ? unsignedValue.replace(/[.,]/g, '')
+          : unsignedValue.replace(decimalSeparator, '#DECIMAL#').replace(/[.,]/g, '').replace('#DECIMAL#', '.');
+      }
+    }
+
+    const parsedValue = Number(normalizedValue);
+    if (Number.isNaN(parsedValue)) return 0;
+
+    return isNegative ? parsedValue * -1 : parsedValue;
+  };
+
   const handleInput = (event: Event) => {
     const target = event.target as HTMLInputElement;
     let val = target.value;
 
-    // Remove non-digits and non-comma
-    // Assuming Indonesian locale: Dot for thousand, Comma for decimal
-
-    // Simple parsing:
-    // 1. Remove dots (thousands separator)
-    // 2. Replace comma with dot (decimal separator for parsing)
-
-    const rawValue = val.replace(/\./g, '').replace(',', '.');
-    const numberValue = parseFloat(rawValue);
-
-    if (!isNaN(numberValue)) {
-      emit('update:modelValue', numberValue);
-    } else {
-      // Handle empty or invalid input
-      if (val === '' || val === '-') {
-        // Maybe emit 0 or keep it as is?
-        // If we emit 0, model becomes 0.
-        // If we emit null?
-        // Let's emit 0 for now as per previous behavior
-        emit('update:modelValue', 0);
-      }
+    if (!props.allowNegative) {
+      val = val.replace(/-/g, '');
+      displayValue.value = val;
     }
+
+    emit('update:modelValue', parseCurrencyInput(val));
   };
 
   const handleFocus = () => {
     isFocused.value = true;
-    // Unformat: show raw number (with comma if needed)
     if (props.modelValue !== undefined && props.modelValue !== null) {
-      // Convert number to string with comma for decimal
       displayValue.value = props.modelValue.toString().replace('.', ',');
     }
   };
 
   const handleBlur = () => {
     isFocused.value = false;
-    displayValue.value = formatCurrency(props.modelValue ?? '');
-    // Emit change event for validation
-    const rawValue = displayValue.value.replace(/\./g, '').replace(',', '.');
-    const numberValue = parseFloat(rawValue);
-    if (!isNaN(numberValue)) {
-      emit('change', numberValue);
+    const normalizedValue = props.allowNegative
+      ? Number(props.modelValue ?? 0)
+      : Math.max(Number(props.modelValue ?? 0), 0);
+
+    if (normalizedValue !== Number(props.modelValue ?? 0)) {
+      emit('update:modelValue', normalizedValue);
     }
+
+    displayValue.value = formatCurrency(normalizedValue);
+    emit('change', normalizedValue);
   };
 </script>
 

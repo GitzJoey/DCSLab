@@ -248,6 +248,12 @@ class DashboardActions
             'title' => 'components.menu.stock-adjustment',
         ];
 
+        $purchaseOrder = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-purchase-order',
+            'title' => 'components.menu.purchase-order',
+        ];
+
         $capitalOpening = [
             'icon' => 'Wallet',
             'pageName' => 'side-menu-finance-capital-opening',
@@ -266,7 +272,7 @@ class DashboardActions
             'title' => 'components.menu.stock-transfer',
         ];
 
-        array_push($root_array['subMenu'], $capitalOpening, $capitalTransaction, $stockAdjustment, $stockTransfer);
+        array_push($root_array['subMenu'], $capitalOpening, $capitalTransaction, $stockAdjustment, $purchaseOrder, $stockTransfer);
 
         array_push($menu, $root_array);
 

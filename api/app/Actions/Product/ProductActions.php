@@ -49,6 +49,7 @@ class ProductActions
             'defaultVatProfile',
             'productUnits.unit',
             'images',
+            'mainImage',
         ]);
 
         $query->join('product_categories', 'products.category_id', '=', 'product_categories.id');
@@ -256,7 +257,7 @@ class ProductActions
 
     public function read(Product $product): Product
     {
-        return $product->load('company', 'category', 'brand', 'defaultVatProfile', 'productUnits.unit', 'images');
+        return $product->load('company', 'category', 'brand', 'defaultVatProfile', 'productUnits.unit', 'images', 'mainImage');
     }
 
     public function delete(Product $product): bool

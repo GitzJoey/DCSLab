@@ -98,6 +98,10 @@ import StockAdjustmentInItemSerialIndex from '@/pages/stock-adjustment/StockAdju
 import StockAdjustmentInItemSerialList from '@/pages/stock-adjustment/StockAdjustmentInItemSerialList.vue';
 import StockAdjustmentOutItemSerialIndex from '@/pages/stock-adjustment/StockAdjustmentOutItemSerialIndex.vue';
 import StockAdjustmentOutItemSerialList from '@/pages/stock-adjustment/StockAdjustmentOutItemSerialList.vue';
+import PurchaseOrderIndex from '@/pages/purchase-order/PurchaseOrderIndex.vue';
+import PurchaseOrderList from '@/pages/purchase-order/PurchaseOrderList.vue';
+import PurchaseOrderCreate from '@/pages/purchase-order/PurchaseOrderCreate.vue';
+import PurchaseOrderEdit from '@/pages/purchase-order/PurchaseOrderEdit.vue';
 import StockTransferIndex from '@/pages/stock-transfer/StockTransferIndex.vue';
 import StockTransferList from '@/pages/stock-transfer/StockTransferList.vue';
 import StockTransferCreate from '@/pages/stock-transfer/StockTransferCreate.vue';
@@ -724,6 +728,39 @@ export default [
                 path: '/dashboard/stock-adjustment/edit/:ulid',
                 name: 'side-menu-stock-adjustment-edit',
                 component: StockAdjustmentEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Purchase Order
+          {
+            path: '/dashboard/purchase-order',
+            name: 'side-menu-purchase-order',
+            redirect: '/dashboard/purchase-order/list',
+            component: PurchaseOrderIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-order/list',
+                name: 'side-menu-purchase-order-list',
+                component: PurchaseOrderList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase-order/create',
+                name: 'side-menu-purchase-order-create',
+                component: PurchaseOrderCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase-order/edit/:ulid',
+                name: 'side-menu-purchase-order-edit',
+                component: PurchaseOrderEdit,
                 meta: {
                   remember: true,
                 },

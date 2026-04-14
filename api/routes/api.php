@@ -15,7 +15,9 @@ use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
+use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StockAdjustmentCategoryController;
@@ -168,6 +170,13 @@ Route::prefix('product')->middleware('auth:sanctum')->group(function () {
         Route::post('edit/service/{product:ulid}', [ProductController::class, 'updateService'])->name('edit.service');
         Route::post('delete/{product:ulid}', [ProductController::class, 'delete'])->name('delete');
         Route::post('image/upload', [ProductImageController::class, 'upload'])->name('image.upload');
+    });
+});
+
+Route::prefix('product_unit')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.product_unit.')->group(function () {
+        Route::get('read', [ProductUnitController::class, 'readAny'])->name('read_any');
+        Route::get('read/{product_unit:ulid}', [ProductUnitController::class, 'read'])->name('read');
     });
 });
 
@@ -351,6 +360,19 @@ Route::prefix('stock_transfer_item_serial')->middleware('auth:sanctum')->group(f
         Route::post('save', [StockTransferItemSerialController::class, 'store'])->name('save');
         Route::post('edit/{stock_transfer_item_serial:ulid}', [StockTransferItemSerialController::class, 'update'])->name('edit');
         Route::post('delete/{stock_transfer_item_serial:ulid}', [StockTransferItemSerialController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('purchase_order')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_order.')->group(function () {
+        Route::get('read', [PurchaseOrderController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase_order:ulid}', [PurchaseOrderController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase_order.')->group(function () {
+        Route::post('save', [PurchaseOrderController::class, 'store'])->name('save');
+        Route::post('edit/{purchase_order:ulid}', [PurchaseOrderController::class, 'update'])->name('edit');
+        Route::post('delete/{purchase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('delete');
     });
 });
 

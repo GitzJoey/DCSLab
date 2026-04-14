@@ -102,7 +102,6 @@ return [
             'remarks' => 'Product Unit Remarks',
         ],
     ],
-
     'supplier' => [
         'company' => 'Company',
         'user' => 'User',
@@ -274,5 +273,38 @@ return [
         'stock_transfer' => 'Stock Transfer',
         'stock_transfer_item' => 'Stock Transfer by Item',
         'serial' => 'Serial',
+    ],
+    'purchase_order' => [
+        'company_id' => 'Company',
+        'branch_id' => 'Branch',
+        'code' => 'Code',
+        'date' => 'Date',
+        'due_days' => 'Due Days',
+        'supplier_id' => 'Supplier',
+        'remarks' => 'Remarks',
+    ],
+    'purchase_order_global_discount' => [
+        'sequence' => 'Sequence',
+        'discount_type' => 'Discount Type',
+        'discount_value' => 'Discount Value',
+    ],
+    'purchase_order_item' => [
+        'qty' => 'Qty',
+        'product_unit_id' => 'Product Unit',
+        'product_unit_conversion_value' => 'Product Unit Conversion Value',
+        'product_unit_price' => 'Product Unit Price',
+        'is_vat_included' => 'VAT Included',
+        'vat_profile_id' => 'VAT Profile',
+        'vat_rate' => 'VAT Rate',
+        'vat_base_numerator' => 'VAT Base Numerator',
+        'vat_base_denominator' => 'VAT Base Denominator',
+        'remarks' => 'Remarks',
+    ],
+    'purchase_order_down_payment' => [
+        'code' => 'Code',
+        'date' => 'Date',
+        'cash_account_id' => 'Cash Account',
+        'amount' => 'Amount',
+        'remarks' => 'Remarks',
     ],
 ];

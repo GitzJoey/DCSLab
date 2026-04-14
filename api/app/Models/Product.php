@@ -79,6 +79,13 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
+    public function mainImage()
+    {
+        return $this->hasOne(ProductImage::class)
+            ->orderByDesc('is_main')
+            ->orderBy('id');
+    }
+
     public function stockTransactions()
     {
         return $this->hasMany(StockTransaction::class);

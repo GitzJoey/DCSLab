@@ -101,7 +101,6 @@ return [
             'remarks' => 'Catatan Product Satuan',
         ],
     ],
-
     'supplier' => [
         'company' => 'Perusahaan',
         'user' => 'Pengguna',
@@ -292,6 +291,39 @@ return [
         'product_id' => 'Produk',
         'product_unit_id' => 'Satuan Produk',
         'product_unit_conversion_value' => 'Nilai Konversi Satuan',
+        'remarks' => 'Catatan',
+    ],
+    'purchase_order' => [
+        'company_id' => 'Perusahaan',
+        'branch_id' => 'Cabang',
+        'code' => 'Kode',
+        'date' => 'Tanggal',
+        'due_days' => 'Jatuh Tempo (Hari)',
+        'supplier_id' => 'Pemasok',
+        'remarks' => 'Catatan',
+    ],
+    'purchase_order_global_discount' => [
+        'sequence' => 'Urutan',
+        'discount_type' => 'Tipe Diskon',
+        'discount_value' => 'Nilai Diskon',
+    ],
+    'purchase_order_item' => [
+        'qty' => 'Qty',
+        'product_unit_id' => 'Satuan Produk',
+        'product_unit_conversion_value' => 'Nilai Konversi Satuan',
+        'product_unit_price' => 'Harga Satuan',
+        'is_vat_included' => 'Harga Termasuk PPN',
+        'vat_profile_id' => 'Profil PPN',
+        'vat_rate' => 'Tarif PPN',
+        'vat_base_numerator' => 'Pembilang Dasar PPN',
+        'vat_base_denominator' => 'Penyebut Dasar PPN',
+        'remarks' => 'Catatan',
+    ],
+    'purchase_order_down_payment' => [
+        'code' => 'Kode',
+        'date' => 'Tanggal',
+        'cash_account_id' => 'Akun Kas',
+        'amount' => 'Jumlah',
         'remarks' => 'Catatan',
     ],
 ];
