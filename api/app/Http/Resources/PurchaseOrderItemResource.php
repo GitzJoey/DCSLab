@@ -38,7 +38,7 @@ class PurchaseOrderItemResource extends JsonResource
             'subtotal_discounts' => PurchaseOrderItemSubtotalDiscountResource::collection($this->whenLoaded('subtotalDiscounts')),
             'subtotal_after_discount' => $this->subtotal_after_discount,
             'global_discount' => $this->global_discount,
-            'total_before_vat' => $this->total_before_vat,
+            'subtotal_after_global_discount' => $this->subtotal_after_global_discount,
             $this->mergeWhen($this->relationLoaded('vatProfile'), [
                 'vat_profile' => new VatProfileResource($this->whenLoaded('vatProfile')),
             ]),

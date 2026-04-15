@@ -2,15 +2,18 @@
 
 namespace App\Actions\PurchaseOrderItem;
 
+use App\Actions\PurchaseOrder\PurchaseOrderCalculationActions;
 use App\Actions\PurchaseOrderItemProductUnitPriceDiscount\PurchaseOrderItemProductUnitPriceDiscountActions;
 use App\Actions\PurchaseOrderItemSubtotalDiscount\PurchaseOrderItemSubtotalDiscountActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderItemCreateDTO;
+use App\DTOs\PurchaseOrderItemProductUnitPriceDiscountCreateDTO;
+use App\DTOs\PurchaseOrderItemProductUnitPriceDiscountUpdateDTO;
+use App\DTOs\PurchaseOrderItemSubtotalDiscountCreateDTO;
+use App\DTOs\PurchaseOrderItemSubtotalDiscountUpdateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\Helpers\TimezoneHelper;
-use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderItem;
-use App\Services\PurchaseOrderItem\PurchaseOrderItemDiscountService;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -25,16 +28,20 @@ class PurchaseOrderItemActions
 
     private $purchaseOrderItemSubtotalDiscountActions;
 
-    private $purchaseOrderItemDiscountService;
+    private $purchaseOrderCalculationActions;
+
+    private $purchaseOrderItemCalculationActions;
 
     public function __construct(
+        PurchaseOrderCalculationActions $purchaseOrderCalculationActions,
+        PurchaseOrderItemCalculationActions $purchaseOrderItemCalculationActions,
         PurchaseOrderItemProductUnitPriceDiscountActions $purchaseOrderItemProductUnitPriceDiscountActions,
         PurchaseOrderItemSubtotalDiscountActions $purchaseOrderItemSubtotalDiscountActions,
-        PurchaseOrderItemDiscountService $purchaseOrderItemDiscountService,
     ) {
+        $this->purchaseOrderCalculationActions = $purchaseOrderCalculationActions;
+        $this->purchaseOrderItemCalculationActions = $purchaseOrderItemCalculationActions;
         $this->purchaseOrderItemProductUnitPriceDiscountActions = $purchaseOrderItemProductUnitPriceDiscountActions;
         $this->purchaseOrderItemSubtotalDiscountActions = $purchaseOrderItemSubtotalDiscountActions;
-        $this->purchaseOrderItemDiscountService = $purchaseOrderItemDiscountService;
     }
 
     public function readAny(
@@ -225,8 +232,10 @@ class PurchaseOrderItemActions
             ->sum('subtotal_after_discount');
     }
 
-    public function create(PurchaseOrderItemCreateDTO $data): PurchaseOrderItem
-    {
+    public function create(
+        PurchaseOrderItemCreateDTO $data,
+        bool $updateParentSummary,
+    ): PurchaseOrderItem {
         $timer_start = microtime(true);
 
         try {
@@ -247,16 +256,45 @@ class PurchaseOrderItemActions
             $poItem->remarks = $data->remarks;
             $poItem->save();
 
-            $this->purchaseOrderItemDiscountService->createProductUnitPriceDiscounts($poItem, $data->productUnitPriceDiscounts);
-            $this->purchaseOrderItemDiscountService->createSubtotalDiscounts($poItem, $data->subtotalDiscounts);
+            foreach ($data->productUnitPriceDiscounts as $discount) {
+                $dto = new PurchaseOrderItemProductUnitPriceDiscountCreateDTO(
+                    companyId: $poItem->company_id,
+                    branchId: $poItem->branch_id,
+                    purchaseOrderItemId: $poItem->id,
+                    sequence: $discount['sequence'],
+                    discountType: $discount['discount_type'],
+                    discountValue: $discount['discount_value'],
+                );
+
+                $this->purchaseOrderItemProductUnitPriceDiscountActions->create($dto);
+            }
+
+            foreach ($data->subtotalDiscounts as $discount) {
+                $dto = new PurchaseOrderItemSubtotalDiscountCreateDTO(
+                    companyId: $poItem->company_id,
+                    branchId: $poItem->branch_id,
+                    purchaseOrderItemId: $poItem->id,
+                    sequence: $discount['sequence'],
+                    discountType: $discount['discount_type'],
+                    discountValue: $discount['discount_value'],
+                );
+
+                $this->purchaseOrderItemSubtotalDiscountActions->create($dto);
+            }
 
             $poItem->price_discount = $this->purchaseOrderItemProductUnitPriceDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
             $poItem->price_after_discount = $poItem->product_unit_price - $poItem->price_discount;
             $poItem->subtotal = $poItem->qty * $poItem->price_after_discount;
             $poItem->subtotal_discount = $this->purchaseOrderItemSubtotalDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
             $poItem->subtotal_after_discount = $poItem->subtotal - $poItem->subtotal_discount;
-
             $poItem->save();
+
+            if ($updateParentSummary) {
+                $purchaseOrder = $poItem->purchaseOrder;
+                $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+                $this->purchaseOrderItemCalculationActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
+                $poItem->refresh();
+            }
 
             $this->flushCache();
 
@@ -270,8 +308,11 @@ class PurchaseOrderItemActions
         }
     }
 
-    public function update(PurchaseOrderItem $poItem, PurchaseOrderItemUpdateDTO $data): PurchaseOrderItem
-    {
+    public function update(
+        PurchaseOrderItem $poItem,
+        PurchaseOrderItemUpdateDTO $data,
+        bool $updateParentSummary,
+    ): PurchaseOrderItem {
         $timer_start = microtime(true);
 
         try {
@@ -286,44 +327,87 @@ class PurchaseOrderItemActions
             $poItem->vat_base_denominator = $data->vatBaseDenominator;
             $poItem->remarks = $data->remarks;
 
-            $this->purchaseOrderItemDiscountService->syncProductUnitPriceDiscounts($poItem, $data->deleteProductUnitPriceDiscountIds, $data->productUnitPriceDiscounts);
-            $this->purchaseOrderItemDiscountService->syncSubtotalDiscounts($poItem, $data->deleteSubtotalDiscountIds, $data->subtotalDiscounts);
+            foreach ($data->deleteProductUnitPriceDiscountIds as $deleteId) {
+                $poItemPriceDiscount = $poItem->productUnitPriceDiscounts()->findOrFail($deleteId);
+                $this->purchaseOrderItemProductUnitPriceDiscountActions->delete($poItemPriceDiscount);
+            }
 
+            foreach ($data->productUnitPriceDiscounts as $discount) {
+                if (! empty($discount['id'])) {
+                    $poItemPriceDiscount = $poItem->productUnitPriceDiscounts()->findOrFail($discount['id']);
+                    $dto = new PurchaseOrderItemProductUnitPriceDiscountUpdateDTO(
+                        sequence: $discount['sequence'],
+                        discountType: $discount['discount_type'],
+                        discountValue: $discount['discount_value'],
+                    );
+
+                    $this->purchaseOrderItemProductUnitPriceDiscountActions->update($poItemPriceDiscount, $dto);
+                } else {
+                    $dto = new PurchaseOrderItemProductUnitPriceDiscountCreateDTO(
+                        companyId: $poItem->company_id,
+                        branchId: $poItem->branch_id,
+                        purchaseOrderItemId: $poItem->id,
+                        sequence: $discount['sequence'],
+                        discountType: $discount['discount_type'],
+                        discountValue: $discount['discount_value'],
+                    );
+
+                    $this->purchaseOrderItemProductUnitPriceDiscountActions->create($dto);
+                }
+            }
+
+            foreach ($data->deleteSubtotalDiscountIds as $deleteId) {
+                $poItemSubtotalDiscount = $poItem->subtotalDiscounts()->findOrFail($deleteId);
+                $this->purchaseOrderItemSubtotalDiscountActions->delete($poItemSubtotalDiscount);
+            }
+
+            foreach ($data->subtotalDiscounts as $discount) {
+                if (! empty($discount['id'])) {
+                    $poItemSubtotalDiscount = $poItem->subtotalDiscounts()->findOrFail($discount['id']);
+                    $dto = new PurchaseOrderItemSubtotalDiscountUpdateDTO(
+                        sequence: $discount['sequence'],
+                        discountType: $discount['discount_type'],
+                        discountValue: $discount['discount_value'],
+                    );
+
+                    $this->purchaseOrderItemSubtotalDiscountActions->update($poItemSubtotalDiscount, $dto);
+                } else {
+                    $dto = new PurchaseOrderItemSubtotalDiscountCreateDTO(
+                        companyId: $poItem->company_id,
+                        branchId: $poItem->branch_id,
+                        purchaseOrderItemId: $poItem->id,
+                        sequence: $discount['sequence'],
+                        discountType: $discount['discount_type'],
+                        discountValue: $discount['discount_value'],
+                    );
+
+                    $this->purchaseOrderItemSubtotalDiscountActions->create($dto);
+                }
+            }
+
+            $poItem->price_discount = $this->purchaseOrderItemProductUnitPriceDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->price_after_discount = $poItem->product_unit_price - $poItem->price_discount;
+            $poItem->subtotal = $poItem->qty * $poItem->price_after_discount;
+            $poItem->subtotal_discount = $this->purchaseOrderItemSubtotalDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->subtotal_after_discount = $poItem->subtotal - $poItem->subtotal_discount;
             $poItem->save();
+
+            if ($updateParentSummary) {
+                $purchaseOrder = $poItem->purchaseOrder;
+                $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+                $this->purchaseOrderItemCalculationActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
+                $poItem->refresh();
+            }
 
             $this->flushCache();
 
-            return $poItem->refresh();
+            return $poItem;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {
             $execution_time = microtime(true) - $timer_start;
             $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    public function updateProductUnitGlobalDiscountByPurchaseOrderId(int $purchaseOrderId): void
-    {
-        $purchaseOrder = PurchaseOrder::query()
-            ->with('items')
-            ->findOrFail($purchaseOrderId);
-
-        $itemTotalBeforeGlobalDiscount = (float) $purchaseOrder->item_total_before_global_discount;
-        $globalDiscount = (float) $purchaseOrder->global_discount;
-
-        foreach ($purchaseOrder->items as $poItem) {
-            if ($itemTotalBeforeGlobalDiscount <= 0 || $globalDiscount <= 0) {
-                $poItem->global_discount = 0;
-            } else {
-                $poItem->global_discount = ($poItem->subtotal_after_discount / $itemTotalBeforeGlobalDiscount) * $globalDiscount;
-            }
-
-            if ($poItem->global_discount < 0) {
-                $poItem->global_discount = 0;
-            }
-
-            $poItem->save();
         }
     }
 

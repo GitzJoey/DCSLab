@@ -36,15 +36,6 @@ class VatProfile extends Model
         ];
     }
 
-    public function getVatBaseFactorValue(): float
-    {
-        if ($this->vat_base_denominator <= 0) {
-            return 0;
-        }
-
-        return (float) $this->vat_base_numerator / (float) $this->vat_base_denominator;
-    }
-
     public function company()
     {
         return $this->belongsTo(Company::class)->withTrashed();

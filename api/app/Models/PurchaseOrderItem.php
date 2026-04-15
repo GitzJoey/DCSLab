@@ -34,8 +34,7 @@ class PurchaseOrderItem extends Model
         'subtotal_after_discount', // calculated_after_save_item_row
 
         'global_discount', // calculated_after_save_discount_rows
-        'total_before_vat', // calculated_after_save_discount_rows
-
+        'subtotal_after_global_discount', // calculated_after_save_discount_rows
         'vat_profile_id', // user_input
         'vat_rate', // user_input
         'vat_base_numerator', // user_input
@@ -62,7 +61,7 @@ class PurchaseOrderItem extends Model
         'subtotal_discount' => 'decimal:8',
         'subtotal_after_discount' => 'decimal:8',
         'global_discount' => 'decimal:8',
-        'total_before_vat' => 'decimal:8',
+        'subtotal_after_global_discount' => 'decimal:8',
         'vat_rate' => 'decimal:8',
         'vat_base_numerator' => 'integer',
         'vat_base_denominator' => 'integer',
@@ -74,15 +73,6 @@ class PurchaseOrderItem extends Model
         'total_cogs' => 'decimal:8',
         'base_unit_cogs' => 'decimal:8',
     ];
-
-    public function getVatBaseFactorValue(): float
-    {
-        if ($this->vat_base_denominator <= 0) {
-            return 0;
-        }
-
-        return (float) $this->vat_base_numerator / (float) $this->vat_base_denominator;
-    }
 
     public function company()
     {

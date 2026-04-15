@@ -2,15 +2,22 @@
 
 namespace App\Actions\PurchaseOrder;
 
+use App\Actions\PurchaseOrderDownPayment\PurchaseOrderDownPaymentActions;
 use App\Actions\PurchaseOrderGlobalDiscount\PurchaseOrderGlobalDiscountActions;
 use App\Actions\PurchaseOrderItem\PurchaseOrderItemActions;
+use App\Actions\PurchaseOrderItem\PurchaseOrderItemCalculationActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
+use App\DTOs\PurchaseOrderDownPaymentCreateDTO;
+use App\DTOs\PurchaseOrderDownPaymentUpdateDTO;
+use App\DTOs\PurchaseOrderGlobalDiscountCreateDTO;
+use App\DTOs\PurchaseOrderGlobalDiscountUpdateDTO;
+use App\DTOs\PurchaseOrderItemCreateDTO;
+use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\PurchaseOrder;
-use App\Services\PurchaseOrder\PurchaseOrderService;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -25,16 +32,24 @@ class PurchaseOrderActions
 
     private $purchaseOrderGlobalDiscountActions;
 
-    private $purchaseOrderService;
+    private $purchaseOrderDownPaymentActions;
+
+    private $purchaseOrderCalculationActions;
+
+    private $purchaseOrderItemCalculationActions;
 
     public function __construct(
         PurchaseOrderItemActions $purchaseOrderItemActions,
         PurchaseOrderGlobalDiscountActions $purchaseOrderGlobalDiscountActions,
-        PurchaseOrderService $purchaseOrderService,
+        PurchaseOrderDownPaymentActions $purchaseOrderDownPaymentActions,
+        PurchaseOrderCalculationActions $purchaseOrderCalculationActions,
+        PurchaseOrderItemCalculationActions $purchaseOrderItemCalculationActions,
     ) {
         $this->purchaseOrderItemActions = $purchaseOrderItemActions;
         $this->purchaseOrderGlobalDiscountActions = $purchaseOrderGlobalDiscountActions;
-        $this->purchaseOrderService = $purchaseOrderService;
+        $this->purchaseOrderDownPaymentActions = $purchaseOrderDownPaymentActions;
+        $this->purchaseOrderCalculationActions = $purchaseOrderCalculationActions;
+        $this->purchaseOrderItemCalculationActions = $purchaseOrderItemCalculationActions;
     }
 
     public function readAny(
@@ -220,25 +235,58 @@ class PurchaseOrderActions
             $purchaseOrder->rounding = $data->rounding;
             $purchaseOrder->save();
 
-            $this->purchaseOrderService->createItems(
-                purchaseOrder: $purchaseOrder,
-                items: $data->items,
-            );
-            $this->purchaseOrderService->createGlobalDiscounts(
-                purchaseOrder: $purchaseOrder,
-                globalDiscounts: $data->globalDiscounts,
-            );
-            $this->purchaseOrderService->createDownPayments(
-                purchaseOrder: $purchaseOrder,
-                downPayments: $data->downPayments,
-            );
+            foreach ($data->items as $item) {
+                $dto = new PurchaseOrderItemCreateDTO(
+                    companyId: $purchaseOrder->company_id,
+                    branchId: $purchaseOrder->branch_id,
+                    purchaseOrderId: $purchaseOrder->id,
+                    qty: $item['qty'],
+                    productUnitId: $item['product_unit_id'],
+                    productUnitConversionValue: $item['product_unit_conversion_value'],
+                    productUnitPrice: $item['product_unit_price'],
+                    productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
+                    productUnitPriceDiscounts: $item['product_unit_price_discounts'],
+                    subtotalDiscounts: $item['subtotal_discounts'],
+                    vatProfileId: $item['vat_profile_id'],
+                    vatRate: $item['vat_rate'],
+                    vatBaseNumerator: $item['vat_base_numerator'],
+                    vatBaseDenominator: $item['vat_base_denominator'],
+                    remarks: $item['remarks'] ?? null,
+                );
 
-            $purchaseOrder->item_total_before_global_discount = $this->purchaseOrderItemActions->getSubtotalAfterDiscountAmountByPurchaseOrderId($purchaseOrder->id);
-            $purchaseOrder->global_discount = $this->purchaseOrderGlobalDiscountActions->getAmountByPurchaseOrderId($purchaseOrder->id);
-            $purchaseOrder->item_total_after_global_discount = $purchaseOrder->item_total_before_global_discount - $purchaseOrder->global_discount;
-            $purchaseOrder->save();
+                $this->purchaseOrderItemActions->create($dto, false);
+            }
 
-            $this->purchaseOrderItemActions->updateProductUnitGlobalDiscountByPurchaseOrderId($purchaseOrder->id);
+            foreach ($data->globalDiscounts as $globalDiscount) {
+                $dto = new PurchaseOrderGlobalDiscountCreateDTO(
+                    companyId: $purchaseOrder->company_id,
+                    branchId: $purchaseOrder->branch_id,
+                    purchaseOrderId: $purchaseOrder->id,
+                    sequence: $globalDiscount['sequence'],
+                    discountType: $globalDiscount['discount_type'],
+                    discountValue: $globalDiscount['discount_value'],
+                );
+
+                $this->purchaseOrderGlobalDiscountActions->create($dto);
+            }
+
+            foreach ($data->downPayments as $downPayment) {
+                $dto = new PurchaseOrderDownPaymentCreateDTO(
+                    companyId: $purchaseOrder->company_id,
+                    branchId: $purchaseOrder->branch_id,
+                    purchaseOrderId: $purchaseOrder->id,
+                    code: $downPayment['code'],
+                    date: $downPayment['date'],
+                    cashAccountId: $downPayment['cash_account_id'],
+                    amount: $downPayment['amount'],
+                    remarks: $downPayment['remarks'] ?? null,
+                );
+
+                $this->purchaseOrderDownPaymentActions->create($dto, false);
+            }
+
+            $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+            $this->purchaseOrderItemCalculationActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
 
             $this->flushCache();
 
@@ -267,22 +315,119 @@ class PurchaseOrderActions
             $purchaseOrder->rounding = $data->rounding;
             $purchaseOrder->save();
 
-            $this->purchaseOrderService->syncGlobalDiscounts(
-                purchaseOrder: $purchaseOrder,
-                deleteGlobalDiscountIds: $data->deleteGlobalDiscountIds,
-                globalDiscounts: $data->globalDiscounts,
-            );
-            $this->purchaseOrderService->syncItems(
-                purchaseOrder: $purchaseOrder,
-                deleteItemIds: $data->deleteItemIds,
-                items: $data->items,
-            );
-            $this->purchaseOrderService->syncDownPayments(
-                purchaseOrder: $purchaseOrder,
-                deleteDownPaymentIds: $data->deleteDownPaymentIds,
-                downPayments: $data->downPayments,
-            );
-            $this->purchaseOrderService->updateSummary($purchaseOrder);
+            foreach ($data->deleteGlobalDiscountIds as $deleteId) {
+                $poGlobalDiscount = $purchaseOrder->globalDiscounts()->findOrFail($deleteId);
+                $this->purchaseOrderGlobalDiscountActions->delete($poGlobalDiscount);
+            }
+
+            foreach ($data->globalDiscounts as $globalDiscount) {
+                if (! empty($globalDiscount['id'])) {
+                    $poGlobalDiscount = $purchaseOrder->globalDiscounts()->findOrFail($globalDiscount['id']);
+                    $dto = new PurchaseOrderGlobalDiscountUpdateDTO(
+                        sequence: $globalDiscount['sequence'],
+                        discountType: $globalDiscount['discount_type'],
+                        discountValue: $globalDiscount['discount_value'],
+                    );
+
+                    $this->purchaseOrderGlobalDiscountActions->update($poGlobalDiscount, $dto);
+                } else {
+                    $dto = new PurchaseOrderGlobalDiscountCreateDTO(
+                        companyId: $purchaseOrder->company_id,
+                        branchId: $purchaseOrder->branch_id,
+                        purchaseOrderId: $purchaseOrder->id,
+                        sequence: $globalDiscount['sequence'],
+                        discountType: $globalDiscount['discount_type'],
+                        discountValue: $globalDiscount['discount_value'],
+                    );
+
+                    $this->purchaseOrderGlobalDiscountActions->create($dto);
+                }
+            }
+
+            foreach ($data->deleteItemIds as $deleteId) {
+                $poItem = $purchaseOrder->items()->findOrFail($deleteId);
+                $this->purchaseOrderItemActions->delete($poItem);
+            }
+
+            foreach ($data->items as $item) {
+                if (! empty($item['id'])) {
+                    $poItem = $purchaseOrder->items()->findOrFail($item['id']);
+                    $dto = new PurchaseOrderItemUpdateDTO(
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        productUnitPrice: $item['product_unit_price'],
+                        productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
+                        deleteProductUnitPriceDiscountIds: $item['delete_product_unit_price_discount_ids'],
+                        productUnitPriceDiscounts: $item['product_unit_price_discounts'],
+                        deleteSubtotalDiscountIds: $item['delete_subtotal_discount_ids'],
+                        subtotalDiscounts: $item['subtotal_discounts'],
+                        vatProfileId: $item['vat_profile_id'],
+                        vatRate: $item['vat_rate'],
+                        vatBaseNumerator: $item['vat_base_numerator'],
+                        vatBaseDenominator: $item['vat_base_denominator'],
+                        remarks: $item['remarks'],
+                    );
+
+                    $this->purchaseOrderItemActions->update($poItem, $dto, false);
+                } else {
+                    $dto = new PurchaseOrderItemCreateDTO(
+                        companyId: $purchaseOrder->company_id,
+                        branchId: $purchaseOrder->branch_id,
+                        purchaseOrderId: $purchaseOrder->id,
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        productUnitPrice: $item['product_unit_price'],
+                        productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
+                        productUnitPriceDiscounts: $item['product_unit_price_discounts'],
+                        subtotalDiscounts: $item['subtotal_discounts'],
+                        vatProfileId: $item['vat_profile_id'],
+                        vatRate: $item['vat_rate'],
+                        vatBaseNumerator: $item['vat_base_numerator'],
+                        vatBaseDenominator: $item['vat_base_denominator'],
+                        remarks: $item['remarks'] ?? null,
+                    );
+
+                    $this->purchaseOrderItemActions->create($dto, false);
+                }
+            }
+
+            foreach ($data->deleteDownPaymentIds as $deleteId) {
+                $poDownPayment = $purchaseOrder->downPayments()->findOrFail($deleteId);
+                $this->purchaseOrderDownPaymentActions->delete($poDownPayment);
+            }
+
+            foreach ($data->downPayments as $downPayment) {
+                if (! empty($downPayment['id'])) {
+                    $poDownPayment = $purchaseOrder->downPayments()->findOrFail($downPayment['id']);
+                    $dto = new PurchaseOrderDownPaymentUpdateDTO(
+                        code: $downPayment['code'],
+                        date: $downPayment['date'],
+                        cashAccountId: $downPayment['cash_account_id'],
+                        amount: $downPayment['amount'],
+                        remarks: $downPayment['remarks'] ?? null,
+                    );
+
+                    $this->purchaseOrderDownPaymentActions->update($poDownPayment, $dto, false);
+                } else {
+                    $dto = new PurchaseOrderDownPaymentCreateDTO(
+                        companyId: $purchaseOrder->company_id,
+                        branchId: $purchaseOrder->branch_id,
+                        purchaseOrderId: $purchaseOrder->id,
+                        code: $downPayment['code'],
+                        date: $downPayment['date'],
+                        cashAccountId: $downPayment['cash_account_id'],
+                        amount: $downPayment['amount'],
+                        remarks: $downPayment['remarks'] ?? null,
+                    );
+
+                    $this->purchaseOrderDownPaymentActions->create($dto, false);
+                }
+            }
+
+            $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+            $this->purchaseOrderItemCalculationActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
 
             $this->flushCache();
 
@@ -301,9 +446,17 @@ class PurchaseOrderActions
         $timer_start = microtime(true);
 
         try {
-            $this->purchaseOrderService->deleteGlobalDiscounts($purchaseOrder);
-            $this->purchaseOrderService->deleteDownPayments($purchaseOrder);
-            $this->purchaseOrderService->deleteItems($purchaseOrder);
+            foreach ($purchaseOrder->items as $poItem) {
+                $this->purchaseOrderItemActions->delete($poItem);
+            }
+
+            foreach ($purchaseOrder->globalDiscounts as $poGlobalDiscount) {
+                $this->purchaseOrderGlobalDiscountActions->delete($poGlobalDiscount);
+            }
+
+            foreach ($purchaseOrder->downPayments as $poDownPayment) {
+                $this->purchaseOrderDownPaymentActions->delete($poDownPayment);
+            }
 
             $result = $purchaseOrder->delete();
 

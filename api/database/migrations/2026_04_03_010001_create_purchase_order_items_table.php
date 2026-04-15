@@ -29,7 +29,7 @@ return new class extends Migration
             $table->decimal('subtotal_after_discount', 30, 8)->default(0);
 
             $table->decimal('global_discount', 30, 8)->default(0);
-            $table->decimal('total_before_vat', 30, 8)->default(0);
+            $table->decimal('subtotal_after_global_discount', 30, 8)->default(0);
 
             $table->foreignId('vat_profile_id')->nullable()->references('id')->on('vat_profiles');
             $table->decimal('vat_rate', 30, 8)->default(0);

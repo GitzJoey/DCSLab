@@ -3,6 +3,7 @@
 namespace App\Actions\PurchaseOrderDownPayment;
 
 use App\Actions\CashTransaction\CashTransactionActions;
+use App\Actions\PurchaseOrder\PurchaseOrderCalculationActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
@@ -21,6 +22,7 @@ class PurchaseOrderDownPaymentActions
     use LoggerHelper;
 
     public function __construct(
+        private PurchaseOrderCalculationActions $purchaseOrderCalculationActions,
         private CashTransactionActions $cashTransactionActions,
     ) {
     }
@@ -155,95 +157,11 @@ class PurchaseOrderDownPaymentActions
         ]);
     }
 
-    public function create(PurchaseOrderDownPaymentCreateDTO $data): PurchaseOrderDownPayment
+    public function getAmountByPurchaseOrderId(int $purchaseOrderId): float
     {
-        $timer_start = microtime(true);
-
-        try {
-            $purchaseOrderDownPayment = new PurchaseOrderDownPayment();
-            $purchaseOrderDownPayment->company_id = $data->companyId;
-            $purchaseOrderDownPayment->branch_id = $data->branchId;
-            $purchaseOrderDownPayment->purchase_order_id = $data->purchaseOrderId;
-            $purchaseOrderDownPayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
-            $purchaseOrderDownPayment->date = $this->generateDate($data->date);
-            $purchaseOrderDownPayment->cash_account_id = $data->cashAccountId;
-            $purchaseOrderDownPayment->amount = $data->amount;
-            $purchaseOrderDownPayment->remarks = $data->remarks;
-            $purchaseOrderDownPayment->save();
-
-            $this->cashTransactionActions->create(
-                data: CashTransactionCreateDTO::fromPurchaseOrderDownPayment($purchaseOrderDownPayment)
-            );
-
-            $this->flushCache();
-
-            return $purchaseOrderDownPayment;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    public function update(PurchaseOrderDownPayment $purchaseOrderDownPayment, PurchaseOrderDownPaymentUpdateDTO $data): PurchaseOrderDownPayment
-    {
-        $timer_start = microtime(true);
-
-        try {
-            $purchaseOrderDownPayment->code = $this->generateUniqueCode($purchaseOrderDownPayment->company_id, $data->code, $purchaseOrderDownPayment->id);
-            $purchaseOrderDownPayment->date = $this->generateDate($data->date);
-            $purchaseOrderDownPayment->cash_account_id = $data->cashAccountId;
-            $purchaseOrderDownPayment->amount = $data->amount;
-            $purchaseOrderDownPayment->remarks = $data->remarks;
-            $purchaseOrderDownPayment->save();
-
-            $cashTransaction = $purchaseOrderDownPayment->cashTransaction;
-            if (! $cashTransaction) {
-                $this->cashTransactionActions->create(
-                    data: CashTransactionCreateDTO::fromPurchaseOrderDownPayment($purchaseOrderDownPayment)
-                );
-            } else {
-                $this->cashTransactionActions->update(
-                    cashTransaction: $cashTransaction,
-                    data: CashTransactionUpdateDTO::fromPurchaseOrderDownPayment($purchaseOrderDownPayment)
-                );
-            }
-
-            $this->flushCache();
-
-            return $purchaseOrderDownPayment;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    public function delete(PurchaseOrderDownPayment $purchaseOrderDownPayment): bool
-    {
-        $timer_start = microtime(true);
-        $retval = false;
-
-        try {
-            $cashTransaction = $purchaseOrderDownPayment->cashTransaction;
-            if ($cashTransaction) $this->cashTransactionActions->delete($cashTransaction);
-
-            $retval = $purchaseOrderDownPayment->delete();
-
-            $this->flushCache();
-
-            return $retval;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
+        return (float) PurchaseOrderDownPayment::query()
+            ->where('purchase_order_id', $purchaseOrderId)
+            ->sum('amount');
     }
 
     public function generateDate(string $date): string
@@ -283,5 +201,113 @@ class PurchaseOrderDownPaymentActions
         }
 
         return $result->count() == 0;
+    }
+
+    public function create(
+        PurchaseOrderDownPaymentCreateDTO $data,
+        bool $updateParentSummary,
+    ): PurchaseOrderDownPayment {
+        $timer_start = microtime(true);
+
+        try {
+            $purchaseOrderDownPayment = new PurchaseOrderDownPayment();
+            $purchaseOrderDownPayment->company_id = $data->companyId;
+            $purchaseOrderDownPayment->branch_id = $data->branchId;
+            $purchaseOrderDownPayment->purchase_order_id = $data->purchaseOrderId;
+            $purchaseOrderDownPayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $purchaseOrderDownPayment->date = $this->generateDate($data->date);
+            $purchaseOrderDownPayment->cash_account_id = $data->cashAccountId;
+            $purchaseOrderDownPayment->amount = $data->amount;
+            $purchaseOrderDownPayment->remarks = $data->remarks;
+            $purchaseOrderDownPayment->save();
+
+            $this->cashTransactionActions->create(
+                data: CashTransactionCreateDTO::fromPurchaseOrderDownPayment($purchaseOrderDownPayment)
+            );
+
+            if ($updateParentSummary) {
+                $purchaseOrder = $purchaseOrderDownPayment->purchaseOrder;
+                $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+                $purchaseOrderDownPayment->refresh();
+            }
+
+            $this->flushCache();
+
+            return $purchaseOrderDownPayment;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function update(
+        PurchaseOrderDownPayment $purchaseOrderDownPayment,
+        PurchaseOrderDownPaymentUpdateDTO $data,
+        bool $updateParentSummary,
+    ): PurchaseOrderDownPayment {
+        $timer_start = microtime(true);
+
+        try {
+            $purchaseOrderDownPayment->code = $this->generateUniqueCode($purchaseOrderDownPayment->company_id, $data->code, $purchaseOrderDownPayment->id);
+            $purchaseOrderDownPayment->date = $this->generateDate($data->date);
+            $purchaseOrderDownPayment->cash_account_id = $data->cashAccountId;
+            $purchaseOrderDownPayment->amount = $data->amount;
+            $purchaseOrderDownPayment->remarks = $data->remarks;
+            $purchaseOrderDownPayment->save();
+
+            $cashTransaction = $purchaseOrderDownPayment->cashTransaction;
+            if (! $cashTransaction) {
+                $this->cashTransactionActions->create(
+                    data: CashTransactionCreateDTO::fromPurchaseOrderDownPayment($purchaseOrderDownPayment)
+                );
+            } else {
+                $this->cashTransactionActions->update(
+                    cashTransaction: $cashTransaction,
+                    data: CashTransactionUpdateDTO::fromPurchaseOrderDownPayment($purchaseOrderDownPayment)
+                );
+            }
+
+            if ($updateParentSummary) {
+                $purchaseOrder = $purchaseOrderDownPayment->purchaseOrder;
+                $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+                $purchaseOrderDownPayment->refresh();
+            }
+
+            $this->flushCache();
+
+            return $purchaseOrderDownPayment;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function delete(PurchaseOrderDownPayment $purchaseOrderDownPayment): bool
+    {
+        $timer_start = microtime(true);
+        $retval = false;
+
+        try {
+            $cashTransaction = $purchaseOrderDownPayment->cashTransaction;
+            if ($cashTransaction) $this->cashTransactionActions->delete($cashTransaction);
+
+            $retval = $purchaseOrderDownPayment->delete();
+
+            $this->flushCache();
+
+            return $retval;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 }

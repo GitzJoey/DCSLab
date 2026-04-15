@@ -53,7 +53,7 @@ export interface PurchaseOrderItem {
   subtotal_discounts: PurchaseOrderItemSubtotalDiscount[];
   subtotal_after_discount: number;
   global_discount: number;
-  total_before_vat: number;
+  subtotal_after_global_discount: number;
   product_unit_is_price_include_vat: boolean;
   vat_profile?: VatProfile | null;
   vat_rate: number;
