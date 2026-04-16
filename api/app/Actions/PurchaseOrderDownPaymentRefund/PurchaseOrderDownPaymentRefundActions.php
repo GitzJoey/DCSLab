@@ -3,7 +3,7 @@
 namespace App\Actions\PurchaseOrderDownPaymentRefund;
 
 use App\Actions\CashTransaction\CashTransactionActions;
-use App\Actions\PurchaseOrder\PurchaseOrderCalculationActions;
+use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
@@ -22,7 +22,6 @@ class PurchaseOrderDownPaymentRefundActions
     use LoggerHelper;
 
     public function __construct(
-        private PurchaseOrderCalculationActions $purchaseOrderCalculationActions,
         private CashTransactionActions $cashTransactionActions,
     ) {
     }
@@ -227,7 +226,7 @@ class PurchaseOrderDownPaymentRefundActions
 
             if ($updateParentSummary) {
                 $purchaseOrder = $purchaseOrderDownPaymentRefund->purchaseOrder;
-                $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+                PurchaseOrderActions::updateSummary($purchaseOrder);
                 $purchaseOrderDownPaymentRefund->refresh();
             }
 
@@ -272,7 +271,7 @@ class PurchaseOrderDownPaymentRefundActions
 
             if ($updateParentSummary) {
                 $purchaseOrder = $purchaseOrderDownPaymentRefund->purchaseOrder;
-                $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
+                PurchaseOrderActions::updateSummary($purchaseOrder);
                 $purchaseOrderDownPaymentRefund->refresh();
             }
 

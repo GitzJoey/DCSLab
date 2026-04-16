@@ -3,10 +3,10 @@
 namespace App\Actions\PurchaseOrder;
 
 use App\Actions\PurchaseOrderDownPayment\PurchaseOrderDownPaymentActions;
+use App\Actions\PurchaseOrderDownPaymentAllocation\PurchaseOrderDownPaymentAllocationActions;
 use App\Actions\PurchaseOrderDownPaymentRefund\PurchaseOrderDownPaymentRefundActions;
 use App\Actions\PurchaseOrderGlobalDiscount\PurchaseOrderGlobalDiscountActions;
 use App\Actions\PurchaseOrderItem\PurchaseOrderItemActions;
-use App\Actions\PurchaseOrderItem\PurchaseOrderItemCalculationActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
 use App\DTOs\PurchaseOrderDownPaymentCreateDTO;
@@ -37,26 +37,22 @@ class PurchaseOrderActions
 
     private $purchaseOrderDownPaymentActions;
 
+    private $purchaseOrderDownPaymentAllocationActions;
+
     private $purchaseOrderDownPaymentRefundActions;
-
-    private $purchaseOrderCalculationActions;
-
-    private $purchaseOrderItemCalculationActions;
 
     public function __construct(
         PurchaseOrderItemActions $purchaseOrderItemActions,
         PurchaseOrderGlobalDiscountActions $purchaseOrderGlobalDiscountActions,
         PurchaseOrderDownPaymentActions $purchaseOrderDownPaymentActions,
+        PurchaseOrderDownPaymentAllocationActions $purchaseOrderDownPaymentAllocationActions,
         PurchaseOrderDownPaymentRefundActions $purchaseOrderDownPaymentRefundActions,
-        PurchaseOrderCalculationActions $purchaseOrderCalculationActions,
-        PurchaseOrderItemCalculationActions $purchaseOrderItemCalculationActions,
     ) {
         $this->purchaseOrderItemActions = $purchaseOrderItemActions;
         $this->purchaseOrderGlobalDiscountActions = $purchaseOrderGlobalDiscountActions;
         $this->purchaseOrderDownPaymentActions = $purchaseOrderDownPaymentActions;
+        $this->purchaseOrderDownPaymentAllocationActions = $purchaseOrderDownPaymentAllocationActions;
         $this->purchaseOrderDownPaymentRefundActions = $purchaseOrderDownPaymentRefundActions;
-        $this->purchaseOrderCalculationActions = $purchaseOrderCalculationActions;
-        $this->purchaseOrderItemCalculationActions = $purchaseOrderItemCalculationActions;
     }
 
     public function readAny(
@@ -308,8 +304,8 @@ class PurchaseOrderActions
                 $this->purchaseOrderDownPaymentRefundActions->create($dto, false);
             }
 
-            $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
-            $this->purchaseOrderItemCalculationActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
+            self::updateSummary($purchaseOrder);
+            $this->purchaseOrderItemActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
 
             $this->flushCache();
 
@@ -482,8 +478,8 @@ class PurchaseOrderActions
                 }
             }
 
-            $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
-            $this->purchaseOrderItemCalculationActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
+            self::updateSummary($purchaseOrder);
+            $this->purchaseOrderItemActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
 
             $this->flushCache();
 
@@ -495,6 +491,29 @@ class PurchaseOrderActions
             $execution_time = microtime(true) - $timer_start;
             $this->loggerPerformance(__METHOD__, $execution_time);
         }
+    }
+
+    /**
+     * Update the purchase order header summary.
+     *
+     * This method recalculates the persisted summary fields from the current
+     * persisted child records.
+     *
+     * Child actions may call this method statically after they create or update
+     * their own records directly. Do not construct or inject the parent action
+     * only to refresh the header summary.
+     */
+    public static function updateSummary(PurchaseOrder $po): void
+    {
+        $po->item_total_before_global_discount = app(PurchaseOrderItemActions::class)->getSubtotalAfterDiscountAmountByPurchaseOrderId($po->id);
+        $po->global_discount = app(PurchaseOrderGlobalDiscountActions::class)->getAmountByPurchaseOrderId($po->id);
+        $po->item_total_after_global_discount = $po->item_total_before_global_discount - $po->global_discount;
+        $po->amount_paid_down_payment = app(PurchaseOrderDownPaymentActions::class)->getAmountByPurchaseOrderId($po->id);
+        $po->amount_allocated_down_payment = app(PurchaseOrderDownPaymentAllocationActions::class)->getAmountByPurchaseOrderId($po->id);
+        $po->amount_refunded_down_payment = app(PurchaseOrderDownPaymentRefundActions::class)->getAmountByPurchaseOrderId($po->id);
+        $po->amount_available_down_payment = $po->amount_paid_down_payment - $po->amount_allocated_down_payment - $po->amount_refunded_down_payment;
+
+        $po->save();
     }
 
     public function delete(PurchaseOrder $purchaseOrder): bool
