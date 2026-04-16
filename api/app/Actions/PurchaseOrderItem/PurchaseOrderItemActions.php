@@ -466,13 +466,22 @@ class PurchaseOrderItemActions
             $poItem->vat = $vat;
         }
 
-        $itemTotalBeforeRounding = $purchaseOrder->items->sum(function ($poItem) {
-            return (float) $poItem->subtotal_after_global_discount + (float) $poItem->vat;
-        });
+        $getPoItemTotalBeforeRounding = function ($poItem) {
+            $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
+            $vat = (float) $poItem->vat;
+
+            if ($poItem->product_unit_is_price_include_vat) {
+                return $subtotalAfterGlobalDiscount;
+            }
+
+            return $subtotalAfterGlobalDiscount + $vat;
+        };
+
+        $itemTotalBeforeRounding = $purchaseOrder->items->sum($getPoItemTotalBeforeRounding);
 
         foreach ($purchaseOrder->items as $poItem) {
-            $poItem->rounding = (function () use ($poItem, $purchaseOrder, $itemTotalBeforeRounding) {
-                $poItemTotalBeforeRounding = (float) $poItem->subtotal_after_global_discount + (float) $poItem->vat;
+            $poItem->rounding = (function () use ($poItem, $purchaseOrder, $itemTotalBeforeRounding, $getPoItemTotalBeforeRounding) {
+                $poItemTotalBeforeRounding = $getPoItemTotalBeforeRounding($poItem);
                 $purchaseOrderRounding = (float) $purchaseOrder->rounding;
 
                 if ($itemTotalBeforeRounding <= 0 || $purchaseOrderRounding == 0 || $poItemTotalBeforeRounding <= 0) return 0;
@@ -480,8 +489,8 @@ class PurchaseOrderItemActions
                 return ($poItemTotalBeforeRounding / $itemTotalBeforeRounding) * $purchaseOrderRounding;
             })();
 
-            $poItem->grand_total = (function () use ($poItem) {
-                return (float) $poItem->subtotal_after_global_discount + (float) $poItem->vat + (float) $poItem->rounding;
+            $poItem->grand_total = (function () use ($poItem, $getPoItemTotalBeforeRounding) {
+                return $getPoItemTotalBeforeRounding($poItem) + (float) $poItem->rounding;
             })();
 
             $poItem->cogs = (function () use ($poItem) {

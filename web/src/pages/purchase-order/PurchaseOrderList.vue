@@ -44,6 +44,15 @@ const endDate = ref<string | null>(null);
 const searchText = ref<string>('');
 const selectedSupplierId = ref<string | null>(null);
 
+const formatCurrencyRounded = (value: number | string, precision = 2) =>
+  formatCurrency(Number(Number(value ?? 0).toFixed(precision)));
+
+const formatQuantityValue = (value: number | string, precision = 4) =>
+  new Intl.NumberFormat('id-ID', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: precision,
+  }).format(Number(value ?? 0));
+
 const purchaseOrderLists = ref<Collection<Array<PurchaseOrder>> | null>({
   data: [],
   meta: {
@@ -250,51 +259,73 @@ const confirmDelete = async () => {
         @dataListChanged="handleDataListChange"
       >
         <template #row="{ item, index }">
-          <div class="col-span-12 lg:col-span-4 md:col-span-4 self-start">
-            <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
-              {{ t('views.purchase_order.page_title') }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ t('views.purchase_order.fields.code') }}:
-              {{ (item as PurchaseOrder).code ?? '-' }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ t('views.purchase_order.fields.date') }}:
-              {{ (item as PurchaseOrder).date ? formatDate((item as PurchaseOrder).date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ t('views.purchase_order.fields.due_days') }}:
-              {{ formatCurrency((item as PurchaseOrder).due_days ?? 0) }}
-            </div>
-          </div>
-
-          <div class="col-span-12 lg:col-span-4 md:col-span-4 self-start">
-            <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
-              {{ t('views.purchase_order.fields.supplier_id') }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ (item as PurchaseOrder).supplier?.name ?? '-' }}
-            </div>
-            <div v-if="(item as PurchaseOrder).remarks?.trim()" class="text-slate-500 text-xs">
-              {{ t('views.purchase_order.fields.remarks') }}:
-              {{ (item as PurchaseOrder).remarks }}
+          <div class="col-span-12 md:col-span-12 lg:col-span-4 self-start">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.purchase_order.page_title') }}
+              </div>
+              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.code') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrder).code ?? '-' }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.date') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as PurchaseOrder).date ? formatDate((item as PurchaseOrder).date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.supplier_id') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).supplier?.name ?? '-' }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.due_days') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrder).due_days ?? 0 }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.branch_id') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).branch?.name ?? '-' }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.remarks') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).remarks?.trim() || '-' }}</div>
+              </div>
             </div>
           </div>
 
-          <div class="col-span-12 lg:col-span-3 md:col-span-2 self-start">
-            <div class="text-primary text-xs font-semibold uppercase tracking-wide mb-1">
-              {{ t('views.purchase_order.fields.grand_total') }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ formatCurrency((item as PurchaseOrder).grand_total ?? 0) }}
-            </div>
-            <div class="text-slate-500 text-xs whitespace-nowrap">
-              {{ t('views.purchase_order.fields.amount_paid_down_payment') }}:
-              {{ formatCurrency((item as PurchaseOrder).amount_paid_down_payment ?? 0) }}
+          <div class="col-span-12 md:col-span-6 lg:col-span-4 self-start md:pr-3 lg:pr-4">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.purchase_order.field_groups.summary') }}
+              </div>
+              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_total_before_global_discount') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).item_total_before_global_discount ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.global_discount') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).global_discount ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_total_after_global_discount') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).item_total_after_global_discount ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.vat_base') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrencyRounded((item as PurchaseOrder).vat_base ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.vat') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrencyRounded((item as PurchaseOrder).vat ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.rounding') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).rounding ?? 0) }}</div>
+                <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.grand_total') }}</div>
+                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as PurchaseOrder).grand_total ?? 0) }}</div>
+              </div>
             </div>
           </div>
 
-          <div class="col-span-12 lg:col-span-1 md:col-span-2 flex justify-end items-start gap-2">
+          <div class="col-span-12 md:col-span-5 lg:col-span-3 self-start md:pl-3 lg:pl-4">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.purchase_order.fields.down_payment') }}
+              </div>
+              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_paid_down_payment') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).amount_paid_down_payment ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_allocated_down_payment') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).amount_allocated_down_payment ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_refunded_down_payment') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).amount_refunded_down_payment ?? 0) }}</div>
+                <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.amount_available_down_payment') }}</div>
+                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as PurchaseOrder).amount_available_down_payment ?? 0) }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-12 md:col-span-1 lg:col-span-1 self-center flex justify-end items-center gap-2 pt-2 md:flex-col lg:flex-col">
             <Button size="sm" variant="outline-secondary" class="flex items-center gap-1" @click="viewSelected(index)">
               <Lucide icon="Info" class="w-4 h-4" />
             </Button>
@@ -310,29 +341,113 @@ const confirmDelete = async () => {
             v-if="expandDetail === index"
             class="col-span-12 border-t border-slate-200 dark:border-darkmode-400 mt-2 pt-3"
           >
-            <div class="grid grid-cols-12 gap-4 text-xs">
-              <div class="col-span-12 md:col-span-4">
-                <div class="text-primary font-semibold uppercase tracking-wide mb-1">
-                  {{ t('views.purchase_order.fields.global_discount') }}
+            <div class="grid grid-cols-12 gap-4">
+              <div class="col-span-12 lg:col-span-6 space-y-3">
+                <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                  {{ t('views.purchase_order.field_groups.items') }}
                 </div>
-                <div class="text-slate-500">
-                  {{ formatCurrency((item as PurchaseOrder).global_discount ?? 0) }}
+                <div v-if="!(item as PurchaseOrder).items?.length" class="text-xs text-slate-500">
+                  {{ t('components.data-list.data_not_found') }}
+                </div>
+                <div v-else class="space-y-3 rounded-md border border-slate-200/60 dark:border-darkmode-400 p-3">
+                  <div
+                    v-for="poItem in (item as PurchaseOrder).items"
+                    :key="poItem.id"
+                    class="border-b border-slate-200/60 pb-3 text-sm last:border-b-0 last:pb-0 dark:border-darkmode-400"
+                  >
+                    <div class="font-medium text-slate-700 dark:text-slate-200 break-words">
+                      {{ poItem.product_unit?.product?.name ?? '-' }}
+                    </div>
+                    <div class="mt-1 text-xs text-slate-500 break-words">
+                      {{ poItem.product_unit?.code ?? '-' }}{{ poItem.product_unit?.unit?.name ? ` (${poItem.product_unit.unit.name})` : '' }}
+                    </div>
+                    <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
+                      <span>
+                        {{ t('views.purchase_order.fields.qty') }}
+                        <span class="text-slate-700 dark:text-slate-200">{{ formatQuantityValue(poItem.qty ?? 0) }}</span>
+                      </span>
+                      <span class="text-slate-400">|</span>
+                      <span>
+                        {{ t('views.purchase_order.fields.unit_name') }}
+                        <span class="text-slate-700 dark:text-slate-200">{{ poItem.product_unit?.unit?.name ?? '-' }}</span>
+                      </span>
+                      <span class="text-slate-400">|</span>
+                      <span>
+                        {{ t('views.purchase_order.fields.product_unit_price') }}
+                        <span class="text-slate-700 dark:text-slate-200">{{ formatCurrency(poItem.product_unit_price ?? 0) }}</span>
+                      </span>
+                      <span class="text-slate-400">|</span>
+                      <span>
+                        {{ t('views.purchase_order.fields.subtotal_after_discount') }}
+                        <span class="font-medium text-slate-700 dark:text-slate-200">{{ formatCurrency(poItem.subtotal_after_discount ?? 0) }}</span>
+                      </span>
+                    </div>
+                    <div v-if="poItem.remarks?.trim()" class="mt-2 text-xs text-slate-500 break-words">
+                      {{ poItem.remarks }}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-span-12 md:col-span-4">
-                <div class="text-primary font-semibold uppercase tracking-wide mb-1">
-                  {{ t('views.purchase_order.fields.down_payment') }}
+
+              <div class="col-span-12 lg:col-span-6 space-y-4">
+                <div class="space-y-3">
+                  <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                    {{ t('views.purchase_order.fields.global_discounts') }}
+                  </div>
+                  <div v-if="!(item as PurchaseOrder).global_discounts?.length" class="text-xs text-slate-500">
+                    {{ t('components.data-list.data_not_found') }}
+                  </div>
+                  <div v-else class="space-y-2">
+                    <div
+                      v-for="discount in (item as PurchaseOrder).global_discounts"
+                      :key="discount.id"
+                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs"
+                    >
+                      <div class="col-span-3 text-slate-500">#{{ discount.sequence }}</div>
+                      <div class="col-span-5 text-slate-700 dark:text-slate-200">{{ discount.discount_type }}</div>
+                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency(discount.discount_value ?? 0) }}</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="text-slate-500">
-                  {{ formatCurrency((item as PurchaseOrder).amount_available_down_payment ?? 0) }}
+
+                <div class="space-y-3">
+                  <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                    {{ t('views.purchase_order.fields.down_payments') }}
+                  </div>
+                  <div v-if="!(item as PurchaseOrder).down_payments?.length" class="text-xs text-slate-500">
+                    {{ t('components.data-list.data_not_found') }}
+                  </div>
+                  <div v-else class="space-y-2">
+                    <div
+                      v-for="downPayment in (item as PurchaseOrder).down_payments"
+                      :key="downPayment.id"
+                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs"
+                    >
+                      <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ downPayment.code }}</div>
+                      <div class="col-span-4 text-slate-500">{{ downPayment.cash_account?.name ?? '-' }}</div>
+                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency(downPayment.amount ?? 0) }}</div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="col-span-12 md:col-span-4">
-                <div class="text-primary font-semibold uppercase tracking-wide mb-1">
-                  {{ t('views.purchase_order.fields.remarks') }}
-                </div>
-                <div class="text-slate-500">
-                  {{ (item as PurchaseOrder).remarks || '-' }}
+
+                <div class="space-y-3">
+                  <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                    {{ t('views.purchase_order.fields.refunded_down_payments') }}
+                  </div>
+                  <div v-if="!(item as PurchaseOrder).refunded_down_payments?.length" class="text-xs text-slate-500">
+                    {{ t('components.data-list.data_not_found') }}
+                  </div>
+                  <div v-else class="space-y-2">
+                    <div
+                      v-for="refundedDownPayment in (item as PurchaseOrder).refunded_down_payments"
+                      :key="refundedDownPayment.id"
+                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs"
+                    >
+                      <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ refundedDownPayment.code }}</div>
+                      <div class="col-span-4 text-slate-500">{{ refundedDownPayment.cash_account?.name ?? '-' }}</div>
+                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency(refundedDownPayment.amount ?? 0) }}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

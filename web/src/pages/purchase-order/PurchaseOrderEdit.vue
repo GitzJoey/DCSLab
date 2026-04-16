@@ -40,7 +40,7 @@ import {
   PurchaseOrderItemNestedUpdateRequest,
 } from '@/types/services/purchase-order/PurchaseOrderRequest';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-import { convertErrorTypeToAlertListType, formatDate } from '@/utils/helper';
+import { convertErrorTypeToAlertListType, formatCurrency, formatDate } from '@/utils/helper';
 
 type PurchaseOrderItemFormItem = PurchaseOrderItemNestedUpdateRequest & {
   product_unit_product_code?: string | null;
@@ -62,6 +62,14 @@ type ProductUnitOption = {
   product_unit_is_price_include_vat: boolean;
   vat_profile_id: string | null;
   vat_profile_name: string | null;
+  vat_rate: number;
+  vat_base_numerator: number;
+  vat_base_denominator: number;
+};
+
+type VatProfileOption = {
+  code: string;
+  name: string;
   vat_rate: number;
   vat_base_numerator: number;
   vat_base_denominator: number;
@@ -97,7 +105,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'views.purchase_order.field_groups.company_info', state: CardState.Expanded },
   { title: 'views.purchase_order.field_groups.purchase_order_data', state: CardState.Expanded },
   { title: 'views.purchase_order.field_groups.items', state: CardState.Expanded },
-  { title: 'views.purchase_order.field_groups.summary', state: CardState.Collapsed },
+  { title: 'views.purchase_order.field_groups.summary', state: CardState.Expanded },
   { title: '', state: CardState.Hidden, id: 'button' },
 ]);
 
@@ -110,7 +118,7 @@ const supplierOptions = computed(() =>
   })),
 );
 
-const vatProfileDDL = ref<Array<DropDownOption> | null>(null);
+const vatProfileDDL = ref<Array<VatProfileOption> | null>(null);
 const vatProfileSearch = ref<string>('');
 const vatProfileOptions = computed(() =>
   (vatProfileDDL.value ?? []).map((item) => ({
@@ -180,6 +188,7 @@ const purchaseOrderRefundedDownPaymentsForm = computed<PurchaseOrderDownPaymentR
   () => purchaseOrderForm.refunded_down_payments as PurchaseOrderDownPaymentRefundNestedUpdateRequest[],
 );
 const isGlobalDiscountEditorExpanded = ref(false);
+const isTotalsBreakdownExpanded = ref(false);
 const isDownPaymentEditorExpanded = ref(false);
 const isRefundedDownPaymentEditorExpanded = ref(false);
 
@@ -244,7 +253,7 @@ const setRefundedDownPaymentCode = (index: number) => {
 };
 
 const appendDDL = (
-  target: typeof supplierDDL | typeof vatProfileDDL | typeof cashAccountDDL,
+  target: typeof supplierDDL | typeof cashAccountDDL,
   item?: { id: string; name?: string | null; code?: string | null } | null,
 ) => {
   if (!item?.id) return;
@@ -255,6 +264,31 @@ const appendDDL = (
     name: item.name ?? item.code ?? item.id,
   });
   target.value = [...current];
+};
+
+const appendVatProfileOption = (
+  vatProfile?: {
+    id?: string | null;
+    name?: string | null;
+    vat_rate?: number | null;
+    vat_base_numerator?: number | null;
+    vat_base_denominator?: number | null;
+  } | null,
+) => {
+  if (!vatProfile?.id) return;
+
+  const currentOptions = vatProfileDDL.value ?? [];
+  if (currentOptions.some((option) => option.code === vatProfile.id)) return;
+
+  currentOptions.push({
+    code: vatProfile.id,
+    name: vatProfile.name ?? vatProfile.id,
+    vat_rate: Number(vatProfile.vat_rate ?? 0),
+    vat_base_numerator: Number(vatProfile.vat_base_numerator ?? 1),
+    vat_base_denominator: Number(vatProfile.vat_base_denominator ?? 1),
+  });
+
+  vatProfileDDL.value = [...currentOptions];
 };
 
 const loadSupplierDDL = async (search = '') => {
@@ -296,10 +330,19 @@ const loadVatProfileDDL = async (search = '') => {
     vatProfileDDL.value = result.data.data.map((item: any) => ({
       code: item.id,
       name: item.name,
+      vat_rate: Number(item.vat_rate ?? 0),
+      vat_base_numerator: Number(item.vat_base_numerator ?? 1),
+      vat_base_denominator: Number(item.vat_base_denominator ?? 1),
     }));
   }
 
-  (purchaseOrderData.value?.items ?? []).forEach((item) => appendDDL(vatProfileDDL, item.vat_profile));
+  (purchaseOrderData.value?.items ?? []).forEach((item) => appendVatProfileOption({
+    id: item.vat_profile?.id,
+    name: item.vat_profile?.name,
+    vat_rate: item.vat_rate,
+    vat_base_numerator: item.vat_base_numerator,
+    vat_base_denominator: item.vat_base_denominator,
+  }));
 };
 
 const loadCashAccountDDL = async (search = '') => {
@@ -334,11 +377,40 @@ const clearSupplier = () => {
   purchaseOrderForm.validate('supplier_id');
 };
 
+const applyVatProfileToItem = (
+  item: PurchaseOrderItemFormItem,
+  vatProfileId: string | null,
+) => {
+  item.vat_profile_id = vatProfileId;
+
+  const selectedVatProfile = (vatProfileDDL.value ?? []).find((vatProfile) => vatProfile.code === vatProfileId);
+
+  if (!selectedVatProfile) {
+    item.vat_profile_name = null;
+    item.vat_rate = 0;
+    item.vat_base_numerator = 1;
+    item.vat_base_denominator = 1;
+    return;
+  }
+
+  item.vat_profile_name = selectedVatProfile.name;
+  item.vat_rate = selectedVatProfile.vat_rate;
+  item.vat_base_numerator = selectedVatProfile.vat_base_numerator;
+  item.vat_base_denominator = selectedVatProfile.vat_base_denominator;
+};
+
 const clearVatProfile = (index: number) => {
   const item = purchaseOrderItemsForm.value[index];
   if (!item) return;
-  item.vat_profile_id = null;
-  item.vat_profile_name = null;
+  applyVatProfileToItem(item, null);
+  purchaseOrderForm.validate(`items.${index}.vat_profile_id` as any);
+};
+
+const syncVatProfile = (index: number) => {
+  const item = purchaseOrderItemsForm.value[index];
+  if (!item) return;
+
+  applyVatProfileToItem(item, item.vat_profile_id ?? null);
   purchaseOrderForm.validate(`items.${index}.vat_profile_id` as any);
 };
 
@@ -393,7 +465,7 @@ const loadData = async () => {
       product_unit_is_price_include_vat: item.product_unit_is_price_include_vat,
       vat_profile_id: item.vat_profile?.id ?? null,
       vat_profile_name: item.vat_profile?.name ?? null,
-      vat_rate: item.vat_rate,
+      vat_rate: Number(item.vat_rate ?? 0),
       vat_base_numerator: item.vat_base_numerator,
       vat_base_denominator: item.vat_base_denominator,
       remarks: item.remarks ?? '',
@@ -505,6 +577,28 @@ const openChangeProductUnit = (index: number) => {
 };
 
 const selectProductUnit = (option: ProductUnitOption) => {
+  let vatProfileId: string | null = null;
+  let vatProfileName: string | null = null;
+  let vatRate = 0;
+  let vatBaseNumerator = 1;
+  let vatBaseDenominator = 1;
+
+  if (option.vat_profile_id) {
+    vatProfileId = option.vat_profile_id;
+    vatProfileName = option.vat_profile_name;
+    vatRate = option.vat_rate;
+    vatBaseNumerator = option.vat_base_numerator;
+    vatBaseDenominator = option.vat_base_denominator;
+
+    appendVatProfileOption({
+      id: vatProfileId,
+      name: vatProfileName,
+      vat_rate: vatRate,
+      vat_base_numerator: vatBaseNumerator,
+      vat_base_denominator: vatBaseDenominator,
+    });
+  }
+
   const itemData: Partial<PurchaseOrderItemFormItem> = {
     product_unit_id: option.product_unit_id,
     product_unit_product_code: option.product_unit_code,
@@ -514,11 +608,11 @@ const selectProductUnit = (option: ProductUnitOption) => {
     product_unit_conversion_value: option.conversion_value,
     product_unit_price: option.price,
     product_unit_is_price_include_vat: option.product_unit_is_price_include_vat,
-    vat_profile_id: option.vat_profile_id,
-    vat_profile_name: option.vat_profile_name,
-    vat_rate: option.vat_rate,
-    vat_base_numerator: option.vat_base_numerator,
-    vat_base_denominator: option.vat_base_denominator,
+    vat_profile_id: vatProfileId,
+    vat_profile_name: vatProfileName,
+    vat_rate: vatRate,
+    vat_base_numerator: vatBaseNumerator,
+    vat_base_denominator: vatBaseDenominator,
   };
 
   let targetIndex: number;
@@ -539,11 +633,11 @@ const selectProductUnit = (option: ProductUnitOption) => {
       delete_subtotal_discount_ids: [],
       subtotal_discounts: [],
       product_unit_is_price_include_vat: option.product_unit_is_price_include_vat,
-      vat_profile_id: option.vat_profile_id,
-      vat_profile_name: option.vat_profile_name,
-      vat_rate: option.vat_rate,
-      vat_base_numerator: option.vat_base_numerator,
-      vat_base_denominator: option.vat_base_denominator,
+      vat_profile_id: vatProfileId,
+      vat_profile_name: vatProfileName,
+      vat_rate: vatRate,
+      vat_base_numerator: vatBaseNumerator,
+      vat_base_denominator: vatBaseDenominator,
       remarks: '',
     } as any);
     targetIndex = purchaseOrderForm.items.length - 1;
@@ -731,7 +825,7 @@ const getItemSubtotalAfterDiscountPreview = (item: PurchaseOrderItemFormItem) =>
   }, getItemUnitPriceSubtotalAfterDiscountPreview(item));
 };
 
-const getItemsGrandTotalPreview = () =>
+const getItemsSubtotalAfterDiscountPreview = () =>
   purchaseOrderItemsForm.value.reduce((total, item) => total + getItemSubtotalAfterDiscountPreview(item), 0);
 
 const getPurchaseOrderGlobalDiscountPreview = () => {
@@ -739,7 +833,7 @@ const getPurchaseOrderGlobalDiscountPreview = () => {
 
   purchaseOrderGlobalDiscountsForm.value.forEach((discount) => {
     const discountValue = Math.max(Number(discount.discount_value || 0), 0);
-    const currentTotal = Math.max(getItemsGrandTotalPreview() - totalDiscount, 0);
+    const currentTotal = Math.max(getItemsSubtotalAfterDiscountPreview() - totalDiscount, 0);
     const appliedDiscount = discount.discount_type === 'PERCENTAGE'
       ? (currentTotal * discountValue) / 100
       : discountValue;
@@ -751,7 +845,7 @@ const getPurchaseOrderGlobalDiscountPreview = () => {
 };
 
 const getItemGlobalDiscountPreview = (item: PurchaseOrderItemFormItem, itemIndex: number) => {
-  const totalBeforeGlobalDiscount = getItemsGrandTotalPreview();
+  const totalBeforeGlobalDiscount = getItemsSubtotalAfterDiscountPreview();
   const totalGlobalDiscount = getPurchaseOrderGlobalDiscountPreview();
 
   if (totalBeforeGlobalDiscount <= 0 || totalGlobalDiscount <= 0) {
@@ -777,30 +871,51 @@ const getItemGlobalDiscountPreview = (item: PurchaseOrderItemFormItem, itemIndex
   return Math.min(Math.max(allocations[itemIndex] || 0, 0), getItemSubtotalAfterDiscountPreview(item));
 };
 
-const getItemTotalBeforeVatPreview = (item: PurchaseOrderItemFormItem, itemIndex: number) => {
-  const subtotalAfterGlobalDiscount = Math.max(
+const getItemSubtotalAfterGlobalDiscountPreview = (item: PurchaseOrderItemFormItem, itemIndex: number) =>
+  Math.max(
     getItemSubtotalAfterDiscountPreview(item) - getItemGlobalDiscountPreview(item, itemIndex),
     0,
   );
+
+const getItemVatBasePreview = (item: PurchaseOrderItemFormItem, itemIndex: number) => {
+  const subtotalAfterGlobalDiscount = getItemSubtotalAfterGlobalDiscountPreview(item, itemIndex);
+  const vatRate = Number(item.vat_rate || 0);
   const vatBaseFactor = Number(item.vat_base_denominator || 0) > 0
     ? Number(item.vat_base_numerator || 0) / Number(item.vat_base_denominator || 1)
     : 0;
-  const vatMultiplier = 1 + (vatBaseFactor * Number(item.vat_rate || 0));
 
-  if (item.product_unit_is_price_include_vat && vatMultiplier > 0) {
-    return subtotalAfterGlobalDiscount / vatMultiplier;
+  if (subtotalAfterGlobalDiscount <= 0 || vatRate <= 0 || vatBaseFactor <= 0) {
+    return 0;
   }
 
-  return subtotalAfterGlobalDiscount;
+  let taxableBase = subtotalAfterGlobalDiscount;
+
+  if (item.product_unit_is_price_include_vat) {
+    taxableBase = taxableBase / (1 + (vatRate / 100));
+  }
+
+  return taxableBase * vatBaseFactor;
 };
 
 const getItemVatPreview = (item: PurchaseOrderItemFormItem, itemIndex: number) => {
-  const vatBaseFactor = Number(item.vat_base_denominator || 0) > 0
-    ? Number(item.vat_base_numerator || 0) / Number(item.vat_base_denominator || 1)
-    : 0;
-  const vatBase = getItemTotalBeforeVatPreview(item, itemIndex) * vatBaseFactor;
+  const vatBase = getItemVatBasePreview(item, itemIndex);
+  const vatRate = Number(item.vat_rate || 0);
 
-  return vatBase * Number(item.vat_rate || 0);
+  if (vatBase <= 0 || vatRate <= 0) {
+    return 0;
+  }
+
+  return vatBase * (vatRate / 100);
+};
+
+const getItemTotalBeforeRoundingPreview = (item: PurchaseOrderItemFormItem, itemIndex: number) => {
+  const subtotalAfterGlobalDiscount = getItemSubtotalAfterGlobalDiscountPreview(item, itemIndex);
+
+  if (item.product_unit_is_price_include_vat) {
+    return subtotalAfterGlobalDiscount;
+  }
+
+  return subtotalAfterGlobalDiscount + getItemVatPreview(item, itemIndex);
 };
 
 const getItemGrandTotalPreview = (item: PurchaseOrderItemFormItem) => {
@@ -810,11 +925,36 @@ const getItemGrandTotalPreview = (item: PurchaseOrderItemFormItem) => {
     return 0;
   }
 
-  return getItemTotalBeforeVatPreview(item, itemIndex) + getItemVatPreview(item, itemIndex);
+  return getItemTotalBeforeRoundingPreview(item, itemIndex);
 };
 
+const getPurchaseOrderItemTotalAfterGlobalDiscountPreview = () =>
+  purchaseOrderItemsForm.value.reduce(
+    (total, item, itemIndex) => total + getItemSubtotalAfterGlobalDiscountPreview(item, itemIndex),
+    0,
+  );
+
+const getPurchaseOrderVatBasePreview = () =>
+  purchaseOrderItemsForm.value.reduce(
+    (total, item, itemIndex) => total + getItemVatBasePreview(item, itemIndex),
+    0,
+  );
+
+const getPurchaseOrderVatPreview = () =>
+  purchaseOrderItemsForm.value.reduce(
+    (total, item, itemIndex) => total + getItemVatPreview(item, itemIndex),
+    0,
+  );
+
+const formatCurrencyPreviewValue = (value: number) => Number(value.toFixed(2));
+const formatCompactNumberValue = (value: number | string, precision = 4) =>
+  formatCurrency(Number(Number(value ?? 0).toFixed(precision)));
+
 const getGlobalDiscountedGrandTotalPreview = () =>
-  purchaseOrderItemsForm.value.reduce((total, item) => total + getItemGrandTotalPreview(item), 0);
+  purchaseOrderItemsForm.value.reduce(
+    (total, item, itemIndex) => total + getItemTotalBeforeRoundingPreview(item, itemIndex),
+    0,
+  );
 
 const getPurchaseOrderGrandTotalPreview = () =>
   getGlobalDiscountedGrandTotalPreview() + Number(purchaseOrderForm.rounding || 0);
@@ -828,6 +968,17 @@ const getDownPaymentsTotalPreview = () =>
 const getRefundedDownPaymentsTotalPreview = () =>
   purchaseOrderRefundedDownPaymentsForm.value.reduce(
     (total, refundedDownPayment) => total + Math.max(Number(refundedDownPayment.amount || 0), 0),
+    0,
+  );
+
+const getAllocatedDownPaymentsTotalPreview = () =>
+  Math.max(Number(purchaseOrderData.value?.amount_allocated_down_payment ?? 0), 0);
+
+const getAvailableDownPaymentsTotalPreview = () =>
+  Math.max(
+    getDownPaymentsTotalPreview()
+    - getAllocatedDownPaymentsTotalPreview()
+    - getRefundedDownPaymentsTotalPreview(),
     0,
   );
 
@@ -1026,8 +1177,6 @@ const onSubmit = async () => {
 
       <template #card-items-2>
         <div class="p-5 space-y-4">
-          <div class="font-medium">{{ t('views.purchase_order.field_groups.items') }}</div>
-
           <FormErrorMessages :messages="purchaseOrderForm.errors.items" />
 
           <div v-if="purchaseOrderItemsForm.length === 0" class="text-slate-500 text-sm">
@@ -1097,7 +1246,7 @@ const onSubmit = async () => {
                   </div>
                   <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
                     <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')} ${item.product_unit_conversion_value}
+                      {{ `${t('views.product.fields.conversion_value')} ${formatCompactNumberValue(item.product_unit_conversion_value)}
                       ${item.product_unit_base_unit_name || ''}`.trim() }}
                     </div>
                   </div>
@@ -1112,10 +1261,10 @@ const onSubmit = async () => {
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
                 <div class="col-span-12">
-                  <FormLabel>{{ t('views.purchase_order.fields.item_grand_total') }}</FormLabel>
+                  <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
                     <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getItemGrandTotalPreview(item)" readonly />
+                      <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
                     </div>
                     <div class="shrink-0">
                       <Button type="button" variant="outline-secondary"
@@ -1193,7 +1342,7 @@ const onSubmit = async () => {
                   </div>
                   <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
                     <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')} ${item.product_unit_conversion_value}
+                      {{ `${t('views.product.fields.conversion_value')} ${formatCompactNumberValue(item.product_unit_conversion_value)}
                       ${item.product_unit_base_unit_name || ''}`.trim() }}
                     </div>
                   </div>
@@ -1208,10 +1357,10 @@ const onSubmit = async () => {
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
                 <div class="col-span-12 md:col-span-4">
-                  <FormLabel>{{ t('views.purchase_order.fields.item_grand_total') }}</FormLabel>
+                  <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
                     <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getItemGrandTotalPreview(item)" readonly />
+                      <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
                     </div>
                     <div class="shrink-0">
                       <Button type="button" variant="outline-secondary"
@@ -1288,7 +1437,7 @@ const onSubmit = async () => {
                   </div>
                   <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
                     <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')} ${item.product_unit_conversion_value}
+                      {{ `${t('views.product.fields.conversion_value')} ${formatCompactNumberValue(item.product_unit_conversion_value)}
                       ${item.product_unit_base_unit_name || ''}`.trim() }}
                     </div>
                   </div>
@@ -1308,10 +1457,10 @@ const onSubmit = async () => {
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
                 <div class="col-span-12 lg:col-span-3">
-                  <FormLabel>{{ t('views.purchase_order.fields.item_grand_total') }}</FormLabel>
+                  <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
                     <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getItemGrandTotalPreview(item)" readonly />
+                      <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
                     </div>
                     <div class="shrink-0">
                       <Button type="button" variant="outline-secondary"
@@ -1335,14 +1484,7 @@ const onSubmit = async () => {
                 <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-5">
                   <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_price_breakdown') }}</div>
                   <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                      <div class="font-medium text-sm">{{ t('views.purchase_order.fields.product_unit_price_discounts') }}</div>
-                      <Button type="button" variant="outline-primary" @click="addItemPriceDiscount(index)">
-                        <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                        {{ t('components.buttons.create_new') }}
-                      </Button>
-                    </div>
-                    <div v-if="item.product_unit_price_discounts.length === 0" class="text-slate-500 text-sm">
+                    <div v-if="item.product_unit_price_discounts.length === 0" class="text-right text-slate-500 text-sm">
                       {{ t('views.purchase_order.fields.product_unit_price_discounts_empty') }}
                     </div>
                     <div v-else class="space-y-3">
@@ -1377,6 +1519,12 @@ const onSubmit = async () => {
                         </div>
                       </div>
                     </div>
+                    <div class="flex justify-end">
+                      <Button type="button" variant="outline-primary" @click="addItemPriceDiscount(index)">
+                        <Lucide icon="Plus" class="w-4 h-4 mr-1" />
+                        {{ t('components.buttons.create_new') }}
+                      </Button>
+                    </div>
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.price_after_discount') }}
@@ -1395,14 +1543,7 @@ const onSubmit = async () => {
                     </div>
                   </div>
                   <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                      <div class="font-medium text-sm">{{ t('views.purchase_order.fields.subtotal_discounts') }}</div>
-                      <Button type="button" variant="outline-primary" @click="addItemSubtotalDiscount(index)">
-                        <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                        {{ t('components.buttons.create_new') }}
-                      </Button>
-                    </div>
-                    <div v-if="item.subtotal_discounts.length === 0" class="text-slate-500 text-sm">
+                    <div v-if="item.subtotal_discounts.length === 0" class="text-right text-slate-500 text-sm">
                       {{ t('views.purchase_order.fields.subtotal_discounts_empty') }}
                     </div>
                     <div v-else class="space-y-3">
@@ -1437,6 +1578,12 @@ const onSubmit = async () => {
                         </div>
                       </div>
                     </div>
+                    <div class="flex justify-end">
+                      <Button type="button" variant="outline-primary" @click="addItemSubtotalDiscount(index)">
+                        <Lucide icon="Plus" class="w-4 h-4 mr-1" />
+                        {{ t('components.buttons.create_new') }}
+                      </Button>
+                    </div>
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.subtotal_after_discount') }}
@@ -1464,7 +1611,7 @@ const onSubmit = async () => {
                       <FormSelectSearch v-model="item.vat_profile_id" v-model:search="vatProfileSearch"
                         :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
                         :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.vat_profile_id`)" @search="loadVatProfileDDL"
+                        @change="syncVatProfile(index)" @search="loadVatProfileDDL"
                         @clear="clearVatProfile(index)" />
                       <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_profile_id`)" />
                     </div>
@@ -1510,18 +1657,71 @@ const onSubmit = async () => {
               </div>
 
               <div v-else-if="purchaseOrderItemDiscountsExpanded[index]" class="mt-4 grid grid-cols-12 gap-4">
-                <div class="col-span-12 lg:col-span-7">
+                <div class="col-span-12 lg:col-span-6">
+                  <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-4">
+                    <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_additional_details') }}</div>
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-5">
+                        <FormLabel>{{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}</FormLabel>
+                        <FormSwitch>
+                          <FormSwitch.Input v-model="item.product_unit_is_price_include_vat" type="checkbox" />
+                        </FormSwitch>
+                      </div>
+                      <div class="col-span-12 md:col-span-7">
+                        <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }">
+                          {{ t('views.purchase_order.fields.vat_profile_id') }}
+                        </FormLabel>
+                        <FormSelectSearch v-model="item.vat_profile_id" v-model:search="vatProfileSearch"
+                          :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }"
+                          @change="syncVatProfile(index)" @search="loadVatProfileDDL"
+                          @clear="clearVatProfile(index)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_profile_id`)" />
+                      </div>
+                      <div class="col-span-12 md:col-span-4">
+                        <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }">
+                          {{ t('views.purchase_order.fields.vat_rate') }}
+                        </FormLabel>
+                        <FormInputCurrency v-model="item.vat_rate" :allow-negative="false"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.vat_rate`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_rate`)" />
+                      </div>
+                      <div class="col-span-12 md:col-span-4">
+                        <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }">
+                          {{ t('views.purchase_order.fields.vat_base_numerator') }}
+                        </FormLabel>
+                        <FormInput v-model="item.vat_base_numerator" type="number" min="1"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.vat_base_numerator`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_numerator`)" />
+                      </div>
+                      <div class="col-span-12 md:col-span-4">
+                        <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }">
+                          {{ t('views.purchase_order.fields.vat_base_denominator') }}
+                        </FormLabel>
+                        <FormInput v-model="item.vat_base_denominator" type="number" min="1"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.vat_base_denominator`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_denominator`)" />
+                      </div>
+                      <div class="col-span-12">
+                        <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }">
+                          {{ t('views.purchase_order.fields.remarks') }}
+                        </FormLabel>
+                        <FormTextarea v-model="item.remarks"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.remarks`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.remarks`)" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-span-12 lg:col-span-6">
                   <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-5">
                     <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_price_breakdown') }}</div>
                     <div class="space-y-3">
-                      <div class="flex justify-between items-center">
-                        <div class="font-medium text-sm">{{ t('views.purchase_order.fields.product_unit_price_discounts') }}</div>
-                        <Button type="button" variant="outline-primary" @click="addItemPriceDiscount(index)">
-                          <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                          {{ t('components.buttons.create_new') }}
-                        </Button>
-                      </div>
-                      <div v-if="item.product_unit_price_discounts.length === 0" class="text-slate-500 text-sm">
+                      <div v-if="item.product_unit_price_discounts.length === 0" class="text-right text-slate-500 text-sm">
                         {{ t('views.purchase_order.fields.product_unit_price_discounts_empty') }}
                       </div>
                       <div v-else class="space-y-3">
@@ -1556,6 +1756,12 @@ const onSubmit = async () => {
                           </div>
                         </div>
                       </div>
+                      <div class="flex justify-end">
+                        <Button type="button" variant="outline-primary" @click="addItemPriceDiscount(index)">
+                          <Lucide icon="Plus" class="w-4 h-4 mr-1" />
+                          {{ t('components.buttons.create_new') }}
+                        </Button>
+                      </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                           {{ t('views.purchase_order.fields.price_after_discount') }}
@@ -1574,14 +1780,7 @@ const onSubmit = async () => {
                       </div>
                     </div>
                     <div class="space-y-3">
-                      <div class="flex justify-between items-center">
-                        <div class="font-medium text-sm">{{ t('views.purchase_order.fields.subtotal_discounts') }}</div>
-                        <Button type="button" variant="outline-primary" @click="addItemSubtotalDiscount(index)">
-                          <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                          {{ t('components.buttons.create_new') }}
-                        </Button>
-                      </div>
-                      <div v-if="item.subtotal_discounts.length === 0" class="text-slate-500 text-sm">
+                      <div v-if="item.subtotal_discounts.length === 0" class="text-right text-slate-500 text-sm">
                         {{ t('views.purchase_order.fields.subtotal_discounts_empty') }}
                       </div>
                       <div v-else class="space-y-3">
@@ -1616,6 +1815,12 @@ const onSubmit = async () => {
                           </div>
                         </div>
                       </div>
+                      <div class="flex justify-end">
+                        <Button type="button" variant="outline-primary" @click="addItemSubtotalDiscount(index)">
+                          <Lucide icon="Plus" class="w-4 h-4 mr-1" />
+                          {{ t('components.buttons.create_new') }}
+                        </Button>
+                      </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                           {{ t('views.purchase_order.fields.subtotal_after_discount') }}
@@ -1623,66 +1828,6 @@ const onSubmit = async () => {
                         <div class="col-span-12 md:col-span-8">
                           <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-span-12 lg:col-span-5">
-                  <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-4">
-                    <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_additional_details') }}</div>
-                    <div class="grid grid-cols-12 gap-4 gap-y-3">
-                      <div class="col-span-12 md:col-span-4">
-                        <FormLabel class="flex min-h-[40px] items-start">{{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}</FormLabel>
-                        <FormSwitch>
-                          <FormSwitch.Input v-model="item.product_unit_is_price_include_vat" type="checkbox" />
-                        </FormSwitch>
-                      </div>
-                      <div class="col-span-12 md:col-span-8">
-                        <FormLabel :class="['flex min-h-[40px] items-start', { 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }]">
-                          {{ t('views.purchase_order.fields.vat_profile_id') }}
-                        </FormLabel>
-                        <FormSelectSearch v-model="item.vat_profile_id" v-model:search="vatProfileSearch"
-                          :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
-                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }"
-                          @change="validatePurchaseOrderField(`items.${index}.vat_profile_id`)" @search="loadVatProfileDDL"
-                          @clear="clearVatProfile(index)" />
-                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_profile_id`)" />
-                      </div>
-                      <div class="col-span-12 md:col-span-4">
-                        <FormLabel :class="['flex min-h-[40px] items-start', { 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }]">
-                          {{ t('views.purchase_order.fields.vat_rate') }}
-                        </FormLabel>
-                        <FormInputCurrency v-model="item.vat_rate" :allow-negative="false"
-                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }"
-                          @change="validatePurchaseOrderField(`items.${index}.vat_rate`)" />
-                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_rate`)" />
-                      </div>
-                      <div class="col-span-12 md:col-span-4">
-                        <FormLabel :class="['flex min-h-[40px] items-start', { 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }]">
-                          {{ t('views.purchase_order.fields.vat_base_numerator') }}
-                        </FormLabel>
-                        <FormInput v-model="item.vat_base_numerator" type="number" min="1"
-                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }"
-                          @change="validatePurchaseOrderField(`items.${index}.vat_base_numerator`)" />
-                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_numerator`)" />
-                      </div>
-                      <div class="col-span-12 md:col-span-4">
-                        <FormLabel :class="['flex min-h-[40px] items-start', { 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }]">
-                          {{ t('views.purchase_order.fields.vat_base_denominator') }}
-                        </FormLabel>
-                        <FormInput v-model="item.vat_base_denominator" type="number" min="1"
-                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }"
-                          @change="validatePurchaseOrderField(`items.${index}.vat_base_denominator`)" />
-                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_denominator`)" />
-                      </div>
-                      <div class="col-span-12">
-                        <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }">
-                          {{ t('views.purchase_order.fields.remarks') }}
-                        </FormLabel>
-                        <FormTextarea v-model="item.remarks"
-                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }"
-                          @change="validatePurchaseOrderField(`items.${index}.remarks`)" />
-                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.remarks`)" />
                       </div>
                     </div>
                   </div>
@@ -1705,8 +1850,8 @@ const onSubmit = async () => {
             <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
               <div class="col-span-12 lg:col-span-9"></div>
               <div class="col-span-12 lg:col-span-3">
-                <FormLabel>{{ t('views.purchase_order.fields.items_grand_total_after_discount') }}</FormLabel>
-                <FormInputCurrency :model-value="getItemsGrandTotalPreview()" readonly />
+                <FormLabel>{{ t('views.purchase_order.fields.items_subtotal_after_discount') }}</FormLabel>
+                <FormInputCurrency :model-value="getItemsSubtotalAfterDiscountPreview()" readonly />
               </div>
             </div>
 
@@ -1778,28 +1923,65 @@ const onSubmit = async () => {
                 </div>
               </div>
 
-              <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
-                <div class="col-span-12 lg:col-span-9"></div>
-                <div class="col-span-12 lg:col-span-3">
-                  <FormLabel :class="{ 'text-danger': purchaseOrderForm.invalid('rounding') }">
-                    {{ t('views.purchase_order.fields.rounding') }}
-                  </FormLabel>
-                  <FormInputCurrency v-model="purchaseOrderForm.rounding"
-                    :class="{ 'border-danger': purchaseOrderForm.invalid('rounding') }"
-                    @change="purchaseOrderForm.validate('rounding')" />
-                  <FormErrorMessages :messages="purchaseOrderForm.errors.rounding" />
+              <template v-if="isTotalsBreakdownExpanded">
+                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
+                  <div class="col-span-12 lg:col-span-9"></div>
+                  <div class="col-span-12 lg:col-span-3">
+                    <FormLabel>{{ t('views.purchase_order.fields.item_total_after_global_discount') }}</FormLabel>
+                    <FormInputCurrency :model-value="getPurchaseOrderItemTotalAfterGlobalDiscountPreview()" readonly />
+                  </div>
                 </div>
-              </div>
+
+                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
+                  <div class="col-span-12 lg:col-span-9"></div>
+                  <div class="col-span-12 lg:col-span-3">
+                    <FormLabel>{{ t('views.purchase_order.fields.vat_base') }}</FormLabel>
+                    <FormInputCurrency :model-value="formatCurrencyPreviewValue(getPurchaseOrderVatBasePreview())" readonly />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
+                  <div class="col-span-12 lg:col-span-9"></div>
+                  <div class="col-span-12 lg:col-span-3">
+                    <FormLabel>{{ t('views.purchase_order.fields.vat') }}</FormLabel>
+                    <FormInputCurrency :model-value="formatCurrencyPreviewValue(getPurchaseOrderVatPreview())" readonly />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
+                  <div class="col-span-12 lg:col-span-9"></div>
+                  <div class="col-span-12 lg:col-span-3">
+                    <FormLabel :class="{ 'text-danger': purchaseOrderForm.invalid('rounding') }">
+                      {{ t('views.purchase_order.fields.rounding') }}
+                    </FormLabel>
+                    <FormInputCurrency v-model="purchaseOrderForm.rounding"
+                      :class="{ 'border-danger': purchaseOrderForm.invalid('rounding') }"
+                      @change="purchaseOrderForm.validate('rounding')" />
+                    <FormErrorMessages :messages="purchaseOrderForm.errors.rounding" />
+                  </div>
+                </div>
+              </template>
 
               <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
                 <div class="col-span-12 lg:col-span-9"></div>
                 <div class="col-span-12 lg:col-span-3">
                   <FormLabel>{{ t('views.purchase_order.fields.grand_total') }}</FormLabel>
-                  <FormInputCurrency :model-value="getPurchaseOrderGrandTotalPreview()" readonly />
+                  <div class="flex items-start gap-2">
+                    <div class="shrink-0">
+                      <Button type="button" variant="outline-secondary"
+                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
+                        @click="isTotalsBreakdownExpanded = !isTotalsBreakdownExpanded">
+                        {{ isTotalsBreakdownExpanded ? '▲' : '▼' }}
+                      </Button>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <FormInputCurrency :model-value="getPurchaseOrderGrandTotalPreview()" readonly />
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="border-t border-slate-200/60 dark:border-darkmode-400 pt-4 space-y-4">
+              <div class="space-y-4">
                 <div v-if="isDownPaymentEditorExpanded" class="space-y-4">
                   <FormErrorMessages :messages="purchaseOrderForm.errors.down_payments" />
                   <div v-if="purchaseOrderDownPaymentsForm.length === 0" class="text-right text-slate-500 text-sm">
@@ -2022,6 +2204,22 @@ const onSubmit = async () => {
                         <FormInputCurrency :model-value="getRefundedDownPaymentsTotalPreview()" readonly />
                       </div>
                     </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
+                  <div class="col-span-12 lg:col-span-9"></div>
+                  <div class="col-span-12 lg:col-span-3">
+                    <FormLabel>{{ t('views.purchase_order.fields.amount_allocated_down_payment') }}</FormLabel>
+                    <FormInputCurrency :model-value="getAllocatedDownPaymentsTotalPreview()" readonly />
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
+                  <div class="col-span-12 lg:col-span-9"></div>
+                  <div class="col-span-12 lg:col-span-3">
+                    <FormLabel>{{ t('views.purchase_order.fields.amount_available_down_payment') }}</FormLabel>
+                    <FormInputCurrency :model-value="getAvailableDownPaymentsTotalPreview()" readonly />
                   </div>
                 </div>
               </div>

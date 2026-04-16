@@ -68,7 +68,16 @@ class PurchaseOrderActions
         ?ExecuteDTO $execute
     ) {
         $query = PurchaseOrder::select('purchase_orders.*')
-            ->with(['company', 'branch', 'supplier'])
+            ->with([
+                'company',
+                'branch',
+                'supplier',
+                'globalDiscounts',
+                'items.productUnit.product',
+                'items.productUnit.unit',
+                'downPayments.cashAccount',
+                'refundedDownPayments.cashAccount',
+            ])
             ->join('companies', 'companies.id', '=', 'purchase_orders.company_id')
             ->whereCompanyId('purchase_orders', $companyId)
             ->whereBranchId('purchase_orders', $branchId)
@@ -508,6 +517,9 @@ class PurchaseOrderActions
         $po->item_total_before_global_discount = app(PurchaseOrderItemActions::class)->getSubtotalAfterDiscountAmountByPurchaseOrderId($po->id);
         $po->global_discount = app(PurchaseOrderGlobalDiscountActions::class)->getAmountByPurchaseOrderId($po->id);
         $po->item_total_after_global_discount = $po->item_total_before_global_discount - $po->global_discount;
+        $po->vat_base = (float) $po->items->sum('vat_base');
+        $po->vat = (float) $po->items->sum('vat');
+        $po->grand_total = (float) $po->items->sum('grand_total');
         $po->amount_paid_down_payment = app(PurchaseOrderDownPaymentActions::class)->getAmountByPurchaseOrderId($po->id);
         $po->amount_allocated_down_payment = app(PurchaseOrderDownPaymentAllocationActions::class)->getAmountByPurchaseOrderId($po->id);
         $po->amount_refunded_down_payment = app(PurchaseOrderDownPaymentRefundActions::class)->getAmountByPurchaseOrderId($po->id);

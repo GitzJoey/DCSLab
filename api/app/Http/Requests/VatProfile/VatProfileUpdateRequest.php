@@ -29,7 +29,7 @@ class VatProfileUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'vat_rate' => ['required', 'numeric', 'min:0'],
+            'vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'vat_base_numerator' => ['required', 'integer', 'min:0'],
             'vat_base_denominator' => ['required', 'integer', 'min:1'],
             'remarks' => ['present', 'nullable', 'string'],
