@@ -36,10 +36,12 @@ class PurchaseOrderResource extends JsonResource
             'grand_total' => $this->grand_total,
             'amount_paid_down_payment' => $this->amount_paid_down_payment,
             'amount_allocated_down_payment' => $this->amount_allocated_down_payment,
+            'amount_refunded_down_payment' => $this->amount_refunded_down_payment,
             'amount_available_down_payment' => $this->amount_available_down_payment,
             'global_discounts' => PurchaseOrderGlobalDiscountResource::collection($this->whenLoaded('globalDiscounts')),
             'items' => PurchaseOrderItemResource::collection($this->whenLoaded('items')),
             'down_payments' => PurchaseOrderDownPaymentResource::collection($this->whenLoaded('downPayments')),
+            'refunded_down_payments' => PurchaseOrderDownPaymentRefundResource::collection($this->whenLoaded('refundedDownPayments')),
         ];
     }
 }

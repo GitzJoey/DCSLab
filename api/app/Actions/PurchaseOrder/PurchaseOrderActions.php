@@ -3,12 +3,15 @@
 namespace App\Actions\PurchaseOrder;
 
 use App\Actions\PurchaseOrderDownPayment\PurchaseOrderDownPaymentActions;
+use App\Actions\PurchaseOrderDownPaymentRefund\PurchaseOrderDownPaymentRefundActions;
 use App\Actions\PurchaseOrderGlobalDiscount\PurchaseOrderGlobalDiscountActions;
 use App\Actions\PurchaseOrderItem\PurchaseOrderItemActions;
 use App\Actions\PurchaseOrderItem\PurchaseOrderItemCalculationActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
 use App\DTOs\PurchaseOrderDownPaymentCreateDTO;
+use App\DTOs\PurchaseOrderDownPaymentRefundCreateDTO;
+use App\DTOs\PurchaseOrderDownPaymentRefundUpdateDTO;
 use App\DTOs\PurchaseOrderDownPaymentUpdateDTO;
 use App\DTOs\PurchaseOrderGlobalDiscountCreateDTO;
 use App\DTOs\PurchaseOrderGlobalDiscountUpdateDTO;
@@ -34,6 +37,8 @@ class PurchaseOrderActions
 
     private $purchaseOrderDownPaymentActions;
 
+    private $purchaseOrderDownPaymentRefundActions;
+
     private $purchaseOrderCalculationActions;
 
     private $purchaseOrderItemCalculationActions;
@@ -42,12 +47,14 @@ class PurchaseOrderActions
         PurchaseOrderItemActions $purchaseOrderItemActions,
         PurchaseOrderGlobalDiscountActions $purchaseOrderGlobalDiscountActions,
         PurchaseOrderDownPaymentActions $purchaseOrderDownPaymentActions,
+        PurchaseOrderDownPaymentRefundActions $purchaseOrderDownPaymentRefundActions,
         PurchaseOrderCalculationActions $purchaseOrderCalculationActions,
         PurchaseOrderItemCalculationActions $purchaseOrderItemCalculationActions,
     ) {
         $this->purchaseOrderItemActions = $purchaseOrderItemActions;
         $this->purchaseOrderGlobalDiscountActions = $purchaseOrderGlobalDiscountActions;
         $this->purchaseOrderDownPaymentActions = $purchaseOrderDownPaymentActions;
+        $this->purchaseOrderDownPaymentRefundActions = $purchaseOrderDownPaymentRefundActions;
         $this->purchaseOrderCalculationActions = $purchaseOrderCalculationActions;
         $this->purchaseOrderItemCalculationActions = $purchaseOrderItemCalculationActions;
     }
@@ -178,6 +185,7 @@ class PurchaseOrderActions
             'items.productUnitPriceDiscounts',
             'items.subtotalDiscounts',
             'downPayments.cashAccount',
+            'refundedDownPayments.cashAccount',
         ]);
     }
 
@@ -283,6 +291,21 @@ class PurchaseOrderActions
                 );
 
                 $this->purchaseOrderDownPaymentActions->create($dto, false);
+            }
+
+            foreach ($data->refundedDownPayments as $refundedDownPayment) {
+                $dto = new PurchaseOrderDownPaymentRefundCreateDTO(
+                    companyId: $purchaseOrder->company_id,
+                    branchId: $purchaseOrder->branch_id,
+                    purchaseOrderId: $purchaseOrder->id,
+                    code: $refundedDownPayment['code'],
+                    date: $refundedDownPayment['date'],
+                    cashAccountId: $refundedDownPayment['cash_account_id'],
+                    amount: $refundedDownPayment['amount'],
+                    remarks: $refundedDownPayment['remarks'] ?? null,
+                );
+
+                $this->purchaseOrderDownPaymentRefundActions->create($dto, false);
             }
 
             $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
@@ -426,6 +449,39 @@ class PurchaseOrderActions
                 }
             }
 
+            foreach ($data->deleteRefundedDownPaymentIds as $deleteId) {
+                $poRefundedDownPayment = $purchaseOrder->refundedDownPayments()->findOrFail($deleteId);
+                $this->purchaseOrderDownPaymentRefundActions->delete($poRefundedDownPayment);
+            }
+
+            foreach ($data->refundedDownPayments as $refundedDownPayment) {
+                if (! empty($refundedDownPayment['id'])) {
+                    $poRefundedDownPayment = $purchaseOrder->refundedDownPayments()->findOrFail($refundedDownPayment['id']);
+                    $dto = new PurchaseOrderDownPaymentRefundUpdateDTO(
+                        code: $refundedDownPayment['code'],
+                        date: $refundedDownPayment['date'],
+                        cashAccountId: $refundedDownPayment['cash_account_id'],
+                        amount: $refundedDownPayment['amount'],
+                        remarks: $refundedDownPayment['remarks'] ?? null,
+                    );
+
+                    $this->purchaseOrderDownPaymentRefundActions->update($poRefundedDownPayment, $dto, false);
+                } else {
+                    $dto = new PurchaseOrderDownPaymentRefundCreateDTO(
+                        companyId: $purchaseOrder->company_id,
+                        branchId: $purchaseOrder->branch_id,
+                        purchaseOrderId: $purchaseOrder->id,
+                        code: $refundedDownPayment['code'],
+                        date: $refundedDownPayment['date'],
+                        cashAccountId: $refundedDownPayment['cash_account_id'],
+                        amount: $refundedDownPayment['amount'],
+                        remarks: $refundedDownPayment['remarks'] ?? null,
+                    );
+
+                    $this->purchaseOrderDownPaymentRefundActions->create($dto, false);
+                }
+            }
+
             $this->purchaseOrderCalculationActions->updateSummary($purchaseOrder);
             $this->purchaseOrderItemCalculationActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
 
@@ -456,6 +512,10 @@ class PurchaseOrderActions
 
             foreach ($purchaseOrder->downPayments as $poDownPayment) {
                 $this->purchaseOrderDownPaymentActions->delete($poDownPayment);
+            }
+
+            foreach ($purchaseOrder->refundedDownPayments as $poRefundedDownPayment) {
+                $this->purchaseOrderDownPaymentRefundActions->delete($poRefundedDownPayment);
             }
 
             $result = $purchaseOrder->delete();

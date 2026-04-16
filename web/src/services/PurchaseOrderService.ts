@@ -177,6 +177,7 @@ export default class PurchaseOrderService {
       global_discounts: [] as NonNullable<PurchaseOrderStoreRequest['global_discounts']>,
       items: [] as NonNullable<PurchaseOrderStoreRequest['items']>,
       down_payments: [] as NonNullable<PurchaseOrderStoreRequest['down_payments']>,
+      refunded_down_payments: [] as NonNullable<PurchaseOrderStoreRequest['refunded_down_payments']>,
     });
   }
 
@@ -208,6 +209,8 @@ export default class PurchaseOrderService {
       items: [] as NonNullable<PurchaseOrderUpdateRequest['items']>,
       delete_down_payment_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_down_payment_ids']>,
       down_payments: [] as NonNullable<PurchaseOrderUpdateRequest['down_payments']>,
+      delete_refunded_down_payment_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_refunded_down_payment_ids']>,
+      refunded_down_payments: [] as NonNullable<PurchaseOrderUpdateRequest['refunded_down_payments']>,
     });
   }
 

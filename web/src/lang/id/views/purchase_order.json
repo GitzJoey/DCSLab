@@ -23,7 +23,8 @@
     "items": "Item-item",
     "summary": "Ringkasan",
     "global_discounts": "Diskon Global",
-    "down_payments": "Uang Muka"
+    "down_payments": "Uang Muka",
+    "refunded_down_payments": "Refund Uang Muka"
   },
   "fields": {
     "company_id": "Perusahaan",
@@ -39,6 +40,9 @@
     "global_discount": "Diskon Global",
     "down_payment": "Uang Muka",
     "amount_paid_down_payment": "Jumlah Uang Muka",
+    "amount_allocated_down_payment": "Jumlah Uang Muka Teralokasi",
+    "amount_refunded_down_payment": "Jumlah Refund Uang Muka",
+    "amount_available_down_payment": "Sisa Uang Muka",
     "product_unit_id": "Produk",
     "qty": "Qty",
     "product_unit_conversion_value": "Nilai Konversi",

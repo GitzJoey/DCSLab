@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <FormCheck class="min-h-[38px]">
+  <FormCheck>
     <slot></slot>
   </FormCheck>
 </template>

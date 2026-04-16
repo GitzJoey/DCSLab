@@ -81,6 +81,18 @@ export interface PurchaseOrderDownPayment {
   remarks: string | null;
 }
 
+export interface PurchaseOrderDownPaymentRefund {
+  id: string;
+  ulid: string;
+  company?: Company;
+  branch?: Branch;
+  code: string;
+  date: string;
+  cash_account?: CashAccount | null;
+  amount: number;
+  remarks: string | null;
+}
+
 export interface PurchaseOrder {
   id: string;
   ulid: string;
@@ -100,8 +112,10 @@ export interface PurchaseOrder {
   grand_total: number;
   amount_paid_down_payment: number;
   amount_allocated_down_payment: number;
+  amount_refunded_down_payment: number;
   amount_available_down_payment: number;
   global_discounts: PurchaseOrderGlobalDiscount[];
   items: PurchaseOrderItem[];
   down_payments: PurchaseOrderDownPayment[];
+  refunded_down_payments: PurchaseOrderDownPaymentRefund[];
 }

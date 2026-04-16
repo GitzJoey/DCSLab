@@ -17,6 +17,7 @@ final class PurchaseOrderCreateDTO
 
         public readonly array $items,
         public readonly array $downPayments,
+        public readonly array $refundedDownPayments,
     ) {
     }
 }

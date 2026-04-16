@@ -34,6 +34,7 @@ import { NotificationData } from '@/types/models/NotificationData';
 import { PurchaseOrder } from '@/types/models/PurchaseOrder';
 import {
   PurchaseOrderDownPaymentNestedUpdateRequest,
+  PurchaseOrderDownPaymentRefundNestedUpdateRequest,
   PurchaseOrderGlobalDiscountNestedUpdateRequest,
   PurchaseOrderItemDiscountNestedUpdateRequest,
   PurchaseOrderItemNestedUpdateRequest,
@@ -175,8 +176,12 @@ const purchaseOrderGlobalDiscountsForm = computed<PurchaseOrderGlobalDiscountNes
 const purchaseOrderDownPaymentsForm = computed<PurchaseOrderDownPaymentNestedUpdateRequest[]>(
   () => purchaseOrderForm.down_payments as PurchaseOrderDownPaymentNestedUpdateRequest[],
 );
+const purchaseOrderRefundedDownPaymentsForm = computed<PurchaseOrderDownPaymentRefundNestedUpdateRequest[]>(
+  () => purchaseOrderForm.refunded_down_payments as PurchaseOrderDownPaymentRefundNestedUpdateRequest[],
+);
 const isGlobalDiscountEditorExpanded = ref(false);
 const isDownPaymentEditorExpanded = ref(false);
+const isRefundedDownPaymentEditorExpanded = ref(false);
 
 const invalidPurchaseOrderField = (field: string) => purchaseOrderForm.invalid(field as any);
 const validatePurchaseOrderField = (field: string) => purchaseOrderForm.validate(field as any);
@@ -230,6 +235,12 @@ const setDownPaymentCode = (index: number) => {
   purchaseOrderForm.forgetError(`down_payments.${index}.code` as any);
   purchaseOrderDownPaymentsForm.value[index].code =
     purchaseOrderDownPaymentsForm.value[index].code === '_AUTO_' ? '' : '_AUTO_';
+};
+
+const setRefundedDownPaymentCode = (index: number) => {
+  purchaseOrderForm.forgetError(`refunded_down_payments.${index}.code` as any);
+  purchaseOrderRefundedDownPaymentsForm.value[index].code =
+    purchaseOrderRefundedDownPaymentsForm.value[index].code === '_AUTO_' ? '' : '_AUTO_';
 };
 
 const appendDDL = (
@@ -314,6 +325,7 @@ const loadCashAccountDDL = async (search = '') => {
   }
 
   (purchaseOrderData.value?.down_payments ?? []).forEach((item) => appendDDL(cashAccountDDL, item.cash_account));
+  (purchaseOrderData.value?.refunded_down_payments ?? []).forEach((item) => appendDDL(cashAccountDDL, item.cash_account));
 };
 
 const clearSupplier = () => {
@@ -335,6 +347,13 @@ const clearCashAccount = (index: number) => {
   if (!downPayment) return;
   downPayment.cash_account_id = '';
   purchaseOrderForm.validate(`down_payments.${index}.cash_account_id` as any);
+};
+
+const clearRefundedCashAccount = (index: number) => {
+  const refundedDownPayment = purchaseOrderRefundedDownPaymentsForm.value[index];
+  if (!refundedDownPayment) return;
+  refundedDownPayment.cash_account_id = '';
+  purchaseOrderForm.validate(`refunded_down_payments.${index}.cash_account_id` as any);
 };
 
 const loadData = async () => {
@@ -406,6 +425,15 @@ const loadData = async () => {
         cash_account_id: downPayment.cash_account?.id ?? '',
         amount: downPayment.amount,
         remarks: downPayment.remarks ?? '',
+      })) as any,
+      delete_refunded_down_payment_ids: [],
+      refunded_down_payments: (data.refunded_down_payments || []).map((refundedDownPayment: any) => ({
+        id: refundedDownPayment.id ?? null,
+        code: refundedDownPayment.code,
+        date: formatDate(refundedDownPayment.date, 'YYYY-MM-DD HH:mm:ss'),
+        cash_account_id: refundedDownPayment.cash_account?.id ?? '',
+        amount: refundedDownPayment.amount,
+        remarks: refundedDownPayment.remarks ?? '',
       })) as any,
     } as any);
     purchaseOrderItemDiscountsExpanded.value = items.map(() => false);
@@ -654,6 +682,30 @@ const removeDownPayment = (index: number) => {
   });
 };
 
+const addRefundedDownPayment = () => {
+  purchaseOrderRefundedDownPaymentsForm.value.push({
+    id: null,
+    code: '_AUTO_',
+    date: '_AUTO_',
+    cash_account_id: '',
+    amount: 0,
+    remarks: '',
+  });
+};
+
+const removeRefundedDownPayment = (index: number) => {
+  const refundedDownPayment = purchaseOrderRefundedDownPaymentsForm.value[index];
+  if (refundedDownPayment?.id) {
+    purchaseOrderForm.delete_refunded_down_payment_ids.push(refundedDownPayment.id);
+  }
+  purchaseOrderRefundedDownPaymentsForm.value.splice(index, 1);
+  Object.keys(purchaseOrderForm.errors).forEach((key) => {
+    if (key.startsWith('refunded_down_payments.')) {
+      purchaseOrderForm.forgetError(key as any);
+    }
+  });
+};
+
 const getItemUnitPriceAfterDiscountPreview = (item: PurchaseOrderItemFormItem) => {
   return item.product_unit_price_discounts.reduce((currentPrice, discount) => {
     const discountValue = Math.max(Number(discount.discount_value || 0), 0);
@@ -773,6 +825,12 @@ const getDownPaymentsTotalPreview = () =>
     0,
   );
 
+const getRefundedDownPaymentsTotalPreview = () =>
+  purchaseOrderRefundedDownPaymentsForm.value.reduce(
+    (total, refundedDownPayment) => total + Math.max(Number(refundedDownPayment.amount || 0), 0),
+    0,
+  );
+
 const scrollToError = (id: string) => {
   const el = document.getElementById(id);
   if (!el) return;
@@ -812,6 +870,7 @@ const onSubmit = async () => {
   const backupItems = [...purchaseOrderItemsForm.value];
   const backupGlobalDiscounts = [...purchaseOrderGlobalDiscountsForm.value];
   const backupDownPayments = [...purchaseOrderDownPaymentsForm.value];
+  const backupRefundedDownPayments = [...purchaseOrderRefundedDownPaymentsForm.value];
 
   const cleanedItems: PurchaseOrderItemNestedUpdateRequest[] = purchaseOrderItemsForm.value.map((item) => ({
     id: item.id,
@@ -856,6 +915,14 @@ const onSubmit = async () => {
     amount: downPayment.amount,
     remarks: downPayment.remarks,
   })) as any;
+  purchaseOrderForm.refunded_down_payments = purchaseOrderRefundedDownPaymentsForm.value.map((refundedDownPayment) => ({
+    id: refundedDownPayment.id,
+    code: refundedDownPayment.code,
+    date: refundedDownPayment.date,
+    cash_account_id: refundedDownPayment.cash_account_id,
+    amount: refundedDownPayment.amount,
+    remarks: refundedDownPayment.remarks,
+  })) as any;
 
   emits('loading-state', true);
 
@@ -869,6 +936,7 @@ const onSubmit = async () => {
     purchaseOrderForm.items = backupItems as any;
     purchaseOrderForm.global_discounts = backupGlobalDiscounts as any;
     purchaseOrderForm.down_payments = backupDownPayments as any;
+    purchaseOrderForm.refunded_down_payments = backupRefundedDownPayments as any;
     showAlertPlaceholder('danger', '', convertErrorTypeToAlertListType(error));
   } finally {
     emits('loading-state', false);
@@ -1833,6 +1901,125 @@ const onSubmit = async () => {
                       </div>
                       <div class="flex-1 min-w-0">
                         <FormInputCurrency :model-value="getDownPaymentsTotalPreview()" readonly />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div v-if="isRefundedDownPaymentEditorExpanded" class="space-y-4">
+                  <FormErrorMessages :messages="purchaseOrderForm.errors.refunded_down_payments" />
+                  <div v-if="purchaseOrderRefundedDownPaymentsForm.length === 0" class="text-right text-slate-500 text-sm">
+                    {{ t('components.data-list.data_not_found') }}
+                  </div>
+                  <div v-else class="space-y-4">
+                    <div
+                      v-for="(refundedDownPayment, index) in purchaseOrderRefundedDownPaymentsForm"
+                      :key="`refunded-down-payment-${refundedDownPayment.id ?? index}`"
+                      class="space-y-3">
+                      <div class="grid grid-cols-12 gap-4 gap-y-3">
+                        <div class="col-span-12 md:col-span-6 lg:col-span-2"></div>
+                        <div class="col-span-12 md:col-span-6 lg:col-span-2">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.code`) }">
+                            {{ t('views.purchase_order.fields.code') }}
+                          </FormLabel>
+                          <FormInputCode
+                            v-model="refundedDownPayment.code"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.code`) }"
+                            :placeholder="t('views.purchase_order.fields.code')"
+                            @set-auto="setRefundedDownPaymentCode(index)"
+                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.code`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.code`)" />
+                        </div>
+                        <div class="col-span-12 md:col-span-6 lg:col-span-4">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.date`) }">
+                            {{ t('views.purchase_order.fields.date') }}
+                          </FormLabel>
+                          <FormInputDateTimeAuto
+                            v-model="refundedDownPayment.date"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.date`) }"
+                            :placeholder="t('views.purchase_order.fields.date')"
+                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.date`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.date`)" />
+                        </div>
+                        <div class="col-span-12 md:col-span-8 lg:col-span-2">
+                          <FormLabel
+                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`) }">
+                            {{ t('views.purchase_order.fields.cash_account_id') }}
+                          </FormLabel>
+                          <FormSelectSearch
+                            v-model="refundedDownPayment.cash_account_id"
+                            v-model:search="cashAccountSearch"
+                            :options="cashAccountOptions"
+                            :placeholder="t('components.dropdown.placeholder')"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`) }"
+                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`)"
+                            @search="loadCashAccountDDL"
+                            @clear="clearRefundedCashAccount(index)" />
+                          <FormErrorMessages
+                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.cash_account_id`)" />
+                        </div>
+                        <div class="col-span-12 md:col-span-4 lg:col-span-2">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.amount`) }">
+                            {{ t('views.purchase_order.fields.amount') }}
+                          </FormLabel>
+                          <div class="flex items-start gap-2">
+                            <div class="flex-1 min-w-0">
+                              <FormInputCurrency
+                                v-model="refundedDownPayment.amount"
+                                :allow-negative="false"
+                                :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.amount`) }"
+                                @change="validatePurchaseOrderField(`refunded_down_payments.${index}.amount`)" />
+                            </div>
+                            <div class="shrink-0">
+                              <Button
+                                type="button"
+                                variant="outline-secondary"
+                                class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
+                                @click="removeRefundedDownPayment(index)">
+                                <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                              </Button>
+                            </div>
+                          </div>
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.amount`)" />
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-12 gap-4 gap-y-3">
+                        <div class="col-span-12 lg:col-span-2"></div>
+                        <div class="col-span-12 lg:col-span-10">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.remarks`) }">
+                            {{ t('views.purchase_order.fields.remarks') }}
+                          </FormLabel>
+                          <FormTextarea
+                            v-model="refundedDownPayment.remarks"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.remarks`) }"
+                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.remarks`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.remarks`)" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex justify-end">
+                    <Button type="button" variant="outline-primary" @click="addRefundedDownPayment">
+                      <Lucide icon="Plus" class="w-4 h-4 mr-1" />
+                      {{ t('components.buttons.create_new') }}
+                    </Button>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
+                  <div class="col-span-12 lg:col-span-9"></div>
+                  <div class="col-span-12 lg:col-span-3">
+                    <FormLabel>{{ t('views.purchase_order.fields.amount_refunded_down_payment') }}</FormLabel>
+                    <div class="flex items-start gap-2">
+                      <div class="shrink-0">
+                        <Button type="button" variant="outline-secondary"
+                          class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
+                          @click="isRefundedDownPaymentEditorExpanded = !isRefundedDownPaymentEditorExpanded">
+                          {{ isRefundedDownPaymentEditorExpanded ? '▲' : '▼' }}
+                        </Button>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <FormInputCurrency :model-value="getRefundedDownPaymentsTotalPreview()" readonly />
                       </div>
                     </div>
                   </div>

@@ -307,4 +307,11 @@ return [
         'amount' => 'Amount',
         'remarks' => 'Remarks',
     ],
+    'purchase_order_down_payment_refund' => [
+        'code' => 'Code',
+        'date' => 'Date',
+        'cash_account_id' => 'Cash Account',
+        'amount' => 'Amount',
+        'remarks' => 'Remarks',
+    ],
 ];

@@ -22,6 +22,9 @@ final class PurchaseOrderUpdateDTO
 
         public readonly array $deleteDownPaymentIds,
         public readonly array $downPayments,
+
+        public readonly array $deleteRefundedDownPaymentIds,
+        public readonly array $refundedDownPayments,
     ) {
     }
 }

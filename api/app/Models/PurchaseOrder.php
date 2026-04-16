@@ -35,6 +35,7 @@ class PurchaseOrder extends Model
         'grand_total',
         'amount_paid_down_payment',
         'amount_allocated_down_payment',
+        'amount_refunded_down_payment',
         'amount_available_down_payment',
     ];
 
@@ -50,6 +51,7 @@ class PurchaseOrder extends Model
         'grand_total' => 'decimal:8',
         'amount_paid_down_payment' => 'decimal:8',
         'amount_allocated_down_payment' => 'decimal:8',
+        'amount_refunded_down_payment' => 'decimal:8',
         'amount_available_down_payment' => 'decimal:8',
     ];
 
@@ -81,6 +83,11 @@ class PurchaseOrder extends Model
     public function downPayments()
     {
         return $this->hasMany(PurchaseOrderDownPayment::class);
+    }
+
+    public function refundedDownPayments()
+    {
+        return $this->hasMany(PurchaseOrderDownPaymentRefund::class);
     }
 
     public function scopeSearch($query, string $search)

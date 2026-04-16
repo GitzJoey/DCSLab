@@ -89,6 +89,16 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'down_payments.*.cash_account_id' => ['required', 'integer', 'bail', new ExistsForCompany('cash_accounts', $this->company_id), new IsValidCashAccount($this->branch_id)],
             'down_payments.*.amount' => ['required', 'numeric', 'min:0'],
             'down_payments.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+
+            'delete_refunded_down_payment_ids' => ['present', 'array'],
+            'delete_refunded_down_payment_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_down_payment_refunds', $this->company_id)],
+            'refunded_down_payments' => ['present', 'array'],
+            'refunded_down_payments.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_down_payment_refunds', $this->company_id)],
+            'refunded_down_payments.*.code' => ['required', 'string', 'max:255'],
+            'refunded_down_payments.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'refunded_down_payments.*.cash_account_id' => ['required', 'integer', 'bail', new ExistsForCompany('cash_accounts', $this->company_id), new IsValidCashAccount($this->branch_id)],
+            'refunded_down_payments.*.amount' => ['required', 'numeric', 'min:0'],
+            'refunded_down_payments.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -124,6 +134,12 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'down_payments.*.cash_account_id' => trans('validation_attributes.purchase_order_down_payment.cash_account_id'),
             'down_payments.*.amount' => trans('validation_attributes.purchase_order_down_payment.amount'),
             'down_payments.*.remarks' => trans('validation_attributes.purchase_order_down_payment.remarks'),
+
+            'refunded_down_payments.*.code' => trans('validation_attributes.purchase_order_down_payment_refund.code'),
+            'refunded_down_payments.*.date' => trans('validation_attributes.purchase_order_down_payment_refund.date'),
+            'refunded_down_payments.*.cash_account_id' => trans('validation_attributes.purchase_order_down_payment_refund.cash_account_id'),
+            'refunded_down_payments.*.amount' => trans('validation_attributes.purchase_order_down_payment_refund.amount'),
+            'refunded_down_payments.*.remarks' => trans('validation_attributes.purchase_order_down_payment_refund.remarks'),
         ];
     }
 
@@ -233,6 +249,28 @@ class PurchaseOrderUpdateRequest extends FormRequest
                 $deleteDownPaymentIds[] = HashidsHelper::decodeId($id);
             }
             $this->merge(['delete_down_payment_ids' => $deleteDownPaymentIds]);
+        }
+
+        if (is_array($this->input('refunded_down_payments'))) {
+            $refundedDownPayments = [];
+            foreach ($this->input('refunded_down_payments') as $refundedDownPayment) {
+                if (array_key_exists('id', $refundedDownPayment) && ! is_null($refundedDownPayment['id'])) {
+                    $refundedDownPayment['id'] = HashidsHelper::decodeId($refundedDownPayment['id']);
+                }
+                if (array_key_exists('cash_account_id', $refundedDownPayment) && ! is_null($refundedDownPayment['cash_account_id'])) {
+                    $refundedDownPayment['cash_account_id'] = HashidsHelper::decodeId($refundedDownPayment['cash_account_id']);
+                }
+                $refundedDownPayments[] = $refundedDownPayment;
+            }
+            $this->merge(['refunded_down_payments' => $refundedDownPayments]);
+        }
+
+        if (is_array($this->input('delete_refunded_down_payment_ids'))) {
+            $deleteRefundedDownPaymentIds = [];
+            foreach ($this->input('delete_refunded_down_payment_ids') as $id) {
+                $deleteRefundedDownPaymentIds[] = HashidsHelper::decodeId($id);
+            }
+            $this->merge(['delete_refunded_down_payment_ids' => $deleteRefundedDownPaymentIds]);
         }
     }
 }

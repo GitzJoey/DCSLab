@@ -326,4 +326,11 @@ return [
         'amount' => 'Jumlah',
         'remarks' => 'Catatan',
     ],
+    'purchase_order_down_payment_refund' => [
+        'code' => 'Kode',
+        'date' => 'Tanggal',
+        'cash_account_id' => 'Akun Kas',
+        'amount' => 'Jumlah',
+        'remarks' => 'Catatan',
+    ],
 ];

@@ -6,6 +6,7 @@ use App\Enums\CapitalTransactionTypeEnum;
 use App\Models\CapitalOpening;
 use App\Models\CapitalTransaction;
 use App\Models\PurchaseOrderDownPayment;
+use App\Models\PurchaseOrderDownPaymentRefund;
 
 final class CashTransactionUpdateDTO
 {
@@ -51,6 +52,17 @@ final class CashTransactionUpdateDTO
             date: $purchaseOrderDownPayment->date,
             cashAccountId: $purchaseOrderDownPayment->cash_account_id,
             amount: (float) $purchaseOrderDownPayment->amount,
+        );
+    }
+
+    public static function fromPurchaseOrderDownPaymentRefund(PurchaseOrderDownPaymentRefund $purchaseOrderDownPaymentRefund): self
+    {
+        return new self(
+            referableType: PurchaseOrderDownPaymentRefund::class,
+            referableId: $purchaseOrderDownPaymentRefund->id,
+            date: $purchaseOrderDownPaymentRefund->date,
+            cashAccountId: $purchaseOrderDownPaymentRefund->cash_account_id,
+            amount: (float) $purchaseOrderDownPaymentRefund->amount,
         );
     }
 }

@@ -29,6 +29,7 @@ return new class extends Migration
             $table->decimal('grand_total', 30, 8)->default(0);
             $table->decimal('amount_paid_down_payment', 30, 8)->default(0);
             $table->decimal('amount_allocated_down_payment', 30, 8)->default(0);
+            $table->decimal('amount_refunded_down_payment', 30, 8)->default(0);
             $table->decimal('amount_available_down_payment', 30, 8)->default(0);
 
             $table->unsignedBigInteger('created_by')->default(0);

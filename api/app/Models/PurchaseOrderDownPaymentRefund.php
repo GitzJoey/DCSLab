@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderDownPayment extends Model
+class PurchaseOrderDownPaymentRefund extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -58,16 +58,11 @@ class PurchaseOrderDownPayment extends Model
         return $this->morphOne(CashTransaction::class, 'referable');
     }
 
-    public function allocations()
-    {
-        return $this->hasMany(PurchaseOrderDownPaymentAllocation::class);
-    }
-
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_down_payments.code', 'like', '%'.$search.'%')
-                ->orWhere('purchase_order_down_payments.remarks', 'like', '%'.$search.'%');
+            $query->where('purchase_order_down_payment_refunds.code', 'like', '%'.$search.'%')
+                ->orWhere('purchase_order_down_payment_refunds.remarks', 'like', '%'.$search.'%');
         });
     }
 }

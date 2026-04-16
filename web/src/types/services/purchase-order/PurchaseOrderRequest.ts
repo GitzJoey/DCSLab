@@ -58,6 +58,14 @@ export interface PurchaseOrderDownPaymentNestedStoreRequest {
   remarks: string | null;
 }
 
+export interface PurchaseOrderDownPaymentRefundNestedStoreRequest {
+  code: string;
+  date: string;
+  cash_account_id: string;
+  amount: number;
+  remarks: string | null;
+}
+
 export interface PurchaseOrderStoreRequest {
   company_id: string;
   branch_id: string;
@@ -70,6 +78,7 @@ export interface PurchaseOrderStoreRequest {
   global_discounts: PurchaseOrderGlobalDiscountNestedStoreRequest[];
   items: PurchaseOrderItemNestedStoreRequest[];
   down_payments: PurchaseOrderDownPaymentNestedStoreRequest[];
+  refunded_down_payments: PurchaseOrderDownPaymentRefundNestedStoreRequest[];
 }
 
 export interface PurchaseOrderGlobalDiscountNestedUpdateRequest {
@@ -113,6 +122,15 @@ export interface PurchaseOrderDownPaymentNestedUpdateRequest {
   remarks: string | null;
 }
 
+export interface PurchaseOrderDownPaymentRefundNestedUpdateRequest {
+  id: string | null;
+  code: string;
+  date: string;
+  cash_account_id: string;
+  amount: number;
+  remarks: string | null;
+}
+
 export interface PurchaseOrderUpdateRequest {
   company_id: string;
   branch_id: string;
@@ -128,4 +146,6 @@ export interface PurchaseOrderUpdateRequest {
   items: PurchaseOrderItemNestedUpdateRequest[];
   delete_down_payment_ids: string[];
   down_payments: PurchaseOrderDownPaymentNestedUpdateRequest[];
+  delete_refunded_down_payment_ids: string[];
+  refunded_down_payments: PurchaseOrderDownPaymentRefundNestedUpdateRequest[];
 }

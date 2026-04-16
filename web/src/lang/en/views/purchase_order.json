@@ -23,7 +23,8 @@
     "items": "Items",
     "summary": "Summary",
     "global_discounts": "Global Discounts",
-    "down_payments": "Down Payments"
+    "down_payments": "Down Payments",
+    "refunded_down_payments": "Down Payment Refunds"
   },
   "fields": {
     "company_id": "Company",
@@ -39,6 +40,9 @@
     "global_discount": "Global Discount",
     "down_payment": "Down Payment",
     "amount_paid_down_payment": "Down Payment Amount",
+    "amount_allocated_down_payment": "Allocated Down Payment Amount",
+    "amount_refunded_down_payment": "Refunded Down Payment Amount",
+    "amount_available_down_payment": "Available Down Payment Amount",
     "product_unit_id": "Product",
     "qty": "Qty",
     "product_unit_conversion_value": "Conversion Value",

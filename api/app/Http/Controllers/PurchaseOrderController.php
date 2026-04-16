@@ -166,6 +166,7 @@ class PurchaseOrderController extends BaseController
                     globalDiscounts: $validatedRequest['global_discounts'],
                     items: $validatedRequest['items'],
                     downPayments: $validatedRequest['down_payments'],
+                    refundedDownPayments: $validatedRequest['refunded_down_payments'],
                 )
             );
 
@@ -214,6 +215,8 @@ class PurchaseOrderController extends BaseController
                     items: $validatedRequest['items'],
                     deleteDownPaymentIds: $validatedRequest['delete_down_payment_ids'],
                     downPayments: $validatedRequest['down_payments'],
+                    deleteRefundedDownPaymentIds: $validatedRequest['delete_refunded_down_payment_ids'],
+                    refundedDownPayments: $validatedRequest['refunded_down_payments'],
                 ),
             );
 
