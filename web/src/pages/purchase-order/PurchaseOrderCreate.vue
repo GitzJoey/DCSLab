@@ -863,12 +863,9 @@ const getRefundedDownPaymentsTotalPreview = () =>
 const getAllocatedDownPaymentsTotalPreview = () => 0;
 
 const getAvailableDownPaymentsTotalPreview = () =>
-  Math.max(
-    getDownPaymentsTotalPreview()
-    - getAllocatedDownPaymentsTotalPreview()
-    - getRefundedDownPaymentsTotalPreview(),
-    0,
-  );
+  getDownPaymentsTotalPreview()
+  - getAllocatedDownPaymentsTotalPreview()
+  - getRefundedDownPaymentsTotalPreview();
 
 const scrollToError = (id: string) => {
   const el = document.getElementById(id);

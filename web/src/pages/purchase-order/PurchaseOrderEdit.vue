@@ -57,6 +57,7 @@ type ProductUnitOption = {
   product_name: string;
   product_image_url: string | null;
   unit_name: string;
+  base_unit_name: string;
   conversion_value: number;
   price: number;
   product_unit_is_price_include_vat: boolean;
@@ -446,6 +447,9 @@ const loadData = async () => {
       product_unit_product_name: item.product_unit?.product?.name ?? '',
       product_unit_product_image_url: item.product_unit?.product?.main_product_image?.url ?? null,
       product_unit_unit_name: item.product_unit?.unit?.name ?? '',
+      product_unit_base_unit_name: Number(item.product_unit_conversion_value ?? 1) !== 1
+        ? item.product_unit?.product?.base_product_unit?.unit?.name ?? ''
+        : '',
       product_unit_conversion_value: item.product_unit_conversion_value,
       product_unit_price: item.product_unit_price,
       delete_product_unit_price_discount_ids: [],
@@ -541,12 +545,15 @@ const searchProductUnits = async () => {
     const products = result.data.data as any[];
     productUnitOptions.value = products.flatMap((product: any) => {
       const units: any[] = product.product_units || [];
+      const baseUnitName =
+        units.find((unit: any) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
       return units.map((unit: any) => ({
         product_unit_id: unit.id,
         product_unit_code: unit.code,
         product_name: product.name,
         product_image_url: product.main_product_image?.url ?? null,
         unit_name: unit.unit?.name ?? '',
+        base_unit_name: baseUnitName,
         conversion_value: Number(unit.conversion_value ?? 1),
         price: Number(unit.price ?? 0),
         product_unit_is_price_include_vat: Boolean(product.is_price_include_vat),
@@ -605,6 +612,7 @@ const selectProductUnit = (option: ProductUnitOption) => {
     product_unit_product_name: option.product_name,
     product_unit_product_image_url: option.product_image_url,
     product_unit_unit_name: option.unit_name,
+    product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
     product_unit_conversion_value: option.conversion_value,
     product_unit_price: option.price,
     product_unit_is_price_include_vat: option.product_unit_is_price_include_vat,
@@ -626,6 +634,7 @@ const selectProductUnit = (option: ProductUnitOption) => {
       product_unit_product_name: option.product_name,
       product_unit_product_image_url: option.product_image_url,
       product_unit_unit_name: option.unit_name,
+      product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
       product_unit_conversion_value: option.conversion_value,
       product_unit_price: option.price,
       delete_product_unit_price_discount_ids: [],
@@ -975,12 +984,9 @@ const getAllocatedDownPaymentsTotalPreview = () =>
   Math.max(Number(purchaseOrderData.value?.amount_allocated_down_payment ?? 0), 0);
 
 const getAvailableDownPaymentsTotalPreview = () =>
-  Math.max(
-    getDownPaymentsTotalPreview()
-    - getAllocatedDownPaymentsTotalPreview()
-    - getRefundedDownPaymentsTotalPreview(),
-    0,
-  );
+  getDownPaymentsTotalPreview()
+  - getAllocatedDownPaymentsTotalPreview()
+  - getRefundedDownPaymentsTotalPreview();
 
 const scrollToError = (id: string) => {
   const el = document.getElementById(id);

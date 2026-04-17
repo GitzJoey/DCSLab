@@ -156,13 +156,6 @@ class PurchaseOrderDownPaymentRefundActions
         ]);
     }
 
-    public function getAmountByPurchaseOrderId(int $purchaseOrderId): float
-    {
-        return (float) PurchaseOrderDownPaymentRefund::query()
-            ->where('purchase_order_id', $purchaseOrderId)
-            ->sum('amount');
-    }
-
     public function generateDate(string $date): string
     {
         if ($date == config('dcslab.KEYWORDS.AUTO')) {

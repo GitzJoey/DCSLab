@@ -4,6 +4,7 @@ namespace App\Actions\PurchaseOrderDownPayment;
 
 use App\Actions\CashTransaction\CashTransactionActions;
 use App\Actions\PurchaseOrder\PurchaseOrderActions;
+use App\Actions\PurchaseOrderDownPaymentAllocation\PurchaseOrderDownPaymentAllocationActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
@@ -23,6 +24,7 @@ class PurchaseOrderDownPaymentActions
 
     public function __construct(
         private CashTransactionActions $cashTransactionActions,
+        private PurchaseOrderDownPaymentAllocationActions $purchaseOrderDownPaymentAllocationActions,
     ) {
     }
 
@@ -156,13 +158,6 @@ class PurchaseOrderDownPaymentActions
         ]);
     }
 
-    public function getAmountByPurchaseOrderId(int $purchaseOrderId): float
-    {
-        return (float) PurchaseOrderDownPayment::query()
-            ->where('purchase_order_id', $purchaseOrderId)
-            ->sum('amount');
-    }
-
     public function generateDate(string $date): string
     {
         if ($date == config('dcslab.KEYWORDS.AUTO')) {
@@ -293,6 +288,10 @@ class PurchaseOrderDownPaymentActions
         $retval = false;
 
         try {
+            foreach ($purchaseOrderDownPayment->allocations as $allocation) {
+                $this->purchaseOrderDownPaymentAllocationActions->delete($allocation);
+            }
+
             $cashTransaction = $purchaseOrderDownPayment->cashTransaction;
             if ($cashTransaction) $this->cashTransactionActions->delete($cashTransaction);
 

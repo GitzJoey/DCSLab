@@ -17,6 +17,9 @@ return [
     'too_many_tokens' => 'Too many token request',
     'must_reset_password' => 'Require to reset the password',
     'inactive_user' => 'Your profile status is inactive',
+    'purchase_order' => [
+        'exceed_available_down_payment' => 'Total down payment refund exceeds the available down payment',
+    ],
     'company' => [
         'deactivate_default_company' => 'Default company cannot be deactivated',
         'delete_default_company' => 'Default company cannot be deleted',

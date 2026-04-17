@@ -73,7 +73,23 @@ class PurchaseOrderStoreRequest extends FormRequest
             'down_payments.*.amount' => ['required', 'numeric', 'min:0'],
             'down_payments.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'refunded_down_payments' => ['present', 'array'],
+            'refunded_down_payments' => [
+                'present',
+                'array',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    $downPaymentsTotal = (float) collect($this->input('down_payments', []))->sum(function ($row) {
+                        return max((float) ($row['amount'] ?? 0), 0);
+                    });
+                    $refundedDownPaymentsTotal = (float) collect(is_array($value) ? $value : [])->sum(function ($row) {
+                        return max((float) ($row['amount'] ?? 0), 0);
+                    });
+                    $maxRefundableAmount = max($downPaymentsTotal, 0);
+
+                    if ($refundedDownPaymentsTotal > $maxRefundableAmount) {
+                        $fail(trans('rules.purchase_order.exceed_available_down_payment'));
+                    }
+                },
+            ],
             'refunded_down_payments.*.code' => ['required', 'string', 'max:255'],
             'refunded_down_payments.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'refunded_down_payments.*.cash_account_id' => ['required', 'integer', 'bail', new ExistsForCompany('cash_accounts', $this->company_id), new IsValidCashAccount($this->branch_id)],

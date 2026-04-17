@@ -142,8 +142,6 @@ class PurchaseOrderController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->purchaseOrderActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -152,6 +150,8 @@ class PurchaseOrderController extends BaseController
                 );
                 if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->purchaseOrderActions->create(
                 data: new PurchaseOrderCreateDTO(
@@ -187,22 +187,20 @@ class PurchaseOrderController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->purchaseOrderActions->isUniqueCode(
-                    $validatedRequest['company_id'],
+                    $purchaseOrder->company_id,
                     $validatedRequest['code'],
                     $purchaseOrder->id,
                 );
                 if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
+            DB::beginTransaction();
+
             $result = $this->purchaseOrderActions->update(
                 purchaseOrder: $purchaseOrder,
                 data: new PurchaseOrderUpdateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
                     code: $validatedRequest['code'],
                     date: $validatedRequest['date'],
                     dueDays: $validatedRequest['due_days'],

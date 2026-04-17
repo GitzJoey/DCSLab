@@ -92,7 +92,44 @@ class PurchaseOrderUpdateRequest extends FormRequest
 
             'delete_refunded_down_payment_ids' => ['present', 'array'],
             'delete_refunded_down_payment_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_down_payment_refunds', $this->company_id)],
-            'refunded_down_payments' => ['present', 'array'],
+            'refunded_down_payments' => [
+                'present',
+                'array',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    $downPaymentsTotal = (float) collect($this->input('down_payments', []))->sum(function ($row) {
+                        return max((float) ($row['amount'] ?? 0), 0);
+                    });
+                    $refundedDownPaymentsTotal = (float) collect(is_array($value) ? $value : [])->sum(function ($row) {
+                        return max((float) ($row['amount'] ?? 0), 0);
+                    });
+                    $purchaseOrder = $this->route('purchase_order');
+                    $remainingAllocatedDownPaymentTotal = 0;
+
+                    if ($purchaseOrder) {
+                        $deleteDownPaymentIds = collect($this->input('delete_down_payment_ids', []))
+                            ->filter(fn ($id) => ! is_null($id))
+                            ->map(fn ($id) => (int) $id)
+                            ->values();
+
+                        $remainingAllocatedDownPaymentTotal = (float) $purchaseOrder->downPayments()
+                            ->with('allocations')
+                            ->when(
+                                $deleteDownPaymentIds->isNotEmpty(),
+                                fn ($query) => $query->whereNotIn('id', $deleteDownPaymentIds->all())
+                            )
+                            ->get()
+                            ->sum(function ($downPayment) {
+                                return (float) $downPayment->allocations->sum('amount');
+                            });
+                    }
+
+                    $maxRefundableAmount = max($downPaymentsTotal - $remainingAllocatedDownPaymentTotal, 0);
+
+                    if ($refundedDownPaymentsTotal > $maxRefundableAmount) {
+                        $fail(trans('rules.purchase_order.exceed_available_down_payment'));
+                    }
+                },
+            ],
             'refunded_down_payments.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_down_payment_refunds', $this->company_id)],
             'refunded_down_payments.*.code' => ['required', 'string', 'max:255'],
             'refunded_down_payments.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
@@ -146,8 +183,8 @@ class PurchaseOrderUpdateRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
-            'branch_id' => $this->filled('branch_id') ? HashidsHelper::decodeId($this->branch_id) : null,
+            'company_id' => $this->route('purchase_order')?->company_id ?? null,
+            'branch_id' => $this->route('purchase_order')?->branch_id ?? null,
             'supplier_id' => $this->filled('supplier_id') ? HashidsHelper::decodeId($this->supplier_id) : null,
         ]);
 

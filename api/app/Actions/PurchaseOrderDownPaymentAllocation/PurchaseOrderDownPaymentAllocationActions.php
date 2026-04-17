@@ -152,26 +152,6 @@ class PurchaseOrderDownPaymentAllocationActions
         ]);
     }
 
-    public function getAmountByPurchaseOrderId(int $purchaseOrderId): float
-    {
-        return (float) PurchaseOrderDownPaymentAllocation::query()
-            ->join(
-                'purchase_order_down_payments',
-                'purchase_order_down_payments.id',
-                '=',
-                'purchase_order_down_payment_allocations.purchase_order_down_payment_id'
-            )
-            ->where('purchase_order_down_payments.purchase_order_id', $purchaseOrderId)
-            ->sum('purchase_order_down_payment_allocations.amount');
-    }
-
-    public function getAmountByPurchaseId(int $purchaseId): float
-    {
-        return (float) PurchaseOrderDownPaymentAllocation::query()
-            ->where('purchase_id', $purchaseId)
-            ->sum('amount');
-    }
-
     public function generateDate(string $date): string
     {
         if ($date == config('dcslab.KEYWORDS.AUTO')) {

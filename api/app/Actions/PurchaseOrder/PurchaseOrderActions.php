@@ -3,7 +3,6 @@
 namespace App\Actions\PurchaseOrder;
 
 use App\Actions\PurchaseOrderDownPayment\PurchaseOrderDownPaymentActions;
-use App\Actions\PurchaseOrderDownPaymentAllocation\PurchaseOrderDownPaymentAllocationActions;
 use App\Actions\PurchaseOrderDownPaymentRefund\PurchaseOrderDownPaymentRefundActions;
 use App\Actions\PurchaseOrderGlobalDiscount\PurchaseOrderGlobalDiscountActions;
 use App\Actions\PurchaseOrderItem\PurchaseOrderItemActions;
@@ -18,9 +17,11 @@ use App\DTOs\PurchaseOrderGlobalDiscountUpdateDTO;
 use App\DTOs\PurchaseOrderItemCreateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
+use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDownPaymentAllocation;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -61,21 +62,17 @@ class PurchaseOrderActions
 
     private $purchaseOrderDownPaymentActions;
 
-    private $purchaseOrderDownPaymentAllocationActions;
-
     private $purchaseOrderDownPaymentRefundActions;
 
     public function __construct(
         PurchaseOrderItemActions $purchaseOrderItemActions,
         PurchaseOrderGlobalDiscountActions $purchaseOrderGlobalDiscountActions,
         PurchaseOrderDownPaymentActions $purchaseOrderDownPaymentActions,
-        PurchaseOrderDownPaymentAllocationActions $purchaseOrderDownPaymentAllocationActions,
         PurchaseOrderDownPaymentRefundActions $purchaseOrderDownPaymentRefundActions,
     ) {
         $this->purchaseOrderItemActions = $purchaseOrderItemActions;
         $this->purchaseOrderGlobalDiscountActions = $purchaseOrderGlobalDiscountActions;
         $this->purchaseOrderDownPaymentActions = $purchaseOrderDownPaymentActions;
-        $this->purchaseOrderDownPaymentAllocationActions = $purchaseOrderDownPaymentAllocationActions;
         $this->purchaseOrderDownPaymentRefundActions = $purchaseOrderDownPaymentRefundActions;
     }
 
@@ -131,7 +128,8 @@ class PurchaseOrderActions
             }
         });
 
-        $query->orderBy('purchase_orders.date', 'desc');
+        $query->orderBy('purchase_orders.date', 'desc')
+            ->orderBy('purchase_orders.id', 'asc');
 
         if ($execute) {
             $timer_start = microtime(true);
@@ -319,7 +317,6 @@ class PurchaseOrderActions
             }
 
             self::updateSummary($purchaseOrder);
-            $this->purchaseOrderItemActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
 
             $this->flushCache();
 
@@ -338,9 +335,7 @@ class PurchaseOrderActions
         $timer_start = microtime(true);
 
         try {
-            $purchaseOrder->company_id = $data->companyId;
-            $purchaseOrder->branch_id = $data->branchId;
-            $purchaseOrder->code = $this->generateUniqueCode($data->companyId, $data->code, $purchaseOrder->id);
+            $purchaseOrder->code = $this->generateUniqueCode($purchaseOrder->company_id, $data->code, $purchaseOrder->id);
             $purchaseOrder->date = $this->generateDate($data->date);
             $purchaseOrder->due_days = $data->dueDays;
             $purchaseOrder->supplier_id = $data->supplierId;
@@ -493,7 +488,6 @@ class PurchaseOrderActions
             }
 
             self::updateSummary($purchaseOrder);
-            $this->purchaseOrderItemActions->updateCalculatedFieldsByPurchaseOrder($purchaseOrder);
 
             $this->flushCache();
 
@@ -507,27 +501,142 @@ class PurchaseOrderActions
         }
     }
 
-    /**
-     * Update the purchase order header summary.
-     *
-     * This method recalculates the persisted summary fields from the current
-     * persisted child records.
-     *
-     * Child actions may call this method statically after they create or update
-     * their own records directly. Do not construct or inject the parent action
-     * only to refresh the header summary.
-     */
     public static function updateSummary(PurchaseOrder $po): void
     {
-        $po->item_total_before_global_discount = app(PurchaseOrderItemActions::class)->getSubtotalAfterDiscountAmountByPurchaseOrderId($po->id);
-        $po->global_discount = app(PurchaseOrderGlobalDiscountActions::class)->getAmountByPurchaseOrderId($po->id);
-        $po->item_total_after_global_discount = $po->item_total_before_global_discount - $po->global_discount;
+        $po->item_total_before_global_discount = $po->items->sum('subtotal_after_discount');
+        $po->global_discount = (function () use ($po) {
+            $beforeDiscount = (float) $po->item_total_before_global_discount;
+            $afterDiscount = $beforeDiscount;
+
+            foreach ($po->globalDiscounts()->orderBy('sequence')->orderBy('id')->get() as $globalDiscount) {
+                $discountType = $globalDiscount->discount_type instanceof DiscountTypeEnum
+                    ? $globalDiscount->discount_type
+                    : DiscountTypeEnum::resolveToEnum($globalDiscount->discount_type);
+                $discountValue = (float) $globalDiscount->discount_value;
+
+                if ($discountType === DiscountTypeEnum::PERCENTAGE) {
+                    $afterDiscount -= $afterDiscount * $discountValue / 100;
+                } else {
+                    $afterDiscount -= $discountValue;
+                }
+
+                if ($afterDiscount < 0) {
+                    $afterDiscount = 0;
+                }
+            }
+
+            return $beforeDiscount - $afterDiscount;
+        })();
+
+        foreach ($po->items as $poItem) {
+            $poItem->global_discount = (function () use ($poItem, $po) {
+                $itemTotalBeforeGlobalDiscount = (float) $po->item_total_before_global_discount;
+                $purchaseOrderGlobalDiscount = (float) $po->global_discount;
+
+                if ($itemTotalBeforeGlobalDiscount <= 0 || $purchaseOrderGlobalDiscount <= 0) return 0;
+
+                $value = ((float) $poItem->subtotal_after_discount / $itemTotalBeforeGlobalDiscount) * $purchaseOrderGlobalDiscount;
+
+                return $value < 0 ? 0 : $value;
+            })();
+            $poItem->subtotal_after_global_discount = $poItem->subtotal_after_discount - $poItem->global_discount;
+            $poItem->save();
+        }
+
+        $po->item_total_after_global_discount = $po->items->sum('subtotal_after_global_discount');
+
+        foreach ($po->items as $poItem) {
+            $poItem->vat_base = (function () use ($poItem) {
+                $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
+                $vatRate = (float) $poItem->vat_rate;
+                $vatBaseFactor = $poItem->vat_base_denominator > 0
+                    ? (float) $poItem->vat_base_numerator / (float) $poItem->vat_base_denominator
+                    : 0;
+
+                if ($subtotalAfterGlobalDiscount <= 0 || $vatRate <= 0 || $vatBaseFactor <= 0) return 0;
+
+                if ($poItem->product_unit_is_price_include_vat) {
+                    $subtotalAfterGlobalDiscount = $subtotalAfterGlobalDiscount / (1 + ($vatRate / 100));
+                }
+
+                return $subtotalAfterGlobalDiscount * $vatBaseFactor;
+            })();
+            $poItem->vat = (function () use ($poItem) {
+                $vatBase = (float) $poItem->vat_base;
+                $vatRate = (float) $poItem->vat_rate;
+
+                if ($vatBase <= 0 || $vatRate <= 0) return 0;
+
+                $value = $vatBase * ($vatRate / 100);
+
+                return $value < 0 ? 0 : $value;
+            })();
+            $poItem->save();
+        }
+
+        $getPoItemTotalBeforeRounding = function ($poItem) {
+            $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
+            $vat = (float) $poItem->vat;
+
+            if ($poItem->product_unit_is_price_include_vat) {
+                return $subtotalAfterGlobalDiscount;
+            }
+
+            return $subtotalAfterGlobalDiscount + $vat;
+        };
+
+        $totalBeforeRounding = $po->items->sum($getPoItemTotalBeforeRounding);
+
+        foreach ($po->items as $poItem) {
+            $poItem->rounding = (function () use ($poItem, $po, $totalBeforeRounding, $getPoItemTotalBeforeRounding) {
+                $poItemTotalBeforeRounding = $getPoItemTotalBeforeRounding($poItem);
+                $purchaseOrderRounding = (float) $po->rounding;
+
+                if ($totalBeforeRounding <= 0 || $purchaseOrderRounding == 0 || $poItemTotalBeforeRounding <= 0) return 0;
+
+                return ($poItemTotalBeforeRounding / $totalBeforeRounding) * $purchaseOrderRounding;
+            })();
+            $poItem->grand_total = (function () use ($poItem, $getPoItemTotalBeforeRounding) {
+                return $getPoItemTotalBeforeRounding($poItem) + (float) $poItem->rounding;
+            })();
+            $poItem->cogs = (function () use ($poItem) {
+                $qty = (float) $poItem->qty;
+                $grandTotal = (float) $poItem->grand_total;
+
+                if ($qty <= 0 || $grandTotal <= 0) return 0;
+
+                return $grandTotal / $qty;
+            })();
+            $poItem->total_cogs = (function () use ($poItem) {
+                $qty = (float) $poItem->qty;
+                $cogs = (float) $poItem->cogs;
+
+                if ($qty <= 0 || $cogs <= 0) return 0;
+
+                return $qty * $cogs;
+            })();
+            $poItem->base_unit_cogs = (function () use ($poItem) {
+                $productUnitQtyBase = (float) $poItem->product_unit_qty_base;
+                $totalCogs = (float) $poItem->total_cogs;
+
+                if ($productUnitQtyBase <= 0 || $totalCogs <= 0) return 0;
+
+                return $totalCogs / $productUnitQtyBase;
+            })();
+            $poItem->save();
+        }
+
         $po->vat_base = (float) $po->items->sum('vat_base');
         $po->vat = (float) $po->items->sum('vat');
         $po->grand_total = (float) $po->items->sum('grand_total');
-        $po->amount_paid_down_payment = app(PurchaseOrderDownPaymentActions::class)->getAmountByPurchaseOrderId($po->id);
-        $po->amount_allocated_down_payment = app(PurchaseOrderDownPaymentAllocationActions::class)->getAmountByPurchaseOrderId($po->id);
-        $po->amount_refunded_down_payment = app(PurchaseOrderDownPaymentRefundActions::class)->getAmountByPurchaseOrderId($po->id);
+        $po->amount_paid_down_payment = $po->downPayments->sum('amount');
+        $po->amount_allocated_down_payment = (function () use ($po) {
+            return PurchaseOrderDownPaymentAllocation::query()
+                ->whereHas('purchaseOrderDownPayment', function ($query) use ($po) {
+                    $query->where('purchase_order_id', $po->id);
+                })->sum('amount');
+        })();
+        $po->amount_refunded_down_payment = $po->refundedDownPayments->sum('amount');
         $po->amount_available_down_payment = $po->amount_paid_down_payment - $po->amount_allocated_down_payment - $po->amount_refunded_down_payment;
 
         $po->save();

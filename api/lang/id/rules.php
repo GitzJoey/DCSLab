@@ -17,6 +17,9 @@ return [
     'too_many_tokens' => 'Terlalu banyak permintaan token',
     'must_reset_password' => 'Harap lakukan reset password',
     'inactive_user' => 'Profil anda tidak aktif',
+    'purchase_order' => [
+        'exceed_available_down_payment' => 'Total refund down payment melebihi down payment yang tersedia',
+    ],
     'company' => [
         'deactivate_default_company' => 'Perusahaan utama tidak boleh dinonaktifkan',
         'delete_default_company' => 'Perusahaan utama tidak boleh dihapus',
