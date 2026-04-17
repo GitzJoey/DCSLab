@@ -31,6 +31,30 @@ class PurchaseOrderActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'supplier',
+    ];
+
+    private const DETAIL_EAGER_LOADS = [
+        'company',
+        'branch',
+        'supplier',
+        'globalDiscounts',
+        'items.productUnit.unit',
+        'items.productUnit.product.category',
+        'items.productUnit.product.brand',
+        'items.productUnit.product.baseProductUnit.unit',
+        'items.productUnit.product.images',
+        'items.productUnit.product.mainImage',
+        'items.vatProfile',
+        'items.productUnitPriceDiscounts',
+        'items.subtotalDiscounts',
+        'downPayments.cashAccount',
+        'refundedDownPayments.cashAccount',
+    ];
+
     private $purchaseOrderItemActions;
 
     private $purchaseOrderGlobalDiscountActions;
@@ -67,18 +91,15 @@ class PurchaseOrderActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = PurchaseOrder::select('purchase_orders.*')
-            ->with([
-                'company',
-                'branch',
-                'supplier',
-                'globalDiscounts',
-                'items.productUnit.product',
-                'items.productUnit.unit',
-                'downPayments.cashAccount',
-                'refundedDownPayments.cashAccount',
-            ])
-            ->join('companies', 'companies.id', '=', 'purchase_orders.company_id')
+        $query = PurchaseOrder::select('purchase_orders.*');
+
+        if ($execute->pagination) {
+            $query->with(self::DETAIL_EAGER_LOADS);
+        } else {
+            $query->with(self::LIST_EAGER_LOADS);
+        }
+
+        $query->join('companies', 'companies.id', '=', 'purchase_orders.company_id')
             ->whereCompanyId('purchase_orders', $companyId)
             ->whereBranchId('purchase_orders', $branchId)
             ->withTrashed();
@@ -175,23 +196,7 @@ class PurchaseOrderActions
 
     public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
     {
-        return $purchaseOrder->load([
-            'company',
-            'branch',
-            'supplier',
-            'globalDiscounts',
-            'items.productUnit.unit',
-            'items.productUnit.product.category',
-            'items.productUnit.product.brand',
-            'items.productUnit.product.baseProductUnit.unit',
-            'items.productUnit.product.images',
-            'items.productUnit.product.mainImage',
-            'items.vatProfile',
-            'items.productUnitPriceDiscounts',
-            'items.subtotalDiscounts',
-            'downPayments.cashAccount',
-            'refundedDownPayments.cashAccount',
-        ]);
+        return $purchaseOrder->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function generateUniqueCode(int $companyId, string $code, ?int $exceptId): string
