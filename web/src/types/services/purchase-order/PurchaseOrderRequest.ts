@@ -55,6 +55,7 @@ export interface PurchaseOrderDownPaymentNestedStoreRequest {
   date: string;
   cash_account_id: string;
   amount: number;
+  amount_allocated?: number;
   remarks: string | null;
 }
 
@@ -119,6 +120,7 @@ export interface PurchaseOrderDownPaymentNestedUpdateRequest {
   date: string;
   cash_account_id: string;
   amount: number;
+  amount_allocated?: number;
   remarks: string | null;
 }
 

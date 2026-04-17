@@ -29,6 +29,7 @@ class PurchaseOrderDownPaymentResource extends JsonResource
                 'cash_account' => new CashAccountResource($this->whenLoaded('cashAccount')),
             ]),
             'amount' => $this->amount,
+            'amount_allocated' => $this->amount_allocated,
             'remarks' => $this->remarks,
         ];
     }

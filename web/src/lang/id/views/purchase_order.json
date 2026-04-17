@@ -42,6 +42,7 @@
     "down_payment": "Uang Muka",
     "down_payments": "Uang Muka",
     "amount_paid_down_payment": "Jumlah Uang Muka",
+    "amount_allocated": "Jumlah Teralokasi",
     "amount_allocated_down_payment": "Jumlah Uang Muka Teralokasi",
     "amount_refunded_down_payment": "Jumlah Refund Uang Muka",
     "amount_available_down_payment": "Sisa Uang Muka",

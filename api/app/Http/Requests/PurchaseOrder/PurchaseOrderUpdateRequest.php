@@ -112,15 +112,12 @@ class PurchaseOrderUpdateRequest extends FormRequest
                             ->values();
 
                         $remainingAllocatedDownPaymentTotal = (float) $purchaseOrder->downPayments()
-                            ->with('allocations')
                             ->when(
                                 $deleteDownPaymentIds->isNotEmpty(),
                                 fn ($query) => $query->whereNotIn('id', $deleteDownPaymentIds->all())
                             )
                             ->get()
-                            ->sum(function ($downPayment) {
-                                return (float) $downPayment->allocations->sum('amount');
-                            });
+                            ->sum('amount_allocated');
                     }
 
                     $maxRefundableAmount = max($downPaymentsTotal - $remainingAllocatedDownPaymentTotal, 0);

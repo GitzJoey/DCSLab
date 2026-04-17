@@ -78,6 +78,7 @@ export interface PurchaseOrderDownPayment {
   date: string;
   cash_account?: CashAccount | null;
   amount: number;
+  amount_allocated: number;
   remarks: string | null;
 }
 

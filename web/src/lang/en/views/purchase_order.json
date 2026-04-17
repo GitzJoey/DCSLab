@@ -42,6 +42,7 @@
     "down_payment": "Down Payment",
     "down_payments": "Down Payments",
     "amount_paid_down_payment": "Down Payment Amount",
+    "amount_allocated": "Allocated Amount",
     "amount_allocated_down_payment": "Allocated Down Payment Amount",
     "amount_refunded_down_payment": "Refunded Down Payment Amount",
     "amount_available_down_payment": "Available Down Payment Amount",

@@ -2,6 +2,7 @@
 
 namespace App\Actions\PurchaseOrderDownPaymentAllocation;
 
+use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderDownPaymentAllocationCreateDTO;
 use App\DTOs\PurchaseOrderDownPaymentAllocationUpdateDTO;
@@ -176,6 +177,14 @@ class PurchaseOrderDownPaymentAllocationActions
             $purchaseOrderDownPaymentAllocation->remarks = $data->remarks;
             $purchaseOrderDownPaymentAllocation->save();
 
+            $poDownPayment = $purchaseOrderDownPaymentAllocation->purchaseOrderDownPayment;
+            if ($poDownPayment) {
+                $poDownPayment->amount_allocated = (float) $poDownPayment->allocations()->sum('amount');
+                $poDownPayment->save();
+                PurchaseOrderActions::updateSummary($poDownPayment->purchaseOrder);
+                $purchaseOrderDownPaymentAllocation->refresh();
+            }
+
             $this->flushCache();
 
             return $purchaseOrderDownPaymentAllocation;
@@ -189,22 +198,38 @@ class PurchaseOrderDownPaymentAllocationActions
     }
 
     public function update(
-        PurchaseOrderDownPaymentAllocation $purchaseOrderDownPaymentAllocation,
+        PurchaseOrderDownPaymentAllocation $poDownPaymentAllocation,
         PurchaseOrderDownPaymentAllocationUpdateDTO $data,
     ): PurchaseOrderDownPaymentAllocation {
         $timer_start = microtime(true);
 
         try {
-            $purchaseOrderDownPaymentAllocation->purchase_order_down_payment_id = $data->purchaseOrderDownPaymentId;
-            $purchaseOrderDownPaymentAllocation->purchase_id = $data->purchaseId;
-            $purchaseOrderDownPaymentAllocation->date = $this->generateDate($data->date);
-            $purchaseOrderDownPaymentAllocation->amount = $data->amount;
-            $purchaseOrderDownPaymentAllocation->remarks = $data->remarks;
-            $purchaseOrderDownPaymentAllocation->save();
+            $originalPoDownPayment = $poDownPaymentAllocation->purchaseOrderDownPayment;
+
+            $poDownPaymentAllocation->purchase_order_down_payment_id = $data->purchaseOrderDownPaymentId;
+            $poDownPaymentAllocation->purchase_id = $data->purchaseId;
+            $poDownPaymentAllocation->date = $this->generateDate($data->date);
+            $poDownPaymentAllocation->amount = $data->amount;
+            $poDownPaymentAllocation->remarks = $data->remarks;
+            $poDownPaymentAllocation->save();
+
+            if ($originalPoDownPayment) {
+                $originalPoDownPayment->amount_allocated = (float) $originalPoDownPayment->allocations()->sum('amount');
+                $originalPoDownPayment->save();
+                PurchaseOrderActions::updateSummary($originalPoDownPayment->purchaseOrder);
+            }
+
+            $poDownPaymentAllocation->refresh();
+            $newPoDownPayment = $poDownPaymentAllocation->purchaseOrderDownPayment;
+            if ($newPoDownPayment && $originalPoDownPayment?->id !== $newPoDownPayment->id) {
+                $newPoDownPayment->amount_allocated = (float) $newPoDownPayment->allocations()->sum('amount');
+                $newPoDownPayment->save();
+                PurchaseOrderActions::updateSummary($newPoDownPayment->purchaseOrder);
+            }
 
             $this->flushCache();
 
-            return $purchaseOrderDownPaymentAllocation;
+            return $poDownPaymentAllocation;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -219,7 +244,15 @@ class PurchaseOrderDownPaymentAllocationActions
         $timer_start = microtime(true);
 
         try {
+            $poDownPayment = $purchaseOrderDownPaymentAllocation->purchaseOrderDownPayment;
             $result = $purchaseOrderDownPaymentAllocation->delete();
+
+            if ($poDownPayment) {
+                $poDownPayment->amount_allocated = (float) $poDownPayment->allocations()->sum('amount');
+                $poDownPayment->save();
+
+                PurchaseOrderActions::updateSummary($poDownPayment->purchaseOrder);
+            }
 
             $this->flushCache();
 

@@ -21,7 +21,6 @@ use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\PurchaseOrder;
-use App\Models\PurchaseOrderDownPaymentAllocation;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -630,12 +629,7 @@ class PurchaseOrderActions
         $po->vat = (float) $po->items->sum('vat');
         $po->grand_total = (float) $po->items->sum('grand_total');
         $po->amount_paid_down_payment = $po->downPayments->sum('amount');
-        $po->amount_allocated_down_payment = (function () use ($po) {
-            return PurchaseOrderDownPaymentAllocation::query()
-                ->whereHas('purchaseOrderDownPayment', function ($query) use ($po) {
-                    $query->where('purchase_order_id', $po->id);
-                })->sum('amount');
-        })();
+        $po->amount_allocated_down_payment = $po->downPayments->sum('amount_allocated');
         $po->amount_refunded_down_payment = $po->refundedDownPayments->sum('amount');
         $po->amount_available_down_payment = $po->amount_paid_down_payment - $po->amount_allocated_down_payment - $po->amount_refunded_down_payment;
 

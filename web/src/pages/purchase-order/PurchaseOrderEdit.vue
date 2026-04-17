@@ -500,6 +500,7 @@ const loadData = async () => {
         date: formatDate(downPayment.date, 'YYYY-MM-DD HH:mm:ss'),
         cash_account_id: downPayment.cash_account?.id ?? '',
         amount: downPayment.amount,
+        amount_allocated: downPayment.amount_allocated ?? 0,
         remarks: downPayment.remarks ?? '',
       })) as any,
       delete_refunded_down_payment_ids: [],
@@ -768,6 +769,7 @@ const addDownPayment = () => {
     date: '_AUTO_',
     cash_account_id: '',
     amount: 0,
+    amount_allocated: 0,
     remarks: '',
   });
 };
@@ -981,7 +983,10 @@ const getRefundedDownPaymentsTotalPreview = () =>
   );
 
 const getAllocatedDownPaymentsTotalPreview = () =>
-  Math.max(Number(purchaseOrderData.value?.amount_allocated_down_payment ?? 0), 0);
+  purchaseOrderDownPaymentsForm.value.reduce(
+    (total, downPayment) => total + Math.max(Number(downPayment.amount_allocated ?? 0), 0),
+    0,
+  );
 
 const getAvailableDownPaymentsTotalPreview = () =>
   getDownPaymentsTotalPreview()
@@ -2073,7 +2078,7 @@ const onSubmit = async () => {
                       </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 lg:col-span-2"></div>
-                        <div class="col-span-12 lg:col-span-10">
+                        <div class="col-span-12 lg:col-span-7">
                           <FormLabel
                             :class="{ 'text-danger': invalidPurchaseOrderField(`down_payments.${index}.remarks`) }">
                             {{ t('views.purchase_order.fields.remarks') }}
@@ -2083,6 +2088,10 @@ const onSubmit = async () => {
                             @change="validatePurchaseOrderField(`down_payments.${index}.remarks`)" />
                           <FormErrorMessages
                             :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.remarks`)" />
+                        </div>
+                        <div class="col-span-12 lg:col-span-3">
+                          <FormLabel>{{ t('views.purchase_order.fields.amount_allocated') }}</FormLabel>
+                          <FormInputCurrency :model-value="Number(downPayment.amount_allocated ?? 0)" readonly />
                         </div>
                       </div>
                     </div>

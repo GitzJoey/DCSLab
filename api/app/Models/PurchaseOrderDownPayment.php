@@ -25,12 +25,14 @@ class PurchaseOrderDownPayment extends Model
         'date',
         'cash_account_id',
         'amount',
+        'amount_allocated',
         'remarks',
     ];
 
     protected $casts = [
         'date' => 'datetime',
         'amount' => 'decimal:8',
+        'amount_allocated' => 'decimal:8',
     ];
 
     public function company()

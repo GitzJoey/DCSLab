@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('date');
             $table->foreignId('cash_account_id')->references('id')->on('cash_accounts');
             $table->decimal('amount', 30, 8)->default(0);
+            $table->decimal('amount_allocated', 30, 8)->default(0);
             $table->string('remarks')->nullable();
 
             $table->unsignedBigInteger('created_by')->default(0);

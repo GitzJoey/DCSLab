@@ -657,6 +657,7 @@ const addDownPayment = () => {
     date: '_AUTO_',
     cash_account_id: '',
     amount: 0,
+    amount_allocated: 0,
     remarks: '',
   });
 };
@@ -860,7 +861,11 @@ const getRefundedDownPaymentsTotalPreview = () =>
     0,
   );
 
-const getAllocatedDownPaymentsTotalPreview = () => 0;
+const getAllocatedDownPaymentsTotalPreview = () =>
+  purchaseOrderDownPaymentsForm.value.reduce(
+    (total, downPayment) => total + Math.max(Number(downPayment.amount_allocated ?? 0), 0),
+    0,
+  );
 
 const getAvailableDownPaymentsTotalPreview = () =>
   getDownPaymentsTotalPreview()
@@ -2032,7 +2037,7 @@ const onSubmit = async () => {
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <!-- down payment spacer: keeps remarks width consistent with fields above -->
                         <div class="col-span-12 lg:col-span-2"></div>
-                        <div class="col-span-12 lg:col-span-10">
+                        <div class="col-span-12 lg:col-span-7">
                           <FormLabel
                             :class="{ 'text-danger': invalidPurchaseOrderField(`down_payments.${index}.remarks`) }">
                             {{ t('views.purchase_order.fields.remarks') }}
@@ -2042,6 +2047,10 @@ const onSubmit = async () => {
                             @change="validatePurchaseOrderField(`down_payments.${index}.remarks`)" />
                           <FormErrorMessages
                             :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.remarks`)" />
+                        </div>
+                        <div class="col-span-12 lg:col-span-3">
+                          <FormLabel>{{ t('views.purchase_order.fields.amount_allocated') }}</FormLabel>
+                          <FormInputCurrency :model-value="Number(downPayment.amount_allocated ?? 0)" readonly />
                         </div>
                       </div>
                     </div>
