@@ -2,7 +2,6 @@
 
 namespace App\Actions\Branch;
 
-use App\Actions\Company\CompanyActions;
 use App\DTOs\ExecuteDTO;
 use App\Models\Branch;
 use App\Models\Company;
@@ -15,6 +14,10 @@ class BranchActions
 {
     use CacheHelper;
     use LoggerHelper;
+
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
 
     public function __construct()
     {
@@ -31,7 +34,7 @@ class BranchActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = Branch::with('company')->select('branches.*')
+        $query = Branch::with(self::LIST_EAGER_LOADS)->select('branches.*')
             ->whereCompanyId('branches', $companyId)
             ->withTrashed();
 
@@ -125,7 +128,7 @@ class BranchActions
 
     public function read(Branch $branch): Branch
     {
-        return $branch->load('company');
+        return $branch->load(self::LIST_EAGER_LOADS);
     }
 
     public function getById(int $branchId): Branch
@@ -205,7 +208,7 @@ class BranchActions
         $timer_start = microtime(true);
 
         try {
-            $company = (new CompanyActions())->getById($companyId);
+            $company = Company::findOrFail($companyId);
 
             return $company->branches()->update(['is_main' => false]);
         } catch (Exception $e) {

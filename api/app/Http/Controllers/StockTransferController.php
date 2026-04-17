@@ -143,7 +143,6 @@ class StockTransferController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->stockTransferActions->isUniqueCode(
                     companyId: $validatedRequest['company_id'],
@@ -152,6 +151,8 @@ class StockTransferController extends BaseController
                 );
                 if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->stockTransferActions->create(
                 new StockTransferCreateDTO(
@@ -184,7 +185,6 @@ class StockTransferController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->stockTransferActions->isUniqueCode(
                     companyId: $validatedRequest['company_id'],
@@ -193,6 +193,8 @@ class StockTransferController extends BaseController
                 );
                 if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->stockTransferActions->update(
                 stockTransfer: $stockTransfer,

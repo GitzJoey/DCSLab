@@ -38,8 +38,6 @@ class ProductCategoryController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] != config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->productCategoryActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null,
@@ -51,6 +49,8 @@ class ProductCategoryController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], null,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->productCategoryActions->create($validatedRequest);
 
@@ -176,8 +176,6 @@ class ProductCategoryController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->productCategoryActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $productCategory->id,
@@ -189,6 +187,8 @@ class ProductCategoryController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $productCategory->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->productCategoryActions->update(
                 productCategory: $productCategory,

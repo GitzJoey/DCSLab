@@ -36,8 +36,6 @@ class VatProfileController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->vatProfileActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -53,6 +51,8 @@ class VatProfileController extends BaseController
                 null,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->vatProfileActions->create([
                 'company_id' => $validatedRequest['company_id'],
@@ -173,8 +173,6 @@ class VatProfileController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->vatProfileActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -190,6 +188,8 @@ class VatProfileController extends BaseController
                 $vatProfile->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->vatProfileActions->update(
                 vatProfile: $vatProfile,

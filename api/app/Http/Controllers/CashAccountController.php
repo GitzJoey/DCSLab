@@ -138,8 +138,6 @@ class CashAccountController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] != config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->cashAccountActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null,
@@ -151,6 +149,8 @@ class CashAccountController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], null,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->cashAccountActions->create($validatedRequest);
 
@@ -171,8 +171,6 @@ class CashAccountController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] != config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->cashAccountActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $cashAccount->id,
@@ -184,6 +182,8 @@ class CashAccountController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $cashAccount->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->cashAccountActions->update($cashAccount, $validatedRequest);
 

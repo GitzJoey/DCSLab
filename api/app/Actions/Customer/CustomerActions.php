@@ -18,6 +18,12 @@ class CustomerActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'user',
+        'group',
+    ];
+
     public function __construct()
     {
     }
@@ -42,7 +48,7 @@ class CustomerActions
 
         ?ExecuteDTO $execute
     ): Paginator|Collection|Builder {
-        $query = Customer::with(['company', 'user', 'group'])
+        $query = Customer::with(self::LIST_EAGER_LOADS)
             ->select('customers.*')
             ->where('customers.company_id', $companyId)
             ->withTrashed();
@@ -215,7 +221,7 @@ class CustomerActions
 
     public function read(Customer $customer): Customer
     {
-        return $customer->load('company', 'user', 'group');
+        return $customer->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): Customer

@@ -20,6 +20,23 @@ class StockTransferItemSerialActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'stockTransfer.sourceWarehouse',
+        'stockTransfer.destinationWarehouse',
+        'stockTransferItem.company',
+        'stockTransferItem.branch',
+        'stockTransferItem.stockTransfer.sourceWarehouse',
+        'stockTransferItem.stockTransfer.destinationWarehouse',
+        'stockTransferItem.productUnit.unit',
+        'stockTransferItem.productUnit.product.category',
+        'stockTransferItem.productUnit.product.brand',
+        'stockTransferItem.productUnit.product.baseProductUnit.unit',
+        'stockTransferItem.productUnit.product.images',
+        'stockTransferItem.productUnit.product.mainImage',
+    ];
+
     protected StockSerialTransactionActions $stockSerialTransactionActions;
 
     public function __construct(StockSerialTransactionActions $stockSerialTransactionActions)
@@ -46,17 +63,7 @@ class StockTransferItemSerialActions
         ?ExecuteDTO $execute
     ) {
         $query = StockTransferItemSerial::select('stock_transfer_item_serials.*')
-            ->with([
-                'company',
-                'branch',
-                'stockTransfer.sourceWarehouse',
-                'stockTransfer.destinationWarehouse',
-                'stockTransferItem.productUnit.unit',
-                'stockTransferItem.productUnit.product.category',
-                'stockTransferItem.productUnit.product.brand',
-                'stockTransferItem.productUnit.product.baseProductUnit.unit',
-                'stockTransferItem.productUnit.product.images',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'stock_transfer_item_serials.company_id')
             ->join('stock_transfers', 'stock_transfers.id', '=', 'stock_transfer_item_serials.stock_transfer_id')
             ->join('stock_transfer_items', 'stock_transfer_items.id', '=', 'stock_transfer_item_serials.stock_transfer_item_id')
@@ -200,16 +207,7 @@ class StockTransferItemSerialActions
 
     public function read(StockTransferItemSerial $stockTransferItemSerial): StockTransferItemSerial
     {
-        return $stockTransferItemSerial->load([
-            'company',
-            'branch',
-            'stockTransfer',
-            'stockTransferItem.stockTransfer',
-            'stockTransferItem.productUnit.unit',
-            'stockTransferItem.productUnit.product.images',
-            'stockSerialTransactionSource',
-            'stockSerialTransactionDestination',
-        ]);
+        return $stockTransferItemSerial->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(StockTransferItemSerialCreateDTO $data): StockTransferItemSerial

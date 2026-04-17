@@ -24,6 +24,26 @@ class UserActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'roles',
+        'profile',
+        'settings',
+    ];
+
+    private const DETAIL_EAGER_LOADS = [
+        'roles',
+        'profile',
+        'settings',
+        'companies.branches',
+    ];
+
+    private const READ_BY_ID_EAGER_LOADS = [
+        'roles.permissions',
+        'profile',
+        'companies.branches',
+        'settings',
+    ];
+
     public function __construct()
     {
     }
@@ -49,12 +69,10 @@ class UserActions
             }
 
             $result = null;
-            $relationship = ['roles', 'profile', 'settings'];
-
             if (empty($search)) {
-                $usr = User::with($relationship)->latest();
+                $usr = User::with(self::LIST_EAGER_LOADS)->latest();
             } else {
-                $usr = User::with($relationship)
+                $usr = User::with(self::LIST_EAGER_LOADS)
                     ->where('email', 'like', '%'.$search.'%')
                     ->orWhere('name', 'like', '%'.$search.'%')
                     ->orWhereHas('profile', function ($query) use ($search) {
@@ -86,7 +104,7 @@ class UserActions
 
     public function read(User $user): User
     {
-        return $user->load('profile', 'roles', 'settings', 'companies.branches');
+        return $user->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function readBy(string $key, string $value)
@@ -96,7 +114,7 @@ class UserActions
         try {
             switch (strtoupper($key)) {
                 case 'ID':
-                    return User::with('roles.permissions', 'profile', 'companies.branches', 'settings')->find($value);
+                    return User::with(self::READ_BY_ID_EAGER_LOADS)->find($value);
                 case 'EMAIL':
                     return User::where('email', '=', $value)->first();
                 default:

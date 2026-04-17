@@ -15,6 +15,10 @@ class SupplierActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +32,7 @@ class SupplierActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = Supplier::with('company')->select('suppliers.*')
+        $query = Supplier::with(self::LIST_EAGER_LOADS)->select('suppliers.*')
             ->whereCompanyId('suppliers', $companyId)
             ->withTrashed();
 
@@ -112,7 +116,7 @@ class SupplierActions
 
     public function read(Supplier $supplier): Supplier
     {
-        return $supplier->load('company');
+        return $supplier->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): Supplier

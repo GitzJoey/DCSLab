@@ -12,6 +12,7 @@ use App\DTOs\PurchaseOrderItemProductUnitPriceDiscountUpdateDTO;
 use App\DTOs\PurchaseOrderItemSubtotalDiscountCreateDTO;
 use App\DTOs\PurchaseOrderItemSubtotalDiscountUpdateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
+use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\PurchaseOrderItem;
 use App\Traits\CacheHelper;
@@ -23,6 +24,21 @@ class PurchaseOrderItemActions
 {
     use CacheHelper;
     use LoggerHelper;
+
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'purchaseOrder.supplier',
+        'productUnit.unit',
+        'productUnit.product.category',
+        'productUnit.product.brand',
+        'productUnit.product.baseProductUnit.unit',
+        'productUnit.product.images',
+        'productUnit.product.mainImage',
+        'vatProfile',
+        'productUnitPriceDiscounts',
+        'subtotalDiscounts',
+    ];
 
     private $purchaseOrderItemProductUnitPriceDiscountActions;
 
@@ -54,19 +70,7 @@ class PurchaseOrderItemActions
         ?ExecuteDTO $execute
     ) {
         $query = PurchaseOrderItem::select('purchase_order_items.*')
-            ->with([
-                'company',
-                'branch',
-                'purchaseOrder.supplier',
-                'productUnit.unit',
-                'productUnit.product.category',
-                'productUnit.product.brand',
-                'productUnit.product.baseProductUnit.unit',
-                'productUnit.product.images',
-                'vatProfile',
-                'productUnitPriceDiscounts',
-                'subtotalDiscounts',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'purchase_order_items.company_id')
             ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_items.purchase_order_id')
             ->join('product_units', 'product_units.id', '=', 'purchase_order_items.product_unit_id')
@@ -202,19 +206,7 @@ class PurchaseOrderItemActions
 
     public function read(PurchaseOrderItem $poItem): PurchaseOrderItem
     {
-        return $poItem->load([
-            'company',
-            'branch',
-            'purchaseOrder.supplier',
-            'productUnit.unit',
-            'productUnit.product.category',
-            'productUnit.product.brand',
-            'productUnit.product.baseProductUnit.unit',
-            'productUnit.product.images',
-            'vatProfile',
-            'productUnitPriceDiscounts',
-            'subtotalDiscounts',
-        ]);
+        return $poItem->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(
@@ -267,10 +259,54 @@ class PurchaseOrderItemActions
                 $this->purchaseOrderItemSubtotalDiscountActions->create($dto);
             }
 
-            $poItem->price_discount = $this->purchaseOrderItemProductUnitPriceDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->price_discount = (function () use ($poItem) {
+                $beforeDiscount = (float) $poItem->product_unit_price;
+                $afterDiscount = $beforeDiscount;
+
+                foreach ($poItem->productUnitPriceDiscounts()->orderBy('sequence')->orderBy('id')->get() as $discount) {
+                    $discountType = $discount->discount_type instanceof DiscountTypeEnum
+                        ? $discount->discount_type
+                        : DiscountTypeEnum::resolveToEnum($discount->discount_type);
+                    $discountValue = (float) $discount->discount_value;
+
+                    if ($discountType === DiscountTypeEnum::PERCENTAGE) {
+                        $afterDiscount -= $afterDiscount * $discountValue / 100;
+                    } else {
+                        $afterDiscount -= $discountValue;
+                    }
+
+                    if ($afterDiscount < 0) {
+                        $afterDiscount = 0;
+                    }
+                }
+
+                return $beforeDiscount - $afterDiscount;
+            })();
             $poItem->price_after_discount = $poItem->product_unit_price - $poItem->price_discount;
             $poItem->subtotal = $poItem->qty * $poItem->price_after_discount;
-            $poItem->subtotal_discount = $this->purchaseOrderItemSubtotalDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->subtotal_discount = (function () use ($poItem) {
+                $beforeDiscount = (float) $poItem->subtotal;
+                $afterDiscount = $beforeDiscount;
+
+                foreach ($poItem->subtotalDiscounts()->orderBy('sequence')->orderBy('id')->get() as $discount) {
+                    $discountType = $discount->discount_type instanceof DiscountTypeEnum
+                        ? $discount->discount_type
+                        : DiscountTypeEnum::resolveToEnum($discount->discount_type);
+                    $discountValue = (float) $discount->discount_value;
+
+                    if ($discountType === DiscountTypeEnum::PERCENTAGE) {
+                        $afterDiscount -= $afterDiscount * $discountValue / 100;
+                    } else {
+                        $afterDiscount -= $discountValue;
+                    }
+
+                    if ($afterDiscount < 0) {
+                        $afterDiscount = 0;
+                    }
+                }
+
+                return $beforeDiscount - $afterDiscount;
+            })();
             $poItem->subtotal_after_discount = $poItem->subtotal - $poItem->subtotal_discount;
             $poItem->save();
 
@@ -369,10 +405,54 @@ class PurchaseOrderItemActions
                 }
             }
 
-            $poItem->price_discount = $this->purchaseOrderItemProductUnitPriceDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->price_discount = (function () use ($poItem) {
+                $beforeDiscount = (float) $poItem->product_unit_price;
+                $afterDiscount = $beforeDiscount;
+
+                foreach ($poItem->productUnitPriceDiscounts()->orderBy('sequence')->orderBy('id')->get() as $discount) {
+                    $discountType = $discount->discount_type instanceof DiscountTypeEnum
+                        ? $discount->discount_type
+                        : DiscountTypeEnum::resolveToEnum($discount->discount_type);
+                    $discountValue = (float) $discount->discount_value;
+
+                    if ($discountType === DiscountTypeEnum::PERCENTAGE) {
+                        $afterDiscount -= $afterDiscount * $discountValue / 100;
+                    } else {
+                        $afterDiscount -= $discountValue;
+                    }
+
+                    if ($afterDiscount < 0) {
+                        $afterDiscount = 0;
+                    }
+                }
+
+                return $beforeDiscount - $afterDiscount;
+            })();
             $poItem->price_after_discount = $poItem->product_unit_price - $poItem->price_discount;
             $poItem->subtotal = $poItem->qty * $poItem->price_after_discount;
-            $poItem->subtotal_discount = $this->purchaseOrderItemSubtotalDiscountActions->getAmountByPurchaseOrderItemId($poItem->id);
+            $poItem->subtotal_discount = (function () use ($poItem) {
+                $beforeDiscount = (float) $poItem->subtotal;
+                $afterDiscount = $beforeDiscount;
+
+                foreach ($poItem->subtotalDiscounts()->orderBy('sequence')->orderBy('id')->get() as $discount) {
+                    $discountType = $discount->discount_type instanceof DiscountTypeEnum
+                        ? $discount->discount_type
+                        : DiscountTypeEnum::resolveToEnum($discount->discount_type);
+                    $discountValue = (float) $discount->discount_value;
+
+                    if ($discountType === DiscountTypeEnum::PERCENTAGE) {
+                        $afterDiscount -= $afterDiscount * $discountValue / 100;
+                    } else {
+                        $afterDiscount -= $discountValue;
+                    }
+
+                    if ($afterDiscount < 0) {
+                        $afterDiscount = 0;
+                    }
+                }
+
+                return $beforeDiscount - $afterDiscount;
+            })();
             $poItem->subtotal_after_discount = $poItem->subtotal - $poItem->subtotal_discount;
             $poItem->save();
 

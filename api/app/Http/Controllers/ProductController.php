@@ -199,8 +199,6 @@ class ProductController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->productPhysicalActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null
@@ -253,6 +251,8 @@ class ProductController extends BaseController
                 }
             }
 
+            DB::beginTransaction();
+
             $result = $this->productPhysicalActions->create(
                 new ProductPhysicalCreateDTO(
                     companyId: $validatedRequest['company_id'],
@@ -290,8 +290,6 @@ class ProductController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->productServiceActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null
@@ -303,6 +301,8 @@ class ProductController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], null
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->productServiceActions->create(
                 new ProductServiceCreateDTO(
@@ -339,8 +339,6 @@ class ProductController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->productPhysicalActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $product->id,
@@ -404,6 +402,8 @@ class ProductController extends BaseController
                 }
             }
 
+            DB::beginTransaction();
+
             $result = $this->productPhysicalActions->update(
                 product: $product,
                 data: new ProductPhysicalUpdateDTO(
@@ -445,8 +445,6 @@ class ProductController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->productServiceActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $product->id,
@@ -458,6 +456,8 @@ class ProductController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $product->id
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->productServiceActions->update(
                 product: $product,

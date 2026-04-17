@@ -15,6 +15,10 @@ class ProductCategoryActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -29,7 +33,7 @@ class ProductCategoryActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = ProductCategory::with('company')->select('product_categories.*')
+        $query = ProductCategory::with(self::LIST_EAGER_LOADS)->select('product_categories.*')
             ->whereCompanyId('product_categories', $companyId)
             ->withTrashed();
 
@@ -120,7 +124,7 @@ class ProductCategoryActions
 
     public function read(ProductCategory $productCategory): ProductCategory
     {
-        return $productCategory->load('company');
+        return $productCategory->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): ProductCategory

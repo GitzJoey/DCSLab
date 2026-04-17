@@ -5,9 +5,7 @@ namespace App\Actions\PurchaseOrderItemProductUnitPriceDiscount;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderItemProductUnitPriceDiscountCreateDTO;
 use App\DTOs\PurchaseOrderItemProductUnitPriceDiscountUpdateDTO;
-use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
-use App\Models\PurchaseOrderItem;
 use App\Models\PurchaseOrderItemProductUnitPriceDiscount;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -18,6 +16,18 @@ class PurchaseOrderItemProductUnitPriceDiscountActions
 {
     use CacheHelper;
     use LoggerHelper;
+
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'purchaseOrderItem.purchaseOrder.supplier',
+        'purchaseOrderItem.productUnit.unit',
+        'purchaseOrderItem.productUnit.product.category',
+        'purchaseOrderItem.productUnit.product.brand',
+        'purchaseOrderItem.productUnit.product.baseProductUnit.unit',
+        'purchaseOrderItem.productUnit.product.images',
+        'purchaseOrderItem.productUnit.product.mainImage',
+    ];
 
     public function readAny(
         bool $withTrashed,
@@ -37,16 +47,7 @@ class PurchaseOrderItemProductUnitPriceDiscountActions
         ?ExecuteDTO $execute
     ) {
         $query = PurchaseOrderItemProductUnitPriceDiscount::select('purchase_order_item_product_unit_price_discounts.*')
-            ->with([
-                'company',
-                'branch',
-                'purchaseOrderItem.purchaseOrder.supplier',
-                'purchaseOrderItem.productUnit.unit',
-                'purchaseOrderItem.productUnit.product.category',
-                'purchaseOrderItem.productUnit.product.brand',
-                'purchaseOrderItem.productUnit.product.baseProductUnit.unit',
-                'purchaseOrderItem.productUnit.product.images',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'purchase_order_item_product_unit_price_discounts.company_id')
             ->join('purchase_order_items', 'purchase_order_items.id', '=', 'purchase_order_item_product_unit_price_discounts.purchase_order_item_id')
             ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_items.purchase_order_id')
@@ -185,45 +186,7 @@ class PurchaseOrderItemProductUnitPriceDiscountActions
 
     public function read(PurchaseOrderItemProductUnitPriceDiscount $poItemPriceDiscount): PurchaseOrderItemProductUnitPriceDiscount
     {
-        return $poItemPriceDiscount->load([
-            'company',
-            'branch',
-            'purchaseOrderItem.purchaseOrder.supplier',
-            'purchaseOrderItem.productUnit.unit',
-            'purchaseOrderItem.productUnit.product.category',
-            'purchaseOrderItem.productUnit.product.brand',
-            'purchaseOrderItem.productUnit.product.baseProductUnit.unit',
-            'purchaseOrderItem.productUnit.product.images',
-        ]);
-    }
-
-    public function getAmountByPurchaseOrderItemId(int $purchaseOrderItemId): float
-    {
-        $purchaseOrderItem = PurchaseOrderItem::query()
-            ->with(['productUnitPriceDiscounts' => fn ($query) => $query->orderBy('sequence')->orderBy('id')])
-            ->findOrFail($purchaseOrderItemId);
-
-        $beforeDiscount = (float) $purchaseOrderItem->product_unit_price;
-        $afterDiscount = $beforeDiscount;
-
-        foreach ($purchaseOrderItem->productUnitPriceDiscounts as $discount) {
-            $discountType = $discount->discount_type instanceof DiscountTypeEnum
-                ? $discount->discount_type
-                : DiscountTypeEnum::resolveToEnum($discount->discount_type);
-            $discountValue = (float) $discount->discount_value;
-
-            if ($discountType === DiscountTypeEnum::PERCENTAGE) {
-                $afterDiscount -= $afterDiscount * $discountValue / 100;
-            } else {
-                $afterDiscount -= $discountValue;
-            }
-
-            if ($afterDiscount < 0) {
-                $afterDiscount = 0;
-            }
-        }
-
-        return $beforeDiscount - $afterDiscount;
+        return $poItemPriceDiscount->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(PurchaseOrderItemProductUnitPriceDiscountCreateDTO $data): PurchaseOrderItemProductUnitPriceDiscount

@@ -19,6 +19,16 @@ class ProductActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'category',
+        'brand',
+        'defaultVatProfile',
+        'productUnits.unit',
+        'images',
+        'mainImage',
+    ];
+
     public function __construct()
     {
     }
@@ -41,16 +51,9 @@ class ProductActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = Product::select('products.*')->withTrashed();
-        $query->with([
-            'company',
-            'category',
-            'brand',
-            'defaultVatProfile',
-            'productUnits.unit',
-            'images',
-            'mainImage',
-        ]);
+        $query = Product::select('products.*')
+            ->with(self::LIST_EAGER_LOADS)
+            ->withTrashed();
 
         $query->join('product_categories', 'products.category_id', '=', 'product_categories.id');
         $query->leftJoin('brands', 'products.brand_id', '=', 'brands.id');
@@ -257,7 +260,7 @@ class ProductActions
 
     public function read(Product $product): Product
     {
-        return $product->load('company', 'category', 'brand', 'defaultVatProfile', 'productUnits.unit', 'images', 'mainImage');
+        return $product->load(self::LIST_EAGER_LOADS);
     }
 
     public function delete(Product $product): bool

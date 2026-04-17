@@ -17,6 +17,12 @@ class PurchaseOrderGlobalDiscountActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'purchaseOrder.supplier',
+    ];
+
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -29,11 +35,7 @@ class PurchaseOrderGlobalDiscountActions
         ?ExecuteDTO $execute
     ) {
         $query = PurchaseOrderGlobalDiscount::select('purchase_order_global_discounts.*')
-            ->with([
-                'company',
-                'branch',
-                'purchaseOrder.supplier',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'purchase_order_global_discounts.company_id')
             ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_global_discounts.purchase_order_id')
             ->whereCompanyId('purchase_order_global_discounts', $companyId)
@@ -142,11 +144,7 @@ class PurchaseOrderGlobalDiscountActions
 
     public function read(PurchaseOrderGlobalDiscount $purchaseOrderGlobalDiscount): PurchaseOrderGlobalDiscount
     {
-        return $purchaseOrderGlobalDiscount->load([
-            'company',
-            'branch',
-            'purchaseOrder.supplier',
-        ]);
+        return $purchaseOrderGlobalDiscount->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(PurchaseOrderGlobalDiscountCreateDTO $data): PurchaseOrderGlobalDiscount

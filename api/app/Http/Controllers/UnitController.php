@@ -127,8 +127,6 @@ class UnitController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->unitActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null,
@@ -140,6 +138,8 @@ class UnitController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], null,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->unitActions->create($validatedRequest);
 
@@ -160,8 +160,6 @@ class UnitController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->unitActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $unit->id,
@@ -173,6 +171,8 @@ class UnitController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $unit->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->unitActions->update($unit, $validatedRequest);
 

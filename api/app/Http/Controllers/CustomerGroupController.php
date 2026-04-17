@@ -117,8 +117,6 @@ class CustomerGroupController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->customerGroupActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null,
@@ -130,6 +128,8 @@ class CustomerGroupController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], null,
             );
             if (! $isUnique) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->customerGroupActions->create($validatedRequest);
 
@@ -150,8 +150,6 @@ class CustomerGroupController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->customerGroupActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $customerGroup->id,
@@ -163,6 +161,8 @@ class CustomerGroupController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $customerGroup->id,
             );
             if (! $isUnique) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->customerGroupActions->update(
                 customerGroup: $customerGroup,

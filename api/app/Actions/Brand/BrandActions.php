@@ -15,6 +15,10 @@ class BrandActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +32,7 @@ class BrandActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = Brand::with('company')->select('brands.*')
+        $query = Brand::with(self::LIST_EAGER_LOADS)->select('brands.*')
             ->whereCompanyId('brands', $companyId)
             ->withTrashed();
 
@@ -114,7 +118,7 @@ class BrandActions
 
     public function read(Brand $brand): Brand
     {
-        return $brand->load('company');
+        return $brand->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): Brand

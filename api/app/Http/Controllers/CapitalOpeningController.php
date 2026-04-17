@@ -137,8 +137,6 @@ class CapitalOpeningController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->capitalOpeningActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -147,6 +145,8 @@ class CapitalOpeningController extends BaseController
                 );
                 if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->capitalOpeningActions->create(
                 data: new CapitalOpeningCreateDTO(
@@ -178,8 +178,6 @@ class CapitalOpeningController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->capitalOpeningActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -188,6 +186,8 @@ class CapitalOpeningController extends BaseController
                 );
                 if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->capitalOpeningActions->update(
                 capitalOpening: $capitalOpening,

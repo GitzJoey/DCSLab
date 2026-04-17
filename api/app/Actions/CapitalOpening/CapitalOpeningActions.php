@@ -19,6 +19,13 @@ class CapitalOpeningActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'investor',
+        'cashAccount',
+    ];
+
     public function __construct(
         private CashTransactionActions $cashTransactionActions
     ) {
@@ -36,12 +43,7 @@ class CapitalOpeningActions
         ?ExecuteDTO $execute
     ) {
         $query = CapitalOpening::select('capital_openings.*')
-            ->with([
-                'company',
-                'branch',
-                'investor',
-                'cashAccount',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'capital_openings.company_id')
             ->whereCompanyId('capital_openings', $companyId)
             ->withTrashed();
@@ -134,12 +136,7 @@ class CapitalOpeningActions
 
     public function read(CapitalOpening $capitalOpening): CapitalOpening
     {
-        return $capitalOpening->load([
-            'company',
-            'branch',
-            'investor',
-            'cashAccount',
-        ]);
+        return $capitalOpening->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(CapitalOpeningCreateDTO $data): CapitalOpening

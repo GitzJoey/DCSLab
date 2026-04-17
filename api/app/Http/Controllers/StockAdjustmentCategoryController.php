@@ -36,8 +36,6 @@ class StockAdjustmentCategoryController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->stockAdjustmentCategoryActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -46,6 +44,8 @@ class StockAdjustmentCategoryController extends BaseController
                 );
                 if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->stockAdjustmentCategoryActions->create([
                 'company_id' => $validatedRequest['company_id'],
@@ -161,8 +161,6 @@ class StockAdjustmentCategoryController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->stockAdjustmentCategoryActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -178,6 +176,8 @@ class StockAdjustmentCategoryController extends BaseController
                 $stockAdjustmentCategory->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->stockAdjustmentCategoryActions->update(
                 stockAdjustmentCategory: $stockAdjustmentCategory,

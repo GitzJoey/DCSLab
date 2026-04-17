@@ -116,8 +116,6 @@ class EmployeeController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->employeeActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -133,6 +131,8 @@ class EmployeeController extends BaseController
                 null
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->employeeActions->create($validatedRequest);
 
@@ -153,8 +153,6 @@ class EmployeeController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->employeeActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -170,6 +168,8 @@ class EmployeeController extends BaseController
                 $employee->id
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->employeeActions->update(
                 employee: $employee,

@@ -37,14 +37,6 @@ class CustomerController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
-            $validatedRequest['group_id'] = $validatedRequest['group_id'] ?? null;
-            $validatedRequest['zone'] = $validatedRequest['zone'] ?? null;
-            $validatedRequest['payment_term_type'] = $validatedRequest['payment_term_type'] ?? null;
-            $validatedRequest['tax_id'] = $validatedRequest['tax_id'] ?? null;
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->customerActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -64,6 +56,8 @@ class CustomerController extends BaseController
             if (! $isUniqueName) {
                 return response()->error(['name' => [trans('rules.unique_name')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->customerActions->create($validatedRequest);
 
@@ -204,8 +198,6 @@ class CustomerController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->customerActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -226,10 +218,7 @@ class CustomerController extends BaseController
                 return response()->error(['name' => [trans('rules.unique_name')]], 422);
             }
 
-            $validatedRequest['group_id'] = $validatedRequest['group_id'] ?? null;
-            $validatedRequest['zone'] = $validatedRequest['zone'] ?? null;
-            $validatedRequest['payment_term_type'] = $validatedRequest['payment_term_type'] ?? null;
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
+            DB::beginTransaction();
 
             $result = $this->customerActions->update(
                 customer: $customer,

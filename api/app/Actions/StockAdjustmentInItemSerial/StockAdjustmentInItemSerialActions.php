@@ -20,6 +20,25 @@ class StockAdjustmentInItemSerialActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'stockAdjustment.category',
+        'stockAdjustment.inWarehouse',
+        'stockAdjustment.outWarehouse',
+        'stockAdjustmentInItem.company',
+        'stockAdjustmentInItem.branch',
+        'stockAdjustmentInItem.stockAdjustment.category',
+        'stockAdjustmentInItem.stockAdjustment.inWarehouse',
+        'stockAdjustmentInItem.stockAdjustment.outWarehouse',
+        'stockAdjustmentInItem.productUnit.unit',
+        'stockAdjustmentInItem.productUnit.product.category',
+        'stockAdjustmentInItem.productUnit.product.brand',
+        'stockAdjustmentInItem.productUnit.product.baseProductUnit.unit',
+        'stockAdjustmentInItem.productUnit.product.images',
+        'stockAdjustmentInItem.productUnit.product.mainImage',
+    ];
+
     protected StockSerialTransactionActions $stockSerialTransactionActions;
 
     public function __construct(StockSerialTransactionActions $stockSerialTransactionActions)
@@ -47,15 +66,7 @@ class StockAdjustmentInItemSerialActions
         ?ExecuteDTO $execute
     ) {
         $query = StockAdjustmentInItemSerial::select('stock_adjustment_in_item_serials.*')
-            ->with([
-                'company',
-                'branch',
-                'stockAdjustmentInItem.stockAdjustment',
-                'stockAdjustmentInItem.productUnit.unit',
-                'stockAdjustmentInItem.productUnit.product.category',
-                'stockAdjustmentInItem.productUnit.product.brand',
-                'stockAdjustmentInItem.productUnit.product.images',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'stock_adjustment_in_item_serials.company_id')
             ->join('stock_adjustments', 'stock_adjustments.id', '=', 'stock_adjustment_in_item_serials.stock_adjustment_id')
             ->join('stock_adjustment_in_items', 'stock_adjustment_in_items.id', '=', 'stock_adjustment_in_item_serials.stock_adjustment_in_item_id')
@@ -205,15 +216,7 @@ class StockAdjustmentInItemSerialActions
 
     public function read(StockAdjustmentInItemSerial $stockAdjustmentInItemSerial): StockAdjustmentInItemSerial
     {
-        return $stockAdjustmentInItemSerial->load([
-            'company',
-            'branch',
-            'stockAdjustment',
-            'stockAdjustmentInItem.stockAdjustment',
-            'stockAdjustmentInItem.productUnit.unit',
-            'stockAdjustmentInItem.productUnit.product.images',
-            'stockAdjustmentInItem.stockTransaction',
-        ]);
+        return $stockAdjustmentInItemSerial->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(StockAdjustmentInItemSerialCreateDTO $data): StockAdjustmentInItemSerial

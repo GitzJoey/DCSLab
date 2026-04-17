@@ -15,6 +15,10 @@ class UnitActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +32,7 @@ class UnitActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = Unit::with('company')->select('units.*')
+        $query = Unit::with(self::LIST_EAGER_LOADS)->select('units.*')
             ->where('units.company_id', $companyId)
             ->withTrashed();
 
@@ -114,7 +118,7 @@ class UnitActions
 
     public function read(Unit $unit): Unit
     {
-        return $unit->load('company');
+        return $unit->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): Unit

@@ -17,6 +17,12 @@ class PurchaseOrderDownPaymentAllocationActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'purchaseOrderDownPayment.purchaseOrder.supplier',
+    ];
+
     public function readAny(
         bool $withTrashed,
         int $companyId,
@@ -29,11 +35,7 @@ class PurchaseOrderDownPaymentAllocationActions
         ?ExecuteDTO $execute
     ) {
         $query = PurchaseOrderDownPaymentAllocation::select('purchase_order_down_payment_allocations.*')
-            ->with([
-                'company',
-                'branch',
-                'purchaseOrderDownPayment.purchaseOrder.supplier',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'purchase_order_down_payment_allocations.company_id')
             ->join(
                 'purchase_order_down_payments',
@@ -145,11 +147,7 @@ class PurchaseOrderDownPaymentAllocationActions
 
     public function read(PurchaseOrderDownPaymentAllocation $purchaseOrderDownPaymentAllocation): PurchaseOrderDownPaymentAllocation
     {
-        return $purchaseOrderDownPaymentAllocation->load([
-            'company',
-            'branch',
-            'purchaseOrderDownPayment.purchaseOrder.supplier',
-        ]);
+        return $purchaseOrderDownPaymentAllocation->load(self::LIST_EAGER_LOADS);
     }
 
     public function generateDate(string $date): string

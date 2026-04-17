@@ -14,6 +14,10 @@ class RoleActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const DETAIL_EAGER_LOADS = [
+        'permissions',
+    ];
+
     public function __construct()
     {
     }
@@ -35,7 +39,7 @@ class RoleActions
 
     public function read(Role $role): Role
     {
-        return $role->with('permissions')->first();
+        return $role->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function readBy(string $key, string $value): ?Role

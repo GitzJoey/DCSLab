@@ -15,6 +15,10 @@ class VatProfileActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +32,7 @@ class VatProfileActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = VatProfile::with(['company'])->select('vat_profiles.*')
+        $query = VatProfile::with(self::LIST_EAGER_LOADS)->select('vat_profiles.*')
             ->where('vat_profiles.company_id', $companyId)
             ->withTrashed();
 
@@ -121,7 +125,7 @@ class VatProfileActions
 
     public function read(VatProfile $vatProfile): VatProfile
     {
-        return $vatProfile->load('company');
+        return $vatProfile->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): VatProfile

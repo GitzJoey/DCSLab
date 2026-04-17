@@ -25,6 +25,20 @@ class StockTransferItemActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'stockTransfer.sourceWarehouse',
+        'stockTransfer.destinationWarehouse',
+        'productUnit.unit',
+        'productUnit.product.category',
+        'productUnit.product.brand',
+        'productUnit.product.baseProductUnit.unit',
+        'productUnit.product.images',
+        'productUnit.product.mainImage',
+        'serials',
+    ];
+
     private $stockTransferItemSerialActions;
 
     private $stockTransactionActions;
@@ -56,18 +70,7 @@ class StockTransferItemActions
         ?ExecuteDTO $execute
     ) {
         $query = StockTransferItem::select('stock_transfer_items.*')
-            ->with([
-                'company',
-                'branch',
-                'stockTransfer.sourceWarehouse',
-                'stockTransfer.destinationWarehouse',
-                'productUnit.unit',
-                'productUnit.product.category',
-                'productUnit.product.brand',
-                'productUnit.product.baseProductUnit.unit',
-                'productUnit.product.images',
-                'serials',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'stock_transfer_items.company_id')
             ->join('stock_transfers', 'stock_transfers.id', '=', 'stock_transfer_items.stock_transfer_id')
             ->join('items', 'items.id', '=', 'stock_transfer_items.product_unit_id')
@@ -208,16 +211,7 @@ class StockTransferItemActions
 
     public function read(StockTransferItem $stockTransferItem): StockTransferItem
     {
-        return $stockTransferItem->load([
-            'company',
-            'branch',
-            'stockTransfer',
-            'productUnit.unit',
-            'productUnit.product.category',
-            'productUnit.product.brand',
-            'productUnit.product.images',
-            'serials',
-        ]);
+        return $stockTransferItem->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(StockTransferItemCreateDTO $data): StockTransferItem

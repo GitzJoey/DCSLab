@@ -21,6 +21,24 @@ class StockTransferActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'sourceWarehouse',
+        'destinationWarehouse',
+    ];
+
+    private const DETAIL_EAGER_LOADS = [
+        'company',
+        'branch',
+        'sourceWarehouse',
+        'destinationWarehouse',
+        'stockTransferItems.productUnit.unit',
+        'stockTransferItems.productUnit.product.images',
+        'stockTransferItems.productUnit.product.baseProductUnit.unit',
+        'stockTransferItems.serials',
+    ];
+
     private $stockTransferItemActions;
 
     public function __construct(
@@ -42,16 +60,15 @@ class StockTransferActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = StockTransfer::select('stock_transfers.*')
-            ->with(['company', 'branch', 'sourceWarehouse', 'destinationWarehouse'])
-            ->when($execute?->pagination, function ($query) {
-                $query->with([
-                    'stockTransferItems.productUnit.unit',
-                    'stockTransferItems.productUnit.product.images',
-                    'stockTransferItems.productUnit.product.baseProductUnit.unit',
-                    'stockTransferItems.serials',
-                ]);
-            })
+        $query = StockTransfer::select('stock_transfers.*');
+
+        if ($execute?->pagination) {
+            $query->with(self::DETAIL_EAGER_LOADS);
+        } else {
+            $query->with(self::LIST_EAGER_LOADS);
+        }
+
+        $query
             ->join('companies', 'companies.id', '=', 'stock_transfers.company_id')
             ->whereCompanyId('stock_transfers', $companyId)
             ->whereBranchId('stock_transfers', $branchId)
@@ -155,17 +172,7 @@ class StockTransferActions
 
     public function read(StockTransfer $stockTransfer): StockTransfer
     {
-        return $stockTransfer->load([
-            'company',
-            'branch',
-            'sourceWarehouse',
-            'destinationWarehouse',
-            'stockTransferItems.productUnit',
-            'stockTransferItems.productUnit.unit',
-            'stockTransferItems.productUnit.product.images',
-            'stockTransferItems.productUnit.product.baseProductUnit.unit',
-            'stockTransferItems.serials',
-        ]);
+        return $stockTransfer->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function create(StockTransferCreateDTO $data): StockTransfer

@@ -15,6 +15,11 @@ class WarehouseActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+    ];
+
     public function __construct()
     {
     }
@@ -30,7 +35,7 @@ class WarehouseActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = Warehouse::with('company', 'branch')->select('warehouses.*')
+        $query = Warehouse::with(self::LIST_EAGER_LOADS)->select('warehouses.*')
             ->whereCompanyId('warehouses', $companyId)
             ->withTrashed();
 
@@ -120,7 +125,7 @@ class WarehouseActions
 
     public function read(Warehouse $warehouse): Warehouse
     {
-        return $warehouse->load('company', 'branch');
+        return $warehouse->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): Warehouse

@@ -127,8 +127,6 @@ class BrandController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->brandActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null,
@@ -140,6 +138,8 @@ class BrandController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], null,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->brandActions->create($validatedRequest);
 
@@ -160,8 +160,6 @@ class BrandController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->brandActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $brand->id,
@@ -173,6 +171,8 @@ class BrandController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $brand->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->brandActions->update($brand, $validatedRequest);
 

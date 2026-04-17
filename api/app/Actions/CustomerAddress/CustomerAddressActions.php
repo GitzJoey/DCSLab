@@ -14,6 +14,11 @@ class CustomerAddressActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'customer',
+    ];
+
     public function __construct()
     {
     }
@@ -29,10 +34,7 @@ class CustomerAddressActions
         ?ExecuteDTO $execute
     ) {
         $query = CustomerAddress::select('customer_addresses.*')
-            ->with([
-                'company',
-                'customer',
-            ])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'customer_addresses.company_id')
             ->whereCompanyId('customer_addresses', $companyId)
             ->withTrashed();
@@ -122,10 +124,7 @@ class CustomerAddressActions
 
     public function read(CustomerAddress $customerAddress): CustomerAddress
     {
-        return $customerAddress->load([
-            'company',
-            'customer',
-        ]);
+        return $customerAddress->load(self::LIST_EAGER_LOADS);
     }
 
     public function isUniqueAddress(int $companyId, int $customerId, string $address, ?int $exceptId = null): bool

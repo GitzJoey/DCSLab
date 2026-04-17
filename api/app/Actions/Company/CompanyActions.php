@@ -16,6 +16,10 @@ class CompanyActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const DETAIL_EAGER_LOADS = [
+        'branches',
+    ];
+
     public function __construct(
         private CompanyInitializationService $companyInitializationService,
     ) {
@@ -126,7 +130,7 @@ class CompanyActions
 
     public function read(Company $company): Company
     {
-        return $company->load('branches');
+        return $company->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function create(User $user, array $data): Company

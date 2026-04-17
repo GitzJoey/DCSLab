@@ -130,8 +130,6 @@ class SupplierController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->supplierActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -147,6 +145,8 @@ class SupplierController extends BaseController
                 null
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->supplierActions->create($validatedRequest);
 
@@ -167,8 +167,6 @@ class SupplierController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUniqueCode = $this->supplierActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -184,6 +182,8 @@ class SupplierController extends BaseController
                 $supplier->id
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             $result = $this->supplierActions->update(
                 supplier: $supplier,

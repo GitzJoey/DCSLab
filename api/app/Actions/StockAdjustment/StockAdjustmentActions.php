@@ -24,6 +24,28 @@ class StockAdjustmentActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'category',
+        'inWarehouse',
+        'outWarehouse',
+    ];
+
+    private const DETAIL_EAGER_LOADS = [
+        'company',
+        'branch',
+        'category',
+        'inWarehouse',
+        'outWarehouse',
+        'inItems.productUnit.product.images',
+        'inItems.productUnit.unit',
+        'inItems.serials',
+        'outItems.productUnit.product.images',
+        'outItems.productUnit.unit',
+        'outItems.serials',
+    ];
+
     private $stockAdjustmentInItemActions;
 
     private $stockAdjustmentOutItemActions;
@@ -50,18 +72,15 @@ class StockAdjustmentActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = StockAdjustment::select('stock_adjustments.*')
-            ->with(['company', 'branch', 'category', 'inWarehouse', 'outWarehouse'])
-            ->when($execute?->pagination, function ($query) {
-                $query->with([
-                    'inItems.productUnit.product.images',
-                    'inItems.productUnit.unit',
-                    'inItems.serials',
-                    'outItems.productUnit.product.images',
-                    'outItems.productUnit.unit',
-                    'outItems.serials',
-                ]);
-            })
+        $query = StockAdjustment::select('stock_adjustments.*');
+
+        if ($execute?->pagination) {
+            $query->with(self::DETAIL_EAGER_LOADS);
+        } else {
+            $query->with(self::LIST_EAGER_LOADS);
+        }
+
+        $query
             ->join('companies', 'companies.id', '=', 'stock_adjustments.company_id')
             ->whereCompanyId('stock_adjustments', $companyId)
             ->whereBranchId('stock_adjustments', $branchId)
@@ -171,21 +190,7 @@ class StockAdjustmentActions
 
     public function read(StockAdjustment $stockAdjustment): StockAdjustment
     {
-        return $stockAdjustment->load([
-            'company',
-            'branch',
-            'category',
-            'inWarehouse',
-            'outWarehouse',
-            'inItems.productUnit',
-            'inItems.productUnit.unit',
-            'inItems.productUnit.product.images',
-            'inItems.serials',
-            'outItems.productUnit',
-            'outItems.productUnit.unit',
-            'outItems.productUnit.product.images',
-            'outItems.serials',
-        ]);
+        return $stockAdjustment->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function create(StockAdjustmentCreateDTO $data): StockAdjustment

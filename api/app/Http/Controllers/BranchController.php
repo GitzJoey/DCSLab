@@ -138,8 +138,6 @@ class BranchController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->branchActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], null,
@@ -151,6 +149,8 @@ class BranchController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], null,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             if ($validatedRequest['is_main']) {
                 $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
@@ -175,8 +175,6 @@ class BranchController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->branchActions->isUniqueCode(
                     $validatedRequest['company_id'], $validatedRequest['code'], $branch->id,
@@ -188,6 +186,8 @@ class BranchController extends BaseController
                 $validatedRequest['company_id'], $validatedRequest['name'], $branch->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             if ($validatedRequest['is_main']) {
                 $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
@@ -217,11 +217,11 @@ class BranchController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($this->branchActions->isMain($branch)) {
                 return response()->error(trans('rules.branch.delete_main_branch'), 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->branchActions->delete($branch);
 

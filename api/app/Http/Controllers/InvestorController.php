@@ -36,8 +36,6 @@ class InvestorController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->investorActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -58,7 +56,7 @@ class InvestorController extends BaseController
                 return response()->error(['name' => [trans('rules.unique_name')]], 422);
             }
 
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
+            DB::beginTransaction();
 
             $result = $this->investorActions->create($validatedRequest);
 
@@ -177,8 +175,6 @@ class InvestorController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->investorActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -199,7 +195,7 @@ class InvestorController extends BaseController
                 return response()->error(['name' => [trans('rules.unique_name')]], 422);
             }
 
-            $validatedRequest['remarks'] = $validatedRequest['remarks'] ?? null;
+            DB::beginTransaction();
 
             $result = $this->investorActions->update(
                 investor: $investor,

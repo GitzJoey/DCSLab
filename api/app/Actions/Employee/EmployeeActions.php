@@ -15,6 +15,10 @@ class EmployeeActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -30,7 +34,7 @@ class EmployeeActions
         ?ExecuteDTO $execute
     ) {
         $query = Employee::select('employees.*')
-            ->with(['company'])
+            ->with(self::LIST_EAGER_LOADS)
             ->join('companies', 'companies.id', '=', 'employees.company_id')
             ->whereCompanyId('employees', $companyId)
             ->withTrashed();
@@ -120,7 +124,7 @@ class EmployeeActions
 
     public function read(Employee $employee): Employee
     {
-        return $employee->load('company');
+        return $employee->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): Employee

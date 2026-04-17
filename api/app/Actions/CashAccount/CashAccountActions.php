@@ -17,6 +17,11 @@ class CashAccountActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+    ];
+
     public function __construct()
     {
     }
@@ -33,7 +38,7 @@ class CashAccountActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = CashAccount::with('company', 'branch')->select('cash_accounts.*')
+        $query = CashAccount::with(self::LIST_EAGER_LOADS)->select('cash_accounts.*')
             ->whereCompanyId('cash_accounts', $companyId)
             ->withTrashed();
 
@@ -139,7 +144,7 @@ class CashAccountActions
 
     public function read(CashAccount $cashAccount): CashAccount
     {
-        return $cashAccount->load('company', 'branch');
+        return $cashAccount->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): CashAccount

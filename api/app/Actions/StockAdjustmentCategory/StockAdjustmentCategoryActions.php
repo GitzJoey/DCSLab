@@ -15,6 +15,10 @@ class StockAdjustmentCategoryActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +32,7 @@ class StockAdjustmentCategoryActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = StockAdjustmentCategory::with(['company'])->select('stock_adjustment_categories.*')
+        $query = StockAdjustmentCategory::with(self::LIST_EAGER_LOADS)->select('stock_adjustment_categories.*')
             ->where('stock_adjustment_categories.company_id', $companyId)
             ->withTrashed();
 
@@ -121,7 +125,7 @@ class StockAdjustmentCategoryActions
 
     public function read(StockAdjustmentCategory $stockAdjustmentCategory): StockAdjustmentCategory
     {
-        return $stockAdjustmentCategory->load('company');
+        return $stockAdjustmentCategory->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): StockAdjustmentCategory

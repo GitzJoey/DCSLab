@@ -147,8 +147,6 @@ class CapitalTransactionController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->capitalTransactionActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -157,6 +155,8 @@ class CapitalTransactionController extends BaseController
                 );
                 if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->capitalTransactionActions->create(
                 data: new CapitalTransactionCreateDTO(
@@ -189,8 +189,6 @@ class CapitalTransactionController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->capitalTransactionActions->isUniqueCode(
                     $validatedRequest['company_id'],
@@ -199,6 +197,8 @@ class CapitalTransactionController extends BaseController
                 );
                 if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->capitalTransactionActions->update(
                 capitalTransaction: $capitalTransaction,

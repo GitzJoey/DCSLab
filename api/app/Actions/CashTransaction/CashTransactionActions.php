@@ -16,6 +16,11 @@ class CashTransactionActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'cashAccount',
+        'referable',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +33,7 @@ class CashTransactionActions
         ?ExecuteDTO $execute
     ) {
         $query = CashTransaction::select('cash_transactions.*')
-            ->with(['cashAccount', 'referable']);
+            ->with(self::LIST_EAGER_LOADS);
 
         $query->where(function ($query) use ($referableType, $referableId, $cashAccountId) {
             if ($referableType) {
@@ -106,7 +111,7 @@ class CashTransactionActions
 
     public function read(CashTransaction $cashTransaction): CashTransaction
     {
-        return $cashTransaction->load(['cashAccount', 'referable']);
+        return $cashTransaction->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(CashTransactionCreateDTO $data): CashTransaction

@@ -16,6 +16,12 @@ class StockTransactionActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'warehouse',
+        'product',
+        'referable',
+    ];
+
     public function __construct()
     {
     }
@@ -29,7 +35,7 @@ class StockTransactionActions
         ?ExecuteDTO $execute
     ) {
         $query = StockTransaction::select('stock_transactions.*')
-            ->with(['warehouse', 'productUnit', 'referable']);
+            ->with(self::LIST_EAGER_LOADS);
 
         $query->where(function ($query) use ($referableType, $referableId, $warehouseId, $productId) {
             if ($referableType) {
@@ -112,7 +118,7 @@ class StockTransactionActions
 
     public function read(StockTransaction $stockTransaction): StockTransaction
     {
-        return $stockTransaction->load(['warehouse', 'product', 'referable']);
+        return $stockTransaction->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(StockTransactionCreateDTO $data): StockTransaction

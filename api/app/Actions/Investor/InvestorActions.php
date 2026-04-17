@@ -15,6 +15,10 @@ class InvestorActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +32,7 @@ class InvestorActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = Investor::with(['company'])->select('investors.*')
+        $query = Investor::with(self::LIST_EAGER_LOADS)->select('investors.*')
             ->where('investors.company_id', $companyId)
             ->withTrashed();
 
@@ -121,7 +125,7 @@ class InvestorActions
 
     public function read(Investor $investor): Investor
     {
-        return $investor->load('company');
+        return $investor->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): Investor

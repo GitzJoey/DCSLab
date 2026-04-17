@@ -15,6 +15,10 @@ class CustomerGroupActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+    ];
+
     public function __construct()
     {
     }
@@ -28,7 +32,7 @@ class CustomerGroupActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = CustomerGroup::with(['company'])->select('customer_groups.*')
+        $query = CustomerGroup::with(self::LIST_EAGER_LOADS)->select('customer_groups.*')
             ->where('customer_groups.company_id', $companyId)
             ->withTrashed();
 
@@ -121,7 +125,7 @@ class CustomerGroupActions
 
     public function read(CustomerGroup $customerGroup): CustomerGroup
     {
-        return $customerGroup->load('company');
+        return $customerGroup->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(array $data): CustomerGroup

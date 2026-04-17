@@ -20,6 +20,12 @@ class ProductUnitActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'unit',
+        'product',
+    ];
+
     public function __construct()
     {
     }
@@ -37,7 +43,7 @@ class ProductUnitActions
 
         ?ExecuteDTO $execute
     ) {
-        $query = ProductUnit::with(['company', 'unit', 'product'])->select('product_units.*')
+        $query = ProductUnit::with(self::LIST_EAGER_LOADS)->select('product_units.*')
             ->where('product_units.company_id', $companyId)
             ->withTrashed();
 
@@ -143,7 +149,7 @@ class ProductUnitActions
 
     public function read(ProductUnit $productUnit): ProductUnit
     {
-        return $productUnit->load('company', 'unit', 'product');
+        return $productUnit->load(self::LIST_EAGER_LOADS);
     }
 
     public function createPhysical(ProductUnitCreatePhysicalDTO $data): ProductUnit

@@ -134,8 +134,6 @@ class CompanyController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] != config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->companyActions->isUniqueCode(
                     Auth::user(), $validatedRequest['code'], null,
@@ -147,6 +145,8 @@ class CompanyController extends BaseController
                 Auth::user(), $validatedRequest['name'], null,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             if ($validatedRequest['default']) {
                 $this->companyActions->resetDefault(Auth::user());
@@ -174,8 +174,6 @@ class CompanyController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($validatedRequest['code'] != config('dcslab.KEYWORDS.AUTO')) {
                 $isUnique = $this->companyActions->isUniqueCode(
                     Auth::user(), $validatedRequest['code'], $company->id,
@@ -187,6 +185,8 @@ class CompanyController extends BaseController
                 Auth::user(), $validatedRequest['name'], $company->id,
             );
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
+
+            DB::beginTransaction();
 
             if ($validatedRequest['default']) {
                 $this->companyActions->resetDefault(Auth::user());
@@ -229,11 +229,11 @@ class CompanyController extends BaseController
         $errorMsg = '';
 
         try {
-            DB::beginTransaction();
-
             if ($this->companyActions->isDefault($company)) {
                 return response()->error(trans('rules.company.delete_default_company'), 422);
             }
+
+            DB::beginTransaction();
 
             $result = $this->companyActions->delete($company);
 
