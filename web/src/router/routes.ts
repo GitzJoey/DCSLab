@@ -102,6 +102,12 @@ import PurchaseOrderIndex from '@/pages/purchase-order/PurchaseOrderIndex.vue';
 import PurchaseOrderList from '@/pages/purchase-order/PurchaseOrderList.vue';
 import PurchaseOrderCreate from '@/pages/purchase-order/PurchaseOrderCreate.vue';
 import PurchaseOrderEdit from '@/pages/purchase-order/PurchaseOrderEdit.vue';
+import PurchaseOrderItemIndex from '@/pages/purchase-order/PurchaseOrderItemIndex.vue';
+import PurchaseOrderItemList from '@/pages/purchase-order/PurchaseOrderItemList.vue';
+import PurchaseOrderDownPaymentIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentIndex.vue';
+import PurchaseOrderDownPaymentList from '@/pages/purchase-order/PurchaseOrderDownPaymentList.vue';
+import PurchaseOrderDownPaymentRefundIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentRefundIndex.vue';
+import PurchaseOrderDownPaymentRefundList from '@/pages/purchase-order/PurchaseOrderDownPaymentRefundList.vue';
 import StockTransferIndex from '@/pages/stock-transfer/StockTransferIndex.vue';
 import StockTransferList from '@/pages/stock-transfer/StockTransferList.vue';
 import StockTransferCreate from '@/pages/stock-transfer/StockTransferCreate.vue';
@@ -761,6 +767,54 @@ export default [
                 path: '/dashboard/purchase-order/edit/:ulid',
                 name: 'side-menu-purchase-order-edit',
                 component: PurchaseOrderEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/purchase-order-item',
+            name: 'side-menu-purchase-order-item',
+            redirect: '/dashboard/purchase-order-item/list',
+            component: PurchaseOrderItemIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-order-item/list',
+                name: 'side-menu-purchase-order-item-list',
+                component: PurchaseOrderItemList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/purchase-order-down-payment',
+            name: 'side-menu-purchase-order-down-payment',
+            redirect: '/dashboard/purchase-order-down-payment/list',
+            component: PurchaseOrderDownPaymentIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-order-down-payment/list',
+                name: 'side-menu-purchase-order-down-payment-list',
+                component: PurchaseOrderDownPaymentList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/purchase-order-down-payment-refund',
+            name: 'side-menu-purchase-order-down-payment-refund',
+            redirect: '/dashboard/purchase-order-down-payment-refund/list',
+            component: PurchaseOrderDownPaymentRefundIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-order-down-payment-refund/list',
+                name: 'side-menu-purchase-order-down-payment-refund-list',
+                component: PurchaseOrderDownPaymentRefundList,
                 meta: {
                   remember: true,
                 },

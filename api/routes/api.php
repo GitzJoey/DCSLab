@@ -18,6 +18,9 @@ use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PurchaseOrderController;
+use App\Http\Controllers\PurchaseOrderDownPaymentController;
+use App\Http\Controllers\PurchaseOrderDownPaymentRefundController;
+use App\Http\Controllers\PurchaseOrderItemController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StockAdjustmentCategoryController;
@@ -373,6 +376,27 @@ Route::prefix('purchase_order')->middleware('auth:sanctum')->group(function () {
         Route::post('save', [PurchaseOrderController::class, 'store'])->name('save');
         Route::post('edit/{purchase_order:ulid}', [PurchaseOrderController::class, 'update'])->name('edit');
         Route::post('delete/{purchase_order:ulid}', [PurchaseOrderController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('purchase_order_item')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_order_item.')->group(function () {
+        Route::get('read', [PurchaseOrderItemController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase_order_item:ulid}', [PurchaseOrderItemController::class, 'read'])->name('read');
+    });
+});
+
+Route::prefix('purchase_order_down_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_order_down_payment.')->group(function () {
+        Route::get('read', [PurchaseOrderDownPaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase_order_down_payment:ulid}', [PurchaseOrderDownPaymentController::class, 'read'])->name('read');
+    });
+});
+
+Route::prefix('purchase_order_down_payment_refund')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_order_down_payment_refund.')->group(function () {
+        Route::get('read', [PurchaseOrderDownPaymentRefundController::class, 'readAny'])->name('read_any');
+        Route::get('read/{podp_refund:ulid}', [PurchaseOrderDownPaymentRefundController::class, 'read'])->name('read');
     });
 });
 

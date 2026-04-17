@@ -360,6 +360,31 @@ class DashboardActions
             'subMenu' => [],
         ];
 
+        $purchaseOrder = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-report-purchase-order',
+            'title' => 'components.menu.purchase-order',
+            'subMenu' => [],
+        ];
+
+        $purchaseOrderItem = [
+            'icon' => 'PackageSearch',
+            'pageName' => 'side-menu-purchase-order-item',
+            'title' => 'components.menu.purchase-order-item',
+        ];
+
+        $purchaseOrderDownPayment = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-purchase-order-down-payment',
+            'title' => 'components.menu.purchase-order-down-payment',
+        ];
+
+        $purchaseOrderDownPaymentRefund = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-purchase-order-down-payment-refund',
+            'title' => 'components.menu.purchase-order-down-payment-refund',
+        ];
+
         $stockTransferItem = [
             'icon' => 'Boxes',
             'pageName' => 'side-menu-stock-transfer-item',
@@ -386,7 +411,14 @@ class DashboardActions
             $stockTransferItemSerial
         );
 
-        array_push($root_array['subMenu'], $cashAccount, $product, $stockAdjustment, $stockTransfer);
+        array_push(
+            $purchaseOrder['subMenu'],
+            $purchaseOrderItem,
+            $purchaseOrderDownPayment,
+            $purchaseOrderDownPaymentRefund
+        );
+
+        array_push($root_array['subMenu'], $cashAccount, $product, $stockAdjustment, $purchaseOrder, $stockTransfer);
 
         array_push($menu, $root_array);
 

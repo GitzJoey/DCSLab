@@ -40,6 +40,9 @@ import stock_adjustment_in_item_serial from './id/views/stock_adjustment_in_item
 import stock_adjustment_out_item from './id/views/stock_adjustment_out_item.json';
 import stock_adjustment_out_item_serial from './id/views/stock_adjustment_out_item_serial.json';
 import purchase_order from './id/views/purchase_order.json';
+import purchase_order_item from './id/views/purchase_order_item.json';
+import purchase_order_down_payment from './id/views/purchase_order_down_payment.json';
+import purchase_order_down_payment_refund from './id/views/purchase_order_down_payment_refund.json';
 import stock_transfer from './id/views/stock_transfer.json';
 import stock_transfer_item from './id/views/stock_transfer_item.json';
 import stock_transfer_item_serial from './id/views/stock_transfer_item_serial.json';
@@ -90,6 +93,9 @@ export default {
     stock_adjustment_out_item: stock_adjustment_out_item,
     stock_adjustment_out_item_serial: stock_adjustment_out_item_serial,
     purchase_order: purchase_order,
+    purchase_order_item: purchase_order_item,
+    purchase_order_down_payment: purchase_order_down_payment,
+    purchase_order_down_payment_refund: purchase_order_down_payment_refund,
     stock_transfer: stock_transfer,
     stock_transfer_item: stock_transfer_item,
     stock_transfer_item_serial: stock_transfer_item_serial,

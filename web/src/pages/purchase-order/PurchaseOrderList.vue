@@ -275,8 +275,6 @@ const confirmDelete = async () => {
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).supplier?.name ?? '-' }}</div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.due_days') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrder).due_days ?? 0 }}</div>
-                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.branch_id') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).branch?.name ?? '-' }}</div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.remarks') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).remarks?.trim() || '-' }}</div>
               </div>
