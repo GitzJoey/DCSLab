@@ -42,7 +42,7 @@ import {
   PurchaseOrderItemNestedStoreRequest,
 } from '@/types/services/purchase-order/PurchaseOrderRequest';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-import { convertErrorTypeToAlertListType } from '@/utils/helper';
+import { convertErrorTypeToAlertListType, formatCurrency } from '@/utils/helper';
 
 type PurchaseOrderItemFormItem = PurchaseOrderItemNestedStoreRequest & {
   product_unit_product_code?: string | null;
@@ -836,6 +836,8 @@ const getPurchaseOrderVatPreview = () =>
   );
 
 const formatCurrencyPreviewValue = (value: number) => Number(value.toFixed(2));
+const formatCompactNumberValue = (value: number | string, precision = 4) =>
+  formatCurrency(Number(Number(value ?? 0).toFixed(precision)));
 
 const getGlobalDiscountedGrandTotalPreview = () =>
   purchaseOrderItemsForm.value.reduce(
@@ -1141,7 +1143,8 @@ const onSubmit = async () => {
                   </div>
                   <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
                     <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')} ${item.product_unit_conversion_value}
+                      {{ `${t('views.product.fields.conversion_value')}
+                      ${formatCompactNumberValue(item.product_unit_conversion_value)}
                       ${item.product_unit_base_unit_name || ''}`.trim() }}
                     </div>
                   </div>
@@ -1245,7 +1248,8 @@ const onSubmit = async () => {
                   </div>
                   <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
                     <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')} ${item.product_unit_conversion_value}
+                      {{ `${t('views.product.fields.conversion_value')}
+                      ${formatCompactNumberValue(item.product_unit_conversion_value)}
                       ${item.product_unit_base_unit_name || ''}`.trim() }}
                     </div>
                   </div>
@@ -1349,7 +1353,8 @@ const onSubmit = async () => {
                   </div>
                   <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
                     <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')} ${item.product_unit_conversion_value}
+                      {{ `${t('views.product.fields.conversion_value')}
+                      ${formatCompactNumberValue(item.product_unit_conversion_value)}
                       ${item.product_unit_base_unit_name || ''}`.trim() }}
                     </div>
                   </div>
@@ -1394,14 +1399,16 @@ const onSubmit = async () => {
               </div>
 
               <!-- item details: stacked breakdown panels for mobile and tablet -->
-              <div v-if="currentItemLayout !== 'lg' && purchaseOrderItemDiscountsExpanded[index]" class="mt-4 space-y-4">
+              <div v-if="currentItemLayout !== 'lg' && purchaseOrderItemDiscountsExpanded[index]"
+                class="mt-4 space-y-4">
                 <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-5">
                   <!-- stacked panel: price and discount breakdown -->
                   <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_price_breakdown') }}</div>
 
                   <!-- unit price discounts and derived totals -->
                   <div class="space-y-3">
-                    <div v-if="item.product_unit_price_discounts.length === 0" class="text-right text-slate-500 text-sm">
+                    <div v-if="item.product_unit_price_discounts.length === 0"
+                      class="text-right text-slate-500 text-sm">
                       {{ t('views.purchase_order.fields.product_unit_price_discounts_empty') }}
                     </div>
 
@@ -1537,8 +1544,7 @@ const onSubmit = async () => {
                       <FormSelectSearch v-model="item.vat_profile_id" v-model:search="vatProfileSearch"
                         :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
                         :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }"
-                        @change="syncVatProfile(index)" @search="loadVatProfileDDL"
-                        @clear="clearVatProfile(index)" />
+                        @change="syncVatProfile(index)" @search="loadVatProfileDDL" @clear="clearVatProfile(index)" />
                       <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_profile_id`)" />
                     </div>
                     <div class="col-span-12 md:col-span-4">
@@ -1551,7 +1557,8 @@ const onSubmit = async () => {
                       <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_rate`)" />
                     </div>
                     <div class="col-span-12 md:col-span-4">
-                      <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }">
+                      <FormLabel
+                        :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }">
                         {{ t('views.purchase_order.fields.vat_base_numerator') }}
                       </FormLabel>
                       <FormInput v-model="item.vat_base_numerator" type="number" min="1"
@@ -1567,7 +1574,8 @@ const onSubmit = async () => {
                       <FormInput v-model="item.vat_base_denominator" type="number" min="1"
                         :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }"
                         @change="validatePurchaseOrderField(`items.${index}.vat_base_denominator`)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_denominator`)" />
+                      <FormErrorMessages
+                        :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_denominator`)" />
                     </div>
                     <div class="col-span-12">
                       <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }">
@@ -1605,13 +1613,11 @@ const onSubmit = async () => {
                         <FormSelectSearch v-model="item.vat_profile_id" v-model:search="vatProfileSearch"
                           :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
                           :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }"
-                          @change="syncVatProfile(index)"
-                          @search="loadVatProfileDDL" @clear="clearVatProfile(index)" />
+                          @change="syncVatProfile(index)" @search="loadVatProfileDDL" @clear="clearVatProfile(index)" />
                         <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_profile_id`)" />
                       </div>
                       <div class="col-span-12 md:col-span-4">
-                        <FormLabel
-                          :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }">
+                        <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }">
                           {{ t('views.purchase_order.fields.vat_rate') }}
                         </FormLabel>
                         <FormInputCurrency v-model="item.vat_rate" :allow-negative="false"
@@ -1660,7 +1666,8 @@ const onSubmit = async () => {
 
                     <!-- unit price discounts and derived totals -->
                     <div class="space-y-3">
-                      <div v-if="item.product_unit_price_discounts.length === 0" class="text-right text-slate-500 text-sm">
+                      <div v-if="item.product_unit_price_discounts.length === 0"
+                        class="text-right text-slate-500 text-sm">
                         {{ t('views.purchase_order.fields.product_unit_price_discounts_empty') }}
                       </div>
 
@@ -1878,9 +1885,7 @@ const onSubmit = async () => {
                       </Button>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <FormInputCurrency
-                        :model-value="getPurchaseOrderGlobalDiscountPreview()"
-                        readonly />
+                      <FormInputCurrency :model-value="getPurchaseOrderGlobalDiscountPreview()" readonly />
                     </div>
                   </div>
                 </div>
@@ -1901,7 +1906,8 @@ const onSubmit = async () => {
                   <div class="col-span-12 lg:col-span-9"></div>
                   <div class="col-span-12 lg:col-span-3">
                     <FormLabel>{{ t('views.purchase_order.fields.vat_base') }}</FormLabel>
-                    <FormInputCurrency :model-value="formatCurrencyPreviewValue(getPurchaseOrderVatBasePreview())" readonly />
+                    <FormInputCurrency :model-value="formatCurrencyPreviewValue(getPurchaseOrderVatBasePreview())"
+                      readonly />
                   </div>
                 </div>
 
@@ -1910,7 +1916,8 @@ const onSubmit = async () => {
                   <div class="col-span-12 lg:col-span-9"></div>
                   <div class="col-span-12 lg:col-span-3">
                     <FormLabel>{{ t('views.purchase_order.fields.vat') }}</FormLabel>
-                    <FormInputCurrency :model-value="formatCurrencyPreviewValue(getPurchaseOrderVatPreview())" readonly />
+                    <FormInputCurrency :model-value="formatCurrencyPreviewValue(getPurchaseOrderVatPreview())"
+                      readonly />
                   </div>
                 </div>
 
@@ -1975,8 +1982,7 @@ const onSubmit = async () => {
                           </FormLabel>
                           <FormInputCode v-model="downPayment.code"
                             :class="{ 'border-danger': invalidPurchaseOrderField(`down_payments.${index}.code`) }"
-                            :placeholder="t('views.purchase_order.fields.code')"
-                            @set-auto="setDownPaymentCode(index)"
+                            :placeholder="t('views.purchase_order.fields.code')" @set-auto="setDownPaymentCode(index)"
                             @change="validatePurchaseOrderField(`down_payments.${index}.code`)" />
                           <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.code`)" />
                         </div>
@@ -2077,15 +2083,14 @@ const onSubmit = async () => {
                 <div v-if="isRefundedDownPaymentEditorExpanded" class="space-y-4">
                   <FormErrorMessages :messages="purchaseOrderForm.errors.refunded_down_payments" />
 
-                  <div v-if="purchaseOrderRefundedDownPaymentsForm.length === 0" class="text-right text-slate-500 text-sm">
+                  <div v-if="purchaseOrderRefundedDownPaymentsForm.length === 0"
+                    class="text-right text-slate-500 text-sm">
                     {{ t('components.data-list.data_not_found') }}
                   </div>
 
                   <div v-else class="space-y-4">
-                    <div
-                      v-for="(refundedDownPayment, index) in purchaseOrderRefundedDownPaymentsForm"
-                      :key="`refunded-down-payment-${index}`"
-                      class="space-y-3">
+                    <div v-for="(refundedDownPayment, index) in purchaseOrderRefundedDownPaymentsForm"
+                      :key="`refunded-down-payment-${index}`" class="space-y-3">
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 md:col-span-6 lg:col-span-2"></div>
                         <div class="col-span-12 md:col-span-6 lg:col-span-2">
@@ -2093,40 +2098,37 @@ const onSubmit = async () => {
                             :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.code`) }">
                             {{ t('views.purchase_order.fields.code') }}
                           </FormLabel>
-                          <FormInputCode
-                            v-model="refundedDownPayment.code"
+                          <FormInputCode v-model="refundedDownPayment.code"
                             :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.code`) }"
                             :placeholder="t('views.purchase_order.fields.code')"
                             @set-auto="setRefundedDownPaymentCode(index)"
                             @change="validatePurchaseOrderField(`refunded_down_payments.${index}.code`)" />
-                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.code`)" />
+                          <FormErrorMessages
+                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.code`)" />
                         </div>
                         <div class="col-span-12 md:col-span-6 lg:col-span-4">
                           <FormLabel
                             :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.date`) }">
                             {{ t('views.purchase_order.fields.date') }}
                           </FormLabel>
-                          <FormInputDateTimeAuto
-                            v-model="refundedDownPayment.date"
+                          <FormInputDateTimeAuto v-model="refundedDownPayment.date"
                             :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.date`) }"
                             :placeholder="t('views.purchase_order.fields.date')"
                             @change="validatePurchaseOrderField(`refunded_down_payments.${index}.date`)" />
-                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.date`)" />
+                          <FormErrorMessages
+                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.date`)" />
                         </div>
                         <div class="col-span-12 md:col-span-8 lg:col-span-2">
                           <FormLabel
                             :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`) }">
                             {{ t('views.purchase_order.fields.cash_account_id') }}
                           </FormLabel>
-                          <FormSelectSearch
-                            v-model="refundedDownPayment.cash_account_id"
-                            v-model:search="cashAccountSearch"
-                            :options="cashAccountOptions"
+                          <FormSelectSearch v-model="refundedDownPayment.cash_account_id"
+                            v-model:search="cashAccountSearch" :options="cashAccountOptions"
                             :placeholder="t('components.dropdown.placeholder')"
                             :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`) }"
                             @change="validatePurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`)"
-                            @search="loadCashAccountDDL"
-                            @clear="clearRefundedCashAccount(index)" />
+                            @search="loadCashAccountDDL" @clear="clearRefundedCashAccount(index)" />
                           <FormErrorMessages
                             :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.cash_account_id`)" />
                         </div>
@@ -2137,23 +2139,20 @@ const onSubmit = async () => {
                           </FormLabel>
                           <div class="flex items-start gap-2">
                             <div class="flex-1 min-w-0">
-                              <FormInputCurrency
-                                v-model="refundedDownPayment.amount"
-                                :allow-negative="false"
+                              <FormInputCurrency v-model="refundedDownPayment.amount" :allow-negative="false"
                                 :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.amount`) }"
                                 @change="validatePurchaseOrderField(`refunded_down_payments.${index}.amount`)" />
                             </div>
                             <div class="shrink-0">
-                              <Button
-                                type="button"
-                                variant="outline-secondary"
+                              <Button type="button" variant="outline-secondary"
                                 class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
                                 @click="removeRefundedDownPayment(index)">
                                 <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                               </Button>
                             </div>
                           </div>
-                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.amount`)" />
+                          <FormErrorMessages
+                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.amount`)" />
                         </div>
                       </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
@@ -2163,8 +2162,7 @@ const onSubmit = async () => {
                             :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.remarks`) }">
                             {{ t('views.purchase_order.fields.remarks') }}
                           </FormLabel>
-                          <FormTextarea
-                            v-model="refundedDownPayment.remarks"
+                          <FormTextarea v-model="refundedDownPayment.remarks"
                             :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.remarks`) }"
                             @change="validatePurchaseOrderField(`refunded_down_payments.${index}.remarks`)" />
                           <FormErrorMessages
@@ -2188,9 +2186,7 @@ const onSubmit = async () => {
                     <FormLabel>{{ t('views.purchase_order.fields.amount_refunded_down_payment') }}</FormLabel>
                     <div class="flex items-start gap-2">
                       <div class="shrink-0">
-                        <Button
-                          type="button"
-                          variant="outline-secondary"
+                        <Button type="button" variant="outline-secondary"
                           class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
                           @click="isRefundedDownPaymentEditorExpanded = !isRefundedDownPaymentEditorExpanded">
                           {{ isRefundedDownPaymentEditorExpanded ? '▲' : '▼' }}
