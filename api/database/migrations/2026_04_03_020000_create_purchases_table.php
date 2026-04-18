@@ -26,14 +26,15 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->boolean('is_posted')->default(false);
 
-            $table->decimal('total_before_global_discount', 30, 8)->default(0);
+            $table->decimal('item_total_before_global_discount', 30, 8)->default(0);
             $table->decimal('global_discount', 30, 8)->default(0);
-            $table->decimal('total_before_vat', 30, 8)->default(0);
-            $table->decimal('additional_cost', 30, 8)->default(0);
+            $table->decimal('item_total_after_global_discount', 30, 8)->default(0);
             $table->decimal('vat_base', 30, 8)->default(0);
             $table->decimal('vat', 30, 8)->default(0);
+            $table->decimal('item_total_after_vat', 30, 8)->default(0);
+            $table->decimal('additional_cost', 30, 8)->default(0);
             $table->decimal('rounding', 30, 8)->default(0);
-            $table->decimal('grand_total', 30, 8)->default(0);
+            $table->decimal('amount_payable', 30, 8)->default(0);
             $table->decimal('amount_paid_by_purchase_order_down_payment', 30, 8)->default(0);
             $table->decimal('amount_paid_by_purchase_return', 30, 8)->default(0);
             $table->decimal('amount_paid_total', 30, 8)->default(0);

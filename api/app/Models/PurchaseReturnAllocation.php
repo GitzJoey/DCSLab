@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderDownPaymentAllocation extends Model
+class PurchaseReturnAllocation extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -20,7 +20,7 @@ class PurchaseOrderDownPaymentAllocation extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'purchase_order_down_payment_id',
+        'purchase_return_id',
         'purchase_id',
         'date',
         'amount',
@@ -42,9 +42,9 @@ class PurchaseOrderDownPaymentAllocation extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseOrderDownPayment()
+    public function purchaseReturn()
     {
-        return $this->belongsTo(PurchaseOrderDownPayment::class)->withTrashed();
+        return $this->belongsTo(PurchaseReturn::class)->withTrashed();
     }
 
     public function purchase()
@@ -55,7 +55,7 @@ class PurchaseOrderDownPaymentAllocation extends Model
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_down_payment_allocations.remarks', 'like', '%'.$search.'%');
+            $query->where('purchase_return_allocations.remarks', 'like', '%'.$search.'%');
         });
     }
 }

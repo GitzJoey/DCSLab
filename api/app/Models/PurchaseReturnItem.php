@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderItem extends Model
+class PurchaseReturnItem extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -18,36 +18,37 @@ class PurchaseOrderItem extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'company_id', // user_input
-        'branch_id', // user_input
-        'purchase_order_id', // user_input
-        'qty', // user_input
-        'product_unit_id', // user_input
-        'product_unit_conversion_value', // user_input
-        'product_unit_qty_base', // calculated_when_saving_item_row
-        'product_unit_price', // user_input
-        'product_unit_is_price_include_vat', // user_input
-        'price_discount', // calculated_after_save_item_row
-        'price_after_discount', // calculated_after_save_item_row
-        'subtotal', // calculated_after_save_item_row
-        'subtotal_discount', // calculated_after_save_item_row
-        'subtotal_after_discount', // calculated_after_save_item_row
-
-        'global_discount', // calculated_after_save_discount_rows
-        'subtotal_after_global_discount', // calculated_after_save_discount_rows
-        'vat_profile_id', // user_input
-        'vat_rate', // user_input
-        'vat_base_numerator', // user_input
-        'vat_base_denominator', // user_input
-        'vat_base', // calculated_after_save_discount_rows
-        'vat', // calculated_after_save_discount_rows
-        'subtotal_after_vat', // calculated_after_save_discount_rows
-        'rounding', // calculated_after_save_discount_rows
-        'amount_payable', // calculated_after_save_discount_rows
-        'cogs', // calculated_after_save_discount_rows
-        'total_cogs', // calculated_after_save_discount_rows
-        'base_unit_cogs', // calculated_after_save_discount_rows
-        'remarks', // user_input
+        'company_id',
+        'branch_id',
+        'purchase_return_id',
+        'purchase_item_id',
+        'qty',
+        'product_unit_id',
+        'product_unit_conversion_value',
+        'product_unit_qty_base',
+        'product_unit_price',
+        'product_unit_is_price_include_vat',
+        'price_discount',
+        'price_after_discount',
+        'subtotal',
+        'subtotal_discount',
+        'subtotal_after_discount',
+        'global_discount',
+        'subtotal_after_global_discount',
+        'vat_profile_id',
+        'vat_rate',
+        'vat_base_numerator',
+        'vat_base_denominator',
+        'vat_base',
+        'vat',
+        'subtotal_after_vat',
+        'additional_cost',
+        'rounding',
+        'amount_payable',
+        'cogs',
+        'total_cogs',
+        'base_unit_cogs',
+        'remarks',
     ];
 
     protected $casts = [
@@ -69,6 +70,7 @@ class PurchaseOrderItem extends Model
         'vat_base' => 'decimal:8',
         'vat' => 'decimal:8',
         'subtotal_after_vat' => 'decimal:8',
+        'additional_cost' => 'decimal:8',
         'rounding' => 'decimal:8',
         'amount_payable' => 'decimal:8',
         'cogs' => 'decimal:8',
@@ -86,9 +88,14 @@ class PurchaseOrderItem extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseOrder()
+    public function purchaseReturn()
     {
-        return $this->belongsTo(PurchaseOrder::class)->withTrashed();
+        return $this->belongsTo(PurchaseReturn::class)->withTrashed();
+    }
+
+    public function purchaseItem()
+    {
+        return $this->belongsTo(PurchaseItem::class)->withTrashed();
     }
 
     public function productUnit()
@@ -101,20 +108,20 @@ class PurchaseOrderItem extends Model
         return $this->belongsTo(VatProfile::class)->withTrashed();
     }
 
-    public function productUnitPriceDiscounts()
+    public function itemSerials()
     {
-        return $this->hasMany(PurchaseOrderItemProductUnitPriceDiscount::class);
+        return $this->hasMany(PurchaseReturnItemSerial::class);
     }
 
-    public function subtotalDiscounts()
+    public function shipmentItems()
     {
-        return $this->hasMany(PurchaseOrderItemSubtotalDiscount::class);
+        return $this->hasMany(PurchaseReturnShipmentItem::class);
     }
 
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_items.remarks', 'like', '%'.$search.'%');
+            $query->where('purchase_return_items.remarks', 'like', '%'.$search.'%');
         });
     }
 }

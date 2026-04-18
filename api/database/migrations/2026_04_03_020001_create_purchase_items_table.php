@@ -22,27 +22,27 @@ return new class extends Migration
             $table->decimal('product_unit_qty_base', 30, 8)->default(0);
             $table->decimal('product_unit_price', 30, 8)->default(0);
             $table->boolean('product_unit_is_price_include_vat')->default(false);
-            $table->decimal('product_unit_price_discount', 30, 8)->default(0);
-            $table->decimal('product_unit_price_after_discount', 30, 8)->default(0);
-            $table->decimal('product_unit_subtotal', 30, 8)->default(0);
-            $table->decimal('product_unit_subtotal_discount', 30, 8)->default(0);
-            $table->decimal('product_unit_subtotal_after_discount', 30, 8)->default(0);
-            $table->decimal('product_unit_global_discount', 30, 8)->default(0);
-            $table->decimal('product_unit_total_before_vat', 30, 8)->default(0);
+            $table->decimal('price_discount', 30, 8)->default(0);
+            $table->decimal('price_after_discount', 30, 8)->default(0);
+            $table->decimal('subtotal', 30, 8)->default(0);
+            $table->decimal('subtotal_discount', 30, 8)->default(0);
+            $table->decimal('subtotal_after_discount', 30, 8)->default(0);
 
+            $table->decimal('global_discount', 30, 8)->default(0);
+            $table->decimal('subtotal_after_global_discount', 30, 8)->default(0);
             $table->foreignId('vat_profile_id')->nullable()->references('id')->on('vat_profiles');
             $table->decimal('vat_rate', 30, 8)->default(0);
             $table->unsignedInteger('vat_base_numerator')->default(1);
             $table->unsignedInteger('vat_base_denominator')->default(1);
-            $table->decimal('product_unit_vat_base', 30, 8)->default(0);
-            $table->decimal('product_unit_vat', 30, 8)->default(0);
-            $table->decimal('product_unit_additional_cost', 30, 8)->default(0);
-            $table->decimal('product_unit_rounding', 30, 8)->default(0);
-            $table->decimal('product_unit_grand_total', 30, 8)->default(0);
-            $table->decimal('product_unit_cogs', 30, 8)->default(0);
-            $table->decimal('product_unit_total_cogs', 30, 8)->default(0);
-            $table->decimal('product_unit_base_unit_cogs', 30, 8)->default(0);
-
+            $table->decimal('vat_base', 30, 8)->default(0);
+            $table->decimal('vat', 30, 8)->default(0);
+            $table->decimal('subtotal_after_vat', 30, 8)->default(0);
+            $table->decimal('additional_cost', 30, 8)->default(0);
+            $table->decimal('rounding', 30, 8)->default(0);
+            $table->decimal('amount_payable', 30, 8)->default(0);
+            $table->decimal('cogs', 30, 8)->default(0);
+            $table->decimal('total_cogs', 30, 8)->default(0);
+            $table->decimal('base_unit_cogs', 30, 8)->default(0);
             $table->string('remarks')->nullable();
 
             $table->unsignedBigInteger('created_by')->default(0);

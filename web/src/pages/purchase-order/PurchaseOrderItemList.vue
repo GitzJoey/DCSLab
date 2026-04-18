@@ -476,8 +476,8 @@ const showNotification = (title: string, content: string) => {
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).subtotal_after_discount ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.vat') }}</div>
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).vat ?? 0) }}</div>
-                <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.grand_total') }}</div>
-                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as PurchaseOrderItem).grand_total ?? 0) }}</div>
+                <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.amount_payable') }}</div>
+                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as PurchaseOrderItem).amount_payable ?? 0) }}</div>
               </div>
             </div>
           </div>

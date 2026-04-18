@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderDownPaymentAllocation extends Model
+class PurchaseReturnShipment extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -20,16 +20,18 @@ class PurchaseOrderDownPaymentAllocation extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'purchase_order_down_payment_id',
-        'purchase_id',
+        'purchase_return_id',
+        'supplier_id',
+        'code',
         'date',
-        'amount',
+        'warehouse_id',
         'remarks',
+        'is_posted',
     ];
 
     protected $casts = [
         'date' => 'datetime',
-        'amount' => 'decimal:8',
+        'is_posted' => 'boolean',
     ];
 
     public function company()
@@ -42,20 +44,36 @@ class PurchaseOrderDownPaymentAllocation extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseOrderDownPayment()
+    public function purchaseReturn()
     {
-        return $this->belongsTo(PurchaseOrderDownPayment::class)->withTrashed();
+        return $this->belongsTo(PurchaseReturn::class)->withTrashed();
     }
 
-    public function purchase()
+    public function supplier()
     {
-        return $this->belongsTo(Purchase::class)->withTrashed();
+        return $this->belongsTo(Supplier::class)->withTrashed();
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class)->withTrashed();
+    }
+
+    public function items()
+    {
+        return $this->hasMany(PurchaseReturnShipmentItem::class);
+    }
+
+    public function itemSerials()
+    {
+        return $this->hasMany(PurchaseReturnShipmentItemSerial::class);
     }
 
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_down_payment_allocations.remarks', 'like', '%'.$search.'%');
+            $query->where('purchase_return_shipments.code', 'like', '%'.$search.'%')
+                ->orWhere('purchase_return_shipments.remarks', 'like', '%'.$search.'%');
         });
     }
 }

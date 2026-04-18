@@ -808,7 +808,7 @@ const getItemTotalBeforeRoundingPreview = (item: PurchaseOrderItemFormItem, item
   return subtotalAfterGlobalDiscount + getItemVatPreview(item, itemIndex);
 };
 
-const getItemGrandTotalPreview = (item: PurchaseOrderItemFormItem) => {
+const getItemAmountPayablePreview = (item: PurchaseOrderItemFormItem) => {
   const itemIndex = purchaseOrderItemsForm.value.indexOf(item);
 
   if (itemIndex < 0) {
@@ -840,14 +840,14 @@ const formatCurrencyPreviewValue = (value: number) => Number(value.toFixed(2));
 const formatCompactNumberValue = (value: number | string, precision = 4) =>
   formatCurrency(Number(Number(value ?? 0).toFixed(precision)));
 
-const getGlobalDiscountedGrandTotalPreview = () =>
+const getTotalAmountPayableBeforeRoundingPreview = () =>
   purchaseOrderItemsForm.value.reduce(
     (total, item, itemIndex) => total + getItemTotalBeforeRoundingPreview(item, itemIndex),
     0,
   );
 
-const getPurchaseOrderGrandTotalPreview = () =>
-  getGlobalDiscountedGrandTotalPreview() + Number(purchaseOrderForm.rounding || 0);
+const getPurchaseOrderAmountPayablePreview = () =>
+  getTotalAmountPayableBeforeRoundingPreview() + Number(purchaseOrderForm.rounding || 0);
 
 const getDownPaymentsTotalPreview = () =>
   purchaseOrderDownPaymentsForm.value.reduce(
@@ -1161,7 +1161,7 @@ const onSubmit = async () => {
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
-                <!-- item grand total -->
+                <!-- item amount payable -->
                 <div class="col-span-12">
                   <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
@@ -1266,7 +1266,7 @@ const onSubmit = async () => {
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
-                <!-- item grand total -->
+                <!-- item amount payable -->
                 <div class="col-span-12 md:col-span-4">
                   <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
@@ -1375,7 +1375,7 @@ const onSubmit = async () => {
                   </div>
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
-                <!-- item grand total -->
+                <!-- item amount payable -->
                 <div class="col-span-12 lg:col-span-3">
                   <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
@@ -1805,7 +1805,7 @@ const onSubmit = async () => {
         <div class="p-5 space-y-4">
           <!-- summary card: item totals, global discounts, and down payments -->
           <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-4">
-            <!-- summary: total of all item grand totals after item-level discounts -->
+            <!-- summary: total amount payable of all items after item-level discounts -->
             <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
               <!-- summary spacer: keeps totals aligned to the right on desktop -->
               <div class="col-span-12 lg:col-span-9"></div>
@@ -1923,7 +1923,7 @@ const onSubmit = async () => {
                   </div>
                 </div>
 
-                <!-- summary: rounding adjustment before grand total -->
+                <!-- summary: rounding adjustment before amount payable -->
                 <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
                   <div class="col-span-12 lg:col-span-9"></div>
                   <div class="col-span-12 lg:col-span-3">
@@ -1938,12 +1938,12 @@ const onSubmit = async () => {
                 </div>
               </template>
 
-              <!-- summary: grand total after applying global discounts and rounding -->
+              <!-- summary: amount payable after applying global discounts and rounding -->
               <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
                 <!-- summary spacer: keeps the numeric field aligned with other totals -->
                 <div class="col-span-12 lg:col-span-9"></div>
                 <div class="col-span-12 lg:col-span-3">
-                  <FormLabel>{{ t('views.purchase_order.fields.grand_total') }}</FormLabel>
+                  <FormLabel>{{ t('views.purchase_order.fields.amount_payable') }}</FormLabel>
                   <div class="flex items-start gap-2">
                     <div class="shrink-0">
                       <Button type="button" variant="outline-secondary"
@@ -1953,7 +1953,7 @@ const onSubmit = async () => {
                       </Button>
                     </div>
                     <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getPurchaseOrderGrandTotalPreview()" readonly />
+                      <FormInputCurrency :model-value="getPurchaseOrderAmountPayablePreview()" readonly />
                     </div>
                   </div>
                 </div>

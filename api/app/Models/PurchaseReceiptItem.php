@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderDownPaymentAllocation extends Model
+class PurchaseReceiptItem extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -20,16 +20,19 @@ class PurchaseOrderDownPaymentAllocation extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'purchase_order_down_payment_id',
-        'purchase_id',
-        'date',
-        'amount',
+        'purchase_receipt_id',
+        'purchase_item_id',
+        'qty',
+        'product_unit_id',
+        'product_unit_conversion_value',
+        'product_unit_qty_base',
         'remarks',
     ];
 
     protected $casts = [
-        'date' => 'datetime',
-        'amount' => 'decimal:8',
+        'qty' => 'decimal:8',
+        'product_unit_conversion_value' => 'decimal:8',
+        'product_unit_qty_base' => 'decimal:8',
     ];
 
     public function company()
@@ -42,20 +45,30 @@ class PurchaseOrderDownPaymentAllocation extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseOrderDownPayment()
+    public function purchaseReceipt()
     {
-        return $this->belongsTo(PurchaseOrderDownPayment::class)->withTrashed();
+        return $this->belongsTo(PurchaseReceipt::class)->withTrashed();
     }
 
-    public function purchase()
+    public function purchaseItem()
     {
-        return $this->belongsTo(Purchase::class)->withTrashed();
+        return $this->belongsTo(PurchaseItem::class)->withTrashed();
+    }
+
+    public function productUnit()
+    {
+        return $this->belongsTo(ProductUnit::class)->withTrashed();
+    }
+
+    public function itemSerials()
+    {
+        return $this->hasMany(PurchaseReceiptItemSerial::class);
     }
 
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_down_payment_allocations.remarks', 'like', '%'.$search.'%');
+            $query->where('purchase_receipt_items.remarks', 'like', '%'.$search.'%');
         });
     }
 }

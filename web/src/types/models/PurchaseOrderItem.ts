@@ -51,8 +51,9 @@ export interface PurchaseOrderItem {
   vat_base_denominator: number;
   vat_base: number;
   vat: number;
+  subtotal_after_vat: number;
   rounding: number;
-  grand_total: number;
+  amount_payable: number;
   cogs: number;
   total_cogs: number;
   base_unit_cogs: number;

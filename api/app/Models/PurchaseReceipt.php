@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderDownPaymentAllocation extends Model
+class PurchaseReceipt extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -20,16 +20,17 @@ class PurchaseOrderDownPaymentAllocation extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'purchase_order_down_payment_id',
         'purchase_id',
+        'code',
         'date',
-        'amount',
+        'warehouse_id',
         'remarks',
+        'is_posted',
     ];
 
     protected $casts = [
         'date' => 'datetime',
-        'amount' => 'decimal:8',
+        'is_posted' => 'boolean',
     ];
 
     public function company()
@@ -42,20 +43,31 @@ class PurchaseOrderDownPaymentAllocation extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseOrderDownPayment()
-    {
-        return $this->belongsTo(PurchaseOrderDownPayment::class)->withTrashed();
-    }
-
     public function purchase()
     {
         return $this->belongsTo(Purchase::class)->withTrashed();
     }
 
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class)->withTrashed();
+    }
+
+    public function items()
+    {
+        return $this->hasMany(PurchaseReceiptItem::class);
+    }
+
+    public function itemSerials()
+    {
+        return $this->hasMany(PurchaseReceiptItemSerial::class);
+    }
+
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_down_payment_allocations.remarks', 'like', '%'.$search.'%');
+            $query->where('purchase_receipts.code', 'like', '%'.$search.'%')
+                ->orWhere('purchase_receipts.remarks', 'like', '%'.$search.'%');
         });
     }
 }

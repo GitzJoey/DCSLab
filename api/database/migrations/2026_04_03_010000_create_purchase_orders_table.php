@@ -25,8 +25,9 @@ return new class extends Migration
             $table->decimal('item_total_after_global_discount', 30, 8)->default(0);
             $table->decimal('vat_base', 30, 8)->default(0);
             $table->decimal('vat', 30, 8)->default(0);
+            $table->decimal('item_total_after_vat', 30, 8)->default(0);
             $table->decimal('rounding', 30, 8)->default(0);
-            $table->decimal('grand_total', 30, 8)->default(0);
+            $table->decimal('amount_payable', 30, 8)->default(0);
             $table->decimal('amount_paid_down_payment', 30, 8)->default(0);
             $table->decimal('amount_allocated_down_payment', 30, 8)->default(0);
             $table->decimal('amount_refunded_down_payment', 30, 8)->default(0);

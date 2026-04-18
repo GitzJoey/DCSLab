@@ -30,8 +30,9 @@ export interface PurchaseOrder {
   item_total_after_global_discount: number;
   vat_base: number;
   vat: number;
+  item_total_after_vat: number;
   rounding: number;
-  grand_total: number;
+  amount_payable: number;
   amount_paid_down_payment: number;
   amount_allocated_down_payment: number;
   amount_refunded_down_payment: number;

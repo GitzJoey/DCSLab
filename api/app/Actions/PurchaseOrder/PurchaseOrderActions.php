@@ -573,7 +573,7 @@ class PurchaseOrderActions
             $poItem->save();
         }
 
-        $getPoItemTotalBeforeRounding = function ($poItem) {
+        $getPoItemSubtotalAfterVat = function ($poItem) {
             $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
             $vat = (float) $poItem->vat;
 
@@ -584,27 +584,28 @@ class PurchaseOrderActions
             return $subtotalAfterGlobalDiscount + $vat;
         };
 
-        $totalBeforeRounding = $po->items->sum($getPoItemTotalBeforeRounding);
+        $itemTotalAfterVat = $po->items->sum($getPoItemSubtotalAfterVat);
 
         foreach ($po->items as $poItem) {
-            $poItem->rounding = (function () use ($poItem, $po, $totalBeforeRounding, $getPoItemTotalBeforeRounding) {
-                $poItemTotalBeforeRounding = $getPoItemTotalBeforeRounding($poItem);
+            $poItem->rounding = (function () use ($poItem, $po, $itemTotalAfterVat, $getPoItemSubtotalAfterVat) {
+                $poItemSubtotalAfterVat = $getPoItemSubtotalAfterVat($poItem);
                 $purchaseOrderRounding = (float) $po->rounding;
 
-                if ($totalBeforeRounding <= 0 || $purchaseOrderRounding == 0 || $poItemTotalBeforeRounding <= 0) return 0;
+                if ($itemTotalAfterVat <= 0 || $purchaseOrderRounding == 0 || $poItemSubtotalAfterVat <= 0) return 0;
 
-                return ($poItemTotalBeforeRounding / $totalBeforeRounding) * $purchaseOrderRounding;
+                return ($poItemSubtotalAfterVat / $itemTotalAfterVat) * $purchaseOrderRounding;
             })();
-            $poItem->grand_total = (function () use ($poItem, $getPoItemTotalBeforeRounding) {
-                return $getPoItemTotalBeforeRounding($poItem) + (float) $poItem->rounding;
+            $poItem->subtotal_after_vat = $getPoItemSubtotalAfterVat($poItem);
+            $poItem->amount_payable = (function () use ($poItem, $getPoItemSubtotalAfterVat) {
+                return $getPoItemSubtotalAfterVat($poItem) + (float) $poItem->rounding;
             })();
             $poItem->cogs = (function () use ($poItem) {
                 $qty = (float) $poItem->qty;
-                $grandTotal = (float) $poItem->grand_total;
+                $amountPayable = (float) $poItem->amount_payable;
 
-                if ($qty <= 0 || $grandTotal <= 0) return 0;
+                if ($qty <= 0 || $amountPayable <= 0) return 0;
 
-                return $grandTotal / $qty;
+                return $amountPayable / $qty;
             })();
             $poItem->total_cogs = (function () use ($poItem) {
                 $qty = (float) $poItem->qty;
@@ -627,7 +628,8 @@ class PurchaseOrderActions
 
         $po->vat_base = (float) $po->items->sum('vat_base');
         $po->vat = (float) $po->items->sum('vat');
-        $po->grand_total = (float) $po->items->sum('grand_total');
+        $po->item_total_after_vat = (float) $po->items->sum('subtotal_after_vat');
+        $po->amount_payable = (float) $po->items->sum('amount_payable');
         $po->amount_paid_down_payment = $po->downPayments->sum('amount');
         $po->amount_allocated_down_payment = $po->downPayments->sum('amount_allocated');
         $po->amount_refunded_down_payment = $po->refundedDownPayments->sum('amount');

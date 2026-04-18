@@ -37,8 +37,9 @@ return new class extends Migration
             $table->unsignedInteger('vat_base_denominator')->default(1);
             $table->decimal('vat_base', 30, 8)->default(0);
             $table->decimal('vat', 30, 8)->default(0);
+            $table->decimal('subtotal_after_vat', 30, 8)->default(0);
             $table->decimal('rounding', 30, 8)->default(0);
-            $table->decimal('grand_total', 30, 8)->default(0);
+            $table->decimal('amount_payable', 30, 8)->default(0);
             $table->decimal('cogs', 30, 8)->default(0);
             $table->decimal('total_cogs', 30, 8)->default(0);
             $table->decimal('base_unit_cogs', 30, 8)->default(0);

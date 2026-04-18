@@ -228,36 +228,26 @@ const confirmDelete = async () => {
       <div class="grid grid-cols-12 gap-4 mb-5">
         <div class="col-span-12 md:col-span-4">
           <FormLabel>{{ t('views.purchase_order.fields.start_date') }}</FormLabel>
-          <FormInputDateTime v-model="startDate" @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)" />
+          <FormInputDateTime v-model="startDate"
+            @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)" />
         </div>
         <div class="col-span-12 md:col-span-4">
           <FormLabel>{{ t('views.purchase_order.fields.end_date') }}</FormLabel>
-          <FormInputDateTime v-model="endDate" @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)" />
+          <FormInputDateTime v-model="endDate"
+            @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)" />
         </div>
         <div class="col-span-12 md:col-span-4">
           <FormLabel>{{ t('views.purchase_order.fields.supplier_id') }}</FormLabel>
-          <FormSelectSearch
-            v-model="selectedSupplierId"
-            v-model:search="supplierSearch"
-            :options="supplierOptions"
+          <FormSelectSearch v-model="selectedSupplierId" v-model:search="supplierSearch" :options="supplierOptions"
             :placeholder="t('components.dropdown.placeholder')"
             @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)"
-            @search="loadSupplierDDL"
-            @clear="clearSupplierFilter"
-          />
+            @search="loadSupplierDDL" @clear="clearSupplierFilter" />
         </div>
       </div>
 
-      <DataListFlex
-        :data="purchaseOrderLists"
-        :enable-search="true"
-        :can-print="true"
-        :can-export="true"
-        :rows="purchaseOrderLists?.data ?? []"
-        row-class="bg-white dark:bg-darkmode-600"
-        :pagination="purchaseOrderLists ? purchaseOrderLists.meta : null"
-        @dataListChanged="handleDataListChange"
-      >
+      <DataListFlex :data="purchaseOrderLists" :enable-search="true" :can-print="true" :can-export="true"
+        :rows="purchaseOrderLists?.data ?? []" row-class="bg-white dark:bg-darkmode-600"
+        :pagination="purchaseOrderLists ? purchaseOrderLists.meta : null" @dataListChanged="handleDataListChange">
         <template #row="{ item, index }">
           <div class="col-span-12 md:col-span-12 lg:col-span-4 self-start">
             <div class="space-y-2">
@@ -266,17 +256,22 @@ const confirmDelete = async () => {
               </div>
               <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.code') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrder).code ?? '-' }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrder).code ?? '-' }}
+                </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.date') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
-                  {{ (item as PurchaseOrder).date ? formatDate((item as PurchaseOrder).date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+                  {{ (item as PurchaseOrder).date ? formatDate((item as PurchaseOrder).date, 'DD-MMM-YYYY HH:mm:ss') :
+                  '-' }}
                 </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.supplier_id') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).supplier?.name ?? '-' }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as
+                  PurchaseOrder).supplier?.name ?? '-' }}</div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.due_days') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrder).due_days ?? 0 }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrder).due_days ?? 0 }}
+                </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.remarks') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrder).remarks?.trim() || '-' }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as
+                  PurchaseOrder).remarks?.trim() || '-' }}</div>
               </div>
             </div>
           </div>
@@ -287,20 +282,30 @@ const confirmDelete = async () => {
                 {{ t('views.purchase_order.field_groups.summary') }}
               </div>
               <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_total_before_global_discount') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).item_total_before_global_discount ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{
+                  t('views.purchase_order.fields.item_total_before_global_discount') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                  PurchaseOrder).item_total_before_global_discount ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.global_discount') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).global_discount ?? 0) }}</div>
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_total_after_global_discount') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).item_total_after_global_discount ?? 0) }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                  PurchaseOrder).global_discount ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{
+                  t('views.purchase_order.fields.item_total_after_global_discount') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                  PurchaseOrder).item_total_after_global_discount ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.vat_base') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrencyRounded((item as PurchaseOrder).vat_base ?? 0) }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrencyRounded((item as
+                  PurchaseOrder).vat_base ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.vat') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrencyRounded((item as PurchaseOrder).vat ?? 0) }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrencyRounded((item as
+                  PurchaseOrder).vat ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.rounding') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).rounding ?? 0) }}</div>
-                <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.grand_total') }}</div>
-                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as PurchaseOrder).grand_total ?? 0) }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                  PurchaseOrder).rounding ?? 0) }}</div>
+                <div class="col-span-4 text-primary font-medium">{{ t('views.purchase_order.fields.amount_payable') }}
+                </div>
+                <div class="col-span-8 text-right text-primary font-medium">{{ formatCurrency((item as
+                  PurchaseOrder).amount_payable ?? 0) }}</div>
               </div>
             </div>
           </div>
@@ -311,34 +316,42 @@ const confirmDelete = async () => {
                 {{ t('views.purchase_order.fields.down_payment') }}
               </div>
               <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_paid_down_payment') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).amount_paid_down_payment ?? 0) }}</div>
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_allocated_down_payment') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).amount_allocated_down_payment ?? 0) }}</div>
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_refunded_down_payment') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrder).amount_refunded_down_payment ?? 0) }}</div>
-                <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.amount_available_down_payment') }}</div>
-                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as PurchaseOrder).amount_available_down_payment ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_paid_down_payment') }}
+                </div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                  PurchaseOrder).amount_paid_down_payment ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_allocated_down_payment')
+                  }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                  PurchaseOrder).amount_allocated_down_payment ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_refunded_down_payment')
+                  }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                  PurchaseOrder).amount_refunded_down_payment ?? 0) }}</div>
+                <div class="col-span-7 text-primary font-medium">{{
+                  t('views.purchase_order.fields.amount_available_down_payment') }}</div>
+                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as
+                  PurchaseOrder).amount_available_down_payment ?? 0) }}</div>
               </div>
             </div>
           </div>
 
-          <div class="col-span-12 md:col-span-1 lg:col-span-1 self-center flex justify-end items-center gap-2 pt-2 md:flex-col lg:flex-col">
+          <div
+            class="col-span-12 md:col-span-1 lg:col-span-1 self-center flex justify-end items-center gap-2 pt-2 md:flex-col lg:flex-col">
             <Button size="sm" variant="outline-secondary" class="flex items-center gap-1" @click="viewSelected(index)">
               <Lucide icon="Info" class="w-4 h-4" />
             </Button>
             <Button size="sm" variant="outline-secondary" class="flex items-center gap-1" @click="editSelected(index)">
               <Lucide icon="Pen" class="w-4 h-4" />
             </Button>
-            <Button size="sm" variant="outline-secondary" class="flex items-center gap-1" @click="deleteSelected(index)">
+            <Button size="sm" variant="outline-secondary" class="flex items-center gap-1"
+              @click="deleteSelected(index)">
               <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
             </Button>
           </div>
 
-          <div
-            v-if="expandDetail === index"
-            class="col-span-12 border-t border-slate-200 dark:border-darkmode-400 mt-2 pt-3"
-          >
+          <div v-if="expandDetail === index"
+            class="col-span-12 border-t border-slate-200 dark:border-darkmode-400 mt-2 pt-3">
             <div class="grid grid-cols-12 gap-4">
               <div class="col-span-12 lg:col-span-6 space-y-3">
                 <div class="text-primary text-xs font-semibold uppercase tracking-wide">
@@ -348,36 +361,39 @@ const confirmDelete = async () => {
                   {{ t('components.data-list.data_not_found') }}
                 </div>
                 <div v-else class="space-y-3 rounded-md border border-slate-200/60 dark:border-darkmode-400 p-3">
-                  <div
-                    v-for="poItem in (item as PurchaseOrder).items"
-                    :key="poItem.id"
-                    class="border-b border-slate-200/60 pb-3 text-sm last:border-b-0 last:pb-0 dark:border-darkmode-400"
-                  >
+                  <div v-for="poItem in (item as PurchaseOrder).items" :key="poItem.id"
+                    class="border-b border-slate-200/60 pb-3 text-sm last:border-b-0 last:pb-0 dark:border-darkmode-400">
                     <div class="font-medium text-slate-700 dark:text-slate-200 break-words">
                       {{ poItem.product_unit?.product?.name ?? '-' }}
                     </div>
                     <div class="mt-1 text-xs text-slate-500 break-words">
-                      {{ poItem.product_unit?.code ?? '-' }}{{ poItem.product_unit?.unit?.name ? ` (${poItem.product_unit.unit.name})` : '' }}
+                      {{ poItem.product_unit?.code ?? '-' }}{{ poItem.product_unit?.unit?.name ? `
+                      (${poItem.product_unit.unit.name})` : '' }}
                     </div>
-                    <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
+                    <div
+                      class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
                       <span>
                         {{ t('views.purchase_order.fields.qty') }}
-                        <span class="text-slate-700 dark:text-slate-200">{{ formatQuantityValue(poItem.qty ?? 0) }}</span>
+                        <span class="text-slate-700 dark:text-slate-200">{{ formatQuantityValue(poItem.qty ?? 0)
+                          }}</span>
                       </span>
                       <span class="text-slate-400">|</span>
                       <span>
                         {{ t('views.purchase_order.fields.unit_name') }}
-                        <span class="text-slate-700 dark:text-slate-200">{{ poItem.product_unit?.unit?.name ?? '-' }}</span>
+                        <span class="text-slate-700 dark:text-slate-200">{{ poItem.product_unit?.unit?.name ?? '-'
+                          }}</span>
                       </span>
                       <span class="text-slate-400">|</span>
                       <span>
                         {{ t('views.purchase_order.fields.product_unit_price') }}
-                        <span class="text-slate-700 dark:text-slate-200">{{ formatCurrency(poItem.product_unit_price ?? 0) }}</span>
+                        <span class="text-slate-700 dark:text-slate-200">{{ formatCurrency(poItem.product_unit_price ??
+                          0) }}</span>
                       </span>
                       <span class="text-slate-400">|</span>
                       <span>
                         {{ t('views.purchase_order.fields.subtotal_after_discount') }}
-                        <span class="font-medium text-slate-700 dark:text-slate-200">{{ formatCurrency(poItem.subtotal_after_discount ?? 0) }}</span>
+                        <span class="font-medium text-slate-700 dark:text-slate-200">{{
+                          formatCurrency(poItem.subtotal_after_discount ?? 0) }}</span>
                       </span>
                     </div>
                     <div v-if="poItem.remarks?.trim()" class="mt-2 text-xs text-slate-500 break-words">
@@ -396,14 +412,12 @@ const confirmDelete = async () => {
                     {{ t('components.data-list.data_not_found') }}
                   </div>
                   <div v-else class="space-y-2">
-                    <div
-                      v-for="discount in (item as PurchaseOrder).global_discounts"
-                      :key="discount.id"
-                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs"
-                    >
+                    <div v-for="discount in (item as PurchaseOrder).global_discounts" :key="discount.id"
+                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs">
                       <div class="col-span-3 text-slate-500">#{{ discount.sequence }}</div>
                       <div class="col-span-5 text-slate-700 dark:text-slate-200">{{ discount.discount_type }}</div>
-                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency(discount.discount_value ?? 0) }}</div>
+                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{
+                        formatCurrency(discount.discount_value ?? 0) }}</div>
                     </div>
                   </div>
                 </div>
@@ -416,14 +430,12 @@ const confirmDelete = async () => {
                     {{ t('components.data-list.data_not_found') }}
                   </div>
                   <div v-else class="space-y-2">
-                    <div
-                      v-for="downPayment in (item as PurchaseOrder).down_payments"
-                      :key="downPayment.id"
-                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs"
-                    >
+                    <div v-for="downPayment in (item as PurchaseOrder).down_payments" :key="downPayment.id"
+                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs">
                       <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ downPayment.code }}</div>
                       <div class="col-span-4 text-slate-500">{{ downPayment.cash_account?.name ?? '-' }}</div>
-                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency(downPayment.amount ?? 0) }}</div>
+                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{
+                        formatCurrency(downPayment.amount ?? 0) }}</div>
                     </div>
                   </div>
                 </div>
@@ -436,14 +448,13 @@ const confirmDelete = async () => {
                     {{ t('components.data-list.data_not_found') }}
                   </div>
                   <div v-else class="space-y-2">
-                    <div
-                      v-for="refundedDownPayment in (item as PurchaseOrder).refunded_down_payments"
+                    <div v-for="refundedDownPayment in (item as PurchaseOrder).refunded_down_payments"
                       :key="refundedDownPayment.id"
-                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs"
-                    >
+                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs">
                       <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ refundedDownPayment.code }}</div>
                       <div class="col-span-4 text-slate-500">{{ refundedDownPayment.cash_account?.name ?? '-' }}</div>
-                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency(refundedDownPayment.amount ?? 0) }}</div>
+                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{
+                        formatCurrency(refundedDownPayment.amount ?? 0) }}</div>
                     </div>
                   </div>
                 </div>

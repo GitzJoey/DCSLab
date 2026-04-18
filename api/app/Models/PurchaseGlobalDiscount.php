@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DiscountTypeEnum;
 use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrderDownPaymentAllocation extends Model
+class PurchaseGlobalDiscount extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -20,16 +21,16 @@ class PurchaseOrderDownPaymentAllocation extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'purchase_order_down_payment_id',
         'purchase_id',
-        'date',
-        'amount',
-        'remarks',
+        'sequence',
+        'discount_type',
+        'discount_value',
     ];
 
     protected $casts = [
-        'date' => 'datetime',
-        'amount' => 'decimal:8',
+        'sequence' => 'integer',
+        'discount_type' => DiscountTypeEnum::class,
+        'discount_value' => 'decimal:8',
     ];
 
     public function company()
@@ -42,11 +43,6 @@ class PurchaseOrderDownPaymentAllocation extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchaseOrderDownPayment()
-    {
-        return $this->belongsTo(PurchaseOrderDownPayment::class)->withTrashed();
-    }
-
     public function purchase()
     {
         return $this->belongsTo(Purchase::class)->withTrashed();
@@ -55,7 +51,7 @@ class PurchaseOrderDownPaymentAllocation extends Model
     public function scopeSearch($query, string $search)
     {
         return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_down_payment_allocations.remarks', 'like', '%'.$search.'%');
+            $query->where('purchase_global_discounts.discount_type', 'like', '%'.$search.'%');
         });
     }
 }
