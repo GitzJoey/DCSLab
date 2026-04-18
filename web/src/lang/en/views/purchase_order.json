@@ -27,6 +27,11 @@
     "down_payments": "Down Payments",
     "refunded_down_payments": "Down Payment Refunds"
   },
+  "filters": {
+    "down_payment_allocation_status": "Down Payment Allocation Status",
+    "down_payment_allocation_status_not_fully_allocated": "Not / Not Fully Allocated",
+    "down_payment_allocation_status_fully_allocated": "Fully Allocated"
+  },
   "fields": {
     "company_id": "Company",
     "branch_id": "Branch",

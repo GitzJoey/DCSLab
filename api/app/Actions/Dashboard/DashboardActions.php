@@ -379,6 +379,12 @@ class DashboardActions
             'title' => 'components.menu.purchase-order-down-payment',
         ];
 
+        $purchaseOrderDownPaymentNotFullyAllocated = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-purchase-order-down-payment-not-fully-allocated',
+            'title' => 'components.menu.purchase-order-down-payment-not-fully-allocated',
+        ];
+
         $purchaseOrderDownPaymentRefund = [
             'icon' => 'Undo2',
             'pageName' => 'side-menu-purchase-order-down-payment-refund',
@@ -415,6 +421,7 @@ class DashboardActions
             $purchaseOrder['subMenu'],
             $purchaseOrderItem,
             $purchaseOrderDownPayment,
+            $purchaseOrderDownPaymentNotFullyAllocated,
             $purchaseOrderDownPaymentRefund
         );
 

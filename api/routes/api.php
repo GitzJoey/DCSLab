@@ -388,6 +388,7 @@ Route::prefix('purchase_order_item')->middleware('auth:sanctum')->group(function
 
 Route::prefix('purchase_order_down_payment')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.purchase_order_down_payment.')->group(function () {
+        Route::get('read/allocation-statuses', [PurchaseOrderDownPaymentController::class, 'getAllocationStatuses'])->name('read_allocation_statuses');
         Route::get('read', [PurchaseOrderDownPaymentController::class, 'readAny'])->name('read_any');
         Route::get('read/{purchase_order_down_payment:ulid}', [PurchaseOrderDownPaymentController::class, 'read'])->name('read');
     });

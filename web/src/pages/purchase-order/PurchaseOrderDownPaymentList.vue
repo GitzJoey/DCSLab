@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { FormInputDateTime, FormLabel, FormSelectSearch } from '@/components/Base/Form';
+import { FormInputDateTime, FormLabel, FormSelect, FormSelectSearch } from '@/components/Base/Form';
 import { DataListFlex } from '@/components/DataList';
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
@@ -12,6 +12,7 @@ import CashAccountService from '@/services/CashAccountService';
 import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
 import { ErrorCode } from '@/types/enums/ErrorCode';
 import { ViewMode } from '@/types/enums/ViewMode';
+import type { PurchaseOrderDownPaymentAllocationStatus } from '@/types/enums/PurchaseOrderDownPaymentAllocationStatus';
 import type { PurchaseOrderDownPayment } from '@/types/models/PurchaseOrderDownPayment';
 import type { DropDownOption } from '@/types/models/DropDownOption';
 import type { Collection } from '@/types/resources/Collection';
@@ -19,6 +20,14 @@ import type { DataListEmittedData } from '@/components/DataList/DataList.vue';
 import type { PurchaseOrderDownPaymentReadAnyPaginateRequest } from '@/types/services/purchase-order-down-payment/PurchaseOrderDownPaymentRequest';
 import type { ServiceResponse } from '@/types/services/ServiceResponse';
 import { formatCurrency, formatDate } from '@/utils/helper';
+
+const props = withDefaults(defineProps<{
+  presetAllocationStatus?: PurchaseOrderDownPaymentAllocationStatus | null;
+  hideAllocationStatusFilter?: boolean;
+}>(), {
+  presetAllocationStatus: null,
+  hideAllocationStatusFilter: false,
+});
 
 const { t } = useI18n();
 const router = useRouter();
@@ -35,6 +44,7 @@ const endDate = ref<string | null>(null);
 const searchText = ref('');
 const selectedSupplierId = ref<string | null>(null);
 const selectedCashAccountId = ref<string | null>(null);
+const selectedAllocationStatus = ref<PurchaseOrderDownPaymentAllocationStatus | ''>(props.presetAllocationStatus ?? '');
 const supplierSearch = ref('');
 const cashAccountSearch = ref('');
 
@@ -49,8 +59,10 @@ const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUs
 
 const supplierDDL = ref<Array<DropDownOption> | null>(null);
 const cashAccountDDL = ref<Array<DropDownOption> | null>(null);
+const allocationStatusDDL = ref<Array<DropDownOption> | null>(null);
 const supplierOptions = computed(() => (supplierDDL.value ?? []).map((item) => ({ value: item.code, label: item.name })));
 const cashAccountOptions = computed(() => (cashAccountDDL.value ?? []).map((item) => ({ value: item.code, label: item.name })));
+const allocationStatusOptions = computed(() => (allocationStatusDDL.value ?? []).map((item) => ({ value: item.code, label: t(item.name) })));
 
 onMounted(async () => {
   emits('mode-state', ViewMode.LIST);
@@ -66,7 +78,7 @@ onMounted(async () => {
   startDate.value = formatDate(startOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
   endDate.value = formatDate(endOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
 
-  await Promise.all([loadSupplierDDL(), loadCashAccountDDL()]);
+  await Promise.all([loadSupplierDDL(), loadCashAccountDDL(), loadAllocationStatusDDL()]);
   await getLists('', true, 1, 10);
 });
 
@@ -83,6 +95,7 @@ const getLists = async (search: string, refresh: boolean, page: number, perPage:
     end_date: endDate.value || undefined,
     supplier_id: selectedSupplierId.value,
     cash_account_id: selectedCashAccountId.value,
+    allocation_status: selectedAllocationStatus.value || null,
     refresh,
     page,
     per_page: perPage,
@@ -131,6 +144,13 @@ const loadCashAccountDDL = async (search = '') => {
 
   if (result.success && result.data) {
     cashAccountDDL.value = result.data.data.map((item: any) => ({ code: item.id, name: item.name }));
+  }
+};
+
+const loadAllocationStatusDDL = async () => {
+  const result = await purchaseOrderDownPaymentService.readAllocationStatuses();
+  if (result.success && result.data) {
+    allocationStatusDDL.value = result.data;
   }
 };
 
@@ -202,6 +222,13 @@ const editSelected = (index: number) => {
             @search="loadCashAccountDDL"
             @clear="clearCashAccountFilter"
           />
+        </div>
+        <div v-if="!props.hideAllocationStatusFilter" class="col-span-12 md:col-span-3">
+          <FormLabel>{{ t('views.purchase_order.filters.down_payment_allocation_status') }}</FormLabel>
+          <FormSelect v-model="selectedAllocationStatus" @change="handleFilterChange">
+            <option value="">{{ t('components.dropdown.placeholder') }}</option>
+            <option v-for="item in allocationStatusOptions" :key="item.value" :value="item.value">{{ item.label }}</option>
+          </FormSelect>
         </div>
       </div>
 

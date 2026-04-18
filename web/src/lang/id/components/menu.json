@@ -34,6 +34,7 @@
   "purchase-order": "Purchase Order",
   "purchase-order-item": "Purchase Order per Item",
   "purchase-order-down-payment": "Uang Muka Purchase Order",
+  "purchase-order-down-payment-not-fully-allocated": "Uang Muka PO Belum Full Dialokasikan",
   "purchase-order-down-payment-refund": "Refund Uang Muka Purchase Order",
   "stock-transfer": "Transfer Stok",
   "stock-transfer-item": "Transfer Stok per Item",

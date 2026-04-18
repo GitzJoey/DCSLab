@@ -6,6 +6,7 @@ use App\Actions\PurchaseOrderDownPayment\PurchaseOrderDownPaymentActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\Enums\PurchaseOrderDownPaymentAllocationStatusEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Resources\PurchaseOrderDownPaymentResource;
 use App\Models\PurchaseOrderDownPayment;
@@ -15,6 +16,7 @@ use App\Rules\IsValidCompany;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class PurchaseOrderDownPaymentController extends BaseController
 {
@@ -48,6 +50,7 @@ class PurchaseOrderDownPaymentController extends BaseController
             'purchase_order_id' => ['nullable', 'integer', new ExistsForCompany('purchase_orders', $request->company_id)],
             'supplier_id' => ['nullable', 'integer', new ExistsForCompany('suppliers', $request->company_id)],
             'cash_account_id' => ['nullable', 'integer', new ExistsForCompany('cash_accounts', $request->company_id)],
+            'allocation_status' => ['nullable', 'string', Rule::in(PurchaseOrderDownPaymentAllocationStatusEnum::toArrayValue())],
 
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
@@ -71,6 +74,7 @@ class PurchaseOrderDownPaymentController extends BaseController
                 purchaseOrderId: $validated['purchase_order_id'] ?? null,
                 supplierId: $validated['supplier_id'] ?? null,
                 cashAccountId: $validated['cash_account_id'] ?? null,
+                allocationStatus: $validated['allocation_status'] ?? null,
                 execute: new ExecuteDTO(
                     useCache: ! $validated['refresh'],
                     pagination: (function () use ($validated) {
@@ -124,5 +128,10 @@ class PurchaseOrderDownPaymentController extends BaseController
         }
 
         return new PurchaseOrderDownPaymentResource($result);
+    }
+
+    public function getAllocationStatuses()
+    {
+        return $this->purchaseOrderDownPaymentActions->getAllocationStatuses();
     }
 }

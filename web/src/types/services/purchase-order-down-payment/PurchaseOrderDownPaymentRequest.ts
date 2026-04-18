@@ -1,3 +1,5 @@
+import type { PurchaseOrderDownPaymentAllocationStatus } from '@/types/enums/PurchaseOrderDownPaymentAllocationStatus';
+
 export interface PurchaseOrderDownPaymentReadAnyPaginateRequest {
   with_trashed: boolean;
   company_id: string;
@@ -7,6 +9,7 @@ export interface PurchaseOrderDownPaymentReadAnyPaginateRequest {
   end_date?: string;
   supplier_id?: string | null;
   cash_account_id?: string | null;
+  allocation_status?: PurchaseOrderDownPaymentAllocationStatus | null;
   refresh: boolean;
   page: number;
   per_page: number;
@@ -21,6 +24,7 @@ export interface PurchaseOrderDownPaymentReadAnyGetRequest {
   end_date?: string;
   supplier_id?: string | null;
   cash_account_id?: string | null;
+  allocation_status?: PurchaseOrderDownPaymentAllocationStatus | null;
   refresh: boolean;
   limit: number;
 }

@@ -106,6 +106,7 @@ import PurchaseOrderItemIndex from '@/pages/purchase-order/PurchaseOrderItemInde
 import PurchaseOrderItemList from '@/pages/purchase-order/PurchaseOrderItemList.vue';
 import PurchaseOrderDownPaymentIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentIndex.vue';
 import PurchaseOrderDownPaymentList from '@/pages/purchase-order/PurchaseOrderDownPaymentList.vue';
+import PurchaseOrderDownPaymentNotFullyAllocatedIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentNotFullyAllocatedIndex.vue';
 import PurchaseOrderDownPaymentRefundIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentRefundIndex.vue';
 import PurchaseOrderDownPaymentRefundList from '@/pages/purchase-order/PurchaseOrderDownPaymentRefundList.vue';
 import StockTransferIndex from '@/pages/stock-transfer/StockTransferIndex.vue';
@@ -804,6 +805,14 @@ export default [
                 },
               },
             ],
+          },
+          {
+            path: '/dashboard/purchase-order-down-payment-not-fully-allocated',
+            name: 'side-menu-purchase-order-down-payment-not-fully-allocated',
+            component: PurchaseOrderDownPaymentNotFullyAllocatedIndex,
+            meta: {
+              remember: true,
+            },
           },
           {
             path: '/dashboard/purchase-order-down-payment-refund',

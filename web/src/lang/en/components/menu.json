@@ -29,6 +29,7 @@
   "purchase-order": "Purchase Order",
   "purchase-order-item": "Purchase Order by Item",
   "purchase-order-down-payment": "Purchase Order Down Payment",
+  "purchase-order-down-payment-not-fully-allocated": "PO Down Payment Not Fully Allocated",
   "purchase-order-down-payment-refund": "Purchase Order Down Payment Refund",
   "stock-transfer": "Stock Transfer",
   "stock-transfer-item": "Stock Transfer by Item",

@@ -27,6 +27,11 @@
     "down_payments": "Uang Muka",
     "refunded_down_payments": "Refund Uang Muka"
   },
+  "filters": {
+    "down_payment_allocation_status": "Status Alokasi Uang Muka",
+    "down_payment_allocation_status_not_fully_allocated": "Belum / Belum Sepenuhnya Dialokasikan",
+    "down_payment_allocation_status_fully_allocated": "Sudah Dialokasikan Penuh"
+  },
   "fields": {
     "company_id": "Perusahaan",
     "branch_id": "Cabang",

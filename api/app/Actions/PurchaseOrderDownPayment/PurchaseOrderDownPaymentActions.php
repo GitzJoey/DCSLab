@@ -10,6 +10,7 @@ use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderDownPaymentCreateDTO;
 use App\DTOs\PurchaseOrderDownPaymentUpdateDTO;
+use App\Enums\PurchaseOrderDownPaymentAllocationStatusEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\PurchaseOrderDownPayment;
 use App\Traits\CacheHelper;
@@ -40,11 +41,14 @@ class PurchaseOrderDownPaymentActions
         int $companyId,
         ?int $branchId,
         ?string $search,
+
         ?string $startDate,
         ?string $endDate,
         ?int $purchaseOrderId,
         ?int $supplierId,
         ?int $cashAccountId,
+        ?string $allocationStatus,
+
         ?ExecuteDTO $execute
     ) {
         $query = PurchaseOrderDownPayment::select('purchase_order_down_payments.*')
@@ -55,7 +59,7 @@ class PurchaseOrderDownPaymentActions
             ->whereBranchId('purchase_order_down_payments', $branchId)
             ->withTrashed();
 
-        $query->where(function ($query) use ($withTrashed, $search, $startDate, $endDate, $purchaseOrderId, $supplierId, $cashAccountId) {
+        $query->where(function ($query) use ($withTrashed, $search, $startDate, $endDate, $purchaseOrderId, $supplierId, $cashAccountId, $allocationStatus) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
 
@@ -82,6 +86,15 @@ class PurchaseOrderDownPaymentActions
             if ($cashAccountId) {
                 $query->where('purchase_order_down_payments.cash_account_id', $cashAccountId);
             }
+
+            if ($allocationStatus === PurchaseOrderDownPaymentAllocationStatusEnum::NOT_FULLY_ALLOCATED->value) {
+                $query->whereColumn('purchase_order_down_payments.amount_allocated', '<', 'purchase_order_down_payments.amount');
+            }
+
+            if ($allocationStatus === PurchaseOrderDownPaymentAllocationStatusEnum::FULLY_ALLOCATED->value) {
+                $query->whereColumn('purchase_order_down_payments.amount_allocated', '>=', 'purchase_order_down_payments.amount')
+                    ->where('purchase_order_down_payments.amount', '>', 0);
+            }
         });
 
         $query->orderBy('purchase_order_down_payments.date', 'desc')
@@ -102,6 +115,7 @@ class PurchaseOrderDownPaymentActions
                     $purchaseOrderId ?? '[null]',
                     $supplierId ?? '[null]',
                     $cashAccountId ?? '[null]',
+                    $allocationStatus ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',
@@ -148,6 +162,20 @@ class PurchaseOrderDownPaymentActions
         }
 
         return $query;
+    }
+
+    public function getAllocationStatuses(): array
+    {
+        return [
+            [
+                'name' => 'views.purchase_order.filters.down_payment_allocation_status_not_fully_allocated',
+                'code' => PurchaseOrderDownPaymentAllocationStatusEnum::NOT_FULLY_ALLOCATED->value,
+            ],
+            [
+                'name' => 'views.purchase_order.filters.down_payment_allocation_status_fully_allocated',
+                'code' => PurchaseOrderDownPaymentAllocationStatusEnum::FULLY_ALLOCATED->value,
+            ],
+        ];
     }
 
     public function read(PurchaseOrderDownPayment $purchaseOrderDownPayment): PurchaseOrderDownPayment
