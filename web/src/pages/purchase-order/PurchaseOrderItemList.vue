@@ -432,17 +432,26 @@ const showNotification = (title: string, content: string) => {
                   </div>
                   <div class="mt-1 text-xs text-slate-500 break-words">
                     {{ (item as PurchaseOrderItem).product_unit?.code ?? '-' }}
-                    {{ (item as PurchaseOrderItem).product_unit?.unit?.name ? ` (${(item as PurchaseOrderItem).product_unit?.unit?.name})` : '' }}
                   </div>
                 </div>
               </div>
               <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.qty') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ getQtyDisplay(item as PurchaseOrderItem) }}</div>
-                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.product_unit_price') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ formatCurrency((item as PurchaseOrderItem).product_unit_price ?? 0) }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.product.fields.category_id') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as PurchaseOrderItem).product_unit?.product?.category?.name ?? '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.product.fields.brand_id') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as PurchaseOrderItem).product_unit?.product?.brand?.name ?? '-' }}
+                </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.vat_profile_id') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrderItem).vat_profile?.name ?? '-' }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.vat_rate') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ formatQuantityValue((item as PurchaseOrderItem).vat_rate ?? 0) }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.vat_base_fraction') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ `${formatQuantityValue((item as PurchaseOrderItem).vat_base_numerator ?? 0)}/${formatQuantityValue((item as PurchaseOrderItem).vat_base_denominator ?? 0)}` }}
+                </div>
               </div>
             </div>
           </div>
@@ -450,9 +459,15 @@ const showNotification = (title: string, content: string) => {
           <div class="col-span-12 md:col-span-5 lg:col-span-3 self-start md:pl-3 lg:pl-4">
             <div class="space-y-2">
               <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                {{ t('views.purchase_order.field_groups.purchase_order_data') }}
+                {{ t('views.purchase_order.field_groups.summary') }}
               </div>
               <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200 break-words">
+                  {{ `${formatQuantityValue((item as PurchaseOrderItem).qty ?? 0)} ${(item as PurchaseOrderItem).product_unit?.unit?.name ?? ''}`.trim() || '-' }}
+                </div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.product_unit_price') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).product_unit_price ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.price_discount') }}</div>
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).price_discount ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.subtotal_discount') }}</div>
@@ -489,8 +504,6 @@ const showNotification = (title: string, content: string) => {
                   <div class="col-span-8 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).global_discount ?? 0) }}</div>
                   <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}</div>
                   <div class="col-span-8 text-right text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrderItem).product_unit_is_price_include_vat ? 'Yes' : 'No' }}</div>
-                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.vat_profile_id') }}</div>
-                  <div class="col-span-8 text-right text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrderItem).vat_profile?.name ?? '-' }}</div>
                 </div>
               </div>
               <div class="col-span-12 lg:col-span-6 space-y-3">

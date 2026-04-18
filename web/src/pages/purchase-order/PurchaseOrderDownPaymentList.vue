@@ -219,24 +219,52 @@ const editSelected = (index: number) => {
           <div class="col-span-12 md:col-span-12 lg:col-span-4 self-start">
             <div class="space-y-2">
               <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                {{ t('views.purchase_order.fields.down_payment') }}
+                {{ t('views.purchase_order.page_title') }}
               </div>
               <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.code') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrderDownPayment).code }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrderDownPayment).purchase_order?.code ?? '-' }}</div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.date') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
-                  {{ (item as PurchaseOrderDownPayment).date ? formatDate((item as PurchaseOrderDownPayment).date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+                  {{ (item as PurchaseOrderDownPayment).purchase_order?.date ? formatDate((item as PurchaseOrderDownPayment).purchase_order?.date as string, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
                 </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.supplier_id') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
                   {{ (item as PurchaseOrderDownPayment).purchase_order?.supplier?.name ?? '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.due_days') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200">
+                  {{ (item as PurchaseOrderDownPayment).purchase_order?.due_days ?? 0 }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.remarks') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as PurchaseOrderDownPayment).purchase_order?.remarks?.trim() || '-' }}
                 </div>
               </div>
             </div>
           </div>
 
           <div class="col-span-12 md:col-span-6 lg:col-span-4 self-start md:pr-3 lg:pr-4">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.purchase_order.fields.down_payment') }}
+              </div>
+              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.code') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrderDownPayment).code ?? '-' }}</div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.date') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as PurchaseOrderDownPayment).date ? formatDate((item as PurchaseOrderDownPayment).date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.cash_account_id') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as PurchaseOrderDownPayment).cash_account?.name ?? '-' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-12 md:col-span-5 lg:col-span-3 self-start md:pl-3 lg:pl-4">
             <div class="space-y-2">
               <div class="text-primary text-xs font-semibold uppercase tracking-wide">
                 {{ t('views.purchase_order.field_groups.summary') }}
@@ -246,27 +274,9 @@ const editSelected = (index: number) => {
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderDownPayment).amount ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_allocated') }}</div>
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderDownPayment).amount_allocated ?? 0) }}</div>
-                <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.amount_available_down_payment') }}</div>
-                <div class="col-span-5 text-right text-primary font-medium">
-                  {{ formatCurrency(((item as PurchaseOrderDownPayment).amount ?? 0) - ((item as PurchaseOrderDownPayment).amount_allocated ?? 0)) }}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-span-12 md:col-span-5 lg:col-span-3 self-start md:pl-3 lg:pl-4">
-            <div class="space-y-2">
-              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                {{ t('views.purchase_order.field_groups.purchase_order_data') }}
-              </div>
-              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.code') }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.remarks') }}</div>
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200 break-words">
-                  {{ (item as PurchaseOrderDownPayment).purchase_order?.code ?? '-' }}
-                </div>
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.cash_account_id') }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200 break-words">
-                  {{ (item as PurchaseOrderDownPayment).cash_account?.name ?? '-' }}
+                  {{ (item as PurchaseOrderDownPayment).remarks?.trim() || '-' }}
                 </div>
               </div>
             </div>
@@ -285,15 +295,17 @@ const editSelected = (index: number) => {
             <div class="grid grid-cols-12 gap-4">
               <div class="col-span-12 lg:col-span-6 space-y-3">
                 <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                  {{ t('views.purchase_order.field_groups.purchase_order_data') }}
+                  {{ t('views.purchase_order.field_groups.summary') }}
                 </div>
                 <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
                   <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.company_id') }}</div>
                   <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrderDownPayment).company?.name ?? '-' }}</div>
                   <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.supplier_id') }}</div>
                   <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ (item as PurchaseOrderDownPayment).purchase_order?.supplier?.name ?? '-' }}</div>
-                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.code') }}</div>
-                  <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">{{ (item as PurchaseOrderDownPayment).purchase_order?.code ?? '-' }}</div>
+                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.amount_available_down_payment') }}</div>
+                  <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                    {{ formatCurrency(((item as PurchaseOrderDownPayment).amount ?? 0) - ((item as PurchaseOrderDownPayment).amount_allocated ?? 0)) }}
+                  </div>
                 </div>
               </div>
               <div class="col-span-12 lg:col-span-6 space-y-3">

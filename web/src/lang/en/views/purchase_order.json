@@ -79,6 +79,7 @@
     "product_unit_is_price_include_vat": "VAT Included",
     "vat_profile_id": "VAT Profile",
     "vat_rate": "VAT Rate",
+    "vat_base_fraction": "VAT Base Fraction",
     "vat_base_numerator": "VAT Base Numerator",
     "vat_base_denominator": "VAT Base Denominator",
     "sequence": "Sequence",

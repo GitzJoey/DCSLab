@@ -79,6 +79,7 @@
     "product_unit_is_price_include_vat": "Harga Termasuk PPN",
     "vat_profile_id": "Profil PPN",
     "vat_rate": "Tarif PPN",
+    "vat_base_fraction": "Fraksi Dasar PPN",
     "vat_base_numerator": "Pembilang Dasar PPN",
     "vat_base_denominator": "Penyebut Dasar PPN",
     "sequence": "Urutan",
