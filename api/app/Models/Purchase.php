@@ -110,6 +110,11 @@ class Purchase extends Model
         return $this->hasMany(PurchasePayment::class);
     }
 
+    public function additionalCosts()
+    {
+        return $this->hasMany(PurchaseAdditionalCost::class);
+    }
+
     public function globalDiscounts()
     {
         return $this->hasMany(PurchaseGlobalDiscount::class);

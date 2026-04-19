@@ -105,6 +105,21 @@ class Company extends Model
         return $this->hasMany(PurchaseOrder::class);
     }
 
+    public function purchaseAdditionalCostCategories()
+    {
+        return $this->hasMany(PurchaseAdditionalCostCategory::class);
+    }
+
+    public function purchaseAdditionalCosts()
+    {
+        return $this->hasMany(PurchaseAdditionalCost::class);
+    }
+
+    public function purchaseAdditionalCostPayments()
+    {
+        return $this->hasMany(PurchaseAdditionalCostPayment::class);
+    }
+
     public function customers()
     {
         return $this->hasMany(Customer::class);

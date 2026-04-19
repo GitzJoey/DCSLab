@@ -5,6 +5,8 @@ namespace App\DTOs;
 use App\Enums\CapitalTransactionTypeEnum;
 use App\Models\CapitalOpening;
 use App\Models\CapitalTransaction;
+use App\Models\PurchaseAdditionalCost;
+use App\Models\PurchaseAdditionalCostPayment;
 use App\Models\PurchaseOrderDownPayment;
 use App\Models\PurchaseOrderDownPaymentRefund;
 
@@ -63,6 +65,28 @@ final class CashTransactionCreateDTO
             date: $purchaseOrderDownPaymentRefund->date,
             cashAccountId: $purchaseOrderDownPaymentRefund->cash_account_id,
             amount: (float) $purchaseOrderDownPaymentRefund->amount,
+        );
+    }
+
+    public static function fromPurchaseAdditionalCost(PurchaseAdditionalCost $purchaseAdditionalCost): self
+    {
+        return new self(
+            referableType: PurchaseAdditionalCost::class,
+            referableId: $purchaseAdditionalCost->id,
+            date: $purchaseAdditionalCost->date,
+            cashAccountId: $purchaseAdditionalCost->paid_immediately_cash_account_id,
+            amount: (float) $purchaseAdditionalCost->amount_paid_immediately,
+        );
+    }
+
+    public static function fromPurchaseAdditionalCostPayment(PurchaseAdditionalCostPayment $purchaseAdditionalCostPayment): self
+    {
+        return new self(
+            referableType: PurchaseAdditionalCostPayment::class,
+            referableId: $purchaseAdditionalCostPayment->id,
+            date: $purchaseAdditionalCostPayment->date,
+            cashAccountId: $purchaseAdditionalCostPayment->cash_account_id,
+            amount: (float) $purchaseAdditionalCostPayment->amount,
         );
     }
 }

@@ -1,0 +1,35 @@
+{
+  "page_title": "Biaya Tambahan Purchase",
+  "actions": {
+    "create": "Tambah Biaya Tambahan Purchase",
+    "edit": "Ubah Biaya Tambahan Purchase"
+  },
+  "table": {
+    "title": "Daftar Biaya Tambahan Purchase"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "purchase_additional_cost_data": "Data Biaya Tambahan Purchase"
+  },
+  "fields": {
+    "purchase": "Purchase",
+    "category": "Kategori",
+    "code": "Kode",
+    "date": "Tanggal",
+    "due_days": "Jatuh Tempo (Hari)",
+    "paid_immediately_cash_account": "Akun Kas Bayar Langsung",
+    "amount_paid_immediately": "Jumlah Bayar Langsung",
+    "amount_payable": "Jumlah Terhutang",
+    "amount_payable_paid": "Terhutang Sudah Dibayar",
+    "amount_payable_due": "Sisa Hutang",
+    "is_amount_payable_paid_off": "Status Lunas",
+    "amount_total": "Jumlah Total",
+    "remarks": "Catatan"
+  },
+  "alert": {
+    "delete_purchase_additional_cost": {
+      "title": "Berhasil Menghapus Biaya Tambahan Purchase",
+      "content": "Biaya tambahan purchase telah dihapus."
+    }
+  }
+}

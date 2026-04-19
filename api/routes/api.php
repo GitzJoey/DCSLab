@@ -17,6 +17,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
 use App\Http\Controllers\ProductUnitController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PurchaseAdditionalCostCategoryController;
+use App\Http\Controllers\PurchaseAdditionalCostController;
+use App\Http\Controllers\PurchaseAdditionalCostPaymentController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseOrderDownPaymentController;
 use App\Http\Controllers\PurchaseOrderDownPaymentRefundController;
@@ -235,6 +239,19 @@ Route::prefix('stock_adjustment_category')->middleware('auth:sanctum')->group(fu
     });
 });
 
+Route::prefix('purchase_additional_cost_category')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_additional_cost_category.')->group(function () {
+        Route::get('read', [PurchaseAdditionalCostCategoryController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase_additional_cost_category:ulid}', [PurchaseAdditionalCostCategoryController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase_additional_cost_category.')->group(function () {
+        Route::post('save', [PurchaseAdditionalCostCategoryController::class, 'store'])->name('save');
+        Route::post('edit/{purchase_additional_cost_category:ulid}', [PurchaseAdditionalCostCategoryController::class, 'update'])->name('edit');
+        Route::post('delete/{purchase_additional_cost_category:ulid}', [PurchaseAdditionalCostCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
 Route::prefix('capital_opening')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.capital_opening.')->group(function () {
         Route::get('read', [CapitalOpeningController::class, 'readAny'])->name('read_any');
@@ -398,6 +415,45 @@ Route::prefix('purchase_order_down_payment_refund')->middleware('auth:sanctum')-
     Route::middleware('throttle:100,1')->name('api.get.purchase_order_down_payment_refund.')->group(function () {
         Route::get('read', [PurchaseOrderDownPaymentRefundController::class, 'readAny'])->name('read_any');
         Route::get('read/{podp_refund:ulid}', [PurchaseOrderDownPaymentRefundController::class, 'read'])->name('read');
+    });
+});
+
+Route::prefix('purchase')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase.')->group(function () {
+        Route::get('read', [PurchaseController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase:ulid}', [PurchaseController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase.')->group(function () {
+        Route::post('save', [PurchaseController::class, 'store'])->name('save');
+        Route::post('edit/{purchase:ulid}', [PurchaseController::class, 'update'])->name('edit');
+        Route::post('delete/{purchase:ulid}', [PurchaseController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('purchase_additional_cost')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_additional_cost.')->group(function () {
+        Route::get('read', [PurchaseAdditionalCostController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase_additional_cost:ulid}', [PurchaseAdditionalCostController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase_additional_cost.')->group(function () {
+        Route::post('save', [PurchaseAdditionalCostController::class, 'store'])->name('save');
+        Route::post('edit/{purchase_additional_cost:ulid}', [PurchaseAdditionalCostController::class, 'update'])->name('edit');
+        Route::post('delete/{purchase_additional_cost:ulid}', [PurchaseAdditionalCostController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('purchase_additional_cost_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_additional_cost_payment.')->group(function () {
+        Route::get('read', [PurchaseAdditionalCostPaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase_additional_cost_payment:ulid}', [PurchaseAdditionalCostPaymentController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase_additional_cost_payment.')->group(function () {
+        Route::post('save', [PurchaseAdditionalCostPaymentController::class, 'store'])->name('save');
+        Route::post('edit/{purchase_additional_cost_payment:ulid}', [PurchaseAdditionalCostPaymentController::class, 'update'])->name('edit');
+        Route::post('delete/{purchase_additional_cost_payment:ulid}', [PurchaseAdditionalCostPaymentController::class, 'delete'])->name('delete');
     });
 });
 

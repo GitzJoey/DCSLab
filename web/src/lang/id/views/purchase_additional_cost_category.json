@@ -1,0 +1,24 @@
+{
+  "page_title": "Kategori Biaya Tambahan Purchase",
+  "actions": {
+    "create": "Tambah Kategori Biaya Tambahan Purchase",
+    "edit": "Ubah Kategori Biaya Tambahan Purchase"
+  },
+  "table": {
+    "title": "Daftar Kategori Biaya Tambahan Purchase"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "purchase_additional_cost_category_data": "Data Kategori Biaya Tambahan Purchase"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama"
+  },
+  "alert": {
+    "delete_purchase_additional_cost_category": {
+      "title": "Berhasil Menghapus Kategori Biaya Tambahan Purchase",
+      "content": "Kategori biaya tambahan purchase telah dihapus."
+    }
+  }
+}

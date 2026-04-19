@@ -1,0 +1,24 @@
+{
+  "page_title": "Purchase Additional Cost Category",
+  "actions": {
+    "create": "Create Purchase Additional Cost Category",
+    "edit": "Edit Purchase Additional Cost Category"
+  },
+  "table": {
+    "title": "Purchase Additional Cost Category List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "purchase_additional_cost_category_data": "Purchase Additional Cost Category Data"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name"
+  },
+  "alert": {
+    "delete_purchase_additional_cost_category": {
+      "title": "Successfully Deleted Purchase Additional Cost Category",
+      "content": "Purchase additional cost category has been deleted."
+    }
+  }
+}

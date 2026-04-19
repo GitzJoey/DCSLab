@@ -223,7 +223,13 @@ class DashboardActions
             'title' => 'components.menu.stock-adjustment-category',
         ];
 
-        array_push($root_array['subMenu'], $companyManagement, $financeManagement, $productManagement, $supplier, $customerManagement, $stockAdjustmentCategory);
+        $purchaseAdditionalCostCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-purchase-additional-cost-category',
+            'title' => 'components.menu.purchase-additional-cost-category',
+        ];
+
+        array_push($root_array['subMenu'], $companyManagement, $financeManagement, $productManagement, $supplier, $customerManagement, $stockAdjustmentCategory, $purchaseAdditionalCostCategory);
         array_push($menu, $root_array);
 
         return $menu;
@@ -254,6 +260,18 @@ class DashboardActions
             'title' => 'components.menu.purchase-order',
         ];
 
+        $purchaseAdditionalCost = [
+            'icon' => 'ReceiptText',
+            'pageName' => 'side-menu-purchase-additional-cost',
+            'title' => 'components.menu.purchase-additional-cost',
+        ];
+
+        $purchaseAdditionalCostPayment = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-purchase-additional-cost-payment',
+            'title' => 'components.menu.purchase-additional-cost-payment',
+        ];
+
         $capitalOpening = [
             'icon' => 'Wallet',
             'pageName' => 'side-menu-finance-capital-opening',
@@ -272,7 +290,16 @@ class DashboardActions
             'title' => 'components.menu.stock-transfer',
         ];
 
-        array_push($root_array['subMenu'], $capitalOpening, $capitalTransaction, $stockAdjustment, $purchaseOrder, $stockTransfer);
+        array_push(
+            $root_array['subMenu'],
+            $capitalOpening,
+            $capitalTransaction,
+            $stockAdjustment,
+            $purchaseOrder,
+            $purchaseAdditionalCost,
+            $purchaseAdditionalCostPayment,
+            $stockTransfer
+        );
 
         array_push($menu, $root_array);
 

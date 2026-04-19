@@ -86,6 +86,18 @@ import StockAdjustmentCategoryIndex from '@/pages/stock-adjustment-category/Stoc
 import StockAdjustmentCategoryList from '@/pages/stock-adjustment-category/StockAdjustmentCategoryList.vue';
 import StockAdjustmentCategoryCreate from '@/pages/stock-adjustment-category/StockAdjustmentCategoryCreate.vue';
 import StockAdjustmentCategoryEdit from '@/pages/stock-adjustment-category/StockAdjustmentCategoryEdit.vue';
+import PurchaseAdditionalCostCategoryIndex from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryIndex.vue';
+import PurchaseAdditionalCostCategoryList from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryList.vue';
+import PurchaseAdditionalCostCategoryCreate from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryCreate.vue';
+import PurchaseAdditionalCostCategoryEdit from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryEdit.vue';
+import PurchaseAdditionalCostIndex from '@/pages/purchase-additional-cost/PurchaseAdditionalCostIndex.vue';
+import PurchaseAdditionalCostList from '@/pages/purchase-additional-cost/PurchaseAdditionalCostList.vue';
+import PurchaseAdditionalCostCreate from '@/pages/purchase-additional-cost/PurchaseAdditionalCostCreate.vue';
+import PurchaseAdditionalCostEdit from '@/pages/purchase-additional-cost/PurchaseAdditionalCostEdit.vue';
+import PurchaseAdditionalCostPaymentIndex from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentIndex.vue';
+import PurchaseAdditionalCostPaymentList from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentList.vue';
+import PurchaseAdditionalCostPaymentCreate from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentCreate.vue';
+import PurchaseAdditionalCostPaymentEdit from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentEdit.vue';
 import StockAdjustmentIndex from '@/pages/stock-adjustment/StockAdjustmentIndex.vue';
 import StockAdjustmentList from '@/pages/stock-adjustment/StockAdjustmentList.vue';
 import StockAdjustmentCreate from '@/pages/stock-adjustment/StockAdjustmentCreate.vue';
@@ -698,6 +710,108 @@ export default [
                 meta: {
                   remember: true,
                 },
+              },
+            ],
+          },
+        ],
+      },
+      // Purchase Additional Cost Category
+      {
+        path: '/dashboard/purchase-additional-cost-category',
+        children: [
+          {
+            path: '/dashboard/purchase-additional-cost-category',
+            name: 'side-menu-purchase-additional-cost-category',
+            redirect: '/dashboard/purchase-additional-cost-category/list',
+            component: PurchaseAdditionalCostCategoryIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-additional-cost-category/list',
+                name: 'side-menu-purchase-additional-cost-category-list',
+                component: PurchaseAdditionalCostCategoryList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase-additional-cost-category/create',
+                name: 'side-menu-purchase-additional-cost-category-create',
+                component: PurchaseAdditionalCostCategoryCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase-additional-cost-category/edit/:ulid',
+                name: 'side-menu-purchase-additional-cost-category-edit',
+                component: PurchaseAdditionalCostCategoryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      // Purchase Additional Cost
+      {
+        path: '/dashboard/purchase-additional-cost',
+        children: [
+          {
+            path: '/dashboard/purchase-additional-cost',
+            name: 'side-menu-purchase-additional-cost',
+            redirect: '/dashboard/purchase-additional-cost/list',
+            component: PurchaseAdditionalCostIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-additional-cost/list',
+                name: 'side-menu-purchase-additional-cost-list',
+                component: PurchaseAdditionalCostList,
+                meta: { remember: true },
+              },
+              {
+                path: '/dashboard/purchase-additional-cost/create',
+                name: 'side-menu-purchase-additional-cost-create',
+                component: PurchaseAdditionalCostCreate,
+                meta: { remember: true },
+              },
+              {
+                path: '/dashboard/purchase-additional-cost/edit/:ulid',
+                name: 'side-menu-purchase-additional-cost-edit',
+                component: PurchaseAdditionalCostEdit,
+                meta: { remember: true },
+              },
+            ],
+          },
+        ],
+      },
+      // Purchase Additional Cost Payment
+      {
+        path: '/dashboard/purchase-additional-cost-payment',
+        children: [
+          {
+            path: '/dashboard/purchase-additional-cost-payment',
+            name: 'side-menu-purchase-additional-cost-payment',
+            redirect: '/dashboard/purchase-additional-cost-payment/list',
+            component: PurchaseAdditionalCostPaymentIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-additional-cost-payment/list',
+                name: 'side-menu-purchase-additional-cost-payment-list',
+                component: PurchaseAdditionalCostPaymentList,
+                meta: { remember: true },
+              },
+              {
+                path: '/dashboard/purchase-additional-cost-payment/create',
+                name: 'side-menu-purchase-additional-cost-payment-create',
+                component: PurchaseAdditionalCostPaymentCreate,
+                meta: { remember: true },
+              },
+              {
+                path: '/dashboard/purchase-additional-cost-payment/edit/:ulid',
+                name: 'side-menu-purchase-additional-cost-payment-edit',
+                component: PurchaseAdditionalCostPaymentEdit,
+                meta: { remember: true },
               },
             ],
           },

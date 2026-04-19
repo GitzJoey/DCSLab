@@ -1,0 +1,28 @@
+{
+  "page_title": "Purchase Additional Cost Payment",
+  "actions": {
+    "create": "Create Purchase Additional Cost Payment",
+    "edit": "Edit Purchase Additional Cost Payment"
+  },
+  "table": {
+    "title": "Purchase Additional Cost Payment List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "purchase_additional_cost_payment_data": "Purchase Additional Cost Payment Data"
+  },
+  "fields": {
+    "purchase_additional_cost": "Purchase Additional Cost",
+    "code": "Code",
+    "date": "Date",
+    "cash_account": "Cash Account",
+    "amount": "Amount",
+    "remarks": "Remarks"
+  },
+  "alert": {
+    "delete_purchase_additional_cost_payment": {
+      "title": "Successfully Deleted Purchase Additional Cost Payment",
+      "content": "Purchase additional cost payment has been deleted."
+    }
+  }
+}
