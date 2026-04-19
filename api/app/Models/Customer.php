@@ -65,14 +65,4 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerAddress::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('customers.code', 'like', '%'.$search.'%')
-                ->orWhere('customers.name', 'like', '%'.$search.'%')
-                ->orWhere('customers.zone', 'like', '%'.$search.'%')
-                ->orWhere('customers.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

@@ -45,7 +45,8 @@ class EmployeeActions
                 if ($withTrashed) $query->withTrashed();
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where('employees.code', 'like', '%'.$search.'%')
+                        ->orWhere('employees.remarks', 'like', '%'.$search.'%');
                 }
 
                 if ($userId) {

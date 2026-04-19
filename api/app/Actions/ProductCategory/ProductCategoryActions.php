@@ -45,7 +45,10 @@ class ProductCategoryActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('product_categories.code', 'like', '%'.$search.'%')
+                            ->orWhere('product_categories.name', 'like', '%'.$search.'%');
+                    });
                 }
 
                 if ($type !== null) {

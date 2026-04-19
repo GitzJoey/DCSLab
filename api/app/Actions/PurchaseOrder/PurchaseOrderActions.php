@@ -111,7 +111,10 @@ class PurchaseOrderActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('code', 'like', '%'.$search.'%')
+                        ->orWhere('remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($startDate) {

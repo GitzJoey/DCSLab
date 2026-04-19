@@ -30,12 +30,4 @@ class PurchaseAdditionalCostCategory extends Model
     {
         return $this->hasMany(PurchaseAdditionalCost::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_additional_cost_categories.code', 'like', '%'.$search.'%')
-                ->orWhere('purchase_additional_cost_categories.name', 'like', '%'.$search.'%');
-        });
-    }
 }

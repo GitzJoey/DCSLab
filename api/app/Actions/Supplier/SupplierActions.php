@@ -42,7 +42,16 @@ class SupplierActions
                 if ($withTrashed) $query->withTrashed();
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('suppliers.code', 'like', '%'.$search.'%')
+                            ->orWhere('suppliers.name', 'like', '%'.$search.'%')
+                            ->orWhere('suppliers.address', 'like', '%'.$search.'%')
+                            ->orWhere('suppliers.city', 'like', '%'.$search.'%')
+                            ->orWhere('suppliers.payment_term_type', 'like', '%'.$search.'%')
+                            ->orWhere('suppliers.payment_term', 'like', '%'.$search.'%')
+                            ->orWhere('suppliers.tax_id', 'like', '%'.$search.'%')
+                            ->orWhere('suppliers.remarks', 'like', '%'.$search.'%');
+                    });
                 }
             });
 

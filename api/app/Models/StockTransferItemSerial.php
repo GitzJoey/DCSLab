@@ -58,9 +58,4 @@ class StockTransferItemSerial extends Model
     {
         return $this->morphOne(StockSerialTransaction::class, 'referable')->where('direction', 1);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where('serial', 'like', '%'.$search.'%');
-    }
 }

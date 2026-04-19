@@ -66,7 +66,10 @@ class PurchaseAdditionalCostPaymentActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('purchase_additional_cost_payments.code', 'like', '%'.$search.'%')
+                            ->orWhere('purchase_additional_cost_payments.remarks', 'like', '%'.$search.'%');
+                    });
                 }
 
                 if (! is_null($purchaseAdditionalCostId)) {

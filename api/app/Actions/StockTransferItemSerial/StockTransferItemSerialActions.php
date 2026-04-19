@@ -94,7 +94,7 @@ class StockTransferItemSerialActions
             }
 
             if ($search) {
-                $query->search($search);
+                $query->where('serial', 'like', '%'.$search.'%');
             }
 
             $stockTransferStartDateUtc = $stockTransferStartDate ? TimezoneHelper::convertToUTC($stockTransferStartDate) : null;

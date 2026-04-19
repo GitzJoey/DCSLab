@@ -75,7 +75,9 @@ class PurchaseOrderItemSubtotalDiscountActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchase_order_item_subtotal_discounts.discount_type', 'like', '%'.$search.'%');
+                });
             }
 
             $purchaseOrderStartDateUtc = $purchaseOrderStartDate ? TimezoneHelper::convertToUTC($purchaseOrderStartDate) : null;

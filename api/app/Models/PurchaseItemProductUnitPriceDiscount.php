@@ -47,11 +47,4 @@ class PurchaseItemProductUnitPriceDiscount extends Model
     {
         return $this->belongsTo(PurchaseItem::class)->withTrashed();
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_item_product_unit_price_discounts.discount_type', 'like', '%'.$search.'%');
-        });
-    }
 }

@@ -62,13 +62,4 @@ class CustomerGroup extends Model
     {
         return $this->hasMany(Customer::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('customer_groups.code', 'like', '%'.$search.'%')
-                ->orWhere('customer_groups.name', 'like', '%'.$search.'%')
-                ->orWhere('customer_groups.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

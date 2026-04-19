@@ -51,7 +51,10 @@ class StockAdjustmentCategoryActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('stock_adjustment_categories.code', 'like', '%'.$search.'%')
+                            ->orWhere('stock_adjustment_categories.name', 'like', '%'.$search.'%');
+                    });
                 }
             });
 

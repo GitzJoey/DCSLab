@@ -62,7 +62,11 @@ class CashAccountActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('cash_accounts.code', 'like', '%'.$search.'%')
+                            ->orWhere('cash_accounts.name', 'like', '%'.$search.'%')
+                            ->orWhere('cash_accounts.remarks', 'like', '%'.$search.'%');
+                    });
                 }
 
                 if (! is_null($isBank)) {

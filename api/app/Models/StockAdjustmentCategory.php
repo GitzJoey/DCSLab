@@ -23,12 +23,4 @@ class StockAdjustmentCategory extends Model
     {
         return $this->belongsTo(Company::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('stock_adjustment_categories.code', 'like', '%'.$search.'%')
-                ->orWhere('stock_adjustment_categories.name', 'like', '%'.$search.'%');
-        });
-    }
 }

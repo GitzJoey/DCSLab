@@ -59,12 +59,4 @@ class ProductUnit extends Model
     {
         return $this->hasMany(StockTransferItem::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('items.code', 'like', '%'.$search.'%')
-                ->orWhere('items.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

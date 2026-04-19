@@ -55,7 +55,11 @@ class CapitalTransactionActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('capital_transactions.code', 'like', '%'.$search.'%')
+                        ->orWhere('capital_transactions.type', 'like', '%'.$search.'%')
+                        ->orWhere('capital_transactions.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($branchId) {

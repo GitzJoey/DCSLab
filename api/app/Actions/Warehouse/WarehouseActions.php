@@ -45,7 +45,24 @@ class WarehouseActions
                 if ($withTrashed) $query->withTrashed();
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->whereHas('branch', function ($query) use ($search) {
+                            $query->where(function ($query) use ($search) {
+                                $query->where('branches.code', 'like', '%'.$search.'%')
+                                    ->orWhere('branches.name', 'like', '%'.$search.'%')
+                                    ->orWhere('branches.address', 'like', '%'.$search.'%')
+                                    ->orWhere('branches.city', 'like', '%'.$search.'%')
+                                    ->orWhere('branches.contact', 'like', '%'.$search.'%')
+                                    ->orWhere('branches.remarks', 'like', '%'.$search.'%');
+                            });
+                        })
+                            ->orWhere('warehouses.code', 'like', '%'.$search.'%')
+                            ->orWhere('warehouses.name', 'like', '%'.$search.'%')
+                            ->orWhere('warehouses.address', 'like', '%'.$search.'%')
+                            ->orWhere('warehouses.city', 'like', '%'.$search.'%')
+                            ->orWhere('warehouses.contact', 'like', '%'.$search.'%')
+                            ->orWhere('warehouses.remarks', 'like', '%'.$search.'%');
+                    });
                 }
 
                 if ($branchId) {

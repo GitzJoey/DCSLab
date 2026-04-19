@@ -64,7 +64,10 @@ class PurchaseOrderDownPaymentActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchase_order_down_payments.code', 'like', '%'.$search.'%')
+                        ->orWhere('purchase_order_down_payments.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($startDate) {

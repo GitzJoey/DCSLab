@@ -36,10 +36,4 @@ class CustomerAddress extends Model
     {
         return $this->belongsTo(Customer::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where('customer_addresses.code', 'like', '%'.$search.'%')
-            ->orWhere('customer_addresses.remarks', 'like', '%'.$search.'%');
-    }
 }

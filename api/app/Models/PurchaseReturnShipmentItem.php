@@ -64,11 +64,4 @@ class PurchaseReturnShipmentItem extends Model
     {
         return $this->hasMany(PurchaseReturnShipmentItemSerial::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_return_shipment_items.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

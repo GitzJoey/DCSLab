@@ -61,12 +61,4 @@ class VatProfile extends Model
     //     return $this->hasMany(PurchaseReturnItem::class);
     // }
 
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('vat_profiles.code', 'like', '%'.$search.'%')
-                ->orWhere('vat_profiles.name', 'like', '%'.$search.'%')
-                ->orWhere('vat_profiles.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

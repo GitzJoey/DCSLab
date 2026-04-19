@@ -32,13 +32,4 @@ class Investor extends Model
     {
         return $this->belongsTo(Company::class)->withTrashed();
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('investors.code', 'like', '%'.$search.'%')
-                ->orWhere('investors.name', 'like', '%'.$search.'%')
-                ->orWhere('investors.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

@@ -64,13 +64,4 @@ class CashAccount extends Model
 
         return $query;
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('cash_accounts.code', 'like', '%'.$search.'%')
-                ->orWhere('cash_accounts.name', 'like', '%'.$search.'%')
-                ->orWhere('cash_accounts.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

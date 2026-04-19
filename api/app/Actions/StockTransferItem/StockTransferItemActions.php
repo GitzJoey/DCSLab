@@ -98,7 +98,9 @@ class StockTransferItemActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('remarks', 'like', '%'.$search.'%');
+                });
             }
 
             $stockTransferStartDateUtc = $stockTransferStartDate ? TimezoneHelper::convertToUTC($stockTransferStartDate) : null;

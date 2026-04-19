@@ -47,11 +47,4 @@ class PurchaseOrderGlobalDiscount extends Model
     {
         return $this->belongsTo(PurchaseOrder::class)->withTrashed();
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_order_global_discounts.discount_type', 'like', '%'.$search.'%');
-        });
-    }
 }

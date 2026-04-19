@@ -73,7 +73,9 @@ class PurchaseItemProductUnitPriceDiscountActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchase_item_product_unit_price_discounts.discount_type', 'like', '%'.$search.'%');
+                });
             }
 
             $purchaseStartDateUtc = $purchaseStartDate ? TimezoneHelper::convertToUTC($purchaseStartDate) : null;

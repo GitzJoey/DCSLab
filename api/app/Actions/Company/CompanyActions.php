@@ -48,7 +48,11 @@ class CompanyActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('companies.code', 'like', '%'.$search.'%')
+                            ->orWhere('companies.name', 'like', '%'.$search.'%')
+                            ->orWhere('companies.address', 'like', '%'.$search.'%');
+                    });
                 }
 
                 if ($default !== null) {

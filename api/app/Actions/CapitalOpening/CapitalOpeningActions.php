@@ -53,7 +53,10 @@ class CapitalOpeningActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('capital_openings.code', 'like', '%'.$search.'%')
+                        ->orWhere('capital_openings.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($branchId) {

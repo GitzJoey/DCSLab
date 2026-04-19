@@ -65,16 +65,4 @@ class Branch extends Model
     {
         return $this->hasMany(StockTransferItemSerial::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('branches.code', 'like', '%'.$search.'%')
-                ->orWhere('branches.name', 'like', '%'.$search.'%')
-                ->orWhere('branches.address', 'like', '%'.$search.'%')
-                ->orWhere('branches.city', 'like', '%'.$search.'%')
-                ->orWhere('branches.contact', 'like', '%'.$search.'%')
-                ->orWhere('branches.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

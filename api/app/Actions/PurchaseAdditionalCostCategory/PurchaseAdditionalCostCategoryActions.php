@@ -48,7 +48,10 @@ class PurchaseAdditionalCostCategoryActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('purchase_additional_cost_categories.code', 'like', '%'.$search.'%')
+                            ->orWhere('purchase_additional_cost_categories.name', 'like', '%'.$search.'%');
+                    });
                 }
             });
 

@@ -69,11 +69,4 @@ class StockAdjustmentInItem extends Model
     {
         return $this->hasMany(StockAdjustmentInItemSerial::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

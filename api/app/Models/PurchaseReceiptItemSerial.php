@@ -44,11 +44,4 @@ class PurchaseReceiptItemSerial extends Model
     {
         return $this->belongsTo(PurchaseReceiptItem::class)->withTrashed();
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_receipt_item_serials.serial', 'like', '%'.$search.'%');
-        });
-    }
 }

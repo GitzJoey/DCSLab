@@ -45,7 +45,8 @@ class CustomerAddressActions
                 if ($withTrashed) $query->withTrashed();
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where('customer_addresses.code', 'like', '%'.$search.'%')
+                        ->orWhere('customer_addresses.remarks', 'like', '%'.$search.'%');
                 }
 
                 if ($customerId) {

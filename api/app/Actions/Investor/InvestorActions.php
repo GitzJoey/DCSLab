@@ -51,7 +51,11 @@ class InvestorActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('investors.code', 'like', '%'.$search.'%')
+                            ->orWhere('investors.name', 'like', '%'.$search.'%')
+                            ->orWhere('investors.remarks', 'like', '%'.$search.'%');
+                    });
                 }
             });
 

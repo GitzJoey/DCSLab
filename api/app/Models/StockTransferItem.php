@@ -70,11 +70,4 @@ class StockTransferItem extends Model
         return $this->morphOne(StockTransaction::class, 'referable')
             ->where('warehouse_id', $this->stockTransfer->destination_warehouse_id);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

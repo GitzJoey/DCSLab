@@ -61,7 +61,9 @@ class PurchaseOrderDownPaymentAllocationActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchase_order_down_payment_allocations.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($startDate) {

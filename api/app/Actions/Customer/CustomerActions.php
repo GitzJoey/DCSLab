@@ -90,7 +90,12 @@ class CustomerActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('customers.code', 'like', '%'.$search.'%')
+                            ->orWhere('customers.name', 'like', '%'.$search.'%')
+                            ->orWhere('customers.zone', 'like', '%'.$search.'%')
+                            ->orWhere('customers.remarks', 'like', '%'.$search.'%');
+                    });
                 }
 
                 if (! is_null($isMember)) {

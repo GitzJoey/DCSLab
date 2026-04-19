@@ -52,9 +52,4 @@ class StockAdjustmentInItemSerial extends Model
     {
         return $this->morphOne(StockSerialTransaction::class, 'referable');
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where('serial', 'like', '%'.$search.'%');
-    }
 }

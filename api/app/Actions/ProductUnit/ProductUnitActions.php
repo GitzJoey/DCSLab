@@ -55,7 +55,10 @@ class ProductUnitActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('items.code', 'like', '%'.$search.'%')
+                            ->orWhere('items.remarks', 'like', '%'.$search.'%');
+                    });
                 }
 
                 if ($productId) {

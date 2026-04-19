@@ -74,12 +74,4 @@ class StockAdjustment extends Model
     {
         return $this->hasMany(StockAdjustmentOutItem::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('code', 'like', '%'.$search.'%')
-                ->orWhere('remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

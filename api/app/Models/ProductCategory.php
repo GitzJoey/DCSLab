@@ -39,12 +39,4 @@ class ProductCategory extends Model
     {
         return $this->hasMany(Product::class)->withTrashed();
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('product_categories.code', 'like', '%'.$search.'%')
-                ->orWhere('product_categories.name', 'like', '%'.$search.'%');
-        });
-    }
 }

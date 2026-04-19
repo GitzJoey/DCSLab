@@ -57,12 +57,4 @@ class CapitalOpening extends Model
     {
         return $this->morphOne(CashTransaction::class, 'referable');
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('capital_openings.code', 'like', '%'.$search.'%')
-                ->orWhere('capital_openings.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

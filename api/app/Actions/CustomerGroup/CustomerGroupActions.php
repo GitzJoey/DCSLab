@@ -51,7 +51,11 @@ class CustomerGroupActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('customer_groups.code', 'like', '%'.$search.'%')
+                            ->orWhere('customer_groups.name', 'like', '%'.$search.'%')
+                            ->orWhere('customer_groups.remarks', 'like', '%'.$search.'%');
+                    });
                 }
             });
 

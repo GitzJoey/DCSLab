@@ -105,12 +105,4 @@ class PurchaseReturn extends Model
     {
         return $this->hasMany(PurchaseReturnGlobalDiscount::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_returns.code', 'like', '%'.$search.'%')
-                ->orWhere('purchase_returns.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

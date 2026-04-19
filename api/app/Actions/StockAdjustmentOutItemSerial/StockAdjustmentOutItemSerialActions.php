@@ -96,7 +96,7 @@ class StockAdjustmentOutItemSerialActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where('serial', 'like', '%'.$search.'%');
             }
 
             $stockAdjustmentStartDateUtc = $stockAdjustmentStartDate ? TimezoneHelper::convertToUTC($stockAdjustmentStartDate) : null;

@@ -58,7 +58,10 @@ class PurchaseOrderDownPaymentRefundActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchase_order_down_payment_refunds.code', 'like', '%'.$search.'%')
+                        ->orWhere('purchase_order_down_payment_refunds.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($startDate) {

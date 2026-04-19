@@ -56,17 +56,4 @@ class Warehouse extends Model
     {
         return $this->hasMany(StockTransaction::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->whereHas('branch', fn ($query) => $query->search($search))
-                ->orWhere('warehouses.code', 'like', '%'.$search.'%')
-                ->orWhere('warehouses.name', 'like', '%'.$search.'%')
-                ->orWhere('warehouses.address', 'like', '%'.$search.'%')
-                ->orWhere('warehouses.city', 'like', '%'.$search.'%')
-                ->orWhere('warehouses.contact', 'like', '%'.$search.'%')
-                ->orWhere('warehouses.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

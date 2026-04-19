@@ -47,11 +47,4 @@ class PurchaseReturnGlobalDiscount extends Model
     {
         return $this->belongsTo(PurchaseReturn::class)->withTrashed();
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_return_global_discounts.discount_type', 'like', '%'.$search.'%');
-        });
-    }
 }

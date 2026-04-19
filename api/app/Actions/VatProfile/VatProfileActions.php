@@ -51,7 +51,11 @@ class VatProfileActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('vat_profiles.code', 'like', '%'.$search.'%')
+                            ->orWhere('vat_profiles.name', 'like', '%'.$search.'%')
+                            ->orWhere('vat_profiles.remarks', 'like', '%'.$search.'%');
+                    });
                 }
             });
 

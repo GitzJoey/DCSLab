@@ -44,7 +44,10 @@ class BrandActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->where('brands.code', 'like', '%'.$search.'%')
+                            ->orWhere('brands.name', 'like', '%'.$search.'%');
+                    });
                 }
             });
 

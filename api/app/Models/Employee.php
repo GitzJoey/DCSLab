@@ -37,10 +37,4 @@ class Employee extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where('employees.code', 'like', '%'.$search.'%')
-            ->orWhere('employees.remarks', 'like', '%'.$search.'%');
-    }
 }

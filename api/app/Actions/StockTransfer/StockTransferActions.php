@@ -86,7 +86,10 @@ class StockTransferActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('stock_transfers.code', 'like', '%'.$search.'%')
+                        ->orWhere('stock_transfers.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($startDate) {

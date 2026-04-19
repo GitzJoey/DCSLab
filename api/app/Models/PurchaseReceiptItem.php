@@ -64,11 +64,4 @@ class PurchaseReceiptItem extends Model
     {
         return $this->hasMany(PurchaseReceiptItemSerial::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchase_receipt_items.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

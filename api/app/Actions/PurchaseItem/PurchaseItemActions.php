@@ -90,7 +90,9 @@ class PurchaseItemActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchase_items.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             $purchaseStartDateUtc = $purchaseStartDate ? TimezoneHelper::convertToUTC($purchaseStartDate) : null;

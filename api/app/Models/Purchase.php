@@ -137,13 +137,4 @@ class Purchase extends Model
     {
         return $this->hasMany(PurchaseReturnAllocation::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('purchases.code', 'like', '%'.$search.'%')
-                ->orWhere('purchases.tax_invoice_number', 'like', '%'.$search.'%')
-                ->orWhere('purchases.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

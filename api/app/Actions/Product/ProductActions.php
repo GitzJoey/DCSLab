@@ -102,7 +102,29 @@ class ProductActions
                 }
 
                 if ($search) {
-                    $query->search($search);
+                    $query->where(function ($query) use ($search) {
+                        $query->whereHas('brand', function ($query) use ($search) {
+                            $query->where(function ($query) use ($search) {
+                                $query->where('brands.code', 'like', '%'.$search.'%')
+                                    ->orWhere('brands.name', 'like', '%'.$search.'%');
+                            });
+                        })
+                            ->orWhereHas('category', function ($query) use ($search) {
+                                $query->where(function ($query) use ($search) {
+                                    $query->where('product_categories.code', 'like', '%'.$search.'%')
+                                        ->orWhere('product_categories.name', 'like', '%'.$search.'%');
+                                });
+                            })
+                            ->orWhere('products.code', 'like', '%'.$search.'%')
+                            ->orWhere('products.name', 'like', '%'.$search.'%')
+                            ->orWhere('products.remarks', 'like', '%'.$search.'%')
+                            ->orWhereHas('productUnits', function ($query) use ($search) {
+                                $query->where(function ($query) use ($search) {
+                                    $query->where('items.code', 'like', '%'.$search.'%')
+                                        ->orWhere('items.remarks', 'like', '%'.$search.'%');
+                                });
+                            });
+                    });
                 }
 
                 if ($categoryId) {

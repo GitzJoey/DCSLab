@@ -60,13 +60,4 @@ class CapitalTransaction extends Model
     {
         return $this->morphOne(CashTransaction::class, 'referable');
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('capital_transactions.code', 'like', '%'.$search.'%')
-                ->orWhere('capital_transactions.type', 'like', '%'.$search.'%')
-                ->orWhere('capital_transactions.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

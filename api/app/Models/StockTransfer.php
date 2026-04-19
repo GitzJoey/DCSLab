@@ -57,12 +57,4 @@ class StockTransfer extends Model
     {
         return $this->hasMany(StockTransferItem::class);
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->where('stock_transfers.code', 'like', '%'.$search.'%')
-                ->orWhere('stock_transfers.remarks', 'like', '%'.$search.'%');
-        });
-    }
 }

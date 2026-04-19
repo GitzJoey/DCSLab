@@ -118,16 +118,4 @@ class Product extends Model
 
         return $query;
     }
-
-    public function scopeSearch($query, string $search)
-    {
-        return $query->where(function ($query) use ($search) {
-            $query->whereHas('brand', fn ($q) => $q->search($search))
-                ->orWhereHas('category', fn ($q) => $q->search($search))
-                ->orWhere('products.code', 'like', '%'.$search.'%')
-                ->orWhere('products.name', 'like', '%'.$search.'%')
-                ->orWhere('products.remarks', 'like', '%'.$search.'%')
-                ->orWhereHas('productUnits', fn ($q) => $q->search($search));
-        });
-    }
 }

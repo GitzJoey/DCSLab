@@ -104,7 +104,11 @@ class PurchaseActions
             if ($withTrashed) $query->withTrashed();
 
             if ($search) {
-                $query->search($search);
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchases.code', 'like', '%'.$search.'%')
+                        ->orWhere('purchases.tax_invoice_number', 'like', '%'.$search.'%')
+                        ->orWhere('purchases.remarks', 'like', '%'.$search.'%');
+                });
             }
 
             if ($startDate) {
