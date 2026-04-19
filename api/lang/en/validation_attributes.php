@@ -337,7 +337,7 @@ return [
         'code' => 'Code',
         'date' => 'Date',
         'due_days' => 'Due Days',
-        'warehouse_id' => 'Warehouse',
+        'receipt_warehouse_id' => 'Receipt Warehouse',
         'supplier_id' => 'Supplier',
         'purchase_order_id' => 'Purchase Order',
         'tax_invoice_number' => 'Tax Invoice Number',

@@ -1,5 +1,6 @@
 import type { Branch } from './Branch';
 import type { Company } from './Company';
+import type { PurchaseReceipt } from './PurchaseReceipt';
 import type { Supplier } from './Supplier';
 
 export interface Purchase {
@@ -16,4 +17,5 @@ export interface Purchase {
   amount_payable?: number;
   amount_due?: number;
   is_paid_off?: boolean;
+  receipts?: PurchaseReceipt[];
 }

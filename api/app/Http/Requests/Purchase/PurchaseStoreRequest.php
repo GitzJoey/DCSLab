@@ -35,9 +35,10 @@ class PurchaseStoreRequest extends FormRequest
         $this->merge([
             'company_id' => $this->filled('company_id') ? HashidsHelper::decodeId($this->company_id) : null,
             'branch_id' => $this->filled('branch_id') ? HashidsHelper::decodeId($this->branch_id) : null,
-            'warehouse_id' => $this->filled('warehouse_id') ? HashidsHelper::decodeId($this->warehouse_id) : null,
             'supplier_id' => $this->filled('supplier_id') ? HashidsHelper::decodeId($this->supplier_id) : null,
             'purchase_order_id' => $this->filled('purchase_order_id') ? HashidsHelper::decodeId($this->purchase_order_id) : null,
+
+            'receipt_warehouse_id' => $this->filled('receipt_warehouse_id') ? HashidsHelper::decodeId($this->receipt_warehouse_id) : null,
         ]);
 
         if (is_array($this->input('items'))) {
@@ -80,7 +81,6 @@ class PurchaseStoreRequest extends FormRequest
             'code' => ['required', 'string'],
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'due_days' => ['required', 'integer', 'min:0'],
-            'warehouse_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
             'supplier_id' => [
                 'present',
                 'nullable',
@@ -97,6 +97,8 @@ class PurchaseStoreRequest extends FormRequest
             'is_posted' => ['required', 'boolean'],
             'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
+
+            'receipt_warehouse_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
 
             'items' => ['required', 'array', 'min:1'],
             'items.*.purchase_order_item_id' => [
@@ -203,9 +205,10 @@ class PurchaseStoreRequest extends FormRequest
             'code' => trans('validation_attributes.purchase.code'),
             'date' => trans('validation_attributes.purchase.date'),
             'due_days' => trans('validation_attributes.purchase.due_days'),
-            'warehouse_id' => trans('validation_attributes.purchase.warehouse_id'),
             'supplier_id' => trans('validation_attributes.purchase.supplier_id'),
             'purchase_order_id' => trans('validation_attributes.purchase.purchase_order_id'),
+
+            'receipt_warehouse_id' => trans('validation_attributes.purchase.receipt_warehouse_id'),
             'tax_invoice_number' => trans('validation_attributes.purchase.tax_invoice_number'),
             'tax_invoice_vat_base' => trans('validation_attributes.purchase.tax_invoice_vat_base'),
             'tax_invoice_vat' => trans('validation_attributes.purchase.tax_invoice_vat'),

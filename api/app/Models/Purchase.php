@@ -23,7 +23,6 @@ class Purchase extends Model
         'code',
         'date',
         'due_days',
-        'warehouse_id',
         'supplier_id',
         'purchase_order_id',
         'tax_invoice_number',
@@ -81,11 +80,6 @@ class Purchase extends Model
     public function branch()
     {
         return $this->belongsTo(Branch::class)->withTrashed();
-    }
-
-    public function warehouse()
-    {
-        return $this->belongsTo(Warehouse::class)->withTrashed();
     }
 
     public function supplier()

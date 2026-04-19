@@ -5,12 +5,15 @@ namespace App\Actions\Purchase;
 use App\Actions\PurchaseAdditionalCost\PurchaseAdditionalCostActions;
 use App\Actions\PurchaseGlobalDiscount\PurchaseGlobalDiscountActions;
 use App\Actions\PurchaseItem\PurchaseItemActions;
+use App\Actions\PurchaseReceipt\PurchaseReceiptActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseCreateDTO;
 use App\DTOs\PurchaseGlobalDiscountCreateDTO;
 use App\DTOs\PurchaseGlobalDiscountUpdateDTO;
 use App\DTOs\PurchaseItemCreateDTO;
 use App\DTOs\PurchaseItemUpdateDTO;
+use App\DTOs\PurchaseReceiptCreateDTO;
+use App\DTOs\PurchaseReceiptUpdateDTO;
 use App\DTOs\PurchaseUpdateDTO;
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
@@ -29,7 +32,6 @@ class PurchaseActions
     private const LIST_EAGER_LOADS = [
         'company',
         'branch',
-        'warehouse',
         'supplier',
         'purchaseOrder',
     ];
@@ -37,7 +39,6 @@ class PurchaseActions
     private const DETAIL_EAGER_LOADS = [
         'company',
         'branch',
-        'warehouse',
         'supplier',
         'purchaseOrder.supplier',
         'items.purchaseOrderItem.purchaseOrder.supplier',
@@ -65,6 +66,7 @@ class PurchaseActions
         private readonly PurchaseItemActions $purchaseItemActions,
         private readonly PurchaseGlobalDiscountActions $purchaseGlobalDiscountActions,
         private readonly PurchaseAdditionalCostActions $purchaseAdditionalCostActions,
+        private readonly PurchaseReceiptActions $purchaseReceiptActions,
     ) {
     }
 
@@ -242,7 +244,6 @@ class PurchaseActions
             $purchase->code = $this->generateUniqueCode($data->companyId, $data->code, null);
             $purchase->date = $this->generateDate($data->date);
             $purchase->due_days = $data->dueDays;
-            $purchase->warehouse_id = $data->warehouseId;
             $purchase->supplier_id = $data->supplierId;
             $purchase->purchase_order_id = $data->purchaseOrderId;
             $purchase->tax_invoice_number = $data->taxInvoiceNumber;
@@ -254,27 +255,57 @@ class PurchaseActions
             $purchase->rounding = $data->rounding;
             $purchase->save();
 
-            foreach ($data->items as $item) {
+            for ($i = 0; $i < count($data->items); $i++) {
                 $dto = new PurchaseItemCreateDTO(
                     companyId: $purchase->company_id,
                     branchId: $purchase->branch_id,
                     purchaseId: $purchase->id,
-                    purchaseOrderItemId: $item['purchase_order_item_id'] ?? null,
-                    qty: $item['qty'],
-                    productUnitId: $item['product_unit_id'],
-                    productUnitConversionValue: $item['product_unit_conversion_value'],
-                    productUnitPrice: $item['product_unit_price'],
-                    productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
-                    productUnitPriceDiscounts: $item['product_unit_price_discounts'],
-                    subtotalDiscounts: $item['subtotal_discounts'],
-                    vatProfileId: $item['vat_profile_id'],
-                    vatRate: $item['vat_rate'],
-                    vatBaseNumerator: $item['vat_base_numerator'],
-                    vatBaseDenominator: $item['vat_base_denominator'],
-                    remarks: $item['remarks'] ?? null,
+                    purchaseOrderItemId: $data->items[$i]['purchase_order_item_id'],
+                    qty: $data->items[$i]['qty'],
+                    productUnitId: $data->items[$i]['product_unit_id'],
+                    productUnitConversionValue: $data->items[$i]['product_unit_conversion_value'],
+                    productUnitPrice: $data->items[$i]['product_unit_price'],
+                    productUnitIsPriceIncludeVat: $data->items[$i]['product_unit_is_price_include_vat'],
+                    productUnitPriceDiscounts: $data->items[$i]['product_unit_price_discounts'],
+                    subtotalDiscounts: $data->items[$i]['subtotal_discounts'],
+                    vatProfileId: $data->items[$i]['vat_profile_id'],
+                    vatRate: $data->items[$i]['vat_rate'],
+                    vatBaseNumerator: $data->items[$i]['vat_base_numerator'],
+                    vatBaseDenominator: $data->items[$i]['vat_base_denominator'],
+                    remarks: $data->items[$i]['remarks'],
                 );
 
-                $this->purchaseItemActions->create($dto, false);
+                $result = $this->purchaseItemActions->create($dto, false);
+                $data->items[$i]['id'] = $result->id;
+            }
+
+            if ($data->receiptWarehouseId) {
+                $items = [];
+                foreach ($data->items as $item) {
+                    $items[] = [
+                        'purchase_item_id' => $item['id'],
+                        'qty' => $item['qty'],
+                        'product_unit_id' => $item['product_unit_id'],
+                        'product_unit_conversion_value' => $item['product_unit_conversion_value'],
+                        'product_unit_qty_base' => $item['product_unit_qty_base'],
+                        'remarks' => $item['remarks'],
+                        'serials' => $item['serials'],
+                    ];
+                }
+
+                $dto = new PurchaseReceiptCreateDTO(
+                    companyId: $purchase->company_id,
+                    branchId: $purchase->branch_id,
+                    purchaseId: $purchase->id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $purchase->date,
+                    warehouseId: $data->receiptWarehouseId,
+                    remarks: $purchase->remarks,
+                    isPosted: $purchase->is_posted,
+                    items: $items,
+                );
+
+                $this->purchaseReceiptActions->create($dto);
             }
 
             foreach ($data->globalDiscounts as $globalDiscount) {
@@ -328,7 +359,6 @@ class PurchaseActions
             $purchase->code = $this->generateUniqueCode($purchase->company_id, $data->code, $purchase->id);
             $purchase->date = $this->generateDate($data->date);
             $purchase->due_days = $data->dueDays;
-            $purchase->warehouse_id = $data->warehouseId;
             $purchase->supplier_id = $data->supplierId;
             $purchase->purchase_order_id = $data->purchaseOrderId;
             $purchase->tax_invoice_number = $data->taxInvoiceNumber;
@@ -410,53 +440,106 @@ class PurchaseActions
                 $this->purchaseItemActions->delete($purchaseItem);
             }
 
-            foreach ($data->items as $item) {
-                if (! empty($item['id'])) {
-                    $purchaseItem = $purchase->items()->findOrFail($item['id']);
+            for ($i = 0; $i < count($data->items); $i++) {
+                if (! empty($data->items[$i]['id'])) {
+                    $purchaseItem = $purchase->items()->findOrFail($data->items[$i]['id']);
                     $dto = new PurchaseItemUpdateDTO(
-                        purchaseOrderItemId: $item['purchase_order_item_id'] ?? null,
-                        qty: $item['qty'],
-                        productUnitId: $item['product_unit_id'],
-                        productUnitConversionValue: $item['product_unit_conversion_value'],
-                        productUnitPrice: $item['product_unit_price'],
-                        productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
-                        deleteProductUnitPriceDiscountIds: $item['delete_product_unit_price_discount_ids'],
-                        productUnitPriceDiscounts: $item['product_unit_price_discounts'],
-                        deleteSubtotalDiscountIds: $item['delete_subtotal_discount_ids'],
-                        subtotalDiscounts: $item['subtotal_discounts'],
-                        vatProfileId: $item['vat_profile_id'],
-                        vatRate: $item['vat_rate'],
-                        vatBaseNumerator: $item['vat_base_numerator'],
-                        vatBaseDenominator: $item['vat_base_denominator'],
-                        remarks: $item['remarks'] ?? null,
+                        purchaseOrderItemId: $data->items[$i]['purchase_order_item_id'],
+                        qty: $data->items[$i]['qty'],
+                        productUnitId: $data->items[$i]['product_unit_id'],
+                        productUnitConversionValue: $data->items[$i]['product_unit_conversion_value'],
+                        productUnitPrice: $data->items[$i]['product_unit_price'],
+                        productUnitIsPriceIncludeVat: $data->items[$i]['product_unit_is_price_include_vat'],
+                        deleteProductUnitPriceDiscountIds: $data->items[$i]['delete_product_unit_price_discount_ids'],
+                        productUnitPriceDiscounts: $data->items[$i]['product_unit_price_discounts'],
+                        deleteSubtotalDiscountIds: $data->items[$i]['delete_subtotal_discount_ids'],
+                        subtotalDiscounts: $data->items[$i]['subtotal_discounts'],
+                        vatProfileId: $data->items[$i]['vat_profile_id'],
+                        vatRate: $data->items[$i]['vat_rate'],
+                        vatBaseNumerator: $data->items[$i]['vat_base_numerator'],
+                        vatBaseDenominator: $data->items[$i]['vat_base_denominator'],
+                        remarks: $data->items[$i]['remarks'],
                     );
 
-                    $this->purchaseItemActions->update($purchaseItem, $dto, false);
+                    $result = $this->purchaseItemActions->update($purchaseItem, $dto, false);
                 } else {
                     $dto = new PurchaseItemCreateDTO(
                         companyId: $purchase->company_id,
                         branchId: $purchase->branch_id,
                         purchaseId: $purchase->id,
-                        purchaseOrderItemId: $item['purchase_order_item_id'] ?? null,
-                        qty: $item['qty'],
-                        productUnitId: $item['product_unit_id'],
-                        productUnitConversionValue: $item['product_unit_conversion_value'],
-                        productUnitPrice: $item['product_unit_price'],
-                        productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
-                        productUnitPriceDiscounts: $item['product_unit_price_discounts'],
-                        subtotalDiscounts: $item['subtotal_discounts'],
-                        vatProfileId: $item['vat_profile_id'],
-                        vatRate: $item['vat_rate'],
-                        vatBaseNumerator: $item['vat_base_numerator'],
-                        vatBaseDenominator: $item['vat_base_denominator'],
-                        remarks: $item['remarks'] ?? null,
+                        purchaseOrderItemId: $data->items[$i]['purchase_order_item_id'],
+                        qty: $data->items[$i]['qty'],
+                        productUnitId: $data->items[$i]['product_unit_id'],
+                        productUnitConversionValue: $data->items[$i]['product_unit_conversion_value'],
+                        productUnitPrice: $data->items[$i]['product_unit_price'],
+                        productUnitIsPriceIncludeVat: $data->items[$i]['product_unit_is_price_include_vat'],
+                        productUnitPriceDiscounts: $data->items[$i]['product_unit_price_discounts'],
+                        subtotalDiscounts: $data->items[$i]['subtotal_discounts'],
+                        vatProfileId: $data->items[$i]['vat_profile_id'],
+                        vatRate: $data->items[$i]['vat_rate'],
+                        vatBaseNumerator: $data->items[$i]['vat_base_numerator'],
+                        vatBaseDenominator: $data->items[$i]['vat_base_denominator'],
+                        remarks: $data->items[$i]['remarks'],
                     );
 
-                    $this->purchaseItemActions->create($dto, false);
+                    $result = $this->purchaseItemActions->create($dto, false);
                 }
+
+                $data->items[$i]['id'] = $result->id;
             }
 
             self::updateSummary($purchase);
+
+            $purchaseReceipts = $purchase->receipts()->with('items.serials')->get();
+            if ($purchaseReceipts->count() > 1) {
+                throw new Exception('Purchase expects at most one auto-generated receipt.');
+            }
+
+            if ($data->receiptWarehouseId) {
+                $items = [];
+                foreach ($data->items as $item) {
+                    $items[] = [
+                        'purchase_item_id' => $item['id'],
+                        'qty' => $item['qty'],
+                        'product_unit_id' => $item['product_unit_id'],
+                        'product_unit_conversion_value' => $item['product_unit_conversion_value'],
+                        'product_unit_qty_base' => $item['product_unit_qty_base'],
+                        'remarks' => $item['remarks'],
+                        'serials' => $item['serials'],
+                    ];
+                }
+
+                $purchaseReceipt = $purchaseReceipts->first();
+                if ($purchaseReceipt) {
+                    $dto = new PurchaseReceiptUpdateDTO(
+                        code: $purchaseReceipt?->code ?? config('dcslab.KEYWORDS.AUTO'),
+                        date: $purchase->date,
+                        warehouseId: $data->receiptWarehouseId,
+                        remarks: $purchase->remarks,
+                        isPosted: $purchase->is_posted,
+                        items: $items,
+                    );
+                    $this->purchaseReceiptActions->update($purchaseReceipt, $dto);
+                } else {
+                    $createDto = new PurchaseReceiptCreateDTO(
+                        companyId: $purchase->company_id,
+                        branchId: $purchase->branch_id,
+                        purchaseId: $purchase->id,
+                        code: config('dcslab.KEYWORDS.AUTO'),
+                        date: $purchase->date,
+                        warehouseId: $data->receiptWarehouseId,
+                        remarks: $purchase->remarks,
+                        isPosted: $purchase->is_posted,
+                        items: $dto->items,
+                    );
+
+                    $this->purchaseReceiptActions->create($createDto);
+                }
+            } else {
+                if ($purchaseReceipt) {
+                    $this->purchaseReceiptActions->delete($purchaseReceipt);
+                }
+            }
 
             $this->flushCache();
 
@@ -711,13 +794,16 @@ class PurchaseActions
 
         try {
             if (
-                $purchase->receipts()->exists()
-                || $purchase->payments()->exists()
+                $purchase->payments()->exists()
                 || $purchase->purchaseOrderDownPaymentAllocations()->exists()
                 || $purchase->purchaseReturnAllocations()->exists()
                 || $purchase->purchaseReturns()->exists()
             ) {
                 throw new Exception('Purchase cannot be deleted because it already has related transactions.');
+            }
+
+            foreach ($purchase->receipts()->with('items.itemSerials')->get() as $purchaseReceipt) {
+                $this->purchaseReceiptActions->delete($purchaseReceipt);
             }
 
             foreach ($purchase->items as $purchaseItem) {

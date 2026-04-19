@@ -23,9 +23,6 @@ class PurchaseResource extends JsonResource
             'code' => $this->code,
             'date' => $this->date,
             'due_days' => $this->due_days,
-            $this->mergeWhen($this->relationLoaded('warehouse'), [
-                'warehouse' => new WarehouseResource($this->whenLoaded('warehouse')),
-            ]),
             $this->mergeWhen($this->relationLoaded('supplier'), [
                 'supplier' => new SupplierResource($this->whenLoaded('supplier')),
             ]),
@@ -53,6 +50,9 @@ class PurchaseResource extends JsonResource
             'is_paid_off' => $this->is_paid_off,
             $this->mergeWhen($this->relationLoaded('items'), [
                 'items' => PurchaseItemResource::collection($this->whenLoaded('items')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('receipts'), [
+                'receipts' => PurchaseReceiptResource::collection($this->whenLoaded('receipts')),
             ]),
             $this->mergeWhen($this->relationLoaded('globalDiscounts'), [
                 'global_discounts' => PurchaseGlobalDiscountResource::collection($this->whenLoaded('globalDiscounts')),

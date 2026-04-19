@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('code');
             $table->dateTime('date');
             $table->integer('due_days')->default(0);
-            $table->foreignId('warehouse_id')->nullable()->references('id')->on('warehouses');
             $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers');
             $table->foreignId('purchase_order_id')->nullable()->references('id')->on('purchase_orders');
             $table->string('tax_invoice_number')->nullable();

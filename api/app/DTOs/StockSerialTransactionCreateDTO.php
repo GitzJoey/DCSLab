@@ -2,6 +2,7 @@
 
 namespace App\DTOs;
 
+use App\Models\PurchaseReceiptItemSerial;
 use App\Models\StockAdjustmentInItemSerial;
 use App\Models\StockAdjustmentOutItemSerial;
 use App\Models\StockTransferItemSerial;
@@ -41,6 +42,19 @@ final class StockSerialTransactionCreateDTO
             warehouseId: $stockAdjustmentOutItemSerial->stockAdjustmentOutItem->stockAdjustment->out_warehouse_id,
             productId: $stockAdjustmentOutItemSerial->stockAdjustmentOutItem->productUnit->product_id,
             direction: -1,
+            serial: $serial,
+        );
+    }
+
+    public static function fromPurchaseReceiptItemSerial(PurchaseReceiptItemSerial $purchaseReceiptItemSerial, string $serial): self
+    {
+        return new self(
+            referableType: PurchaseReceiptItemSerial::class,
+            referableId: $purchaseReceiptItemSerial->id,
+            date: $purchaseReceiptItemSerial->purchaseReceipt->date,
+            warehouseId: $purchaseReceiptItemSerial->purchaseReceipt->warehouse_id,
+            productId: $purchaseReceiptItemSerial->purchaseReceiptItem->productUnit->product_id,
+            direction: 1,
             serial: $serial,
         );
     }

@@ -136,7 +136,6 @@ class PurchaseController extends BaseController
                     code: $validatedRequest['code'],
                     date: $validatedRequest['date'],
                     dueDays: $validatedRequest['due_days'],
-                    warehouseId: $validatedRequest['warehouse_id'],
                     supplierId: $validatedRequest['supplier_id'],
                     purchaseOrderId: $validatedRequest['purchase_order_id'],
                     taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
@@ -146,9 +145,13 @@ class PurchaseController extends BaseController
                     isPosted: $validatedRequest['is_posted'],
                     additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
-                    globalDiscounts: $validatedRequest['global_discounts'],
-                    additionalCosts: $validatedRequest['additional_costs'],
+                    receiptWarehouseId: $validatedRequest['receipt_warehouse_id'],
+
                     items: $validatedRequest['items'],
+
+                    globalDiscounts: $validatedRequest['global_discounts'],
+
+                    additionalCosts: $validatedRequest['additional_costs'],
                 )
             );
 
@@ -186,7 +189,6 @@ class PurchaseController extends BaseController
                     code: $validatedRequest['code'],
                     date: $validatedRequest['date'],
                     dueDays: $validatedRequest['due_days'],
-                    warehouseId: $validatedRequest['warehouse_id'],
                     supplierId: $validatedRequest['supplier_id'],
                     purchaseOrderId: $validatedRequest['purchase_order_id'],
                     taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
@@ -196,12 +198,16 @@ class PurchaseController extends BaseController
                     isPosted: $validatedRequest['is_posted'],
                     additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
-                    deleteGlobalDiscountIds: $validatedRequest['delete_global_discount_ids'],
-                    globalDiscounts: $validatedRequest['global_discounts'],
-                    deleteAdditionalCostIds: $validatedRequest['delete_additional_cost_ids'],
-                    additionalCosts: $validatedRequest['additional_costs'],
+                    receiptWarehouseId: $validatedRequest['receipt_warehouse_id'],
+
                     deleteItemIds: $validatedRequest['delete_item_ids'],
                     items: $validatedRequest['items'],
+
+                    deleteGlobalDiscountIds: $validatedRequest['delete_global_discount_ids'],
+                    globalDiscounts: $validatedRequest['global_discounts'],
+
+                    deleteAdditionalCostIds: $validatedRequest['delete_additional_cost_ids'],
+                    additionalCosts: $validatedRequest['additional_costs'],
                 ),
             );
 

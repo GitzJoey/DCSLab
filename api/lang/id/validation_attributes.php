@@ -356,7 +356,7 @@ return [
         'code' => 'Kode',
         'date' => 'Tanggal',
         'due_days' => 'Jatuh Tempo (Hari)',
-        'warehouse_id' => 'Gudang',
+        'receipt_warehouse_id' => 'Gudang Penerimaan',
         'supplier_id' => 'Pemasok',
         'purchase_order_id' => 'Purchase Order',
         'tax_invoice_number' => 'No. Faktur Pajak',

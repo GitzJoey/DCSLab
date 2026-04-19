@@ -10,7 +10,6 @@ final class PurchaseCreateDTO
         public readonly string $code,
         public readonly string $date,
         public readonly int $dueDays,
-        public readonly ?int $warehouseId,
         public readonly ?int $supplierId,
         public readonly ?int $purchaseOrderId,
         public readonly ?string $taxInvoiceNumber,
@@ -20,9 +19,13 @@ final class PurchaseCreateDTO
         public readonly bool $isPosted,
         public readonly float $additionalCost,
         public readonly float $rounding,
-        public readonly array $globalDiscounts,
-        public readonly array $additionalCosts,
+        public readonly ?int $receiptWarehouseId,
+
         public readonly array $items,
+
+        public readonly array $globalDiscounts,
+
+        public readonly array $additionalCosts,
     ) {
     }
 }

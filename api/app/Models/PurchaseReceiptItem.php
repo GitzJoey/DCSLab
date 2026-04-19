@@ -60,7 +60,7 @@ class PurchaseReceiptItem extends Model
         return $this->belongsTo(ProductUnit::class)->withTrashed();
     }
 
-    public function itemSerials()
+    public function serials()
     {
         return $this->hasMany(PurchaseReceiptItemSerial::class);
     }

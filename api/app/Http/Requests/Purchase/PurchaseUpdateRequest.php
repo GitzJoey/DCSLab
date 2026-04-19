@@ -36,27 +36,10 @@ class PurchaseUpdateRequest extends FormRequest
         $this->merge([
             'company_id' => $purchase->company_id,
             'branch_id' => $purchase->branch_id,
-            'warehouse_id' => $this->filled('warehouse_id') ? HashidsHelper::decodeId($this->warehouse_id) : null,
             'supplier_id' => $this->filled('supplier_id') ? HashidsHelper::decodeId($this->supplier_id) : null,
             'purchase_order_id' => $this->filled('purchase_order_id') ? HashidsHelper::decodeId($this->purchase_order_id) : null,
-            'delete_global_discount_ids' => collect($this->delete_global_discount_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
-            'global_discounts' => collect($this->global_discounts ?? [])->map(function ($discount) {
-                $discount['id'] = ! empty($discount['id']) ? HashidsHelper::decodeId($discount['id']) : null;
+            'receipt_warehouse_id' => $this->filled('receipt_warehouse_id') ? HashidsHelper::decodeId($this->receipt_warehouse_id) : null,
 
-                return $discount;
-            })->all(),
-            'delete_additional_cost_ids' => collect($this->delete_additional_cost_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
-            'additional_costs' => collect($this->additional_costs ?? [])->map(function ($additionalCost) {
-                $additionalCost['id'] = ! empty($additionalCost['id']) ? HashidsHelper::decodeId($additionalCost['id']) : null;
-                $additionalCost['purchase_additional_cost_category_id'] = ! empty($additionalCost['purchase_additional_cost_category_id'])
-                    ? HashidsHelper::decodeId($additionalCost['purchase_additional_cost_category_id'])
-                    : null;
-                $additionalCost['paid_immediately_cash_account_id'] = ! empty($additionalCost['paid_immediately_cash_account_id'])
-                    ? HashidsHelper::decodeId($additionalCost['paid_immediately_cash_account_id'])
-                    : null;
-
-                return $additionalCost;
-            })->all(),
             'delete_item_ids' => collect($this->delete_item_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
             'items' => collect($this->items ?? [])->map(function ($item) {
                 $item['id'] = ! empty($item['id']) ? HashidsHelper::decodeId($item['id']) : null;
@@ -78,6 +61,24 @@ class PurchaseUpdateRequest extends FormRequest
 
                 return $item;
             })->all(),
+            'delete_global_discount_ids' => collect($this->delete_global_discount_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
+            'global_discounts' => collect($this->global_discounts ?? [])->map(function ($discount) {
+                $discount['id'] = ! empty($discount['id']) ? HashidsHelper::decodeId($discount['id']) : null;
+
+                return $discount;
+            })->all(),
+            'delete_additional_cost_ids' => collect($this->delete_additional_cost_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
+            'additional_costs' => collect($this->additional_costs ?? [])->map(function ($additionalCost) {
+                $additionalCost['id'] = ! empty($additionalCost['id']) ? HashidsHelper::decodeId($additionalCost['id']) : null;
+                $additionalCost['purchase_additional_cost_category_id'] = ! empty($additionalCost['purchase_additional_cost_category_id'])
+                    ? HashidsHelper::decodeId($additionalCost['purchase_additional_cost_category_id'])
+                    : null;
+                $additionalCost['paid_immediately_cash_account_id'] = ! empty($additionalCost['paid_immediately_cash_account_id'])
+                    ? HashidsHelper::decodeId($additionalCost['paid_immediately_cash_account_id'])
+                    : null;
+
+                return $additionalCost;
+            })->all(),
         ]);
     }
 
@@ -89,7 +90,6 @@ class PurchaseUpdateRequest extends FormRequest
             'code' => ['required', 'string'],
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'due_days' => ['required', 'integer', 'min:0'],
-            'warehouse_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
             'supplier_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('suppliers', $this->company_id), new IsValidSupplier($this->company_id)],
             'purchase_order_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_orders', $this->company_id)],
             'tax_invoice_number' => ['present', 'nullable', 'string'],
@@ -99,6 +99,8 @@ class PurchaseUpdateRequest extends FormRequest
             'is_posted' => ['required', 'boolean'],
             'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
+
+            'receipt_warehouse_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
 
             'delete_item_ids' => ['required', 'array'],
             'delete_item_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_items', $this->company_id)],
@@ -214,13 +216,13 @@ class PurchaseUpdateRequest extends FormRequest
             'code' => trans('validation_attributes.purchase.code'),
             'date' => trans('validation_attributes.purchase.date'),
             'due_days' => trans('validation_attributes.purchase.due_days'),
-            'warehouse_id' => trans('validation_attributes.purchase.warehouse_id'),
             'supplier_id' => trans('validation_attributes.purchase.supplier_id'),
             'purchase_order_id' => trans('validation_attributes.purchase.purchase_order_id'),
             'tax_invoice_number' => trans('validation_attributes.purchase.tax_invoice_number'),
             'tax_invoice_vat_base' => trans('validation_attributes.purchase.tax_invoice_vat_base'),
             'tax_invoice_vat' => trans('validation_attributes.purchase.tax_invoice_vat'),
             'remarks' => trans('validation_attributes.purchase.remarks'),
+            'receipt_warehouse_id' => trans('validation_attributes.purchase.receipt_warehouse_id'),
 
             'items.*.qty' => trans('validation_attributes.purchase_order_item.qty'),
             'items.*.product_unit_id' => trans('validation_attributes.purchase_order_item.product_unit_id'),
