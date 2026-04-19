@@ -147,6 +147,7 @@ class PurchaseController extends BaseController
                     additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
                     globalDiscounts: $validatedRequest['global_discounts'],
+                    additionalCosts: $validatedRequest['additional_costs'],
                     items: $validatedRequest['items'],
                 )
             );
@@ -197,6 +198,8 @@ class PurchaseController extends BaseController
                     rounding: (float) $validatedRequest['rounding'],
                     deleteGlobalDiscountIds: $validatedRequest['delete_global_discount_ids'],
                     globalDiscounts: $validatedRequest['global_discounts'],
+                    deleteAdditionalCostIds: $validatedRequest['delete_additional_cost_ids'],
+                    additionalCosts: $validatedRequest['additional_costs'],
                     deleteItemIds: $validatedRequest['delete_item_ids'],
                     items: $validatedRequest['items'],
                 ),

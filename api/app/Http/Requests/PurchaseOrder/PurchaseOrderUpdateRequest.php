@@ -4,6 +4,9 @@ namespace App\Http\Requests\PurchaseOrder;
 
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
+use App\Models\PurchaseOrder;
+use App\Models\PurchaseOrderDownPayment;
+use App\Models\PurchaseOrderDownPaymentRefund;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCashAccount;
@@ -175,6 +178,83 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'refunded_down_payments.*.amount' => trans('validation_attributes.purchase_order_down_payment_refund.amount'),
             'refunded_down_payments.*.remarks' => trans('validation_attributes.purchase_order_down_payment_refund.remarks'),
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $purchaseOrder = $this->route('purchase_order');
+            $code = $this->input('code');
+
+            if (
+                ! empty($code)
+                && $code !== config('dcslab.KEYWORDS.AUTO')
+                && PurchaseOrder::where('company_id', $this->company_id)
+                    ->where('code', $code)
+                    ->where('id', '<>', $purchaseOrder?->id)
+                    ->exists()
+            ) {
+                $validator->errors()->add('code', trans('rules.unique_code'));
+            }
+
+            $downPaymentCodesInRequest = [];
+            foreach ($this->input('down_payments', []) as $index => $downPayment) {
+                $downPaymentCode = $downPayment['code'] ?? null;
+                $downPaymentId = $downPayment['id'] ?? null;
+
+                if (empty($downPaymentCode) || $downPaymentCode === config('dcslab.KEYWORDS.AUTO')) {
+                    continue;
+                }
+
+                if (in_array($downPaymentCode, $downPaymentCodesInRequest, true)) {
+                    $validator->errors()->add("down_payments.$index.code", trans('rules.unique_code'));
+
+                    continue;
+                }
+
+                $downPaymentCodesInRequest[] = $downPaymentCode;
+
+                $downPaymentQuery = PurchaseOrderDownPayment::where('company_id', $this->company_id)
+                    ->where('code', $downPaymentCode);
+
+                if (! empty($downPaymentId)) {
+                    $downPaymentQuery->where('id', '<>', $downPaymentId);
+                }
+
+                if ($downPaymentQuery->exists()) {
+                    $validator->errors()->add("down_payments.$index.code", trans('rules.unique_code'));
+                }
+            }
+
+            $refundedDownPaymentCodesInRequest = [];
+            foreach ($this->input('refunded_down_payments', []) as $index => $refundedDownPayment) {
+                $refundedDownPaymentCode = $refundedDownPayment['code'] ?? null;
+                $refundedDownPaymentId = $refundedDownPayment['id'] ?? null;
+
+                if (empty($refundedDownPaymentCode) || $refundedDownPaymentCode === config('dcslab.KEYWORDS.AUTO')) {
+                    continue;
+                }
+
+                if (in_array($refundedDownPaymentCode, $refundedDownPaymentCodesInRequest, true)) {
+                    $validator->errors()->add("refunded_down_payments.$index.code", trans('rules.unique_code'));
+
+                    continue;
+                }
+
+                $refundedDownPaymentCodesInRequest[] = $refundedDownPaymentCode;
+
+                $refundedDownPaymentQuery = PurchaseOrderDownPaymentRefund::where('company_id', $this->company_id)
+                    ->where('code', $refundedDownPaymentCode);
+
+                if (! empty($refundedDownPaymentId)) {
+                    $refundedDownPaymentQuery->where('id', '<>', $refundedDownPaymentId);
+                }
+
+                if ($refundedDownPaymentQuery->exists()) {
+                    $validator->errors()->add("refunded_down_payments.$index.code", trans('rules.unique_code'));
+                }
+            }
+        });
     }
 
     public function prepareForValidation()

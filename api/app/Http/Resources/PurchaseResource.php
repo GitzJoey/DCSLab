@@ -13,12 +13,16 @@ class PurchaseResource extends JsonResource
         return [
             'id' => Hashids::encode($this->id),
             'ulid' => $this->ulid,
+
             $this->mergeWhen($this->relationLoaded('company'), [
                 'company' => new CompanyResource($this->whenLoaded('company')),
             ]),
             $this->mergeWhen($this->relationLoaded('branch'), [
                 'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
+            'code' => $this->code,
+            'date' => $this->date,
+            'due_days' => $this->due_days,
             $this->mergeWhen($this->relationLoaded('warehouse'), [
                 'warehouse' => new WarehouseResource($this->whenLoaded('warehouse')),
             ]),
@@ -28,15 +32,6 @@ class PurchaseResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
                 'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
             ]),
-            $this->mergeWhen($this->relationLoaded('globalDiscounts'), [
-                'global_discounts' => PurchaseGlobalDiscountResource::collection($this->whenLoaded('globalDiscounts')),
-            ]),
-            $this->mergeWhen($this->relationLoaded('items'), [
-                'items' => PurchaseItemResource::collection($this->whenLoaded('items')),
-            ]),
-            'code' => $this->code,
-            'date' => $this->date,
-            'due_days' => $this->due_days,
             'tax_invoice_number' => $this->tax_invoice_number,
             'tax_invoice_vat_base' => $this->tax_invoice_vat_base,
             'tax_invoice_vat' => $this->tax_invoice_vat,
@@ -56,6 +51,15 @@ class PurchaseResource extends JsonResource
             'amount_paid_total' => $this->amount_paid_total,
             'amount_due' => $this->amount_due,
             'is_paid_off' => $this->is_paid_off,
+            $this->mergeWhen($this->relationLoaded('items'), [
+                'items' => PurchaseItemResource::collection($this->whenLoaded('items')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('globalDiscounts'), [
+                'global_discounts' => PurchaseGlobalDiscountResource::collection($this->whenLoaded('globalDiscounts')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('additionalCosts'), [
+                'additional_costs' => PurchaseAdditionalCostResource::collection($this->whenLoaded('additionalCosts')),
+            ]),
         ];
     }
 }

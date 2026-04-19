@@ -21,6 +21,7 @@ final class PurchaseCreateDTO
         public readonly float $additionalCost,
         public readonly float $rounding,
         public readonly array $globalDiscounts,
+        public readonly array $additionalCosts,
         public readonly array $items,
     ) {
     }

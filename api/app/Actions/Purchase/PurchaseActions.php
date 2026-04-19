@@ -2,6 +2,7 @@
 
 namespace App\Actions\Purchase;
 
+use App\Actions\PurchaseAdditionalCost\PurchaseAdditionalCostActions;
 use App\Actions\PurchaseGlobalDiscount\PurchaseGlobalDiscountActions;
 use App\Actions\PurchaseItem\PurchaseItemActions;
 use App\DTOs\ExecuteDTO;
@@ -39,7 +40,6 @@ class PurchaseActions
         'warehouse',
         'supplier',
         'purchaseOrder.supplier',
-        'globalDiscounts',
         'items.purchaseOrderItem.purchaseOrder.supplier',
         'items.productUnit.unit',
         'items.productUnit.product.category',
@@ -50,8 +50,12 @@ class PurchaseActions
         'items.vatProfile',
         'items.productUnitPriceDiscounts',
         'items.subtotalDiscounts',
-        'receipts.warehouse',
+        'globalDiscounts',
+        'additionalCosts.category',
+        'additionalCosts.paidImmediatelyCashAccount',
+        'additionalCosts.payments.cashAccount',
         'payments.cashAccount',
+        'receipts.warehouse',
         'purchaseOrderDownPaymentAllocations.purchaseOrderDownPayment',
         'purchaseReturnAllocations.purchaseReturn',
         'purchaseReturns.supplier',
@@ -60,6 +64,7 @@ class PurchaseActions
     public function __construct(
         private readonly PurchaseItemActions $purchaseItemActions,
         private readonly PurchaseGlobalDiscountActions $purchaseGlobalDiscountActions,
+        private readonly PurchaseAdditionalCostActions $purchaseAdditionalCostActions,
     ) {
     }
 
@@ -281,6 +286,22 @@ class PurchaseActions
                 $this->purchaseGlobalDiscountActions->create($dto);
             }
 
+            foreach ($data->additionalCosts as $additionalCost) {
+                $this->purchaseAdditionalCostActions->create([
+                    'company_id' => $purchase->company_id,
+                    'branch_id' => $purchase->branch_id,
+                    'purchase_id' => $purchase->id,
+                    'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
+                    'code' => $additionalCost['code'],
+                    'date' => $additionalCost['date'],
+                    'due_days' => $additionalCost['due_days'],
+                    'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
+                    'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
+                    'amount_payable' => $additionalCost['amount_payable'],
+                    'remarks' => $additionalCost['remarks'] ?? null,
+                ]);
+            }
+
             self::updateSummary($purchase);
 
             $this->flushCache();
@@ -341,6 +362,42 @@ class PurchaseActions
                     );
 
                     $this->purchaseGlobalDiscountActions->create($dto);
+                }
+            }
+
+            foreach ($data->deleteAdditionalCostIds as $deleteId) {
+                $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($deleteId);
+                $this->purchaseAdditionalCostActions->delete($purchaseAdditionalCost);
+            }
+
+            foreach ($data->additionalCosts as $additionalCost) {
+                if (! empty($additionalCost['id'])) {
+                    $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($additionalCost['id']);
+
+                    $this->purchaseAdditionalCostActions->update($purchaseAdditionalCost, [
+                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
+                        'code' => $additionalCost['code'],
+                        'date' => $additionalCost['date'],
+                        'due_days' => $additionalCost['due_days'],
+                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
+                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
+                        'amount_payable' => $additionalCost['amount_payable'],
+                        'remarks' => $additionalCost['remarks'] ?? null,
+                    ]);
+                } else {
+                    $this->purchaseAdditionalCostActions->create([
+                        'company_id' => $purchase->company_id,
+                        'branch_id' => $purchase->branch_id,
+                        'purchase_id' => $purchase->id,
+                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
+                        'code' => $additionalCost['code'],
+                        'date' => $additionalCost['date'],
+                        'due_days' => $additionalCost['due_days'],
+                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
+                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
+                        'amount_payable' => $additionalCost['amount_payable'],
+                        'remarks' => $additionalCost['remarks'] ?? null,
+                    ]);
                 }
             }
 
@@ -411,15 +468,7 @@ class PurchaseActions
 
     public static function updateSummary(Purchase $purchase): void
     {
-        $purchase->load([
-            'items.productUnitPriceDiscounts',
-            'items.subtotalDiscounts',
-            'globalDiscounts',
-            'payments',
-            'additionalCosts.payments',
-            'purchaseOrderDownPaymentAllocations',
-            'purchaseReturnAllocations',
-        ]);
+        $purchase->refresh();
 
         $purchase->item_total_before_global_discount = (float) $purchase->items->sum('subtotal_after_discount');
         $purchase->global_discount = (function () use ($purchase) {
@@ -459,6 +508,25 @@ class PurchaseActions
             })();
             $purchaseItem->subtotal_after_global_discount = $purchaseItem->subtotal_after_discount - $purchaseItem->global_discount;
             $purchaseItem->save();
+        }
+
+        $globalDiscountDifference = round((float) $purchase->global_discount - (float) $purchase->items->sum('global_discount'), 8);
+        if (abs($globalDiscountDifference) > 0.00000001) {
+            $lastGlobalDiscountPurchaseItem = $purchase->items
+                ->filter(fn ($purchaseItem) => (float) $purchaseItem->subtotal_after_discount > 0)
+                ->last();
+
+            if ($lastGlobalDiscountPurchaseItem) {
+                $lastGlobalDiscountPurchaseItem->global_discount = max(
+                    0,
+                    (float) $lastGlobalDiscountPurchaseItem->global_discount + $globalDiscountDifference
+                );
+                $lastGlobalDiscountPurchaseItem->subtotal_after_global_discount = max(
+                    0,
+                    (float) $lastGlobalDiscountPurchaseItem->subtotal_after_discount - (float) $lastGlobalDiscountPurchaseItem->global_discount
+                );
+                $lastGlobalDiscountPurchaseItem->save();
+            }
         }
 
         $purchase->item_total_after_global_discount = (float) $purchase->items->sum('subtotal_after_global_discount');
@@ -505,6 +573,7 @@ class PurchaseActions
         $purchase->vat_base = (float) $purchase->items->sum('vat_base');
         $purchase->vat = (float) $purchase->items->sum('vat');
         $purchase->item_total_after_vat = (float) $purchase->items->sum('subtotal_after_vat');
+        $purchase->additional_cost = (float) $purchase->additionalCosts->sum('amount_total');
 
         foreach ($purchase->items as $purchaseItem) {
             $purchaseItem->additional_cost = (function () use ($purchaseItem, $purchase) {
@@ -515,25 +584,78 @@ class PurchaseActions
 
                 return ((float) $purchaseItem->subtotal_after_vat / $itemTotalAfterVat) * $purchaseAdditionalCost;
             })();
+            $purchaseItem->rounding = (function () use ($purchaseItem, $purchase) {
+                $purchaseItemSubtotalAfterVat = (float) $purchaseItem->subtotal_after_vat;
+                $itemTotalAfterVat = (float) $purchase->item_total_after_vat;
+                $purchaseRounding = (float) $purchase->rounding;
+
+                if ($itemTotalAfterVat <= 0 || $purchaseRounding == 0 || $purchaseItemSubtotalAfterVat <= 0) return 0;
+
+                return ($purchaseItemSubtotalAfterVat / $itemTotalAfterVat) * $purchaseRounding;
+            })();
             $purchaseItem->save();
         }
 
-        $getPurchaseItemAmountBeforeRounding = function ($purchaseItem) {
-            return (float) $purchaseItem->subtotal_after_vat + (float) $purchaseItem->additional_cost;
-        };
+        $additionalCostDifference = round((float) $purchase->additional_cost - (float) $purchase->items->sum('additional_cost'), 8);
+        if (abs($additionalCostDifference) > 0.00000001) {
+            $lastAdditionalCostPurchaseItem = $purchase->items
+                ->filter(fn ($purchaseItem) => (float) $purchaseItem->subtotal_after_vat > 0)
+                ->last();
 
-        $amountBeforeRounding = $purchase->items->sum($getPurchaseItemAmountBeforeRounding);
+            if ($lastAdditionalCostPurchaseItem) {
+                $lastAdditionalCostPurchaseItem->additional_cost = max(
+                    0,
+                    (float) $lastAdditionalCostPurchaseItem->additional_cost + $additionalCostDifference
+                );
+                $lastAdditionalCostPurchaseItem->save();
+            }
+        }
+
+        $roundingDifference = round((float) $purchase->rounding - (float) $purchase->items->sum('rounding'), 8);
+        if (abs($roundingDifference) > 0.00000001) {
+            $lastRoundingPurchaseItem = $purchase->items
+                ->filter(function ($purchaseItem) {
+                    return ((float) $purchaseItem->subtotal_after_vat + (float) $purchaseItem->additional_cost) > 0;
+                })
+                ->last();
+
+            if ($lastRoundingPurchaseItem) {
+                $lastRoundingPurchaseItem->rounding = (float) $lastRoundingPurchaseItem->rounding + $roundingDifference;
+                $lastRoundingPurchaseItem->amount_payable = (float) $lastRoundingPurchaseItem->subtotal_after_vat
+                    + (float) $lastRoundingPurchaseItem->additional_cost
+                    + (float) $lastRoundingPurchaseItem->rounding;
+                $lastRoundingPurchaseItem->cogs = (function () use ($lastRoundingPurchaseItem) {
+                    $qty = (float) $lastRoundingPurchaseItem->qty;
+                    $amountPayable = (float) $lastRoundingPurchaseItem->amount_payable;
+
+                    if ($qty <= 0 || $amountPayable <= 0) return 0;
+
+                    return $amountPayable / $qty;
+                })();
+                $lastRoundingPurchaseItem->total_cogs = (function () use ($lastRoundingPurchaseItem) {
+                    $qty = (float) $lastRoundingPurchaseItem->qty;
+                    $cogs = (float) $lastRoundingPurchaseItem->cogs;
+
+                    if ($qty <= 0 || $cogs <= 0) return 0;
+
+                    return $qty * $cogs;
+                })();
+                $lastRoundingPurchaseItem->base_unit_cogs = (function () use ($lastRoundingPurchaseItem) {
+                    $productUnitQtyBase = (float) $lastRoundingPurchaseItem->product_unit_qty_base;
+                    $totalCogs = (float) $lastRoundingPurchaseItem->total_cogs;
+
+                    if ($productUnitQtyBase <= 0 || $totalCogs <= 0) return 0;
+
+                    return $totalCogs / $productUnitQtyBase;
+                })();
+                $lastRoundingPurchaseItem->save();
+            }
+        }
 
         foreach ($purchase->items as $purchaseItem) {
-            $purchaseItem->rounding = (function () use ($purchaseItem, $purchase, $amountBeforeRounding, $getPurchaseItemAmountBeforeRounding) {
-                $purchaseItemAmountBeforeRounding = $getPurchaseItemAmountBeforeRounding($purchaseItem);
-                $purchaseRounding = (float) $purchase->rounding;
-
-                if ($amountBeforeRounding <= 0 || $purchaseRounding == 0 || $purchaseItemAmountBeforeRounding <= 0) return 0;
-
-                return ($purchaseItemAmountBeforeRounding / $amountBeforeRounding) * $purchaseRounding;
-            })();
-            $purchaseItem->amount_payable = $getPurchaseItemAmountBeforeRounding($purchaseItem) + (float) $purchaseItem->rounding;
+            $purchaseItem->amount_payable = (float) $purchaseItem->subtotal_after_vat
+                + (float) $purchaseItem->additional_cost
+                + (float) $purchaseItem->rounding;
             $purchaseItem->cogs = (function () use ($purchaseItem) {
                 $qty = (float) $purchaseItem->qty;
                 $amountPayable = (float) $purchaseItem->amount_payable;
@@ -561,7 +683,6 @@ class PurchaseActions
             $purchaseItem->save();
         }
 
-        $purchase->additional_cost = (float) $purchase->additionalCosts->sum('amount_total');
         $purchase->amount_payable = (float) $purchase->items->sum('amount_payable');
         $purchase->amount_paid_by_purchase_order_down_payment = (float) $purchase->purchaseOrderDownPaymentAllocations->sum('amount');
         $purchase->amount_paid_by_purchase_return = (float) $purchase->purchaseReturnAllocations->sum('amount');

@@ -502,6 +502,8 @@ class PurchaseOrderActions
 
     public static function updateSummary(PurchaseOrder $po): void
     {
+        $po->refresh();
+
         $po->item_total_before_global_discount = $po->items->sum('subtotal_after_discount');
         $po->global_discount = (function () use ($po) {
             $beforeDiscount = (float) $po->item_total_before_global_discount;
@@ -542,7 +544,26 @@ class PurchaseOrderActions
             $poItem->save();
         }
 
-        $po->item_total_after_global_discount = $po->items->sum('subtotal_after_global_discount');
+        $globalDiscountDifference = round((float) $po->global_discount - (float) $po->items->sum('global_discount'), 8);
+        if (abs($globalDiscountDifference) > 0.00000001) {
+            $lastGlobalDiscountPoItem = $po->items
+                ->filter(fn ($poItem) => (float) $poItem->subtotal_after_discount > 0)
+                ->last();
+
+            if ($lastGlobalDiscountPoItem) {
+                $lastGlobalDiscountPoItem->global_discount = max(
+                    0,
+                    (float) $lastGlobalDiscountPoItem->global_discount + $globalDiscountDifference
+                );
+                $lastGlobalDiscountPoItem->subtotal_after_global_discount = max(
+                    0,
+                    (float) $lastGlobalDiscountPoItem->subtotal_after_discount - (float) $lastGlobalDiscountPoItem->global_discount
+                );
+                $lastGlobalDiscountPoItem->save();
+            }
+        }
+
+        $po->item_total_after_global_discount = (float) $po->items->sum('subtotal_after_global_discount');
 
         foreach ($po->items as $poItem) {
             $poItem->vat_base = (function () use ($poItem) {
@@ -570,34 +591,35 @@ class PurchaseOrderActions
 
                 return $value < 0 ? 0 : $value;
             })();
+            $poItem->subtotal_after_vat = (function () use ($poItem) {
+                $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
+                $vat = (float) $poItem->vat;
+
+                if ($poItem->product_unit_is_price_include_vat) {
+                    return $subtotalAfterGlobalDiscount;
+                }
+
+                return $subtotalAfterGlobalDiscount + $vat;
+            })();
             $poItem->save();
         }
 
-        $getPoItemSubtotalAfterVat = function ($poItem) {
-            $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
-            $vat = (float) $poItem->vat;
-
-            if ($poItem->product_unit_is_price_include_vat) {
-                return $subtotalAfterGlobalDiscount;
-            }
-
-            return $subtotalAfterGlobalDiscount + $vat;
-        };
-
-        $itemTotalAfterVat = $po->items->sum($getPoItemSubtotalAfterVat);
+        $po->vat_base = (float) $po->items->sum('vat_base');
+        $po->vat = (float) $po->items->sum('vat');
+        $po->item_total_after_vat = (float) $po->items->sum('subtotal_after_vat');
 
         foreach ($po->items as $poItem) {
-            $poItem->rounding = (function () use ($poItem, $po, $itemTotalAfterVat, $getPoItemSubtotalAfterVat) {
-                $poItemSubtotalAfterVat = $getPoItemSubtotalAfterVat($poItem);
+            $poItem->rounding = (function () use ($poItem, $po) {
+                $poItemSubtotalAfterVat = (float) $poItem->subtotal_after_vat;
+                $itemTotalAfterVat = (float) $po->item_total_after_vat;
                 $purchaseOrderRounding = (float) $po->rounding;
 
                 if ($itemTotalAfterVat <= 0 || $purchaseOrderRounding == 0 || $poItemSubtotalAfterVat <= 0) return 0;
 
                 return ($poItemSubtotalAfterVat / $itemTotalAfterVat) * $purchaseOrderRounding;
             })();
-            $poItem->subtotal_after_vat = $getPoItemSubtotalAfterVat($poItem);
-            $poItem->amount_payable = (function () use ($poItem, $getPoItemSubtotalAfterVat) {
-                return $getPoItemSubtotalAfterVat($poItem) + (float) $poItem->rounding;
+            $poItem->amount_payable = (function () use ($poItem) {
+                return (float) $poItem->subtotal_after_vat + (float) $poItem->rounding;
             })();
             $poItem->cogs = (function () use ($poItem) {
                 $qty = (float) $poItem->qty;
@@ -626,9 +648,44 @@ class PurchaseOrderActions
             $poItem->save();
         }
 
-        $po->vat_base = (float) $po->items->sum('vat_base');
-        $po->vat = (float) $po->items->sum('vat');
-        $po->item_total_after_vat = (float) $po->items->sum('subtotal_after_vat');
+        $roundingDifference = round((float) $po->rounding - (float) $po->items->sum('rounding'), 8);
+        if (abs($roundingDifference) > 0.00000001) {
+            $lastRoundingPoItem = $po->items
+                ->filter(fn ($poItem) => (float) $poItem->subtotal_after_vat > 0)
+                ->last();
+
+            if ($lastRoundingPoItem) {
+                $lastRoundingPoItem->rounding = (float) $lastRoundingPoItem->rounding + $roundingDifference;
+                $lastRoundingPoItem->amount_payable = (float) $lastRoundingPoItem->subtotal_after_vat
+                    + (float) $lastRoundingPoItem->rounding;
+                $lastRoundingPoItem->cogs = (function () use ($lastRoundingPoItem) {
+                    $qty = (float) $lastRoundingPoItem->qty;
+                    $amountPayable = (float) $lastRoundingPoItem->amount_payable;
+
+                    if ($qty <= 0 || $amountPayable <= 0) return 0;
+
+                    return $amountPayable / $qty;
+                })();
+                $lastRoundingPoItem->total_cogs = (function () use ($lastRoundingPoItem) {
+                    $qty = (float) $lastRoundingPoItem->qty;
+                    $cogs = (float) $lastRoundingPoItem->cogs;
+
+                    if ($qty <= 0 || $cogs <= 0) return 0;
+
+                    return $qty * $cogs;
+                })();
+                $lastRoundingPoItem->base_unit_cogs = (function () use ($lastRoundingPoItem) {
+                    $productUnitQtyBase = (float) $lastRoundingPoItem->product_unit_qty_base;
+                    $totalCogs = (float) $lastRoundingPoItem->total_cogs;
+
+                    if ($productUnitQtyBase <= 0 || $totalCogs <= 0) return 0;
+
+                    return $totalCogs / $productUnitQtyBase;
+                })();
+                $lastRoundingPoItem->save();
+            }
+        }
+
         $po->amount_payable = (float) $po->items->sum('amount_payable');
         $po->amount_paid_down_payment = $po->downPayments->sum('amount');
         $po->amount_allocated_down_payment = $po->downPayments->sum('amount_allocated');

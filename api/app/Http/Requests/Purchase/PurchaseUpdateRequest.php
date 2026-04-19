@@ -4,7 +4,9 @@ namespace App\Http\Requests\Purchase;
 
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
+use App\Models\PurchaseAdditionalCost;
 use App\Rules\ExistsForCompany;
+use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
 use App\Rules\IsValidWarehouse;
@@ -42,6 +44,18 @@ class PurchaseUpdateRequest extends FormRequest
                 $discount['id'] = ! empty($discount['id']) ? HashidsHelper::decodeId($discount['id']) : null;
 
                 return $discount;
+            })->all(),
+            'delete_additional_cost_ids' => collect($this->delete_additional_cost_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
+            'additional_costs' => collect($this->additional_costs ?? [])->map(function ($additionalCost) {
+                $additionalCost['id'] = ! empty($additionalCost['id']) ? HashidsHelper::decodeId($additionalCost['id']) : null;
+                $additionalCost['purchase_additional_cost_category_id'] = ! empty($additionalCost['purchase_additional_cost_category_id'])
+                    ? HashidsHelper::decodeId($additionalCost['purchase_additional_cost_category_id'])
+                    : null;
+                $additionalCost['paid_immediately_cash_account_id'] = ! empty($additionalCost['paid_immediately_cash_account_id'])
+                    ? HashidsHelper::decodeId($additionalCost['paid_immediately_cash_account_id'])
+                    : null;
+
+                return $additionalCost;
             })->all(),
             'delete_item_ids' => collect($this->delete_item_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
             'items' => collect($this->items ?? [])->map(function ($item) {
@@ -85,13 +99,7 @@ class PurchaseUpdateRequest extends FormRequest
             'is_posted' => ['required', 'boolean'],
             'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
-            'delete_global_discount_ids' => ['required', 'array'],
-            'delete_global_discount_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_global_discounts', $this->company_id)],
-            'global_discounts' => ['required', 'array'],
-            'global_discounts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_global_discounts', $this->company_id)],
-            'global_discounts.*.sequence' => ['required', 'integer', 'min:1'],
-            'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
-            'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
+
             'delete_item_ids' => ['required', 'array'],
             'delete_item_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_items', $this->company_id)],
             'items' => ['required', 'array', 'min:1'],
@@ -121,7 +129,81 @@ class PurchaseUpdateRequest extends FormRequest
             'items.*.vat_base_numerator' => ['required', 'integer', 'min:1'],
             'items.*.vat_base_denominator' => ['required', 'integer', 'min:1'],
             'items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+
+            'delete_global_discount_ids' => ['required', 'array'],
+            'delete_global_discount_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_global_discounts', $this->company_id)],
+            'global_discounts' => ['required', 'array'],
+            'global_discounts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_global_discounts', $this->company_id)],
+            'global_discounts.*.sequence' => ['required', 'integer', 'min:1'],
+            'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
+            'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
+
+            'delete_additional_cost_ids' => ['required', 'array'],
+            'delete_additional_cost_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_additional_costs', $this->company_id)],
+            'additional_costs' => ['required', 'array'],
+            'additional_costs.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_additional_costs', $this->company_id)],
+            'additional_costs.*.purchase_additional_cost_category_id' => [
+                'required',
+                'integer',
+                new ExistsForCompany('purchase_additional_cost_categories', $this->company_id),
+            ],
+            'additional_costs.*.code' => ['required', 'string'],
+            'additional_costs.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'additional_costs.*.due_days' => ['required', 'integer', 'min:0'],
+            'additional_costs.*.paid_immediately_cash_account_id' => [
+                'present',
+                'nullable',
+                'integer',
+                'bail',
+                new ExistsForCompany('cash_accounts', $this->company_id),
+                new IsValidCashAccount($this->branch_id),
+            ],
+            'additional_costs.*.amount_paid_immediately' => ['required', 'numeric', 'min:0'],
+            'additional_costs.*.amount_payable' => ['required', 'numeric', 'min:0'],
+            'additional_costs.*.remarks' => ['present', 'nullable', 'string'],
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            foreach ($this->input('additional_costs', []) as $index => $additionalCost) {
+                $amountPaidImmediately = (float) ($additionalCost['amount_paid_immediately'] ?? 0);
+                $amountPayable = (float) ($additionalCost['amount_payable'] ?? 0);
+                $code = $additionalCost['code'] ?? null;
+                $id = $additionalCost['id'] ?? null;
+
+                if ($amountPaidImmediately > 0 && empty($additionalCost['paid_immediately_cash_account_id'])) {
+                    $validator->errors()->add(
+                        "additional_costs.$index.paid_immediately_cash_account_id",
+                        trans('validation.required', [
+                            'attribute' => trans('validation_attributes.purchase_additional_cost.paid_immediately_cash_account_id'),
+                        ])
+                    );
+                }
+
+                if ($amountPaidImmediately <= 0 && $amountPayable <= 0) {
+                    $validator->errors()->add(
+                        "additional_costs.$index.amount_total",
+                        'Either immediate payment or payable amount must be greater than zero.'
+                    );
+                }
+
+                if (! empty($code) && $code !== config('dcslab.KEYWORDS.AUTO')) {
+                    $query = PurchaseAdditionalCost::where('company_id', $this->company_id)
+                        ->whereNull('deleted_at')
+                        ->where('code', $code);
+
+                    if (! empty($id)) {
+                        $query->where('id', '<>', $id);
+                    }
+
+                    if ($query->exists()) {
+                        $validator->errors()->add("additional_costs.$index.code", trans('rules.unique_code'));
+                    }
+                }
+            }
+        });
     }
 
     public function attributes()
@@ -140,10 +222,6 @@ class PurchaseUpdateRequest extends FormRequest
             'tax_invoice_vat' => trans('validation_attributes.purchase.tax_invoice_vat'),
             'remarks' => trans('validation_attributes.purchase.remarks'),
 
-            'global_discounts.*.sequence' => trans('validation_attributes.purchase_order_global_discount.sequence'),
-            'global_discounts.*.discount_type' => trans('validation_attributes.purchase_order_global_discount.discount_type'),
-            'global_discounts.*.discount_value' => trans('validation_attributes.purchase_order_global_discount.discount_value'),
-
             'items.*.qty' => trans('validation_attributes.purchase_order_item.qty'),
             'items.*.product_unit_id' => trans('validation_attributes.purchase_order_item.product_unit_id'),
             'items.*.product_unit_conversion_value' => trans('validation_attributes.purchase_order_item.product_unit_conversion_value'),
@@ -154,6 +232,19 @@ class PurchaseUpdateRequest extends FormRequest
             'items.*.vat_base_numerator' => trans('validation_attributes.purchase_order_item.vat_base_numerator'),
             'items.*.vat_base_denominator' => trans('validation_attributes.purchase_order_item.vat_base_denominator'),
             'items.*.remarks' => trans('validation_attributes.purchase_order_item.remarks'),
+
+            'global_discounts.*.sequence' => trans('validation_attributes.purchase_order_global_discount.sequence'),
+            'global_discounts.*.discount_type' => trans('validation_attributes.purchase_order_global_discount.discount_type'),
+            'global_discounts.*.discount_value' => trans('validation_attributes.purchase_order_global_discount.discount_value'),
+
+            'additional_costs.*.purchase_additional_cost_category_id' => trans('validation_attributes.purchase_additional_cost.purchase_additional_cost_category_id'),
+            'additional_costs.*.code' => trans('validation_attributes.purchase_additional_cost.code'),
+            'additional_costs.*.date' => trans('validation_attributes.purchase_additional_cost.date'),
+            'additional_costs.*.due_days' => trans('validation_attributes.purchase_additional_cost.due_days'),
+            'additional_costs.*.paid_immediately_cash_account_id' => trans('validation_attributes.purchase_additional_cost.paid_immediately_cash_account_id'),
+            'additional_costs.*.amount_paid_immediately' => trans('validation_attributes.purchase_additional_cost.amount_paid_immediately'),
+            'additional_costs.*.amount_payable' => trans('validation_attributes.purchase_additional_cost.amount_payable'),
+            'additional_costs.*.remarks' => trans('validation_attributes.purchase_additional_cost.remarks'),
         ];
     }
 }
