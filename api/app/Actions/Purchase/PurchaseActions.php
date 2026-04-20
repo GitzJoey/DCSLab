@@ -333,7 +333,7 @@ class PurchaseActions
                     'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
                     'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
                     'amount_payable' => $additionalCost['amount_payable'],
-                    'remarks' => $additionalCost['remarks'] ?? null,
+                    'remarks' => $additionalCost['remarks'],
                 ]);
             }
 
@@ -369,71 +369,6 @@ class PurchaseActions
             $purchase->additional_cost = $data->additionalCost;
             $purchase->rounding = $data->rounding;
             $purchase->save();
-
-            foreach ($data->deleteGlobalDiscountIds as $deleteId) {
-                $purchaseGlobalDiscount = $purchase->globalDiscounts()->findOrFail($deleteId);
-                $this->purchaseGlobalDiscountActions->delete($purchaseGlobalDiscount);
-            }
-
-            foreach ($data->globalDiscounts as $globalDiscount) {
-                if (! empty($globalDiscount['id'])) {
-                    $purchaseGlobalDiscount = $purchase->globalDiscounts()->findOrFail($globalDiscount['id']);
-                    $dto = new PurchaseGlobalDiscountUpdateDTO(
-                        sequence: $globalDiscount['sequence'],
-                        discountType: $globalDiscount['discount_type'],
-                        discountValue: $globalDiscount['discount_value'],
-                    );
-
-                    $this->purchaseGlobalDiscountActions->update($purchaseGlobalDiscount, $dto);
-                } else {
-                    $dto = new PurchaseGlobalDiscountCreateDTO(
-                        companyId: $purchase->company_id,
-                        branchId: $purchase->branch_id,
-                        purchaseId: $purchase->id,
-                        sequence: $globalDiscount['sequence'],
-                        discountType: $globalDiscount['discount_type'],
-                        discountValue: $globalDiscount['discount_value'],
-                    );
-
-                    $this->purchaseGlobalDiscountActions->create($dto);
-                }
-            }
-
-            foreach ($data->deleteAdditionalCostIds as $deleteId) {
-                $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($deleteId);
-                $this->purchaseAdditionalCostActions->delete($purchaseAdditionalCost);
-            }
-
-            foreach ($data->additionalCosts as $additionalCost) {
-                if (! empty($additionalCost['id'])) {
-                    $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($additionalCost['id']);
-
-                    $this->purchaseAdditionalCostActions->update($purchaseAdditionalCost, [
-                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                        'code' => $additionalCost['code'],
-                        'date' => $additionalCost['date'],
-                        'due_days' => $additionalCost['due_days'],
-                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                        'amount_payable' => $additionalCost['amount_payable'],
-                        'remarks' => $additionalCost['remarks'] ?? null,
-                    ]);
-                } else {
-                    $this->purchaseAdditionalCostActions->create([
-                        'company_id' => $purchase->company_id,
-                        'branch_id' => $purchase->branch_id,
-                        'purchase_id' => $purchase->id,
-                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                        'code' => $additionalCost['code'],
-                        'date' => $additionalCost['date'],
-                        'due_days' => $additionalCost['due_days'],
-                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                        'amount_payable' => $additionalCost['amount_payable'],
-                        'remarks' => $additionalCost['remarks'] ?? null,
-                    ]);
-                }
-            }
 
             foreach ($data->deleteItemIds as $deleteId) {
                 $purchaseItem = $purchase->items()->findOrFail($deleteId);
@@ -488,8 +423,6 @@ class PurchaseActions
                 $data->items[$i]['id'] = $result->id;
             }
 
-            self::updateSummary($purchase);
-
             $purchaseReceipts = $purchase->receipts()->with('items.serials')->get();
             if ($purchaseReceipts->count() > 1) {
                 throw new Exception('Purchase expects at most one auto-generated receipt.');
@@ -512,7 +445,7 @@ class PurchaseActions
                 $purchaseReceipt = $purchaseReceipts->first();
                 if ($purchaseReceipt) {
                     $dto = new PurchaseReceiptUpdateDTO(
-                        code: $purchaseReceipt?->code ?? config('dcslab.KEYWORDS.AUTO'),
+                        code: $purchaseReceipt->code,
                         date: $purchase->date,
                         warehouseId: $data->receiptWarehouseId,
                         remarks: $purchase->remarks,
@@ -530,16 +463,84 @@ class PurchaseActions
                         warehouseId: $data->receiptWarehouseId,
                         remarks: $purchase->remarks,
                         isPosted: $purchase->is_posted,
-                        items: $dto->items,
+                        items: $items,
                     );
 
                     $this->purchaseReceiptActions->create($createDto);
                 }
             } else {
+                $purchaseReceipt = $purchaseReceipts->first();
                 if ($purchaseReceipt) {
                     $this->purchaseReceiptActions->delete($purchaseReceipt);
                 }
             }
+
+            foreach ($data->deleteGlobalDiscountIds as $deleteId) {
+                $purchaseGlobalDiscount = $purchase->globalDiscounts()->findOrFail($deleteId);
+                $this->purchaseGlobalDiscountActions->delete($purchaseGlobalDiscount);
+            }
+
+            foreach ($data->globalDiscounts as $globalDiscount) {
+                if (! empty($globalDiscount['id'])) {
+                    $purchaseGlobalDiscount = $purchase->globalDiscounts()->findOrFail($globalDiscount['id']);
+                    $dto = new PurchaseGlobalDiscountUpdateDTO(
+                        sequence: $globalDiscount['sequence'],
+                        discountType: $globalDiscount['discount_type'],
+                        discountValue: $globalDiscount['discount_value'],
+                    );
+
+                    $this->purchaseGlobalDiscountActions->update($purchaseGlobalDiscount, $dto);
+                } else {
+                    $dto = new PurchaseGlobalDiscountCreateDTO(
+                        companyId: $purchase->company_id,
+                        branchId: $purchase->branch_id,
+                        purchaseId: $purchase->id,
+                        sequence: $globalDiscount['sequence'],
+                        discountType: $globalDiscount['discount_type'],
+                        discountValue: $globalDiscount['discount_value'],
+                    );
+
+                    $this->purchaseGlobalDiscountActions->create($dto);
+                }
+            }
+
+            foreach ($data->deleteAdditionalCostIds as $deleteId) {
+                $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($deleteId);
+                $this->purchaseAdditionalCostActions->delete($purchaseAdditionalCost);
+            }
+
+            foreach ($data->additionalCosts as $additionalCost) {
+                if (! empty($additionalCost['id'])) {
+                    $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($additionalCost['id']);
+
+                    $this->purchaseAdditionalCostActions->update($purchaseAdditionalCost, [
+                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
+                        'code' => $additionalCost['code'],
+                        'date' => $additionalCost['date'],
+                        'due_days' => $additionalCost['due_days'],
+                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
+                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
+                        'amount_payable' => $additionalCost['amount_payable'],
+                        'remarks' => $additionalCost['remarks'],
+                    ]);
+                } else {
+                    $this->purchaseAdditionalCostActions->create([
+                        'company_id' => $purchase->company_id,
+                        'branch_id' => $purchase->branch_id,
+                        'purchase_id' => $purchase->id,
+                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
+                        'code' => $additionalCost['code'],
+                        'date' => $additionalCost['date'],
+                        'due_days' => $additionalCost['due_days'],
+                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
+                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
+                        'amount_payable' => $additionalCost['amount_payable'],
+                        'remarks' => $additionalCost['remarks'],
+                    ]);
+                }
+            }
+
+            self::updateSummary($purchase);
 
             $this->flushCache();
 
