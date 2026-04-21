@@ -15,7 +15,7 @@ class PurchaseAdditionalCostCategoryUpdateRequest extends FormRequest
 
         /** @var \App\User */
         $user = Auth::user();
-        $purchaseAdditionalCostCategory = $this->route('purchase_additional_cost_category');
+        $purchaseAdditionalCostCategory = $this->route('pacc');
 
         return $user->can('update', $purchaseAdditionalCostCategory);
     }

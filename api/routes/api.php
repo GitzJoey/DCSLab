@@ -242,13 +242,13 @@ Route::prefix('stock_adjustment_category')->middleware('auth:sanctum')->group(fu
 Route::prefix('purchase_additional_cost_category')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.purchase_additional_cost_category.')->group(function () {
         Route::get('read', [PurchaseAdditionalCostCategoryController::class, 'readAny'])->name('read_any');
-        Route::get('read/{purchase_additional_cost_category:ulid}', [PurchaseAdditionalCostCategoryController::class, 'read'])->name('read');
+        Route::get('read/{pacc:ulid}', [PurchaseAdditionalCostCategoryController::class, 'read'])->name('read');
     });
 
     Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase_additional_cost_category.')->group(function () {
         Route::post('save', [PurchaseAdditionalCostCategoryController::class, 'store'])->name('save');
-        Route::post('edit/{purchase_additional_cost_category:ulid}', [PurchaseAdditionalCostCategoryController::class, 'update'])->name('edit');
-        Route::post('delete/{purchase_additional_cost_category:ulid}', [PurchaseAdditionalCostCategoryController::class, 'delete'])->name('delete');
+        Route::post('edit/{pacc:ulid}', [PurchaseAdditionalCostCategoryController::class, 'update'])->name('edit');
+        Route::post('delete/{pacc:ulid}', [PurchaseAdditionalCostCategoryController::class, 'delete'])->name('delete');
     });
 });
 

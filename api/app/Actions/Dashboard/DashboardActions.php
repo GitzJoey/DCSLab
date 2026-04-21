@@ -261,7 +261,7 @@ class DashboardActions
         ];
 
         $purchaseAdditionalCost = [
-            'icon' => 'ReceiptText',
+            'icon' => 'Wallet',
             'pageName' => 'side-menu-purchase-additional-cost',
             'title' => 'components.menu.purchase-additional-cost',
         ];
