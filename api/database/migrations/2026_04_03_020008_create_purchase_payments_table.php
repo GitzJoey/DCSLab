@@ -12,15 +12,19 @@ return new class extends Migration
             $table->id();
             $table->ulid();
 
+            // Header
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
-            $table->foreignId('purchase_id')->references('id')->on('purchases');
             $table->string('code');
             $table->dateTime('date');
+            $table->foreignId('purchase_id')->references('id')->on('purchases');
             $table->foreignId('cash_account_id')->references('id')->on('cash_accounts');
             $table->decimal('amount', 30, 8)->default(0);
+
+            // Header advanced
             $table->string('remarks')->nullable();
 
+            // Audit
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

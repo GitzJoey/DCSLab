@@ -425,8 +425,10 @@ Route::prefix('purchase')->middleware('auth:sanctum')->group(function () {
     });
 
     Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase.')->group(function () {
-        Route::post('save', [PurchaseController::class, 'store'])->name('save');
-        Route::post('edit/{purchase:ulid}', [PurchaseController::class, 'update'])->name('edit');
+        Route::post('save/direct', [PurchaseController::class, 'storeDirect'])->name('save.direct');
+        Route::post('save/manual', [PurchaseController::class, 'storeManual'])->name('save.manual');
+        Route::post('edit/direct/{purchase:ulid}', [PurchaseController::class, 'updateDirect'])->name('edit.direct');
+        Route::post('edit/manual/{purchase:ulid}', [PurchaseController::class, 'updateManual'])->name('edit.manual');
         Route::post('delete/{purchase:ulid}', [PurchaseController::class, 'delete'])->name('delete');
     });
 });

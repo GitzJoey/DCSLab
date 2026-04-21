@@ -2,7 +2,7 @@
 
 namespace App\DTOs;
 
-final class PurchaseUpdateDTO
+final class PurchaseDirectUpdateDTO
 {
     public function __construct(
         public readonly string $code,
@@ -10,6 +10,7 @@ final class PurchaseUpdateDTO
         public readonly int $dueDays,
         public readonly ?int $supplierId,
         public readonly ?int $purchaseOrderId,
+        public readonly int $directReceiptWarehouseId,
         public readonly ?string $taxInvoiceNumber,
         public readonly float $taxInvoiceVatBase,
         public readonly float $taxInvoiceVat,
@@ -17,7 +18,6 @@ final class PurchaseUpdateDTO
         public readonly bool $isPosted,
         public readonly float $additionalCost,
         public readonly float $rounding,
-        public readonly ?int $receiptWarehouseId,
 
         public readonly array $deleteItemIds,
         public readonly array $items,

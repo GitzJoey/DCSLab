@@ -12,14 +12,18 @@ return new class extends Migration
             $table->id();
             $table->ulid();
 
+            // Header
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->string('code');
             $table->dateTime('date');
             $table->integer('due_days')->default(0);
             $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers');
+
+            // Header advanced
             $table->text('remarks')->nullable();
 
+            // Footer totals
             $table->decimal('item_total_before_global_discount', 30, 8)->default(0);
             $table->decimal('global_discount', 30, 8)->default(0);
             $table->decimal('item_total_after_global_discount', 30, 8)->default(0);
@@ -33,6 +37,7 @@ return new class extends Migration
             $table->decimal('amount_refunded_down_payment', 30, 8)->default(0);
             $table->decimal('amount_available_down_payment', 30, 8)->default(0);
 
+            // Audit
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

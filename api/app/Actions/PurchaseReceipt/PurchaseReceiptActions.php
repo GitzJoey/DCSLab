@@ -227,6 +227,7 @@ class PurchaseReceiptActions
             $purchaseReceipt->company_id = $data->companyId;
             $purchaseReceipt->branch_id = $data->branchId;
             $purchaseReceipt->purchase_id = $data->purchaseId;
+            $purchaseReceipt->is_from_direct_purchase = $data->isFromDirectPurchase;
             $purchaseReceipt->code = $this->generateUniqueCode($data->companyId, $data->code, null);
             $purchaseReceipt->date = $this->generateDate($data->date);
             $purchaseReceipt->warehouse_id = $data->warehouseId;
@@ -272,6 +273,7 @@ class PurchaseReceiptActions
         try {
             $purchaseReceipt->code = $this->generateUniqueCode($purchaseReceipt->company_id, $data->code, $purchaseReceipt->id);
             $purchaseReceipt->date = $this->generateDate($data->date);
+            $purchaseReceipt->is_from_direct_purchase = $data->isFromDirectPurchase;
             $purchaseReceipt->warehouse_id = $data->warehouseId;
             $purchaseReceipt->remarks = $data->remarks;
             $purchaseReceipt->is_posted = $data->isPosted;

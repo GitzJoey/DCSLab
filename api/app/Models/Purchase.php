@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PurchaseReceiptModeEnum;
 use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
@@ -25,6 +26,7 @@ class Purchase extends Model
         'due_days',
         'supplier_id',
         'purchase_order_id',
+        'receipt_mode',
         'tax_invoice_number',
         'tax_invoice_vat_base',
         'tax_invoice_vat',
@@ -53,6 +55,7 @@ class Purchase extends Model
     protected $casts = [
         'date' => 'datetime',
         'due_days' => 'integer',
+        'receipt_mode' => PurchaseReceiptModeEnum::class,
         'tax_invoice_vat_base' => 'decimal:8',
         'tax_invoice_vat' => 'decimal:8',
         'is_posted' => 'boolean',
@@ -100,6 +103,16 @@ class Purchase extends Model
     public function receipts()
     {
         return $this->hasMany(PurchaseReceipt::class);
+    }
+
+    public function directReceipt()
+    {
+        return $this->hasOne(PurchaseReceipt::class)->where('is_from_direct_purchase', true);
+    }
+
+    public function manualReceipts()
+    {
+        return $this->hasMany(PurchaseReceipt::class)->where('is_from_direct_purchase', false);
     }
 
     public function payments()

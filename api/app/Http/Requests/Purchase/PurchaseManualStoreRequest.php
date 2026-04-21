@@ -4,6 +4,7 @@ namespace App\Http\Requests\Purchase;
 
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
+use App\Models\Purchase;
 use App\Models\PurchaseAdditionalCost;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
@@ -11,12 +12,11 @@ use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidCompany;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
-use App\Rules\IsValidWarehouse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class PurchaseStoreRequest extends FormRequest
+class PurchaseManualStoreRequest extends FormRequest
 {
     public function authorize()
     {
@@ -27,7 +27,7 @@ class PurchaseStoreRequest extends FormRequest
         /** @var \App\User */
         $user = Auth::user();
 
-        return $user->can('create', \App\Models\Purchase::class);
+        return $user->can('create', Purchase::class);
     }
 
     public function prepareForValidation()
@@ -37,8 +37,6 @@ class PurchaseStoreRequest extends FormRequest
             'branch_id' => $this->filled('branch_id') ? HashidsHelper::decodeId($this->branch_id) : null,
             'supplier_id' => $this->filled('supplier_id') ? HashidsHelper::decodeId($this->supplier_id) : null,
             'purchase_order_id' => $this->filled('purchase_order_id') ? HashidsHelper::decodeId($this->purchase_order_id) : null,
-
-            'receipt_warehouse_id' => $this->filled('receipt_warehouse_id') ? HashidsHelper::decodeId($this->receipt_warehouse_id) : null,
         ]);
 
         if (is_array($this->input('items'))) {
@@ -90,6 +88,7 @@ class PurchaseStoreRequest extends FormRequest
                 new IsValidSupplier($this->company_id),
             ],
             'purchase_order_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_orders', $this->company_id)],
+            'direct_receipt_warehouse_id' => ['prohibited'],
             'tax_invoice_number' => ['present', 'nullable', 'string'],
             'tax_invoice_vat_base' => ['required', 'numeric', 'min:0'],
             'tax_invoice_vat' => ['required', 'numeric', 'min:0'],
@@ -97,8 +96,6 @@ class PurchaseStoreRequest extends FormRequest
             'is_posted' => ['required', 'boolean'],
             'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
-
-            'receipt_warehouse_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
 
             'items' => ['required', 'array', 'min:1'],
             'items.*.purchase_order_item_id' => [
@@ -207,8 +204,6 @@ class PurchaseStoreRequest extends FormRequest
             'due_days' => trans('validation_attributes.purchase.due_days'),
             'supplier_id' => trans('validation_attributes.purchase.supplier_id'),
             'purchase_order_id' => trans('validation_attributes.purchase.purchase_order_id'),
-
-            'receipt_warehouse_id' => trans('validation_attributes.purchase.receipt_warehouse_id'),
             'tax_invoice_number' => trans('validation_attributes.purchase.tax_invoice_number'),
             'tax_invoice_vat_base' => trans('validation_attributes.purchase.tax_invoice_vat_base'),
             'tax_invoice_vat' => trans('validation_attributes.purchase.tax_invoice_vat'),

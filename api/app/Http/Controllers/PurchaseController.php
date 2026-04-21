@@ -6,11 +6,16 @@ use App\Actions\Purchase\PurchaseActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
-use App\DTOs\PurchaseCreateDTO;
-use App\DTOs\PurchaseUpdateDTO;
+use App\DTOs\PurchaseDirectCreateDTO;
+use App\DTOs\PurchaseDirectUpdateDTO;
+use App\DTOs\PurchaseManualCreateDTO;
+use App\DTOs\PurchaseManualUpdateDTO;
+use App\Enums\PurchaseReceiptModeEnum;
 use App\Helpers\HashidsHelper;
-use App\Http\Requests\Purchase\PurchaseStoreRequest;
-use App\Http\Requests\Purchase\PurchaseUpdateRequest;
+use App\Http\Requests\Purchase\PurchaseDirectStoreRequest;
+use App\Http\Requests\Purchase\PurchaseDirectUpdateRequest;
+use App\Http\Requests\Purchase\PurchaseManualStoreRequest;
+use App\Http\Requests\Purchase\PurchaseManualUpdateRequest;
 use App\Http\Resources\PurchaseResource;
 use App\Models\Purchase;
 use App\Rules\IsValidBranch;
@@ -110,7 +115,7 @@ class PurchaseController extends BaseController
             : new PurchaseResource($result);
     }
 
-    public function store(PurchaseStoreRequest $request)
+    public function storeDirect(PurchaseDirectStoreRequest $request)
     {
         $validatedRequest = $request->validated();
 
@@ -128,9 +133,8 @@ class PurchaseController extends BaseController
             }
 
             DB::beginTransaction();
-
-            $result = $this->purchaseActions->create(
-                data: new PurchaseCreateDTO(
+            $result = $this->purchaseActions->createDirect(
+                data: new PurchaseDirectCreateDTO(
                     companyId: $validatedRequest['company_id'],
                     branchId: $validatedRequest['branch_id'],
                     code: $validatedRequest['code'],
@@ -138,6 +142,7 @@ class PurchaseController extends BaseController
                     dueDays: $validatedRequest['due_days'],
                     supplierId: $validatedRequest['supplier_id'],
                     purchaseOrderId: $validatedRequest['purchase_order_id'],
+                    directReceiptWarehouseId: $validatedRequest['direct_receipt_warehouse_id'],
                     taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
                     taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
                     taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
@@ -145,7 +150,6 @@ class PurchaseController extends BaseController
                     isPosted: $validatedRequest['is_posted'],
                     additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
-                    receiptWarehouseId: $validatedRequest['receipt_warehouse_id'],
 
                     items: $validatedRequest['items'],
 
@@ -164,8 +168,67 @@ class PurchaseController extends BaseController
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function update(Purchase $purchase, PurchaseUpdateRequest $request)
+    public function storeManual(PurchaseManualStoreRequest $request)
     {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUniqueCode = $this->purchaseActions->isUniqueCode(
+                    $validatedRequest['company_id'],
+                    $validatedRequest['code'],
+                    null,
+                );
+                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            DB::beginTransaction();
+
+            $result = $this->purchaseActions->createManual(
+                data: new PurchaseManualCreateDTO(
+                    companyId: $validatedRequest['company_id'],
+                    branchId: $validatedRequest['branch_id'],
+                    code: $validatedRequest['code'],
+                    date: $validatedRequest['date'],
+                    dueDays: $validatedRequest['due_days'],
+                    supplierId: $validatedRequest['supplier_id'],
+                    purchaseOrderId: $validatedRequest['purchase_order_id'],
+                    taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
+                    taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
+                    taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
+                    remarks: $validatedRequest['remarks'],
+                    isPosted: $validatedRequest['is_posted'],
+                    additionalCost: (float) $validatedRequest['additional_cost'],
+                    rounding: (float) $validatedRequest['rounding'],
+
+                    items: $validatedRequest['items'],
+
+                    globalDiscounts: $validatedRequest['global_discounts'],
+
+                    additionalCosts: $validatedRequest['additional_costs'],
+                )
+            );
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function updateDirect(Purchase $purchase, PurchaseDirectUpdateRequest $request)
+    {
+        if ($purchase->receipt_mode !== PurchaseReceiptModeEnum::DIRECT) {
+            return response()->error([
+                'receipt_mode' => ['Purchase ini bukan mode direct.'],
+            ], 422);
+        }
+
         $validatedRequest = $request->validated();
 
         $result = null;
@@ -183,9 +246,69 @@ class PurchaseController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->purchaseActions->update(
+            $result = $this->purchaseActions->updateDirect(
                 purchase: $purchase,
-                data: new PurchaseUpdateDTO(
+                data: new PurchaseDirectUpdateDTO(
+                    code: $validatedRequest['code'],
+                    date: $validatedRequest['date'],
+                    dueDays: $validatedRequest['due_days'],
+                    supplierId: $validatedRequest['supplier_id'],
+                    purchaseOrderId: $validatedRequest['purchase_order_id'],
+                    directReceiptWarehouseId: $validatedRequest['direct_receipt_warehouse_id'],
+                    taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
+                    taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
+                    taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
+                    remarks: $validatedRequest['remarks'],
+                    isPosted: $validatedRequest['is_posted'],
+                    additionalCost: (float) $validatedRequest['additional_cost'],
+                    rounding: (float) $validatedRequest['rounding'],
+
+                    deleteItemIds: $validatedRequest['delete_item_ids'],
+                    items: $validatedRequest['items'],
+
+                    deleteGlobalDiscountIds: $validatedRequest['delete_global_discount_ids'],
+                    globalDiscounts: $validatedRequest['global_discounts'],
+
+                    deleteAdditionalCostIds: $validatedRequest['delete_additional_cost_ids'],
+                    additionalCosts: $validatedRequest['additional_costs'],
+                ),
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function updateManual(Purchase $purchase, PurchaseManualUpdateRequest $request)
+    {
+        if ($purchase->receipt_mode !== PurchaseReceiptModeEnum::MANUAL) {
+            return response()->error([
+                'receipt_mode' => ['Purchase ini bukan mode manual.'],
+            ], 422);
+        }
+
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUniqueCode = $this->purchaseActions->isUniqueCode(
+                    $purchase->company_id,
+                    $validatedRequest['code'],
+                    $purchase->id,
+                );
+                if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
+            }
+
+            DB::beginTransaction();
+            $result = $this->purchaseActions->updateManual(
+                purchase: $purchase,
+                data: new PurchaseManualUpdateDTO(
                     code: $validatedRequest['code'],
                     date: $validatedRequest['date'],
                     dueDays: $validatedRequest['due_days'],
@@ -198,7 +321,6 @@ class PurchaseController extends BaseController
                     isPosted: $validatedRequest['is_posted'],
                     additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
-                    receiptWarehouseId: $validatedRequest['receipt_warehouse_id'],
 
                     deleteItemIds: $validatedRequest['delete_item_ids'],
                     items: $validatedRequest['items'],

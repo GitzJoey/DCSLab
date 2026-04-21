@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\TimezoneHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -21,7 +22,7 @@ class PurchaseResource extends JsonResource
                 'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
             'code' => $this->code,
-            'date' => $this->date,
+            'date' => TimezoneHelper::convertFromUTCIfValid($this->date),
             'due_days' => $this->due_days,
             $this->mergeWhen($this->relationLoaded('supplier'), [
                 'supplier' => new SupplierResource($this->whenLoaded('supplier')),
@@ -29,6 +30,7 @@ class PurchaseResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('purchaseOrder'), [
                 'purchase_order' => new PurchaseOrderResource($this->whenLoaded('purchaseOrder')),
             ]),
+            'receipt_mode' => $this->receipt_mode?->value,
             'tax_invoice_number' => $this->tax_invoice_number,
             'tax_invoice_vat_base' => $this->tax_invoice_vat_base,
             'tax_invoice_vat' => $this->tax_invoice_vat,
@@ -51,8 +53,11 @@ class PurchaseResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('items'), [
                 'items' => PurchaseItemResource::collection($this->whenLoaded('items')),
             ]),
-            $this->mergeWhen($this->relationLoaded('receipts'), [
-                'receipts' => PurchaseReceiptResource::collection($this->whenLoaded('receipts')),
+            $this->mergeWhen($this->relationLoaded('directReceipt'), [
+                'direct_receipt' => new PurchaseReceiptResource($this->whenLoaded('directReceipt')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('manualReceipts'), [
+                'manual_receipts' => PurchaseReceiptResource::collection($this->whenLoaded('manualReceipts')),
             ]),
             $this->mergeWhen($this->relationLoaded('globalDiscounts'), [
                 'global_discounts' => PurchaseGlobalDiscountResource::collection($this->whenLoaded('globalDiscounts')),

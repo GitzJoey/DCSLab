@@ -9,12 +9,11 @@ use App\Rules\ExistsForCompany;
 use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
-use App\Rules\IsValidWarehouse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class PurchaseUpdateRequest extends FormRequest
+class PurchaseManualUpdateRequest extends FormRequest
 {
     public function authorize()
     {
@@ -38,7 +37,6 @@ class PurchaseUpdateRequest extends FormRequest
             'branch_id' => $purchase->branch_id,
             'supplier_id' => $this->filled('supplier_id') ? HashidsHelper::decodeId($this->supplier_id) : null,
             'purchase_order_id' => $this->filled('purchase_order_id') ? HashidsHelper::decodeId($this->purchase_order_id) : null,
-            'receipt_warehouse_id' => $this->filled('receipt_warehouse_id') ? HashidsHelper::decodeId($this->receipt_warehouse_id) : null,
 
             'delete_item_ids' => collect($this->delete_item_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
             'items' => collect($this->items ?? [])->map(function ($item) {
@@ -92,6 +90,7 @@ class PurchaseUpdateRequest extends FormRequest
             'due_days' => ['required', 'integer', 'min:0'],
             'supplier_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('suppliers', $this->company_id), new IsValidSupplier($this->company_id)],
             'purchase_order_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_orders', $this->company_id)],
+            'direct_receipt_warehouse_id' => ['prohibited'],
             'tax_invoice_number' => ['present', 'nullable', 'string'],
             'tax_invoice_vat_base' => ['required', 'numeric', 'min:0'],
             'tax_invoice_vat' => ['required', 'numeric', 'min:0'],
@@ -99,8 +98,6 @@ class PurchaseUpdateRequest extends FormRequest
             'is_posted' => ['required', 'boolean'],
             'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
-
-            'receipt_warehouse_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
 
             'delete_item_ids' => ['required', 'array'],
             'delete_item_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_items', $this->company_id)],
@@ -222,7 +219,6 @@ class PurchaseUpdateRequest extends FormRequest
             'tax_invoice_vat_base' => trans('validation_attributes.purchase.tax_invoice_vat_base'),
             'tax_invoice_vat' => trans('validation_attributes.purchase.tax_invoice_vat'),
             'remarks' => trans('validation_attributes.purchase.remarks'),
-            'receipt_warehouse_id' => trans('validation_attributes.purchase.receipt_warehouse_id'),
 
             'items.*.qty' => trans('validation_attributes.purchase_order_item.qty'),
             'items.*.product_unit_id' => trans('validation_attributes.purchase_order_item.product_unit_id'),

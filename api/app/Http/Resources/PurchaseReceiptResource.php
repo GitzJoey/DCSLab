@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\TimezoneHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
@@ -21,7 +22,8 @@ class PurchaseReceiptResource extends JsonResource
                 'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
             'code' => $this->code,
-            'date' => $this->date,
+            'date' => TimezoneHelper::convertFromUTCIfValid($this->date),
+            'is_from_direct_purchase' => $this->is_from_direct_purchase,
             $this->mergeWhen($this->relationLoaded('warehouse'), [
                 'warehouse' => new WarehouseResource($this->whenLoaded('warehouse')),
             ]),

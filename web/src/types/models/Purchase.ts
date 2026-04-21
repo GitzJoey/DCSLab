@@ -8,10 +8,10 @@ export interface Purchase {
   ulid: string;
   company?: Company;
   branch?: Branch;
-  supplier?: Supplier | null;
   code: string;
   date: string;
   due_days: number;
+  supplier?: Supplier | null;
   remarks?: string | null;
   additional_cost?: number;
   amount_payable?: number;

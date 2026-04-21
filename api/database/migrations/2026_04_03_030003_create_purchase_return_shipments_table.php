@@ -12,16 +12,20 @@ return new class extends Migration
             $table->id();
             $table->ulid();
 
+            // Header
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
-            $table->foreignId('purchase_return_id')->references('id')->on('purchase_returns');
-            $table->foreignId('supplier_id')->references('id')->on('suppliers');
             $table->string('code');
             $table->dateTime('date');
+            $table->foreignId('supplier_id')->references('id')->on('suppliers');
+            $table->foreignId('purchase_return_id')->references('id')->on('purchase_returns');
             $table->foreignId('warehouse_id')->references('id')->on('warehouses');
+
+            // Header advanced
             $table->string('remarks')->nullable();
             $table->boolean('is_posted')->default(false);
 
+            // Audit
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);

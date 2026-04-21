@@ -21,6 +21,7 @@ class PurchaseReceipt extends Model
         'company_id',
         'branch_id',
         'purchase_id',
+        'is_from_direct_purchase',
         'code',
         'date',
         'warehouse_id',
@@ -31,6 +32,7 @@ class PurchaseReceipt extends Model
     protected $casts = [
         'date' => 'datetime',
         'is_posted' => 'boolean',
+        'is_from_direct_purchase' => 'boolean',
     ];
 
     public function company()

@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->ulid();
 
+            // Header
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->string('code');
@@ -19,12 +20,15 @@ return new class extends Migration
             $table->integer('due_days')->default(0);
             $table->foreignId('supplier_id')->nullable()->references('id')->on('suppliers');
             $table->foreignId('purchase_order_id')->nullable()->references('id')->on('purchase_orders');
+            $table->string('receipt_mode')->default('direct');
+            // Header advanced
             $table->string('tax_invoice_number')->nullable();
             $table->decimal('tax_invoice_vat_base', 30, 8)->default(0);
             $table->decimal('tax_invoice_vat', 30, 8)->default(0);
             $table->text('remarks')->nullable();
             $table->boolean('is_posted')->default(false);
 
+            // Footer totals
             $table->decimal('item_total_before_global_discount', 30, 8)->default(0);
             $table->decimal('global_discount', 30, 8)->default(0);
             $table->decimal('item_total_after_global_discount', 30, 8)->default(0);
@@ -40,6 +44,7 @@ return new class extends Migration
             $table->decimal('amount_due', 30, 8)->default(0);
             $table->boolean('is_paid_off')->default(false);
 
+            // Audit
             $table->unsignedBigInteger('created_by')->default(0);
             $table->unsignedBigInteger('updated_by')->default(0);
             $table->unsignedBigInteger('deleted_by')->default(0);
