@@ -29,6 +29,10 @@ return [
         'delete_main_branch' => 'Main branch cannot be deleted',
         'set_branch_to_non_main' => 'Set branch to non main is not permitted',
     ],
+    'expense_category' => [
+        'parent_must_be_active' => 'Parent expense category must be active.',
+        'cannot_delete_with_children' => 'Expense category cannot be deleted because it still has child categories.',
+    ],
     'product' => [
         'unit' => [
             'duplicate_conversion' => 'Within one product, conversion values must be unique.',

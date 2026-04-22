@@ -293,6 +293,13 @@ return [
         'code' => 'Code',
         'name' => 'Name',
     ],
+    'expense_category' => [
+        'company_id' => 'Company',
+        'parent_id' => 'Parent',
+        'code' => 'Code',
+        'name' => 'Name',
+        'sequence' => 'Sequence',
+    ],
     'purchase_additional_cost' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',

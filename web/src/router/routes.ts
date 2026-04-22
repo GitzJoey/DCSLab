@@ -46,6 +46,10 @@ import CapitalTransactionIndex from '@/pages/capital-transaction/CapitalTransact
 import CapitalTransactionList from '@/pages/capital-transaction/CapitalTransactionList.vue';
 import CapitalTransactionCreate from '@/pages/capital-transaction/CapitalTransactionCreate.vue';
 import CapitalTransactionEdit from '@/pages/capital-transaction/CapitalTransactionEdit.vue';
+import ExpenseCategoryIndex from '@/pages/expense-category/ExpenseCategoryIndex.vue';
+import ExpenseCategoryList from '@/pages/expense-category/ExpenseCategoryList.vue';
+import ExpenseCategoryCreate from '@/pages/expense-category/ExpenseCategoryCreate.vue';
+import ExpenseCategoryEdit from '@/pages/expense-category/ExpenseCategoryEdit.vue';
 import ProductCategoryIndex from '@/pages/product-category/ProductCategoryIndex.vue';
 import ProductCategoryList from '@/pages/product-category/ProductCategoryList.vue';
 import ProductCategoryCreate from '@/pages/product-category/ProductCategoryCreate.vue';
@@ -707,6 +711,44 @@ export default [
                 path: '/dashboard/stock-adjustment-category/edit/:ulid',
                 name: 'side-menu-stock-adjustment-category-edit',
                 component: StockAdjustmentCategoryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      // Purchase Additional Cost Category
+      {
+        path: '/dashboard/expense-category',
+        children: [
+          {
+            path: '/dashboard/expense-category',
+            name: 'side-menu-expense-category',
+            redirect: '/dashboard/expense-category/list',
+            component: ExpenseCategoryIndex,
+            children: [
+              {
+                path: '/dashboard/expense-category/list',
+                name: 'side-menu-expense-category-list',
+                component: ExpenseCategoryList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/expense-category/create',
+                name: 'side-menu-expense-category-create',
+                component: ExpenseCategoryCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/expense-category/edit/:ulid',
+                name: 'side-menu-expense-category-edit',
+                component: ExpenseCategoryEdit,
                 meta: {
                   remember: true,
                 },

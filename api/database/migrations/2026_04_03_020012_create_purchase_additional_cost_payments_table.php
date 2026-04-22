@@ -17,8 +17,10 @@ return new class extends Migration
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->string('code');
             $table->dateTime('date');
-            $table->foreignId('purchase_additional_cost_id')->references('id')->on('purchase_additional_costs');
-            $table->foreignId('cash_account_id')->references('id')->on('cash_accounts');
+            $table->foreignId('purchase_additional_cost_id');
+            $table->foreign('purchase_additional_cost_id', 'pacps_pac_id_fk')->references('id')->on('purchase_additional_costs');
+            $table->foreignId('cash_account_id');
+            $table->foreign('cash_account_id', 'pacps_ca_id_fk')->references('id')->on('cash_accounts');
             $table->decimal('amount', 30, 8)->default(0);
 
             // Header advanced

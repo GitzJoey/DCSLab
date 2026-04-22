@@ -1,0 +1,27 @@
+{
+  "page_title": "Expense Category",
+  "actions": {
+    "create": "Create Expense Category",
+    "edit": "Edit Expense Category"
+  },
+  "table": {
+    "title": "Expense Category Tree List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "expense_category_data": "Expense Category Data"
+  },
+  "fields": {
+    "parent": "Parent",
+    "code": "Code",
+    "name": "Name",
+    "sequence": "Sequence",
+    "child_count": "Child Count"
+  },
+  "alert": {
+    "delete_expense_category": {
+      "title": "Successfully Deleted Expense Category",
+      "content": "Expense category has been deleted."
+    }
+  }
+}

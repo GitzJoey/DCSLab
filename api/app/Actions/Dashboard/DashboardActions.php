@@ -223,13 +223,29 @@ class DashboardActions
             'title' => 'components.menu.stock-adjustment-category',
         ];
 
+        $expenseCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-expense-category',
+            'title' => 'components.menu.expense-category',
+        ];
+
         $purchaseAdditionalCostCategory = [
             'icon' => 'Tags',
             'pageName' => 'side-menu-purchase-additional-cost-category',
             'title' => 'components.menu.purchase-additional-cost-category',
         ];
 
-        array_push($root_array['subMenu'], $companyManagement, $financeManagement, $productManagement, $supplier, $customerManagement, $stockAdjustmentCategory, $purchaseAdditionalCostCategory);
+        array_push(
+            $root_array['subMenu'],
+            $companyManagement,
+            $financeManagement,
+            $productManagement,
+            $supplier,
+            $customerManagement,
+            $stockAdjustmentCategory,
+            $expenseCategory,
+            $purchaseAdditionalCostCategory
+        );
         array_push($menu, $root_array);
 
         return $menu;

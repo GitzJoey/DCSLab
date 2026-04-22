@@ -239,7 +239,11 @@
 
 <template>
   <div v-if="visible" class="intro-y box p-5 mt-5">
-    <div class="grid justify-items-end">
+    <div class="flex flex-wrap items-start justify-between gap-2">
+      <div class="flex flex-row gap-2">
+        <slot name="toolbar-actions"></slot>
+      </div>
+
       <div class="flex flex-row gap-2">
         <div v-if="enableSearch" class="relative w-56 text-slate-500">
           <FormInput v-model="search" type="text" class="w-56 pr-10" placeholder="Search..." />

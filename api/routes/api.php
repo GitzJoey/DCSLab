@@ -11,6 +11,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -236,6 +237,19 @@ Route::prefix('stock_adjustment_category')->middleware('auth:sanctum')->group(fu
         Route::post('save', [StockAdjustmentCategoryController::class, 'store'])->name('save');
         Route::post('edit/{stock_adjustment_category:ulid}', [StockAdjustmentCategoryController::class, 'update'])->name('edit');
         Route::post('delete/{stock_adjustment_category:ulid}', [StockAdjustmentCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('expense_category')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.expense_category.')->group(function () {
+        Route::get('read', [ExpenseCategoryController::class, 'readAny'])->name('read_any');
+        Route::get('read/{expense_category:ulid}', [ExpenseCategoryController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.expense_category.')->group(function () {
+        Route::post('save', [ExpenseCategoryController::class, 'store'])->name('save');
+        Route::post('edit/{expense_category:ulid}', [ExpenseCategoryController::class, 'update'])->name('edit');
+        Route::post('delete/{expense_category:ulid}', [ExpenseCategoryController::class, 'delete'])->name('delete');
     });
 });
 

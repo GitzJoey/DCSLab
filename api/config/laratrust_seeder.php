@@ -45,6 +45,7 @@ return [
             'customer_group' => 'c,r,ra,u,d',
             'customer_address' => 'c,r,ra,u,d',
             'customer' => 'c,r,ra,u,d',
+            'expense_category' => 'c,r,ra,u,d',
             'stock_adjustment_category' => 'c,r,ra,u,d',
 
             'capital_opening' => 'c,r,ra,u,d',

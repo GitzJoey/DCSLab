@@ -19,8 +19,10 @@ return new class extends Migration
             $table->dateTime('date');
             $table->integer('due_days')->default(0);
             $table->foreignId('purchase_id')->references('id')->on('purchases');
-            $table->foreignId('purchase_additional_cost_category_id')->references('id')->on('purchase_additional_cost_categories');
-            $table->foreignId('paid_immediately_cash_account_id')->nullable()->references('id')->on('cash_accounts');
+            $table->foreignId('purchase_additional_cost_category_id');
+            $table->foreign('purchase_additional_cost_category_id', 'pacs_pacc_id_fk')->references('id')->on('purchase_additional_cost_categories');
+            $table->foreignId('paid_immediately_cash_account_id')->nullable();
+            $table->foreign('paid_immediately_cash_account_id', 'pacs_pica_id_fk')->references('id')->on('cash_accounts');
 
             // Header advanced
             $table->string('remarks')->nullable();

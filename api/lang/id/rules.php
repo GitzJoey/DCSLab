@@ -29,6 +29,10 @@ return [
         'delete_main_branch' => 'Cabang utama tidak boleh dihapus',
         'set_branch_to_non_main' => 'Tidak di ijinkan merubah cabang utama',
     ],
+    'expense_category' => [
+        'parent_must_be_active' => 'Parent expense category harus aktif.',
+        'cannot_delete_with_children' => 'Expense category tidak boleh dihapus karena masih memiliki child category.',
+    ],
     'product' => [
         'unit' => [
             'duplicate_conversion' => 'Dalam satu produk, conversion value tidak boleh duplikat.',

@@ -312,6 +312,13 @@ return [
         'code' => 'Kode',
         'name' => 'Nama',
     ],
+    'expense_category' => [
+        'company_id' => 'Perusahaan',
+        'parent_id' => 'Parent',
+        'code' => 'Kode',
+        'name' => 'Nama',
+        'sequence' => 'Urutan',
+    ],
     'purchase_additional_cost' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
