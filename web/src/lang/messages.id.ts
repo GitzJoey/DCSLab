@@ -34,6 +34,8 @@ import cash_transfer from './id/views/cash_transfer.json';
 import expense from './id/views/expense.json';
 import prepaid_expense from './id/views/prepaid_expense.json';
 import expense_payment from './id/views/expense_payment.json';
+import purchase_additional_cost from './id/views/purchase_additional_cost.json';
+import purchase_additional_cost_payment from './id/views/purchase_additional_cost_payment.json';
 import expense_category from './id/views/expense_category.json';
 import product_service from './id/views/product_service.json';
 import product from './id/views/product.json';
@@ -95,6 +97,8 @@ export default {
     expense: expense,
     prepaid_expense: prepaid_expense,
     expense_payment: expense_payment,
+    purchase_additional_cost: purchase_additional_cost,
+    purchase_additional_cost_payment: purchase_additional_cost_payment,
     expense_category: expense_category,
     stock_adjustment_category: stock_adjustment_category,
     stock_adjustment: stock_adjustment,

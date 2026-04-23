@@ -31,6 +31,15 @@
     "remarks": "Remarks",
     "images": "Images"
   },
+  "hints": {
+    "estimated_useful_life": "Enter the value in months."
+  },
+  "units": {
+    "month": "month",
+    "months": "months",
+    "year": "year",
+    "years": "years"
+  },
   "status": {
     "paid_off": "Paid Off",
     "not_paid_off": "Not Paid Off"

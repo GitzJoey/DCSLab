@@ -453,15 +453,16 @@ const showAlertPlaceholder = (
               <FormLabel :class="{ 'text-danger': prepaidExpenseForm.invalid('estimated_useful_life') }">
                 {{ t('views.prepaid_expense.fields.estimated_useful_life') }}
               </FormLabel>
-              <FormInput
+              <FormInputCurrency
                 id="estimated_useful_life"
                 v-model="prepaidExpenseForm.estimated_useful_life"
-                type="number"
-                min="0"
                 :class="{ 'border-danger': prepaidExpenseForm.invalid('estimated_useful_life') }"
                 :placeholder="t('views.prepaid_expense.fields.estimated_useful_life')"
                 @change="prepaidExpenseForm.validate('estimated_useful_life')"
               />
+              <div class="mt-1 text-xs text-slate-500">
+                {{ t('views.prepaid_expense.hints.estimated_useful_life') }}
+              </div>
               <FormErrorMessages :messages="prepaidExpenseForm.errors.estimated_useful_life" />
             </div>
 

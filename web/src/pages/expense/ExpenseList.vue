@@ -256,7 +256,7 @@ const showNextImage = () => {
                 </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.expense.fields.amount_paid_immediately') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200">
-                  <div class="ml-auto w-full max-w-[8rem] text-right font-semibold">
+                  <div class="w-full max-w-[8rem] font-semibold">
                     {{ formatCurrency(Number((item as Expense).amount_paid_immediately ?? 0)) }}
                   </div>
                 </div>

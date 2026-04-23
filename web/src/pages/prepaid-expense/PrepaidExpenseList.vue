@@ -156,6 +156,22 @@ const getPaidOffLabel = (prepaidExpense: PrepaidExpense) =>
     ? t('views.prepaid_expense.status.paid_off')
     : t('views.prepaid_expense.status.not_paid_off');
 
+const formatEstimatedUsefulLife = (estimatedUsefulLife?: number | null): string => {
+  const totalMonths = Number(estimatedUsefulLife ?? 0);
+  const totalYears = totalMonths / 12;
+  const formattedYears = Number.isInteger(totalYears)
+    ? totalYears.toString()
+    : totalYears.toFixed(1).replace(/\.0$/, '');
+  const monthUnit = totalMonths === 1
+    ? t('views.prepaid_expense.units.month')
+    : t('views.prepaid_expense.units.months');
+  const yearUnit = totalYears === 1
+    ? t('views.prepaid_expense.units.year')
+    : t('views.prepaid_expense.units.years');
+
+  return `${totalMonths} ${monthUnit} (${formattedYears} ${yearUnit})`;
+};
+
 const getPrepaidExpenseImages = (prepaidExpense: PrepaidExpense): PrepaidExpenseImage[] => {
   const images = prepaidExpense.prepaid_expense_images?.filter((image) => !!image.url) ?? [];
 
@@ -260,7 +276,7 @@ const showNextImage = () => {
                 </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.prepaid_expense.fields.estimated_useful_life') }}</div>
                 <div class="col-span-8 break-words text-slate-700 dark:text-slate-200">
-                  {{ (item as PrepaidExpense).estimated_useful_life ?? 0 }}
+                  {{ formatEstimatedUsefulLife((item as PrepaidExpense).estimated_useful_life) }}
                 </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.prepaid_expense.fields.paid_immediately_cash_account') }}</div>
                 <div class="col-span-8 break-words text-slate-700 dark:text-slate-200">
@@ -268,7 +284,7 @@ const showNextImage = () => {
                 </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.prepaid_expense.fields.amount_paid_immediately') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200">
-                  <div class="ml-auto w-full max-w-[8rem] text-right font-semibold">
+                  <div class="w-full max-w-[8rem] font-semibold">
                     {{ formatCurrency(Number((item as PrepaidExpense).amount_paid_immediately ?? 0)) }}
                   </div>
                 </div>

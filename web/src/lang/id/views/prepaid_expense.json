@@ -31,6 +31,15 @@
     "remarks": "Catatan",
     "images": "Gambar"
   },
+  "hints": {
+    "estimated_useful_life": "Isi dalam satuan bulan."
+  },
+  "units": {
+    "month": "bulan",
+    "months": "bulan",
+    "year": "tahun",
+    "years": "tahun"
+  },
   "status": {
     "paid_off": "Lunas",
     "not_paid_off": "Belum Lunas"
