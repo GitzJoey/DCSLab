@@ -48,6 +48,7 @@ return [
             'expense_category' => 'c,r,ra,u,d',
             'income_category' => 'c,r,ra,u,d',
             'debt_category' => 'c,r,ra,u,d',
+            'receivable_category' => 'c,r,ra,u,d',
             'debt_creditor' => 'c,r,ra,u,d',
             'stock_adjustment_category' => 'c,r,ra,u,d',
 
@@ -59,6 +60,8 @@ return [
             'prepaid_expense_payment' => 'c,r,ra,u,d',
             'debt' => 'c,r,ra,u,d',
             'debt_payment' => 'c,r,ra,u,d',
+            'receivable' => 'c,r,ra,u,d',
+            'receivable_payment' => 'c,r,ra,u,d',
             'income' => 'c,r,ra,u,d',
             'income_payment' => 'c,r,ra,u,d',
             'prepaid_income' => 'c,r,ra,u,d',

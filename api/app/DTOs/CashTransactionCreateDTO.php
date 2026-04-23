@@ -20,6 +20,8 @@ use App\Models\PurchaseAdditionalCost;
 use App\Models\PurchaseAdditionalCostPayment;
 use App\Models\PurchaseOrderDownPayment;
 use App\Models\PurchaseOrderDownPaymentRefund;
+use App\Models\Receivable;
+use App\Models\ReceivablePayment;
 
 final class CashTransactionCreateDTO
 {
@@ -186,6 +188,28 @@ final class CashTransactionCreateDTO
             date: $debtPayment->date,
             cashAccountId: $debtPayment->cash_account_id,
             amount: ((float) $debtPayment->amount * -1),
+        );
+    }
+
+    public static function fromReceivable(Receivable $receivable): self
+    {
+        return new self(
+            referableType: Receivable::class,
+            referableId: $receivable->id,
+            date: $receivable->date,
+            cashAccountId: $receivable->cash_account_id,
+            amount: (float) $receivable->direct_amount_received,
+        );
+    }
+
+    public static function fromReceivablePayment(ReceivablePayment $receivablePayment): self
+    {
+        return new self(
+            referableType: ReceivablePayment::class,
+            referableId: $receivablePayment->id,
+            date: $receivablePayment->date,
+            cashAccountId: $receivablePayment->cash_account_id,
+            amount: (float) $receivablePayment->amount,
         );
     }
 

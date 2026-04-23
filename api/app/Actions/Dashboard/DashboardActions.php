@@ -241,6 +241,12 @@ class DashboardActions
             'title' => 'components.menu.debt-category',
         ];
 
+        $receivableCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-receivable-category',
+            'title' => 'components.menu.receivable-category',
+        ];
+
         $debtCreditor = [
             'icon' => 'Building2',
             'pageName' => 'side-menu-debt-creditor',
@@ -264,6 +270,7 @@ class DashboardActions
             $expenseCategory,
             $incomeCategory,
             $debtCategory,
+            $receivableCategory,
             $debtCreditor,
             $purchaseAdditionalCostCategory
         );
@@ -357,6 +364,12 @@ class DashboardActions
             'title' => 'components.menu.debt',
         ];
 
+        $receivable = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-receivable',
+            'title' => 'components.menu.receivable',
+        ];
+
         $stockTransfer = [
             'icon' => 'Truck',
             'pageName' => 'side-menu-stock-transfer',
@@ -373,6 +386,7 @@ class DashboardActions
             $income,
             $prepaidIncome,
             $debt,
+            $receivable,
             $stockAdjustment,
             $purchaseOrder,
             $purchaseAdditionalCost,

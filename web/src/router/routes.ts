@@ -78,6 +78,10 @@ import DebtCategoryIndex from '@/pages/debt-category/DebtCategoryIndex.vue';
 import DebtCategoryList from '@/pages/debt-category/DebtCategoryList.vue';
 import DebtCategoryCreate from '@/pages/debt-category/DebtCategoryCreate.vue';
 import DebtCategoryEdit from '@/pages/debt-category/DebtCategoryEdit.vue';
+import ReceivableCategoryIndex from '@/pages/receivable-category/ReceivableCategoryIndex.vue';
+import ReceivableCategoryList from '@/pages/receivable-category/ReceivableCategoryList.vue';
+import ReceivableCategoryCreate from '@/pages/receivable-category/ReceivableCategoryCreate.vue';
+import ReceivableCategoryEdit from '@/pages/receivable-category/ReceivableCategoryEdit.vue';
 import DebtCreditorIndex from '@/pages/debt-creditor/DebtCreditorIndex.vue';
 import DebtCreditorList from '@/pages/debt-creditor/DebtCreditorList.vue';
 import DebtCreditorCreate from '@/pages/debt-creditor/DebtCreditorCreate.vue';
@@ -90,6 +94,10 @@ import IncomeIndex from '@/pages/income/IncomeIndex.vue';
 import IncomeList from '@/pages/income/IncomeList.vue';
 import IncomeCreate from '@/pages/income/IncomeCreate.vue';
 import IncomeEdit from '@/pages/income/IncomeEdit.vue';
+import ReceivableIndex from '@/pages/receivable/ReceivableIndex.vue';
+import ReceivableList from '@/pages/receivable/ReceivableList.vue';
+import ReceivableCreate from '@/pages/receivable/ReceivableCreate.vue';
+import ReceivableEdit from '@/pages/receivable/ReceivableEdit.vue';
 import PrepaidIncomeIndex from '@/pages/prepaid-income/PrepaidIncomeIndex.vue';
 import PrepaidIncomeList from '@/pages/prepaid-income/PrepaidIncomeList.vue';
 import PrepaidIncomeCreate from '@/pages/prepaid-income/PrepaidIncomeCreate.vue';
@@ -839,6 +847,43 @@ export default [
         ],
       },
       {
+        path: '/dashboard/receivable-category',
+        children: [
+          {
+            path: '/dashboard/receivable-category',
+            name: 'side-menu-receivable-category',
+            redirect: '/dashboard/receivable-category/list',
+            component: ReceivableCategoryIndex,
+            children: [
+              {
+                path: '/dashboard/receivable-category/list',
+                name: 'side-menu-receivable-category-list',
+                component: ReceivableCategoryList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/receivable-category/create',
+                name: 'side-menu-receivable-category-create',
+                component: ReceivableCategoryCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/receivable-category/edit/:ulid',
+                name: 'side-menu-receivable-category-edit',
+                component: ReceivableCategoryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
         path: '/dashboard/debt-creditor',
         children: [
           {
@@ -1398,6 +1443,38 @@ export default [
                 path: '/dashboard/income/edit/:ulid',
                 name: 'side-menu-income-edit',
                 component: IncomeEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/receivable',
+            name: 'side-menu-receivable',
+            redirect: '/dashboard/receivable/list',
+            component: ReceivableIndex,
+            children: [
+              {
+                path: '/dashboard/receivable/list',
+                name: 'side-menu-receivable-list',
+                component: ReceivableList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/receivable/create',
+                name: 'side-menu-receivable-create',
+                component: ReceivableCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/receivable/edit/:ulid',
+                name: 'side-menu-receivable-edit',
+                component: ReceivableEdit,
                 meta: {
                   remember: true,
                 },

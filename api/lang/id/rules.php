@@ -66,6 +66,16 @@ return [
     'debt_payment' => [
         'invalid_debt_reference' => 'Data hutang tidak valid untuk cabang yang dipilih.',
     ],
+    'receivable' => [
+        'amount_total_must_be_positive' => 'Jumlah diterima langsung atau jumlah piutang bawaan harus lebih dari nol.',
+        'payments_exceed_total_receivable' => 'Total pembayaran piutang tidak boleh melebihi total piutang.',
+        'invalid_payment_reference' => 'Data pembayaran piutang tidak valid untuk transaksi ini.',
+        'cash_account_is_required_for_direct_amount_received' => 'Akun kas wajib dipilih jika ada nominal diterima langsung.',
+        'direct_amount_received_is_required_for_cash_account' => 'Nominal diterima langsung wajib lebih dari nol jika akun kas diisi.',
+    ],
+    'receivable_payment' => [
+        'invalid_receivable_reference' => 'Data piutang tidak valid untuk cabang yang dipilih.',
+    ],
     'prepaid_income' => [
         'amount_total_must_be_positive' => 'Jumlah diterima langsung atau jumlah piutang harus lebih dari nol.',
         'payments_exceed_amount_receivable' => 'Total pembayaran piutang tidak boleh melebihi jumlah piutang.',

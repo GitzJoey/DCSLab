@@ -66,6 +66,16 @@ return [
     'debt_payment' => [
         'invalid_debt_reference' => 'Debt data is invalid for the selected branch.',
     ],
+    'receivable' => [
+        'amount_total_must_be_positive' => 'Either direct amount received or opening amount due must be greater than zero.',
+        'payments_exceed_total_receivable' => 'Total receivable payments must not exceed the total receivable.',
+        'invalid_payment_reference' => 'Receivable payment data is invalid for this transaction.',
+        'cash_account_is_required_for_direct_amount_received' => 'Cash account is required when direct amount received is filled.',
+        'direct_amount_received_is_required_for_cash_account' => 'Direct amount received must be greater than zero when cash account is selected.',
+    ],
+    'receivable_payment' => [
+        'invalid_receivable_reference' => 'Receivable data is invalid for the selected branch.',
+    ],
     'prepaid_income' => [
         'amount_total_must_be_positive' => 'Either immediate receipt or receivable amount must be greater than zero.',
         'payments_exceed_amount_receivable' => 'Total receivable payments must not exceed the receivable amount.',

@@ -1,0 +1,25 @@
+{
+  "page_title": "Kategori Piutang",
+  "actions": {
+    "create": "Tambah Kategori Piutang",
+    "edit": "Ubah Kategori Piutang"
+  },
+  "table": {
+    "title": "Daftar Kategori Piutang"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "receivable_category_data": "Data Kategori Piutang"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "sequence": "Urutan"
+  },
+  "alert": {
+    "delete_receivable_category": {
+      "title": "Berhasil Menghapus Kategori Piutang",
+      "content": "Kategori piutang telah dihapus."
+    }
+  }
+}

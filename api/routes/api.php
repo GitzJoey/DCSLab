@@ -44,6 +44,9 @@ use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseOrderDownPaymentController;
 use App\Http\Controllers\PurchaseOrderDownPaymentRefundController;
 use App\Http\Controllers\PurchaseOrderItemController;
+use App\Http\Controllers\ReceivableCategoryController;
+use App\Http\Controllers\ReceivableController;
+use App\Http\Controllers\ReceivablePaymentController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StockAdjustmentCategoryController;
@@ -297,6 +300,19 @@ Route::prefix('debt_category')->middleware('auth:sanctum')->group(function () {
     });
 });
 
+Route::prefix('receivable_category')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.receivable_category.')->group(function () {
+        Route::get('read', [ReceivableCategoryController::class, 'readAny'])->name('read_any');
+        Route::get('read/{receivable_category:ulid}', [ReceivableCategoryController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.receivable_category.')->group(function () {
+        Route::post('save', [ReceivableCategoryController::class, 'store'])->name('save');
+        Route::post('edit/{receivable_category:ulid}', [ReceivableCategoryController::class, 'update'])->name('edit');
+        Route::post('delete/{receivable_category:ulid}', [ReceivableCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
 Route::prefix('debt_creditor')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.debt_creditor.')->group(function () {
         Route::get('read', [DebtCreditorController::class, 'readAny'])->name('read_any');
@@ -494,6 +510,32 @@ Route::prefix('debt_payment')->middleware('auth:sanctum')->group(function () {
         Route::post('save', [DebtPaymentController::class, 'store'])->name('save');
         Route::post('edit/{debt_payment:ulid}', [DebtPaymentController::class, 'update'])->name('edit');
         Route::post('delete/{debt_payment:ulid}', [DebtPaymentController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('receivable')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.receivable.')->group(function () {
+        Route::get('read', [ReceivableController::class, 'readAny'])->name('read_any');
+        Route::get('read/{receivable:ulid}', [ReceivableController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.receivable.')->group(function () {
+        Route::post('save', [ReceivableController::class, 'store'])->name('save');
+        Route::post('edit/{receivable:ulid}', [ReceivableController::class, 'update'])->name('edit');
+        Route::post('delete/{receivable:ulid}', [ReceivableController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('receivable_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.receivable_payment.')->group(function () {
+        Route::get('read', [ReceivablePaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{receivable_payment:ulid}', [ReceivablePaymentController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.receivable_payment.')->group(function () {
+        Route::post('save', [ReceivablePaymentController::class, 'store'])->name('save');
+        Route::post('edit/{receivable_payment:ulid}', [ReceivablePaymentController::class, 'update'])->name('edit');
+        Route::post('delete/{receivable_payment:ulid}', [ReceivablePaymentController::class, 'delete'])->name('delete');
     });
 });
 
