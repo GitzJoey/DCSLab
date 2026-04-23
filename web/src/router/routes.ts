@@ -54,10 +54,10 @@ import ExpenseIndex from '@/pages/expense/ExpenseIndex.vue';
 import ExpenseList from '@/pages/expense/ExpenseList.vue';
 import ExpenseCreate from '@/pages/expense/ExpenseCreate.vue';
 import ExpenseEdit from '@/pages/expense/ExpenseEdit.vue';
-import LiabilityIndex from '@/pages/liability/LiabilityIndex.vue';
-import LiabilityList from '@/pages/liability/LiabilityList.vue';
-import LiabilityCreate from '@/pages/liability/LiabilityCreate.vue';
-import LiabilityEdit from '@/pages/liability/LiabilityEdit.vue';
+import DebtIndex from '@/pages/debt/DebtIndex.vue';
+import DebtList from '@/pages/debt/DebtList.vue';
+import DebtCreate from '@/pages/debt/DebtCreate.vue';
+import DebtEdit from '@/pages/debt/DebtEdit.vue';
 import PrepaidExpenseIndex from '@/pages/prepaid-expense/PrepaidExpenseIndex.vue';
 import PrepaidExpenseList from '@/pages/prepaid-expense/PrepaidExpenseList.vue';
 import PrepaidExpenseCreate from '@/pages/prepaid-expense/PrepaidExpenseCreate.vue';
@@ -74,14 +74,14 @@ import ExpenseCategoryIndex from '@/pages/expense-category/ExpenseCategoryIndex.
 import ExpenseCategoryList from '@/pages/expense-category/ExpenseCategoryList.vue';
 import ExpenseCategoryCreate from '@/pages/expense-category/ExpenseCategoryCreate.vue';
 import ExpenseCategoryEdit from '@/pages/expense-category/ExpenseCategoryEdit.vue';
-import LiabilityCategoryIndex from '@/pages/liability-category/LiabilityCategoryIndex.vue';
-import LiabilityCategoryList from '@/pages/liability-category/LiabilityCategoryList.vue';
-import LiabilityCategoryCreate from '@/pages/liability-category/LiabilityCategoryCreate.vue';
-import LiabilityCategoryEdit from '@/pages/liability-category/LiabilityCategoryEdit.vue';
-import LiabilityCreditorIndex from '@/pages/liability-creditor/LiabilityCreditorIndex.vue';
-import LiabilityCreditorList from '@/pages/liability-creditor/LiabilityCreditorList.vue';
-import LiabilityCreditorCreate from '@/pages/liability-creditor/LiabilityCreditorCreate.vue';
-import LiabilityCreditorEdit from '@/pages/liability-creditor/LiabilityCreditorEdit.vue';
+import DebtCategoryIndex from '@/pages/debt-category/DebtCategoryIndex.vue';
+import DebtCategoryList from '@/pages/debt-category/DebtCategoryList.vue';
+import DebtCategoryCreate from '@/pages/debt-category/DebtCategoryCreate.vue';
+import DebtCategoryEdit from '@/pages/debt-category/DebtCategoryEdit.vue';
+import DebtCreditorIndex from '@/pages/debt-creditor/DebtCreditorIndex.vue';
+import DebtCreditorList from '@/pages/debt-creditor/DebtCreditorList.vue';
+import DebtCreditorCreate from '@/pages/debt-creditor/DebtCreditorCreate.vue';
+import DebtCreditorEdit from '@/pages/debt-creditor/DebtCreditorEdit.vue';
 import IncomeCategoryIndex from '@/pages/income-category/IncomeCategoryIndex.vue';
 import IncomeCategoryList from '@/pages/income-category/IncomeCategoryList.vue';
 import IncomeCategoryCreate from '@/pages/income-category/IncomeCategoryCreate.vue';
@@ -802,34 +802,34 @@ export default [
         ],
       },
       {
-        path: '/dashboard/liability-category',
+        path: '/dashboard/debt-category',
         children: [
           {
-            path: '/dashboard/liability-category',
-            name: 'side-menu-liability-category',
-            redirect: '/dashboard/liability-category/list',
-            component: LiabilityCategoryIndex,
+            path: '/dashboard/debt-category',
+            name: 'side-menu-debt-category',
+            redirect: '/dashboard/debt-category/list',
+            component: DebtCategoryIndex,
             children: [
               {
-                path: '/dashboard/liability-category/list',
-                name: 'side-menu-liability-category-list',
-                component: LiabilityCategoryList,
+                path: '/dashboard/debt-category/list',
+                name: 'side-menu-debt-category-list',
+                component: DebtCategoryList,
                 meta: {
                   remember: true,
                 },
               },
               {
-                path: '/dashboard/liability-category/create',
-                name: 'side-menu-liability-category-create',
-                component: LiabilityCategoryCreate,
+                path: '/dashboard/debt-category/create',
+                name: 'side-menu-debt-category-create',
+                component: DebtCategoryCreate,
                 meta: {
                   remember: true,
                 },
               },
               {
-                path: '/dashboard/liability-category/edit/:ulid',
-                name: 'side-menu-liability-category-edit',
-                component: LiabilityCategoryEdit,
+                path: '/dashboard/debt-category/edit/:ulid',
+                name: 'side-menu-debt-category-edit',
+                component: DebtCategoryEdit,
                 meta: {
                   remember: true,
                 },
@@ -839,34 +839,34 @@ export default [
         ],
       },
       {
-        path: '/dashboard/liability-creditor',
+        path: '/dashboard/debt-creditor',
         children: [
           {
-            path: '/dashboard/liability-creditor',
-            name: 'side-menu-liability-creditor',
-            redirect: '/dashboard/liability-creditor/list',
-            component: LiabilityCreditorIndex,
+            path: '/dashboard/debt-creditor',
+            name: 'side-menu-debt-creditor',
+            redirect: '/dashboard/debt-creditor/list',
+            component: DebtCreditorIndex,
             children: [
               {
-                path: '/dashboard/liability-creditor/list',
-                name: 'side-menu-liability-creditor-list',
-                component: LiabilityCreditorList,
+                path: '/dashboard/debt-creditor/list',
+                name: 'side-menu-debt-creditor-list',
+                component: DebtCreditorList,
                 meta: {
                   remember: true,
                 },
               },
               {
-                path: '/dashboard/liability-creditor/create',
-                name: 'side-menu-liability-creditor-create',
-                component: LiabilityCreditorCreate,
+                path: '/dashboard/debt-creditor/create',
+                name: 'side-menu-debt-creditor-create',
+                component: DebtCreditorCreate,
                 meta: {
                   remember: true,
                 },
               },
               {
-                path: '/dashboard/liability-creditor/edit/:ulid',
-                name: 'side-menu-liability-creditor-edit',
-                component: LiabilityCreditorEdit,
+                path: '/dashboard/debt-creditor/edit/:ulid',
+                name: 'side-menu-debt-creditor-edit',
+                component: DebtCreditorEdit,
                 meta: {
                   remember: true,
                 },
@@ -1273,33 +1273,33 @@ export default [
               },
             ],
           },
-          // Liability
+          // Debt
           {
-            path: '/dashboard/liability',
-            name: 'side-menu-liability',
-            redirect: '/dashboard/liability/list',
-            component: LiabilityIndex,
+            path: '/dashboard/debt',
+            name: 'side-menu-debt',
+            redirect: '/dashboard/debt/list',
+            component: DebtIndex,
             children: [
               {
-                path: '/dashboard/liability/list',
-                name: 'side-menu-liability-list',
-                component: LiabilityList,
+                path: '/dashboard/debt/list',
+                name: 'side-menu-debt-list',
+                component: DebtList,
                 meta: {
                   remember: true,
                 },
               },
               {
-                path: '/dashboard/liability/create',
-                name: 'side-menu-liability-create',
-                component: LiabilityCreate,
+                path: '/dashboard/debt/create',
+                name: 'side-menu-debt-create',
+                component: DebtCreate,
                 meta: {
                   remember: true,
                 },
               },
               {
-                path: '/dashboard/liability/edit/:ulid',
-                name: 'side-menu-liability-edit',
-                component: LiabilityEdit,
+                path: '/dashboard/debt/edit/:ulid',
+                name: 'side-menu-debt-edit',
+                component: DebtEdit,
                 meta: {
                   remember: true,
                 },

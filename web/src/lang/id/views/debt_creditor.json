@@ -1,0 +1,25 @@
+{
+  "page_title": "Kreditur",
+  "actions": {
+    "create": "Tambah Kreditur",
+    "edit": "Ubah Kreditur"
+  },
+  "table": {
+    "title": "Daftar Kreditur"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "debt_creditor_data": "Data Kreditur"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "remarks": "Catatan"
+  },
+  "alert": {
+    "delete_debt_creditor": {
+      "title": "Berhasil Menghapus Kreditur",
+      "content": "Kreditur telah dihapus."
+    }
+  }
+}

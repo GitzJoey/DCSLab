@@ -1,0 +1,25 @@
+{
+  "page_title": "Debt Category",
+  "actions": {
+    "create": "Create Debt Category",
+    "edit": "Edit Debt Category"
+  },
+  "table": {
+    "title": "Debt Category List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "debt_category_data": "Debt Category Data"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name",
+    "sequence": "Sequence"
+  },
+  "alert": {
+    "delete_debt_category": {
+      "title": "Successfully Deleted Debt Category",
+      "content": "Debt category has been deleted."
+    }
+  }
+}

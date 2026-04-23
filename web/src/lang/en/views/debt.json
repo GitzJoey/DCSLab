@@ -1,0 +1,56 @@
+{
+  "page_title": "Debt",
+  "actions": {
+    "create": "Create Debt",
+    "edit": "Edit Debt"
+  },
+  "table": {
+    "title": "Debt List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "debt_data": "Debt Data",
+    "balance_summary": "Balance Summary",
+    "payments": "Payments"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "category": "Debt Category",
+    "party_type": "Party Type",
+    "party": "Party",
+    "creditor": "Creditor",
+    "supplier": "Supplier",
+    "cash_account": "Cash Account",
+    "code": "Code",
+    "date": "Date",
+    "due_days": "Due Days",
+    "direct_amount_received": "Direct Amount Received",
+    "opening_amount_due": "Opening Amount Due",
+    "amount_total": "Total Debt",
+    "amount_paid_by_cash_account": "Paid via Cash",
+    "amount_paid_by_stock_adjustment": "Paid via Stock Adjustment",
+    "amount_due": "Amount Due",
+    "is_paid_off": "Debt Status",
+    "remarks": "Remarks",
+    "payment_code": "Payment Code",
+    "payment_date": "Payment Date",
+    "payment_cash_account": "Payment Cash Account",
+    "payment_amount": "Payment Value",
+    "payment_remarks": "Payment Remarks"
+  },
+  "party_types": {
+    "creditor": "Creditor",
+    "supplier": "Supplier"
+  },
+  "status": {
+    "paid_off": "Paid Off",
+    "not_paid_off": "Not Paid Off"
+  },
+  "alert": {
+    "delete_debt": {
+      "title": "Successfully Deleted Debt",
+      "content": "Debt has been deleted."
+    }
+  }
+}

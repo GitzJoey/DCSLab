@@ -348,7 +348,7 @@ watch(
                 <br />
                 {{ selectedUserLocation.company.name }}
               </FormLabel>
-              <FormInput type="hidden" v-model="prepaidExpenseForm.company_id" />
+              <FormInputCurrency type="hidden" v-model="prepaidExpenseForm.company_id" />
             </div>
             <div class="col-span-12 md:col-span-6">
               <FormLabel>
@@ -475,11 +475,10 @@ watch(
               <FormLabel :class="{ 'text-danger': prepaidExpenseForm.invalid('due_days') }">
                 {{ t('views.prepaid_expense.fields.due_days') }}
               </FormLabel>
-              <FormInput
+              <FormInputCurrency
                 id="due_days"
                 v-model="prepaidExpenseForm.due_days"
-                type="number"
-                min="0"
+                :allow-negative="false"
                 :class="{ 'border-danger': prepaidExpenseForm.invalid('due_days') }"
                 :placeholder="t('views.prepaid_expense.fields.due_days')"
                 @change="prepaidExpenseForm.validate('due_days')"

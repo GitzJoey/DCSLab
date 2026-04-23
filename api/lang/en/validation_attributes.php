@@ -317,13 +317,13 @@ return [
         'name' => 'Name',
         'sequence' => 'Sequence',
     ],
-    'liability_category' => [
+    'debt_category' => [
         'company_id' => 'Company',
         'code' => 'Code',
         'name' => 'Name',
         'sequence' => 'Sequence',
     ],
-    'liability_creditor' => [
+    'debt_creditor' => [
         'company_id' => 'Company',
         'code' => 'Code',
         'name' => 'Name',
@@ -397,18 +397,18 @@ return [
         'amount_total' => 'Amount Total',
         'remarks' => 'Remarks',
     ],
-    'liability' => [
+    'debt' => [
         'company_id' => 'Company',
         'branch_id' => 'Branch',
-        'category_id' => 'Liability Category',
+        'category_id' => 'Debt Category',
         'creditor_id' => 'Creditor',
         'supplier_id' => 'Supplier',
         'cash_account_id' => 'Cash Account',
         'code' => 'Code',
         'date' => 'Date',
         'due_days' => 'Due Days',
-        'amount_received' => 'Amount Received',
-        'amount_payable' => 'Amount Payable',
+        'direct_amount_received' => 'Direct Amount Received',
+        'opening_amount_due' => 'Opening Amount Due',
         'amount_total' => 'Amount Total',
         'amount_paid_by_cash_account' => 'Amount Paid by Cash Account',
         'amount_paid_by_stock_adjustment' => 'Amount Paid by Stock Adjustment',
@@ -443,11 +443,11 @@ return [
         'amount' => 'Amount',
         'remarks' => 'Remarks',
     ],
-    'liability_payment' => [
-        'id' => 'Liability Payment',
+    'debt_payment' => [
+        'id' => 'Debt Payment',
         'company_id' => 'Company',
         'branch_id' => 'Branch',
-        'liability_id' => 'Liability',
+        'debt_id' => 'Debt',
         'code' => 'Code',
         'date' => 'Date',
         'cash_account_id' => 'Cash Account',

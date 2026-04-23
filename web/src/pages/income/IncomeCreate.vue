@@ -347,7 +347,7 @@ watch(
                 <br />
                 {{ selectedUserLocation.company.name }}
               </FormLabel>
-              <FormInput type="hidden" v-model="incomeForm.company_id" />
+              <FormInputCurrency type="hidden" v-model="incomeForm.company_id" />
             </div>
             <div class="col-span-12 md:col-span-6">
               <FormLabel>
@@ -457,11 +457,10 @@ watch(
               <FormLabel :class="{ 'text-danger': incomeForm.invalid('due_days') }">
                 {{ t('views.income.fields.due_days') }}
               </FormLabel>
-              <FormInput
+              <FormInputCurrency
                 id="due_days"
                 v-model="incomeForm.due_days"
-                type="number"
-                min="0"
+                :allow-negative="false"
                 :class="{ 'border-danger': incomeForm.invalid('due_days') }"
                 :placeholder="t('views.income.fields.due_days')"
                 @change="incomeForm.validate('due_days')"

@@ -1,0 +1,25 @@
+{
+  "page_title": "Kategori Hutang",
+  "actions": {
+    "create": "Tambah Kategori Hutang",
+    "edit": "Ubah Kategori Hutang"
+  },
+  "table": {
+    "title": "Daftar Kategori Hutang"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "debt_category_data": "Data Kategori Hutang"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "sequence": "Urutan"
+  },
+  "alert": {
+    "delete_debt_category": {
+      "title": "Berhasil Menghapus Kategori Hutang",
+      "content": "Kategori hutang telah dihapus."
+    }
+  }
+}

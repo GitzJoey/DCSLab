@@ -54,14 +54,17 @@ return [
         'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',
         'invalid_payment_reference' => 'Data pembayaran biaya dibayar dimuka tidak valid untuk transaksi ini.',
     ],
-    'liability' => [
+    'debt' => [
         'amount_total_must_be_positive' => 'Jumlah pencairan atau jumlah hutang bawaan harus lebih dari nol.',
-        'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah hutang.',
+        'payments_exceed_total_debt' => 'Total pembayaran hutang tidak boleh melebihi total hutang.',
         'invalid_payment_reference' => 'Data pembayaran hutang tidak valid untuk transaksi ini.',
         'party_must_be_single' => 'Pilih salah satu pihak saja, kreditur atau pemasok.',
         'party_is_required' => 'Kreditur atau pemasok wajib dipilih.',
-        'cash_account_is_required_for_amount_received' => 'Akun kas wajib dipilih jika ada jumlah pencairan.',
-        'amount_received_is_required_for_cash_account' => 'Jumlah pencairan wajib lebih dari nol jika akun kas diisi.',
+        'cash_account_is_required_for_direct_amount_received' => 'Akun kas wajib dipilih jika ada nominal diterima langsung.',
+        'direct_amount_received_is_required_for_cash_account' => 'Nominal diterima langsung wajib lebih dari nol jika akun kas diisi.',
+    ],
+    'debt_payment' => [
+        'invalid_debt_reference' => 'Data hutang tidak valid untuk cabang yang dipilih.',
     ],
     'prepaid_income' => [
         'amount_total_must_be_positive' => 'Jumlah diterima langsung atau jumlah piutang harus lebih dari nol.',

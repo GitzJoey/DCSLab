@@ -6,12 +6,12 @@ use App\Enums\CapitalTransactionTypeEnum;
 use App\Models\CapitalOpening;
 use App\Models\CapitalTransaction;
 use App\Models\CashTransfer;
+use App\Models\Debt;
+use App\Models\DebtPayment;
 use App\Models\Expense;
 use App\Models\ExpensePayment;
 use App\Models\Income;
 use App\Models\IncomePayment;
-use App\Models\Liability;
-use App\Models\LiabilityPayment;
 use App\Models\PrepaidExpense;
 use App\Models\PrepaidExpensePayment;
 use App\Models\PrepaidIncome;
@@ -167,25 +167,25 @@ final class CashTransactionUpdateDTO
         );
     }
 
-    public static function fromLiability(Liability $liability): self
+    public static function fromDebt(Debt $debt): self
     {
         return new self(
-            referableType: Liability::class,
-            referableId: $liability->id,
-            date: $liability->date,
-            cashAccountId: $liability->cash_account_id,
-            amount: (float) $liability->amount_received,
+            referableType: Debt::class,
+            referableId: $debt->id,
+            date: $debt->date,
+            cashAccountId: $debt->cash_account_id,
+            amount: (float) $debt->direct_amount_received,
         );
     }
 
-    public static function fromLiabilityPayment(LiabilityPayment $liabilityPayment): self
+    public static function fromDebtPayment(DebtPayment $debtPayment): self
     {
         return new self(
-            referableType: LiabilityPayment::class,
-            referableId: $liabilityPayment->id,
-            date: $liabilityPayment->date,
-            cashAccountId: $liabilityPayment->cash_account_id,
-            amount: ((float) $liabilityPayment->amount * -1),
+            referableType: DebtPayment::class,
+            referableId: $debtPayment->id,
+            date: $debtPayment->date,
+            cashAccountId: $debtPayment->cash_account_id,
+            amount: ((float) $debtPayment->amount * -1),
         );
     }
 

@@ -235,16 +235,16 @@ class DashboardActions
             'title' => 'components.menu.income-category',
         ];
 
-        $liabilityCategory = [
+        $debtCategory = [
             'icon' => 'Tags',
-            'pageName' => 'side-menu-liability-category',
-            'title' => 'components.menu.liability-category',
+            'pageName' => 'side-menu-debt-category',
+            'title' => 'components.menu.debt-category',
         ];
 
-        $liabilityCreditor = [
+        $debtCreditor = [
             'icon' => 'Building2',
-            'pageName' => 'side-menu-liability-creditor',
-            'title' => 'components.menu.liability-creditor',
+            'pageName' => 'side-menu-debt-creditor',
+            'title' => 'components.menu.debt-creditor',
         ];
 
         $purchaseAdditionalCostCategory = [
@@ -263,8 +263,8 @@ class DashboardActions
             $stockAdjustmentCategory,
             $expenseCategory,
             $incomeCategory,
-            $liabilityCategory,
-            $liabilityCreditor,
+            $debtCategory,
+            $debtCreditor,
             $purchaseAdditionalCostCategory
         );
         array_push($menu, $root_array);
@@ -351,10 +351,10 @@ class DashboardActions
             'title' => 'components.menu.prepaid-income',
         ];
 
-        $liability = [
+        $debt = [
             'icon' => 'WalletCards',
-            'pageName' => 'side-menu-liability',
-            'title' => 'components.menu.liability',
+            'pageName' => 'side-menu-debt',
+            'title' => 'components.menu.debt',
         ];
 
         $stockTransfer = [
@@ -372,7 +372,7 @@ class DashboardActions
             $prepaidExpense,
             $income,
             $prepaidIncome,
-            $liability,
+            $debt,
             $stockAdjustment,
             $purchaseOrder,
             $purchaseAdditionalCost,

@@ -54,14 +54,17 @@ return [
         'payments_exceed_amount_payable' => 'Total payable payments must not exceed the payable amount.',
         'invalid_payment_reference' => 'Prepaid expense payment data is invalid for this prepaid expense.',
     ],
-    'liability' => [
-        'amount_total_must_be_positive' => 'Either received amount or existing payable amount must be greater than zero.',
-        'payments_exceed_amount_payable' => 'Total liability payments must not exceed the payable amount.',
-        'invalid_payment_reference' => 'Liability payment data is invalid for this liability.',
+    'debt' => [
+        'amount_total_must_be_positive' => 'Either direct amount received or opening amount due must be greater than zero.',
+        'payments_exceed_total_debt' => 'Total debt payments must not exceed the total debt.',
+        'invalid_payment_reference' => 'Debt payment data is invalid for this debt.',
         'party_must_be_single' => 'Choose only one party, either creditor or supplier.',
         'party_is_required' => 'A creditor or supplier must be selected.',
-        'cash_account_is_required_for_amount_received' => 'Cash account is required when received amount is filled.',
-        'amount_received_is_required_for_cash_account' => 'Received amount must be greater than zero when cash account is selected.',
+        'cash_account_is_required_for_direct_amount_received' => 'Cash account is required when direct amount received is filled.',
+        'direct_amount_received_is_required_for_cash_account' => 'Direct amount received must be greater than zero when cash account is selected.',
+    ],
+    'debt_payment' => [
+        'invalid_debt_reference' => 'Debt data is invalid for the selected branch.',
     ],
     'prepaid_income' => [
         'amount_total_must_be_positive' => 'Either immediate receipt or receivable amount must be greater than zero.',

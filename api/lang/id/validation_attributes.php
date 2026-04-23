@@ -336,13 +336,13 @@ return [
         'name' => 'Nama',
         'sequence' => 'Urutan',
     ],
-    'liability_category' => [
+    'debt_category' => [
         'company_id' => 'Perusahaan',
         'code' => 'Kode',
         'name' => 'Nama',
         'sequence' => 'Urutan',
     ],
-    'liability_creditor' => [
+    'debt_creditor' => [
         'company_id' => 'Perusahaan',
         'code' => 'Kode',
         'name' => 'Nama',
@@ -416,7 +416,7 @@ return [
         'amount_total' => 'Jumlah Total',
         'remarks' => 'Catatan',
     ],
-    'liability' => [
+    'debt' => [
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
         'category_id' => 'Kategori Hutang',
@@ -426,8 +426,8 @@ return [
         'code' => 'Kode',
         'date' => 'Tanggal',
         'due_days' => 'Jatuh Tempo (Hari)',
-        'amount_received' => 'Jumlah Pencairan',
-        'amount_payable' => 'Jumlah Hutang',
+        'direct_amount_received' => 'Nominal Diterima Langsung',
+        'opening_amount_due' => 'Hutang Bawaan',
         'amount_total' => 'Jumlah Total',
         'amount_paid_by_cash_account' => 'Sudah Dibayar dari Kas',
         'amount_paid_by_stock_adjustment' => 'Sudah Dibayar dari Penyesuaian Stok',
@@ -462,11 +462,11 @@ return [
         'amount' => 'Jumlah',
         'remarks' => 'Catatan',
     ],
-    'liability_payment' => [
+    'debt_payment' => [
         'id' => 'Pembayaran Hutang',
         'company_id' => 'Perusahaan',
         'branch_id' => 'Cabang',
-        'liability_id' => 'Hutang',
+        'debt_id' => 'Hutang',
         'code' => 'Kode',
         'date' => 'Tanggal',
         'cash_account_id' => 'Akun Kas',
