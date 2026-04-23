@@ -34,15 +34,45 @@ return [
         'cannot_delete_with_children' => 'Expense category cannot be deleted because it still has child categories.',
         'must_not_have_children' => 'Expense category must be a category without child categories.',
     ],
+    'income_category' => [
+        'parent_must_be_active' => 'Parent income category must be active.',
+        'cannot_delete_with_children' => 'Income category cannot be deleted because it still has child categories.',
+        'must_not_have_children' => 'Income category must be a category without child categories.',
+    ],
     'expense' => [
         'amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
         'payments_exceed_amount_payable' => 'Total payable payments must not exceed the payable amount.',
         'invalid_payment_reference' => 'Expense payment data is invalid for this expense.',
     ],
+    'income' => [
+        'amount_total_must_be_positive' => 'Either immediate receipt or receivable amount must be greater than zero.',
+        'payments_exceed_amount_receivable' => 'Total receivable payments must not exceed the receivable amount.',
+        'invalid_payment_reference' => 'Income payment data is invalid for this income.',
+    ],
     'prepaid_expense' => [
         'amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
         'payments_exceed_amount_payable' => 'Total payable payments must not exceed the payable amount.',
         'invalid_payment_reference' => 'Prepaid expense payment data is invalid for this prepaid expense.',
+    ],
+    'liability' => [
+        'amount_total_must_be_positive' => 'Either received amount or existing payable amount must be greater than zero.',
+        'payments_exceed_amount_payable' => 'Total liability payments must not exceed the payable amount.',
+        'invalid_payment_reference' => 'Liability payment data is invalid for this liability.',
+        'party_must_be_single' => 'Choose only one party, either creditor or supplier.',
+        'party_is_required' => 'A creditor or supplier must be selected.',
+        'cash_account_is_required_for_amount_received' => 'Cash account is required when received amount is filled.',
+        'amount_received_is_required_for_cash_account' => 'Received amount must be greater than zero when cash account is selected.',
+    ],
+    'prepaid_income' => [
+        'amount_total_must_be_positive' => 'Either immediate receipt or receivable amount must be greater than zero.',
+        'payments_exceed_amount_receivable' => 'Total receivable payments must not exceed the receivable amount.',
+        'invalid_payment_reference' => 'Prepaid income payment data is invalid for this prepaid income.',
+    ],
+    'stock_adjustment' => [
+        'invalid_in_item_reference' => 'Incoming item data is invalid for this stock adjustment.',
+        'invalid_out_item_reference' => 'Outgoing item data is invalid for this stock adjustment.',
+        'invalid_in_item_serial_reference' => 'Incoming item serial data is invalid for this stock adjustment.',
+        'invalid_out_item_serial_reference' => 'Outgoing item serial data is invalid for this stock adjustment.',
     ],
     'product' => [
         'unit' => [

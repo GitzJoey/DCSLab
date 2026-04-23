@@ -1,0 +1,28 @@
+{
+  "page_title": "Pembayaran Pendapatan",
+  "actions": {
+    "create": "Tambah Pembayaran Pendapatan",
+    "edit": "Ubah Pembayaran Pendapatan"
+  },
+  "table": {
+    "title": "Daftar Pembayaran Pendapatan"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "income_payment_data": "Data Pembayaran Pendapatan"
+  },
+  "fields": {
+    "income": "Pendapatan",
+    "code": "Kode",
+    "date": "Tanggal",
+    "cash_account": "Akun Kas",
+    "amount": "Jumlah",
+    "remarks": "Catatan"
+  },
+  "alert": {
+    "delete_income_payment": {
+      "title": "Berhasil Menghapus Pembayaran Pendapatan",
+      "content": "Pembayaran pendapatan telah dihapus."
+    }
+  }
+}

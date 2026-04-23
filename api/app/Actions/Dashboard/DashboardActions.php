@@ -229,6 +229,24 @@ class DashboardActions
             'title' => 'components.menu.expense-category',
         ];
 
+        $incomeCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-income-category',
+            'title' => 'components.menu.income-category',
+        ];
+
+        $liabilityCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-liability-category',
+            'title' => 'components.menu.liability-category',
+        ];
+
+        $liabilityCreditor = [
+            'icon' => 'Building2',
+            'pageName' => 'side-menu-liability-creditor',
+            'title' => 'components.menu.liability-creditor',
+        ];
+
         $purchaseAdditionalCostCategory = [
             'icon' => 'Tags',
             'pageName' => 'side-menu-purchase-additional-cost-category',
@@ -244,6 +262,9 @@ class DashboardActions
             $customerManagement,
             $stockAdjustmentCategory,
             $expenseCategory,
+            $incomeCategory,
+            $liabilityCategory,
+            $liabilityCreditor,
             $purchaseAdditionalCostCategory
         );
         array_push($menu, $root_array);
@@ -318,6 +339,24 @@ class DashboardActions
             'title' => 'components.menu.prepaid-expense',
         ];
 
+        $income = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-income',
+            'title' => 'components.menu.income',
+        ];
+
+        $prepaidIncome = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-prepaid-income',
+            'title' => 'components.menu.prepaid-income',
+        ];
+
+        $liability = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-liability',
+            'title' => 'components.menu.liability',
+        ];
+
         $stockTransfer = [
             'icon' => 'Truck',
             'pageName' => 'side-menu-stock-transfer',
@@ -331,6 +370,9 @@ class DashboardActions
             $cashTransfer,
             $expense,
             $prepaidExpense,
+            $income,
+            $prepaidIncome,
+            $liability,
             $stockAdjustment,
             $purchaseOrder,
             $purchaseAdditionalCost,

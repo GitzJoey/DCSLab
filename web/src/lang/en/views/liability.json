@@ -1,0 +1,56 @@
+{
+  "page_title": "Liability",
+  "actions": {
+    "create": "Create Liability",
+    "edit": "Edit Liability"
+  },
+  "table": {
+    "title": "Liability List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "liability_data": "Liability Data",
+    "payable_summary": "Balance Summary",
+    "payments": "Payments"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "category": "Liability Category",
+    "party_type": "Party Type",
+    "party": "Party",
+    "creditor": "Creditor",
+    "supplier": "Supplier",
+    "cash_account": "Cash Account",
+    "code": "Code",
+    "date": "Date",
+    "due_days": "Due Days",
+    "amount_received": "Amount Received",
+    "amount_payable": "Opening Payable",
+    "amount_total": "Total Liability",
+    "amount_paid_by_cash_account": "Paid via Cash",
+    "amount_paid_by_stock_adjustment": "Paid via Stock Adjustment",
+    "amount_due": "Amount Due",
+    "is_paid_off": "Liability Status",
+    "remarks": "Remarks",
+    "payment_code": "Payment Code",
+    "payment_date": "Payment Date",
+    "payment_cash_account": "Payment Cash Account",
+    "payment_amount": "Payment Value",
+    "payment_remarks": "Payment Remarks"
+  },
+  "party_types": {
+    "creditor": "Creditor",
+    "supplier": "Supplier"
+  },
+  "status": {
+    "paid_off": "Paid Off",
+    "not_paid_off": "Not Paid Off"
+  },
+  "alert": {
+    "delete_liability": {
+      "title": "Successfully Deleted Liability",
+      "content": "Liability has been deleted."
+    }
+  }
+}

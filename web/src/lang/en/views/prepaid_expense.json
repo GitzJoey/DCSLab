@@ -10,6 +10,7 @@
   "field_groups": {
     "company_info": "Company Info",
     "prepaid_expense_data": "Prepaid Expense Data",
+    "payable_summary": "Payable Summary",
     "payments": "Payments",
     "images": "Images"
   },

@@ -16,10 +16,21 @@ use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExpenseImageController;
 use App\Http\Controllers\ExpensePaymentController;
+use App\Http\Controllers\IncomeCategoryController;
+use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\IncomeImageController;
+use App\Http\Controllers\IncomePaymentController;
 use App\Http\Controllers\InvestorController;
+use App\Http\Controllers\LiabilityCategoryController;
+use App\Http\Controllers\LiabilityController;
+use App\Http\Controllers\LiabilityCreditorController;
+use App\Http\Controllers\LiabilityPaymentController;
 use App\Http\Controllers\PrepaidExpenseController;
 use App\Http\Controllers\PrepaidExpenseImageController;
 use App\Http\Controllers\PrepaidExpensePaymentController;
+use App\Http\Controllers\PrepaidIncomeController;
+use App\Http\Controllers\PrepaidIncomeImageController;
+use App\Http\Controllers\PrepaidIncomePaymentController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
@@ -260,6 +271,45 @@ Route::prefix('expense_category')->middleware('auth:sanctum')->group(function ()
     });
 });
 
+Route::prefix('income_category')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.income_category.')->group(function () {
+        Route::get('read', [IncomeCategoryController::class, 'readAny'])->name('read_any');
+        Route::get('read/{income_category:ulid}', [IncomeCategoryController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.income_category.')->group(function () {
+        Route::post('save', [IncomeCategoryController::class, 'store'])->name('save');
+        Route::post('edit/{income_category:ulid}', [IncomeCategoryController::class, 'update'])->name('edit');
+        Route::post('delete/{income_category:ulid}', [IncomeCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('liability_category')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.liability_category.')->group(function () {
+        Route::get('read', [LiabilityCategoryController::class, 'readAny'])->name('read_any');
+        Route::get('read/{liability_category:ulid}', [LiabilityCategoryController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.liability_category.')->group(function () {
+        Route::post('save', [LiabilityCategoryController::class, 'store'])->name('save');
+        Route::post('edit/{liability_category:ulid}', [LiabilityCategoryController::class, 'update'])->name('edit');
+        Route::post('delete/{liability_category:ulid}', [LiabilityCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('liability_creditor')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.liability_creditor.')->group(function () {
+        Route::get('read', [LiabilityCreditorController::class, 'readAny'])->name('read_any');
+        Route::get('read/{liability_creditor:ulid}', [LiabilityCreditorController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.liability_creditor.')->group(function () {
+        Route::post('save', [LiabilityCreditorController::class, 'store'])->name('save');
+        Route::post('edit/{liability_creditor:ulid}', [LiabilityCreditorController::class, 'update'])->name('edit');
+        Route::post('delete/{liability_creditor:ulid}', [LiabilityCreditorController::class, 'delete'])->name('delete');
+    });
+});
+
 Route::prefix('purchase_additional_cost_category')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.purchase_additional_cost_category.')->group(function () {
         Route::get('read', [PurchaseAdditionalCostCategoryController::class, 'readAny'])->name('read_any');
@@ -354,6 +404,60 @@ Route::prefix('prepaid_expense_payment')->middleware('auth:sanctum')->group(func
     });
 });
 
+Route::prefix('income')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.income.')->group(function () {
+        Route::get('read', [IncomeController::class, 'readAny'])->name('read_any');
+        Route::get('read/{income:ulid}', [IncomeController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.income.')->group(function () {
+        Route::post('save', [IncomeController::class, 'store'])->name('save');
+        Route::post('edit/{income:ulid}', [IncomeController::class, 'update'])->name('edit');
+        Route::post('delete/{income:ulid}', [IncomeController::class, 'delete'])->name('delete');
+        Route::post('image/upload', [IncomeImageController::class, 'upload'])->name('image.upload');
+    });
+});
+
+Route::prefix('income_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.income_payment.')->group(function () {
+        Route::get('read', [IncomePaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{income_payment:ulid}', [IncomePaymentController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.income_payment.')->group(function () {
+        Route::post('save', [IncomePaymentController::class, 'store'])->name('save');
+        Route::post('edit/{income_payment:ulid}', [IncomePaymentController::class, 'update'])->name('edit');
+        Route::post('delete/{income_payment:ulid}', [IncomePaymentController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('prepaid_income')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.prepaid_income.')->group(function () {
+        Route::get('read', [PrepaidIncomeController::class, 'readAny'])->name('read_any');
+        Route::get('read/{prepaid_income:ulid}', [PrepaidIncomeController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.prepaid_income.')->group(function () {
+        Route::post('save', [PrepaidIncomeController::class, 'store'])->name('save');
+        Route::post('edit/{prepaid_income:ulid}', [PrepaidIncomeController::class, 'update'])->name('edit');
+        Route::post('delete/{prepaid_income:ulid}', [PrepaidIncomeController::class, 'delete'])->name('delete');
+        Route::post('image/upload', [PrepaidIncomeImageController::class, 'upload'])->name('image.upload');
+    });
+});
+
+Route::prefix('prepaid_income_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.prepaid_income_payment.')->group(function () {
+        Route::get('read', [PrepaidIncomePaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{prepaid_income_payment:ulid}', [PrepaidIncomePaymentController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.prepaid_income_payment.')->group(function () {
+        Route::post('save', [PrepaidIncomePaymentController::class, 'store'])->name('save');
+        Route::post('edit/{prepaid_income_payment:ulid}', [PrepaidIncomePaymentController::class, 'update'])->name('edit');
+        Route::post('delete/{prepaid_income_payment:ulid}', [PrepaidIncomePaymentController::class, 'delete'])->name('delete');
+    });
+});
+
 Route::prefix('cash_transfer')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.cash_transfer.')->group(function () {
         Route::get('read', [CashTransferController::class, 'readAny'])->name('read_any');
@@ -364,6 +468,32 @@ Route::prefix('cash_transfer')->middleware('auth:sanctum')->group(function () {
         Route::post('save', [CashTransferController::class, 'store'])->name('save');
         Route::post('edit/{cash_transfer:ulid}', [CashTransferController::class, 'update'])->name('edit');
         Route::post('delete/{cash_transfer:ulid}', [CashTransferController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('liability')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.liability.')->group(function () {
+        Route::get('read', [LiabilityController::class, 'readAny'])->name('read_any');
+        Route::get('read/{liability:ulid}', [LiabilityController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.liability.')->group(function () {
+        Route::post('save', [LiabilityController::class, 'store'])->name('save');
+        Route::post('edit/{liability:ulid}', [LiabilityController::class, 'update'])->name('edit');
+        Route::post('delete/{liability:ulid}', [LiabilityController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('liability_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.liability_payment.')->group(function () {
+        Route::get('read', [LiabilityPaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{liability_payment:ulid}', [LiabilityPaymentController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.liability_payment.')->group(function () {
+        Route::post('save', [LiabilityPaymentController::class, 'store'])->name('save');
+        Route::post('edit/{liability_payment:ulid}', [LiabilityPaymentController::class, 'update'])->name('edit');
+        Route::post('delete/{liability_payment:ulid}', [LiabilityPaymentController::class, 'delete'])->name('delete');
     });
 });
 

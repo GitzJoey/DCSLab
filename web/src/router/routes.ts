@@ -54,6 +54,10 @@ import ExpenseIndex from '@/pages/expense/ExpenseIndex.vue';
 import ExpenseList from '@/pages/expense/ExpenseList.vue';
 import ExpenseCreate from '@/pages/expense/ExpenseCreate.vue';
 import ExpenseEdit from '@/pages/expense/ExpenseEdit.vue';
+import LiabilityIndex from '@/pages/liability/LiabilityIndex.vue';
+import LiabilityList from '@/pages/liability/LiabilityList.vue';
+import LiabilityCreate from '@/pages/liability/LiabilityCreate.vue';
+import LiabilityEdit from '@/pages/liability/LiabilityEdit.vue';
 import PrepaidExpenseIndex from '@/pages/prepaid-expense/PrepaidExpenseIndex.vue';
 import PrepaidExpenseList from '@/pages/prepaid-expense/PrepaidExpenseList.vue';
 import PrepaidExpenseCreate from '@/pages/prepaid-expense/PrepaidExpenseCreate.vue';
@@ -62,10 +66,34 @@ import ExpensePaymentIndex from '@/pages/expense-payment/ExpensePaymentIndex.vue
 import ExpensePaymentList from '@/pages/expense-payment/ExpensePaymentList.vue';
 import ExpensePaymentCreate from '@/pages/expense-payment/ExpensePaymentCreate.vue';
 import ExpensePaymentEdit from '@/pages/expense-payment/ExpensePaymentEdit.vue';
+import IncomePaymentIndex from '@/pages/income-payment/IncomePaymentIndex.vue';
+import IncomePaymentList from '@/pages/income-payment/IncomePaymentList.vue';
+import IncomePaymentCreate from '@/pages/income-payment/IncomePaymentCreate.vue';
+import IncomePaymentEdit from '@/pages/income-payment/IncomePaymentEdit.vue';
 import ExpenseCategoryIndex from '@/pages/expense-category/ExpenseCategoryIndex.vue';
 import ExpenseCategoryList from '@/pages/expense-category/ExpenseCategoryList.vue';
 import ExpenseCategoryCreate from '@/pages/expense-category/ExpenseCategoryCreate.vue';
 import ExpenseCategoryEdit from '@/pages/expense-category/ExpenseCategoryEdit.vue';
+import LiabilityCategoryIndex from '@/pages/liability-category/LiabilityCategoryIndex.vue';
+import LiabilityCategoryList from '@/pages/liability-category/LiabilityCategoryList.vue';
+import LiabilityCategoryCreate from '@/pages/liability-category/LiabilityCategoryCreate.vue';
+import LiabilityCategoryEdit from '@/pages/liability-category/LiabilityCategoryEdit.vue';
+import LiabilityCreditorIndex from '@/pages/liability-creditor/LiabilityCreditorIndex.vue';
+import LiabilityCreditorList from '@/pages/liability-creditor/LiabilityCreditorList.vue';
+import LiabilityCreditorCreate from '@/pages/liability-creditor/LiabilityCreditorCreate.vue';
+import LiabilityCreditorEdit from '@/pages/liability-creditor/LiabilityCreditorEdit.vue';
+import IncomeCategoryIndex from '@/pages/income-category/IncomeCategoryIndex.vue';
+import IncomeCategoryList from '@/pages/income-category/IncomeCategoryList.vue';
+import IncomeCategoryCreate from '@/pages/income-category/IncomeCategoryCreate.vue';
+import IncomeCategoryEdit from '@/pages/income-category/IncomeCategoryEdit.vue';
+import IncomeIndex from '@/pages/income/IncomeIndex.vue';
+import IncomeList from '@/pages/income/IncomeList.vue';
+import IncomeCreate from '@/pages/income/IncomeCreate.vue';
+import IncomeEdit from '@/pages/income/IncomeEdit.vue';
+import PrepaidIncomeIndex from '@/pages/prepaid-income/PrepaidIncomeIndex.vue';
+import PrepaidIncomeList from '@/pages/prepaid-income/PrepaidIncomeList.vue';
+import PrepaidIncomeCreate from '@/pages/prepaid-income/PrepaidIncomeCreate.vue';
+import PrepaidIncomeEdit from '@/pages/prepaid-income/PrepaidIncomeEdit.vue';
 import ProductCategoryIndex from '@/pages/product-category/ProductCategoryIndex.vue';
 import ProductCategoryList from '@/pages/product-category/ProductCategoryList.vue';
 import ProductCategoryCreate from '@/pages/product-category/ProductCategoryCreate.vue';
@@ -773,6 +801,117 @@ export default [
           },
         ],
       },
+      {
+        path: '/dashboard/liability-category',
+        children: [
+          {
+            path: '/dashboard/liability-category',
+            name: 'side-menu-liability-category',
+            redirect: '/dashboard/liability-category/list',
+            component: LiabilityCategoryIndex,
+            children: [
+              {
+                path: '/dashboard/liability-category/list',
+                name: 'side-menu-liability-category-list',
+                component: LiabilityCategoryList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/liability-category/create',
+                name: 'side-menu-liability-category-create',
+                component: LiabilityCategoryCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/liability-category/edit/:ulid',
+                name: 'side-menu-liability-category-edit',
+                component: LiabilityCategoryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/dashboard/liability-creditor',
+        children: [
+          {
+            path: '/dashboard/liability-creditor',
+            name: 'side-menu-liability-creditor',
+            redirect: '/dashboard/liability-creditor/list',
+            component: LiabilityCreditorIndex,
+            children: [
+              {
+                path: '/dashboard/liability-creditor/list',
+                name: 'side-menu-liability-creditor-list',
+                component: LiabilityCreditorList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/liability-creditor/create',
+                name: 'side-menu-liability-creditor-create',
+                component: LiabilityCreditorCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/liability-creditor/edit/:ulid',
+                name: 'side-menu-liability-creditor-edit',
+                component: LiabilityCreditorEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/dashboard/income-category',
+        children: [
+          {
+            path: '/dashboard/income-category',
+            name: 'side-menu-income-category',
+            redirect: '/dashboard/income-category/list',
+            component: IncomeCategoryIndex,
+            children: [
+              {
+                path: '/dashboard/income-category/list',
+                name: 'side-menu-income-category-list',
+                component: IncomeCategoryList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/income-category/create',
+                name: 'side-menu-income-category-create',
+                component: IncomeCategoryCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/income-category/edit/:ulid',
+                name: 'side-menu-income-category-edit',
+                component: IncomeCategoryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
       // Purchase Additional Cost Category
       {
         path: '/dashboard/purchase-additional-cost-category',
@@ -1134,6 +1273,39 @@ export default [
               },
             ],
           },
+          // Liability
+          {
+            path: '/dashboard/liability',
+            name: 'side-menu-liability',
+            redirect: '/dashboard/liability/list',
+            component: LiabilityIndex,
+            children: [
+              {
+                path: '/dashboard/liability/list',
+                name: 'side-menu-liability-list',
+                component: LiabilityList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/liability/create',
+                name: 'side-menu-liability-create',
+                component: LiabilityCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/liability/edit/:ulid',
+                name: 'side-menu-liability-edit',
+                component: LiabilityEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
           // Prepaid Expense
           {
             path: '/dashboard/prepaid-expense',
@@ -1194,6 +1366,102 @@ export default [
                 path: '/dashboard/expense-payment/edit/:ulid',
                 name: 'side-menu-expense-payment-edit',
                 component: ExpensePaymentEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/income',
+            name: 'side-menu-income',
+            redirect: '/dashboard/income/list',
+            component: IncomeIndex,
+            children: [
+              {
+                path: '/dashboard/income/list',
+                name: 'side-menu-income-list',
+                component: IncomeList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/income/create',
+                name: 'side-menu-income-create',
+                component: IncomeCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/income/edit/:ulid',
+                name: 'side-menu-income-edit',
+                component: IncomeEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/prepaid-income',
+            name: 'side-menu-prepaid-income',
+            redirect: '/dashboard/prepaid-income/list',
+            component: PrepaidIncomeIndex,
+            children: [
+              {
+                path: '/dashboard/prepaid-income/list',
+                name: 'side-menu-prepaid-income-list',
+                component: PrepaidIncomeList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/prepaid-income/create',
+                name: 'side-menu-prepaid-income-create',
+                component: PrepaidIncomeCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/prepaid-income/edit/:ulid',
+                name: 'side-menu-prepaid-income-edit',
+                component: PrepaidIncomeEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/income-payment',
+            name: 'side-menu-income-payment',
+            redirect: '/dashboard/income-payment/list',
+            component: IncomePaymentIndex,
+            children: [
+              {
+                path: '/dashboard/income-payment/list',
+                name: 'side-menu-income-payment-list',
+                component: IncomePaymentList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/income-payment/create',
+                name: 'side-menu-income-payment-create',
+                component: IncomePaymentCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/income-payment/edit/:ulid',
+                name: 'side-menu-income-payment-edit',
+                component: IncomePaymentEdit,
                 meta: {
                   remember: true,
                 },

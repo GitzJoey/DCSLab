@@ -1,0 +1,44 @@
+{
+  "page_title": "Income",
+  "actions": {
+    "create": "Create Income",
+    "edit": "Edit Income"
+  },
+  "table": {
+    "title": "Income List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "income_data": "Income Data",
+    "receivable_summary": "Receivable Summary",
+    "payments": "Payments",
+    "images": "Images"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "category": "Category",
+    "code": "Code",
+    "date": "Date",
+    "due_days": "Due Days",
+    "paid_immediately_cash_account": "Paid Immediately Cash Account",
+    "amount_paid_immediately": "Amount Paid Immediately",
+    "amount_receivable": "Amount Receivable",
+    "amount_receivable_paid": "Amount Receivable Collected",
+    "amount_receivable_due": "Amount Receivable Due",
+    "is_amount_receivable_paid_off": "Paid Off Status",
+    "amount_total": "Amount Total",
+    "remarks": "Remarks",
+    "images": "Images"
+  },
+  "status": {
+    "paid_off": "Paid Off",
+    "not_paid_off": "Not Paid Off"
+  },
+  "alert": {
+    "delete_income": {
+      "title": "Successfully Deleted Income",
+      "content": "Income has been deleted."
+    }
+  }
+}

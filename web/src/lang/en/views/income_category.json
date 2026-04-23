@@ -1,0 +1,27 @@
+{
+  "page_title": "Income Category",
+  "actions": {
+    "create": "Create Income Category",
+    "edit": "Edit Income Category"
+  },
+  "table": {
+    "title": "Income Category Tree List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "income_category_data": "Income Category Data"
+  },
+  "fields": {
+    "parent": "Parent",
+    "code": "Code",
+    "name": "Name",
+    "sequence": "Sequence",
+    "child_count": "Child Count"
+  },
+  "alert": {
+    "delete_income_category": {
+      "title": "Successfully Deleted Income Category",
+      "content": "Income category has been deleted."
+    }
+  }
+}

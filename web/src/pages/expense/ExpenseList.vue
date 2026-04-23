@@ -271,7 +271,7 @@ const showNextImage = () => {
           <div class="col-span-12 md:col-span-6 lg:col-span-4 self-start lg:pr-4">
             <div class="space-y-2">
               <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                Payable Summary
+                {{ t('views.expense.field_groups.payable_summary') }}
               </div>
               <div class="grid grid-cols-12 items-start gap-x-3 gap-y-2 text-xs">
                 <div class="col-span-5 text-slate-500">{{ t('views.expense.fields.amount_payable') }}</div>

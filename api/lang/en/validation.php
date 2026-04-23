@@ -184,6 +184,9 @@ return [
         'base_qty_must_be_integer' => 'Qty x product unit conversion value for serialized product must be an integer.',
         'serial_count_not_match_qty' => 'The number of serials must match qty x product unit conversion value.',
     ],
+    'stock_adjustment' => [
+        'same_warehouse_same_product_not_allowed' => 'The same product cannot appear in both incoming and outgoing items when the warehouse is the same.',
+    ],
 
     /*
     |--------------------------------------------------------------------------

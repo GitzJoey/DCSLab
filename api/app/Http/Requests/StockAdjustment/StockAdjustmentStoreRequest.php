@@ -36,7 +36,7 @@ class StockAdjustmentStoreRequest extends FormRequest
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'category_id' => ['required', 'integer', new ExistsForCompany('stock_adjustment_categories', $this->company_id)],
             'in_warehouse_id' => ['present', 'nullable', 'integer', 'required_without:out_warehouse_id', new IsValidWarehouse($this->company_id, false)],
-            'out_warehouse_id' => ['present', 'nullable', 'integer', 'different:in_warehouse_id', 'required_without:in_warehouse_id', new IsValidWarehouse($this->company_id, false)],
+            'out_warehouse_id' => ['present', 'nullable', 'integer', 'required_without:in_warehouse_id', new IsValidWarehouse($this->company_id, false)],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
             'is_posted' => ['required', 'boolean'],
 
@@ -112,91 +112,154 @@ class StockAdjustmentStoreRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            // in_items
+            $hasInitialErrors = $validator->errors()->isNotEmpty();
+
             $inItems = $validator->getData()['in_items'] ?? [];
-            if ($validator->errors()->isNotEmpty() || ! is_array($inItems) || empty($inItems)) {
-                return;
-            }
+            $inItems = is_array($inItems) ? $inItems : [];
+            if (! $hasInitialErrors && is_array($inItems) && ! empty($inItems)) {
+                $inItemUnits = ProductUnit::with('product')
+                    ->whereIn('id', collect($inItems)->pluck('product_unit_id')->filter()->unique()->values()->all())
+                    ->get()
+                    ->keyBy('id');
 
-            $inItemUnits = ProductUnit::with('product')
-                ->whereIn('id', collect($inItems)->pluck('product_unit_id')->filter()->unique()->values()->all())
-                ->get()
-                ->keyBy('id');
-
-            foreach ($inItems as $i => $item) {
-                if (! is_array($item)) {
-                    continue;
-                }
-
-                $productUnitId = $item['product_unit_id'] ?? null;
-                if (empty($productUnitId)) {
-                    continue;
-                }
-
-                $product = $inItemUnits->get((int) $productUnitId)?->product;
-                if ($product?->is_use_serial_number) {
-                    $qty = $item['qty'] ?? null;
-                    $conversionValue = $item['product_unit_conversion_value'] ?? null;
-                    if (! is_numeric($qty) || ! is_numeric($conversionValue)) {
+                foreach ($inItems as $i => $item) {
+                    if (! is_array($item)) {
                         continue;
                     }
 
-                    $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
-                    $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
-                    if (str_contains($normalizedBaseQty, '.')) {
-                        $validator->errors()->add('in_items.'.$i.'.serials', trans('validation.stock_adjustment_in_item.base_qty_must_be_integer'));
-
+                    $productUnitId = $item['product_unit_id'] ?? null;
+                    if (empty($productUnitId)) {
                         continue;
                     }
 
-                    $serialCount = (string) count($item['serials'] ?? []);
-                    if (bccomp($serialCount, $baseQty, 8) !== 0) {
-                        $validator->errors()->add('in_items.'.$i.'.serials', trans('validation.stock_adjustment_in_item.serial_count_not_match_qty'));
+                    $product = $inItemUnits->get((int) $productUnitId)?->product;
+                    if ($product?->is_use_serial_number) {
+                        $qty = $item['qty'] ?? null;
+                        $conversionValue = $item['product_unit_conversion_value'] ?? null;
+                        if (! is_numeric($qty) || ! is_numeric($conversionValue)) {
+                            continue;
+                        }
+
+                        $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
+                        $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
+                        if (str_contains($normalizedBaseQty, '.')) {
+                            $validator->errors()->add('in_items.'.$i.'.serials', trans('validation.stock_adjustment_in_item.base_qty_must_be_integer'));
+
+                            continue;
+                        }
+
+                        $serialCount = (string) count($item['serials'] ?? []);
+                        if (bccomp($serialCount, $baseQty, 8) !== 0) {
+                            $validator->errors()->add('in_items.'.$i.'.serials', trans('validation.stock_adjustment_in_item.serial_count_not_match_qty'));
+                        }
                     }
                 }
             }
 
-            // out_items
             $outItems = $validator->getData()['out_items'] ?? [];
-            if (! is_array($outItems) || empty($outItems)) {
+            $outItems = is_array($outItems) ? $outItems : [];
+            if (! $hasInitialErrors && is_array($outItems) && ! empty($outItems)) {
+                $outItemUnits = ProductUnit::with('product')
+                    ->whereIn('id', collect($outItems)->pluck('product_unit_id')->filter()->unique()->values()->all())
+                    ->get()
+                    ->keyBy('id');
+
+                foreach ($outItems as $i => $item) {
+                    if (! is_array($item)) {
+                        continue;
+                    }
+
+                    $productUnitId = $item['product_unit_id'] ?? null;
+                    if (empty($productUnitId)) {
+                        continue;
+                    }
+
+                    $product = $outItemUnits->get((int) $productUnitId)?->product;
+                    if ($product?->is_use_serial_number) {
+                        $qty = $item['qty'] ?? null;
+                        $conversionValue = $item['product_unit_conversion_value'] ?? null;
+                        if (! is_numeric($qty) || ! is_numeric($conversionValue)) {
+                            continue;
+                        }
+
+                        $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
+                        $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
+                        if (str_contains($normalizedBaseQty, '.')) {
+                            $validator->errors()->add('out_items.'.$i.'.serials', trans('validation.stock_adjustment_out_item.base_qty_must_be_integer'));
+
+                            continue;
+                        }
+
+                        $serialCount = (string) count($item['serials'] ?? []);
+                        if (bccomp($serialCount, $baseQty, 8) !== 0) {
+                            $validator->errors()->add('out_items.'.$i.'.serials', trans('validation.stock_adjustment_out_item.serial_count_not_match_qty'));
+                        }
+                    }
+                }
+            }
+
+            $inWarehouseId = $validator->getData()['in_warehouse_id'] ?? null;
+            $outWarehouseId = $validator->getData()['out_warehouse_id'] ?? null;
+            if (
+                empty($inWarehouseId) || empty($outWarehouseId) ||
+                (int) $inWarehouseId !== (int) $outWarehouseId ||
+                empty($inItems) || empty($outItems)
+            ) {
                 return;
             }
 
-            $outItemUnits = ProductUnit::with('product')
-                ->whereIn('id', collect($outItems)->pluck('product_unit_id')->filter()->unique()->values()->all())
-                ->get()
-                ->keyBy('id');
+            $allProductUnitIds = collect($inItems)->pluck('product_unit_id')
+                ->concat(collect($outItems)->pluck('product_unit_id'))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
 
-            foreach ($outItems as $i => $item) {
-                if (! is_array($item)) {
-                    continue;
-                }
+            $productUnitProductIds = ProductUnit::whereIn('id', $allProductUnitIds)
+                ->pluck('product_id', 'id')
+                ->map(fn ($productId) => (int) $productId)
+                ->all();
 
+            $inProductIdsByIndex = [];
+            foreach ($inItems as $i => $item) {
                 $productUnitId = $item['product_unit_id'] ?? null;
-                if (empty($productUnitId)) {
+                if (empty($productUnitId) || ! isset($productUnitProductIds[$productUnitId])) {
                     continue;
                 }
 
-                $product = $outItemUnits->get((int) $productUnitId)?->product;
-                if ($product?->is_use_serial_number) {
-                    $qty = $item['qty'] ?? null;
-                    $conversionValue = $item['product_unit_conversion_value'] ?? null;
-                    if (! is_numeric($qty) || ! is_numeric($conversionValue)) {
-                        continue;
-                    }
+                $inProductIdsByIndex[$i] = $productUnitProductIds[$productUnitId];
+            }
 
-                    $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
-                    $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
-                    if (str_contains($normalizedBaseQty, '.')) {
-                        $validator->errors()->add('out_items.'.$i.'.serials', trans('validation.stock_adjustment_out_item.base_qty_must_be_integer'));
+            $outProductIdsByIndex = [];
+            foreach ($outItems as $i => $item) {
+                $productUnitId = $item['product_unit_id'] ?? null;
+                if (empty($productUnitId) || ! isset($productUnitProductIds[$productUnitId])) {
+                    continue;
+                }
 
-                        continue;
-                    }
+                $outProductIdsByIndex[$i] = $productUnitProductIds[$productUnitId];
+            }
 
-                    $serialCount = (string) count($item['serials'] ?? []);
-                    if (bccomp($serialCount, $baseQty, 8) !== 0) {
-                        $validator->errors()->add('out_items.'.$i.'.serials', trans('validation.stock_adjustment_out_item.serial_count_not_match_qty'));
-                    }
+            $duplicateProductIds = array_unique(array_intersect(
+                array_values($inProductIdsByIndex),
+                array_values($outProductIdsByIndex)
+            ));
+
+            foreach ($inProductIdsByIndex as $i => $productId) {
+                if (in_array($productId, $duplicateProductIds, true)) {
+                    $validator->errors()->add(
+                        'in_items.'.$i.'.product_unit_id',
+                        trans('validation.stock_adjustment.same_warehouse_same_product_not_allowed')
+                    );
+                }
+            }
+
+            foreach ($outProductIdsByIndex as $i => $productId) {
+                if (in_array($productId, $duplicateProductIds, true)) {
+                    $validator->errors()->add(
+                        'out_items.'.$i.'.product_unit_id',
+                        trans('validation.stock_adjustment.same_warehouse_same_product_not_allowed')
+                    );
                 }
             }
         });

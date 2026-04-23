@@ -34,15 +34,45 @@ return [
         'cannot_delete_with_children' => 'Expense category tidak boleh dihapus karena masih memiliki child category.',
         'must_not_have_children' => 'Expense category harus memilih category yang tidak memiliki child lagi.',
     ],
+    'income_category' => [
+        'parent_must_be_active' => 'Parent income category harus aktif.',
+        'cannot_delete_with_children' => 'Income category tidak boleh dihapus karena masih memiliki child category.',
+        'must_not_have_children' => 'Income category harus memilih category yang tidak memiliki child lagi.',
+    ],
     'expense' => [
         'amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
         'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',
         'invalid_payment_reference' => 'Data pembayaran expense tidak valid untuk expense ini.',
     ],
+    'income' => [
+        'amount_total_must_be_positive' => 'Jumlah diterima langsung atau jumlah piutang harus lebih dari nol.',
+        'payments_exceed_amount_receivable' => 'Total pembayaran piutang tidak boleh melebihi jumlah piutang.',
+        'invalid_payment_reference' => 'Data pembayaran pendapatan tidak valid untuk pendapatan ini.',
+    ],
     'prepaid_expense' => [
         'amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
         'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',
         'invalid_payment_reference' => 'Data pembayaran biaya dibayar dimuka tidak valid untuk transaksi ini.',
+    ],
+    'liability' => [
+        'amount_total_must_be_positive' => 'Jumlah pencairan atau jumlah hutang bawaan harus lebih dari nol.',
+        'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah hutang.',
+        'invalid_payment_reference' => 'Data pembayaran hutang tidak valid untuk transaksi ini.',
+        'party_must_be_single' => 'Pilih salah satu pihak saja, kreditur atau pemasok.',
+        'party_is_required' => 'Kreditur atau pemasok wajib dipilih.',
+        'cash_account_is_required_for_amount_received' => 'Akun kas wajib dipilih jika ada jumlah pencairan.',
+        'amount_received_is_required_for_cash_account' => 'Jumlah pencairan wajib lebih dari nol jika akun kas diisi.',
+    ],
+    'prepaid_income' => [
+        'amount_total_must_be_positive' => 'Jumlah diterima langsung atau jumlah piutang harus lebih dari nol.',
+        'payments_exceed_amount_receivable' => 'Total pembayaran piutang tidak boleh melebihi jumlah piutang.',
+        'invalid_payment_reference' => 'Data pembayaran pendapatan diterima dimuka tidak valid untuk transaksi ini.',
+    ],
+    'stock_adjustment' => [
+        'invalid_in_item_reference' => 'Data item barang masuk tidak valid untuk stock adjustment ini.',
+        'invalid_out_item_reference' => 'Data item barang keluar tidak valid untuk stock adjustment ini.',
+        'invalid_in_item_serial_reference' => 'Data serial barang masuk tidak valid untuk stock adjustment ini.',
+        'invalid_out_item_serial_reference' => 'Data serial barang keluar tidak valid untuk stock adjustment ini.',
     ],
     'product' => [
         'unit' => [

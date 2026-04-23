@@ -1,0 +1,56 @@
+{
+  "page_title": "Hutang",
+  "actions": {
+    "create": "Tambah Hutang",
+    "edit": "Ubah Hutang"
+  },
+  "table": {
+    "title": "Daftar Hutang"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "liability_data": "Data Hutang",
+    "payable_summary": "Ringkasan Saldo",
+    "payments": "Pembayaran"
+  },
+  "fields": {
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "category": "Kategori Hutang",
+    "party_type": "Tipe Pihak",
+    "party": "Pihak",
+    "creditor": "Kreditur",
+    "supplier": "Pemasok",
+    "cash_account": "Akun Kas",
+    "code": "Kode",
+    "date": "Tanggal",
+    "due_days": "Jatuh Tempo (Hari)",
+    "amount_received": "Jumlah Pencairan",
+    "amount_payable": "Hutang Bawaan",
+    "amount_total": "Total Hutang",
+    "amount_paid_by_cash_account": "Dibayar via Kas",
+    "amount_paid_by_stock_adjustment": "Dibayar via Penyesuaian Stok",
+    "amount_due": "Sisa Hutang",
+    "is_paid_off": "Status Hutang",
+    "remarks": "Catatan",
+    "payment_code": "Kode Pembayaran",
+    "payment_date": "Tanggal Pembayaran",
+    "payment_cash_account": "Akun Kas Pembayaran",
+    "payment_amount": "Nominal Pembayaran",
+    "payment_remarks": "Catatan Pembayaran"
+  },
+  "party_types": {
+    "creditor": "Kreditur",
+    "supplier": "Pemasok"
+  },
+  "status": {
+    "paid_off": "Lunas",
+    "not_paid_off": "Belum Lunas"
+  },
+  "alert": {
+    "delete_liability": {
+      "title": "Berhasil Menghapus Hutang",
+      "content": "Hutang telah dihapus."
+    }
+  }
+}

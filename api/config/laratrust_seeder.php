@@ -46,6 +46,9 @@ return [
             'customer_address' => 'c,r,ra,u,d',
             'customer' => 'c,r,ra,u,d',
             'expense_category' => 'c,r,ra,u,d',
+            'income_category' => 'c,r,ra,u,d',
+            'liability_category' => 'c,r,ra,u,d',
+            'liability_creditor' => 'c,r,ra,u,d',
             'stock_adjustment_category' => 'c,r,ra,u,d',
 
             'capital_opening' => 'c,r,ra,u,d',
@@ -54,6 +57,12 @@ return [
             'expense_payment' => 'c,r,ra,u,d',
             'prepaid_expense' => 'c,r,ra,u,d',
             'prepaid_expense_payment' => 'c,r,ra,u,d',
+            'liability' => 'c,r,ra,u,d',
+            'liability_payment' => 'c,r,ra,u,d',
+            'income' => 'c,r,ra,u,d',
+            'income_payment' => 'c,r,ra,u,d',
+            'prepaid_income' => 'c,r,ra,u,d',
+            'prepaid_income_payment' => 'c,r,ra,u,d',
             'cash_transfer' => 'c,r,ra,u,d',
 
             'stock_adjustment' => 'c,r,ra,u,d',

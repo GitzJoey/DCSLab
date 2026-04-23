@@ -183,6 +183,9 @@ return [
         'base_qty_must_be_integer' => 'Qty x nilai konversi satuan produk serial harus menghasilkan bilangan bulat.',
         'serial_count_not_match_qty' => 'Jumlah serial harus sama dengan qty x nilai konversi satuan produk.',
     ],
+    'stock_adjustment' => [
+        'same_warehouse_same_product_not_allowed' => 'Produk yang sama tidak boleh muncul di barang masuk dan barang keluar ketika gudangnya sama.',
+    ],
 
     /*
     |--------------------------------------------------------------------------

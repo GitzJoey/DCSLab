@@ -8,6 +8,7 @@ use App\DTOs\CapitalOpeningUpdateDTO;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\CapitalOpening;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -142,6 +143,17 @@ class CapitalOpeningActions
         return $capitalOpening->load(self::LIST_EAGER_LOADS);
     }
 
+    public function generateDate(string $date): string
+    {
+        if ($date == config('dcslab.KEYWORDS.AUTO')) {
+            $nowLocal = now(TimezoneHelper::getUserTimezone())->toDateTimeString();
+
+            return TimezoneHelper::convertToUTC($nowLocal);
+        }
+
+        return TimezoneHelper::convertToUTC($date);
+    }
+
     public function create(CapitalOpeningCreateDTO $data): CapitalOpening
     {
         $timer_start = microtime(true);
@@ -151,7 +163,7 @@ class CapitalOpeningActions
             $capitalOpening->company_id = $data->companyId;
             $capitalOpening->branch_id = $data->branchId;
             $capitalOpening->code = $this->generateUniqueCode($data->companyId, $data->code, null);
-            $capitalOpening->date = $data->date;
+            $capitalOpening->date = $this->generateDate($data->date);
             $capitalOpening->investor_id = $data->investorId;
             $capitalOpening->cash_account_id = $data->cashAccountId;
             $capitalOpening->amount = $data->amount;
@@ -180,7 +192,7 @@ class CapitalOpeningActions
 
         try {
             $capitalOpening->code = $this->generateUniqueCode($capitalOpening->company_id, $data->code, $capitalOpening->id);
-            $capitalOpening->date = $data->date;
+            $capitalOpening->date = $this->generateDate($data->date);
             $capitalOpening->investor_id = $data->investorId;
             $capitalOpening->cash_account_id = $data->cashAccountId;
             $capitalOpening->amount = $data->amount;

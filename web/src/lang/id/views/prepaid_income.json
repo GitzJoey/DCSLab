@@ -1,0 +1,54 @@
+{
+  "page_title": "Pendapatan Diterima Dimuka",
+  "actions": {
+    "create": "Tambah Pendapatan Diterima Dimuka",
+    "edit": "Ubah Pendapatan Diterima Dimuka"
+  },
+  "table": {
+    "title": "Daftar Pendapatan Diterima Dimuka"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "prepaid_income_data": "Data Pendapatan Diterima Dimuka",
+    "receivable_summary": "Ringkasan Piutang",
+    "payments": "Pembayaran",
+    "images": "Gambar"
+  },
+  "fields": {
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "category": "Kategori",
+    "code": "Kode",
+    "date": "Tanggal",
+    "estimated_useful_life": "Taksiran Masa Manfaat",
+    "due_days": "Jatuh Tempo (Hari)",
+    "paid_immediately_cash_account": "Akun Kas Bayar Langsung",
+    "amount_paid_immediately": "Jumlah Diterima Langsung",
+    "amount_receivable": "Jumlah Piutang",
+    "amount_receivable_paid": "Piutang Sudah Diterima",
+    "amount_receivable_due": "Sisa Piutang",
+    "is_amount_receivable_paid_off": "Status Lunas",
+    "amount_total": "Jumlah Total",
+    "remarks": "Catatan",
+    "images": "Gambar"
+  },
+  "hints": {
+    "estimated_useful_life": "Isi dalam satuan bulan."
+  },
+  "units": {
+    "month": "bulan",
+    "months": "bulan",
+    "year": "tahun",
+    "years": "tahun"
+  },
+  "status": {
+    "paid_off": "Lunas",
+    "not_paid_off": "Belum Lunas"
+  },
+  "alert": {
+    "delete_prepaid_income": {
+      "title": "Berhasil Menghapus Pendapatan Diterima Dimuka",
+      "content": "Pendapatan diterima dimuka telah dihapus."
+    }
+  }
+}

@@ -8,8 +8,14 @@ use App\Models\CapitalTransaction;
 use App\Models\CashTransfer;
 use App\Models\Expense;
 use App\Models\ExpensePayment;
+use App\Models\Income;
+use App\Models\IncomePayment;
+use App\Models\Liability;
+use App\Models\LiabilityPayment;
 use App\Models\PrepaidExpense;
 use App\Models\PrepaidExpensePayment;
+use App\Models\PrepaidIncome;
+use App\Models\PrepaidIncomePayment;
 use App\Models\PurchaseAdditionalCost;
 use App\Models\PurchaseAdditionalCostPayment;
 use App\Models\PurchaseOrderDownPayment;
@@ -95,6 +101,50 @@ final class CashTransactionUpdateDTO
         );
     }
 
+    public static function fromIncome(Income $income): self
+    {
+        return new self(
+            referableType: Income::class,
+            referableId: $income->id,
+            date: $income->date,
+            cashAccountId: $income->paid_immediately_cash_account_id,
+            amount: (float) $income->amount_paid_immediately,
+        );
+    }
+
+    public static function fromIncomePayment(IncomePayment $incomePayment): self
+    {
+        return new self(
+            referableType: IncomePayment::class,
+            referableId: $incomePayment->id,
+            date: $incomePayment->date,
+            cashAccountId: $incomePayment->cash_account_id,
+            amount: (float) $incomePayment->amount,
+        );
+    }
+
+    public static function fromPrepaidIncome(PrepaidIncome $prepaidIncome): self
+    {
+        return new self(
+            referableType: PrepaidIncome::class,
+            referableId: $prepaidIncome->id,
+            date: $prepaidIncome->date,
+            cashAccountId: $prepaidIncome->paid_immediately_cash_account_id,
+            amount: (float) $prepaidIncome->amount_paid_immediately,
+        );
+    }
+
+    public static function fromPrepaidIncomePayment(PrepaidIncomePayment $prepaidIncomePayment): self
+    {
+        return new self(
+            referableType: PrepaidIncomePayment::class,
+            referableId: $prepaidIncomePayment->id,
+            date: $prepaidIncomePayment->date,
+            cashAccountId: $prepaidIncomePayment->cash_account_id,
+            amount: (float) $prepaidIncomePayment->amount,
+        );
+    }
+
     public static function fromCashTransferSource(CashTransfer $cashTransfer): self
     {
         return new self(
@@ -114,6 +164,28 @@ final class CashTransactionUpdateDTO
             date: $cashTransfer->date,
             cashAccountId: $cashTransfer->destination_cash_account_id,
             amount: (float) $cashTransfer->amount,
+        );
+    }
+
+    public static function fromLiability(Liability $liability): self
+    {
+        return new self(
+            referableType: Liability::class,
+            referableId: $liability->id,
+            date: $liability->date,
+            cashAccountId: $liability->cash_account_id,
+            amount: (float) $liability->amount_received,
+        );
+    }
+
+    public static function fromLiabilityPayment(LiabilityPayment $liabilityPayment): self
+    {
+        return new self(
+            referableType: LiabilityPayment::class,
+            referableId: $liabilityPayment->id,
+            date: $liabilityPayment->date,
+            cashAccountId: $liabilityPayment->cash_account_id,
+            amount: ((float) $liabilityPayment->amount * -1),
         );
     }
 

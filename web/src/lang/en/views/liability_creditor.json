@@ -1,0 +1,25 @@
+{
+  "page_title": "Creditor",
+  "actions": {
+    "create": "Create Creditor",
+    "edit": "Edit Creditor"
+  },
+  "table": {
+    "title": "Creditor List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "liability_creditor_data": "Creditor Data"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name",
+    "remarks": "Remarks"
+  },
+  "alert": {
+    "delete_liability_creditor": {
+      "title": "Successfully Deleted Creditor",
+      "content": "Creditor has been deleted."
+    }
+  }
+}

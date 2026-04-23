@@ -1,0 +1,54 @@
+{
+  "page_title": "Prepaid Income",
+  "actions": {
+    "create": "Create Prepaid Income",
+    "edit": "Edit Prepaid Income"
+  },
+  "table": {
+    "title": "Prepaid Income List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "prepaid_income_data": "Prepaid Income Data",
+    "receivable_summary": "Receivable Summary",
+    "payments": "Payments",
+    "images": "Images"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "category": "Category",
+    "code": "Code",
+    "date": "Date",
+    "estimated_useful_life": "Estimated Useful Life",
+    "due_days": "Due Days",
+    "paid_immediately_cash_account": "Paid Immediately Cash Account",
+    "amount_paid_immediately": "Amount Paid Immediately",
+    "amount_receivable": "Amount Receivable",
+    "amount_receivable_paid": "Amount Receivable Collected",
+    "amount_receivable_due": "Amount Receivable Due",
+    "is_amount_receivable_paid_off": "Paid Off Status",
+    "amount_total": "Amount Total",
+    "remarks": "Remarks",
+    "images": "Images"
+  },
+  "hints": {
+    "estimated_useful_life": "Enter the value in months."
+  },
+  "units": {
+    "month": "month",
+    "months": "months",
+    "year": "year",
+    "years": "years"
+  },
+  "status": {
+    "paid_off": "Paid Off",
+    "not_paid_off": "Not Paid Off"
+  },
+  "alert": {
+    "delete_prepaid_income": {
+      "title": "Successfully Deleted Prepaid Income",
+      "content": "Prepaid income has been deleted."
+    }
+  }
+}

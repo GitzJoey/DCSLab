@@ -34,9 +34,16 @@ import cash_transfer from './en/views/cash_transfer.json';
 import expense from './en/views/expense.json';
 import prepaid_expense from './en/views/prepaid_expense.json';
 import expense_payment from './en/views/expense_payment.json';
+import liability from './en/views/liability.json';
+import income from './en/views/income.json';
+import prepaid_income from './en/views/prepaid_income.json';
+import income_payment from './en/views/income_payment.json';
 import purchase_additional_cost from './en/views/purchase_additional_cost.json';
 import purchase_additional_cost_payment from './en/views/purchase_additional_cost_payment.json';
 import expense_category from './en/views/expense_category.json';
+import liability_category from './en/views/liability_category.json';
+import liability_creditor from './en/views/liability_creditor.json';
+import income_category from './en/views/income_category.json';
 import product_service from './en/views/product_service.json';
 import product from './en/views/product.json';
 import supplier from './en/views/supplier.json';
@@ -97,9 +104,16 @@ export default {
     expense: expense,
     prepaid_expense: prepaid_expense,
     expense_payment: expense_payment,
+    liability: liability,
+    income: income,
+    prepaid_income: prepaid_income,
+    income_payment: income_payment,
     purchase_additional_cost: purchase_additional_cost,
     purchase_additional_cost_payment: purchase_additional_cost_payment,
     expense_category: expense_category,
+    liability_category: liability_category,
+    liability_creditor: liability_creditor,
+    income_category: income_category,
     stock_adjustment_category: stock_adjustment_category,
     stock_adjustment: stock_adjustment,
     stock_adjustment_in_item: stock_adjustment_in_item,
