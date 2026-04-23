@@ -6,6 +6,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CapitalOpeningController;
 use App\Http\Controllers\CapitalTransactionController;
 use App\Http\Controllers\CashAccountController;
+use App\Http\Controllers\CashTransferController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
@@ -16,6 +17,9 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExpenseImageController;
 use App\Http\Controllers\ExpensePaymentController;
 use App\Http\Controllers\InvestorController;
+use App\Http\Controllers\PrepaidExpenseController;
+use App\Http\Controllers\PrepaidExpenseImageController;
+use App\Http\Controllers\PrepaidExpensePaymentController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductImageController;
@@ -320,6 +324,46 @@ Route::prefix('expense_payment')->middleware('auth:sanctum')->group(function () 
         Route::post('save', [ExpensePaymentController::class, 'store'])->name('save');
         Route::post('edit/{expense_payment:ulid}', [ExpensePaymentController::class, 'update'])->name('edit');
         Route::post('delete/{expense_payment:ulid}', [ExpensePaymentController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('prepaid_expense')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.prepaid_expense.')->group(function () {
+        Route::get('read', [PrepaidExpenseController::class, 'readAny'])->name('read_any');
+        Route::get('read/{prepaid_expense:ulid}', [PrepaidExpenseController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.prepaid_expense.')->group(function () {
+        Route::post('save', [PrepaidExpenseController::class, 'store'])->name('save');
+        Route::post('edit/{prepaid_expense:ulid}', [PrepaidExpenseController::class, 'update'])->name('edit');
+        Route::post('delete/{prepaid_expense:ulid}', [PrepaidExpenseController::class, 'delete'])->name('delete');
+        Route::post('image/upload', [PrepaidExpenseImageController::class, 'upload'])->name('image.upload');
+    });
+});
+
+Route::prefix('prepaid_expense_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.prepaid_expense_payment.')->group(function () {
+        Route::get('read', [PrepaidExpensePaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{prepaid_expense_payment:ulid}', [PrepaidExpensePaymentController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.prepaid_expense_payment.')->group(function () {
+        Route::post('save', [PrepaidExpensePaymentController::class, 'store'])->name('save');
+        Route::post('edit/{prepaid_expense_payment:ulid}', [PrepaidExpensePaymentController::class, 'update'])->name('edit');
+        Route::post('delete/{prepaid_expense_payment:ulid}', [PrepaidExpensePaymentController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('cash_transfer')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.cash_transfer.')->group(function () {
+        Route::get('read', [CashTransferController::class, 'readAny'])->name('read_any');
+        Route::get('read/{cash_transfer:ulid}', [CashTransferController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.cash_transfer.')->group(function () {
+        Route::post('save', [CashTransferController::class, 'store'])->name('save');
+        Route::post('edit/{cash_transfer:ulid}', [CashTransferController::class, 'update'])->name('edit');
+        Route::post('delete/{cash_transfer:ulid}', [CashTransferController::class, 'delete'])->name('delete');
     });
 });
 

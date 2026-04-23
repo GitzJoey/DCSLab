@@ -46,10 +46,18 @@ import CapitalTransactionIndex from '@/pages/capital-transaction/CapitalTransact
 import CapitalTransactionList from '@/pages/capital-transaction/CapitalTransactionList.vue';
 import CapitalTransactionCreate from '@/pages/capital-transaction/CapitalTransactionCreate.vue';
 import CapitalTransactionEdit from '@/pages/capital-transaction/CapitalTransactionEdit.vue';
+import CashTransferIndex from '@/pages/cash-transfer/CashTransferIndex.vue';
+import CashTransferList from '@/pages/cash-transfer/CashTransferList.vue';
+import CashTransferCreate from '@/pages/cash-transfer/CashTransferCreate.vue';
+import CashTransferEdit from '@/pages/cash-transfer/CashTransferEdit.vue';
 import ExpenseIndex from '@/pages/expense/ExpenseIndex.vue';
 import ExpenseList from '@/pages/expense/ExpenseList.vue';
 import ExpenseCreate from '@/pages/expense/ExpenseCreate.vue';
 import ExpenseEdit from '@/pages/expense/ExpenseEdit.vue';
+import PrepaidExpenseIndex from '@/pages/prepaid-expense/PrepaidExpenseIndex.vue';
+import PrepaidExpenseList from '@/pages/prepaid-expense/PrepaidExpenseList.vue';
+import PrepaidExpenseCreate from '@/pages/prepaid-expense/PrepaidExpenseCreate.vue';
+import PrepaidExpenseEdit from '@/pages/prepaid-expense/PrepaidExpenseEdit.vue';
 import ExpensePaymentIndex from '@/pages/expense-payment/ExpensePaymentIndex.vue';
 import ExpensePaymentList from '@/pages/expense-payment/ExpensePaymentList.vue';
 import ExpensePaymentCreate from '@/pages/expense-payment/ExpensePaymentCreate.vue';
@@ -1060,6 +1068,39 @@ export default [
               },
             ],
           },
+          // Cash Account Transfer
+          {
+            path: '/dashboard/finance/cash-transfer',
+            name: 'side-menu-finance-cash-transfer',
+            redirect: '/dashboard/finance/cash-transfer/list',
+            component: CashTransferIndex,
+            children: [
+              {
+                path: '/dashboard/finance/cash-transfer/list',
+                name: 'side-menu-finance-cash-transfer-list',
+                component: CashTransferList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/finance/cash-transfer/create',
+                name: 'side-menu-finance-cash-transfer-create',
+                component: CashTransferCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/finance/cash-transfer/edit/:ulid',
+                name: 'side-menu-finance-cash-transfer-edit',
+                component: CashTransferEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
           // Expense
           {
             path: '/dashboard/expense',
@@ -1087,6 +1128,39 @@ export default [
                 path: '/dashboard/expense/edit/:ulid',
                 name: 'side-menu-expense-edit',
                 component: ExpenseEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Prepaid Expense
+          {
+            path: '/dashboard/prepaid-expense',
+            name: 'side-menu-prepaid-expense',
+            redirect: '/dashboard/prepaid-expense/list',
+            component: PrepaidExpenseIndex,
+            children: [
+              {
+                path: '/dashboard/prepaid-expense/list',
+                name: 'side-menu-prepaid-expense-list',
+                component: PrepaidExpenseList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/prepaid-expense/create',
+                name: 'side-menu-prepaid-expense-create',
+                component: PrepaidExpenseCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/prepaid-expense/edit/:ulid',
+                name: 'side-menu-prepaid-expense-edit',
+                component: PrepaidExpenseEdit,
                 meta: {
                   remember: true,
                 },

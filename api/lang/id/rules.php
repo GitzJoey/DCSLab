@@ -39,6 +39,11 @@ return [
         'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',
         'invalid_payment_reference' => 'Data pembayaran expense tidak valid untuk expense ini.',
     ],
+    'prepaid_expense' => [
+        'amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
+        'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',
+        'invalid_payment_reference' => 'Data pembayaran biaya dibayar dimuka tidak valid untuk transaksi ini.',
+    ],
     'product' => [
         'unit' => [
             'duplicate_conversion' => 'Dalam satu produk, conversion value tidak boleh duplikat.',

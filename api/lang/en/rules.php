@@ -39,6 +39,11 @@ return [
         'payments_exceed_amount_payable' => 'Total payable payments must not exceed the payable amount.',
         'invalid_payment_reference' => 'Expense payment data is invalid for this expense.',
     ],
+    'prepaid_expense' => [
+        'amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
+        'payments_exceed_amount_payable' => 'Total payable payments must not exceed the payable amount.',
+        'invalid_payment_reference' => 'Prepaid expense payment data is invalid for this prepaid expense.',
+    ],
     'product' => [
         'unit' => [
             'duplicate_conversion' => 'Within one product, conversion values must be unique.',

@@ -32,6 +32,15 @@ import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertP
 import type { ExpenseCategory } from '@/types/models/ExpenseCategory';
 import type { CashAccount } from '@/types/models/CashAccount';
 
+type ExpensePaymentFormItem = {
+  id?: string | null;
+  code: string;
+  date: string;
+  cash_account_id: string;
+  amount: number;
+  remarks: string;
+};
+
 const { t } = useI18n();
 const router = useRouter();
 const selectedUserLocationStore = useSelectedUserLocationStore();
@@ -53,6 +62,10 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   },
   {
     title: 'views.expense.field_groups.expense_data',
+    state: CardState.Expanded,
+  },
+  {
+    title: 'views.expense.field_groups.payments',
     state: CardState.Expanded,
   },
   {
@@ -85,6 +98,21 @@ const paidImmediatelyCashAccountOptions = computed(() =>
 const amountTotalPreview = computed(() =>
   Number(expenseForm.amount_paid_immediately ?? 0) + Number(expenseForm.amount_payable ?? 0),
 );
+const expensePaymentsForm = computed<ExpensePaymentFormItem[]>(
+  () => expenseForm.payments as ExpensePaymentFormItem[],
+);
+const paymentCashAccountSearch = ref<string>('');
+const invalidExpenseField = (field: string) => expenseForm.invalid(field as any);
+const validateExpenseField = (field: string) => expenseForm.validate(field as any);
+const getExpenseFieldErrors = (field: string): string | undefined => {
+  const errors = (expenseForm.errors as Record<string, string | string[] | undefined>)[field];
+
+  if (Array.isArray(errors)) {
+    return errors.join(' ');
+  }
+
+  return errors;
+};
 
 onMounted(async () => {
   emits('mode-state', ViewMode.FORM_CREATE);
@@ -212,6 +240,39 @@ const handleAmountChange = (field: 'amount_paid_immediately' | 'amount_payable')
   expenseForm.validate(field);
 };
 
+const setPaymentCode = (index: number) => {
+  expenseForm.forgetError(`payments.${index}.code` as any);
+  expensePaymentsForm.value[index].code = expensePaymentsForm.value[index].code === '_AUTO_' ? '' : '_AUTO_';
+};
+
+const clearPaymentCashAccount = (index: number) => {
+  const payment = expensePaymentsForm.value[index];
+  if (!payment) return;
+
+  payment.cash_account_id = '';
+  validateExpenseField(`payments.${index}.cash_account_id`);
+};
+
+const addPayment = () => {
+  expensePaymentsForm.value.push({
+    code: '_AUTO_',
+    date: '_AUTO_',
+    cash_account_id: '',
+    amount: 0,
+    remarks: '',
+  });
+};
+
+const removePayment = (index: number) => {
+  expensePaymentsForm.value.splice(index, 1);
+
+  Object.keys(expenseForm.errors).forEach((key) => {
+    if (key === 'payments' || key.startsWith('payments.')) {
+      expenseForm.forgetError(key as any);
+    }
+  });
+};
+
 const onSubmit = async () => {
   if (expenseForm.hasErrors) {
     const firstErrorKey = Object.keys(expenseForm.errors)[0];
@@ -248,6 +309,7 @@ const resetForm = () => {
   setLocationData();
   categorySearch.value = '';
   paidImmediatelyCashAccountSearch.value = '';
+  paymentCashAccountSearch.value = '';
 };
 
 const showAlertPlaceholder = (
@@ -437,6 +499,121 @@ watch(
       </template>
 
       <template #card-items-2>
+        <div class="p-5 space-y-4">
+          <FormErrorMessages :messages="(expenseForm.errors as any).payments" />
+
+          <div v-if="expensePaymentsForm.length === 0" class="text-right text-slate-500 text-sm">
+            {{ t('components.data-list.data_not_found') }}
+          </div>
+
+          <div v-else class="space-y-4">
+            <div v-for="(payment, index) in expensePaymentsForm" :key="`expense-payment-${index}`" class="space-y-3">
+              <div class="grid grid-cols-12 gap-4 gap-y-3">
+                <div class="col-span-12 md:col-span-4 lg:col-span-2">
+                  <FormLabel :class="{ 'text-danger': invalidExpenseField(`payments.${index}.code`) }">
+                    {{ t('views.expense.fields.code') }}
+                  </FormLabel>
+                  <FormInputCode
+                    :id="`payments.${index}.code`"
+                    v-model="payment.code"
+                    :class="{ 'border-danger': invalidExpenseField(`payments.${index}.code`) }"
+                    :placeholder="t('views.expense.fields.code')"
+                    @set-auto="setPaymentCode(index)"
+                    @change="validateExpenseField(`payments.${index}.code`)"
+                  />
+                  <FormErrorMessages :messages="getExpenseFieldErrors(`payments.${index}.code`)" />
+                </div>
+
+                <div class="col-span-12 md:col-span-8 lg:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidExpenseField(`payments.${index}.date`) }">
+                    {{ t('views.expense.fields.date') }}
+                  </FormLabel>
+                  <FormInputDateTimeAuto
+                    :id="`payments.${index}.date`"
+                    v-model="payment.date"
+                    :class="{ 'border-danger': invalidExpenseField(`payments.${index}.date`) }"
+                    :placeholder="t('views.expense.fields.date')"
+                    @change="validateExpenseField(`payments.${index}.date`)"
+                  />
+                  <FormErrorMessages :messages="getExpenseFieldErrors(`payments.${index}.date`)" />
+                </div>
+
+                <div class="col-span-12 lg:col-span-4">
+                  <FormLabel :class="{ 'text-danger': invalidExpenseField(`payments.${index}.cash_account_id`) }">
+                    {{ t('views.expense_payment.fields.cash_account') }}
+                  </FormLabel>
+                  <FormSelectSearch
+                    :id="`payments.${index}.cash_account_id`"
+                    v-model="payment.cash_account_id"
+                    v-model:search="paymentCashAccountSearch"
+                    :options="paidImmediatelyCashAccountOptions"
+                    :placeholder="t('components.dropdown.placeholder')"
+                    :class="{ 'border-danger': invalidExpenseField(`payments.${index}.cash_account_id`) }"
+                    @change="validateExpenseField(`payments.${index}.cash_account_id`)"
+                    @search="loadPaidImmediatelyCashAccountDDL"
+                    @clear="clearPaymentCashAccount(index)"
+                  />
+                  <FormErrorMessages :messages="getExpenseFieldErrors(`payments.${index}.cash_account_id`)" />
+                </div>
+
+                <div class="col-span-12 md:col-span-8 lg:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidExpenseField(`payments.${index}.amount`) }">
+                    {{ t('views.expense_payment.fields.amount') }}
+                  </FormLabel>
+                  <div class="flex items-start gap-2">
+                    <div class="flex-1 min-w-0">
+                      <FormInputCurrency
+                        :id="`payments.${index}.amount`"
+                        v-model="payment.amount"
+                        :allow-negative="false"
+                        :class="{ 'border-danger': invalidExpenseField(`payments.${index}.amount`) }"
+                        @change="validateExpenseField(`payments.${index}.amount`)"
+                      />
+                    </div>
+                    <div class="shrink-0">
+                      <Button
+                        type="button"
+                        variant="outline-secondary"
+                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
+                        @click="removePayment(index)"
+                      >
+                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                      </Button>
+                    </div>
+                  </div>
+                  <FormErrorMessages :messages="getExpenseFieldErrors(`payments.${index}.amount`)" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-12 gap-4 gap-y-3">
+                <div class="col-span-12">
+                  <FormLabel :class="{ 'text-danger': invalidExpenseField(`payments.${index}.remarks`) }">
+                    {{ t('views.expense.fields.remarks') }}
+                  </FormLabel>
+                  <FormTextarea
+                    :id="`payments.${index}.remarks`"
+                    v-model="payment.remarks"
+                    rows="2"
+                    :class="{ 'border-danger': invalidExpenseField(`payments.${index}.remarks`) }"
+                    :placeholder="t('views.expense.fields.remarks')"
+                    @change="validateExpenseField(`payments.${index}.remarks`)"
+                  />
+                  <FormErrorMessages :messages="getExpenseFieldErrors(`payments.${index}.remarks`)" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <Button type="button" variant="outline-primary" @click="addPayment">
+              <Lucide icon="Plus" class="w-4 h-4 mr-1" />
+              {{ t('components.buttons.create_new') }}
+            </Button>
+          </div>
+        </div>
+      </template>
+
+      <template #card-items-3>
         <div class="p-5">
           <FormLabel>
             {{ t('views.expense.fields.images') }}

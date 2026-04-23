@@ -1,0 +1,44 @@
+{
+  "page_title": "Biaya Dibayar Dimuka",
+  "actions": {
+    "create": "Tambah Biaya Dibayar Dimuka",
+    "edit": "Ubah Biaya Dibayar Dimuka"
+  },
+  "table": {
+    "title": "Daftar Biaya Dibayar Dimuka"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "prepaid_expense_data": "Data Biaya Dibayar Dimuka",
+    "payments": "Pembayaran",
+    "images": "Gambar"
+  },
+  "fields": {
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "category": "Kategori",
+    "code": "Kode",
+    "date": "Tanggal",
+    "estimated_useful_life": "Taksiran Masa Manfaat",
+    "due_days": "Jatuh Tempo (Hari)",
+    "paid_immediately_cash_account": "Akun Kas Bayar Langsung",
+    "amount_paid_immediately": "Jumlah Bayar Langsung",
+    "amount_payable": "Jumlah Terhutang",
+    "amount_payable_paid": "Terhutang Sudah Dibayar",
+    "amount_payable_due": "Sisa Hutang",
+    "is_amount_payable_paid_off": "Status Lunas",
+    "amount_total": "Jumlah Total",
+    "remarks": "Catatan",
+    "images": "Gambar"
+  },
+  "status": {
+    "paid_off": "Lunas",
+    "not_paid_off": "Belum Lunas"
+  },
+  "alert": {
+    "delete_prepaid_expense": {
+      "title": "Berhasil Menghapus Biaya Dibayar Dimuka",
+      "content": "Biaya dibayar dimuka telah dihapus."
+    }
+  }
+}

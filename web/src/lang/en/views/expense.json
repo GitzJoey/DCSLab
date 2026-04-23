@@ -10,6 +10,7 @@
   "field_groups": {
     "company_info": "Company Info",
     "expense_data": "Expense Data",
+    "payments": "Payments",
     "images": "Images"
   },
   "fields": {

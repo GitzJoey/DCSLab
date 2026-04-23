@@ -300,10 +300,22 @@ class DashboardActions
             'title' => 'components.menu.capital-transaction',
         ];
 
+        $cashTransfer = [
+            'icon' => 'Repeat',
+            'pageName' => 'side-menu-finance-cash-transfer',
+            'title' => 'components.menu.cash-transfer',
+        ];
+
         $expense = [
             'icon' => 'WalletCards',
             'pageName' => 'side-menu-expense',
             'title' => 'components.menu.expense',
+        ];
+
+        $prepaidExpense = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-prepaid-expense',
+            'title' => 'components.menu.prepaid-expense',
         ];
 
         $stockTransfer = [
@@ -316,7 +328,9 @@ class DashboardActions
             $root_array['subMenu'],
             $capitalOpening,
             $capitalTransaction,
+            $cashTransfer,
             $expense,
+            $prepaidExpense,
             $stockAdjustment,
             $purchaseOrder,
             $purchaseAdditionalCost,
