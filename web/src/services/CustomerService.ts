@@ -23,7 +23,7 @@ export default class CustomerService {
   }
 
   public useCustomerCreateForm() {
-    const url = route('api.post.db.customer.customer.save', undefined, true, this.ziggyRoute);
+    const url = route('api.post.customer.save', undefined, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -70,7 +70,7 @@ export default class CustomerService {
       };
 
       const url = route(
-        'api.get.db.customer.customer.read_any',
+        'api.get.customer.read_any',
         {
           _query: queryParams,
         },
@@ -116,7 +116,7 @@ export default class CustomerService {
       };
 
       const url = route(
-        'api.get.db.customer.customer.read_any',
+        'api.get.customer.read_any',
         {
           _query: queryParams,
         },
@@ -150,7 +150,7 @@ export default class CustomerService {
 
     try {
       const url = route(
-        'api.get.db.customer.customer.read',
+        'api.get.customer.read',
         {
           customer: ulid,
         },
@@ -178,7 +178,7 @@ export default class CustomerService {
   }
 
   public useCustomerEditForm(ulid: string) {
-    const url = route('api.post.db.customer.customer.edit', ulid, true, this.ziggyRoute);
+    const url = route('api.post.customer.edit', { customer: ulid }, true, this.ziggyRoute);
 
     client.axios().defaults.withCredentials = true;
     client.axios().defaults.withXSRFToken = true;
@@ -210,7 +210,7 @@ export default class CustomerService {
 
     try {
       const url = route(
-        'api.post.db.customer.customer.delete',
+        'api.post.customer.delete',
         {
           customer: ulid,
         },
