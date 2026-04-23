@@ -50,6 +50,8 @@ return [
 
             'capital_opening' => 'c,r,ra,u,d',
             'capital_transaction' => 'c,r,ra,u,d',
+            'expense' => 'c,r,ra,u,d',
+            'expense_payment' => 'c,r,ra,u,d',
 
             'stock_adjustment' => 'c,r,ra,u,d',
             'stock_adjustment_in_item' => 'c,r,ra,u,d',

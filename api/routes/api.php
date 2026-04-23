@@ -12,6 +12,9 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerGroupController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExpenseImageController;
+use App\Http\Controllers\ExpensePaymentController;
 use App\Http\Controllers\InvestorController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -290,6 +293,33 @@ Route::prefix('capital_transaction')->middleware('auth:sanctum')->group(function
         Route::post('save', [CapitalTransactionController::class, 'store'])->name('save');
         Route::post('edit/{capital_transaction:ulid}', [CapitalTransactionController::class, 'update'])->name('edit');
         Route::post('delete/{capital_transaction:ulid}', [CapitalTransactionController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('expense')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.expense.')->group(function () {
+        Route::get('read', [ExpenseController::class, 'readAny'])->name('read_any');
+        Route::get('read/{expense:ulid}', [ExpenseController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.expense.')->group(function () {
+        Route::post('save', [ExpenseController::class, 'store'])->name('save');
+        Route::post('edit/{expense:ulid}', [ExpenseController::class, 'update'])->name('edit');
+        Route::post('delete/{expense:ulid}', [ExpenseController::class, 'delete'])->name('delete');
+        Route::post('image/upload', [ExpenseImageController::class, 'upload'])->name('image.upload');
+    });
+});
+
+Route::prefix('expense_payment')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.expense_payment.')->group(function () {
+        Route::get('read', [ExpensePaymentController::class, 'readAny'])->name('read_any');
+        Route::get('read/{expense_payment:ulid}', [ExpensePaymentController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.expense_payment.')->group(function () {
+        Route::post('save', [ExpensePaymentController::class, 'store'])->name('save');
+        Route::post('edit/{expense_payment:ulid}', [ExpensePaymentController::class, 'update'])->name('edit');
+        Route::post('delete/{expense_payment:ulid}', [ExpensePaymentController::class, 'delete'])->name('delete');
     });
 });
 

@@ -27,6 +27,8 @@
   "transaction": "Transaksi",
   "capital-opening": "Saldo Awal Modal",
   "capital-transaction": "Transaksi Modal",
+  "expense": "Biaya",
+  "expense-payment": "Pembayaran Biaya",
   "stock-adjustment": "Penyesuaian Stok",
   "stock-adjustment-in-item": "Penyesuaian Stok Masuk per Item",
   "stock-adjustment-in-item-serial": "Serial Penyesuaian Stok Masuk per Item",

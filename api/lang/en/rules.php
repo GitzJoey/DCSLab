@@ -32,6 +32,12 @@ return [
     'expense_category' => [
         'parent_must_be_active' => 'Parent expense category must be active.',
         'cannot_delete_with_children' => 'Expense category cannot be deleted because it still has child categories.',
+        'must_not_have_children' => 'Expense category must be a category without child categories.',
+    ],
+    'expense' => [
+        'amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
+        'payments_exceed_amount_payable' => 'Total payable payments must not exceed the payable amount.',
+        'invalid_payment_reference' => 'Expense payment data is invalid for this expense.',
     ],
     'product' => [
         'unit' => [

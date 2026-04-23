@@ -243,6 +243,22 @@ const clearPaidImmediatelyCashAccount = () => {
   purchaseAdditionalCostForm.forgetError('paid_immediately_cash_account_id');
 };
 
+const clearAmountTotalError = () => {
+  const { amount_total, ...restErrors } = purchaseAdditionalCostForm.errors as Record<
+    string,
+    string | string[]
+  >;
+
+  if (amount_total) {
+    purchaseAdditionalCostForm.setErrors(restErrors);
+  }
+};
+
+const handleAmountChange = (field: 'amount_paid_immediately' | 'amount_payable') => {
+  clearAmountTotalError();
+  purchaseAdditionalCostForm.validate(field);
+};
+
 const onSubmit = async () => {
   if (purchaseAdditionalCostForm.hasErrors) {
     const firstErrorKey = Object.keys(purchaseAdditionalCostForm.errors)[0];
@@ -427,7 +443,7 @@ const showAlertPlaceholder = (
                 :allow-negative="false"
                 :class="{ 'border-danger': purchaseAdditionalCostForm.invalid('amount_paid_immediately') }"
                 :placeholder="t('views.purchase_additional_cost.fields.amount_paid_immediately')"
-                @change="purchaseAdditionalCostForm.validate('amount_paid_immediately')"
+                @change="handleAmountChange('amount_paid_immediately')"
               />
               <FormErrorMessages :messages="purchaseAdditionalCostForm.errors.amount_paid_immediately" />
             </div>
@@ -441,7 +457,7 @@ const showAlertPlaceholder = (
                 :allow-negative="false"
                 :class="{ 'border-danger': purchaseAdditionalCostForm.invalid('amount_payable') }"
                 :placeholder="t('views.purchase_additional_cost.fields.amount_payable')"
-                @change="purchaseAdditionalCostForm.validate('amount_payable')"
+                @change="handleAmountChange('amount_payable')"
               />
               <FormErrorMessages :messages="purchaseAdditionalCostForm.errors.amount_payable" />
             </div>
@@ -468,7 +484,6 @@ const showAlertPlaceholder = (
                     </div>
                   </div>
                 </div>
-                <FormErrorMessages :messages="(purchaseAdditionalCostForm.errors as any).amount_total" />
               </div>
             </div>
 

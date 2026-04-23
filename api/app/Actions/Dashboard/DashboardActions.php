@@ -300,6 +300,12 @@ class DashboardActions
             'title' => 'components.menu.capital-transaction',
         ];
 
+        $expense = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-expense',
+            'title' => 'components.menu.expense',
+        ];
+
         $stockTransfer = [
             'icon' => 'Truck',
             'pageName' => 'side-menu-stock-transfer',
@@ -310,6 +316,7 @@ class DashboardActions
             $root_array['subMenu'],
             $capitalOpening,
             $capitalTransaction,
+            $expense,
             $stockAdjustment,
             $purchaseOrder,
             $purchaseAdditionalCost,

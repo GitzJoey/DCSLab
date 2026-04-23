@@ -14,6 +14,7 @@ import FormInputCode from './FormInputCode.vue';
 import FormInputCurrency from './FormInputCurrency.vue';
 import FormInputDateTime from './FormInputDateTime.vue';
 import FormInputDateTimeAuto from './FormInputDateTimeAuto.vue';
+import FormImagesField from './FormImagesField.vue';
 import FormErrorMessages from './FormErrorMessages.vue';
 import FormTomSelect from '../TomSelect';
 
@@ -32,6 +33,7 @@ export {
   FormInputCurrency,
   FormInputDateTime,
   FormInputDateTimeAuto,
+  FormImagesField,
   FormFileUpload,
   FormImageUpload,
   FormErrorMessages,

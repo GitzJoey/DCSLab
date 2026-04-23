@@ -21,9 +21,9 @@ import {
   FormSwitch,
   FormTextarea,
   FormSelectSearch,
+  FormImagesField,
 } from '@/components/Base/Form';
 import { ProductImage } from '@/types/models/ProductImage';
-import ProductImagesField from '@/components/Product/ProductImagesField.vue';
 import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
 import { CardState } from '@/types/enums/CardState';
 import Button from '@/components/Base/Button';
@@ -865,7 +865,8 @@ watch(
           <FormLabel>
             {{ t('views.product.fields.images') }}
           </FormLabel>
-          <ProductImagesField
+          <FormImagesField
+            entity="product"
             v-model="productForm.image_hashes"
             v-model:existing-images="uploadedImages"
             v-model:delete-image-ids="productForm.delete_image_ids"

@@ -1,0 +1,28 @@
+{
+  "page_title": "Pembayaran Biaya",
+  "actions": {
+    "create": "Tambah Pembayaran Biaya",
+    "edit": "Ubah Pembayaran Biaya"
+  },
+  "table": {
+    "title": "Daftar Pembayaran Biaya"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "expense_payment_data": "Data Pembayaran Biaya"
+  },
+  "fields": {
+    "expense": "Biaya",
+    "code": "Kode",
+    "date": "Tanggal",
+    "cash_account": "Akun Kas",
+    "amount": "Jumlah",
+    "remarks": "Catatan"
+  },
+  "alert": {
+    "delete_expense_payment": {
+      "title": "Berhasil Menghapus Pembayaran Biaya",
+      "content": "Pembayaran biaya telah dihapus."
+    }
+  }
+}

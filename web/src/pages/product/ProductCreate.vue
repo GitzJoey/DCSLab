@@ -21,8 +21,8 @@ import {
   FormSwitch,
   FormTextarea,
   FormSelectSearch,
+  FormImagesField,
 } from '@/components/Base/Form';
-import ProductImagesField from '@/components/Product/ProductImagesField.vue';
 import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
 import { CardState } from '@/types/enums/CardState';
 import Button from '@/components/Base/Button';
@@ -880,7 +880,7 @@ watch(
           <FormLabel>
             {{ t('views.product.fields.images') }}
           </FormLabel>
-          <ProductImagesField v-model="productForm.image_hashes" />
+          <FormImagesField entity="product" v-model="productForm.image_hashes" />
         </div>
       </template>
 

@@ -30,6 +30,8 @@ import investor from './en/views/investor.json';
 import cash_account from './en/views/cash_account.json';
 import capital_opening from './en/views/capital_opening.json';
 import capital_transaction from './en/views/capital_transaction.json';
+import expense from './en/views/expense.json';
+import expense_payment from './en/views/expense_payment.json';
 import expense_category from './en/views/expense_category.json';
 import product_service from './en/views/product_service.json';
 import product from './en/views/product.json';
@@ -87,6 +89,8 @@ export default {
     cash_account: cash_account,
     capital_opening: capital_opening,
     capital_transaction: capital_transaction,
+    expense: expense,
+    expense_payment: expense_payment,
     expense_category: expense_category,
     stock_adjustment_category: stock_adjustment_category,
     stock_adjustment: stock_adjustment,

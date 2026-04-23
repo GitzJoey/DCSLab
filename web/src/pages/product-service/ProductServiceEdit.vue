@@ -20,6 +20,7 @@
     FormSwitch,
     FormTextarea,
     FormSelectSearch,
+    FormImagesField,
   } from '@/components/Base/Form';
   import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
   import { CardState } from '@/types/enums/CardState';
@@ -33,7 +34,6 @@
   import { ErrorCode } from '@/types/enums/ErrorCode';
   import { DropDownOption } from '@/types/models/DropDownOption';
   import { ProductImage } from '@/types/models/ProductImage';
-  import ProductImagesField from '@/components/Product/ProductImagesField.vue';
   // #endregion
 
   // #region Declarations
@@ -494,7 +494,8 @@
               <FormLabel>
                 {{ t('views.product.fields.images') }}
               </FormLabel>
-              <ProductImagesField
+              <FormImagesField
+                entity="product"
                 v-model="productServiceForm.image_hashes"
                 v-model:existing-images="uploadedImages"
                 v-model:delete-image-ids="productServiceForm.delete_image_ids"

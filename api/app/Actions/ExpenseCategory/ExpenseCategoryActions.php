@@ -171,6 +171,11 @@ class ExpenseCategoryActions
         return $expenseCategory->load(self::TREE_LIST_EAGER_LOADS);
     }
 
+    public function hasChildren(ExpenseCategory $expenseCategory): bool
+    {
+        return $expenseCategory->children()->exists();
+    }
+
     public function create(array $data): ExpenseCategory
     {
         $timer_start = microtime(true);
@@ -220,11 +225,6 @@ class ExpenseCategoryActions
             $execution_time = microtime(true) - $timer_start;
             $this->loggerPerformance(__METHOD__, $execution_time);
         }
-    }
-
-    public function hasChildren(ExpenseCategory $expenseCategory): bool
-    {
-        return $expenseCategory->children()->exists();
     }
 
     public function delete(ExpenseCategory $expenseCategory): bool

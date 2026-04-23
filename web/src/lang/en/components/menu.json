@@ -27,6 +27,8 @@
   "transaction": "Transaction",
   "capital-opening": "Capital Opening",
   "capital-transaction": "Capital Transaction",
+  "expense": "Expense",
+  "expense-payment": "Expense Payment",
   "stock-adjustment": "Stock Adjustment",
   "purchase-order": "Purchase Order",
   "purchase-order-item": "Purchase Order by Item",

@@ -46,6 +46,14 @@ import CapitalTransactionIndex from '@/pages/capital-transaction/CapitalTransact
 import CapitalTransactionList from '@/pages/capital-transaction/CapitalTransactionList.vue';
 import CapitalTransactionCreate from '@/pages/capital-transaction/CapitalTransactionCreate.vue';
 import CapitalTransactionEdit from '@/pages/capital-transaction/CapitalTransactionEdit.vue';
+import ExpenseIndex from '@/pages/expense/ExpenseIndex.vue';
+import ExpenseList from '@/pages/expense/ExpenseList.vue';
+import ExpenseCreate from '@/pages/expense/ExpenseCreate.vue';
+import ExpenseEdit from '@/pages/expense/ExpenseEdit.vue';
+import ExpensePaymentIndex from '@/pages/expense-payment/ExpensePaymentIndex.vue';
+import ExpensePaymentList from '@/pages/expense-payment/ExpensePaymentList.vue';
+import ExpensePaymentCreate from '@/pages/expense-payment/ExpensePaymentCreate.vue';
+import ExpensePaymentEdit from '@/pages/expense-payment/ExpensePaymentEdit.vue';
 import ExpenseCategoryIndex from '@/pages/expense-category/ExpenseCategoryIndex.vue';
 import ExpenseCategoryList from '@/pages/expense-category/ExpenseCategoryList.vue';
 import ExpenseCategoryCreate from '@/pages/expense-category/ExpenseCategoryCreate.vue';
@@ -1046,6 +1054,72 @@ export default [
                 path: '/dashboard/finance/capital-transaction/edit/:ulid',
                 name: 'side-menu-finance-capital-transaction-edit',
                 component: CapitalTransactionEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Expense
+          {
+            path: '/dashboard/expense',
+            name: 'side-menu-expense',
+            redirect: '/dashboard/expense/list',
+            component: ExpenseIndex,
+            children: [
+              {
+                path: '/dashboard/expense/list',
+                name: 'side-menu-expense-list',
+                component: ExpenseList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/expense/create',
+                name: 'side-menu-expense-create',
+                component: ExpenseCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/expense/edit/:ulid',
+                name: 'side-menu-expense-edit',
+                component: ExpenseEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Expense Payment
+          {
+            path: '/dashboard/expense-payment',
+            name: 'side-menu-expense-payment',
+            redirect: '/dashboard/expense-payment/list',
+            component: ExpensePaymentIndex,
+            children: [
+              {
+                path: '/dashboard/expense-payment/list',
+                name: 'side-menu-expense-payment-list',
+                component: ExpensePaymentList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/expense-payment/create',
+                name: 'side-menu-expense-payment-create',
+                component: ExpensePaymentCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/expense-payment/edit/:ulid',
+                name: 'side-menu-expense-payment-edit',
+                component: ExpensePaymentEdit,
                 meta: {
                   remember: true,
                 },

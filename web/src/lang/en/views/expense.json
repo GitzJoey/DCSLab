@@ -1,0 +1,42 @@
+{
+  "page_title": "Expense",
+  "actions": {
+    "create": "Create Expense",
+    "edit": "Edit Expense"
+  },
+  "table": {
+    "title": "Expense List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "expense_data": "Expense Data",
+    "images": "Images"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "category": "Category",
+    "code": "Code",
+    "date": "Date",
+    "due_days": "Due Days",
+    "paid_immediately_cash_account": "Paid Immediately Cash Account",
+    "amount_paid_immediately": "Amount Paid Immediately",
+    "amount_payable": "Amount Payable",
+    "amount_payable_paid": "Amount Payable Paid",
+    "amount_payable_due": "Amount Payable Due",
+    "is_amount_payable_paid_off": "Paid Off Status",
+    "amount_total": "Amount Total",
+    "remarks": "Remarks",
+    "images": "Images"
+  },
+  "status": {
+    "paid_off": "Paid Off",
+    "not_paid_off": "Not Paid Off"
+  },
+  "alert": {
+    "delete_expense": {
+      "title": "Successfully Deleted Expense",
+      "content": "Expense has been deleted."
+    }
+  }
+}

@@ -32,6 +32,12 @@ return [
     'expense_category' => [
         'parent_must_be_active' => 'Parent expense category harus aktif.',
         'cannot_delete_with_children' => 'Expense category tidak boleh dihapus karena masih memiliki child category.',
+        'must_not_have_children' => 'Expense category harus memilih category yang tidak memiliki child lagi.',
+    ],
+    'expense' => [
+        'amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
+        'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',
+        'invalid_payment_reference' => 'Data pembayaran expense tidak valid untuk expense ini.',
     ],
     'product' => [
         'unit' => [

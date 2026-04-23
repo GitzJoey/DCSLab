@@ -5,6 +5,8 @@ namespace App\DTOs;
 use App\Enums\CapitalTransactionTypeEnum;
 use App\Models\CapitalOpening;
 use App\Models\CapitalTransaction;
+use App\Models\Expense;
+use App\Models\ExpensePayment;
 use App\Models\PurchaseAdditionalCost;
 use App\Models\PurchaseAdditionalCostPayment;
 use App\Models\PurchaseOrderDownPayment;
@@ -43,6 +45,28 @@ final class CashTransactionUpdateDTO
             date: $capitalTransaction->date,
             cashAccountId: $capitalTransaction->cash_account_id,
             amount: $amount,
+        );
+    }
+
+    public static function fromExpense(Expense $expense): self
+    {
+        return new self(
+            referableType: Expense::class,
+            referableId: $expense->id,
+            date: $expense->date,
+            cashAccountId: $expense->paid_immediately_cash_account_id,
+            amount: ((float) $expense->amount_paid_immediately * -1),
+        );
+    }
+
+    public static function fromExpensePayment(ExpensePayment $expensePayment): self
+    {
+        return new self(
+            referableType: ExpensePayment::class,
+            referableId: $expensePayment->id,
+            date: $expensePayment->date,
+            cashAccountId: $expensePayment->cash_account_id,
+            amount: ((float) $expensePayment->amount * -1),
         );
     }
 
