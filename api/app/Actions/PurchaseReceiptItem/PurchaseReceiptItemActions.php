@@ -2,6 +2,7 @@
 
 namespace App\Actions\PurchaseReceiptItem;
 
+use App\Actions\PurchaseReceipt\PurchaseReceiptActions;
 use App\Actions\PurchaseReceiptItemSerial\PurchaseReceiptItemSerialActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseReceiptItemCreateDTO;
@@ -27,6 +28,7 @@ class PurchaseReceiptItemActions
     private const LIST_EAGER_LOADS = [
         'company',
         'branch',
+        'purchaseReceipt.supplier',
         'purchaseReceipt.purchase.supplier',
         'purchaseItem',
         'productUnit.unit',
@@ -40,6 +42,7 @@ class PurchaseReceiptItemActions
     private const DETAIL_EAGER_LOADS = [
         'company',
         'branch',
+        'purchaseReceipt.supplier',
         'purchaseReceipt.purchase.supplier',
         'purchaseItem',
         'productUnit.unit',
@@ -173,7 +176,7 @@ class PurchaseReceiptItemActions
         return $purchaseReceiptItem->load(self::DETAIL_EAGER_LOADS);
     }
 
-    public function create(PurchaseReceiptItemCreateDTO $data): PurchaseReceiptItem
+    public function create(PurchaseReceiptItemCreateDTO $data, bool $updateParent): PurchaseReceiptItem
     {
         $timer_start = microtime(true);
 
@@ -202,6 +205,10 @@ class PurchaseReceiptItemActions
                 $this->purchaseReceiptItemSerialActions->create($dto);
             }
 
+            if ($updateParent) {
+                PurchaseReceiptActions::updateSummary($purchaseReceiptItem->purchaseReceipt);
+            }
+
             $this->flushCache();
 
             return $purchaseReceiptItem->refresh()->load(self::DETAIL_EAGER_LOADS);
@@ -214,7 +221,7 @@ class PurchaseReceiptItemActions
         }
     }
 
-    public function update(PurchaseReceiptItem $purchaseReceiptItem, PurchaseReceiptItemUpdateDTO $data): PurchaseReceiptItem
+    public function update(PurchaseReceiptItem $purchaseReceiptItem, PurchaseReceiptItemUpdateDTO $data, bool $updateParent): PurchaseReceiptItem
     {
         $timer_start = microtime(true);
 
@@ -253,6 +260,10 @@ class PurchaseReceiptItemActions
                 }
             }
 
+            if ($updateParent) {
+                PurchaseReceiptActions::updateSummary($purchaseReceiptItem->purchaseReceipt);
+            }
+
             $this->flushCache();
 
             return $purchaseReceiptItem->refresh()->load(self::DETAIL_EAGER_LOADS);
@@ -265,16 +276,22 @@ class PurchaseReceiptItemActions
         }
     }
 
-    public function delete(PurchaseReceiptItem $purchaseReceiptItem): bool
+    public function delete(PurchaseReceiptItem $purchaseReceiptItem, bool $updateParent): bool
     {
         $timer_start = microtime(true);
 
         try {
+            $purchaseReceipt = $purchaseReceiptItem->purchaseReceipt;
+
             foreach ($purchaseReceiptItem->serials as $purchaseReceiptItemSerial) {
                 $this->purchaseReceiptItemSerialActions->delete($purchaseReceiptItemSerial);
             }
 
             $result = $purchaseReceiptItem->delete();
+
+            if ($updateParent) {
+                PurchaseReceiptActions::updateSummary($purchaseReceipt);
+            }
 
             $this->flushCache();
 

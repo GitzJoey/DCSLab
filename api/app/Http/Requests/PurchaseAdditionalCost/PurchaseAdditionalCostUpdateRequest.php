@@ -41,10 +41,10 @@ class PurchaseAdditionalCostUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer'],
             'branch_id' => ['required', 'integer'],
             'purchase_id' => ['required', 'integer', new ExistsForCompany('purchases', $this->company_id)],
-            'purchase_additional_cost_category_id' => ['required', 'integer', new ExistsForCompany('purchase_additional_cost_categories', $this->company_id)],
             'code' => ['required', 'string'],
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'due_days' => ['required', 'integer', 'min:0'],
+            'purchase_additional_cost_category_id' => ['required', 'integer', new ExistsForCompany('purchase_additional_cost_categories', $this->company_id)],
             'paid_immediately_cash_account_id' => [
                 'present',
                 'nullable',

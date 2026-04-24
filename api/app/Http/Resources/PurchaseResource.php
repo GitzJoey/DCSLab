@@ -50,6 +50,12 @@ class PurchaseResource extends JsonResource
             'amount_paid_total' => $this->amount_paid_total,
             'amount_due' => $this->amount_due,
             'is_paid_off' => $this->is_paid_off,
+            'progress_status' => $this->progress_status,
+            'item_total_count' => $this->item_total_count,
+            'item_matched_count' => $this->item_matched_count,
+            'item_less_count' => $this->item_less_count,
+            'item_more_count' => $this->item_more_count,
+            'item_unlinked_count' => $this->item_unlinked_count,
             $this->mergeWhen($this->relationLoaded('items'), [
                 'items' => PurchaseItemResource::collection($this->whenLoaded('items')),
             ]),

@@ -82,8 +82,7 @@ class PurchaseDirectStoreRequest extends FormRequest
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'due_days' => ['required', 'integer', 'min:0'],
             'supplier_id' => [
-                'present',
-                'nullable',
+                'required',
                 'integer',
                 'bail',
                 new ExistsForCompany('suppliers', $this->company_id),

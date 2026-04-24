@@ -20,6 +20,7 @@ class PurchaseReceipt extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
+        'supplier_id',
         'purchase_id',
         'is_from_direct_purchase',
         'code',
@@ -48,6 +49,11 @@ class PurchaseReceipt extends Model
     public function purchase()
     {
         return $this->belongsTo(Purchase::class)->withTrashed();
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
     public function warehouse()

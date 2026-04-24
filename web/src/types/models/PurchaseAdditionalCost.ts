@@ -11,12 +11,11 @@ export interface PurchaseAdditionalCost {
   company?: Company;
   branch?: Branch;
   purchase?: Purchase;
-  category?: PurchaseAdditionalCostCategory;
-  paid_immediately_cash_account?: CashAccount | null;
-  payments?: PurchaseAdditionalCostPayment[];
   code: string;
   date: string;
   due_days: number;
+  category?: PurchaseAdditionalCostCategory;
+  paid_immediately_cash_account?: CashAccount | null;
   amount_paid_immediately: number;
   amount_payable: number;
   amount_payable_paid: number;
@@ -24,4 +23,5 @@ export interface PurchaseAdditionalCost {
   is_amount_payable_paid_off: boolean;
   amount_total: number;
   remarks: string | null;
+  payments?: PurchaseAdditionalCostPayment[];
 }

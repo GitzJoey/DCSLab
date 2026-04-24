@@ -23,12 +23,12 @@ class PurchaseAdditionalCostResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('purchase'), [
                 'purchase' => new PurchaseResource($this->whenLoaded('purchase')),
             ]),
-            $this->mergeWhen($this->relationLoaded('category'), [
-                'category' => new PurchaseAdditionalCostCategoryResource($this->whenLoaded('category')),
-            ]),
             'code' => $this->code,
             'date' => $this->date,
             'due_days' => $this->due_days,
+            $this->mergeWhen($this->relationLoaded('category'), [
+                'category' => new PurchaseAdditionalCostCategoryResource($this->whenLoaded('category')),
+            ]),
             $this->mergeWhen($this->relationLoaded('paidImmediatelyCashAccount'), [
                 'paid_immediately_cash_account' => new CashAccountResource($this->whenLoaded('paidImmediatelyCashAccount')),
             ]),

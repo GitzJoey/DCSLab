@@ -9,6 +9,7 @@ use App\Rules\ExistsForCompany;
 use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
+use App\Rules\IsValidWarehouse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -77,6 +78,12 @@ class PurchaseManualUpdateRequest extends FormRequest
 
                 return $additionalCost;
             })->all(),
+            'manual_receipts' => collect($this->manual_receipts ?? [])->map(function ($manualReceipt) {
+                $manualReceipt['id'] = ! empty($manualReceipt['id']) ? HashidsHelper::decodeId($manualReceipt['id']) : null;
+                $manualReceipt['warehouse_id'] = ! empty($manualReceipt['warehouse_id']) ? HashidsHelper::decodeId($manualReceipt['warehouse_id']) : null;
+
+                return $manualReceipt;
+            })->all(),
         ]);
     }
 
@@ -88,7 +95,7 @@ class PurchaseManualUpdateRequest extends FormRequest
             'code' => ['required', 'string'],
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'due_days' => ['required', 'integer', 'min:0'],
-            'supplier_id' => ['present', 'nullable', 'integer', 'bail', new ExistsForCompany('suppliers', $this->company_id), new IsValidSupplier($this->company_id)],
+            'supplier_id' => ['required', 'integer', 'bail', new ExistsForCompany('suppliers', $this->company_id), new IsValidSupplier($this->company_id)],
             'purchase_order_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_orders', $this->company_id)],
             'direct_receipt_warehouse_id' => ['prohibited'],
             'tax_invoice_number' => ['present', 'nullable', 'string'],
@@ -136,6 +143,20 @@ class PurchaseManualUpdateRequest extends FormRequest
             'global_discounts.*.sequence' => ['required', 'integer', 'min:1'],
             'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
+
+            'manual_receipts' => ['present', 'array'],
+            'manual_receipts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_receipts', $this->company_id)],
+            'manual_receipts.*.code' => ['required', 'string'],
+            'manual_receipts.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'manual_receipts.*.warehouse_id' => ['required', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
+            'manual_receipts.*.remarks' => ['present', 'nullable', 'string'],
+            'manual_receipts.*.is_posted' => ['required', 'boolean'],
+            'manual_receipts.*.items' => ['required', 'array'],
+            'manual_receipts.*.items.*.purchase_item_index' => ['required', 'integer', 'min:0'],
+            'manual_receipts.*.items.*.qty' => ['required', 'numeric', 'gt:0'],
+            'manual_receipts.*.items.*.remarks' => ['present', 'nullable', 'string'],
+            'manual_receipts.*.items.*.serials' => ['required', 'array'],
+            'manual_receipts.*.items.*.serials.*.serial' => ['required', 'string'],
 
             'delete_additional_cost_ids' => ['required', 'array'],
             'delete_additional_cost_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_additional_costs', $this->company_id)],

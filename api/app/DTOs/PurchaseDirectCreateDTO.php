@@ -10,7 +10,7 @@ final class PurchaseDirectCreateDTO
         public readonly string $code,
         public readonly string $date,
         public readonly int $dueDays,
-        public readonly ?int $supplierId,
+        public readonly int $supplierId,
         public readonly ?int $purchaseOrderId,
         public readonly int $directReceiptWarehouseId,
         public readonly ?string $taxInvoiceNumber,

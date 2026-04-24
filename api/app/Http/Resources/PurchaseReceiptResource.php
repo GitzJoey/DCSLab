@@ -21,8 +21,15 @@ class PurchaseReceiptResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('branch'), [
                 'branch' => new BranchResource($this->whenLoaded('branch')),
             ]),
+            $this->mergeWhen($this->relationLoaded('supplier'), [
+                'supplier' => new SupplierResource($this->whenLoaded('supplier')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('purchase'), [
+                'purchase' => new PurchaseResource($this->whenLoaded('purchase')),
+            ]),
             'code' => $this->code,
             'date' => TimezoneHelper::convertFromUTCIfValid($this->date),
+            'is_linked_to_purchase' => ! is_null($this->purchase_id),
             'is_from_direct_purchase' => $this->is_from_direct_purchase,
             $this->mergeWhen($this->relationLoaded('warehouse'), [
                 'warehouse' => new WarehouseResource($this->whenLoaded('warehouse')),

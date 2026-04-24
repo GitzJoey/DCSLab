@@ -356,23 +356,6 @@ watch(
             </div>
 
             <div class="col-span-12 lg:col-span-6">
-              <FormLabel :class="{ 'text-danger': purchaseAdditionalCostForm.invalid('purchase_additional_cost_category_id') }">
-                {{ t('views.purchase_additional_cost.fields.category') }}
-              </FormLabel>
-              <FormSelectSearch
-                v-model="purchaseAdditionalCostForm.purchase_additional_cost_category_id"
-                v-model:search="categorySearch"
-                :options="categoryOptions"
-                :placeholder="t('components.dropdown.placeholder')"
-                :class="{ 'border-danger': purchaseAdditionalCostForm.invalid('purchase_additional_cost_category_id') }"
-                @change="purchaseAdditionalCostForm.validate('purchase_additional_cost_category_id')"
-                @search="loadCategoryDDL"
-                @clear="clearCategory"
-              />
-              <FormErrorMessages :messages="purchaseAdditionalCostForm.errors.purchase_additional_cost_category_id" />
-            </div>
-
-            <div class="col-span-12 lg:col-span-6">
               <FormLabel :class="{ 'text-danger': purchaseAdditionalCostForm.invalid('code') }">
                 {{ t('views.purchase_additional_cost.fields.code') }}
               </FormLabel>
@@ -412,6 +395,23 @@ watch(
                 @change="purchaseAdditionalCostForm.validate('due_days')"
               />
               <FormErrorMessages :messages="purchaseAdditionalCostForm.errors.due_days" />
+            </div>
+
+            <div class="col-span-12 lg:col-span-6">
+              <FormLabel :class="{ 'text-danger': purchaseAdditionalCostForm.invalid('purchase_additional_cost_category_id') }">
+                {{ t('views.purchase_additional_cost.fields.category') }}
+              </FormLabel>
+              <FormSelectSearch
+                v-model="purchaseAdditionalCostForm.purchase_additional_cost_category_id"
+                v-model:search="categorySearch"
+                :options="categoryOptions"
+                :placeholder="t('components.dropdown.placeholder')"
+                :class="{ 'border-danger': purchaseAdditionalCostForm.invalid('purchase_additional_cost_category_id') }"
+                @change="purchaseAdditionalCostForm.validate('purchase_additional_cost_category_id')"
+                @search="loadCategoryDDL"
+                @clear="clearCategory"
+              />
+              <FormErrorMessages :messages="purchaseAdditionalCostForm.errors.purchase_additional_cost_category_id" />
             </div>
 
             <div class="col-span-12 lg:col-span-6">

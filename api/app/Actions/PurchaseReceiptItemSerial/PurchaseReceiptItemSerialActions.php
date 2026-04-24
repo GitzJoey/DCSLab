@@ -27,6 +27,7 @@ class PurchaseReceiptItemSerialActions
     private const LIST_EAGER_LOADS = [
         'company',
         'branch',
+        'purchaseReceipt.supplier',
         'purchaseReceipt.purchase.supplier',
         'purchaseReceipt.warehouse',
         'purchaseReceiptItem.productUnit.unit',

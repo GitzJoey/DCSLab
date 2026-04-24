@@ -59,7 +59,9 @@ class PurchaseActions
         'additionalCosts.paidImmediatelyCashAccount',
         'additionalCosts.payments.cashAccount',
         'payments.cashAccount',
+        'directReceipt.supplier',
         'directReceipt.warehouse',
+        'manualReceipts.supplier',
         'manualReceipts.warehouse',
         'manualReceipts.items.purchaseItem',
         'manualReceipts.items.productUnit.unit',
@@ -308,6 +310,7 @@ class PurchaseActions
             $dto = new PurchaseReceiptCreateDTO(
                 companyId: $purchase->company_id,
                 branchId: $purchase->branch_id,
+                supplierId: $purchase->supplier_id,
                 purchaseId: $purchase->id,
                 isFromDirectPurchase: true,
                 code: config('dcslab.KEYWORDS.AUTO'),
@@ -318,7 +321,7 @@ class PurchaseActions
                 items: $items,
             );
 
-            $this->purchaseReceiptActions->create($dto);
+            $this->purchaseReceiptActions->create($dto, false);
 
             foreach ($data->globalDiscounts as $globalDiscount) {
                 $dto = new PurchaseGlobalDiscountCreateDTO(
@@ -430,6 +433,7 @@ class PurchaseActions
                 $dto = new PurchaseReceiptCreateDTO(
                     companyId: $purchase->company_id,
                     branchId: $purchase->branch_id,
+                    supplierId: $purchase->supplier_id,
                     purchaseId: $purchase->id,
                     isFromDirectPurchase: false,
                     code: $manualReceipt['code'],
@@ -440,7 +444,7 @@ class PurchaseActions
                     items: $items,
                 );
 
-                $this->purchaseReceiptActions->create($dto);
+                $this->purchaseReceiptActions->create($dto, false);
             }
 
             foreach ($data->globalDiscounts as $globalDiscount) {
@@ -575,6 +579,8 @@ class PurchaseActions
             $purchaseReceipt = $purchase->directReceipt;
             if ($purchaseReceipt) {
                 $dto = new PurchaseReceiptUpdateDTO(
+                    supplierId: $purchase->supplier_id,
+                    purchaseId: $purchase->id,
                     code: $purchaseReceipt->code,
                     date: $purchase->date,
                     isFromDirectPurchase: true,
@@ -584,11 +590,12 @@ class PurchaseActions
                     items: $items,
                 );
 
-                $this->purchaseReceiptActions->update($purchaseReceipt, $dto);
+                $this->purchaseReceiptActions->update($purchaseReceipt, $dto, false);
             } else {
                 $dto = new PurchaseReceiptCreateDTO(
                     companyId: $purchase->company_id,
                     branchId: $purchase->branch_id,
+                    supplierId: $purchase->supplier_id,
                     purchaseId: $purchase->id,
                     isFromDirectPurchase: true,
                     code: config('dcslab.KEYWORDS.AUTO'),
@@ -599,7 +606,7 @@ class PurchaseActions
                     items: $items,
                 );
 
-                $this->purchaseReceiptActions->create($dto);
+                $this->purchaseReceiptActions->create($dto, false);
             }
 
             foreach ($data->deleteGlobalDiscountIds as $deleteId) {
@@ -755,7 +762,7 @@ class PurchaseActions
 
             $purchaseReceipt = $purchase->directReceipt()->first();
             if ($purchaseReceipt) {
-                $this->purchaseReceiptActions->delete($purchaseReceipt);
+                $this->purchaseReceiptActions->delete($purchaseReceipt, false);
             }
 
             $existingReceipts = $purchase->manualReceipts()->get()->keyBy('id');
@@ -782,6 +789,8 @@ class PurchaseActions
                     $purchaseReceipt = $existingReceipts->get($manualReceipt['id']);
 
                     $dto = new PurchaseReceiptUpdateDTO(
+                        supplierId: $purchase->supplier_id,
+                        purchaseId: $purchase->id,
                         code: $manualReceipt['code'],
                         date: $manualReceipt['date'],
                         isFromDirectPurchase: false,
@@ -791,12 +800,13 @@ class PurchaseActions
                         items: $items,
                     );
 
-                    $this->purchaseReceiptActions->update($purchaseReceipt, $dto);
+                    $this->purchaseReceiptActions->update($purchaseReceipt, $dto, false);
                     $keptReceiptIds[] = $purchaseReceipt->id;
                 } else {
                     $dto = new PurchaseReceiptCreateDTO(
                         companyId: $purchase->company_id,
                         branchId: $purchase->branch_id,
+                        supplierId: $purchase->supplier_id,
                         purchaseId: $purchase->id,
                         isFromDirectPurchase: false,
                         code: $manualReceipt['code'],
@@ -807,14 +817,14 @@ class PurchaseActions
                         items: $items,
                     );
 
-                    $purchaseReceipt = $this->purchaseReceiptActions->create($dto);
+                    $purchaseReceipt = $this->purchaseReceiptActions->create($dto, false);
                     $keptReceiptIds[] = $purchaseReceipt->id;
                 }
             }
 
             foreach ($existingReceipts as $purchaseReceipt) {
                 if (! in_array($purchaseReceipt->id, $keptReceiptIds, true)) {
-                    $this->purchaseReceiptActions->delete($purchaseReceipt);
+                    $this->purchaseReceiptActions->delete($purchaseReceipt, false);
                 }
             }
 
@@ -901,7 +911,7 @@ class PurchaseActions
     {
         $purchase->refresh();
 
-        $purchase->item_total_before_global_discount = (float) $purchase->items->sum('subtotal_after_discount');
+        $purchase->item_total_before_global_discount = (float) $purchase->items()->sum('subtotal_after_discount');
         $purchase->global_discount = (function () use ($purchase) {
             $beforeDiscount = (float) $purchase->item_total_before_global_discount;
             $afterDiscount = $beforeDiscount;
@@ -941,7 +951,7 @@ class PurchaseActions
             $purchaseItem->save();
         }
 
-        $globalDiscountDifference = round((float) $purchase->global_discount - (float) $purchase->items->sum('global_discount'), 8);
+        $globalDiscountDifference = round((float) $purchase->global_discount - (float) $purchase->items()->sum('global_discount'), 8);
         if (abs($globalDiscountDifference) > 0.00000001) {
             $lastGlobalDiscountPurchaseItem = $purchase->items
                 ->filter(fn ($purchaseItem) => (float) $purchaseItem->subtotal_after_discount > 0)
@@ -960,7 +970,7 @@ class PurchaseActions
             }
         }
 
-        $purchase->item_total_after_global_discount = (float) $purchase->items->sum('subtotal_after_global_discount');
+        $purchase->item_total_after_global_discount = (float) $purchase->items()->sum('subtotal_after_global_discount');
 
         foreach ($purchase->items as $purchaseItem) {
             $purchaseItem->vat_base = (function () use ($purchaseItem) {
@@ -1001,10 +1011,10 @@ class PurchaseActions
             $purchaseItem->save();
         }
 
-        $purchase->vat_base = (float) $purchase->items->sum('vat_base');
-        $purchase->vat = (float) $purchase->items->sum('vat');
-        $purchase->item_total_after_vat = (float) $purchase->items->sum('subtotal_after_vat');
-        $purchase->additional_cost = (float) $purchase->additionalCosts->sum('amount_total');
+        $purchase->vat_base = (float) $purchase->items()->sum('vat_base');
+        $purchase->vat = (float) $purchase->items()->sum('vat');
+        $purchase->item_total_after_vat = (float) $purchase->items()->sum('subtotal_after_vat');
+        $purchase->additional_cost = (float) $purchase->additionalCosts()->sum('amount_total');
 
         foreach ($purchase->items as $purchaseItem) {
             $purchaseItem->additional_cost = (function () use ($purchaseItem, $purchase) {
@@ -1027,7 +1037,7 @@ class PurchaseActions
             $purchaseItem->save();
         }
 
-        $additionalCostDifference = round((float) $purchase->additional_cost - (float) $purchase->items->sum('additional_cost'), 8);
+        $additionalCostDifference = round((float) $purchase->additional_cost - (float) $purchase->items()->sum('additional_cost'), 8);
         if (abs($additionalCostDifference) > 0.00000001) {
             $lastAdditionalCostPurchaseItem = $purchase->items
                 ->filter(fn ($purchaseItem) => (float) $purchaseItem->subtotal_after_vat > 0)
@@ -1042,7 +1052,7 @@ class PurchaseActions
             }
         }
 
-        $roundingDifference = round((float) $purchase->rounding - (float) $purchase->items->sum('rounding'), 8);
+        $roundingDifference = round((float) $purchase->rounding - (float) $purchase->items()->sum('rounding'), 8);
         if (abs($roundingDifference) > 0.00000001) {
             $lastRoundingPurchaseItem = $purchase->items
                 ->filter(function ($purchaseItem) {
@@ -1114,20 +1124,110 @@ class PurchaseActions
             $purchaseItem->save();
         }
 
-        $purchase->amount_payable = (float) $purchase->items->sum('amount_payable');
-        $purchase->amount_paid_by_purchase_order_down_payment = (float) $purchase->purchaseOrderDownPaymentAllocations->sum('amount');
-        $purchase->amount_paid_by_purchase_return = (float) $purchase->purchaseReturnAllocations->sum('amount');
-        $purchasePaymentTotal = (float) $purchase->payments->sum('amount');
-        $purchaseAdditionalCostPaymentTotal = (float) $purchase->additionalCosts->sum(function ($additionalCost) {
-            return (float) $additionalCost->amount_paid_immediately + (float) $additionalCost->amount_payable_paid;
-        });
+        $purchase->amount_payable = (float) $purchase->items()->sum('amount_payable');
+        $purchase->amount_paid_by_purchase_order_down_payment = (float) $purchase->purchaseOrderDownPaymentAllocations()->sum('amount');
+        $purchase->amount_paid_by_purchase_return = (float) $purchase->purchaseReturnAllocations()->sum('amount');
         $purchase->amount_paid_total =
             $purchase->amount_paid_by_purchase_order_down_payment +
             $purchase->amount_paid_by_purchase_return +
-            $purchasePaymentTotal +
-            $purchaseAdditionalCostPaymentTotal;
+            (float) $purchase->payments()->sum('amount');
         $purchase->amount_due = max(0, (float) $purchase->amount_payable - (float) $purchase->amount_paid_total);
         $purchase->is_paid_off = $purchase->amount_due == 0;
+
+        foreach ($purchase->items as $purchaseItem) {
+            $qtyTargetBase = (float) $purchaseItem->product_unit_qty_base;
+            $qtyReceivedBase = (float) $purchaseItem->receiptItems()->sum('product_unit_qty_base');
+
+            $purchaseItem->qty_received_base = $qtyReceivedBase;
+            $purchaseItem->qty_outstanding_base = max($qtyTargetBase - $qtyReceivedBase, 0);
+            $purchaseItem->qty_excess_base = max($qtyReceivedBase - $qtyTargetBase, 0);
+            $purchaseItem->save();
+        }
+
+        $purchase->item_total_count = (function () use ($purchase) {
+            return $purchase->items()->count();
+        })();
+        $purchase->item_matched_count = (function () use ($purchase) {
+            $itemMatchedCount = 0;
+
+            foreach ($purchase->items as $purchaseItem) {
+                if (! $purchaseItem->receiptItems()->exists()) {
+                    continue;
+                }
+
+                if ((float) $purchaseItem->qty_excess_base > 0) {
+                    continue;
+                }
+
+                if ((float) $purchaseItem->qty_outstanding_base > 0) {
+                    continue;
+                }
+
+                $itemMatchedCount++;
+            }
+
+            return $itemMatchedCount;
+        })();
+        $purchase->item_less_count = (function () use ($purchase) {
+            $itemLessCount = 0;
+
+            foreach ($purchase->items as $purchaseItem) {
+                if (! $purchaseItem->receiptItems()->exists()) {
+                    continue;
+                }
+
+                if ((float) $purchaseItem->qty_excess_base > 0) {
+                    continue;
+                }
+
+                if ((float) $purchaseItem->qty_outstanding_base > 0) {
+                    $itemLessCount++;
+                }
+            }
+
+            return $itemLessCount;
+        })();
+        $purchase->item_more_count = (function () use ($purchase) {
+            $itemMoreCount = 0;
+
+            foreach ($purchase->items as $purchaseItem) {
+                if (! $purchaseItem->receiptItems()->exists()) {
+                    continue;
+                }
+
+                if ((float) $purchaseItem->qty_excess_base > 0) {
+                    $itemMoreCount++;
+                }
+            }
+
+            return $itemMoreCount;
+        })();
+        $purchase->item_unlinked_count = (function () use ($purchase) {
+            $itemUnlinkedCount = 0;
+
+            foreach ($purchase->items as $purchaseItem) {
+                if (! $purchaseItem->receiptItems()->exists()) {
+                    $itemUnlinkedCount++;
+                }
+            }
+
+            return $itemUnlinkedCount;
+        })();
+        $purchase->progress_status = (function () use ($purchase) {
+            if ($purchase->item_total_count === 0) {
+                return 'unlinked';
+            }
+
+            if ($purchase->item_unlinked_count === $purchase->item_total_count) {
+                return 'unlinked';
+            }
+
+            if ($purchase->item_matched_count === $purchase->item_total_count) {
+                return 'matched';
+            }
+
+            return 'unmatched';
+        })();
 
         $purchase->save();
     }
@@ -1146,16 +1246,16 @@ class PurchaseActions
                 throw new Exception('Purchase cannot be deleted because it already has related transactions.');
             }
 
-            foreach ($purchase->receipts as $purchaseReceipt) {
-                $this->purchaseReceiptActions->delete($purchaseReceipt);
-            }
-
             foreach ($purchase->items as $purchaseItem) {
                 $this->purchaseItemActions->delete($purchaseItem);
             }
 
             foreach ($purchase->globalDiscounts as $purchaseGlobalDiscount) {
                 $this->purchaseGlobalDiscountActions->delete($purchaseGlobalDiscount);
+            }
+
+            foreach ($purchase->receipts as $purchaseReceipt) {
+                $this->purchaseReceiptActions->delete($purchaseReceipt, false);
             }
 
             $result = $purchase->delete();

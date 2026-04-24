@@ -5,6 +5,8 @@ namespace App\DTOs;
 final class PurchaseReceiptUpdateDTO
 {
     public function __construct(
+        public readonly int $supplierId,
+        public readonly ?int $purchaseId,
         public readonly string $code,
         public readonly string $date,
         public readonly bool $isFromDirectPurchase,

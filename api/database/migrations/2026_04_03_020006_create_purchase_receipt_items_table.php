@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('purchase_receipt_id')->references('id')->on('purchase_receipts');
-            $table->foreignId('purchase_item_id')->references('id')->on('purchase_items');
+            $table->foreignId('purchase_item_id')->nullable()->references('id')->on('purchase_items');
             $table->decimal('qty', 30, 8)->default(0);
             $table->foreignId('product_unit_id')->references('id')->on('product_units');
             $table->decimal('product_unit_conversion_value', 30, 8)->default(0);

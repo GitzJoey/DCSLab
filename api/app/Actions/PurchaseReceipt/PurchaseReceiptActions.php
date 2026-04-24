@@ -2,6 +2,7 @@
 
 namespace App\Actions\PurchaseReceipt;
 
+use App\Actions\Purchase\PurchaseActions;
 use App\Actions\PurchaseReceiptItem\PurchaseReceiptItemActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseReceiptCreateDTO;
@@ -27,6 +28,7 @@ class PurchaseReceiptActions
     private const LIST_EAGER_LOADS = [
         'company',
         'branch',
+        'supplier',
         'purchase.supplier',
         'warehouse',
     ];
@@ -34,6 +36,7 @@ class PurchaseReceiptActions
     private const DETAIL_EAGER_LOADS = [
         'company',
         'branch',
+        'supplier',
         'purchase.supplier',
         'warehouse',
         'items.purchaseItem',
@@ -218,7 +221,7 @@ class PurchaseReceiptActions
         return TimezoneHelper::convertToUTC($date);
     }
 
-    public function create(PurchaseReceiptCreateDTO $data): PurchaseReceipt
+    public function create(PurchaseReceiptCreateDTO $data, bool $updateParent): PurchaseReceipt
     {
         $timer_start = microtime(true);
 
@@ -226,6 +229,7 @@ class PurchaseReceiptActions
             $purchaseReceipt = new PurchaseReceipt();
             $purchaseReceipt->company_id = $data->companyId;
             $purchaseReceipt->branch_id = $data->branchId;
+            $purchaseReceipt->supplier_id = $data->supplierId;
             $purchaseReceipt->purchase_id = $data->purchaseId;
             $purchaseReceipt->is_from_direct_purchase = $data->isFromDirectPurchase;
             $purchaseReceipt->code = $this->generateUniqueCode($data->companyId, $data->code, null);
@@ -251,7 +255,13 @@ class PurchaseReceiptActions
                     serials: $item['serials'],
                 );
 
-                $this->purchaseReceiptItemActions->create($dto);
+                $this->purchaseReceiptItemActions->create($dto, false);
+            }
+
+            self::updateSummary($purchaseReceipt);
+
+            if ($purchaseReceipt->purchase && $updateParent) {
+                PurchaseActions::updateSummary($purchaseReceipt->purchase);
             }
 
             $this->flushCache();
@@ -266,11 +276,13 @@ class PurchaseReceiptActions
         }
     }
 
-    public function update(PurchaseReceipt $purchaseReceipt, PurchaseReceiptUpdateDTO $data): PurchaseReceipt
+    public function update(PurchaseReceipt $purchaseReceipt, PurchaseReceiptUpdateDTO $data, bool $updateParent): PurchaseReceipt
     {
         $timer_start = microtime(true);
 
         try {
+            $purchaseReceipt->supplier_id = $data->supplierId;
+            $purchaseReceipt->purchase_id = $data->purchaseId;
             $purchaseReceipt->code = $this->generateUniqueCode($purchaseReceipt->company_id, $data->code, $purchaseReceipt->id);
             $purchaseReceipt->date = $this->generateDate($data->date);
             $purchaseReceipt->is_from_direct_purchase = $data->isFromDirectPurchase;
@@ -280,7 +292,7 @@ class PurchaseReceiptActions
             $purchaseReceipt->save();
 
             foreach ($purchaseReceipt->items as $purchaseReceiptItem) {
-                $this->purchaseReceiptItemActions->delete($purchaseReceiptItem);
+                $this->purchaseReceiptItemActions->delete($purchaseReceiptItem, false);
             }
 
             foreach ($data->items as $item) {
@@ -299,7 +311,13 @@ class PurchaseReceiptActions
                     serials: $item['serials'],
                 );
 
-                $this->purchaseReceiptItemActions->create($dto);
+                $this->purchaseReceiptItemActions->create($dto, false);
+            }
+
+            self::updateSummary($purchaseReceipt);
+
+            if ($purchaseReceipt->purchase && $updateParent) {
+                PurchaseActions::updateSummary($purchaseReceipt->purchase);
             }
 
             $this->flushCache();
@@ -314,16 +332,29 @@ class PurchaseReceiptActions
         }
     }
 
-    public function delete(PurchaseReceipt $purchaseReceipt): bool
+    public static function updateSummary(PurchaseReceipt $purchaseReceipt): void
+    {
+        $purchaseReceipt->refresh()->load(self::DETAIL_EAGER_LOADS);
+
+        // implament later...
+    }
+
+    public function delete(PurchaseReceipt $purchaseReceipt, bool $updateParent): bool
     {
         $timer_start = microtime(true);
 
         try {
+            $purchase = $updateParent ? $purchaseReceipt->purchase : null;
+
             foreach ($purchaseReceipt->items as $purchaseReceiptItem) {
-                $this->purchaseReceiptItemActions->delete($purchaseReceiptItem);
+                $this->purchaseReceiptItemActions->delete($purchaseReceiptItem, false);
             }
 
             $result = $purchaseReceipt->delete();
+
+            if ($updateParent && $purchase) {
+                PurchaseActions::updateSummary($purchase);
+            }
 
             $this->flushCache();
 

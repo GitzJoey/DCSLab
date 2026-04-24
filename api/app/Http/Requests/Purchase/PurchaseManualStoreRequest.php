@@ -12,6 +12,7 @@ use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidCompany;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
+use App\Rules\IsValidWarehouse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -69,6 +70,22 @@ class PurchaseManualStoreRequest extends FormRequest
             }
             $this->merge(['additional_costs' => $additionalCosts]);
         }
+
+        if (is_array($this->input('manual_receipts'))) {
+            $manualReceipts = [];
+            foreach ($this->input('manual_receipts') as $manualReceipt) {
+                if (array_key_exists('id', $manualReceipt) && ! is_null($manualReceipt['id'])) {
+                    $manualReceipt['id'] = HashidsHelper::decodeId($manualReceipt['id']);
+                }
+                if (array_key_exists('warehouse_id', $manualReceipt) && ! is_null($manualReceipt['warehouse_id'])) {
+                    $manualReceipt['warehouse_id'] = HashidsHelper::decodeId($manualReceipt['warehouse_id']);
+                }
+                $manualReceipts[] = $manualReceipt;
+            }
+            $this->merge(['manual_receipts' => $manualReceipts]);
+        } else {
+            $this->merge(['manual_receipts' => []]);
+        }
     }
 
     public function rules()
@@ -80,8 +97,7 @@ class PurchaseManualStoreRequest extends FormRequest
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'due_days' => ['required', 'integer', 'min:0'],
             'supplier_id' => [
-                'present',
-                'nullable',
+                'required',
                 'integer',
                 'bail',
                 new ExistsForCompany('suppliers', $this->company_id),
@@ -132,6 +148,20 @@ class PurchaseManualStoreRequest extends FormRequest
             'global_discounts.*.sequence' => ['required', 'integer', 'min:1'],
             'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
+
+            'manual_receipts' => ['present', 'array'],
+            'manual_receipts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_receipts', $this->company_id)],
+            'manual_receipts.*.code' => ['required', 'string'],
+            'manual_receipts.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'manual_receipts.*.warehouse_id' => ['required', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
+            'manual_receipts.*.remarks' => ['present', 'nullable', 'string'],
+            'manual_receipts.*.is_posted' => ['required', 'boolean'],
+            'manual_receipts.*.items' => ['required', 'array'],
+            'manual_receipts.*.items.*.purchase_item_index' => ['required', 'integer', 'min:0'],
+            'manual_receipts.*.items.*.qty' => ['required', 'numeric', 'gt:0'],
+            'manual_receipts.*.items.*.remarks' => ['present', 'nullable', 'string'],
+            'manual_receipts.*.items.*.serials' => ['required', 'array'],
+            'manual_receipts.*.items.*.serials.*.serial' => ['required', 'string'],
 
             'additional_costs' => ['required', 'array'],
             'additional_costs.*.purchase_additional_cost_category_id' => [

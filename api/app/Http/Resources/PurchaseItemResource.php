@@ -48,6 +48,9 @@ class PurchaseItemResource extends JsonResource
             'qty' => $this->qty,
             'product_unit_conversion_value' => $this->product_unit_conversion_value,
             'product_unit_qty_base' => $this->product_unit_qty_base,
+            'qty_received_base' => $this->qty_received_base,
+            'qty_outstanding_base' => $this->qty_outstanding_base,
+            'qty_excess_base' => $this->qty_excess_base,
             'product_unit_price' => $this->product_unit_price,
             'product_unit_is_price_include_vat' => $this->product_unit_is_price_include_vat,
 

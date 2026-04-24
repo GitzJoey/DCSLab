@@ -20,6 +20,9 @@ return new class extends Migration
             $table->foreignId('product_unit_id')->references('id')->on('product_units');
             $table->decimal('product_unit_conversion_value', 30, 8)->default(0);
             $table->decimal('product_unit_qty_base', 30, 8)->default(0);
+            $table->decimal('qty_received_base', 30, 8)->default(0);
+            $table->decimal('qty_outstanding_base', 30, 8)->default(0);
+            $table->decimal('qty_excess_base', 30, 8)->default(0);
             $table->decimal('product_unit_price', 30, 8)->default(0);
             $table->boolean('product_unit_is_price_include_vat')->default(false);
             $table->decimal('price_discount', 30, 8)->default(0);

@@ -50,6 +50,13 @@ class Purchase extends Model
         'amount_paid_total',
         'amount_due',
         'is_paid_off',
+
+        'progress_status',
+        'item_total_count',
+        'item_matched_count',
+        'item_less_count',
+        'item_more_count',
+        'item_unlinked_count',
     ];
 
     protected $casts = [
@@ -73,6 +80,11 @@ class Purchase extends Model
         'amount_paid_total' => 'decimal:8',
         'amount_due' => 'decimal:8',
         'is_paid_off' => 'boolean',
+        'item_total_count' => 'integer',
+        'item_matched_count' => 'integer',
+        'item_less_count' => 'integer',
+        'item_more_count' => 'integer',
+        'item_unlinked_count' => 'integer',
     ];
 
     public function company()

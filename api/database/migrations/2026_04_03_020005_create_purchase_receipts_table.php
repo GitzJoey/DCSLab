@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->string('code');
             $table->dateTime('date');
-            $table->foreignId('purchase_id')->references('id')->on('purchases');
+            $table->foreignId('supplier_id')->references('id')->on('suppliers');
+            $table->foreignId('purchase_id')->nullable()->references('id')->on('purchases');
             $table->boolean('is_from_direct_purchase')->default(false);
             $table->foreignId('warehouse_id')->references('id')->on('warehouses');
             $table->string('remarks')->nullable();

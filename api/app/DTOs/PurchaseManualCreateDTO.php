@@ -10,7 +10,7 @@ final class PurchaseManualCreateDTO
         public readonly string $code,
         public readonly string $date,
         public readonly int $dueDays,
-        public readonly ?int $supplierId,
+        public readonly int $supplierId,
         public readonly ?int $purchaseOrderId,
         public readonly ?string $taxInvoiceNumber,
         public readonly float $taxInvoiceVatBase,
@@ -25,6 +25,7 @@ final class PurchaseManualCreateDTO
         public readonly array $globalDiscounts,
 
         public readonly array $additionalCosts,
+        public readonly array $manualReceipts,
     ) {
     }
 }
