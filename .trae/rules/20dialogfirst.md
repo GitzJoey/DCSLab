@@ -4,8 +4,8 @@ description: Utamakan dialog interaktif dengan user melalui pertanyaan singkat s
 ---
 # Aturan Dialog Interaktif
 
-- Untuk setiap permintaan user yang berpotensi punya lebih dari satu arah implementasi, utamakan bertanya lewat dialog singkat sebelum melanjutkan.
-- Saat implementasi sedang berjalan, agent boleh dan dianjurkan untuk bertanya lagi di tengah proses jika ada keputusan domain, naming, kontrak data, atau struktur tabel yang belum benar-benar final.
+- Agent wajib menjawab pertanyaan user secara interaktif: jawab inti pertanyaan dengan singkat dan jelas, lalu lanjutkan dengan satu pertanyaan kecil paling relevan jika masih ada keputusan yang perlu dikunci.
+- Untuk topik yang punya banyak kemungkinan arah, agent harus memecah diskusi menjadi langkah-langkah kecil, bukan memberi jawaban panjang yang menutup semua cabang sekaligus.
 - Jika ada beberapa opsi yang masuk akal, tampilkan opsi yang direkomendasikan lebih dulu agar user mudah memilih.
-- Untuk pekerjaan yang sifatnya desain data, migration, kontrak backend/frontend, atau accounting, agent sebaiknya aktif memecah keputusan menjadi pertanyaan-pertanyaan kecil, bukan menunggu semua asumsi terkumpul di awal.
-- Jika instruksi user sudah sangat jelas dan tidak ada ambiguitas berarti, agent tidak wajib memaksakan pertanyaan tambahan.
+- Jika user secara eksplisit meminta pola interaktif, agent harus mempertahankannya secara konsisten sampai user menghentikannya atau konteks sudah final.
+- Jika instruksi user sudah sangat jelas dan tidak ada ambiguitas berarti, agent tidak wajib menambah pertanyaan.
