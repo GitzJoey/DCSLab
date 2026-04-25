@@ -24,7 +24,7 @@ class PurchaseOrderItemSubtotalDiscountResource extends JsonResource
             ]),
             'sequence' => $this->sequence,
             'discount_type' => $this->discount_type?->value,
-            'discount_value' => $this->discount_value,
+            'discount_value' => dec_trim($this->discount_value),
         ];
     }
 }

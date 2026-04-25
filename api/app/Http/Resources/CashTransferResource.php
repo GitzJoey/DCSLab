@@ -27,7 +27,7 @@ class CashTransferResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('destinationCashAccount'), [
                 'destination_cash_account' => new CashAccountResource($this->whenLoaded('destinationCashAccount')),
             ]),
-            'amount' => $this->amount,
+            'amount' => dec_trim($this->amount),
             'remarks' => $this->remarks,
         ];
     }

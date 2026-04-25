@@ -28,7 +28,7 @@ class CapitalTransactionResource extends JsonResource
                 'cash_account' => new CashAccountResource($this->whenLoaded('cashAccount')),
             ]),
             'type' => $this->type?->value,
-            'amount' => $this->amount,
+            'amount' => dec_trim($this->amount),
             'remarks' => $this->remarks,
         ];
     }

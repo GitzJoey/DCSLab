@@ -28,13 +28,13 @@ class ExpenseResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('paidImmediatelyCashAccount'), [
                 'paid_immediately_cash_account' => new CashAccountResource($this->whenLoaded('paidImmediatelyCashAccount')),
             ]),
-            'amount_paid_immediately' => $this->amount_paid_immediately,
-            'amount_payable' => $this->amount_payable,
+            'amount_paid_immediately' => dec_trim($this->amount_paid_immediately),
+            'amount_payable' => dec_trim($this->amount_payable),
             'due_days' => $this->due_days,
-            'amount_payable_paid' => $this->amount_payable_paid,
-            'amount_payable_due' => $this->amount_payable_due,
+            'amount_payable_paid' => dec_trim($this->amount_payable_paid),
+            'amount_payable_due' => dec_trim($this->amount_payable_due),
             'is_amount_payable_paid_off' => $this->is_amount_payable_paid_off,
-            'amount_total' => $this->amount_total,
+            'amount_total' => dec_trim($this->amount_total),
             'remarks' => $this->remarks,
             $this->mergeWhen($this->relationLoaded('payments'), [
                 'payments' => ExpensePaymentResource::collection($this->whenLoaded('payments')),

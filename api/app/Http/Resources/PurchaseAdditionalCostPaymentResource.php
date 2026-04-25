@@ -27,7 +27,7 @@ class PurchaseAdditionalCostPaymentResource extends JsonResource
             ]),
             'code' => $this->code,
             'date' => $this->date,
-            'amount' => $this->amount,
+            'amount' => dec_trim($this->amount),
             'remarks' => $this->remarks,
         ];
     }

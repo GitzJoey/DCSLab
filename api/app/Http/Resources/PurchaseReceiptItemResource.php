@@ -29,9 +29,9 @@ class PurchaseReceiptItemResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('productUnit'), [
                 'product_unit' => new ProductUnitResource($this->whenLoaded('productUnit')),
             ]),
-            'qty' => $this->qty,
-            'product_unit_conversion_value' => $this->product_unit_conversion_value,
-            'product_unit_qty_base' => $this->product_unit_qty_base,
+            'qty' => dec_trim($this->qty),
+            'product_unit_conversion_value' => dec_trim($this->product_unit_conversion_value),
+            'product_unit_qty_base' => dec_trim($this->product_unit_qty_base),
             'remarks' => $this->remarks,
 
             $this->mergeWhen($this->relationLoaded('serials'), [

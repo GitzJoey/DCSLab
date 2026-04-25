@@ -28,8 +28,8 @@ class PurchaseOrderDownPaymentResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('cashAccount'), [
                 'cash_account' => new CashAccountResource($this->whenLoaded('cashAccount')),
             ]),
-            'amount' => $this->amount,
-            'amount_allocated' => $this->amount_allocated,
+            'amount' => dec_trim($this->amount),
+            'amount_allocated' => dec_trim($this->amount_allocated),
             'remarks' => $this->remarks,
         ];
     }

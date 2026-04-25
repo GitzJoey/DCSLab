@@ -21,10 +21,10 @@ class StockAdjustmentOutItemResource extends JsonResource
             'company' => new CompanyResource($this->whenLoaded('company')),
             'branch' => new BranchResource($this->whenLoaded('branch')),
             'stock_adjustment' => new StockAdjustmentResource($this->whenLoaded('stockAdjustment')),
-            'qty' => $this->qty,
+            'qty' => dec_trim($this->qty),
             'product_unit' => new ProductUnitResource($this->whenLoaded('productUnit')),
-            'product_unit_conversion_value' => $this->product_unit_conversion_value,
-            'product_unit_qty_base' => $this->product_unit_qty_base,
+            'product_unit_conversion_value' => dec_trim($this->product_unit_conversion_value),
+            'product_unit_qty_base' => dec_trim($this->product_unit_qty_base),
             'remarks' => $this->remarks,
             'serials' => StockAdjustmentOutItemSerialResource::collection($this->whenLoaded('serials')),
         ];

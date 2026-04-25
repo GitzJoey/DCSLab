@@ -28,7 +28,7 @@ class CustomerResource extends JsonResource
             ]),
             'zone' => $this->zone,
             'max_open_invoice' => $this->max_open_invoice,
-            'max_outstanding_invoice' => $this->max_outstanding_invoice,
+            'max_outstanding_invoice' => dec_trim($this->max_outstanding_invoice),
             'max_invoice_age' => $this->max_invoice_age,
             'payment_term_type' => $this->payment_term_type?->name,
             'payment_term' => $this->payment_term,

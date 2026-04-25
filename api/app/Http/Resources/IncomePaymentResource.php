@@ -28,7 +28,7 @@ class IncomePaymentResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('cashAccount'), [
                 'cash_account' => new CashAccountResource($this->whenLoaded('cashAccount')),
             ]),
-            'amount' => $this->amount,
+            'amount' => dec_trim($this->amount),
             'remarks' => $this->remarks,
         ];
     }

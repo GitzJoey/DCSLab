@@ -29,13 +29,13 @@ class PrepaidIncomeResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('paidImmediatelyCashAccount'), [
                 'paid_immediately_cash_account' => new CashAccountResource($this->whenLoaded('paidImmediatelyCashAccount')),
             ]),
-            'amount_paid_immediately' => $this->amount_paid_immediately,
-            'amount_receivable' => $this->amount_receivable,
+            'amount_paid_immediately' => dec_trim($this->amount_paid_immediately),
+            'amount_receivable' => dec_trim($this->amount_receivable),
             'due_days' => $this->due_days,
-            'amount_receivable_paid' => $this->amount_receivable_paid,
-            'amount_receivable_due' => $this->amount_receivable_due,
+            'amount_receivable_paid' => dec_trim($this->amount_receivable_paid),
+            'amount_receivable_due' => dec_trim($this->amount_receivable_due),
             'is_amount_receivable_paid_off' => $this->is_amount_receivable_paid_off,
-            'amount_total' => $this->amount_total,
+            'amount_total' => dec_trim($this->amount_total),
             'remarks' => $this->remarks,
             $this->mergeWhen($this->relationLoaded('payments'), [
                 'payments' => PrepaidIncomePaymentResource::collection($this->whenLoaded('payments')),
