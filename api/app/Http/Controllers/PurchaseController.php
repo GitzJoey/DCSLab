@@ -209,8 +209,6 @@ class PurchaseController extends BaseController
                     globalDiscounts: $validatedRequest['global_discounts'],
 
                     additionalCosts: $validatedRequest['additional_costs'],
-
-                    manualReceipts: $validatedRequest['manual_receipts'],
                 )
             );
 
@@ -332,8 +330,6 @@ class PurchaseController extends BaseController
 
                     deleteAdditionalCostIds: $validatedRequest['delete_additional_cost_ids'],
                     additionalCosts: $validatedRequest['additional_costs'],
-
-                    manualReceipts: $validatedRequest['manual_receipts'],
                 ),
             );
 

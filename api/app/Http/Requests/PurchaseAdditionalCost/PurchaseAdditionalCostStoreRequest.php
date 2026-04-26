@@ -72,7 +72,7 @@ class PurchaseAdditionalCostStoreRequest extends FormRequest
             }
 
             if ($amountPaidImmediately <= 0 && $amountPayable <= 0) {
-                $validator->errors()->add('amount_total', 'Either immediate payment or payable amount must be greater than zero.');
+                $validator->errors()->add('amount_total', trans('rules.purchase_additional_cost.amount_total_must_be_positive'));
             }
         });
     }

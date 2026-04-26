@@ -6,13 +6,13 @@ use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Models\Purchase;
 use App\Models\PurchaseAdditionalCost;
+use App\Models\PurchaseOrder;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidCompany;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
-use App\Rules\IsValidWarehouse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -69,22 +69,6 @@ class PurchaseManualStoreRequest extends FormRequest
                 $additionalCosts[] = $additionalCost;
             }
             $this->merge(['additional_costs' => $additionalCosts]);
-        }
-
-        if (is_array($this->input('manual_receipts'))) {
-            $manualReceipts = [];
-            foreach ($this->input('manual_receipts') as $manualReceipt) {
-                if (array_key_exists('id', $manualReceipt) && ! is_null($manualReceipt['id'])) {
-                    $manualReceipt['id'] = HashidsHelper::decodeId($manualReceipt['id']);
-                }
-                if (array_key_exists('warehouse_id', $manualReceipt) && ! is_null($manualReceipt['warehouse_id'])) {
-                    $manualReceipt['warehouse_id'] = HashidsHelper::decodeId($manualReceipt['warehouse_id']);
-                }
-                $manualReceipts[] = $manualReceipt;
-            }
-            $this->merge(['manual_receipts' => $manualReceipts]);
-        } else {
-            $this->merge(['manual_receipts' => []]);
         }
     }
 
@@ -149,20 +133,6 @@ class PurchaseManualStoreRequest extends FormRequest
             'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
 
-            'manual_receipts' => ['present', 'array'],
-            'manual_receipts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_receipts', $this->company_id)],
-            'manual_receipts.*.code' => ['required', 'string'],
-            'manual_receipts.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
-            'manual_receipts.*.warehouse_id' => ['required', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
-            'manual_receipts.*.remarks' => ['present', 'nullable', 'string'],
-            'manual_receipts.*.is_posted' => ['required', 'boolean'],
-            'manual_receipts.*.items' => ['required', 'array'],
-            'manual_receipts.*.items.*.purchase_item_index' => ['required', 'integer', 'min:0'],
-            'manual_receipts.*.items.*.qty' => ['required', 'numeric', 'gt:0'],
-            'manual_receipts.*.items.*.remarks' => ['present', 'nullable', 'string'],
-            'manual_receipts.*.items.*.serials' => ['required', 'array'],
-            'manual_receipts.*.items.*.serials.*.serial' => ['required', 'string'],
-
             'additional_costs' => ['required', 'array'],
             'additional_costs.*.purchase_additional_cost_category_id' => [
                 'required',
@@ -189,6 +159,43 @@ class PurchaseManualStoreRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            $purchaseOrderId = $this->input('purchase_order_id');
+
+            if (is_null($purchaseOrderId)) {
+                foreach ($this->input('items', []) as $index => $item) {
+                    if (! empty($item['purchase_order_item_id'])) {
+                        $validator->errors()->add(
+                            "items.$index.purchase_order_item_id",
+                            trans('rules.purchase.purchase_order_item_must_be_empty_without_purchase_order')
+                        );
+                    }
+                }
+            } else {
+                $purchaseOrder = PurchaseOrder::with('items:id,purchase_order_id')->find($purchaseOrderId);
+
+                if (! is_null($purchaseOrder)) {
+                    if ((int) $this->input('supplier_id') !== (int) $purchaseOrder->supplier_id) {
+                        $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_supplier_must_match'));
+                    }
+
+                    if ((int) $this->input('branch_id') !== (int) $purchaseOrder->branch_id) {
+                        $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_branch_must_match'));
+                    }
+
+                    $purchaseOrderItemIds = $purchaseOrder->items->pluck('id')->all();
+                    foreach ($this->input('items', []) as $index => $item) {
+                        $purchaseOrderItemId = $item['purchase_order_item_id'] ?? null;
+
+                        if (! is_null($purchaseOrderItemId) && ! in_array($purchaseOrderItemId, $purchaseOrderItemIds, true)) {
+                            $validator->errors()->add(
+                                "items.$index.purchase_order_item_id",
+                                trans('rules.purchase.invalid_purchase_order_item_reference')
+                            );
+                        }
+                    }
+                }
+            }
+
             foreach ($this->input('additional_costs', []) as $index => $additionalCost) {
                 $amountPaidImmediately = (float) ($additionalCost['amount_paid_immediately'] ?? 0);
                 $amountPayable = (float) ($additionalCost['amount_payable'] ?? 0);
@@ -206,7 +213,7 @@ class PurchaseManualStoreRequest extends FormRequest
                 if ($amountPaidImmediately <= 0 && $amountPayable <= 0) {
                     $validator->errors()->add(
                         "additional_costs.$index.amount_total",
-                        'Either immediate payment or payable amount must be greater than zero.'
+                        trans('rules.purchase.additional_cost_amount_total_must_be_positive')
                     );
                 }
 

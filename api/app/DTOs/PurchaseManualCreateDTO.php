@@ -23,9 +23,7 @@ final class PurchaseManualCreateDTO
         public readonly array $items,
 
         public readonly array $globalDiscounts,
-
         public readonly array $additionalCosts,
-        public readonly array $manualReceipts,
     ) {
     }
 }

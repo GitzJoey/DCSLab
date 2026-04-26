@@ -112,14 +112,14 @@ class StockTransferStoreRequest extends FormRequest
                 $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
                 $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
                 if (str_contains($normalizedBaseQty, '.')) {
-                    $validator->errors()->add('items.'.$index.'.serials', 'Base qty harus bilangan bulat untuk product serial.');
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.stock_transfer.serial_base_qty_must_be_integer'));
 
                     continue;
                 }
 
                 $serialCount = (string) count(is_array($serials) ? $serials : []);
                 if (bccomp($serialCount, $baseQty, 8) !== 0) {
-                    $validator->errors()->add('items.'.$index.'.serials', 'Jumlah serial harus sama dengan qty base.');
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.stock_transfer.serial_count_must_match_base_qty'));
                 }
             }
         });

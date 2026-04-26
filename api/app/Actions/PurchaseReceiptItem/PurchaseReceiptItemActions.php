@@ -189,7 +189,7 @@ class PurchaseReceiptItemActions
             $purchaseReceiptItem->qty = $data->qty;
             $purchaseReceiptItem->product_unit_id = $data->productUnitId;
             $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;
-            $purchaseReceiptItem->product_unit_qty_base = $data->productUnitQtyBase;
+            $purchaseReceiptItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $purchaseReceiptItem->remarks = $data->remarks;
             $purchaseReceiptItem->save();
 
@@ -230,7 +230,7 @@ class PurchaseReceiptItemActions
             $purchaseReceiptItem->qty = $data->qty;
             $purchaseReceiptItem->product_unit_id = $data->productUnitId;
             $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;
-            $purchaseReceiptItem->product_unit_qty_base = $data->productUnitQtyBase;
+            $purchaseReceiptItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $purchaseReceiptItem->remarks = $data->remarks;
             $purchaseReceiptItem->save();
 

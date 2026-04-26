@@ -20,6 +20,36 @@ return [
     'purchase_order' => [
         'exceed_available_down_payment' => 'Total down payment refund exceeds the available down payment',
     ],
+    'purchase' => [
+        'invalid_delete_item_reference' => 'The selected delete item id is invalid for this purchase.',
+        'invalid_item_reference' => 'The selected item is invalid for this purchase.',
+        'purchase_order_supplier_must_match' => 'Supplier must match the selected purchase order.',
+        'purchase_order_branch_must_match' => 'Branch must match the selected purchase order.',
+        'purchase_order_item_must_be_empty_without_purchase_order' => 'Purchase order item must be empty when purchase order is not selected.',
+        'invalid_purchase_order_item_reference' => 'The selected purchase order item is invalid for this purchase order.',
+        'invalid_product_unit_price_discount_reference' => 'The selected item unit price discount is invalid for this purchase.',
+        'invalid_subtotal_discount_reference' => 'The selected item subtotal discount is invalid for this purchase.',
+        'invalid_global_discount_reference' => 'The selected global discount is invalid for this purchase.',
+        'invalid_additional_cost_reference' => 'The selected additional cost is invalid for this purchase.',
+        'manual_receipt_id_must_be_empty_on_store' => 'Manual receipt id must be empty when creating a purchase.',
+        'invalid_manual_receipt_reference' => 'The selected manual receipt is invalid for this purchase.',
+        'duplicate_manual_receipt_reference' => 'The same manual receipt cannot be used more than once in a single request.',
+        'invalid_purchase_item_index' => 'The selected purchase item index is invalid.',
+        'additional_cost_amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
+    ],
+    'purchase_receipt' => [
+        'direct_mode_is_managed_from_purchase' => 'Direct purchase receipt must be managed from purchase.',
+        'purchase_item_must_be_empty_without_purchase' => 'Purchase item must be empty when purchase is not selected.',
+        'supplier_must_match_purchase' => 'Supplier must match the linked purchase.',
+        'branch_must_match_purchase' => 'Branch must match the linked purchase.',
+        'purchase_branch_must_match_receipt_branch' => 'Purchase branch must match the purchase receipt branch.',
+        'purchase_item_is_required_with_purchase' => 'Purchase item is required when purchase is selected.',
+        'invalid_purchase_item_reference' => 'The selected purchase item is invalid for the linked purchase.',
+        'direct_mode_cannot_be_deleted_here' => 'Direct purchase receipt cannot be deleted from purchase receipt management.',
+    ],
+    'purchase_additional_cost' => [
+        'amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
+    ],
     'company' => [
         'deactivate_default_company' => 'Default company cannot be deactivated',
         'delete_default_company' => 'Default company cannot be deleted',
@@ -86,6 +116,10 @@ return [
         'invalid_out_item_reference' => 'Outgoing item data is invalid for this stock adjustment.',
         'invalid_in_item_serial_reference' => 'Incoming item serial data is invalid for this stock adjustment.',
         'invalid_out_item_serial_reference' => 'Outgoing item serial data is invalid for this stock adjustment.',
+    ],
+    'stock_transfer' => [
+        'serial_base_qty_must_be_integer' => 'Base qty must be an integer for serial products.',
+        'serial_count_must_match_base_qty' => 'The serial count must match the base qty.',
     ],
     'product' => [
         'unit' => [

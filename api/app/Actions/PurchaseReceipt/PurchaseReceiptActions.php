@@ -221,7 +221,7 @@ class PurchaseReceiptActions
         return TimezoneHelper::convertToUTC($date);
     }
 
-    public function create(PurchaseReceiptCreateDTO $data, bool $updateParent): PurchaseReceipt
+    public function create(PurchaseReceiptCreateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
     {
         $timer_start = microtime(true);
 
@@ -249,7 +249,6 @@ class PurchaseReceiptActions
                     qty: $item['qty'],
                     productUnitId: $item['product_unit_id'],
                     productUnitConversionValue: $item['product_unit_conversion_value'],
-                    productUnitQtyBase: $item['product_unit_qty_base'],
                     remarks: $item['remarks'],
 
                     serials: $item['serials'],
@@ -260,7 +259,7 @@ class PurchaseReceiptActions
 
             self::updateSummary($purchaseReceipt);
 
-            if ($purchaseReceipt->purchase && $updateParent) {
+            if ($purchaseReceipt->purchase && $updatePurchaseSummary) {
                 PurchaseActions::updateSummary($purchaseReceipt->purchase);
             }
 
@@ -276,11 +275,13 @@ class PurchaseReceiptActions
         }
     }
 
-    public function update(PurchaseReceipt $purchaseReceipt, PurchaseReceiptUpdateDTO $data, bool $updateParent): PurchaseReceipt
+    public function update(PurchaseReceipt $purchaseReceipt, PurchaseReceiptUpdateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
     {
         $timer_start = microtime(true);
 
         try {
+            $previousPurchase = $purchaseReceipt->purchase;
+
             $purchaseReceipt->supplier_id = $data->supplierId;
             $purchaseReceipt->purchase_id = $data->purchaseId;
             $purchaseReceipt->code = $this->generateUniqueCode($purchaseReceipt->company_id, $data->code, $purchaseReceipt->id);
@@ -305,7 +306,6 @@ class PurchaseReceiptActions
                     qty: $item['qty'],
                     productUnitId: $item['product_unit_id'],
                     productUnitConversionValue: $item['product_unit_conversion_value'],
-                    productUnitQtyBase: $item['product_unit_qty_base'],
                     remarks: $item['remarks'],
 
                     serials: $item['serials'],
@@ -316,8 +316,16 @@ class PurchaseReceiptActions
 
             self::updateSummary($purchaseReceipt);
 
-            if ($purchaseReceipt->purchase && $updateParent) {
-                PurchaseActions::updateSummary($purchaseReceipt->purchase);
+            if ($previousPurchase && $updatePurchaseSummary) {
+                PurchaseActions::updateSummary($previousPurchase->refresh());
+            }
+
+            if ($purchaseReceipt->purchase && $updatePurchaseSummary) {
+                if (! $previousPurchase || $purchaseReceipt->purchase->id !== $previousPurchase->id) {
+                    PurchaseActions::updateSummary($purchaseReceipt->purchase);
+                } else {
+                    PurchaseActions::updateSummary($purchaseReceipt->purchase->refresh());
+                }
             }
 
             $this->flushCache();
@@ -335,16 +343,14 @@ class PurchaseReceiptActions
     public static function updateSummary(PurchaseReceipt $purchaseReceipt): void
     {
         $purchaseReceipt->refresh()->load(self::DETAIL_EAGER_LOADS);
-
-        // implament later...
     }
 
-    public function delete(PurchaseReceipt $purchaseReceipt, bool $updateParent): bool
+    public function delete(PurchaseReceipt $purchaseReceipt, bool $updatePurchaseSummary): bool
     {
         $timer_start = microtime(true);
 
         try {
-            $purchase = $updateParent ? $purchaseReceipt->purchase : null;
+            $purchase = $purchaseReceipt->purchase;
 
             foreach ($purchaseReceipt->items as $purchaseReceiptItem) {
                 $this->purchaseReceiptItemActions->delete($purchaseReceiptItem, false);
@@ -352,8 +358,8 @@ class PurchaseReceiptActions
 
             $result = $purchaseReceipt->delete();
 
-            if ($updateParent && $purchase) {
-                PurchaseActions::updateSummary($purchase);
+            if ($purchase && $updatePurchaseSummary) {
+                PurchaseActions::updateSummary($purchase->refresh());
             }
 
             $this->flushCache();

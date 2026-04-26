@@ -13,7 +13,6 @@ final class PurchaseReceiptItemCreateDTO
         public readonly float $qty,
         public readonly int $productUnitId,
         public readonly float $productUnitConversionValue,
-        public readonly float $productUnitQtyBase,
         public readonly ?string $remarks,
 
         public readonly array $serials,

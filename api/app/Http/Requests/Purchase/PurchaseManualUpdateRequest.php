@@ -5,11 +5,11 @@ namespace App\Http\Requests\Purchase;
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Models\PurchaseAdditionalCost;
+use App\Models\PurchaseOrder;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
-use App\Rules\IsValidWarehouse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -78,12 +78,6 @@ class PurchaseManualUpdateRequest extends FormRequest
 
                 return $additionalCost;
             })->all(),
-            'manual_receipts' => collect($this->manual_receipts ?? [])->map(function ($manualReceipt) {
-                $manualReceipt['id'] = ! empty($manualReceipt['id']) ? HashidsHelper::decodeId($manualReceipt['id']) : null;
-                $manualReceipt['warehouse_id'] = ! empty($manualReceipt['warehouse_id']) ? HashidsHelper::decodeId($manualReceipt['warehouse_id']) : null;
-
-                return $manualReceipt;
-            })->all(),
         ]);
     }
 
@@ -144,20 +138,6 @@ class PurchaseManualUpdateRequest extends FormRequest
             'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
 
-            'manual_receipts' => ['present', 'array'],
-            'manual_receipts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_receipts', $this->company_id)],
-            'manual_receipts.*.code' => ['required', 'string'],
-            'manual_receipts.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
-            'manual_receipts.*.warehouse_id' => ['required', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
-            'manual_receipts.*.remarks' => ['present', 'nullable', 'string'],
-            'manual_receipts.*.is_posted' => ['required', 'boolean'],
-            'manual_receipts.*.items' => ['required', 'array'],
-            'manual_receipts.*.items.*.purchase_item_index' => ['required', 'integer', 'min:0'],
-            'manual_receipts.*.items.*.qty' => ['required', 'numeric', 'gt:0'],
-            'manual_receipts.*.items.*.remarks' => ['present', 'nullable', 'string'],
-            'manual_receipts.*.items.*.serials' => ['required', 'array'],
-            'manual_receipts.*.items.*.serials.*.serial' => ['required', 'string'],
-
             'delete_additional_cost_ids' => ['required', 'array'],
             'delete_additional_cost_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_additional_costs', $this->company_id)],
             'additional_costs' => ['required', 'array'],
@@ -187,11 +167,152 @@ class PurchaseManualUpdateRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            $purchase = $this->route('purchase');
+            $purchaseOrderId = $this->input('purchase_order_id');
+            $purchaseItems = $purchase->items()
+                ->with([
+                    'productUnitPriceDiscounts:id,purchase_item_id',
+                    'subtotalDiscounts:id,purchase_item_id',
+                ])
+                ->get()
+                ->keyBy('id');
+            $purchaseItemIds = $purchaseItems->keys()->all();
+            $purchaseGlobalDiscountIds = $purchase->globalDiscounts()->pluck('id')->all();
+            $purchaseAdditionalCostIds = $purchase->additionalCosts()->pluck('id')->all();
+
+            if (is_null($purchaseOrderId)) {
+                foreach ($this->input('items', []) as $index => $item) {
+                    if (! empty($item['purchase_order_item_id'])) {
+                        $validator->errors()->add(
+                            "items.$index.purchase_order_item_id",
+                            trans('rules.purchase.purchase_order_item_must_be_empty_without_purchase_order')
+                        );
+                    }
+                }
+            } else {
+                $purchaseOrder = PurchaseOrder::with('items:id,purchase_order_id')->find($purchaseOrderId);
+
+                if (! is_null($purchaseOrder)) {
+                    if ((int) $this->input('supplier_id') !== (int) $purchaseOrder->supplier_id) {
+                        $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_supplier_must_match'));
+                    }
+
+                    if ((int) $purchase->branch_id !== (int) $purchaseOrder->branch_id) {
+                        $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_branch_must_match'));
+                    }
+
+                    $purchaseOrderItemIds = $purchaseOrder->items->pluck('id')->all();
+                    foreach ($this->input('items', []) as $index => $item) {
+                        $purchaseOrderItemId = $item['purchase_order_item_id'] ?? null;
+
+                        if (! is_null($purchaseOrderItemId) && ! in_array($purchaseOrderItemId, $purchaseOrderItemIds, true)) {
+                            $validator->errors()->add(
+                                "items.$index.purchase_order_item_id",
+                                trans('rules.purchase.invalid_purchase_order_item_reference')
+                            );
+                        }
+                    }
+                }
+            }
+
+            foreach ($this->input('delete_item_ids', []) as $index => $deleteItemId) {
+                if (! in_array($deleteItemId, $purchaseItemIds, true)) {
+                    $validator->errors()->add("delete_item_ids.$index", trans('rules.purchase.invalid_delete_item_reference'));
+                }
+            }
+
+            foreach ($this->input('items', []) as $index => $item) {
+                $itemId = $item['id'] ?? null;
+                $purchaseItem = ! is_null($itemId) ? $purchaseItems->get($itemId) : null;
+
+                if (! is_null($itemId) && is_null($purchaseItem)) {
+                    $validator->errors()->add("items.$index.id", trans('rules.purchase.invalid_item_reference'));
+                }
+
+                $productUnitPriceDiscountIds = $purchaseItem?->productUnitPriceDiscounts->pluck('id')->all() ?? [];
+                foreach ($item['delete_product_unit_price_discount_ids'] ?? [] as $discountIndex => $discountId) {
+                    if (! in_array($discountId, $productUnitPriceDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.delete_product_unit_price_discount_ids.$discountIndex",
+                            trans('rules.purchase.invalid_product_unit_price_discount_reference')
+                        );
+                    }
+                }
+
+                foreach ($item['product_unit_price_discounts'] ?? [] as $discountIndex => $discount) {
+                    $discountId = $discount['id'] ?? null;
+
+                    if (! is_null($discountId) && ! in_array($discountId, $productUnitPriceDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.product_unit_price_discounts.$discountIndex.id",
+                            trans('rules.purchase.invalid_product_unit_price_discount_reference')
+                        );
+                    }
+                }
+
+                $subtotalDiscountIds = $purchaseItem?->subtotalDiscounts->pluck('id')->all() ?? [];
+                foreach ($item['delete_subtotal_discount_ids'] ?? [] as $discountIndex => $discountId) {
+                    if (! in_array($discountId, $subtotalDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.delete_subtotal_discount_ids.$discountIndex",
+                            trans('rules.purchase.invalid_subtotal_discount_reference')
+                        );
+                    }
+                }
+
+                foreach ($item['subtotal_discounts'] ?? [] as $discountIndex => $discount) {
+                    $discountId = $discount['id'] ?? null;
+
+                    if (! is_null($discountId) && ! in_array($discountId, $subtotalDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.subtotal_discounts.$discountIndex.id",
+                            trans('rules.purchase.invalid_subtotal_discount_reference')
+                        );
+                    }
+                }
+            }
+
+            foreach ($this->input('delete_global_discount_ids', []) as $index => $discountId) {
+                if (! in_array($discountId, $purchaseGlobalDiscountIds, true)) {
+                    $validator->errors()->add(
+                        "delete_global_discount_ids.$index",
+                        trans('rules.purchase.invalid_global_discount_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('global_discounts', []) as $index => $discount) {
+                $discountId = $discount['id'] ?? null;
+
+                if (! is_null($discountId) && ! in_array($discountId, $purchaseGlobalDiscountIds, true)) {
+                    $validator->errors()->add(
+                        "global_discounts.$index.id",
+                        trans('rules.purchase.invalid_global_discount_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('delete_additional_cost_ids', []) as $index => $additionalCostId) {
+                if (! in_array($additionalCostId, $purchaseAdditionalCostIds, true)) {
+                    $validator->errors()->add(
+                        "delete_additional_cost_ids.$index",
+                        trans('rules.purchase.invalid_additional_cost_reference')
+                    );
+                }
+            }
+
             foreach ($this->input('additional_costs', []) as $index => $additionalCost) {
                 $amountPaidImmediately = (float) ($additionalCost['amount_paid_immediately'] ?? 0);
                 $amountPayable = (float) ($additionalCost['amount_payable'] ?? 0);
                 $code = $additionalCost['code'] ?? null;
                 $id = $additionalCost['id'] ?? null;
+
+                if (! is_null($id) && ! in_array($id, $purchaseAdditionalCostIds, true)) {
+                    $validator->errors()->add(
+                        "additional_costs.$index.id",
+                        trans('rules.purchase.invalid_additional_cost_reference')
+                    );
+                }
 
                 if ($amountPaidImmediately > 0 && empty($additionalCost['paid_immediately_cash_account_id'])) {
                     $validator->errors()->add(
@@ -205,7 +326,7 @@ class PurchaseManualUpdateRequest extends FormRequest
                 if ($amountPaidImmediately <= 0 && $amountPayable <= 0) {
                     $validator->errors()->add(
                         "additional_costs.$index.amount_total",
-                        'Either immediate payment or payable amount must be greater than zero.'
+                        trans('rules.purchase.additional_cost_amount_total_must_be_positive')
                     );
                 }
 

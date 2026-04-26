@@ -301,7 +301,6 @@ class PurchaseActions
                     'qty' => $item['qty'],
                     'product_unit_id' => $item['product_unit_id'],
                     'product_unit_conversion_value' => $item['product_unit_conversion_value'],
-                    'product_unit_qty_base' => $item['product_unit_qty_base'],
                     'remarks' => $item['remarks'],
                     'serials' => $item['serials'],
                 ];
@@ -389,7 +388,6 @@ class PurchaseActions
             $purchase->rounding = $data->rounding;
             $purchase->save();
 
-            $purchaseItems = [];
             foreach ($data->items as $item) {
                 $dto = new PurchaseItemCreateDTO(
                     companyId: $purchase->company_id,
@@ -410,41 +408,7 @@ class PurchaseActions
                     remarks: $item['remarks'],
                 );
 
-                $purchaseItems[] = $this->purchaseItemActions->create($dto, false);
-            }
-
-            foreach ($data->manualReceipts as $manualReceipt) {
-                $items = [];
-                foreach ($manualReceipt['items'] as $receiptItem) {
-                    $purchaseItem = $purchaseItems[$receiptItem['purchase_item_index']];
-                    $qty = (float) $receiptItem['qty'];
-
-                    $items[] = [
-                        'purchase_item_id' => $purchaseItem->id,
-                        'qty' => $qty,
-                        'product_unit_id' => $purchaseItem->product_unit_id,
-                        'product_unit_conversion_value' => (float) $purchaseItem->product_unit_conversion_value,
-                        'product_unit_qty_base' => $qty * (float) $purchaseItem->product_unit_conversion_value,
-                        'remarks' => $receiptItem['remarks'],
-                        'serials' => $receiptItem['serials'],
-                    ];
-                }
-
-                $dto = new PurchaseReceiptCreateDTO(
-                    companyId: $purchase->company_id,
-                    branchId: $purchase->branch_id,
-                    supplierId: $purchase->supplier_id,
-                    purchaseId: $purchase->id,
-                    isFromDirectPurchase: false,
-                    code: $manualReceipt['code'],
-                    date: $manualReceipt['date'],
-                    warehouseId: $manualReceipt['warehouse_id'],
-                    remarks: $manualReceipt['remarks'],
-                    isPosted: $manualReceipt['is_posted'],
-                    items: $items,
-                );
-
-                $this->purchaseReceiptActions->create($dto, false);
+                $this->purchaseItemActions->create($dto, false);
             }
 
             foreach ($data->globalDiscounts as $globalDiscount) {
@@ -512,7 +476,7 @@ class PurchaseActions
 
             foreach ($data->deleteItemIds as $deleteId) {
                 $purchaseItem = $purchase->items()->findOrFail($deleteId);
-                $this->purchaseItemActions->delete($purchaseItem);
+                $this->purchaseItemActions->delete($purchaseItem, false);
             }
 
             for ($i = 0; $i < count($data->items); $i++) {
@@ -570,7 +534,6 @@ class PurchaseActions
                     'qty' => $item['qty'],
                     'product_unit_id' => $item['product_unit_id'],
                     'product_unit_conversion_value' => $item['product_unit_conversion_value'],
-                    'product_unit_qty_base' => $item['product_unit_qty_base'],
                     'remarks' => $item['remarks'],
                     'serials' => $item['serials'],
                 ];
@@ -710,10 +673,9 @@ class PurchaseActions
 
             foreach ($data->deleteItemIds as $deleteId) {
                 $purchaseItem = $purchase->items()->findOrFail($deleteId);
-                $this->purchaseItemActions->delete($purchaseItem);
+                $this->purchaseItemActions->delete($purchaseItem, false);
             }
 
-            $purchaseItems = [];
             foreach ($data->items as $item) {
                 if (! empty($item['id'])) {
                     $purchaseItem = $purchase->items()->findOrFail($item['id']);
@@ -735,7 +697,7 @@ class PurchaseActions
                         remarks: $item['remarks'],
                     );
 
-                    $purchaseItems[] = $this->purchaseItemActions->update($purchaseItem, $dto, false);
+                    $this->purchaseItemActions->update($purchaseItem, $dto, false);
                 } else {
                     $dto = new PurchaseItemCreateDTO(
                         companyId: $purchase->company_id,
@@ -756,75 +718,7 @@ class PurchaseActions
                         remarks: $item['remarks'],
                     );
 
-                    $purchaseItems[] = $this->purchaseItemActions->create($dto, false);
-                }
-            }
-
-            $purchaseReceipt = $purchase->directReceipt()->first();
-            if ($purchaseReceipt) {
-                $this->purchaseReceiptActions->delete($purchaseReceipt, false);
-            }
-
-            $existingReceipts = $purchase->manualReceipts()->get()->keyBy('id');
-            $keptReceiptIds = [];
-
-            foreach ($data->manualReceipts as $manualReceipt) {
-                $items = [];
-                foreach ($manualReceipt['items'] as $receiptItem) {
-                    $purchaseItem = $purchaseItems[$receiptItem['purchase_item_index']];
-                    $qty = (float) $receiptItem['qty'];
-
-                    $items[] = [
-                        'purchase_item_id' => $purchaseItem->id,
-                        'qty' => $qty,
-                        'product_unit_id' => $purchaseItem->product_unit_id,
-                        'product_unit_conversion_value' => (float) $purchaseItem->product_unit_conversion_value,
-                        'product_unit_qty_base' => $qty * (float) $purchaseItem->product_unit_conversion_value,
-                        'remarks' => $receiptItem['remarks'],
-                        'serials' => $receiptItem['serials'],
-                    ];
-                }
-
-                if (! empty($manualReceipt['id'])) {
-                    $purchaseReceipt = $existingReceipts->get($manualReceipt['id']);
-
-                    $dto = new PurchaseReceiptUpdateDTO(
-                        supplierId: $purchase->supplier_id,
-                        purchaseId: $purchase->id,
-                        code: $manualReceipt['code'],
-                        date: $manualReceipt['date'],
-                        isFromDirectPurchase: false,
-                        warehouseId: $manualReceipt['warehouse_id'],
-                        remarks: $manualReceipt['remarks'],
-                        isPosted: $manualReceipt['is_posted'],
-                        items: $items,
-                    );
-
-                    $this->purchaseReceiptActions->update($purchaseReceipt, $dto, false);
-                    $keptReceiptIds[] = $purchaseReceipt->id;
-                } else {
-                    $dto = new PurchaseReceiptCreateDTO(
-                        companyId: $purchase->company_id,
-                        branchId: $purchase->branch_id,
-                        supplierId: $purchase->supplier_id,
-                        purchaseId: $purchase->id,
-                        isFromDirectPurchase: false,
-                        code: $manualReceipt['code'],
-                        date: $manualReceipt['date'],
-                        warehouseId: $manualReceipt['warehouse_id'],
-                        remarks: $manualReceipt['remarks'],
-                        isPosted: $manualReceipt['is_posted'],
-                        items: $items,
-                    );
-
-                    $purchaseReceipt = $this->purchaseReceiptActions->create($dto, false);
-                    $keptReceiptIds[] = $purchaseReceipt->id;
-                }
-            }
-
-            foreach ($existingReceipts as $purchaseReceipt) {
-                if (! in_array($purchaseReceipt->id, $keptReceiptIds, true)) {
-                    $this->purchaseReceiptActions->delete($purchaseReceipt, false);
+                    $this->purchaseItemActions->create($dto, false);
                 }
             }
 
@@ -1247,7 +1141,7 @@ class PurchaseActions
             }
 
             foreach ($purchase->items as $purchaseItem) {
-                $this->purchaseItemActions->delete($purchaseItem);
+                $this->purchaseItemActions->delete($purchaseItem, false);
             }
 
             foreach ($purchase->globalDiscounts as $purchaseGlobalDiscount) {

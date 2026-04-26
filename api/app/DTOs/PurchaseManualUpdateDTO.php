@@ -23,10 +23,8 @@ final class PurchaseManualUpdateDTO
 
         public readonly array $deleteGlobalDiscountIds,
         public readonly array $globalDiscounts,
-
         public readonly array $deleteAdditionalCostIds,
         public readonly array $additionalCosts,
-        public readonly array $manualReceipts,
     ) {
     }
 }

@@ -465,11 +465,13 @@ class PurchaseItemActions
         }
     }
 
-    public function delete(PurchaseItem $purchaseItem): bool
+    public function delete(PurchaseItem $purchaseItem, bool $updateParentSummary): bool
     {
         $timer_start = microtime(true);
 
         try {
+            $purchase = $purchaseItem->purchase;
+
             foreach ($purchaseItem->productUnitPriceDiscounts as $purchaseItemPriceDiscount) {
                 $this->purchaseItemProductUnitPriceDiscountActions->delete($purchaseItemPriceDiscount);
             }
@@ -478,7 +480,16 @@ class PurchaseItemActions
                 $this->purchaseItemSubtotalDiscountActions->delete($purchaseItemSubtotalDiscount);
             }
 
+            foreach ($purchaseItem->receiptItems as $purchaseReceiptItem) {
+                $purchaseReceiptItem->purchase_item_id = null;
+                $purchaseReceiptItem->save();
+            }
+
             $result = $purchaseItem->delete();
+
+            if ($updateParentSummary) {
+                PurchaseActions::updateSummary($purchase->refresh());
+            }
 
             $this->flushCache();
 

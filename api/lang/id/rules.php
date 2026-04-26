@@ -20,6 +20,36 @@ return [
     'purchase_order' => [
         'exceed_available_down_payment' => 'Total refund down payment melebihi down payment yang tersedia',
     ],
+    'purchase' => [
+        'invalid_delete_item_reference' => 'ID item hapus yang dipilih tidak valid untuk pembelian ini.',
+        'invalid_item_reference' => 'Item yang dipilih tidak valid untuk pembelian ini.',
+        'purchase_order_supplier_must_match' => 'Supplier harus sama dengan purchase order yang dipilih.',
+        'purchase_order_branch_must_match' => 'Cabang harus sama dengan purchase order yang dipilih.',
+        'purchase_order_item_must_be_empty_without_purchase_order' => 'Purchase order item harus kosong ketika purchase order tidak dipilih.',
+        'invalid_purchase_order_item_reference' => 'Purchase order item yang dipilih tidak valid untuk purchase order ini.',
+        'invalid_product_unit_price_discount_reference' => 'Diskon harga satuan item yang dipilih tidak valid untuk pembelian ini.',
+        'invalid_subtotal_discount_reference' => 'Diskon subtotal item yang dipilih tidak valid untuk pembelian ini.',
+        'invalid_global_discount_reference' => 'Diskon global yang dipilih tidak valid untuk pembelian ini.',
+        'invalid_additional_cost_reference' => 'Biaya tambahan yang dipilih tidak valid untuk pembelian ini.',
+        'manual_receipt_id_must_be_empty_on_store' => 'ID manual receipt harus kosong saat membuat pembelian.',
+        'invalid_manual_receipt_reference' => 'Manual receipt yang dipilih tidak valid untuk pembelian ini.',
+        'duplicate_manual_receipt_reference' => 'Manual receipt yang sama tidak boleh dipakai lebih dari sekali dalam satu request.',
+        'invalid_purchase_item_index' => 'Indeks item pembelian yang dipilih tidak valid.',
+        'additional_cost_amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
+    ],
+    'purchase_receipt' => [
+        'direct_mode_is_managed_from_purchase' => 'Purchase receipt mode direct harus dikelola dari purchase.',
+        'purchase_item_must_be_empty_without_purchase' => 'Purchase item harus kosong ketika purchase tidak dipilih.',
+        'supplier_must_match_purchase' => 'Supplier harus sama dengan purchase yang terhubung.',
+        'branch_must_match_purchase' => 'Cabang harus sama dengan purchase yang terhubung.',
+        'purchase_branch_must_match_receipt_branch' => 'Cabang purchase harus sama dengan cabang purchase receipt.',
+        'purchase_item_is_required_with_purchase' => 'Purchase item wajib diisi ketika purchase dipilih.',
+        'invalid_purchase_item_reference' => 'Purchase item yang dipilih tidak valid untuk purchase yang terhubung.',
+        'direct_mode_cannot_be_deleted_here' => 'Purchase receipt mode direct tidak boleh dihapus dari pengelolaan purchase receipt.',
+    ],
+    'purchase_additional_cost' => [
+        'amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
+    ],
     'company' => [
         'deactivate_default_company' => 'Perusahaan utama tidak boleh dinonaktifkan',
         'delete_default_company' => 'Perusahaan utama tidak boleh dihapus',
@@ -86,6 +116,10 @@ return [
         'invalid_out_item_reference' => 'Data item barang keluar tidak valid untuk stock adjustment ini.',
         'invalid_in_item_serial_reference' => 'Data serial barang masuk tidak valid untuk stock adjustment ini.',
         'invalid_out_item_serial_reference' => 'Data serial barang keluar tidak valid untuk stock adjustment ini.',
+    ],
+    'stock_transfer' => [
+        'serial_base_qty_must_be_integer' => 'Qty base harus bilangan bulat untuk produk serial.',
+        'serial_count_must_match_base_qty' => 'Jumlah serial harus sama dengan qty base.',
     ],
     'product' => [
         'unit' => [

@@ -44,6 +44,7 @@ use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseOrderDownPaymentController;
 use App\Http\Controllers\PurchaseOrderDownPaymentRefundController;
 use App\Http\Controllers\PurchaseOrderItemController;
+use App\Http\Controllers\PurchaseReceiptController;
 use App\Http\Controllers\ReceivableCategoryController;
 use App\Http\Controllers\ReceivableController;
 use App\Http\Controllers\ReceivablePaymentController;
@@ -716,6 +717,19 @@ Route::prefix('purchase_additional_cost_payment')->middleware('auth:sanctum')->g
         Route::post('save', [PurchaseAdditionalCostPaymentController::class, 'store'])->name('save');
         Route::post('edit/{purchase_additional_cost_payment:ulid}', [PurchaseAdditionalCostPaymentController::class, 'update'])->name('edit');
         Route::post('delete/{purchase_additional_cost_payment:ulid}', [PurchaseAdditionalCostPaymentController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('purchase_receipt')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.purchase_receipt.')->group(function () {
+        Route::get('read', [PurchaseReceiptController::class, 'readAny'])->name('read_any');
+        Route::get('read/{purchase_receipt:ulid}', [PurchaseReceiptController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.purchase_receipt.')->group(function () {
+        Route::post('save/manual', [PurchaseReceiptController::class, 'storeManual'])->name('save.manual');
+        Route::post('edit/manual/{purchase_receipt:ulid}', [PurchaseReceiptController::class, 'updateManual'])->name('edit.manual');
+        Route::post('delete/manual/{purchase_receipt:ulid}', [PurchaseReceiptController::class, 'deleteManual'])->name('delete.manual');
     });
 });
 

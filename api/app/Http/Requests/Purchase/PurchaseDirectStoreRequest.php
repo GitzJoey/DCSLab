@@ -6,6 +6,7 @@ use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Models\Purchase;
 use App\Models\PurchaseAdditionalCost;
+use App\Models\PurchaseOrder;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCashAccount;
@@ -134,6 +135,8 @@ class PurchaseDirectStoreRequest extends FormRequest
             'items.*.vat_base_numerator' => ['required', 'integer', 'min:1'],
             'items.*.vat_base_denominator' => ['required', 'integer', 'min:1'],
             'items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'items.*.serials' => ['required', 'array'],
+            'items.*.serials.*.serial' => ['required', 'string'],
 
             'global_discounts' => ['required', 'array'],
             'global_discounts.*.sequence' => ['required', 'integer', 'min:1'],
@@ -166,6 +169,43 @@ class PurchaseDirectStoreRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            $purchaseOrderId = $this->input('purchase_order_id');
+
+            if (is_null($purchaseOrderId)) {
+                foreach ($this->input('items', []) as $index => $item) {
+                    if (! empty($item['purchase_order_item_id'])) {
+                        $validator->errors()->add(
+                            "items.$index.purchase_order_item_id",
+                            trans('rules.purchase.purchase_order_item_must_be_empty_without_purchase_order')
+                        );
+                    }
+                }
+            } else {
+                $purchaseOrder = PurchaseOrder::with('items:id,purchase_order_id')->find($purchaseOrderId);
+
+                if (! is_null($purchaseOrder)) {
+                    if ((int) $this->input('supplier_id') !== (int) $purchaseOrder->supplier_id) {
+                        $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_supplier_must_match'));
+                    }
+
+                    if ((int) $this->input('branch_id') !== (int) $purchaseOrder->branch_id) {
+                        $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_branch_must_match'));
+                    }
+
+                    $purchaseOrderItemIds = $purchaseOrder->items->pluck('id')->all();
+                    foreach ($this->input('items', []) as $index => $item) {
+                        $purchaseOrderItemId = $item['purchase_order_item_id'] ?? null;
+
+                        if (! is_null($purchaseOrderItemId) && ! in_array($purchaseOrderItemId, $purchaseOrderItemIds, true)) {
+                            $validator->errors()->add(
+                                "items.$index.purchase_order_item_id",
+                                trans('rules.purchase.invalid_purchase_order_item_reference')
+                            );
+                        }
+                    }
+                }
+            }
+
             foreach ($this->input('additional_costs', []) as $index => $additionalCost) {
                 $amountPaidImmediately = (float) ($additionalCost['amount_paid_immediately'] ?? 0);
                 $amountPayable = (float) ($additionalCost['amount_payable'] ?? 0);
@@ -183,7 +223,7 @@ class PurchaseDirectStoreRequest extends FormRequest
                 if ($amountPaidImmediately <= 0 && $amountPayable <= 0) {
                     $validator->errors()->add(
                         "additional_costs.$index.amount_total",
-                        'Either immediate payment or payable amount must be greater than zero.'
+                        trans('rules.purchase.additional_cost_amount_total_must_be_positive')
                     );
                 }
 
@@ -227,6 +267,7 @@ class PurchaseDirectStoreRequest extends FormRequest
             'items.*.vat_base_numerator' => trans('validation_attributes.purchase_order_item.vat_base_numerator'),
             'items.*.vat_base_denominator' => trans('validation_attributes.purchase_order_item.vat_base_denominator'),
             'items.*.remarks' => trans('validation_attributes.purchase_order_item.remarks'),
+            'items.*.serials' => 'serials',
 
             'global_discounts.*.sequence' => trans('validation_attributes.purchase_order_global_discount.sequence'),
             'global_discounts.*.discount_type' => trans('validation_attributes.purchase_order_global_discount.discount_type'),
