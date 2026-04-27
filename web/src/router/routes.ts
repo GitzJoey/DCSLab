@@ -170,6 +170,16 @@ import PurchaseOrderIndex from '@/pages/purchase-order/PurchaseOrderIndex.vue';
 import PurchaseOrderList from '@/pages/purchase-order/PurchaseOrderList.vue';
 import PurchaseOrderCreate from '@/pages/purchase-order/PurchaseOrderCreate.vue';
 import PurchaseOrderEdit from '@/pages/purchase-order/PurchaseOrderEdit.vue';
+import PurchaseIndex from '@/pages/purchase/PurchaseIndex.vue';
+import PurchaseList from '@/pages/purchase/PurchaseList.vue';
+import PurchaseCreateDirect from '@/pages/purchase/PurchaseCreateDirect.vue';
+import PurchaseCreateManual from '@/pages/purchase/PurchaseCreateManual.vue';
+import PurchaseEditDirect from '@/pages/purchase/PurchaseEditDirect.vue';
+import PurchaseEditManual from '@/pages/purchase/PurchaseEditManual.vue';
+import PurchaseReceiptIndex from '@/pages/purchase-receipt/PurchaseReceiptIndex.vue';
+import PurchaseReceiptList from '@/pages/purchase-receipt/PurchaseReceiptList.vue';
+import PurchaseReceiptCreate from '@/pages/purchase-receipt/PurchaseReceiptCreate.vue';
+import PurchaseReceiptEdit from '@/pages/purchase-receipt/PurchaseReceiptEdit.vue';
 import PurchaseOrderItemIndex from '@/pages/purchase-order/PurchaseOrderItemIndex.vue';
 import PurchaseOrderItemList from '@/pages/purchase-order/PurchaseOrderItemList.vue';
 import PurchaseOrderDownPaymentIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentIndex.vue';
@@ -1124,6 +1134,94 @@ export default [
                 path: '/dashboard/purchase-order/edit/:ulid',
                 name: 'side-menu-purchase-order-edit',
                 component: PurchaseOrderEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/purchase',
+            name: 'side-menu-purchase',
+            redirect: '/dashboard/purchase/list',
+            component: PurchaseIndex,
+            children: [
+              {
+                path: '/dashboard/purchase/list',
+                name: 'side-menu-purchase-list',
+                component: PurchaseList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase/create',
+                name: 'side-menu-purchase-create',
+                redirect: '/dashboard/purchase/create/manual',
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase/create/direct',
+                name: 'side-menu-purchase-create-direct',
+                component: PurchaseCreateDirect,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase/create/manual',
+                name: 'side-menu-purchase-create-manual',
+                component: PurchaseCreateManual,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase/edit/direct/:ulid',
+                name: 'side-menu-purchase-edit-direct',
+                component: PurchaseEditDirect,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase/edit/manual/:ulid',
+                name: 'side-menu-purchase-edit-manual',
+                component: PurchaseEditManual,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/dashboard/purchase-receipt',
+            name: 'side-menu-purchase-receipt',
+            redirect: '/dashboard/purchase-receipt/list',
+            component: PurchaseReceiptIndex,
+            children: [
+              {
+                path: '/dashboard/purchase-receipt/list',
+                name: 'side-menu-purchase-receipt-list',
+                component: PurchaseReceiptList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase-receipt/create',
+                name: 'side-menu-purchase-receipt-create',
+                component: PurchaseReceiptCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/dashboard/purchase-receipt/edit/:ulid',
+                name: 'side-menu-purchase-receipt-edit',
+                component: PurchaseReceiptEdit,
                 meta: {
                   remember: true,
                 },

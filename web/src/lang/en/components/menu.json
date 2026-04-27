@@ -41,6 +41,8 @@
   "income-payment": "Income Payment",
   "stock-adjustment": "Stock Adjustment",
   "purchase-order": "Purchase Order",
+  "purchase": "Purchase",
+  "purchase-receipt": "Purchase Receipt",
   "purchase-order-item": "Purchase Order by Item",
   "purchase-order-down-payment": "Purchase Order Down Payment",
   "purchase-order-down-payment-not-fully-allocated": "PO Down Payment Not Fully Allocated",

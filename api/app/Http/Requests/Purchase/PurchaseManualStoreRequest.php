@@ -109,11 +109,11 @@ class PurchaseManualStoreRequest extends FormRequest
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'gt:0'],
             'items.*.product_unit_price' => ['required', 'numeric', 'min:0'],
             'items.*.product_unit_is_price_include_vat' => ['required', 'boolean'],
-            'items.*.product_unit_price_discounts' => ['required', 'array'],
+            'items.*.product_unit_price_discounts' => ['present', 'array'],
             'items.*.product_unit_price_discounts.*.sequence' => ['required', 'integer', 'min:1'],
             'items.*.product_unit_price_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'items.*.product_unit_price_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
-            'items.*.subtotal_discounts' => ['required', 'array'],
+            'items.*.subtotal_discounts' => ['present', 'array'],
             'items.*.subtotal_discounts.*.sequence' => ['required', 'integer', 'min:1'],
             'items.*.subtotal_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'items.*.subtotal_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
@@ -128,12 +128,12 @@ class PurchaseManualStoreRequest extends FormRequest
             'items.*.vat_base_denominator' => ['required', 'integer', 'min:1'],
             'items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'global_discounts' => ['required', 'array'],
+            'global_discounts' => ['present', 'array'],
             'global_discounts.*.sequence' => ['required', 'integer', 'min:1'],
             'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
             'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
 
-            'additional_costs' => ['required', 'array'],
+            'additional_costs' => ['present', 'array'],
             'additional_costs.*.purchase_additional_cost_category_id' => [
                 'required',
                 'integer',

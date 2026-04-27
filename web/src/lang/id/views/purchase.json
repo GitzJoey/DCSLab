@@ -1,0 +1,113 @@
+{
+  "page_title": "Purchase",
+  "table": {
+    "title": "Daftar Purchase"
+  },
+  "actions": {
+    "create": "Tambah Purchase",
+    "create_direct": "Create Direct",
+    "create_manual": "Create Manual",
+    "edit": "Ubah Purchase",
+    "show": "Tampilkan Purchase",
+    "delete": "Hapus Purchase"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "purchase_data": "Data Purchase",
+    "summary": "Ringkasan",
+    "status": "Status",
+    "items": "Item-item",
+    "additional_costs": "Biaya Tambahan",
+    "status_breakdown": "Rincian Status"
+  },
+  "fields": {
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "supplier_id": "Pemasok",
+    "purchase_order_id": "Purchase Order",
+    "purchase_order_id_optional": "Kosongkan jika tidak berasal dari purchase order",
+    "due_days": "Jatuh Tempo (Hari)",
+    "direct_receipt_warehouse_id": "Gudang Penerimaan Langsung",
+    "tax_invoice_number": "Nomor Faktur Pajak",
+    "tax_invoice_vat_base": "DPP Faktur Pajak",
+    "tax_invoice_vat": "PPN Faktur Pajak",
+    "remarks": "Catatan",
+    "receipt_mode": "Mode Receipt",
+    "progress_status": "Status Progress",
+    "amount_payable": "Jumlah Harus Dibayar",
+    "amount_payable_preview": "Preview Jumlah Harus Dibayar",
+    "amount_paid_immediately": "Jumlah Bayar Langsung",
+    "amount_paid_total": "Jumlah Dibayar",
+    "amount_due": "Sisa Tagihan",
+    "purchase_additional_cost_category_id": "Kategori Biaya Tambahan",
+    "paid_immediately_cash_account_id": "Kas Bayar Langsung",
+    "item_total_before_global_discount": "Total Sebelum Diskon Global",
+    "global_discount": "Diskon Global",
+    "global_discount_total": "Total Diskon Global",
+    "item_total_after_global_discount": "Total Setelah Diskon Global",
+    "items_subtotal_after_discount": "Subtotal Item Setelah Diskon",
+    "vat_base": "Dasar PPN",
+    "vat": "PPN",
+    "vat_profile_id": "Profil PPN",
+    "vat_rate": "Tarif PPN",
+    "vat_base_fraction": "Fraksi Dasar PPN",
+    "additional_cost": "Biaya Tambahan",
+    "rounding": "Pembulatan",
+    "is_paid_off": "Lunas",
+    "is_posted": "Posted",
+    "product_unit_id": "Produk",
+    "qty": "Qty",
+    "product_unit_qty_base": "Qty Dasar",
+    "qty_received_base": "Qty Diterima Base",
+    "qty_outstanding_base": "Qty Outstanding Base",
+    "qty_excess_base": "Qty Kelebihan Base",
+    "product_unit_price": "Harga Satuan",
+    "product_unit_conversion_value": "Konversi Satuan",
+    "product_unit_is_price_include_vat": "Harga Termasuk PPN",
+    "product_unit_price_discounts": "Diskon Harga Satuan",
+    "product_unit_price_discounts_empty": "Belum ada diskon harga satuan",
+    "price_after_discount": "Harga Satuan Setelah Diskon",
+    "subtotal_discounts": "Diskon Subtotal",
+    "subtotal_discounts_empty": "Belum ada diskon subtotal",
+    "subtotal": "Subtotal",
+    "subtotal_after_discount": "Subtotal Setelah Diskon",
+    "serials": "Serial Number",
+    "serials_empty": "Belum ada serial number",
+    "item_price_breakdown": "Rincian Harga Item",
+    "item_additional_details": "Detail Tambahan Item",
+    "sequence": "Urutan",
+    "discount_type": "Jenis Diskon",
+    "discount_value": "Nilai Diskon",
+    "subtotal_after_vat": "Subtotal Setelah PPN",
+    "item_total_count": "Total Item",
+    "item_matched_count": "Item Sesuai",
+    "item_less_count": "Item Kurang",
+    "item_more_count": "Item Lebih",
+    "item_unlinked_count": "Item Belum Tertaut",
+    "manual_receipt_count": "Jumlah Receipt Manual",
+    "items_empty": "Belum ada item purchase",
+    "additional_costs_hint": "Tambahkan biaya tambahan jika ada biaya pembelian lain di luar item.",
+    "additional_costs_empty": "Belum ada biaya tambahan",
+    "global_discounts": "Diskon Global"
+  },
+  "alert": {
+    "create": {
+      "title": "Simpan Purchase",
+      "message": "Purchase berhasil disimpan"
+    },
+    "update": {
+      "title": "Ubah Purchase",
+      "message": "Purchase berhasil diperbarui"
+    },
+    "delete": {
+      "title": "Hapus Purchase",
+      "message": "Purchase berhasil dihapus"
+    }
+  },
+  "form_placeholder": {
+    "title": "Form purchase belum dilengkapi",
+    "description": "Route create dan edit sudah terhubung, tetapi form detail purchase masih perlu dilanjutkan."
+  }
+}

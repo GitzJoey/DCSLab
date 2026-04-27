@@ -49,6 +49,8 @@
   "income-category": "Kategori Pendapatan",
   "purchase-additional-cost-category": "Kategori Biaya Tambahan Purchase",
   "purchase-order": "Purchase Order",
+  "purchase": "Purchase",
+  "purchase-receipt": "Purchase Receipt",
   "purchase-additional-cost": "Biaya Tambahan Purchase",
   "purchase-additional-cost-payment": "Pembayaran Biaya Tambahan Purchase",
   "purchase-order-item": "Purchase Order per Item",

@@ -1,7 +1,9 @@
 {
+  "add": "Tambah",
   "save": "Simpan",
   "update": "Update",
   "cancel": "Batal",
+  "close": "Tutup",
   "delete": "Hapus",
   "back": "Kembali",
   "reset": "Reset",
@@ -19,5 +21,7 @@
   "retry": "Coba Kembali",
   "reload": "Memuat Ulang",
   "search": "Cari",
-  "select": "Pilih"
+  "select": "Pilih",
+  "yes": "Ya",
+  "no": "Tidak"
 }

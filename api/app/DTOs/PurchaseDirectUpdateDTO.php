@@ -20,7 +20,7 @@ final class PurchaseDirectUpdateDTO
         public readonly float $rounding,
 
         public readonly array $deleteItemIds,
-        public readonly array $items,
+        public array $items,
 
         public readonly array $deleteGlobalDiscountIds,
         public readonly array $globalDiscounts,

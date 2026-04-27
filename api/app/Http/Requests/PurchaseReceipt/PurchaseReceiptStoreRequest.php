@@ -64,7 +64,7 @@ class PurchaseReceiptStoreRequest extends FormRequest
             'items.*.product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'gt:0'],
             'items.*.remarks' => ['present', 'nullable', 'string'],
-            'items.*.serials' => ['required', 'array'],
+            'items.*.serials' => ['present', 'array'],
             'items.*.serials.*.serial' => ['required', 'string', 'max:255'],
         ];
     }

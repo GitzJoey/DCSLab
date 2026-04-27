@@ -21,7 +21,7 @@ final class PurchaseDirectCreateDTO
         public readonly float $additionalCost,
         public readonly float $rounding,
 
-        public readonly array $items,
+        public array $items,
 
         public readonly array $globalDiscounts,
 

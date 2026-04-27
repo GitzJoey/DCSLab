@@ -304,6 +304,18 @@ class DashboardActions
             'title' => 'components.menu.purchase-order',
         ];
 
+        $purchase = [
+            'icon' => 'ShoppingCart',
+            'pageName' => 'side-menu-purchase',
+            'title' => 'components.menu.purchase',
+        ];
+
+        $purchaseReceipt = [
+            'icon' => 'PackageCheck',
+            'pageName' => 'side-menu-purchase-receipt',
+            'title' => 'components.menu.purchase-receipt',
+        ];
+
         $purchaseAdditionalCost = [
             'icon' => 'Wallet',
             'pageName' => 'side-menu-purchase-additional-cost',
@@ -389,6 +401,8 @@ class DashboardActions
             $receivable,
             $stockAdjustment,
             $purchaseOrder,
+            $purchase,
+            $purchaseReceipt,
             $purchaseAdditionalCost,
             $purchaseAdditionalCostPayment,
             $stockTransfer

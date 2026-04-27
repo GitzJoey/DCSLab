@@ -1,14 +1,24 @@
+import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
+import { client, useForm } from 'laravel-precognition-vue';
+import { route, Config } from 'ziggy-js';
 import axios from '../axios';
 import { useZiggyRouteStore } from '../stores/ziggy-route';
-import { route, Config } from 'ziggy-js';
-import { Purchase } from '../types/models/Purchase';
-import { Resource } from '../types/resources/Resource';
-import { Collection } from '../types/resources/Collection';
-import { ServiceResponse } from '../types/services/ServiceResponse';
-import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
-import ErrorHandlerService from './ErrorHandlerService';
-import { PurchaseReadAnyGetRequest, PurchaseReadAnyPaginateRequest } from '../types/services/purchase/PurchaseRequest';
 import { StatusCode } from '../types/enums/StatusCode';
+import { Purchase } from '../types/models/Purchase';
+import { Collection } from '../types/resources/Collection';
+import { Resource } from '../types/resources/Resource';
+import { ServiceResponse } from '../types/services/ServiceResponse';
+import {
+  PurchaseReadAnyGetRequest,
+  PurchaseReadAnyPaginateRequest,
+  PurchaseDirectStoreRequest,
+  PurchaseDirectUpdateRequest,
+  PurchaseManualStoreRequest,
+  PurchaseManualUpdateRequest,
+  PurchaseStoreRequest,
+  PurchaseUpdateRequest,
+} from '../types/services/purchase/PurchaseRequest';
+import ErrorHandlerService from './ErrorHandlerService';
 
 export default class PurchaseService {
   private ziggyRoute: Config;
@@ -89,6 +99,201 @@ export default class PurchaseService {
       if (response.status == StatusCode.OK) {
         result.success = true;
         result.data = response.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
+  public async read(ulid: string): Promise<ServiceResponse<Purchase | null>> {
+    const result: ServiceResponse<Purchase | null> = { success: false };
+
+    try {
+      const url = route(
+        'api.get.purchase.read',
+        {
+          purchase: ulid,
+        },
+        false,
+        this.ziggyRoute,
+      );
+      const response: AxiosResponse<Resource<Purchase>> = await axios.get(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
+  public usePurchaseCreateManualForm() {
+    const url = route('api.post.purchase.save.manual', undefined, true, this.ziggyRoute);
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    return useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      code: '_AUTO_',
+      date: '_AUTO_',
+      due_days: 0,
+      supplier_id: null,
+      purchase_order_id: null,
+      tax_invoice_number: null,
+      tax_invoice_vat_base: 0,
+      tax_invoice_vat: 0,
+      remarks: '',
+      is_posted: false,
+      additional_cost: 0,
+      rounding: 0,
+      items: [] as NonNullable<PurchaseManualStoreRequest['items']>,
+      global_discounts: [] as NonNullable<PurchaseManualStoreRequest['global_discounts']>,
+      additional_costs: [] as NonNullable<PurchaseManualStoreRequest['additional_costs']>,
+    });
+  }
+
+  public usePurchaseEditForm(ulid: string) {
+    return this.usePurchaseEditManualForm(ulid);
+  }
+
+  public usePurchaseCreateDirectForm() {
+    const url = route('api.post.purchase.save.direct', undefined, true, this.ziggyRoute);
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    return useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      code: '_AUTO_',
+      date: '_AUTO_',
+      due_days: 0,
+      supplier_id: null,
+      purchase_order_id: null,
+      direct_receipt_warehouse_id: '',
+      tax_invoice_number: null,
+      tax_invoice_vat_base: 0,
+      tax_invoice_vat: 0,
+      remarks: '',
+      is_posted: false,
+      additional_cost: 0,
+      rounding: 0,
+      items: [] as NonNullable<PurchaseDirectStoreRequest['items']>,
+      global_discounts: [] as NonNullable<PurchaseDirectStoreRequest['global_discounts']>,
+      additional_costs: [] as NonNullable<PurchaseDirectStoreRequest['additional_costs']>,
+    });
+  }
+
+  public usePurchaseEditManualForm(ulid: string) {
+    const url = route(
+      'api.post.purchase.edit.manual',
+      {
+        purchase: ulid,
+      },
+      true,
+      this.ziggyRoute,
+    );
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    return useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      code: '_AUTO_',
+      date: '',
+      due_days: 0,
+      supplier_id: null,
+      purchase_order_id: null,
+      tax_invoice_number: null,
+      tax_invoice_vat_base: 0,
+      tax_invoice_vat: 0,
+      remarks: '',
+      is_posted: false,
+      additional_cost: 0,
+      rounding: 0,
+      delete_item_ids: [] as NonNullable<PurchaseManualUpdateRequest['delete_item_ids']>,
+      items: [] as NonNullable<PurchaseManualUpdateRequest['items']>,
+      delete_global_discount_ids: [] as NonNullable<PurchaseManualUpdateRequest['delete_global_discount_ids']>,
+      global_discounts: [] as NonNullable<PurchaseManualUpdateRequest['global_discounts']>,
+      delete_additional_cost_ids: [] as NonNullable<PurchaseManualUpdateRequest['delete_additional_cost_ids']>,
+      additional_costs: [] as NonNullable<PurchaseManualUpdateRequest['additional_costs']>,
+    });
+  }
+
+  public usePurchaseEditDirectForm(ulid: string) {
+    const url = route(
+      'api.post.purchase.edit.direct',
+      {
+        purchase: ulid,
+      },
+      true,
+      this.ziggyRoute,
+    );
+
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+
+    return useForm('post', url, {
+      company_id: '',
+      branch_id: '',
+      code: '_AUTO_',
+      date: '',
+      due_days: 0,
+      supplier_id: null,
+      purchase_order_id: null,
+      direct_receipt_warehouse_id: '',
+      tax_invoice_number: null,
+      tax_invoice_vat_base: 0,
+      tax_invoice_vat: 0,
+      remarks: '',
+      is_posted: false,
+      additional_cost: 0,
+      rounding: 0,
+      delete_item_ids: [] as NonNullable<PurchaseDirectUpdateRequest['delete_item_ids']>,
+      items: [] as NonNullable<PurchaseDirectUpdateRequest['items']>,
+      delete_global_discount_ids: [] as NonNullable<PurchaseDirectUpdateRequest['delete_global_discount_ids']>,
+      global_discounts: [] as NonNullable<PurchaseDirectUpdateRequest['global_discounts']>,
+      delete_additional_cost_ids: [] as NonNullable<PurchaseDirectUpdateRequest['delete_additional_cost_ids']>,
+      additional_costs: [] as NonNullable<PurchaseDirectUpdateRequest['additional_costs']>,
+    });
+  }
+
+  public async delete(ulid: string): Promise<ServiceResponse<boolean | null>> {
+    const result: ServiceResponse<boolean | null> = { success: false };
+
+    try {
+      const url = route(
+        'api.post.purchase.delete',
+        {
+          purchase: ulid,
+        },
+        false,
+        this.ziggyRoute,
+      );
+      const response: AxiosResponse<boolean | null> = await axios.post(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
       }
 
       return result;

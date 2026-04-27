@@ -41,6 +41,8 @@ import prepaid_income from './id/views/prepaid_income.json';
 import income_payment from './id/views/income_payment.json';
 import purchase_additional_cost from './id/views/purchase_additional_cost.json';
 import purchase_additional_cost_payment from './id/views/purchase_additional_cost_payment.json';
+import purchase from './id/views/purchase.json';
+import purchase_receipt from './id/views/purchase_receipt.json';
 import expense_category from './id/views/expense_category.json';
 import debt_category from './id/views/debt_category.json';
 import receivable_category from './id/views/receivable_category.json';
@@ -113,6 +115,8 @@ export default {
     income_payment: income_payment,
     purchase_additional_cost: purchase_additional_cost,
     purchase_additional_cost_payment: purchase_additional_cost_payment,
+    purchase: purchase,
+    purchase_receipt: purchase_receipt,
     expense_category: expense_category,
     debt_category: debt_category,
     receivable_category: receivable_category,
