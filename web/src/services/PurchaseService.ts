@@ -51,6 +51,10 @@ export default class PurchaseService {
       if (args.start_date) queryParams['start_date'] = args.start_date;
       if (args.end_date) queryParams['end_date'] = args.end_date;
       if (args.supplier_id) queryParams['supplier_id'] = args.supplier_id;
+      if (args.purchase_order_id) queryParams['purchase_order_id'] = args.purchase_order_id;
+      if (args.receipt_mode) queryParams['receipt_mode'] = args.receipt_mode;
+      if (args.progress_status) queryParams['progress_status'] = args.progress_status;
+      if (args.is_posted !== undefined && args.is_posted !== null) queryParams['is_posted'] = args.is_posted;
 
       const url = route('api.get.purchase.read_any', { _query: queryParams }, false, this.ziggyRoute);
       const response: AxiosResponse<Collection<Array<Purchase>>> = await axios.get(url);
@@ -92,6 +96,10 @@ export default class PurchaseService {
       if (args.start_date) queryParams['start_date'] = args.start_date;
       if (args.end_date) queryParams['end_date'] = args.end_date;
       if (args.supplier_id) queryParams['supplier_id'] = args.supplier_id;
+      if (args.purchase_order_id) queryParams['purchase_order_id'] = args.purchase_order_id;
+      if (args.receipt_mode) queryParams['receipt_mode'] = args.receipt_mode;
+      if (args.progress_status) queryParams['progress_status'] = args.progress_status;
+      if (args.is_posted !== undefined && args.is_posted !== null) queryParams['is_posted'] = args.is_posted;
 
       const url = route('api.get.purchase.read_any', { _query: queryParams }, false, this.ziggyRoute);
       const response: AxiosResponse<Resource<Array<Purchase>>> = await axios.get(url);

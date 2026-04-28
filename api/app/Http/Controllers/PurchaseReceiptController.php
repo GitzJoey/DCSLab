@@ -38,6 +38,7 @@ class PurchaseReceiptController extends BaseController
         $request->merge([
             'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
             'branch_id' => $request->filled('branch_id') ? HashidsHelper::decodeId($request->branch_id) : null,
+            'supplier_id' => $request->filled('supplier_id') ? HashidsHelper::decodeId($request->supplier_id) : null,
             'purchase_id' => $request->filled('purchase_id') ? HashidsHelper::decodeId($request->purchase_id) : null,
             'warehouse_id' => $request->filled('warehouse_id') ? HashidsHelper::decodeId($request->warehouse_id) : null,
         ]);
@@ -50,8 +51,11 @@ class PurchaseReceiptController extends BaseController
             'search' => ['nullable', 'string'],
             'start_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'end_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'supplier_id' => ['nullable', 'integer', new ExistsForCompany('suppliers', $request->company_id)],
             'purchase_id' => ['nullable', 'integer', new ExistsForCompany('purchases', $request->company_id)],
             'warehouse_id' => ['nullable', 'integer', new ExistsForCompany('warehouses', $request->company_id)],
+            'is_posted' => ['nullable', 'boolean'],
+            'is_from_direct_purchase' => ['nullable', 'boolean'],
 
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
@@ -70,10 +74,15 @@ class PurchaseReceiptController extends BaseController
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'] ?? null,
                 search: $validatedRequest['search'] ?? null,
+
+                supplierId: $validatedRequest['supplier_id'] ?? null,
+                purchaseId: $validatedRequest['purchase_id'] ?? null,
+                isFromDirectPurchase: $validatedRequest['is_from_direct_purchase'] ?? null,
                 startDate: $validatedRequest['start_date'] ?? null,
                 endDate: $validatedRequest['end_date'] ?? null,
-                purchaseId: $validatedRequest['purchase_id'] ?? null,
                 warehouseId: $validatedRequest['warehouse_id'] ?? null,
+                isPosted: $validatedRequest['is_posted'] ?? null,
+
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: isset($validatedRequest['paginate'])

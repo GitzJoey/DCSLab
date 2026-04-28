@@ -144,11 +144,6 @@ class PurchaseDirectStoreRequest extends FormRequest
             'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
 
             'additional_costs' => ['present', 'array'],
-            'additional_costs.*.purchase_additional_cost_category_id' => [
-                'required',
-                'integer',
-                new ExistsForCompany('purchase_additional_cost_categories', $this->company_id),
-            ],
             'additional_costs.*.code' => ['required', 'string'],
             'additional_costs.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'additional_costs.*.due_days' => ['required', 'integer', 'min:0'],

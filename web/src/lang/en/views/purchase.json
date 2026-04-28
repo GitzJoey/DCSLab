@@ -90,7 +90,8 @@
     "items_empty": "No purchase items yet",
     "additional_costs_hint": "Add additional costs when there are purchase-related charges outside item values.",
     "additional_costs_empty": "No additional costs yet",
-    "global_discounts": "Global Discounts"
+    "global_discounts": "Global Discounts",
+    "global_discounts_empty": "No global discounts yet"
   },
   "alert": {
     "create": {

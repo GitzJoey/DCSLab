@@ -90,7 +90,8 @@
     "items_empty": "Belum ada item purchase",
     "additional_costs_hint": "Tambahkan biaya tambahan jika ada biaya pembelian lain di luar item.",
     "additional_costs_empty": "Belum ada biaya tambahan",
-    "global_discounts": "Diskon Global"
+    "global_discounts": "Diskon Global",
+    "global_discounts_empty": "Belum ada diskon global"
   },
   "alert": {
     "create": {

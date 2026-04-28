@@ -18,6 +18,7 @@ use App\Http\Requests\Purchase\PurchaseManualStoreRequest;
 use App\Http\Requests\Purchase\PurchaseManualUpdateRequest;
 use App\Http\Resources\PurchaseResource;
 use App\Models\Purchase;
+use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
 use App\Rules\IsValidDate;
@@ -26,6 +27,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class PurchaseController extends BaseController
 {
@@ -44,6 +46,7 @@ class PurchaseController extends BaseController
             'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
             'branch_id' => $request->filled('branch_id') ? HashidsHelper::decodeId($request->branch_id) : null,
             'supplier_id' => $request->filled('supplier_id') ? HashidsHelper::decodeId($request->supplier_id) : null,
+            'purchase_order_id' => $request->filled('purchase_order_id') ? HashidsHelper::decodeId($request->purchase_order_id) : null,
         ]);
 
         $validatedRequest = $request->validate([
@@ -51,9 +54,15 @@ class PurchaseController extends BaseController
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['nullable', 'integer', new IsValidBranch($request->company_id, false)],
             'search' => ['nullable', 'string'],
+
             'start_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'end_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'supplier_id' => ['nullable', 'integer', new IsValidSupplier($request->company_id)],
+            'purchase_order_id' => ['nullable', 'integer', new ExistsForCompany('purchase_orders', $request->company_id)],
+            'receipt_mode' => ['nullable', Rule::enum(PurchaseReceiptModeEnum::class)],
+            'is_posted' => ['nullable', 'boolean'],
+            'progress_status' => ['nullable', Rule::in(['unlinked', 'unmatched', 'matched'])],
+
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
             'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
@@ -74,6 +83,10 @@ class PurchaseController extends BaseController
                 startDate: $validatedRequest['start_date'] ?? null,
                 endDate: $validatedRequest['end_date'] ?? null,
                 supplierId: $validatedRequest['supplier_id'] ?? null,
+                purchaseOrderId: $validatedRequest['purchase_order_id'] ?? null,
+                receiptMode: $validatedRequest['receipt_mode'] ?? null,
+                isPosted: $validatedRequest['is_posted'] ?? null,
+                progressStatus: $validatedRequest['progress_status'] ?? null,
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: isset($validatedRequest['paginate'])

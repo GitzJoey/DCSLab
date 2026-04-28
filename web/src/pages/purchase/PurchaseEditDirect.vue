@@ -1181,7 +1181,7 @@ const onSubmit = async () => {
               />
               <FormErrorMessages :messages="purchaseForm.errors.tax_invoice_vat" />
             </div>
-            <div class="col-span-12 md:col-span-6 lg:col-span-4">
+            <div class="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col justify-center">
               <FormLabel>
                 {{ t('views.purchase.fields.is_posted') }}
               </FormLabel>
@@ -2002,21 +2002,6 @@ const onSubmit = async () => {
             </div>
 
             <div class="grid grid-cols-12 gap-4 gap-y-3">
-              <div class="col-span-12 md:col-span-6">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }">
-                  {{ t('views.purchase.fields.purchase_additional_cost_category_id') }}
-                </FormLabel>
-                <FormSelectSearch
-                  v-model="additionalCost.purchase_additional_cost_category_id"
-                  v-model:search="additionalCostCategorySearch"
-                  :options="additionalCostCategoryOptions"
-                  :placeholder="t('components.dropdown.placeholder')"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }"
-                  @search="loadAdditionalCostCategoryDDL"
-                  @change="validateField(`additional_costs.${index}.purchase_additional_cost_category_id`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.purchase_additional_cost_category_id`)" />
-              </div>
               <div class="col-span-12 md:col-span-3">
                 <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.code`) }">
                   {{ t('views.purchase.fields.code') }}
@@ -2053,6 +2038,36 @@ const onSubmit = async () => {
                 />
                 <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.due_days`)" />
               </div>
+              <div class="col-span-12 md:col-span-6">
+                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }">
+                  {{ t('views.purchase.fields.purchase_additional_cost_category_id') }}
+                </FormLabel>
+                <FormSelectSearch
+                  v-model="additionalCost.purchase_additional_cost_category_id"
+                  v-model:search="additionalCostCategorySearch"
+                  :options="additionalCostCategoryOptions"
+                  :placeholder="t('components.dropdown.placeholder')"
+                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }"
+                  @search="loadAdditionalCostCategoryDDL"
+                  @change="validateField(`additional_costs.${index}.purchase_additional_cost_category_id`)"
+                />
+                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.purchase_additional_cost_category_id`)" />
+              </div>
+              <div class="col-span-12 md:col-span-3">
+                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }">
+                  {{ t('views.purchase.fields.paid_immediately_cash_account_id') }}
+                </FormLabel>
+                <FormSelectSearch
+                  v-model="additionalCost.paid_immediately_cash_account_id"
+                  v-model:search="cashAccountSearch"
+                  :options="cashAccountOptions"
+                  :placeholder="t('components.dropdown.placeholder')"
+                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }"
+                  @search="loadCashAccountDDL"
+                  @change="validateField(`additional_costs.${index}.paid_immediately_cash_account_id`)"
+                />
+                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.paid_immediately_cash_account_id`)" />
+              </div>
               <div class="col-span-12 md:col-span-3">
                 <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.amount_paid_immediately`) }">
                   {{ t('views.purchase.fields.amount_paid_immediately') }}
@@ -2082,21 +2097,6 @@ const onSubmit = async () => {
                   "
                 />
                 <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.amount_payable`)" />
-              </div>
-              <div class="col-span-12 md:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }">
-                  {{ t('views.purchase.fields.paid_immediately_cash_account_id') }}
-                </FormLabel>
-                <FormSelectSearch
-                  v-model="additionalCost.paid_immediately_cash_account_id"
-                  v-model:search="cashAccountSearch"
-                  :options="cashAccountOptions"
-                  :placeholder="t('components.dropdown.placeholder')"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }"
-                  @search="loadCashAccountDDL"
-                  @change="validateField(`additional_costs.${index}.paid_immediately_cash_account_id`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.paid_immediately_cash_account_id`)" />
               </div>
               <div class="col-span-12 md:col-span-12">
                 <FormLabel>{{ t('views.purchase.fields.remarks') }}</FormLabel>

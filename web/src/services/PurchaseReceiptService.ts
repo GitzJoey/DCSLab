@@ -44,11 +44,13 @@ export default class PurchaseReceiptService {
 
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
       if (args.search) queryParams['search'] = args.search;
-      if (args.start_date) queryParams['start_date'] = args.start_date;
-      if (args.end_date) queryParams['end_date'] = args.end_date;
       if (args.supplier_id) queryParams['supplier_id'] = args.supplier_id;
       if (args.purchase_id) queryParams['purchase_id'] = args.purchase_id;
+      if (args.is_from_direct_purchase !== undefined && args.is_from_direct_purchase !== null) queryParams['is_from_direct_purchase'] = args.is_from_direct_purchase;
+      if (args.start_date) queryParams['start_date'] = args.start_date;
+      if (args.end_date) queryParams['end_date'] = args.end_date;
       if (args.warehouse_id) queryParams['warehouse_id'] = args.warehouse_id;
+      if (args.is_posted !== undefined && args.is_posted !== null) queryParams['is_posted'] = args.is_posted;
 
       const url = route(
         'api.get.purchase_receipt.read_any',
@@ -92,11 +94,13 @@ export default class PurchaseReceiptService {
 
       if (args.branch_id) queryParams['branch_id'] = args.branch_id;
       if (args.search) queryParams['search'] = args.search;
-      if (args.start_date) queryParams['start_date'] = args.start_date;
-      if (args.end_date) queryParams['end_date'] = args.end_date;
       if (args.supplier_id) queryParams['supplier_id'] = args.supplier_id;
       if (args.purchase_id) queryParams['purchase_id'] = args.purchase_id;
+      if (args.is_from_direct_purchase !== undefined && args.is_from_direct_purchase !== null) queryParams['is_from_direct_purchase'] = args.is_from_direct_purchase;
+      if (args.start_date) queryParams['start_date'] = args.start_date;
+      if (args.end_date) queryParams['end_date'] = args.end_date;
       if (args.warehouse_id) queryParams['warehouse_id'] = args.warehouse_id;
+      if (args.is_posted !== undefined && args.is_posted !== null) queryParams['is_posted'] = args.is_posted;
       if (args.include_id) queryParams['include_id'] = args.include_id;
 
       const url = route(

@@ -101,6 +101,10 @@ class PurchaseActions
         ?string $startDate,
         ?string $endDate,
         ?int $supplierId,
+        ?int $purchaseOrderId,
+        ?string $receiptMode,
+        ?bool $isPosted,
+        ?string $progressStatus,
 
         ?ExecuteDTO $execute
     ) {
@@ -123,6 +127,10 @@ class PurchaseActions
             $startDate,
             $endDate,
             $supplierId,
+            $purchaseOrderId,
+            $receiptMode,
+            $isPosted,
+            $progressStatus,
         ) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
@@ -146,6 +154,22 @@ class PurchaseActions
             if ($supplierId) {
                 $query->where('purchases.supplier_id', $supplierId);
             }
+
+            if ($purchaseOrderId) {
+                $query->where('purchases.purchase_order_id', $purchaseOrderId);
+            }
+
+            if ($receiptMode) {
+                $query->where('purchases.receipt_mode', $receiptMode);
+            }
+
+            if (! is_null($isPosted)) {
+                $query->where('purchases.is_posted', $isPosted);
+            }
+
+            if ($progressStatus) {
+                $query->where('purchases.progress_status', $progressStatus);
+            }
         });
 
         $query->orderBy('purchases.date', 'desc')
@@ -164,6 +188,10 @@ class PurchaseActions
                     $startDate ?? '[null]',
                     $endDate ?? '[null]',
                     $supplierId ?? '[null]',
+                    $purchaseOrderId ?? '[null]',
+                    $receiptMode ?? '[null]',
+                    is_null($isPosted) ? '[null]' : ($isPosted ? 'true' : 'false'),
+                    $progressStatus ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',

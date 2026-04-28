@@ -53,12 +53,15 @@ class PurchaseReceiptActions
         bool $withTrashed,
         int $companyId,
         ?int $branchId,
-
         ?string $search,
+
+        ?int $supplierId,
+        ?int $purchaseId,
+        ?bool $isFromDirectPurchase,
         ?string $startDate,
         ?string $endDate,
-        ?int $purchaseId,
         ?int $warehouseId,
+        ?bool $isPosted,
 
         ?ExecuteDTO $execute
     ) {
@@ -79,10 +82,13 @@ class PurchaseReceiptActions
         $query->where(function ($query) use (
             $withTrashed,
             $search,
+            $supplierId,
+            $purchaseId,
+            $isFromDirectPurchase,
             $startDate,
             $endDate,
-            $purchaseId,
             $warehouseId,
+            $isPosted,
         ) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
@@ -94,6 +100,18 @@ class PurchaseReceiptActions
                 });
             }
 
+            if ($supplierId) {
+                $query->where('purchase_receipts.supplier_id', $supplierId);
+            }
+
+            if ($purchaseId) {
+                $query->where('purchase_receipts.purchase_id', $purchaseId);
+            }
+
+            if (! is_null($isFromDirectPurchase)) {
+                $query->where('purchase_receipts.is_from_direct_purchase', $isFromDirectPurchase);
+            }
+
             if ($startDate) {
                 $query->where('purchase_receipts.date', '>=', TimezoneHelper::convertToUTC($startDate));
             }
@@ -102,12 +120,12 @@ class PurchaseReceiptActions
                 $query->where('purchase_receipts.date', '<=', TimezoneHelper::convertToUTC($endDate));
             }
 
-            if ($purchaseId) {
-                $query->where('purchase_receipts.purchase_id', $purchaseId);
-            }
-
             if ($warehouseId) {
                 $query->where('purchase_receipts.warehouse_id', $warehouseId);
+            }
+
+            if (! is_null($isPosted)) {
+                $query->where('purchase_receipts.is_posted', $isPosted);
             }
         });
 
@@ -124,10 +142,13 @@ class PurchaseReceiptActions
                     $companyId,
                     $branchId ?? '[null]',
                     empty($search) ? '[empty]' : $search,
+                    $supplierId ?? '[null]',
+                    $purchaseId ?? '[null]',
+                    is_null($isFromDirectPurchase) ? '[null]' : ($isFromDirectPurchase ? 'true' : 'false'),
                     $startDate ?? '[null]',
                     $endDate ?? '[null]',
-                    $purchaseId ?? '[null]',
                     $warehouseId ?? '[null]',
+                    is_null($isPosted) ? '[null]' : ($isPosted ? 'true' : 'false'),
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',

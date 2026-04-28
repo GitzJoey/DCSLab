@@ -49,6 +49,8 @@ const searchText = ref<string>('');
 const selectedSupplierId = ref<string | null>(null);
 const selectedPurchaseId = ref<string | null>(null);
 const selectedWarehouseId = ref<string | null>(null);
+const selectedIsPosted = ref<string | null>(null);
+const selectedIsFromDirectPurchase = ref<string | null>(null);
 
 const purchaseReceiptLists = ref<Collection<Array<PurchaseReceipt>> | null>({
   data: [],
@@ -99,6 +101,16 @@ const warehouseOptions = computed(() =>
   })),
 );
 
+const postedOptions = computed(() => [
+  { value: 'true', label: t('components.buttons.yes') },
+  { value: 'false', label: t('components.buttons.no') },
+]);
+
+const directPurchaseOptions = computed(() => [
+  { value: 'true', label: t('components.buttons.yes') },
+  { value: 'false', label: t('components.buttons.no') },
+]);
+
 onMounted(async () => {
   emits('mode-state', ViewMode.LIST);
 
@@ -134,6 +146,9 @@ const getPurchaseReceipts = async (search: string, refresh: boolean, page: numbe
     supplier_id: selectedSupplierId.value,
     purchase_id: selectedPurchaseId.value,
     warehouse_id: selectedWarehouseId.value,
+    is_posted: selectedIsPosted.value === null ? null : selectedIsPosted.value === 'true',
+    is_from_direct_purchase:
+      selectedIsFromDirectPurchase.value === null ? null : selectedIsFromDirectPurchase.value === 'true',
     refresh,
     page,
     per_page: perPage,
@@ -368,6 +383,26 @@ const confirmDelete = async () => {
             @change="getPurchaseReceipts(searchText, true, 1, purchaseReceiptLists?.meta.per_page ?? 10)"
             @search="loadWarehouseDDL"
             @clear="clearWarehouseFilter"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-3">
+          <FormLabel>{{ t('views.purchase_receipt.fields.is_from_direct_purchase') }}</FormLabel>
+          <FormSelectSearch
+            v-model="selectedIsFromDirectPurchase"
+            :options="directPurchaseOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchaseReceipts(searchText, true, 1, purchaseReceiptLists?.meta.per_page ?? 10)"
+            @clear="getPurchaseReceipts(searchText, true, 1, purchaseReceiptLists?.meta.per_page ?? 10)"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-3">
+          <FormLabel>{{ t('views.purchase_receipt.fields.is_posted') }}</FormLabel>
+          <FormSelectSearch
+            v-model="selectedIsPosted"
+            :options="postedOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchaseReceipts(searchText, true, 1, purchaseReceiptLists?.meta.per_page ?? 10)"
+            @clear="getPurchaseReceipts(searchText, true, 1, purchaseReceiptLists?.meta.per_page ?? 10)"
           />
         </div>
       </div>

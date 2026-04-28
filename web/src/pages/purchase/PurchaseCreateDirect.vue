@@ -144,7 +144,6 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
   { title: 'views.purchase.field_groups.company_info', state: CardState.Expanded },
   { title: 'views.purchase.field_groups.purchase_data', state: CardState.Expanded },
   { title: 'views.purchase.field_groups.items', state: CardState.Expanded },
-  { title: 'views.purchase.field_groups.additional_costs', state: CardState.Expanded },
   { title: 'views.purchase.field_groups.summary', state: CardState.Expanded },
   { title: '', state: CardState.Hidden, id: 'button' },
 ]);
@@ -1034,7 +1033,7 @@ const onSubmit = async () => {
               />
               <FormErrorMessages :messages="purchaseForm.errors.tax_invoice_vat" />
             </div>
-            <div class="col-span-12 md:col-span-6 lg:col-span-4">
+            <div class="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col justify-center">
               <FormLabel>
                 {{ t('views.purchase.fields.is_posted') }}
               </FormLabel>
@@ -1827,149 +1826,10 @@ const onSubmit = async () => {
 
       <template #card-items-3>
         <div class="space-y-4 p-5">
-          <div class="flex items-center justify-between gap-3">
-            <div class="text-sm text-slate-500">
-              {{ t('views.purchase.fields.additional_costs_hint') }}
-            </div>
-            <Button type="button" variant="primary" @click="addAdditionalCost">
-              <Lucide icon="Plus" class="mr-1 h-4 w-4" />
-              {{ t('components.buttons.add') }}
-            </Button>
-          </div>
-
-          <FormErrorMessages :messages="purchaseForm.errors.additional_costs" />
-
-          <div v-if="purchaseAdditionalCostsForm.length === 0" class="rounded-md border border-dashed p-4 text-sm text-slate-500">
-            {{ t('views.purchase.fields.additional_costs_empty') }}
-          </div>
-
-          <div
-            v-for="(additionalCost, index) in purchaseAdditionalCostsForm"
-            :key="`additional-cost-${index}`"
-            class="rounded-md border border-slate-200/60 p-4 dark:border-darkmode-400"
-          >
-            <div class="mb-3 flex justify-end">
-              <Button type="button" variant="outline-danger" @click="removeAdditionalCost(index)">
-                <Lucide icon="Trash2" class="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div class="grid grid-cols-12 gap-4 gap-y-3">
-              <div class="col-span-12 md:col-span-6">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }">
-                  {{ t('views.purchase.fields.purchase_additional_cost_category_id') }}
-                </FormLabel>
-                <FormSelectSearch
-                  v-model="additionalCost.purchase_additional_cost_category_id"
-                  v-model:search="additionalCostCategorySearch"
-                  :options="additionalCostCategoryOptions"
-                  :placeholder="t('components.dropdown.placeholder')"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }"
-                  @search="loadAdditionalCostCategoryDDL"
-                  @change="validateField(`additional_costs.${index}.purchase_additional_cost_category_id`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.purchase_additional_cost_category_id`)" />
-              </div>
-              <div class="col-span-12 md:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.code`) }">
-                  {{ t('views.purchase.fields.code') }}
-                </FormLabel>
-                <FormInputCode
-                  v-model="additionalCost.code"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.code`) }"
-                  @set-auto="setAdditionalCostCode(index)"
-                  @change="validateField(`additional_costs.${index}.code`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.code`)" />
-              </div>
-              <div class="col-span-12 md:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.date`) }">
-                  {{ t('views.purchase.fields.date') }}
-                </FormLabel>
-                <FormInputDateTimeAuto
-                  v-model="additionalCost.date"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.date`) }"
-                  @change="validateField(`additional_costs.${index}.date`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.date`)" />
-              </div>
-              <div class="col-span-12 md:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.due_days`) }">
-                  {{ t('views.purchase.fields.due_days') }}
-                </FormLabel>
-                <FormInput
-                  v-model="additionalCost.due_days"
-                  type="number"
-                  min="0"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.due_days`) }"
-                  @change="validateField(`additional_costs.${index}.due_days`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.due_days`)" />
-              </div>
-              <div class="col-span-12 md:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.amount_paid_immediately`) }">
-                  {{ t('views.purchase.fields.amount_paid_immediately') }}
-                </FormLabel>
-                <FormInputCurrency
-                  v-model="additionalCost.amount_paid_immediately"
-                  :allow-negative="false"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.amount_paid_immediately`) }"
-                  @change="
-                    validateField(`additional_costs.${index}.amount_paid_immediately`);
-                    syncDerivedFields();
-                  "
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.amount_paid_immediately`)" />
-              </div>
-              <div class="col-span-12 md:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.amount_payable`) }">
-                  {{ t('views.purchase.fields.amount_payable') }}
-                </FormLabel>
-                <FormInputCurrency
-                  v-model="additionalCost.amount_payable"
-                  :allow-negative="false"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.amount_payable`) }"
-                  @change="
-                    validateField(`additional_costs.${index}.amount_payable`);
-                    syncDerivedFields();
-                  "
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.amount_payable`)" />
-              </div>
-              <div class="col-span-12 md:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }">
-                  {{ t('views.purchase.fields.paid_immediately_cash_account_id') }}
-                </FormLabel>
-                <FormSelectSearch
-                  v-model="additionalCost.paid_immediately_cash_account_id"
-                  v-model:search="cashAccountSearch"
-                  :options="cashAccountOptions"
-                  :placeholder="t('components.dropdown.placeholder')"
-                  :class="{ 'border-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }"
-                  @search="loadCashAccountDDL"
-                  @change="validateField(`additional_costs.${index}.paid_immediately_cash_account_id`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.paid_immediately_cash_account_id`)" />
-              </div>
-              <div class="col-span-12 md:col-span-12">
-                <FormLabel>{{ t('views.purchase.fields.remarks') }}</FormLabel>
-                <FormTextarea
-                  v-model="additionalCost.remarks"
-                  @change="validateField(`additional_costs.${index}.remarks`)"
-                />
-                <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.remarks`)" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-
-      <template #card-items-4>
-        <div class="space-y-4 p-5">
           <div class="rounded-md border border-slate-200/60 p-4 dark:border-darkmode-400">
-            <div class="mb-3 flex items-center justify-between">
+            <div class="mb-3 flex items-center justify-between gap-3">
               <div class="font-medium">{{ t('views.purchase.fields.global_discounts') }}</div>
-              <Button type="button" variant="outline-primary" size="sm" @click="addGlobalDiscount">
+              <Button type="button" variant="primary" @click="addGlobalDiscount">
                 <Lucide icon="Plus" class="mr-1 h-4 w-4" />
                 {{ t('components.buttons.add') }}
               </Button>
@@ -1994,14 +1854,159 @@ const onSubmit = async () => {
                   </option>
                 </FormSelect>
               </div>
-              <div class="col-span-12 md:col-span-4">
+              <div class="col-span-12 md:col-span-2">
                 <FormLabel>{{ t('views.purchase.fields.discount_value') }}</FormLabel>
                 <FormInputCurrency v-model="discount.discount_value" :allow-negative="false" />
               </div>
               <div class="col-span-12 md:col-span-2 flex items-end">
-                <Button type="button" variant="outline-danger" class="w-full" @click="removeGlobalDiscount(index)">
+                <Button
+                  type="button"
+                  variant="outline-secondary"
+                  class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
+                  @click="removeGlobalDiscount(index)"
+                >
+                  <Lucide icon="Trash2" class="h-4 w-4 text-danger" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-md border border-slate-200/60 p-4 dark:border-darkmode-400">
+            <div class="mb-3 flex items-center justify-between gap-3">
+              <div>
+                <div class="font-medium">{{ t('views.purchase.field_groups.additional_costs') }}</div>
+                <div class="text-sm text-slate-500">
+                  {{ t('views.purchase.fields.additional_costs_hint') }}
+                </div>
+              </div>
+              <Button type="button" variant="primary" @click="addAdditionalCost">
+                <Lucide icon="Plus" class="mr-1 h-4 w-4" />
+                {{ t('components.buttons.add') }}
+              </Button>
+            </div>
+
+            <FormErrorMessages :messages="purchaseForm.errors.additional_costs" />
+
+            <div v-if="purchaseAdditionalCostsForm.length === 0" class="rounded-md border border-dashed p-4 text-sm text-slate-500">
+              {{ t('views.purchase.fields.additional_costs_empty') }}
+            </div>
+
+            <div
+              v-for="(additionalCost, index) in purchaseAdditionalCostsForm"
+              :key="`additional-cost-${index}`"
+              class="mt-4 rounded-md border border-slate-200/60 p-4 dark:border-darkmode-400"
+            >
+              <div class="mb-3 flex justify-end">
+                <Button type="button" variant="outline-danger" @click="removeAdditionalCost(index)">
                   <Lucide icon="Trash2" class="h-4 w-4" />
                 </Button>
+              </div>
+
+              <div class="grid grid-cols-12 gap-4 gap-y-3">
+                <div class="col-span-12 md:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.code`) }">
+                    {{ t('views.purchase.fields.code') }}
+                  </FormLabel>
+                  <FormInputCode
+                    v-model="additionalCost.code"
+                    :class="{ 'border-danger': invalidField(`additional_costs.${index}.code`) }"
+                    @set-auto="setAdditionalCostCode(index)"
+                    @change="validateField(`additional_costs.${index}.code`)"
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.code`)" />
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.date`) }">
+                    {{ t('views.purchase.fields.date') }}
+                  </FormLabel>
+                  <FormInputDateTimeAuto
+                    v-model="additionalCost.date"
+                    :class="{ 'border-danger': invalidField(`additional_costs.${index}.date`) }"
+                    @change="validateField(`additional_costs.${index}.date`)"
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.date`)" />
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.due_days`) }">
+                    {{ t('views.purchase.fields.due_days') }}
+                  </FormLabel>
+                  <FormInput
+                    v-model="additionalCost.due_days"
+                    type="number"
+                    min="0"
+                    :class="{ 'border-danger': invalidField(`additional_costs.${index}.due_days`) }"
+                    @change="validateField(`additional_costs.${index}.due_days`)"
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.due_days`)" />
+                </div>
+                <div class="col-span-12 md:col-span-6">
+                  <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }">
+                    {{ t('views.purchase.fields.purchase_additional_cost_category_id') }}
+                  </FormLabel>
+                  <FormSelectSearch
+                    v-model="additionalCost.purchase_additional_cost_category_id"
+                    v-model:search="additionalCostCategorySearch"
+                    :options="additionalCostCategoryOptions"
+                    :placeholder="t('components.dropdown.placeholder')"
+                    :class="{ 'border-danger': invalidField(`additional_costs.${index}.purchase_additional_cost_category_id`) }"
+                    @search="loadAdditionalCostCategoryDDL"
+                    @change="validateField(`additional_costs.${index}.purchase_additional_cost_category_id`)"
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.purchase_additional_cost_category_id`)" />
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }">
+                    {{ t('views.purchase.fields.paid_immediately_cash_account_id') }}
+                  </FormLabel>
+                  <FormSelectSearch
+                    v-model="additionalCost.paid_immediately_cash_account_id"
+                    v-model:search="cashAccountSearch"
+                    :options="cashAccountOptions"
+                    :placeholder="t('components.dropdown.placeholder')"
+                    :class="{ 'border-danger': invalidField(`additional_costs.${index}.paid_immediately_cash_account_id`) }"
+                    @search="loadCashAccountDDL"
+                    @change="validateField(`additional_costs.${index}.paid_immediately_cash_account_id`)"
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.paid_immediately_cash_account_id`)" />
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.amount_paid_immediately`) }">
+                    {{ t('views.purchase.fields.amount_paid_immediately') }}
+                  </FormLabel>
+                  <FormInputCurrency
+                    v-model="additionalCost.amount_paid_immediately"
+                    :allow-negative="false"
+                    :class="{ 'border-danger': invalidField(`additional_costs.${index}.amount_paid_immediately`) }"
+                    @change="
+                      validateField(`additional_costs.${index}.amount_paid_immediately`);
+                      syncDerivedFields();
+                    "
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.amount_paid_immediately`)" />
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                  <FormLabel :class="{ 'text-danger': invalidField(`additional_costs.${index}.amount_payable`) }">
+                    {{ t('views.purchase.fields.amount_payable') }}
+                  </FormLabel>
+                  <FormInputCurrency
+                    v-model="additionalCost.amount_payable"
+                    :allow-negative="false"
+                    :class="{ 'border-danger': invalidField(`additional_costs.${index}.amount_payable`) }"
+                    @change="
+                      validateField(`additional_costs.${index}.amount_payable`);
+                      syncDerivedFields();
+                    "
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.amount_payable`)" />
+                </div>
+                <div class="col-span-12 md:col-span-12">
+                  <FormLabel>{{ t('views.purchase.fields.remarks') }}</FormLabel>
+                  <FormTextarea
+                    v-model="additionalCost.remarks"
+                    @change="validateField(`additional_costs.${index}.remarks`)"
+                  />
+                  <FormErrorMessages :messages="getFieldErrors(`additional_costs.${index}.remarks`)" />
+                </div>
               </div>
             </div>
           </div>

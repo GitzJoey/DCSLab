@@ -8,6 +8,7 @@ import { DataListFlex } from '@/components/DataList';
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import PurchaseService from '@/services/PurchaseService';
+import PurchaseOrderService from '@/services/PurchaseOrderService';
 import SupplierService from '@/services/SupplierService';
 import { useSelectedUserLocationStore } from '@/stores/selected-user-location';
 import { ErrorCode } from '@/types/enums/ErrorCode';
@@ -25,6 +26,7 @@ import { formatCurrency, formatDate } from '@/utils/helper';
 const { t } = useI18n();
 const router = useRouter();
 const purchaseService = new PurchaseService();
+const purchaseOrderService = new PurchaseOrderService();
 const supplierService = new SupplierService();
 const selectedUserLocationStore = useSelectedUserLocationStore();
 
@@ -43,6 +45,10 @@ const startDate = ref<string | null>(null);
 const endDate = ref<string | null>(null);
 const searchText = ref<string>('');
 const selectedSupplierId = ref<string | null>(null);
+const selectedPurchaseOrderId = ref<string | null>(null);
+const selectedReceiptMode = ref<string | null>(null);
+const selectedProgressStatus = ref<string | null>(null);
+const selectedIsPosted = ref<string | null>(null);
 
 const purchaseLists = ref<Collection<Array<Purchase>> | null>({
   data: [],
@@ -75,6 +81,31 @@ const supplierOptions = computed(() =>
   })),
 );
 
+const purchaseOrderDDL = ref<Array<DropDownOption> | null>(null);
+const purchaseOrderSearch = ref<string>('');
+const purchaseOrderOptions = computed(() =>
+  (purchaseOrderDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
+
+const receiptModeOptions = computed(() => [
+  { value: 'direct', label: 'Direct' },
+  { value: 'manual', label: 'Manual' },
+]);
+
+const progressStatusOptions = computed(() => [
+  { value: 'unlinked', label: 'Unlinked' },
+  { value: 'unmatched', label: 'Unmatched' },
+  { value: 'matched', label: 'Matched' },
+]);
+
+const postedOptions = computed(() => [
+  { value: 'true', label: t('components.buttons.yes') },
+  { value: 'false', label: t('components.buttons.no') },
+]);
+
 onMounted(async () => {
   emits('mode-state', ViewMode.LIST);
 
@@ -92,7 +123,7 @@ onMounted(async () => {
   startDate.value = formatDate(startOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
   endDate.value = formatDate(endOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
 
-  await loadSupplierDDL();
+  await Promise.all([loadSupplierDDL(), loadPurchaseOrderDDL()]);
   await getPurchases('', true, 1, 10);
 });
 
@@ -108,6 +139,10 @@ const getPurchases = async (search: string, refresh: boolean, page: number, perP
     start_date: startDate.value,
     end_date: endDate.value ?? undefined,
     supplier_id: selectedSupplierId.value,
+    purchase_order_id: selectedPurchaseOrderId.value,
+    receipt_mode: selectedReceiptMode.value,
+    is_posted: selectedIsPosted.value === null ? null : selectedIsPosted.value === 'true',
+    progress_status: selectedProgressStatus.value,
     refresh,
     page,
     per_page: perPage,
@@ -146,8 +181,44 @@ const loadSupplierDDL = async (search = '') => {
   }
 };
 
+const loadPurchaseOrderDDL = async (search = '') => {
+  if (!selectedUserLocation.value) return;
+
+  const result = await purchaseOrderService.readAnyGet({
+    with_trashed: false,
+    company_id: selectedUserLocation.value.company.id,
+    branch_id: selectedUserLocation.value.branch.id,
+    search,
+    start_date: null,
+    end_date: null,
+    supplier_id: selectedSupplierId.value,
+    refresh: false,
+    limit: 100,
+  });
+
+  if (result.success && result.data) {
+    purchaseOrderDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.code,
+    }));
+  }
+};
+
 const clearSupplierFilter = async () => {
   selectedSupplierId.value = null;
+  selectedPurchaseOrderId.value = null;
+  await loadPurchaseOrderDDL();
+  await getPurchases(searchText.value, true, 1, purchaseLists.value?.meta.per_page ?? 10);
+};
+
+const handleSupplierFilterChange = async () => {
+  selectedPurchaseOrderId.value = null;
+  await loadPurchaseOrderDDL();
+  await getPurchases(searchText.value, true, 1, purchaseLists.value?.meta.per_page ?? 10);
+};
+
+const clearPurchaseOrderFilter = async () => {
+  selectedPurchaseOrderId.value = null;
   await getPurchases(searchText.value, true, 1, purchaseLists.value?.meta.per_page ?? 10);
 };
 
@@ -229,30 +300,72 @@ const confirmDelete = async () => {
   <div class="mt-5 grid grid-cols-12 gap-6">
     <div class="col-span-12">
       <div class="mb-5 grid grid-cols-12 gap-4">
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-3">
           <FormLabel>{{ t('views.purchase.fields.start_date') }}</FormLabel>
           <FormInputDateTime
             v-model="startDate"
             @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
           />
         </div>
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-3">
           <FormLabel>{{ t('views.purchase.fields.end_date') }}</FormLabel>
           <FormInputDateTime
             v-model="endDate"
             @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
           />
         </div>
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-3">
           <FormLabel>{{ t('views.purchase.fields.supplier_id') }}</FormLabel>
           <FormSelectSearch
             v-model="selectedSupplierId"
             v-model:search="supplierSearch"
             :options="supplierOptions"
             :placeholder="t('components.dropdown.placeholder')"
-            @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+            @change="handleSupplierFilterChange"
             @search="loadSupplierDDL"
             @clear="clearSupplierFilter"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-3">
+          <FormLabel>{{ t('views.purchase.fields.purchase_order_id') }}</FormLabel>
+          <FormSelectSearch
+            v-model="selectedPurchaseOrderId"
+            v-model:search="purchaseOrderSearch"
+            :options="purchaseOrderOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+            @search="loadPurchaseOrderDDL"
+            @clear="clearPurchaseOrderFilter"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-4">
+          <FormLabel>{{ t('views.purchase.fields.receipt_mode') }}</FormLabel>
+          <FormSelectSearch
+            v-model="selectedReceiptMode"
+            :options="receiptModeOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+            @clear="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-4">
+          <FormLabel>{{ t('views.purchase.fields.progress_status') }}</FormLabel>
+          <FormSelectSearch
+            v-model="selectedProgressStatus"
+            :options="progressStatusOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+            @clear="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-4">
+          <FormLabel>{{ t('views.purchase.fields.is_posted') }}</FormLabel>
+          <FormSelectSearch
+            v-model="selectedIsPosted"
+            :options="postedOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+            @clear="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
           />
         </div>
       </div>
@@ -400,39 +513,72 @@ const confirmDelete = async () => {
                 <div v-if="!(item as Purchase).items?.length" class="text-xs text-slate-500">
                   {{ t('views.purchase.fields.items_empty') }}
                 </div>
-                <div
-                  v-for="(purchaseItem, itemIndex) in (item as Purchase).items ?? []"
-                  :key="purchaseItem.ulid ?? `${(item as Purchase).ulid}-item-${itemIndex}`"
-                  class="rounded-md border border-slate-200/70 p-3 dark:border-darkmode-400"
-                >
-                  <div class="grid grid-cols-12 gap-x-3 gap-y-2 text-xs">
-                    <div class="col-span-12 font-medium text-slate-700 dark:text-slate-200">
-                      {{ purchaseItem.product_unit?.product?.name ?? purchaseItem.product_unit?.code ?? '-' }}
+                <div v-else class="space-y-2">
+                  <div
+                    v-for="(purchaseItem, itemIndex) in (item as Purchase).items ?? []"
+                    :key="purchaseItem.ulid ?? `${(item as Purchase).ulid}-item-${itemIndex}`"
+                    class="flex flex-wrap items-stretch gap-2 rounded-xl border border-slate-200/70 bg-slate-50/60 px-3 py-3 text-xs dark:border-darkmode-400 dark:bg-darkmode-700/40"
+                  >
+                    <div class="flex min-w-0 basis-full items-center gap-3 lg:flex-1 lg:basis-auto">
+                      <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-[11px] font-semibold text-primary">
+                        {{ itemIndex + 1 }}
+                      </div>
+                      <div class="min-w-0 flex-1">
+                        <div class="truncate text-sm font-semibold text-slate-800 dark:text-slate-100">
+                          {{ purchaseItem.product_unit?.product?.name ?? purchaseItem.product_unit?.code ?? '-' }}
+                        </div>
+                        <div class="truncate text-[11px] text-slate-500 dark:text-slate-400">
+                          {{ purchaseItem.product_unit?.code ?? '-' }}
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.product_unit_id') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">
-                      {{ purchaseItem.product_unit?.code ?? '-' }}
+
+                    <div class="flex min-h-[56px] min-w-[104px] flex-col justify-between rounded-lg border border-slate-200/80 bg-white px-3 py-2 dark:border-darkmode-500 dark:bg-darkmode-600/70 sm:min-w-[116px]">
+                      <div class="truncate text-[11px] leading-4 text-slate-500">{{ t('views.purchase.fields.qty') }}</div>
+                      <div class="text-sm font-semibold leading-5 text-slate-700 dark:text-slate-100">{{ purchaseItem.qty ?? 0 }}</div>
                     </div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.qty') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ purchaseItem.qty ?? 0 }}</div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.product_unit_qty_base') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ purchaseItem.product_unit_qty_base ?? 0 }}</div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.qty_received_base') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ purchaseItem.qty_received_base ?? 0 }}</div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.qty_outstanding_base') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ purchaseItem.qty_outstanding_base ?? 0 }}</div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.qty_excess_base') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">{{ purchaseItem.qty_excess_base ?? 0 }}</div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.product_unit_price') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">
-                      {{ formatCurrency(Number(purchaseItem.product_unit_price ?? 0)) }}
+
+                    <div class="flex min-h-[56px] min-w-[104px] flex-col justify-between rounded-lg border border-slate-200/80 bg-white px-3 py-2 dark:border-darkmode-500 dark:bg-darkmode-600/70 sm:min-w-[116px]">
+                      <div class="truncate text-[11px] leading-4 text-slate-500">{{ t('views.purchase.fields.product_unit_price') }}</div>
+                      <div class="text-sm font-semibold leading-5 text-slate-700 dark:text-slate-100">
+                        {{ formatCurrency(Number(purchaseItem.product_unit_price ?? 0)) }}
+                      </div>
                     </div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.subtotal_after_vat') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">
-                      {{ formatCurrency(Number(purchaseItem.subtotal_after_vat ?? 0)) }}
+
+                    <div class="flex min-h-[56px] min-w-[104px] flex-col justify-between rounded-lg border border-success/20 bg-success/10 px-3 py-2 sm:min-w-[116px]">
+                      <div class="truncate text-[11px] leading-4 text-slate-500 dark:text-slate-300">{{ t('views.purchase.fields.subtotal') }}</div>
+                      <div class="text-sm font-semibold leading-5 text-success">
+                        {{ formatCurrency(Number(purchaseItem.subtotal_after_vat ?? 0)) }}
+                      </div>
                     </div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.purchase.fields.remarks') }}</div>
-                    <div class="col-span-8 break-words text-slate-700 dark:text-slate-200">{{ purchaseItem.remarks?.trim() || '-' }}</div>
+
+                    <div class="flex min-h-[56px] min-w-[104px] flex-col justify-between rounded-lg border border-slate-200/80 bg-white px-3 py-2 dark:border-darkmode-500 dark:bg-darkmode-600/70 sm:min-w-[116px]">
+                      <div class="truncate text-[11px] leading-4 text-slate-500">{{ t('views.purchase.fields.product_unit_qty_base') }}</div>
+                      <div class="text-sm font-semibold leading-5 text-slate-700 dark:text-slate-100">{{ purchaseItem.product_unit_qty_base ?? 0 }}</div>
+                    </div>
+
+                    <div class="flex min-h-[56px] min-w-[104px] flex-col justify-between rounded-lg border border-slate-200/80 bg-white px-3 py-2 dark:border-darkmode-500 dark:bg-darkmode-600/70 sm:min-w-[116px]">
+                      <div class="truncate text-[11px] leading-4 text-slate-500">{{ t('views.purchase.fields.qty_received_base') }}</div>
+                      <div class="text-sm font-semibold leading-5 text-slate-700 dark:text-slate-100">{{ purchaseItem.qty_received_base ?? 0 }}</div>
+                    </div>
+
+                    <div class="flex min-h-[56px] min-w-[104px] flex-col justify-between rounded-lg border border-slate-200/80 bg-white px-3 py-2 dark:border-darkmode-500 dark:bg-darkmode-600/70 sm:min-w-[116px]">
+                      <div class="truncate text-[11px] leading-4 text-slate-500">{{ t('views.purchase.fields.qty_outstanding_base') }}</div>
+                      <div class="text-sm font-semibold leading-5 text-slate-700 dark:text-slate-100">{{ purchaseItem.qty_outstanding_base ?? 0 }}</div>
+                    </div>
+
+                    <div class="flex min-h-[56px] min-w-[104px] flex-col justify-between rounded-lg border border-slate-200/80 bg-white px-3 py-2 dark:border-darkmode-500 dark:bg-darkmode-600/70 sm:min-w-[116px]">
+                      <div class="truncate text-[11px] leading-4 text-slate-500">{{ t('views.purchase.fields.qty_excess_base') }}</div>
+                      <div class="text-sm font-semibold leading-5 text-slate-700 dark:text-slate-100">{{ purchaseItem.qty_excess_base ?? 0 }}</div>
+                    </div>
+
+                    <div
+                      v-if="purchaseItem.remarks?.trim()"
+                      class="min-w-0 basis-full text-[11px] text-slate-600 dark:text-slate-300 xl:basis-auto xl:flex-1"
+                    >
+                      <span class="text-slate-500">{{ t('views.purchase.fields.remarks') }}:</span>
+                      {{ purchaseItem.remarks?.trim() }}
+                    </div>
                   </div>
                 </div>
               </div>
