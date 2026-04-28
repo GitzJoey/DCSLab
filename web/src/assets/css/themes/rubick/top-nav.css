@@ -149,7 +149,9 @@
           box-shadow: 0px 3px 20px #0000000b;
           background-color: theme('colors.theme.1');
           display: none;
-          width: theme('spacing.56');
+          width: max-content;
+          min-width: theme('spacing.56');
+          max-width: min(24rem, calc(100vw - theme('spacing.8')));
           position: absolute;
           border-radius: theme('borderRadius.md');
           z-index: 20;
@@ -197,8 +199,12 @@
             & > .top-menu {
               .top-menu__title {
                 width: 100%;
+                min-width: 0;
+                white-space: normal;
+                line-height: theme('lineHeight.5');
                 .top-menu__sub-icon {
                   margin-left: auto;
+                  flex-shrink: 0;
                 }
               }
             }
@@ -208,7 +214,9 @@
               box-shadow: 0px 3px 20px #0000000b;
               background-color: theme('colors.theme.1');
               display: none;
-              width: theme('spacing.56');
+              width: max-content;
+              min-width: theme('spacing.56');
+              max-width: min(24rem, calc(100vw - theme('spacing.8')));
               position: absolute;
               border-radius: theme('borderRadius.md');
               z-index: 20;
@@ -237,8 +245,12 @@
                 & > .top-menu {
                   .top-menu__title {
                     width: 100%;
+                    min-width: 0;
+                    white-space: normal;
+                    line-height: theme('lineHeight.5');
                     .top-menu__sub-icon {
                       margin-left: auto;
+                      flex-shrink: 0;
                     }
                   }
                 }
