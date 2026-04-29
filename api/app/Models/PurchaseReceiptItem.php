@@ -21,7 +21,7 @@ class PurchaseReceiptItem extends Model
         'company_id',
         'branch_id',
         'purchase_receipt_id',
-        'purchase_item_id',
+        'has_purchase_item_product',
         'qty',
         'product_unit_id',
         'product_unit_conversion_value',
@@ -30,6 +30,7 @@ class PurchaseReceiptItem extends Model
     ];
 
     protected $casts = [
+        'has_purchase_item_product' => 'boolean',
         'qty' => 'decimal:8',
         'product_unit_conversion_value' => 'decimal:8',
         'product_unit_qty_base' => 'decimal:8',
@@ -48,11 +49,6 @@ class PurchaseReceiptItem extends Model
     public function purchaseReceipt()
     {
         return $this->belongsTo(PurchaseReceipt::class)->withTrashed();
-    }
-
-    public function purchaseItem()
-    {
-        return $this->belongsTo(PurchaseItem::class)->withTrashed();
     }
 
     public function productUnit()

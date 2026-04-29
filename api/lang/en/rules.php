@@ -36,16 +36,15 @@ return [
         'duplicate_manual_receipt_reference' => 'The same manual receipt cannot be used more than once in a single request.',
         'invalid_purchase_item_index' => 'The selected purchase item index is invalid.',
         'additional_cost_amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
+        'duplicate_serial' => 'The same serial cannot be used more than once within a single purchase item.',
     ],
     'purchase_receipt' => [
         'direct_mode_is_managed_from_purchase' => 'Direct purchase receipt must be managed from purchase.',
-        'purchase_item_must_be_empty_without_purchase' => 'Purchase item must be empty when purchase is not selected.',
         'supplier_must_match_purchase' => 'Supplier must match the linked purchase.',
         'branch_must_match_purchase' => 'Branch must match the linked purchase.',
         'purchase_branch_must_match_receipt_branch' => 'Purchase branch must match the purchase receipt branch.',
-        'purchase_item_is_required_with_purchase' => 'Purchase item is required when purchase is selected.',
-        'invalid_purchase_item_reference' => 'The selected purchase item is invalid for the linked purchase.',
         'direct_mode_cannot_be_deleted_here' => 'Direct purchase receipt cannot be deleted from purchase receipt management.',
+        'duplicate_serial' => 'The same serial cannot be used more than once within a single purchase receipt item.',
     ],
     'purchase_additional_cost' => [
         'amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',

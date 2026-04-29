@@ -170,7 +170,6 @@ export default class PurchaseReceiptService {
       branch_id: '',
       supplier_id: null,
       purchase_id: null,
-      is_from_direct_purchase: false,
       code: '_AUTO_',
       date: '_AUTO_',
       warehouse_id: null,
@@ -196,7 +195,6 @@ export default class PurchaseReceiptService {
     return useForm('post', url, {
       supplier_id: null,
       purchase_id: null,
-      is_from_direct_purchase: false,
       code: '_AUTO_',
       date: '',
       warehouse_id: null,

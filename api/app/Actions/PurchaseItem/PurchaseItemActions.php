@@ -15,6 +15,7 @@ use App\DTOs\PurchaseItemUpdateDTO;
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\PurchaseItem;
+use App\Models\PurchaseReceiptItem;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -480,8 +481,18 @@ class PurchaseItemActions
                 $this->purchaseItemSubtotalDiscountActions->delete($purchaseItemSubtotalDiscount);
             }
 
-            foreach ($purchaseItem->receiptItems as $purchaseReceiptItem) {
-                $purchaseReceiptItem->purchase_item_id = null;
+            $purchaseReceiptItems = PurchaseReceiptItem::query()
+                ->select('purchase_receipt_items.*')
+                ->join('purchase_receipts', 'purchase_receipts.id', '=', 'purchase_receipt_items.purchase_receipt_id')
+                ->where('purchase_receipts.purchase_id', $purchaseItem->purchase_id)
+                ->where('purchase_receipt_items.product_unit_id', $purchaseItem->product_unit_id)
+                ->where('purchase_receipt_items.has_purchase_item_product', true)
+                ->whereNull('purchase_receipts.deleted_at')
+                ->whereNull('purchase_receipt_items.deleted_at')
+                ->get();
+
+            foreach ($purchaseReceiptItems as $purchaseReceiptItem) {
+                $purchaseReceiptItem->has_purchase_item_product = false;
                 $purchaseReceiptItem->save();
             }
 

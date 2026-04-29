@@ -5,7 +5,7 @@ namespace App\DTOs;
 final class PurchaseReceiptItemUpdateDTO
 {
     public function __construct(
-        public readonly ?int $purchaseItemId,
+        public readonly bool $hasPurchaseItemProduct,
 
         public readonly float $qty,
         public readonly int $productUnitId,

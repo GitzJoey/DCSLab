@@ -4,6 +4,7 @@ namespace App\Http\Requests\PurchaseReceipt;
 
 use App\Enums\PurchaseReceiptModeEnum;
 use App\Helpers\HashidsHelper;
+use App\Models\ProductUnit;
 use App\Models\Purchase;
 use App\Models\PurchaseReceipt;
 use App\Rules\ExistsForCompany;
@@ -36,7 +37,6 @@ class PurchaseReceiptStoreRequest extends FormRequest
             'purchase_id' => $this->filled('purchase_id') ? HashidsHelper::decodeId($this->purchase_id) : null,
             'warehouse_id' => $this->filled('warehouse_id') ? HashidsHelper::decodeId($this->warehouse_id) : null,
             'items' => collect($this->items ?? [])->map(function ($item) {
-                $item['purchase_item_id'] = ! empty($item['purchase_item_id']) ? HashidsHelper::decodeId($item['purchase_item_id']) : null;
                 $item['product_unit_id'] = ! empty($item['product_unit_id']) ? HashidsHelper::decodeId($item['product_unit_id']) : null;
 
                 return $item;
@@ -51,7 +51,6 @@ class PurchaseReceiptStoreRequest extends FormRequest
             'branch_id' => ['required', 'integer', 'bail', new IsValidBranch($this->company_id, true)],
             'supplier_id' => ['required', 'integer', 'bail', new ExistsForCompany('suppliers', $this->company_id), new IsValidSupplier($this->company_id)],
             'purchase_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchases', $this->company_id)],
-            'is_from_direct_purchase' => ['required', 'boolean'],
             'code' => ['required', 'string'],
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'warehouse_id' => ['required', 'integer', 'bail', new ExistsForCompany('warehouses', $this->company_id), new IsValidWarehouse($this->company_id, false)],
@@ -59,7 +58,6 @@ class PurchaseReceiptStoreRequest extends FormRequest
             'is_posted' => ['required', 'boolean'],
 
             'items' => ['required', 'array', 'min:1'],
-            'items.*.purchase_item_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_items', $this->company_id)],
             'items.*.qty' => ['required', 'numeric', 'gt:0'],
             'items.*.product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'gt:0'],
@@ -73,53 +71,57 @@ class PurchaseReceiptStoreRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $purchaseId = $this->input('purchase_id');
-            $isFromDirectPurchase = $this->boolean('is_from_direct_purchase');
 
-            if ($isFromDirectPurchase) {
-                $validator->errors()->add('is_from_direct_purchase', trans('rules.purchase_receipt.direct_mode_is_managed_from_purchase'));
-            }
+            if (! is_null($purchaseId)) {
+                $purchase = Purchase::with(['items', 'receipts'])->find($purchaseId);
+                if (! is_null($purchase)) {
+                    if ($purchase->receipt_mode === PurchaseReceiptModeEnum::DIRECT) {
+                        $validator->errors()->add('purchase_id', trans('rules.purchase_receipt.direct_mode_is_managed_from_purchase'));
+                    }
 
-            if (is_null($purchaseId)) {
-                foreach ($this->input('items', []) as $index => $item) {
-                    if (! empty($item['purchase_item_id'])) {
-                        $validator->errors()->add("items.$index.purchase_item_id", trans('rules.purchase_receipt.purchase_item_must_be_empty_without_purchase'));
+                    if ((int) $this->input('supplier_id') !== (int) $purchase->supplier_id) {
+                        $validator->errors()->add('supplier_id', trans('rules.purchase_receipt.supplier_must_match_purchase'));
+                    }
+
+                    if ((int) $this->input('branch_id') !== (int) $purchase->branch_id) {
+                        $validator->errors()->add('branch_id', trans('rules.purchase_receipt.branch_must_match_purchase'));
                     }
                 }
-
-                return;
             }
 
-            $purchase = Purchase::with(['items', 'receipts'])->find($purchaseId);
-            if (is_null($purchase)) {
-                return;
-            }
+            foreach (($validator->getData()['items'] ?? []) as $index => $item) {
+                $productUnitId = $item['product_unit_id'] ?? null;
+                $qty = $item['qty'] ?? null;
+                $conversionValue = $item['product_unit_conversion_value'] ?? null;
+                $serials = $item['serials'] ?? [];
 
-            if ($purchase->receipt_mode === PurchaseReceiptModeEnum::DIRECT) {
-                $validator->errors()->add('purchase_id', trans('rules.purchase_receipt.direct_mode_is_managed_from_purchase'));
+                if (empty($productUnitId) || ! is_numeric($qty) || ! is_numeric($conversionValue)) {
+                    continue;
+                }
 
-                return;
-            }
+                $product = ProductUnit::with('product')->find($productUnitId)?->product;
+                if (! $product?->is_use_serial_number) {
+                    continue;
+                }
 
-            if ((int) $this->input('supplier_id') !== (int) $purchase->supplier_id) {
-                $validator->errors()->add('supplier_id', trans('rules.purchase_receipt.supplier_must_match_purchase'));
-            }
-
-            if ((int) $this->input('branch_id') !== (int) $purchase->branch_id) {
-                $validator->errors()->add('branch_id', trans('rules.purchase_receipt.branch_must_match_purchase'));
-            }
-
-            $purchaseItemIds = $purchase->items->pluck('id')->all();
-            foreach ($this->input('items', []) as $index => $item) {
-                $purchaseItemId = $item['purchase_item_id'] ?? null;
-
-                if (is_null($purchaseItemId)) {
-                    $validator->errors()->add("items.$index.purchase_item_id", trans('rules.purchase_receipt.purchase_item_is_required_with_purchase'));
+                $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
+                $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
+                if (str_contains($normalizedBaseQty, '.')) {
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.stock_transfer.serial_base_qty_must_be_integer'));
 
                     continue;
                 }
 
-                if (! in_array($purchaseItemId, $purchaseItemIds, true)) {
-                    $validator->errors()->add("items.$index.purchase_item_id", trans('rules.purchase_receipt.invalid_purchase_item_reference'));
+                $serialValues = collect(is_array($serials) ? $serials : [])
+                    ->pluck('serial')
+                    ->values();
+                if ($serialValues->count() !== $serialValues->unique()->count()) {
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.purchase_receipt.duplicate_serial'));
+                }
+
+                $serialCount = (string) count(is_array($serials) ? $serials : []);
+                if (bccomp($serialCount, $baseQty, 8) !== 0) {
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.stock_transfer.serial_count_must_match_base_qty'));
                 }
             }
         });
@@ -132,13 +134,11 @@ class PurchaseReceiptStoreRequest extends FormRequest
             'branch_id' => 'branch',
             'supplier_id' => 'supplier',
             'purchase_id' => 'purchase',
-            'is_from_direct_purchase' => 'is from direct purchase',
             'code' => 'code',
             'date' => 'date',
             'warehouse_id' => 'warehouse',
             'remarks' => 'remarks',
             'is_posted' => 'is posted',
-            'items.*.purchase_item_id' => 'purchase item',
             'items.*.qty' => 'qty',
             'items.*.product_unit_id' => 'product unit',
             'items.*.product_unit_conversion_value' => 'product unit conversion value',

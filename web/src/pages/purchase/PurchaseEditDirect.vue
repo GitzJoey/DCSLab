@@ -375,6 +375,19 @@ const hydrateForm = (purchase: Purchase) => {
       : null);
   });
 
+  const directReceiptItemsByProductUnit = isDirectMode.value
+    ? (purchase.direct_receipt?.items ?? []).reduce<Record<string, any[]>>((accumulator, receiptItem) => {
+      if (!receiptItem.has_purchase_item_product || !receiptItem.product_unit?.id) return accumulator;
+
+      const key = receiptItem.product_unit.id;
+      accumulator[key] ??= [];
+      accumulator[key].push(receiptItem);
+
+      return accumulator;
+    }, {})
+    : {};
+  const directReceiptUsageByProductUnit: Record<string, number> = {};
+
   purchaseForm.setData({
     company_id: purchase.company?.id ?? selectedUserLocation.value?.company.id ?? '',
     branch_id: purchase.branch?.id ?? selectedUserLocation.value?.branch.id ?? '',
@@ -393,9 +406,18 @@ const hydrateForm = (purchase: Purchase) => {
     rounding: Number(purchase.rounding ?? 0),
     delete_item_ids: [],
     items: (purchase.items ?? []).map((item) => {
+      const productUnitId = item.product_unit?.id ?? '';
+      const currentUsageIndex = directReceiptUsageByProductUnit[productUnitId] ?? 0;
+      const matchingReceiptItem = isDirectMode.value && productUnitId
+        ? directReceiptItemsByProductUnit[productUnitId]?.[currentUsageIndex] ?? null
+        : null;
+
+      if (productUnitId) {
+        directReceiptUsageByProductUnit[productUnitId] = currentUsageIndex + 1;
+      }
+
       const serials = isDirectMode.value
-        ? (purchase.direct_receipt?.items ?? [])
-          .find((receiptItem) => receiptItem.purchase_item?.id === item.id)
+        ? matchingReceiptItem
           ?.serials
           ?.map((serial) => ({
             id: serial.id ?? null,

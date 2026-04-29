@@ -4,6 +4,7 @@ namespace App\Http\Requests\Purchase;
 
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
+use App\Models\ProductUnit;
 use App\Models\PurchaseAdditionalCost;
 use App\Models\PurchaseOrder;
 use App\Rules\ExistsForCompany;
@@ -346,6 +347,42 @@ class PurchaseDirectUpdateRequest extends FormRequest
                     if ($query->exists()) {
                         $validator->errors()->add("additional_costs.$index.code", trans('rules.unique_code'));
                     }
+                }
+            }
+
+            foreach (($validator->getData()['items'] ?? []) as $index => $item) {
+                $productUnitId = $item['product_unit_id'] ?? null;
+                $qty = $item['qty'] ?? null;
+                $conversionValue = $item['product_unit_conversion_value'] ?? null;
+                $serials = $item['serials'] ?? [];
+
+                if (empty($productUnitId) || ! is_numeric($qty) || ! is_numeric($conversionValue)) {
+                    continue;
+                }
+
+                $product = ProductUnit::with('product')->find($productUnitId)?->product;
+                if (! $product?->is_use_serial_number) {
+                    continue;
+                }
+
+                $baseQty = bcmul((string) $qty, (string) $conversionValue, 8);
+                $normalizedBaseQty = rtrim(rtrim($baseQty, '0'), '.');
+                if (str_contains($normalizedBaseQty, '.')) {
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.stock_transfer.serial_base_qty_must_be_integer'));
+
+                    continue;
+                }
+
+                $serialValues = collect(is_array($serials) ? $serials : [])
+                    ->pluck('serial')
+                    ->values();
+                if ($serialValues->count() !== $serialValues->unique()->count()) {
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.purchase.duplicate_serial'));
+                }
+
+                $serialCount = (string) count(is_array($serials) ? $serials : []);
+                if (bccomp($serialCount, $baseQty, 8) !== 0) {
+                    $validator->errors()->add('items.'.$index.'.serials', trans('rules.stock_transfer.serial_count_must_match_base_qty'));
                 }
             }
         });

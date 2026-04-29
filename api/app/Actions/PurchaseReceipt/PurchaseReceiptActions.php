@@ -39,7 +39,6 @@ class PurchaseReceiptActions
         'supplier',
         'purchase.supplier',
         'warehouse',
-        'items.purchaseItem',
         'items.productUnit.unit',
         'items.productUnit.product.category',
         'items.productUnit.product.brand',
@@ -265,7 +264,7 @@ class PurchaseReceiptActions
                     companyId: $purchaseReceipt->company_id,
                     branchId: $purchaseReceipt->branch_id,
                     purchaseReceiptId: $purchaseReceipt->id,
-                    purchaseItemId: $item['purchase_item_id'],
+                    hasPurchaseItemProduct: false,
 
                     qty: $item['qty'],
                     productUnitId: $item['product_unit_id'],
@@ -322,7 +321,7 @@ class PurchaseReceiptActions
                     companyId: $purchaseReceipt->company_id,
                     branchId: $purchaseReceipt->branch_id,
                     purchaseReceiptId: $purchaseReceipt->id,
-                    purchaseItemId: $item['purchase_item_id'],
+                    hasPurchaseItemProduct: false,
 
                     qty: $item['qty'],
                     productUnitId: $item['product_unit_id'],

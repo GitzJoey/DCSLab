@@ -30,7 +30,6 @@ class PurchaseReceiptItemActions
         'branch',
         'purchaseReceipt.supplier',
         'purchaseReceipt.purchase.supplier',
-        'purchaseItem',
         'productUnit.unit',
         'productUnit.product.category',
         'productUnit.product.brand',
@@ -44,7 +43,6 @@ class PurchaseReceiptItemActions
         'branch',
         'purchaseReceipt.supplier',
         'purchaseReceipt.purchase.supplier',
-        'purchaseItem',
         'productUnit.unit',
         'productUnit.product.category',
         'productUnit.product.brand',
@@ -61,7 +59,7 @@ class PurchaseReceiptItemActions
 
         ?string $search,
         ?int $purchaseReceiptId,
-        ?int $purchaseItemId,
+        ?bool $hasPurchaseItemProduct,
         ?int $productUnitId,
 
         ?ExecuteDTO $execute
@@ -84,7 +82,7 @@ class PurchaseReceiptItemActions
             $withTrashed,
             $search,
             $purchaseReceiptId,
-            $purchaseItemId,
+            $hasPurchaseItemProduct,
             $productUnitId,
         ) {
             $query->withoutTrashed();
@@ -98,8 +96,8 @@ class PurchaseReceiptItemActions
                 $query->where('purchase_receipt_items.purchase_receipt_id', $purchaseReceiptId);
             }
 
-            if ($purchaseItemId) {
-                $query->where('purchase_receipt_items.purchase_item_id', $purchaseItemId);
+            if (! is_null($hasPurchaseItemProduct)) {
+                $query->where('purchase_receipt_items.has_purchase_item_product', $hasPurchaseItemProduct);
             }
 
             if ($productUnitId) {
@@ -121,7 +119,7 @@ class PurchaseReceiptItemActions
                     $branchId ?? '[null]',
                     empty($search) ? '[empty]' : $search,
                     $purchaseReceiptId ?? '[null]',
-                    $purchaseItemId ?? '[null]',
+                    is_null($hasPurchaseItemProduct) ? '[null]' : ($hasPurchaseItemProduct ? 'true' : 'false'),
                     $productUnitId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
@@ -185,7 +183,7 @@ class PurchaseReceiptItemActions
             $purchaseReceiptItem->company_id = $data->companyId;
             $purchaseReceiptItem->branch_id = $data->branchId;
             $purchaseReceiptItem->purchase_receipt_id = $data->purchaseReceiptId;
-            $purchaseReceiptItem->purchase_item_id = $data->purchaseItemId;
+            $purchaseReceiptItem->has_purchase_item_product = $data->hasPurchaseItemProduct;
             $purchaseReceiptItem->qty = $data->qty;
             $purchaseReceiptItem->product_unit_id = $data->productUnitId;
             $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;
@@ -226,7 +224,7 @@ class PurchaseReceiptItemActions
         $timer_start = microtime(true);
 
         try {
-            $purchaseReceiptItem->purchase_item_id = $data->purchaseItemId;
+            $purchaseReceiptItem->has_purchase_item_product = $data->hasPurchaseItemProduct;
             $purchaseReceiptItem->qty = $data->qty;
             $purchaseReceiptItem->product_unit_id = $data->productUnitId;
             $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;

@@ -8,7 +8,7 @@ final class PurchaseReceiptItemCreateDTO
         public readonly int $companyId,
         public readonly int $branchId,
         public readonly int $purchaseReceiptId,
-        public readonly ?int $purchaseItemId,
+        public readonly bool $hasPurchaseItemProduct,
 
         public readonly float $qty,
         public readonly int $productUnitId,

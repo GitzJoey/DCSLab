@@ -49,6 +49,7 @@ const selectedPurchaseOrderId = ref<string | null>(null);
 const selectedReceiptMode = ref<string | null>(null);
 const selectedProgressStatus = ref<string | null>(null);
 const selectedIsPosted = ref<string | null>(null);
+const selectedIsPaidOff = ref<string | null>(null);
 
 const purchaseLists = ref<Collection<Array<Purchase>> | null>({
   data: [],
@@ -106,6 +107,11 @@ const postedOptions = computed(() => [
   { value: 'false', label: t('components.buttons.no') },
 ]);
 
+const paidOffOptions = computed(() => [
+  { value: 'true', label: t('components.buttons.yes') },
+  { value: 'false', label: t('components.buttons.no') },
+]);
+
 onMounted(async () => {
   emits('mode-state', ViewMode.LIST);
 
@@ -142,6 +148,7 @@ const getPurchases = async (search: string, refresh: boolean, page: number, perP
     purchase_order_id: selectedPurchaseOrderId.value,
     receipt_mode: selectedReceiptMode.value,
     is_posted: selectedIsPosted.value === null ? null : selectedIsPosted.value === 'true',
+    is_paid_off: selectedIsPaidOff.value === null ? null : selectedIsPaidOff.value === 'true',
     progress_status: selectedProgressStatus.value,
     refresh,
     page,
@@ -363,6 +370,16 @@ const confirmDelete = async () => {
           <FormSelectSearch
             v-model="selectedIsPosted"
             :options="postedOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+            @clear="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-4">
+          <FormLabel>{{ t('views.purchase.fields.is_paid_off') }}</FormLabel>
+          <FormSelectSearch
+            v-model="selectedIsPaidOff"
+            :options="paidOffOptions"
             :placeholder="t('components.dropdown.placeholder')"
             @change="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"
             @clear="getPurchases(searchText, true, 1, purchaseLists?.meta.per_page ?? 10)"

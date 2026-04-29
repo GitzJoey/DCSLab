@@ -75,6 +75,8 @@ return [
             'stock_adjustment_out_item_serial' => 'c,r,ra,u,d',
 
             'purchase_order' => 'c,r,ra,u,d',
+            'purchase' => 'c,r,ra,u,d',
+            'purchase_receipt' => 'c,r,ra,u,d',
 
             'stock_transfer' => 'c,r,ra,u,d',
             'stock_transfer_item' => 'c,r,ra,u,d',

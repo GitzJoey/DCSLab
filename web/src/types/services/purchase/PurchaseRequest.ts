@@ -9,6 +9,7 @@ export interface PurchaseReadAnyPaginateRequest {
   purchase_order_id?: string | null;
   receipt_mode?: string | null;
   is_posted?: boolean | null;
+  is_paid_off?: boolean | null;
   progress_status?: string | null;
   refresh: boolean;
   page: number;
@@ -26,6 +27,7 @@ export interface PurchaseReadAnyGetRequest {
   purchase_order_id?: string | null;
   receipt_mode?: string | null;
   is_posted?: boolean | null;
+  is_paid_off?: boolean | null;
   progress_status?: string | null;
   refresh: boolean;
   limit: number;

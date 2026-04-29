@@ -55,6 +55,7 @@ export default class PurchaseService {
       if (args.receipt_mode) queryParams['receipt_mode'] = args.receipt_mode;
       if (args.progress_status) queryParams['progress_status'] = args.progress_status;
       if (args.is_posted !== undefined && args.is_posted !== null) queryParams['is_posted'] = args.is_posted;
+      if (args.is_paid_off !== undefined && args.is_paid_off !== null) queryParams['is_paid_off'] = args.is_paid_off;
 
       const url = route('api.get.purchase.read_any', { _query: queryParams }, false, this.ziggyRoute);
       const response: AxiosResponse<Collection<Array<Purchase>>> = await axios.get(url);
@@ -100,6 +101,7 @@ export default class PurchaseService {
       if (args.receipt_mode) queryParams['receipt_mode'] = args.receipt_mode;
       if (args.progress_status) queryParams['progress_status'] = args.progress_status;
       if (args.is_posted !== undefined && args.is_posted !== null) queryParams['is_posted'] = args.is_posted;
+      if (args.is_paid_off !== undefined && args.is_paid_off !== null) queryParams['is_paid_off'] = args.is_paid_off ? 1 : 0;
 
       const url = route('api.get.purchase.read_any', { _query: queryParams }, false, this.ziggyRoute);
       const response: AxiosResponse<Resource<Array<Purchase>>> = await axios.get(url);

@@ -7,6 +7,7 @@ use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseItem extends Model
@@ -124,9 +125,25 @@ class PurchaseItem extends Model
         return $this->hasMany(PurchaseItemSubtotalDiscount::class);
     }
 
-    public function receiptItems()
+    public function receiptItemsWithSameProduct(): HasManyThrough
     {
-        return $this->hasMany(PurchaseReceiptItem::class);
+        $query = $this->hasManyThrough(
+            PurchaseReceiptItem::class,
+            PurchaseReceipt::class,
+            'purchase_id',
+            'purchase_receipt_id',
+            'purchase_id',
+            'id'
+        );
+        $productId = $this->productUnit?->product_id;
+
+        if (is_null($productId)) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->whereHas('productUnit', function ($query) use ($productId) {
+            $query->where('product_id', $productId);
+        });
     }
 
     public function returnItems()

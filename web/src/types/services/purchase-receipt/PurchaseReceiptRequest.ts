@@ -37,7 +37,6 @@ export interface PurchaseReceiptItemSerialNestedStoreRequest {
 }
 
 export interface PurchaseReceiptItemNestedStoreRequest {
-  purchase_item_id: string | null;
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
@@ -50,7 +49,6 @@ export interface PurchaseReceiptStoreRequest {
   branch_id: string;
   supplier_id: string | null;
   purchase_id: string | null;
-  is_from_direct_purchase: boolean;
   code: string;
   date: string;
   warehouse_id: string | null;
@@ -64,7 +62,6 @@ export interface PurchaseReceiptItemSerialNestedUpdateRequest {
 }
 
 export interface PurchaseReceiptItemNestedUpdateRequest {
-  purchase_item_id: string | null;
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
@@ -75,7 +72,6 @@ export interface PurchaseReceiptItemNestedUpdateRequest {
 export interface PurchaseReceiptUpdateRequest {
   supplier_id: string | null;
   purchase_id: string | null;
-  is_from_direct_purchase: boolean;
   code: string;
   date: string;
   warehouse_id: string | null;

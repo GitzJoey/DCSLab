@@ -50,6 +50,7 @@ type PurchaseReceiptSerialFormItem = {
 };
 
 type PurchaseReceiptItemFormItem = PurchaseReceiptItemNestedStoreRequest & {
+  has_purchase_item_product: boolean;
   product_unit_product_code?: string | null;
   product_unit_product_name?: string | null;
   product_unit_unit_name?: string | null;
@@ -186,7 +187,6 @@ onMounted(async () => {
   purchaseReceiptForm.setData({
     company_id: selectedUserLocation.value.company.id,
     branch_id: selectedUserLocation.value.branch.id,
-    is_from_direct_purchase: false,
   });
 
   await Promise.all([loadSupplierDDL(), loadPurchaseDDL(), loadWarehouseDDL()]);
@@ -287,7 +287,7 @@ const formatPurchaseItemLabel = (purchaseItem: PurchaseItem | null | undefined) 
 };
 
 const buildManualItemFromProductUnit = (option: ProductUnitOption): PurchaseReceiptItemFormItem => ({
-  purchase_item_id: null,
+  has_purchase_item_product: false,
   qty: 1,
   product_unit_id: option.product_unit_id,
   product_unit_conversion_value: option.conversion_value,
@@ -312,7 +312,7 @@ const buildReceiptItemFromPurchaseItem = (purchaseItem: PurchaseItem): PurchaseR
     : Number(purchaseItem.qty ?? 0);
 
   return {
-    purchase_item_id: purchaseItem.id,
+    has_purchase_item_product: true,
     qty: defaultQty > 0 ? defaultQty : 1,
     product_unit_id: productUnit?.id ?? '',
     product_unit_conversion_value: conversionValue,
@@ -652,7 +652,6 @@ const onSubmit = async () => {
 
   const originalItems = getItems();
   const cleanedItems = originalItems.map((item) => ({
-    purchase_item_id: item.purchase_item_id,
     qty: Number(item.qty ?? 0),
     product_unit_id: item.product_unit_id,
     product_unit_conversion_value: Number(item.product_unit_conversion_value ?? 0),
@@ -805,8 +804,6 @@ const onSubmit = async () => {
             </div>
           </div>
 
-          <FormInput v-model="purchaseReceiptForm.is_from_direct_purchase" type="hidden" />
-
           <div v-if="purchaseReceiptForm.purchase_id" class="mt-4 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700 dark:text-slate-200">
             {{ t('views.purchase_receipt.fields.purchase_link_hint') }}
           </div>
@@ -862,7 +859,7 @@ const onSubmit = async () => {
 
           <div
             v-for="(item, index) in getItems()"
-            :key="`${item.purchase_item_id ?? item.product_unit_id ?? 'item'}-${index}`"
+            :key="`${item.has_purchase_item_product ? 'purchase' : 'manual'}-${item.product_unit_id ?? 'item'}-${index}`"
             class="rounded-md border border-slate-200/70 p-4 dark:border-darkmode-400"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">

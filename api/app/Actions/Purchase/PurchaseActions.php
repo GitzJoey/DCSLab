@@ -61,7 +61,6 @@ class PurchaseActions
         'payments.cashAccount',
         'directReceipt.supplier',
         'directReceipt.warehouse',
-        'directReceipt.items.purchaseItem',
         'directReceipt.items.productUnit.unit',
         'directReceipt.items.productUnit.product.category',
         'directReceipt.items.productUnit.product.brand',
@@ -71,7 +70,6 @@ class PurchaseActions
         'directReceipt.items.serials',
         'manualReceipts.supplier',
         'manualReceipts.warehouse',
-        'manualReceipts.items.purchaseItem',
         'manualReceipts.items.productUnit.unit',
         'manualReceipts.items.productUnit.product.category',
         'manualReceipts.items.productUnit.product.brand',
@@ -340,7 +338,6 @@ class PurchaseActions
             $items = [];
             foreach ($data->items as $item) {
                 $items[] = [
-                    'purchase_item_id' => $item['id'],
                     'qty' => $item['qty'],
                     'product_unit_id' => $item['product_unit_id'],
                     'product_unit_conversion_value' => $item['product_unit_conversion_value'],
@@ -573,7 +570,6 @@ class PurchaseActions
             $items = [];
             foreach ($data->items as $item) {
                 $items[] = [
-                    'purchase_item_id' => $item['id'],
                     'qty' => $item['qty'],
                     'product_unit_id' => $item['product_unit_id'],
                     'product_unit_conversion_value' => $item['product_unit_conversion_value'],
@@ -1073,11 +1069,9 @@ class PurchaseActions
 
         foreach ($purchase->items as $purchaseItem) {
             $qtyTargetBase = (float) $purchaseItem->product_unit_qty_base;
-            $qtyReceivedBase = (float) $purchaseItem->receiptItems()->sum('product_unit_qty_base');
-
-            $purchaseItem->qty_received_base = $qtyReceivedBase;
-            $purchaseItem->qty_outstanding_base = max($qtyTargetBase - $qtyReceivedBase, 0);
-            $purchaseItem->qty_excess_base = max($qtyReceivedBase - $qtyTargetBase, 0);
+            $purchaseItem->qty_received_base = (float) $purchaseItem->receiptItemsWithSameProduct()->sum('product_unit_qty_base');
+            $purchaseItem->qty_outstanding_base = max($qtyTargetBase - $purchaseItem->qty_received_base, 0);
+            $purchaseItem->qty_excess_base = max($purchaseItem->qty_received_base - $qtyTargetBase, 0);
             $purchaseItem->save();
         }
 
@@ -1088,7 +1082,7 @@ class PurchaseActions
             $itemMatchedCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItems()->exists()) {
+                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
                     continue;
                 }
 
@@ -1109,7 +1103,7 @@ class PurchaseActions
             $itemLessCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItems()->exists()) {
+                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
                     continue;
                 }
 
@@ -1128,7 +1122,7 @@ class PurchaseActions
             $itemMoreCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItems()->exists()) {
+                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
                     continue;
                 }
 
@@ -1143,7 +1137,7 @@ class PurchaseActions
             $itemUnlinkedCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItems()->exists()) {
+                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
                     $itemUnlinkedCount++;
                 }
             }
@@ -1165,6 +1159,28 @@ class PurchaseActions
 
             return 'unmatched';
         })();
+
+        $purchaseProductIds = $purchase->items
+            ->map(fn ($purchaseItem) => $purchaseItem->productUnit?->product_id)
+            ->filter()
+            ->unique()
+            ->mapWithKeys(fn ($productId) => [(int) $productId => true]);
+
+        $purchaseReceiptItems = $purchase->receipts()
+            ->with(['items.productUnit:id,product_id'])
+            ->get()
+            ->flatMap->items;
+
+        foreach ($purchaseReceiptItems as $purchaseReceiptItem) {
+            $hasPurchaseItemProduct = isset($purchaseProductIds[(int) $purchaseReceiptItem->productUnit?->product_id]);
+
+            if ((bool) $purchaseReceiptItem->has_purchase_item_product === $hasPurchaseItemProduct) {
+                continue;
+            }
+
+            $purchaseReceiptItem->has_purchase_item_product = $hasPurchaseItemProduct;
+            $purchaseReceiptItem->save();
+        }
 
         $purchase->save();
     }

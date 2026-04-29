@@ -51,6 +51,7 @@ type PurchaseReceiptSerialFormItem = {
 };
 
 type PurchaseReceiptItemFormItem = PurchaseReceiptItemNestedStoreRequest & {
+  has_purchase_item_product: boolean;
   product_unit_product_code?: string | null;
   product_unit_product_name?: string | null;
   product_unit_unit_name?: string | null;
@@ -288,8 +289,15 @@ const formatPurchaseItemLabel = (purchaseItem: PurchaseItem | null | undefined) 
   return productCode ? `[${productCode}] ${productName}` : productName;
 };
 
+const formatPurchaseItemLabelFromProductUnit = (productUnit: ProductUnit | null | undefined) => {
+  const productCode = productUnit?.code ?? '';
+  const productName = productUnit?.product?.name ?? '-';
+
+  return productCode ? `[${productCode}] ${productName}` : productName;
+};
+
 const buildManualItemFromProductUnit = (option: ProductUnitOption): PurchaseReceiptItemFormItem => ({
-  purchase_item_id: null,
+  has_purchase_item_product: false,
   qty: 1,
   product_unit_id: option.product_unit_id,
   product_unit_conversion_value: option.conversion_value,
@@ -314,7 +322,7 @@ const buildReceiptItemFromPurchaseItem = (purchaseItem: PurchaseItem): PurchaseR
     : Number(purchaseItem.qty ?? 0);
 
   return {
-    purchase_item_id: purchaseItem.id,
+    has_purchase_item_product: true,
     qty: defaultQty > 0 ? defaultQty : 1,
     product_unit_id: productUnit?.id ?? '',
     product_unit_conversion_value: conversionValue,
@@ -332,25 +340,27 @@ const buildReceiptItemFromPurchaseItem = (purchaseItem: PurchaseItem): PurchaseR
 
 const buildFormItemFromReceiptItem = (receipt: PurchaseReceipt, item: any): PurchaseReceiptItemFormItem => {
   const productUnit: ProductUnit | null | undefined = item.product_unit;
-  const purchaseItem: PurchaseItem | null | undefined = item.purchase_item;
-  const product = productUnit?.product ?? purchaseItem?.product_unit?.product;
+  const product = productUnit?.product;
   const conversionValue = Number(item.product_unit_conversion_value ?? productUnit?.conversion_value ?? 1);
 
   return {
-    purchase_item_id: purchaseItem?.id ?? null,
+    has_purchase_item_product: item.has_purchase_item_product,
     qty: Number(item.qty ?? 0),
-    product_unit_id: productUnit?.id ?? purchaseItem?.product_unit?.id ?? '',
+    product_unit_id: productUnit?.id ?? '',
     product_unit_conversion_value: conversionValue,
     remarks: item.remarks ?? '',
     serials: (item.serials ?? []).map((serial: any) => ({
       serial: serial.serial,
     })) as PurchaseReceiptSerialFormItem[],
-    product_unit_product_code: productUnit?.code ?? purchaseItem?.product_unit?.code ?? '',
+    product_unit_product_code: productUnit?.code ?? '',
     product_unit_product_name: product?.name ?? '-',
-    product_unit_unit_name: productUnit?.unit?.name ?? purchaseItem?.product_unit?.unit?.name ?? '',
+    product_unit_unit_name: productUnit?.unit?.name ?? '',
     product_unit_base_unit_name: buildBaseUnitName(product, Number(productUnit?.conversion_value ?? conversionValue)),
     product_unit_product_image_url: product?.main_product_image?.url ?? null,
-    purchase_item_label: receipt.purchase ? formatPurchaseItemLabel(purchaseItem) : null,
+    purchase_item_label:
+      receipt.purchase && item.has_purchase_item_product
+        ? formatPurchaseItemLabelFromProductUnit(productUnit)
+        : null,
     is_use_serial_number: Boolean(product?.is_use_serial_number),
   };
 };
@@ -598,7 +608,6 @@ const loadData = async () => {
   purchaseReceiptForm.setData({
     supplier_id: data.supplier?.id ?? null,
     purchase_id: data.purchase?.id ?? null,
-    is_from_direct_purchase: false,
     code: data.code,
     date: formatDate(data.date, 'YYYY-MM-DD HH:mm:ss'),
     warehouse_id: data.warehouse?.id ?? null,
@@ -746,7 +755,6 @@ const onSubmit = async () => {
 
   const originalItems = getItems();
   const cleanedItems = originalItems.map((item) => ({
-    purchase_item_id: item.purchase_item_id,
     qty: Number(item.qty ?? 0),
     product_unit_id: item.product_unit_id,
     product_unit_conversion_value: Number(item.product_unit_conversion_value ?? 0),
@@ -897,8 +905,6 @@ const onSubmit = async () => {
             </div>
           </div>
 
-          <FormInput v-model="purchaseReceiptForm.is_from_direct_purchase" type="hidden" />
-
           <div v-if="purchaseReceiptForm.purchase_id" class="mt-4 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700 dark:text-slate-200">
             {{ t('views.purchase_receipt.fields.purchase_link_hint') }}
           </div>
@@ -954,7 +960,7 @@ const onSubmit = async () => {
 
           <div
             v-for="(item, index) in getItems()"
-            :key="`${item.purchase_item_id ?? item.product_unit_id ?? 'item'}-${index}`"
+            :key="`${item.has_purchase_item_product ? 'purchase' : 'manual'}-${item.product_unit_id ?? 'item'}-${index}`"
             class="rounded-md border border-slate-200/70 p-4 dark:border-darkmode-400"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">
