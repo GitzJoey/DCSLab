@@ -22,7 +22,6 @@ class PurchaseItem extends Model
         'company_id',
         'branch_id',
         'purchase_id',
-        'purchase_order_item_id',
         'qty',
         'product_unit_id',
         'product_unit_conversion_value',
@@ -98,11 +97,6 @@ class PurchaseItem extends Model
     public function purchase()
     {
         return $this->belongsTo(Purchase::class)->withTrashed();
-    }
-
-    public function purchaseOrderItem()
-    {
-        return $this->belongsTo(PurchaseOrderItem::class)->withTrashed();
     }
 
     public function productUnit()

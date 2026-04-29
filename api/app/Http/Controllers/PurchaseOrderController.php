@@ -8,6 +8,7 @@ use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
+use App\Enums\PurchaseProgressStatusEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\PurchaseOrder\PurchaseOrderStoreRequest;
 use App\Http\Requests\PurchaseOrder\PurchaseOrderUpdateRequest;
@@ -21,6 +22,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class PurchaseOrderController extends BaseController
 {
@@ -54,6 +56,7 @@ class PurchaseOrderController extends BaseController
             'start_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'end_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'supplier_id' => ['nullable', 'integer', new IsValidSupplier($request->company_id)],
+            'progress_status' => ['nullable', 'string', Rule::in(PurchaseProgressStatusEnum::toArrayValue())],
 
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
@@ -76,6 +79,7 @@ class PurchaseOrderController extends BaseController
                 startDate: $validatedRequest['start_date'] ?? null,
                 endDate: $validatedRequest['end_date'] ?? null,
                 supplierId: $validatedRequest['supplier_id'] ?? null,
+                progressStatus: $validatedRequest['progress_status'] ?? null,
 
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
@@ -132,6 +136,11 @@ class PurchaseOrderController extends BaseController
         } else {
             return new PurchaseOrderResource($result);
         }
+    }
+
+    public function getProgressStatuses()
+    {
+        return $this->purchaseOrderActions->getProgressStatuses();
     }
 
     public function store(PurchaseOrderStoreRequest $request)

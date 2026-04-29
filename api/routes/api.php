@@ -646,6 +646,7 @@ Route::prefix('stock_transfer_item_serial')->middleware('auth:sanctum')->group(f
 
 Route::prefix('purchase_order')->middleware('auth:sanctum')->group(function () {
     Route::middleware('throttle:100,1')->name('api.get.purchase_order.')->group(function () {
+        Route::get('read/progress-statuses', [PurchaseOrderController::class, 'getProgressStatuses'])->name('read_progress_statuses');
         Route::get('read', [PurchaseOrderController::class, 'readAny'])->name('read_any');
         Route::get('read/{purchase_order:ulid}', [PurchaseOrderController::class, 'read'])->name('read');
     });

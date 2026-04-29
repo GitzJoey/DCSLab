@@ -37,6 +37,12 @@ export interface PurchaseOrder {
   amount_allocated_down_payment: number;
   amount_refunded_down_payment: number;
   amount_available_down_payment: number;
+  progress_status: string;
+  item_total_count: number;
+  item_matched_count: number;
+  item_less_count: number;
+  item_more_count: number;
+  item_unlinked_count: number;
   global_discounts: PurchaseOrderGlobalDiscount[];
   items: PurchaseOrderItem[];
   down_payments: PurchaseOrderDownPayment[];

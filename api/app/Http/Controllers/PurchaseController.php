@@ -10,6 +10,7 @@ use App\DTOs\PurchaseDirectCreateDTO;
 use App\DTOs\PurchaseDirectUpdateDTO;
 use App\DTOs\PurchaseManualCreateDTO;
 use App\DTOs\PurchaseManualUpdateDTO;
+use App\Enums\PurchaseProgressStatusEnum;
 use App\Enums\PurchaseReceiptModeEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\Purchase\PurchaseDirectStoreRequest;
@@ -62,7 +63,7 @@ class PurchaseController extends BaseController
             'receipt_mode' => ['nullable', Rule::enum(PurchaseReceiptModeEnum::class)],
             'is_posted' => ['nullable', 'boolean'],
             'is_paid_off' => ['nullable', 'boolean'],
-            'progress_status' => ['nullable', Rule::in(['unlinked', 'unmatched', 'matched'])],
+            'progress_status' => ['nullable', Rule::in(PurchaseProgressStatusEnum::toArrayValue())],
 
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],

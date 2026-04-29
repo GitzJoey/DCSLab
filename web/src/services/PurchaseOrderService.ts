@@ -3,6 +3,7 @@ import { client, useForm } from 'laravel-precognition-vue';
 import { route, Config } from 'ziggy-js';
 import axios from '../axios';
 import { useZiggyRouteStore } from '../stores/ziggy-route';
+import type { DropDownOption } from '../types/models/DropDownOption';
 import { PurchaseOrder } from '../types/models/PurchaseOrder';
 import { StatusCode } from '../types/enums/StatusCode';
 import { type Collection } from '../types/resources/Collection';
@@ -26,6 +27,38 @@ export default class PurchaseOrderService {
     this.errorHandlerService = new ErrorHandlerService();
   }
 
+  public async readProgressStatuses(): Promise<ServiceResponse<Array<DropDownOption> | null>> {
+    const result: ServiceResponse<Array<DropDownOption> | null> = {
+      success: false,
+    };
+
+    try {
+      const url = route(
+        'api.get.purchase_order.read_progress_statuses',
+        {},
+        false,
+        this.ziggyRoute,
+      );
+
+      const response: AxiosResponse<Array<DropDownOption>> = await axios.get(url);
+
+      if (response.status == StatusCode.OK) {
+        result.success = true;
+        result.data = response.data;
+      }
+
+      return result;
+    } catch (e: unknown) {
+      if (e instanceof Error && e.message.includes('Ziggy error')) {
+        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message);
+      } else if (isAxiosError(e)) {
+        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError);
+      } else {
+        return result;
+      }
+    }
+  }
+
   public async readAnyPaginate(
     args: PurchaseOrderReadAnyPaginateRequest,
   ): Promise<ServiceResponse<Collection<Array<PurchaseOrder>> | null>> {
@@ -42,6 +75,7 @@ export default class PurchaseOrderService {
       queryParams['start_date'] = args.start_date;
       queryParams['end_date'] = args.end_date;
       queryParams['supplier_id'] = args.supplier_id;
+      queryParams['progress_status'] = args.progress_status;
       queryParams['refresh'] = args.refresh;
       queryParams['paginate'] = {
         page: args.page,
@@ -92,6 +126,7 @@ export default class PurchaseOrderService {
       queryParams['start_date'] = args.start_date;
       queryParams['end_date'] = args.end_date;
       queryParams['supplier_id'] = args.supplier_id;
+      queryParams['progress_status'] = args.progress_status;
       queryParams['refresh'] = args.refresh;
       queryParams['get'] = {
         limit: args.limit,

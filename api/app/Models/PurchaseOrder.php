@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PurchaseProgressStatusEnum;
 use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
@@ -38,6 +39,12 @@ class PurchaseOrder extends Model
         'amount_allocated_down_payment',
         'amount_refunded_down_payment',
         'amount_available_down_payment',
+        'progress_status',
+        'item_total_count',
+        'item_matched_count',
+        'item_less_count',
+        'item_more_count',
+        'item_unlinked_count',
     ];
 
     protected $casts = [
@@ -55,6 +62,12 @@ class PurchaseOrder extends Model
         'amount_allocated_down_payment' => 'decimal:8',
         'amount_refunded_down_payment' => 'decimal:8',
         'amount_available_down_payment' => 'decimal:8',
+        'progress_status' => PurchaseProgressStatusEnum::class,
+        'item_total_count' => 'integer',
+        'item_matched_count' => 'integer',
+        'item_less_count' => 'integer',
+        'item_more_count' => 'integer',
+        'item_unlinked_count' => 'integer',
     ];
 
     public function company()

@@ -2,7 +2,6 @@ import type { Branch } from './Branch';
 import type { Company } from './Company';
 import type { ProductUnit } from './ProductUnit';
 import type { Purchase } from './Purchase';
-import type { PurchaseOrderItem } from './PurchaseOrderItem';
 import type { VatProfile } from './VatProfile';
 
 export interface PurchaseItemProductUnitPriceDiscount {
@@ -33,7 +32,6 @@ export interface PurchaseItem {
   company?: Company;
   branch?: Branch;
   purchase?: Purchase;
-  purchase_order_item?: PurchaseOrderItem | null;
   product_unit?: ProductUnit | null;
   vat_profile?: VatProfile | null;
   product_unit_price_discounts?: PurchaseItemProductUnitPriceDiscount[];

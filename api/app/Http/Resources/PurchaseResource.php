@@ -50,7 +50,7 @@ class PurchaseResource extends JsonResource
             'amount_paid_total' => dec_trim($this->amount_paid_total),
             'amount_due' => dec_trim($this->amount_due),
             'is_paid_off' => $this->is_paid_off,
-            'progress_status' => $this->progress_status,
+            'progress_status' => $this->progress_status?->value,
             'item_total_count' => $this->item_total_count,
             'item_matched_count' => $this->item_matched_count,
             'item_less_count' => $this->item_less_count,

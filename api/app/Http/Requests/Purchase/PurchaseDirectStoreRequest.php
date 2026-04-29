@@ -46,9 +46,6 @@ class PurchaseDirectStoreRequest extends FormRequest
         if (is_array($this->input('items'))) {
             $items = [];
             foreach ($this->input('items') as $item) {
-                if (array_key_exists('purchase_order_item_id', $item) && ! is_null($item['purchase_order_item_id'])) {
-                    $item['purchase_order_item_id'] = HashidsHelper::decodeId($item['purchase_order_item_id']);
-                }
                 if (array_key_exists('product_unit_id', $item) && ! is_null($item['product_unit_id'])) {
                     $item['product_unit_id'] = HashidsHelper::decodeId($item['product_unit_id']);
                 }
@@ -107,12 +104,6 @@ class PurchaseDirectStoreRequest extends FormRequest
             'rounding' => ['required', 'numeric'],
 
             'items' => ['required', 'array', 'min:1'],
-            'items.*.purchase_order_item_id' => [
-                'present',
-                'nullable',
-                'integer',
-                new ExistsForCompany('purchase_order_items', $this->company_id),
-            ],
             'items.*.qty' => ['required', 'numeric', 'gt:0'],
             'items.*.product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'gt:0'],
@@ -173,16 +164,7 @@ class PurchaseDirectStoreRequest extends FormRequest
         $validator->after(function ($validator) {
             $purchaseOrderId = $this->input('purchase_order_id');
 
-            if (is_null($purchaseOrderId)) {
-                foreach ($this->input('items', []) as $index => $item) {
-                    if (! empty($item['purchase_order_item_id'])) {
-                        $validator->errors()->add(
-                            "items.$index.purchase_order_item_id",
-                            trans('rules.purchase.purchase_order_item_must_be_empty_without_purchase_order')
-                        );
-                    }
-                }
-            } else {
+            if (! is_null($purchaseOrderId)) {
                 $purchaseOrder = PurchaseOrder::with('items:id,purchase_order_id')->find($purchaseOrderId);
 
                 if (! is_null($purchaseOrder)) {
@@ -192,18 +174,6 @@ class PurchaseDirectStoreRequest extends FormRequest
 
                     if ((int) $this->input('branch_id') !== (int) $purchaseOrder->branch_id) {
                         $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_branch_must_match'));
-                    }
-
-                    $purchaseOrderItemIds = $purchaseOrder->items->pluck('id')->all();
-                    foreach ($this->input('items', []) as $index => $item) {
-                        $purchaseOrderItemId = $item['purchase_order_item_id'] ?? null;
-
-                        if (! is_null($purchaseOrderItemId) && ! in_array($purchaseOrderItemId, $purchaseOrderItemIds, true)) {
-                            $validator->errors()->add(
-                                "items.$index.purchase_order_item_id",
-                                trans('rules.purchase.invalid_purchase_order_item_reference')
-                            );
-                        }
                     }
                 }
             }

@@ -8,6 +8,7 @@ import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import ProductImagePreview from '@/components/Product/ProductImagePreview.vue';
 import PurchaseOrderItemService from '@/services/PurchaseOrderItemService';
+import PurchaseOrderService from '@/services/PurchaseOrderService';
 import SupplierService from '@/services/SupplierService';
 import ProductCategoryService from '@/services/ProductCategoryService';
 import BrandService from '@/services/BrandService';
@@ -27,6 +28,7 @@ import { formatCurrency, formatDate } from '@/utils/helper';
 const { t } = useI18n();
 const router = useRouter();
 const purchaseOrderItemService = new PurchaseOrderItemService();
+const purchaseOrderService = new PurchaseOrderService();
 const supplierService = new SupplierService();
 const productCategoryService = new ProductCategoryService();
 const brandService = new BrandService();
@@ -77,10 +79,16 @@ const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLo
 const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
 const supplierDDL = ref<Array<DropDownOption> | null>(null);
+const progressStatusDDL = ref<Array<DropDownOption> | null>(null);
 const productCategoryDDL = ref<Array<DropDownOption> | null>(null);
 const productBrandDDL = ref<Array<DropDownOption> | null>(null);
 
 const supplierOptions = computed(() => (supplierDDL.value ?? []).map((item) => ({ value: item.code, label: item.name })));
+const progressStatusLabelMap = computed<Record<string, string>>(() =>
+  Object.fromEntries(
+    (progressStatusDDL.value ?? []).map((item) => [String(item.code), item.name]),
+  ),
+);
 const productCategoryOptions = computed(() => (productCategoryDDL.value ?? []).map((item) => ({ value: item.code, label: item.name })));
 const productBrandOptions = computed(() => (productBrandDDL.value ?? []).map((item) => ({ value: item.code, label: item.name })));
 
@@ -89,6 +97,18 @@ const formatQuantityValue = (value: number | string, precision = 4) =>
     minimumFractionDigits: 0,
     maximumFractionDigits: precision,
   }).format(Number(value ?? 0));
+
+const getProgressStatusBadgeClass = (status: string | null | undefined) => {
+  switch (status) {
+    case 'matched':
+      return 'bg-success/15 text-success';
+    case 'unmatched':
+      return 'bg-warning/15 text-warning';
+    case 'unlinked':
+    default:
+      return 'bg-slate-200/80 text-slate-700 dark:bg-darkmode-400 dark:text-slate-200';
+  }
+};
 
 onMounted(async () => {
   emits('mode-state', ViewMode.LIST);
@@ -107,7 +127,12 @@ onMounted(async () => {
   startDate.value = formatDate(startOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
   endDate.value = formatDate(endOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
 
-  await Promise.all([loadSupplierDDL(), loadProductCategoryDDL(), loadProductBrandDDL()]);
+  await Promise.all([
+    loadSupplierDDL(),
+    loadProgressStatusDDL(),
+    loadProductCategoryDDL(),
+    loadProductBrandDDL(),
+  ]);
   await getPurchaseOrderItems('', true, 1, 10);
 });
 
@@ -159,6 +184,14 @@ const loadSupplierDDL = async (search = '') => {
 
   if (result.success && result.data) {
     supplierDDL.value = result.data.data.map((item: any) => ({ code: item.id, name: item.name }));
+  }
+};
+
+const loadProgressStatusDDL = async () => {
+  const result = await purchaseOrderService.readProgressStatuses();
+
+  if (result.success && result.data) {
+    progressStatusDDL.value = result.data;
   }
 };
 
@@ -284,6 +317,13 @@ const getQtyDisplay = (item: PurchaseOrderItem): string => {
   return `${qty} ${unitName} (${baseQty} ${baseUnitName})`;
 };
 
+const getBaseQtyDisplay = (qtyBase: number | string, item: PurchaseOrderItem): string => {
+  const baseUnitName = getBaseUnitName(item);
+  const qty = formatQuantityValue(qtyBase);
+
+  return baseUnitName ? `${qty} ${baseUnitName}` : qty;
+};
+
 const showAlertPlaceholder = (
   pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
   pTitle: string,
@@ -406,6 +446,16 @@ const showNotification = (title: string, content: string) => {
                 <div class="col-span-8 text-slate-700 dark:text-slate-200">
                   {{ (item as PurchaseOrderItem).purchase_order?.due_days ?? 0 }}
                 </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.progress_status') }}</div>
+                <div class="col-span-8">
+                  <span
+                    class="inline-flex rounded-full px-2 py-1 text-[11px] font-medium"
+                    :class="getProgressStatusBadgeClass((item as PurchaseOrderItem).purchase_order?.progress_status)"
+                  >
+                    {{ t(progressStatusLabelMap[(item as PurchaseOrderItem).purchase_order?.progress_status ?? '']
+                      ?? 'views.purchase_order.filters.progress_status_unlinked') }}
+                  </span>
+                </div>
                 <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.remarks') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
                   {{ (item as PurchaseOrderItem).purchase_order?.remarks?.trim() || '-' }}
@@ -476,6 +526,15 @@ const showNotification = (title: string, content: string) => {
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).subtotal_after_discount ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.vat') }}</div>
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).vat ?? 0) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty_purchased_base') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ getBaseQtyDisplay((item as
+                  PurchaseOrderItem).qty_purchased_base ?? 0, item as PurchaseOrderItem) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty_outstanding_base') }}</div>
+                <div class="col-span-5 text-right text-warning">{{ getBaseQtyDisplay((item as
+                  PurchaseOrderItem).qty_outstanding_base ?? 0, item as PurchaseOrderItem) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty_excess_base') }}</div>
+                <div class="col-span-5 text-right text-danger">{{ getBaseQtyDisplay((item as PurchaseOrderItem).qty_excess_base
+                  ?? 0, item as PurchaseOrderItem) }}</div>
                 <div class="col-span-7 text-primary font-medium">{{ t('views.purchase_order.fields.amount_payable') }}</div>
                 <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as PurchaseOrderItem).amount_payable ?? 0) }}</div>
               </div>
@@ -500,6 +559,21 @@ const showNotification = (title: string, content: string) => {
                 <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
                   <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.product_unit_conversion_value') }}</div>
                   <div class="col-span-8 text-right text-slate-700 dark:text-slate-200">{{ formatQuantityValue((item as PurchaseOrderItem).product_unit_conversion_value ?? 0) }}</div>
+                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.item_total_count') }}</div>
+                  <div class="col-span-8 text-right text-slate-700 dark:text-slate-200">{{ formatQuantityValue((item as
+                    PurchaseOrderItem).purchase_order?.item_total_count ?? 0, 0) }}</div>
+                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.item_matched_count') }}</div>
+                  <div class="col-span-8 text-right text-success">{{ formatQuantityValue((item as
+                    PurchaseOrderItem).purchase_order?.item_matched_count ?? 0, 0) }}</div>
+                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.item_less_count') }}</div>
+                  <div class="col-span-8 text-right text-warning">{{ formatQuantityValue((item as
+                    PurchaseOrderItem).purchase_order?.item_less_count ?? 0, 0) }}</div>
+                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.item_more_count') }}</div>
+                  <div class="col-span-8 text-right text-danger">{{ formatQuantityValue((item as
+                    PurchaseOrderItem).purchase_order?.item_more_count ?? 0, 0) }}</div>
+                  <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.item_unlinked_count') }}</div>
+                  <div class="col-span-8 text-right text-slate-700 dark:text-slate-200">{{ formatQuantityValue((item as
+                    PurchaseOrderItem).purchase_order?.item_unlinked_count ?? 0, 0) }}</div>
                   <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.global_discount') }}</div>
                   <div class="col-span-8 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).global_discount ?? 0) }}</div>
                   <div class="col-span-4 text-slate-500">{{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}</div>

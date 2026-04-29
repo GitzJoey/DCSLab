@@ -7,6 +7,7 @@ use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrderItem extends Model
@@ -25,6 +26,9 @@ class PurchaseOrderItem extends Model
         'product_unit_id', // user_input
         'product_unit_conversion_value', // user_input
         'product_unit_qty_base', // calculated_when_saving_item_row
+        'qty_purchased_base', // calculated_after_purchase_summary
+        'qty_outstanding_base', // calculated_after_purchase_summary
+        'qty_excess_base', // calculated_after_purchase_summary
         'product_unit_price', // user_input
         'product_unit_is_price_include_vat', // user_input
         'price_discount', // calculated_after_save_item_row
@@ -54,6 +58,9 @@ class PurchaseOrderItem extends Model
         'qty' => 'decimal:8',
         'product_unit_conversion_value' => 'decimal:8',
         'product_unit_qty_base' => 'decimal:8',
+        'qty_purchased_base' => 'decimal:8',
+        'qty_outstanding_base' => 'decimal:8',
+        'qty_excess_base' => 'decimal:8',
         'product_unit_price' => 'decimal:8',
         'product_unit_is_price_include_vat' => 'boolean',
         'price_discount' => 'decimal:8',
@@ -109,5 +116,26 @@ class PurchaseOrderItem extends Model
     public function subtotalDiscounts()
     {
         return $this->hasMany(PurchaseOrderItemSubtotalDiscount::class);
+    }
+
+    public function purchaseItemsWithSameProduct(): HasManyThrough
+    {
+        $query = $this->hasManyThrough(
+            PurchaseItem::class,
+            Purchase::class,
+            'purchase_order_id',
+            'purchase_id',
+            'purchase_order_id',
+            'id'
+        );
+        $productId = $this->productUnit?->product_id;
+
+        if (is_null($productId)) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->whereHas('productUnit', function ($query) use ($productId) {
+            $query->where('product_id', $productId);
+        });
     }
 }

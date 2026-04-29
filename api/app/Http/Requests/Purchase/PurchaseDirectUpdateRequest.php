@@ -45,7 +45,6 @@ class PurchaseDirectUpdateRequest extends FormRequest
             'delete_item_ids' => collect($this->delete_item_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
             'items' => collect($this->items ?? [])->map(function ($item) {
                 $item['id'] = ! empty($item['id']) ? HashidsHelper::decodeId($item['id']) : null;
-                $item['purchase_order_item_id'] = ! empty($item['purchase_order_item_id']) ? HashidsHelper::decodeId($item['purchase_order_item_id']) : null;
                 $item['product_unit_id'] = ! empty($item['product_unit_id']) ? HashidsHelper::decodeId($item['product_unit_id']) : null;
                 $item['vat_profile_id'] = ! empty($item['vat_profile_id']) ? HashidsHelper::decodeId($item['vat_profile_id']) : null;
                 $item['delete_product_unit_price_discount_ids'] = collect($item['delete_product_unit_price_discount_ids'] ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all();
@@ -107,7 +106,6 @@ class PurchaseDirectUpdateRequest extends FormRequest
             'delete_item_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_items', $this->company_id)],
             'items' => ['required', 'array', 'min:1'],
             'items.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_items', $this->company_id)],
-            'items.*.purchase_order_item_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_items', $this->company_id)],
             'items.*.qty' => ['required', 'numeric', 'gt:0'],
             'items.*.product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $this->company_id)],
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'gt:0'],
@@ -185,16 +183,7 @@ class PurchaseDirectUpdateRequest extends FormRequest
             $purchaseGlobalDiscountIds = $purchase->globalDiscounts()->pluck('id')->all();
             $purchaseAdditionalCostIds = $purchase->additionalCosts()->pluck('id')->all();
 
-            if (is_null($purchaseOrderId)) {
-                foreach ($this->input('items', []) as $index => $item) {
-                    if (! empty($item['purchase_order_item_id'])) {
-                        $validator->errors()->add(
-                            "items.$index.purchase_order_item_id",
-                            trans('rules.purchase.purchase_order_item_must_be_empty_without_purchase_order')
-                        );
-                    }
-                }
-            } else {
+            if (! is_null($purchaseOrderId)) {
                 $purchaseOrder = PurchaseOrder::with('items:id,purchase_order_id')->find($purchaseOrderId);
 
                 if (! is_null($purchaseOrder)) {
@@ -204,18 +193,6 @@ class PurchaseDirectUpdateRequest extends FormRequest
 
                     if ((int) $purchase->branch_id !== (int) $purchaseOrder->branch_id) {
                         $validator->errors()->add('purchase_order_id', trans('rules.purchase.purchase_order_branch_must_match'));
-                    }
-
-                    $purchaseOrderItemIds = $purchaseOrder->items->pluck('id')->all();
-                    foreach ($this->input('items', []) as $index => $item) {
-                        $purchaseOrderItemId = $item['purchase_order_item_id'] ?? null;
-
-                        if (! is_null($purchaseOrderItemId) && ! in_array($purchaseOrderItemId, $purchaseOrderItemIds, true)) {
-                            $validator->errors()->add(
-                                "items.$index.purchase_order_item_id",
-                                trans('rules.purchase.invalid_purchase_order_item_reference')
-                            );
-                        }
                     }
                 }
             }

@@ -6,6 +6,7 @@ export interface PurchaseOrderReadAnyPaginateRequest {
   start_date: string | null;
   end_date: string | null;
   supplier_id: string | null;
+  progress_status: string | null;
   refresh: boolean;
   page: number;
   per_page: number;
@@ -19,6 +20,7 @@ export interface PurchaseOrderReadAnyGetRequest {
   start_date: string | null;
   end_date: string | null;
   supplier_id: string | null;
+  progress_status?: string | null;
   refresh: boolean;
   limit: number;
 }

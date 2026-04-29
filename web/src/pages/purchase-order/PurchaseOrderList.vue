@@ -43,6 +43,7 @@ const startDate = ref<string | null>(null);
 const endDate = ref<string | null>(null);
 const searchText = ref<string>('');
 const selectedSupplierId = ref<string | null>(null);
+const selectedProgressStatus = ref<string | null>(null);
 
 const formatCurrencyRounded = (value: number | string, precision = 2) =>
   formatCurrency(Number(Number(value ?? 0).toFixed(precision)));
@@ -52,6 +53,18 @@ const formatQuantityValue = (value: number | string, precision = 4) =>
     minimumFractionDigits: 0,
     maximumFractionDigits: precision,
   }).format(Number(value ?? 0));
+
+const getProgressStatusBadgeClass = (status: string | null | undefined) => {
+  switch (status) {
+    case 'matched':
+      return 'bg-success/15 text-success';
+    case 'unmatched':
+      return 'bg-warning/15 text-warning';
+    case 'unlinked':
+    default:
+      return 'bg-slate-200/80 text-slate-700 dark:bg-darkmode-400 dark:text-slate-200';
+  }
+};
 
 const purchaseOrderLists = ref<Collection<Array<PurchaseOrder>> | null>({
   data: [],
@@ -76,12 +89,26 @@ const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLo
 const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
 const supplierDDL = ref<Array<DropDownOption> | null>(null);
+const progressStatusDDL = ref<Array<DropDownOption> | null>(null);
 const supplierSearch = ref<string>('');
 const supplierOptions = computed(() =>
   (supplierDDL.value ?? []).map((item) => ({
     value: item.code,
     label: item.name,
   })),
+);
+
+const progressStatusOptions = computed(() => [
+  ...(progressStatusDDL.value ?? []).map((item) => ({
+    value: item.code,
+    label: t(item.name),
+  })),
+]);
+
+const progressStatusLabelMap = computed<Record<string, string>>(() =>
+  Object.fromEntries(
+    (progressStatusDDL.value ?? []).map((item) => [String(item.code), item.name]),
+  ),
 );
 
 onMounted(async () => {
@@ -101,7 +128,7 @@ onMounted(async () => {
   startDate.value = formatDate(startOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
   endDate.value = formatDate(endOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
 
-  await loadSupplierDDL();
+  await Promise.all([loadSupplierDDL(), loadProgressStatusDDL()]);
   await getPurchaseOrders('', true, 1, 10);
 });
 
@@ -117,6 +144,7 @@ const getPurchaseOrders = async (search: string, refresh: boolean, page: number,
     start_date: startDate.value,
     end_date: endDate.value,
     supplier_id: selectedSupplierId.value,
+    progress_status: selectedProgressStatus.value,
     refresh,
     page,
     per_page: perPage,
@@ -154,8 +182,21 @@ const loadSupplierDDL = async (search = '') => {
   }
 };
 
+const loadProgressStatusDDL = async () => {
+  const result = await purchaseOrderService.readProgressStatuses();
+
+  if (result.success && result.data) {
+    progressStatusDDL.value = result.data;
+  }
+};
+
 const clearSupplierFilter = async () => {
   selectedSupplierId.value = null;
+  await getPurchaseOrders(searchText.value, true, 1, purchaseOrderLists.value?.meta.per_page ?? 10);
+};
+
+const clearProgressStatusFilter = async () => {
+  selectedProgressStatus.value = null;
   await getPurchaseOrders(searchText.value, true, 1, purchaseOrderLists.value?.meta.per_page ?? 10);
 };
 
@@ -226,22 +267,29 @@ const confirmDelete = async () => {
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12">
       <div class="grid grid-cols-12 gap-4 mb-5">
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
           <FormLabel>{{ t('views.purchase_order.fields.start_date') }}</FormLabel>
           <FormInputDateTime v-model="startDate"
             @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)" />
         </div>
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
           <FormLabel>{{ t('views.purchase_order.fields.end_date') }}</FormLabel>
           <FormInputDateTime v-model="endDate"
             @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)" />
         </div>
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
           <FormLabel>{{ t('views.purchase_order.fields.supplier_id') }}</FormLabel>
           <FormSelectSearch v-model="selectedSupplierId" v-model:search="supplierSearch" :options="supplierOptions"
             :placeholder="t('components.dropdown.placeholder')"
             @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)"
             @search="loadSupplierDDL" @clear="clearSupplierFilter" />
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+          <FormLabel>{{ t('views.purchase_order.filters.progress_status') }}</FormLabel>
+          <FormSelectSearch v-model="selectedProgressStatus" :options="progressStatusOptions"
+            :placeholder="t('components.dropdown.placeholder')"
+            @change="getPurchaseOrders(searchText, true, 1, purchaseOrderLists?.meta.per_page ?? 10)"
+            @clear="clearProgressStatusFilter" />
         </div>
       </div>
 
@@ -311,27 +359,65 @@ const confirmDelete = async () => {
           </div>
 
           <div class="col-span-12 md:col-span-5 lg:col-span-3 self-start md:pl-3 lg:pl-4">
-            <div class="space-y-2">
-              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                {{ t('views.purchase_order.fields.down_payment') }}
-              </div>
-              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_paid_down_payment') }}
+            <div class="space-y-4">
+              <div class="space-y-2">
+                <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                  {{ t('views.purchase_order.field_groups.progress') }}
                 </div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
-                  PurchaseOrder).amount_paid_down_payment ?? 0) }}</div>
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_allocated_down_payment')
-                  }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
-                  PurchaseOrder).amount_allocated_down_payment ?? 0) }}</div>
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_refunded_down_payment')
-                  }}</div>
-                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
-                  PurchaseOrder).amount_refunded_down_payment ?? 0) }}</div>
-                <div class="col-span-7 text-primary font-medium">{{
-                  t('views.purchase_order.fields.amount_available_down_payment') }}</div>
-                <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as
-                  PurchaseOrder).amount_available_down_payment ?? 0) }}</div>
+                <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-3">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="text-xs text-slate-500">{{ t('views.purchase_order.fields.progress_status') }}</span>
+                    <span
+                      class="inline-flex rounded-full px-2 py-1 text-[11px] font-medium"
+                      :class="getProgressStatusBadgeClass((item as PurchaseOrder).progress_status)"
+                    >
+                      {{ t(progressStatusLabelMap[(item as PurchaseOrder).progress_status ?? '']
+                        ?? 'views.purchase_order.filters.progress_status_unlinked') }}
+                    </span>
+                  </div>
+                  <div class="mt-3 grid grid-cols-12 gap-x-3 gap-y-2 text-xs">
+                    <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_total_count') }}</div>
+                    <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{
+                      formatQuantityValue((item as PurchaseOrder).item_total_count ?? 0, 0) }}</div>
+                    <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_matched_count') }}</div>
+                    <div class="col-span-5 text-right text-success">{{ formatQuantityValue((item as
+                      PurchaseOrder).item_matched_count ?? 0, 0) }}</div>
+                    <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_less_count') }}</div>
+                    <div class="col-span-5 text-right text-warning">{{ formatQuantityValue((item as
+                      PurchaseOrder).item_less_count ?? 0, 0) }}</div>
+                    <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_more_count') }}</div>
+                    <div class="col-span-5 text-right text-danger">{{ formatQuantityValue((item as
+                      PurchaseOrder).item_more_count ?? 0, 0) }}</div>
+                    <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.item_unlinked_count') }}
+                    </div>
+                    <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{
+                      formatQuantityValue((item as PurchaseOrder).item_unlinked_count ?? 0, 0) }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                  {{ t('views.purchase_order.fields.down_payment') }}
+                </div>
+                <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                  <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_paid_down_payment') }}
+                  </div>
+                  <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                    PurchaseOrder).amount_paid_down_payment ?? 0) }}</div>
+                  <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_allocated_down_payment')
+                    }}</div>
+                  <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                    PurchaseOrder).amount_allocated_down_payment ?? 0) }}</div>
+                  <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_refunded_down_payment')
+                    }}</div>
+                  <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as
+                    PurchaseOrder).amount_refunded_down_payment ?? 0) }}</div>
+                  <div class="col-span-7 text-primary font-medium">{{
+                    t('views.purchase_order.fields.amount_available_down_payment') }}</div>
+                  <div class="col-span-5 text-right text-primary font-medium">{{ formatCurrency((item as
+                    PurchaseOrder).amount_available_down_payment ?? 0) }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -395,6 +481,19 @@ const confirmDelete = async () => {
                         <span class="font-medium text-slate-700 dark:text-slate-200">{{
                           formatCurrency(poItem.subtotal_after_discount ?? 0) }}</span>
                       </span>
+                    </div>
+                    <div class="mt-2 grid grid-cols-12 gap-x-3 gap-y-1 text-xs">
+                      <div class="col-span-6 text-slate-500">{{ t('views.purchase_order.fields.qty_purchased_base') }}
+                      </div>
+                      <div class="col-span-6 text-right text-slate-700 dark:text-slate-200">{{
+                        formatQuantityValue(poItem.qty_purchased_base ?? 0) }}</div>
+                      <div class="col-span-6 text-slate-500">{{ t('views.purchase_order.fields.qty_outstanding_base') }}
+                      </div>
+                      <div class="col-span-6 text-right text-warning">{{ formatQuantityValue(
+                        poItem.qty_outstanding_base ?? 0) }}</div>
+                      <div class="col-span-6 text-slate-500">{{ t('views.purchase_order.fields.qty_excess_base') }}</div>
+                      <div class="col-span-6 text-right text-danger">{{ formatQuantityValue(
+                        poItem.qty_excess_base ?? 0) }}</div>
                     </div>
                     <div v-if="poItem.remarks?.trim()" class="mt-2 text-xs text-slate-500 break-words">
                       {{ poItem.remarks }}

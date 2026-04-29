@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PurchaseProgressStatusEnum;
 use App\Enums\PurchaseReceiptModeEnum;
 use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
@@ -77,6 +78,7 @@ class Purchase extends Model
         'amount_paid_total' => 'decimal:8',
         'amount_due' => 'decimal:8',
         'is_paid_off' => 'boolean',
+        'progress_status' => PurchaseProgressStatusEnum::class,
         'item_total_count' => 'integer',
         'item_matched_count' => 'integer',
         'item_less_count' => 'integer',

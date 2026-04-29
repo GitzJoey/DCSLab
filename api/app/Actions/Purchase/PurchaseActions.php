@@ -18,6 +18,7 @@ use App\DTOs\PurchaseManualUpdateDTO;
 use App\DTOs\PurchaseReceiptCreateDTO;
 use App\DTOs\PurchaseReceiptUpdateDTO;
 use App\Enums\DiscountTypeEnum;
+use App\Enums\PurchaseProgressStatusEnum;
 use App\Enums\PurchaseReceiptModeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
@@ -44,7 +45,6 @@ class PurchaseActions
         'branch',
         'supplier',
         'purchaseOrder.supplier',
-        'items.purchaseOrderItem.purchaseOrder.supplier',
         'items.productUnit.unit',
         'items.productUnit.product.category',
         'items.productUnit.product.brand',
@@ -316,7 +316,6 @@ class PurchaseActions
                     companyId: $purchase->company_id,
                     branchId: $purchase->branch_id,
                     purchaseId: $purchase->id,
-                    purchaseOrderItemId: $data->items[$i]['purchase_order_item_id'],
                     qty: $data->items[$i]['qty'],
                     productUnitId: $data->items[$i]['product_unit_id'],
                     productUnitConversionValue: $data->items[$i]['product_unit_conversion_value'],
@@ -433,7 +432,6 @@ class PurchaseActions
                     companyId: $purchase->company_id,
                     branchId: $purchase->branch_id,
                     purchaseId: $purchase->id,
-                    purchaseOrderItemId: $item['purchase_order_item_id'],
                     qty: $item['qty'],
                     productUnitId: $item['product_unit_id'],
                     productUnitConversionValue: $item['product_unit_conversion_value'],
@@ -523,7 +521,6 @@ class PurchaseActions
                 if (! empty($data->items[$i]['id'])) {
                     $purchaseItem = $purchase->items()->findOrFail($data->items[$i]['id']);
                     $dto = new PurchaseItemUpdateDTO(
-                        purchaseOrderItemId: $data->items[$i]['purchase_order_item_id'],
                         qty: $data->items[$i]['qty'],
                         productUnitId: $data->items[$i]['product_unit_id'],
                         productUnitConversionValue: $data->items[$i]['product_unit_conversion_value'],
@@ -546,7 +543,6 @@ class PurchaseActions
                         companyId: $purchase->company_id,
                         branchId: $purchase->branch_id,
                         purchaseId: $purchase->id,
-                        purchaseOrderItemId: $data->items[$i]['purchase_order_item_id'],
                         qty: $data->items[$i]['qty'],
                         productUnitId: $data->items[$i]['product_unit_id'],
                         productUnitConversionValue: $data->items[$i]['product_unit_conversion_value'],
@@ -719,7 +715,6 @@ class PurchaseActions
                 if (! empty($item['id'])) {
                     $purchaseItem = $purchase->items()->findOrFail($item['id']);
                     $dto = new PurchaseItemUpdateDTO(
-                        purchaseOrderItemId: $item['purchase_order_item_id'],
                         qty: $item['qty'],
                         productUnitId: $item['product_unit_id'],
                         productUnitConversionValue: $item['product_unit_conversion_value'],
@@ -742,7 +737,6 @@ class PurchaseActions
                         companyId: $purchase->company_id,
                         branchId: $purchase->branch_id,
                         purchaseId: $purchase->id,
-                        purchaseOrderItemId: $item['purchase_order_item_id'],
                         qty: $item['qty'],
                         productUnitId: $item['product_unit_id'],
                         productUnitConversionValue: $item['product_unit_conversion_value'],
@@ -1146,18 +1140,18 @@ class PurchaseActions
         })();
         $purchase->progress_status = (function () use ($purchase) {
             if ($purchase->item_total_count === 0) {
-                return 'unlinked';
+                return PurchaseProgressStatusEnum::UNLINKED;
             }
 
             if ($purchase->item_unlinked_count === $purchase->item_total_count) {
-                return 'unlinked';
+                return PurchaseProgressStatusEnum::UNLINKED;
             }
 
             if ($purchase->item_matched_count === $purchase->item_total_count) {
-                return 'matched';
+                return PurchaseProgressStatusEnum::MATCHED;
             }
 
-            return 'unmatched';
+            return PurchaseProgressStatusEnum::UNMATCHED;
         })();
 
         $purchaseProductIds = $purchase->items

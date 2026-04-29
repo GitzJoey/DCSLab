@@ -30,7 +30,6 @@ class PurchaseItemActions
         'company',
         'branch',
         'purchase.supplier',
-        'purchaseOrderItem.purchaseOrder.supplier',
         'productUnit.unit',
         'productUnit.product.category',
         'productUnit.product.brand',
@@ -214,7 +213,6 @@ class PurchaseItemActions
             $purchaseItem->company_id = $data->companyId;
             $purchaseItem->branch_id = $data->branchId;
             $purchaseItem->purchase_id = $data->purchaseId;
-            $purchaseItem->purchase_order_item_id = $data->purchaseOrderItemId;
             $purchaseItem->qty = $data->qty;
             $purchaseItem->product_unit_id = $data->productUnitId;
             $purchaseItem->product_unit_conversion_value = $data->productUnitConversionValue;
@@ -327,7 +325,6 @@ class PurchaseItemActions
         $timer_start = microtime(true);
 
         try {
-            $purchaseItem->purchase_order_item_id = $data->purchaseOrderItemId;
             $purchaseItem->qty = $data->qty;
             $purchaseItem->product_unit_id = $data->productUnitId;
             $purchaseItem->product_unit_conversion_value = $data->productUnitConversionValue;

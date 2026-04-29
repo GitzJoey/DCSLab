@@ -44,7 +44,6 @@ export interface PurchaseItemSerialNestedStoreRequest {
 }
 
 export interface PurchaseItemNestedStoreRequest {
-  purchase_order_item_id: string | null;
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
@@ -121,7 +120,6 @@ export interface PurchaseItemSerialNestedUpdateRequest {
 
 export interface PurchaseItemNestedUpdateRequest {
   id: string | null;
-  purchase_order_item_id: string | null;
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;

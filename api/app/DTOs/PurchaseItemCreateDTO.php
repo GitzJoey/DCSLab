@@ -8,7 +8,6 @@ final class PurchaseItemCreateDTO
         public readonly int $companyId,
         public readonly int $branchId,
         public readonly int $purchaseId,
-        public readonly ?int $purchaseOrderItemId,
         public readonly float $qty,
         public readonly int $productUnitId,
         public readonly float $productUnitConversionValue,

@@ -34,6 +34,9 @@ export interface PurchaseOrderItem {
   product_unit: ProductUnit;
   product_unit_conversion_value: number;
   product_unit_qty_base: number;
+  qty_purchased_base: number;
+  qty_outstanding_base: number;
+  qty_excess_base: number;
   product_unit_price: number;
   price_discount: number;
   product_unit_price_discounts: PurchaseOrderItemPriceDiscount[];

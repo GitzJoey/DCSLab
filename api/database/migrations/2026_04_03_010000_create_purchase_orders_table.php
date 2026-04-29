@@ -36,6 +36,12 @@ return new class extends Migration
             $table->decimal('amount_allocated_down_payment', 30, 8)->default(0);
             $table->decimal('amount_refunded_down_payment', 30, 8)->default(0);
             $table->decimal('amount_available_down_payment', 30, 8)->default(0);
+            $table->string('progress_status')->default('unlinked');
+            $table->unsignedInteger('item_total_count')->default(0);
+            $table->unsignedInteger('item_matched_count')->default(0);
+            $table->unsignedInteger('item_less_count')->default(0);
+            $table->unsignedInteger('item_more_count')->default(0);
+            $table->unsignedInteger('item_unlinked_count')->default(0);
 
             // Audit
             $table->unsignedBigInteger('created_by')->default(0);

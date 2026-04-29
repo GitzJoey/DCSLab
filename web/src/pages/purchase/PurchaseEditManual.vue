@@ -88,7 +88,6 @@ type VatProfileOption = {
 };
 
 type PurchaseItemForm = {
-  purchase_order_item_id: string | null;
   qty: number;
   product_unit_id: string;
   product_unit_conversion_value: number;
@@ -420,7 +419,6 @@ const hydrateForm = (purchase: Purchase) => {
 
       return {
         id: item.id ?? null,
-        purchase_order_item_id: item.purchase_order_item?.id ?? null,
         qty: Number(item.qty ?? 0),
         product_unit_id: item.product_unit?.id ?? '',
         product_unit_product_code: item.product_unit?.code ?? '',
@@ -650,7 +648,6 @@ const selectProductUnit = (option: ProductUnitOption) => {
   }
 
   purchaseItemsForm.value.push({
-    purchase_order_item_id: null,
     qty: 1,
     product_unit_id: option.product_unit_id,
     product_unit_product_code: option.product_unit_code,

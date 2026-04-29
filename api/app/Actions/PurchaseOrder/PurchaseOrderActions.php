@@ -18,6 +18,7 @@ use App\DTOs\PurchaseOrderItemCreateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
 use App\Enums\DiscountTypeEnum;
+use App\Enums\PurchaseProgressStatusEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\PurchaseOrder;
@@ -84,6 +85,7 @@ class PurchaseOrderActions
         ?string $startDate,
         ?string $endDate,
         ?int $supplierId,
+        ?string $progressStatus,
 
         ?ExecuteDTO $execute
     ) {
@@ -106,6 +108,7 @@ class PurchaseOrderActions
             $startDate,
             $endDate,
             $supplierId,
+            $progressStatus,
         ) {
             $query->withoutTrashed();
             if ($withTrashed) $query->withTrashed();
@@ -128,6 +131,10 @@ class PurchaseOrderActions
             if ($supplierId) {
                 $query->where('purchase_orders.supplier_id', $supplierId);
             }
+
+            if ($progressStatus) {
+                $query->where('purchase_orders.progress_status', $progressStatus);
+            }
         });
 
         $query->orderBy('purchase_orders.date', 'desc')
@@ -146,6 +153,7 @@ class PurchaseOrderActions
                     $startDate ?? '[null]',
                     $endDate ?? '[null]',
                     $supplierId ?? '[null]',
+                    $progressStatus ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',
                     $execute->pagination?->perPage ?? '[null]',
@@ -192,6 +200,11 @@ class PurchaseOrderActions
         }
 
         return $query;
+    }
+
+    public function getProgressStatuses(): array
+    {
+        return PurchaseProgressStatusEnum::toDropDownOptions('views.purchase_order.filters.progress_status_');
     }
 
     public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
@@ -694,6 +707,98 @@ class PurchaseOrderActions
         $po->amount_allocated_down_payment = $po->downPayments->sum('amount_allocated');
         $po->amount_refunded_down_payment = $po->refundedDownPayments->sum('amount');
         $po->amount_available_down_payment = $po->amount_paid_down_payment - $po->amount_allocated_down_payment - $po->amount_refunded_down_payment;
+        foreach ($po->items as $poItem) {
+            $qtyTargetBase = (float) $poItem->product_unit_qty_base;
+            $poItem->qty_purchased_base = (float) $poItem->purchaseItemsWithSameProduct()->sum('product_unit_qty_base');
+            $poItem->qty_outstanding_base = max($qtyTargetBase - $poItem->qty_purchased_base, 0);
+            $poItem->qty_excess_base = max($poItem->qty_purchased_base - $qtyTargetBase, 0);
+            $poItem->save();
+        }
+
+        $po->item_total_count = (function () use ($po) {
+            return $po->items()->count();
+        })();
+        $po->item_matched_count = (function () use ($po) {
+            $itemMatchedCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_excess_base > 0) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_outstanding_base > 0) {
+                    continue;
+                }
+
+                $itemMatchedCount++;
+            }
+
+            return $itemMatchedCount;
+        })();
+        $po->item_less_count = (function () use ($po) {
+            $itemLessCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_excess_base > 0) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_outstanding_base > 0) {
+                    $itemLessCount++;
+                }
+            }
+
+            return $itemLessCount;
+        })();
+        $po->item_more_count = (function () use ($po) {
+            $itemMoreCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_excess_base > 0) {
+                    $itemMoreCount++;
+                }
+            }
+
+            return $itemMoreCount;
+        })();
+        $po->item_unlinked_count = (function () use ($po) {
+            $itemUnlinkedCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                    $itemUnlinkedCount++;
+                }
+            }
+
+            return $itemUnlinkedCount;
+        })();
+        $po->progress_status = (function () use ($po) {
+            if ($po->item_total_count === 0) {
+                return PurchaseProgressStatusEnum::UNLINKED;
+            }
+
+            if ($po->item_unlinked_count === $po->item_total_count) {
+                return PurchaseProgressStatusEnum::UNLINKED;
+            }
+
+            if ($po->item_matched_count === $po->item_total_count) {
+                return PurchaseProgressStatusEnum::MATCHED;
+            }
+
+            return PurchaseProgressStatusEnum::UNMATCHED;
+        })();
 
         $po->save();
     }

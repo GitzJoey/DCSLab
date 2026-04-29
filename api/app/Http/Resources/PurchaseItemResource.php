@@ -23,11 +23,6 @@ class PurchaseItemResource extends JsonResource
             $this->mergeWhen($this->relationLoaded('purchase'), [
                 'purchase' => new PurchaseResource($this->whenLoaded('purchase')),
             ]),
-            $this->mergeWhen($this->relationLoaded('purchaseOrderItem'), [
-                'purchase_order_item' => new PurchaseOrderItemResource(
-                    $this->whenLoaded('purchaseOrderItem')
-                ),
-            ]),
             $this->mergeWhen($this->relationLoaded('productUnit'), [
                 'product_unit' => new ProductUnitResource($this->whenLoaded('productUnit')),
             ]),
