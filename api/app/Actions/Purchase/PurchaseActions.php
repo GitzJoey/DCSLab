@@ -104,6 +104,7 @@ class PurchaseActions
         ?int $purchaseOrderId,
         ?string $receiptMode,
         ?bool $isPosted,
+        ?bool $isPaidOff,
         ?string $progressStatus,
 
         ?ExecuteDTO $execute
@@ -130,6 +131,7 @@ class PurchaseActions
             $purchaseOrderId,
             $receiptMode,
             $isPosted,
+            $isPaidOff,
             $progressStatus,
         ) {
             $query->withoutTrashed();
@@ -167,6 +169,10 @@ class PurchaseActions
                 $query->where('purchases.is_posted', $isPosted);
             }
 
+            if (! is_null($isPaidOff)) {
+                $query->where('purchases.is_paid_off', $isPaidOff);
+            }
+
             if ($progressStatus) {
                 $query->where('purchases.progress_status', $progressStatus);
             }
@@ -191,6 +197,7 @@ class PurchaseActions
                     $purchaseOrderId ?? '[null]',
                     $receiptMode ?? '[null]',
                     is_null($isPosted) ? '[null]' : ($isPosted ? 'true' : 'false'),
+                    is_null($isPaidOff) ? '[null]' : ($isPaidOff ? 'true' : 'false'),
                     $progressStatus ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',

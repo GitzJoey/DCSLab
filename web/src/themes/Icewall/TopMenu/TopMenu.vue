@@ -127,7 +127,7 @@
                     <Lucide :icon="menu.icon" />
                   </div>
                   <div class="top-menu__title">
-                    {{ t(menu.title) }}
+                    <span class="top-menu__title-text">{{ t(menu.title) }}</span>
                     <Lucide v-if="menu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                   </div>
                 </a>
@@ -159,7 +159,7 @@
                         <Lucide :icon="subMenu.icon" />
                       </div>
                       <div class="top-menu__title">
-                        {{ t(subMenu.title) }}
+                        <span class="top-menu__title-text">{{ t(subMenu.title) }}</span>
                         <Lucide v-if="subMenu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                       </div>
                     </a>
@@ -191,7 +191,7 @@
                             <Lucide :icon="lastSubMenu.icon" />
                           </div>
                           <div class="top-menu__title">
-                            {{ t(lastSubMenu.title) }}
+                            <span class="top-menu__title-text">{{ t(lastSubMenu.title) }}</span>
                           </div>
                         </a>
                       </li>

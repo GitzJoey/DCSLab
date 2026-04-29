@@ -61,6 +61,7 @@ class PurchaseController extends BaseController
             'purchase_order_id' => ['nullable', 'integer', new ExistsForCompany('purchase_orders', $request->company_id)],
             'receipt_mode' => ['nullable', Rule::enum(PurchaseReceiptModeEnum::class)],
             'is_posted' => ['nullable', 'boolean'],
+            'is_paid_off' => ['nullable', 'boolean'],
             'progress_status' => ['nullable', Rule::in(['unlinked', 'unmatched', 'matched'])],
 
             'refresh' => ['required', 'boolean'],
@@ -86,6 +87,7 @@ class PurchaseController extends BaseController
                 purchaseOrderId: $validatedRequest['purchase_order_id'] ?? null,
                 receiptMode: $validatedRequest['receipt_mode'] ?? null,
                 isPosted: $validatedRequest['is_posted'] ?? null,
+                isPaidOff: $validatedRequest['is_paid_off'] ?? null,
                 progressStatus: $validatedRequest['progress_status'] ?? null,
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],

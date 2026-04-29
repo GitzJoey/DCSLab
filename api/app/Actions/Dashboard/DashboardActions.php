@@ -46,6 +46,7 @@ class DashboardActions
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
         $menu = $this->createMenu_MasterData($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Finance($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
         $menu = $this->createMenu_Transaction($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
         $menu = $this->createMenu_Report($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
 
@@ -126,8 +127,8 @@ class DashboardActions
 
         $financeManagement = [
             'icon' => 'Wallet',
-            'pageName' => 'side-menu-finance',
-            'title' => 'components.menu.finance',
+            'pageName' => 'side-menu-master-data-finance',
+            'title' => 'components.menu.finance-management',
             'subMenu' => [],
         ];
 
@@ -142,8 +143,6 @@ class DashboardActions
             'pageName' => 'side-menu-finance-cash-account',
             'title' => 'components.menu.cash-account',
         ];
-
-        array_push($financeManagement['subMenu'], $investor, $cashAccount);
 
         $productManagement = [
             'icon' => 'Package',
@@ -260,6 +259,17 @@ class DashboardActions
         ];
 
         array_push(
+            $financeManagement['subMenu'],
+            $investor,
+            $cashAccount,
+            $expenseCategory,
+            $incomeCategory,
+            $debtCategory,
+            $receivableCategory,
+            $debtCreditor
+        );
+
+        array_push(
             $root_array['subMenu'],
             $companyManagement,
             $financeManagement,
@@ -267,11 +277,6 @@ class DashboardActions
             $supplier,
             $customerManagement,
             $stockAdjustmentCategory,
-            $expenseCategory,
-            $incomeCategory,
-            $debtCategory,
-            $receivableCategory,
-            $debtCreditor,
             $purchaseAdditionalCostCategory
         );
         array_push($menu, $root_array);
@@ -279,53 +284,17 @@ class DashboardActions
         return $menu;
     }
 
-    private function createMenu_Transaction(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
+    private function createMenu_Finance(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
     {
         if ($hasOnlyUserRole || $hasOnlyAdminRole) {
             return $menu;
         }
 
         $root_array = [
-            'icon' => 'ArrowLeftRight',
-            'pageName' => 'side-menu-transaction',
-            'title' => 'components.menu.transaction',
-            'subMenu' => [],
-        ];
-
-        $stockAdjustment = [
-            'icon' => 'SlidersHorizontal',
-            'pageName' => 'side-menu-stock-adjustment',
-            'title' => 'components.menu.stock-adjustment',
-        ];
-
-        $purchaseOrder = [
-            'icon' => 'FileSpreadsheet',
-            'pageName' => 'side-menu-purchase-order',
-            'title' => 'components.menu.purchase-order',
-        ];
-
-        $purchase = [
-            'icon' => 'ShoppingCart',
-            'pageName' => 'side-menu-purchase',
-            'title' => 'components.menu.purchase',
-        ];
-
-        $purchaseReceipt = [
-            'icon' => 'PackageCheck',
-            'pageName' => 'side-menu-purchase-receipt',
-            'title' => 'components.menu.purchase-receipt',
-        ];
-
-        $purchaseAdditionalCost = [
             'icon' => 'Wallet',
-            'pageName' => 'side-menu-purchase-additional-cost',
-            'title' => 'components.menu.purchase-additional-cost',
-        ];
-
-        $purchaseAdditionalCostPayment = [
-            'icon' => 'WalletCards',
-            'pageName' => 'side-menu-purchase-additional-cost-payment',
-            'title' => 'components.menu.purchase-additional-cost-payment',
+            'pageName' => 'side-menu-finance',
+            'title' => 'components.menu.finance',
+            'subMenu' => [],
         ];
 
         $capitalOpening = [
@@ -382,12 +351,6 @@ class DashboardActions
             'title' => 'components.menu.receivable',
         ];
 
-        $stockTransfer = [
-            'icon' => 'Truck',
-            'pageName' => 'side-menu-stock-transfer',
-            'title' => 'components.menu.stock-transfer',
-        ];
-
         array_push(
             $root_array['subMenu'],
             $capitalOpening,
@@ -398,13 +361,75 @@ class DashboardActions
             $income,
             $prepaidIncome,
             $debt,
-            $receivable,
-            $stockAdjustment,
+            $receivable
+        );
+
+        array_push($menu, $root_array);
+
+        return $menu;
+    }
+
+    private function createMenu_Transaction(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
+    {
+        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
+            return $menu;
+        }
+
+        $root_array = [
+            'icon' => 'ArrowLeftRight',
+            'pageName' => 'side-menu-transaction',
+            'title' => 'components.menu.transaction',
+            'subMenu' => [],
+        ];
+
+        $stockAdjustment = [
+            'icon' => 'SlidersHorizontal',
+            'pageName' => 'side-menu-stock-adjustment',
+            'title' => 'components.menu.stock-adjustment',
+        ];
+
+        $purchaseOrder = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-purchase-order',
+            'title' => 'components.menu.purchase-order',
+        ];
+
+        $purchasing = [
+            'icon' => 'ShoppingCart',
+            'pageName' => 'side-menu-purchasing',
+            'title' => 'components.menu.purchase-management',
+            'subMenu' => [],
+        ];
+
+        $purchase = [
+            'icon' => 'ShoppingCart',
+            'pageName' => 'side-menu-purchase',
+            'title' => 'components.menu.purchase',
+        ];
+
+        $purchaseReceipt = [
+            'icon' => 'PackageCheck',
+            'pageName' => 'side-menu-purchase-receipt',
+            'title' => 'components.menu.purchase-receipt',
+        ];
+
+        array_push(
+            $purchasing['subMenu'],
             $purchaseOrder,
             $purchase,
-            $purchaseReceipt,
-            $purchaseAdditionalCost,
-            $purchaseAdditionalCostPayment,
+            $purchaseReceipt
+        );
+
+        $stockTransfer = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-stock-transfer',
+            'title' => 'components.menu.stock-transfer',
+        ];
+
+        array_push(
+            $root_array['subMenu'],
+            $stockAdjustment,
+            $purchasing,
             $stockTransfer
         );
 

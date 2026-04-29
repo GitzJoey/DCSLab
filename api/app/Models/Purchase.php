@@ -36,15 +36,12 @@ class Purchase extends Model
         'item_total_before_global_discount',
         'global_discount',
         'item_total_after_global_discount',
-
         'vat_base',
         'vat',
         'item_total_after_vat',
-
         'additional_cost',
         'rounding',
         'amount_payable',
-
         'amount_paid_by_purchase_order_down_payment',
         'amount_paid_by_purchase_return',
         'amount_paid_total',
