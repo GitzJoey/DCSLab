@@ -5,6 +5,7 @@ namespace App\Actions\Purchase;
 use App\Actions\PurchaseAdditionalCost\PurchaseAdditionalCostActions;
 use App\Actions\PurchaseGlobalDiscount\PurchaseGlobalDiscountActions;
 use App\Actions\PurchaseItem\PurchaseItemActions;
+use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Actions\PurchaseReceipt\PurchaseReceiptActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseDirectCreateDTO;
@@ -392,6 +393,10 @@ class PurchaseActions
 
             self::updateSummary($purchase);
 
+            if ($purchase->purchaseOrder) {
+                PurchaseOrderActions::updateSummary($purchase->purchaseOrder);
+            }
+
             $this->flushCache();
 
             return $purchase;
@@ -480,6 +485,10 @@ class PurchaseActions
 
             self::updateSummary($purchase);
 
+            if ($purchase->purchaseOrder) {
+                PurchaseOrderActions::updateSummary($purchase->purchaseOrder);
+            }
+
             $this->flushCache();
 
             return $purchase;
@@ -497,6 +506,8 @@ class PurchaseActions
         $timer_start = microtime(true);
 
         try {
+            $previousPurchaseOrder = $purchase->purchaseOrder;
+
             $purchase->code = $this->generateUniqueCode($purchase->company_id, $data->code, $purchase->id);
             $purchase->date = $this->generateDate($data->date);
             $purchase->due_days = $data->dueDays;
@@ -674,6 +685,18 @@ class PurchaseActions
 
             self::updateSummary($purchase);
 
+            if ($previousPurchaseOrder) {
+                PurchaseOrderActions::updateSummary($previousPurchaseOrder->refresh());
+            }
+
+            if ($purchase->purchaseOrder) {
+                if (! $previousPurchaseOrder || $purchase->purchaseOrder->id !== $previousPurchaseOrder->id) {
+                    PurchaseOrderActions::updateSummary($purchase->purchaseOrder);
+                } else {
+                    PurchaseOrderActions::updateSummary($purchase->purchaseOrder->refresh());
+                }
+            }
+
             $this->flushCache();
 
             return $purchase;
@@ -691,6 +714,8 @@ class PurchaseActions
         $timer_start = microtime(true);
 
         try {
+            $previousPurchaseOrder = $purchase->purchaseOrder;
+
             $purchase->code = $this->generateUniqueCode($purchase->company_id, $data->code, $purchase->id);
             $purchase->date = $this->generateDate($data->date);
             $purchase->due_days = $data->dueDays;
@@ -821,6 +846,18 @@ class PurchaseActions
             }
 
             self::updateSummary($purchase);
+
+            if ($previousPurchaseOrder) {
+                PurchaseOrderActions::updateSummary($previousPurchaseOrder->refresh());
+            }
+
+            if ($purchase->purchaseOrder) {
+                if (! $previousPurchaseOrder || $purchase->purchaseOrder->id !== $previousPurchaseOrder->id) {
+                    PurchaseOrderActions::updateSummary($purchase->purchaseOrder);
+                } else {
+                    PurchaseOrderActions::updateSummary($purchase->purchaseOrder->refresh());
+                }
+            }
 
             $this->flushCache();
 
@@ -1184,6 +1221,8 @@ class PurchaseActions
         $timer_start = microtime(true);
 
         try {
+            $purchaseOrder = $purchase->purchaseOrder;
+
             if (
                 $purchase->payments()->exists()
                 || $purchase->purchaseOrderDownPaymentAllocations()->exists()
@@ -1206,6 +1245,10 @@ class PurchaseActions
             }
 
             $result = $purchase->delete();
+
+            if ($purchaseOrder) {
+                PurchaseOrderActions::updateSummary($purchaseOrder->refresh());
+            }
 
             $this->flushCache();
 

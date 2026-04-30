@@ -4,11 +4,14 @@ namespace App\Actions\PurchaseReceiptItem;
 
 use App\Actions\PurchaseReceipt\PurchaseReceiptActions;
 use App\Actions\PurchaseReceiptItemSerial\PurchaseReceiptItemSerialActions;
+use App\Actions\StockTransaction\StockTransactionActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseReceiptItemCreateDTO;
 use App\DTOs\PurchaseReceiptItemSerialCreateDTO;
 use App\DTOs\PurchaseReceiptItemSerialUpdateDTO;
 use App\DTOs\PurchaseReceiptItemUpdateDTO;
+use App\DTOs\StockTransactionCreateDTO;
+use App\DTOs\StockTransactionUpdateDTO;
 use App\Models\PurchaseReceiptItem;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -22,6 +25,7 @@ class PurchaseReceiptItemActions
 
     public function __construct(
         private readonly PurchaseReceiptItemSerialActions $purchaseReceiptItemSerialActions,
+        private readonly StockTransactionActions $stockTransactionActions,
     ) {
     }
 
@@ -191,6 +195,10 @@ class PurchaseReceiptItemActions
             $purchaseReceiptItem->remarks = $data->remarks;
             $purchaseReceiptItem->save();
 
+            $this->stockTransactionActions->create(
+                data: StockTransactionCreateDTO::fromPurchaseReceiptItem($purchaseReceiptItem)
+            );
+
             foreach ($data->serials as $serial) {
                 $dto = new PurchaseReceiptItemSerialCreateDTO(
                     companyId: $purchaseReceiptItem->company_id,
@@ -231,6 +239,15 @@ class PurchaseReceiptItemActions
             $purchaseReceiptItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $purchaseReceiptItem->remarks = $data->remarks;
             $purchaseReceiptItem->save();
+
+            $stockTransaction = $purchaseReceiptItem->stockTransaction;
+            if (! $stockTransaction) {
+                $dto = StockTransactionCreateDTO::fromPurchaseReceiptItem($purchaseReceiptItem);
+                $this->stockTransactionActions->create($dto);
+            } else {
+                $dto = StockTransactionUpdateDTO::fromPurchaseReceiptItem($purchaseReceiptItem);
+                $this->stockTransactionActions->update($stockTransaction, $dto);
+            }
 
             foreach ($data->deleteSerialIds as $deleteId) {
                 $purchaseReceiptItemSerial = $purchaseReceiptItem->serials()->findOrFail($deleteId);
@@ -280,6 +297,11 @@ class PurchaseReceiptItemActions
 
         try {
             $purchaseReceipt = $purchaseReceiptItem->purchaseReceipt;
+
+            $stockTransaction = $purchaseReceiptItem->stockTransaction;
+            if ($stockTransaction) {
+                $this->stockTransactionActions->delete($stockTransaction);
+            }
 
             foreach ($purchaseReceiptItem->serials as $purchaseReceiptItemSerial) {
                 $this->purchaseReceiptItemSerialActions->delete($purchaseReceiptItemSerial);

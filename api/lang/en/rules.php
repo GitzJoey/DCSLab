@@ -19,6 +19,7 @@ return [
     'inactive_user' => 'Your profile status is inactive',
     'purchase_order' => [
         'exceed_available_down_payment' => 'Total down payment refund exceeds the available down payment',
+        'duplicate_product' => 'The same product cannot be used more than once within a single purchase order.',
     ],
     'purchase' => [
         'invalid_delete_item_reference' => 'The selected delete item id is invalid for this purchase.',
@@ -36,6 +37,7 @@ return [
         'duplicate_manual_receipt_reference' => 'The same manual receipt cannot be used more than once in a single request.',
         'invalid_purchase_item_index' => 'The selected purchase item index is invalid.',
         'additional_cost_amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
+        'duplicate_product' => 'The same product cannot be used more than once within a single purchase.',
         'duplicate_serial' => 'The same serial cannot be used more than once within a single purchase item.',
     ],
     'purchase_receipt' => [
@@ -44,6 +46,7 @@ return [
         'branch_must_match_purchase' => 'Branch must match the linked purchase.',
         'purchase_branch_must_match_receipt_branch' => 'Purchase branch must match the purchase receipt branch.',
         'direct_mode_cannot_be_deleted_here' => 'Direct purchase receipt cannot be deleted from purchase receipt management.',
+        'duplicate_product' => 'The same product cannot be used more than once within a single purchase receipt.',
         'duplicate_serial' => 'The same serial cannot be used more than once within a single purchase receipt item.',
     ],
     'purchase_additional_cost' => [

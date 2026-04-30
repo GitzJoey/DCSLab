@@ -56,6 +56,11 @@ class PurchaseReceiptItem extends Model
         return $this->belongsTo(ProductUnit::class)->withTrashed();
     }
 
+    public function stockTransaction()
+    {
+        return $this->morphOne(StockTransaction::class, 'referable');
+    }
+
     public function serials()
     {
         return $this->hasMany(PurchaseReceiptItemSerial::class);

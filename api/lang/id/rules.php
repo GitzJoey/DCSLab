@@ -19,6 +19,7 @@ return [
     'inactive_user' => 'Profil anda tidak aktif',
     'purchase_order' => [
         'exceed_available_down_payment' => 'Total refund down payment melebihi down payment yang tersedia',
+        'duplicate_product' => 'Produk yang sama tidak boleh dipakai lebih dari sekali dalam satu purchase order.',
     ],
     'purchase' => [
         'invalid_delete_item_reference' => 'ID item hapus yang dipilih tidak valid untuk pembelian ini.',
@@ -36,6 +37,7 @@ return [
         'duplicate_manual_receipt_reference' => 'Manual receipt yang sama tidak boleh dipakai lebih dari sekali dalam satu request.',
         'invalid_purchase_item_index' => 'Indeks item pembelian yang dipilih tidak valid.',
         'additional_cost_amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
+        'duplicate_product' => 'Produk yang sama tidak boleh dipakai lebih dari sekali dalam satu purchase.',
         'duplicate_serial' => 'Serial yang sama tidak boleh dipakai lebih dari sekali dalam satu item purchase.',
     ],
     'purchase_receipt' => [
@@ -44,6 +46,7 @@ return [
         'branch_must_match_purchase' => 'Cabang harus sama dengan purchase yang terhubung.',
         'purchase_branch_must_match_receipt_branch' => 'Cabang purchase harus sama dengan cabang purchase receipt.',
         'direct_mode_cannot_be_deleted_here' => 'Purchase receipt mode direct tidak boleh dihapus dari pengelolaan purchase receipt.',
+        'duplicate_product' => 'Produk yang sama tidak boleh dipakai lebih dari sekali dalam satu purchase receipt.',
         'duplicate_serial' => 'Serial yang sama tidak boleh dipakai lebih dari sekali dalam satu item purchase receipt.',
     ],
     'purchase_additional_cost' => [

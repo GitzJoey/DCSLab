@@ -2,6 +2,7 @@
 
 namespace App\DTOs;
 
+use App\Models\PurchaseReceiptItem;
 use App\Models\StockAdjustmentInItem;
 use App\Models\StockAdjustmentOutItem;
 use App\Models\StockTransferItem;
@@ -39,6 +40,18 @@ final class StockTransactionUpdateDTO
             warehouseId: $stockAdjustmentOutItem->stockAdjustment->out_warehouse_id,
             productId: $stockAdjustmentOutItem->productUnit->product_id,
             baseQty: $stockAdjustmentOutItem->product_unit_qty_base * -1,
+        );
+    }
+
+    public static function fromPurchaseReceiptItem(PurchaseReceiptItem $purchaseReceiptItem): self
+    {
+        return new self(
+            referableType: PurchaseReceiptItem::class,
+            referableId: $purchaseReceiptItem->id,
+            date: $purchaseReceiptItem->purchaseReceipt->date,
+            warehouseId: $purchaseReceiptItem->purchaseReceipt->warehouse_id,
+            productId: $purchaseReceiptItem->productUnit->product_id,
+            baseQty: $purchaseReceiptItem->product_unit_qty_base,
         );
     }
 

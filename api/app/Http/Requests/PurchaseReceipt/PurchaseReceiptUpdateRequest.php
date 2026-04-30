@@ -67,6 +67,43 @@ class PurchaseReceiptUpdateRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+            $items = $this->input('items', []);
+            $productUnitIds = collect($items)
+                ->pluck('product_unit_id')
+                ->filter(fn ($productUnitId) => is_numeric($productUnitId))
+                ->map(fn ($productUnitId) => (int) $productUnitId)
+                ->unique()
+                ->values();
+
+            if ($productUnitIds->isNotEmpty()) {
+                $productIdsByProductUnitId = ProductUnit::query()
+                    ->whereIn('id', $productUnitIds)
+                    ->pluck('product_id', 'id')
+                    ->map(fn ($productId) => (int) $productId)
+                    ->all();
+
+                $seenProductIds = [];
+                foreach ($items as $index => $item) {
+                    $productUnitId = $item['product_unit_id'] ?? null;
+                    if (! is_numeric($productUnitId)) {
+                        continue;
+                    }
+
+                    $productId = $productIdsByProductUnitId[(int) $productUnitId] ?? null;
+                    if (is_null($productId)) {
+                        continue;
+                    }
+
+                    if (isset($seenProductIds[$productId])) {
+                        $validator->errors()->add("items.$index.product_unit_id", trans('rules.purchase_receipt.duplicate_product'));
+
+                        continue;
+                    }
+
+                    $seenProductIds[$productId] = true;
+                }
+            }
+
             /** @var PurchaseReceipt $purchaseReceipt */
             $purchaseReceipt = $this->route('purchase_receipt');
             $purchaseId = $this->input('purchase_id');

@@ -140,6 +140,9 @@ class PurchaseOrderController extends BaseController
 
     public function getProgressStatuses()
     {
+        if (! Auth::check()) return response()->error(trans('auth.unauthenticated'), 401);
+        $this->authorize('viewAny', PurchaseOrder::class);
+
         return $this->purchaseOrderActions->getProgressStatuses();
     }
 
