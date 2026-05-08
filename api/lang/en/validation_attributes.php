@@ -545,6 +545,7 @@ return [
         'date' => 'Date',
         'due_days' => 'Due Days',
         'receipt_mode' => 'Receipt Mode',
+        'direct_receipt_code' => 'Direct Receipt Code',
         'direct_receipt_warehouse_id' => 'Direct Receipt Warehouse',
         'supplier_id' => 'Supplier',
         'purchase_order_id' => 'Purchase Order',

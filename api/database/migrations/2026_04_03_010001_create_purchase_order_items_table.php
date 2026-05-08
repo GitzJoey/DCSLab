@@ -18,6 +18,7 @@ return new class extends Migration
 
             $table->decimal('qty', 30, 8)->default(0);
             $table->foreignId('product_unit_id')->references('id')->on('product_units');
+            $table->foreignId('product_id')->references('id')->on('products');
             $table->decimal('product_unit_conversion_value', 30, 8)->default(0);
             $table->decimal('product_unit_qty_base', 30, 8)->default(0);
             $table->decimal('qty_purchased_base', 30, 8)->default(0);

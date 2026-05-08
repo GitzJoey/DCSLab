@@ -8,6 +8,7 @@ use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrder extends Model
@@ -108,5 +109,17 @@ class PurchaseOrder extends Model
     public function purchases()
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    public function purchaseItems(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            PurchaseItem::class,
+            Purchase::class,
+            'purchase_order_id',
+            'purchase_id',
+            'id',
+            'id'
+        );
     }
 }

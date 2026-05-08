@@ -20,6 +20,13 @@ return [
     'purchase_order' => [
         'exceed_available_down_payment' => 'Total down payment refund exceeds the available down payment',
         'duplicate_product' => 'The same product cannot be used more than once within a single purchase order.',
+        'invalid_global_discount_reference' => 'The selected global discount is invalid for this purchase order.',
+        'invalid_delete_item_reference' => 'The selected delete item id is invalid for this purchase order.',
+        'invalid_item_reference' => 'The selected item is invalid for this purchase order.',
+        'invalid_product_unit_price_discount_reference' => 'The selected item unit price discount is invalid for this purchase order.',
+        'invalid_subtotal_discount_reference' => 'The selected item subtotal discount is invalid for this purchase order.',
+        'invalid_down_payment_reference' => 'The selected down payment is invalid for this purchase order.',
+        'invalid_refunded_down_payment_reference' => 'The selected refunded down payment is invalid for this purchase order.',
     ],
     'purchase' => [
         'invalid_delete_item_reference' => 'The selected delete item id is invalid for this purchase.',
@@ -46,6 +53,9 @@ return [
         'branch_must_match_purchase' => 'Branch must match the linked purchase.',
         'purchase_branch_must_match_receipt_branch' => 'Purchase branch must match the purchase receipt branch.',
         'direct_mode_cannot_be_deleted_here' => 'Direct purchase receipt cannot be deleted from purchase receipt management.',
+        'invalid_delete_item_reference' => 'The selected delete item id is invalid for this purchase receipt.',
+        'invalid_item_reference' => 'The selected item is invalid for this purchase receipt.',
+        'invalid_serial_reference' => 'The selected serial is invalid for this purchase receipt item.',
         'duplicate_product' => 'The same product cannot be used more than once within a single purchase receipt.',
         'duplicate_serial' => 'The same serial cannot be used more than once within a single purchase receipt item.',
     ],

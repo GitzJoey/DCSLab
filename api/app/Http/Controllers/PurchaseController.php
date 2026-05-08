@@ -19,6 +19,7 @@ use App\Http\Requests\Purchase\PurchaseManualStoreRequest;
 use App\Http\Requests\Purchase\PurchaseManualUpdateRequest;
 use App\Http\Resources\PurchaseResource;
 use App\Models\Purchase;
+use App\Models\PurchaseReceipt;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
@@ -148,6 +149,17 @@ class PurchaseController extends BaseController
                 if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
             }
 
+            if ($validatedRequest['direct_receipt_code'] !== config('dcslab.KEYWORDS.AUTO')) {
+                $isUniqueDirectReceiptCode = PurchaseReceipt::query()
+                    ->where('company_id', $validatedRequest['company_id'])
+                    ->whereNull('deleted_at')
+                    ->where('code', $validatedRequest['direct_receipt_code'])
+                    ->doesntExist();
+                if (! $isUniqueDirectReceiptCode) {
+                    return response()->error(['direct_receipt_code' => [trans('rules.unique_code')]], 422);
+                }
+            }
+
             DB::beginTransaction();
             $result = $this->purchaseActions->createDirect(
                 data: new PurchaseDirectCreateDTO(
@@ -158,13 +170,13 @@ class PurchaseController extends BaseController
                     dueDays: $validatedRequest['due_days'],
                     supplierId: $validatedRequest['supplier_id'],
                     purchaseOrderId: $validatedRequest['purchase_order_id'],
+                    directReceiptCode: $validatedRequest['direct_receipt_code'],
                     directReceiptWarehouseId: $validatedRequest['direct_receipt_warehouse_id'],
                     taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
                     taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
                     taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
                     remarks: $validatedRequest['remarks'],
                     isPosted: $validatedRequest['is_posted'],
-                    additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
 
                     items: $validatedRequest['items'],
@@ -217,7 +229,6 @@ class PurchaseController extends BaseController
                     taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
                     remarks: $validatedRequest['remarks'],
                     isPosted: $validatedRequest['is_posted'],
-                    additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
 
                     items: $validatedRequest['items'],
@@ -261,7 +272,6 @@ class PurchaseController extends BaseController
             }
 
             DB::beginTransaction();
-
             $result = $this->purchaseActions->updateDirect(
                 purchase: $purchase,
                 data: new PurchaseDirectUpdateDTO(
@@ -276,7 +286,6 @@ class PurchaseController extends BaseController
                     taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
                     remarks: $validatedRequest['remarks'],
                     isPosted: $validatedRequest['is_posted'],
-                    additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
 
                     deleteItemIds: $validatedRequest['delete_item_ids'],
@@ -335,7 +344,6 @@ class PurchaseController extends BaseController
                     taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
                     remarks: $validatedRequest['remarks'],
                     isPosted: $validatedRequest['is_posted'],
-                    additionalCost: (float) $validatedRequest['additional_cost'],
                     rounding: (float) $validatedRequest['rounding'],
 
                     deleteItemIds: $validatedRequest['delete_item_ids'],

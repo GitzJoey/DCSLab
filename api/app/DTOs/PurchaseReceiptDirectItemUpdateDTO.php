@@ -2,16 +2,14 @@
 
 namespace App\DTOs;
 
-final class PurchaseReceiptItemUpdateDTO
+final class PurchaseReceiptDirectItemUpdateDTO
 {
     public function __construct(
-        public readonly bool $hasPurchaseItemProduct,
-
+        public readonly int $purchaseItemId,
         public readonly float $qty,
         public readonly int $productUnitId,
         public readonly float $productUnitConversionValue,
         public readonly ?string $remarks,
-
         public readonly array $deleteSerialIds,
         public readonly array $serials,
     ) {

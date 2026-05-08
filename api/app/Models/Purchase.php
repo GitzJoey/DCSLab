@@ -9,6 +9,7 @@ use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
@@ -124,6 +125,18 @@ class Purchase extends Model
     public function manualReceipts()
     {
         return $this->hasMany(PurchaseReceipt::class)->where('is_from_direct_purchase', false);
+    }
+
+    public function receiptItems(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            PurchaseReceiptItem::class,
+            PurchaseReceipt::class,
+            'purchase_id',
+            'purchase_receipt_id',
+            'id',
+            'id'
+        );
     }
 
     public function payments()

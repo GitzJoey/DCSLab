@@ -564,6 +564,7 @@ return [
         'date' => 'Tanggal',
         'due_days' => 'Jatuh Tempo (Hari)',
         'receipt_mode' => 'Mode Penerimaan',
+        'direct_receipt_code' => 'Kode Penerimaan Langsung',
         'direct_receipt_warehouse_id' => 'Gudang Penerimaan Langsung',
         'supplier_id' => 'Pemasok',
         'purchase_order_id' => 'Purchase Order',

@@ -6,7 +6,10 @@ use App\Actions\Purchase\PurchaseActions;
 use App\Actions\PurchaseReceiptItem\PurchaseReceiptItemActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseReceiptCreateDTO;
-use App\DTOs\PurchaseReceiptItemCreateDTO;
+use App\DTOs\PurchaseReceiptDirectItemCreateDTO;
+use App\DTOs\PurchaseReceiptDirectItemUpdateDTO;
+use App\DTOs\PurchaseReceiptManualItemCreateDTO;
+use App\DTOs\PurchaseReceiptManualItemUpdateDTO;
 use App\DTOs\PurchaseReceiptUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\PurchaseReceipt;
@@ -241,7 +244,7 @@ class PurchaseReceiptActions
         return TimezoneHelper::convertToUTC($date);
     }
 
-    public function create(PurchaseReceiptCreateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
+    public function createDirect(PurchaseReceiptCreateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
     {
         $timer_start = microtime(true);
 
@@ -251,7 +254,7 @@ class PurchaseReceiptActions
             $purchaseReceipt->branch_id = $data->branchId;
             $purchaseReceipt->supplier_id = $data->supplierId;
             $purchaseReceipt->purchase_id = $data->purchaseId;
-            $purchaseReceipt->is_from_direct_purchase = $data->isFromDirectPurchase;
+            $purchaseReceipt->is_from_direct_purchase = true;
             $purchaseReceipt->code = $this->generateUniqueCode($data->companyId, $data->code, null);
             $purchaseReceipt->date = $this->generateDate($data->date);
             $purchaseReceipt->warehouse_id = $data->warehouseId;
@@ -260,12 +263,11 @@ class PurchaseReceiptActions
             $purchaseReceipt->save();
 
             foreach ($data->items as $item) {
-                $dto = new PurchaseReceiptItemCreateDTO(
+                $dto = new PurchaseReceiptDirectItemCreateDTO(
                     companyId: $purchaseReceipt->company_id,
                     branchId: $purchaseReceipt->branch_id,
                     purchaseReceiptId: $purchaseReceipt->id,
-                    hasPurchaseItemProduct: false,
-
+                    purchaseItemId: $item['purchase_item_id'],
                     qty: $item['qty'],
                     productUnitId: $item['product_unit_id'],
                     productUnitConversionValue: $item['product_unit_conversion_value'],
@@ -274,7 +276,7 @@ class PurchaseReceiptActions
                     serials: $item['serials'],
                 );
 
-                $this->purchaseReceiptItemActions->create($dto, false);
+                $this->purchaseReceiptItemActions->createDirect($dto, false);
             }
 
             self::updateSummary($purchaseReceipt);
@@ -295,7 +297,58 @@ class PurchaseReceiptActions
         }
     }
 
-    public function update(PurchaseReceipt $purchaseReceipt, PurchaseReceiptUpdateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
+    public function createManual(PurchaseReceiptCreateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $purchaseReceipt = new PurchaseReceipt();
+            $purchaseReceipt->company_id = $data->companyId;
+            $purchaseReceipt->branch_id = $data->branchId;
+            $purchaseReceipt->supplier_id = $data->supplierId;
+            $purchaseReceipt->purchase_id = $data->purchaseId;
+            $purchaseReceipt->is_from_direct_purchase = false;
+            $purchaseReceipt->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $purchaseReceipt->date = $this->generateDate($data->date);
+            $purchaseReceipt->warehouse_id = $data->warehouseId;
+            $purchaseReceipt->remarks = $data->remarks;
+            $purchaseReceipt->is_posted = $data->isPosted;
+            $purchaseReceipt->save();
+
+            foreach ($data->items as $item) {
+                $dto = new PurchaseReceiptManualItemCreateDTO(
+                    companyId: $purchaseReceipt->company_id,
+                    branchId: $purchaseReceipt->branch_id,
+                    purchaseReceiptId: $purchaseReceipt->id,
+                    qty: $item['qty'],
+                    productUnitId: $item['product_unit_id'],
+                    productUnitConversionValue: $item['product_unit_conversion_value'],
+                    remarks: $item['remarks'],
+                    serials: $item['serials'],
+                );
+
+                $this->purchaseReceiptItemActions->createManual($dto, false);
+            }
+
+            self::updateSummary($purchaseReceipt);
+
+            if ($purchaseReceipt->purchase && $updatePurchaseSummary) {
+                PurchaseActions::updateSummary($purchaseReceipt->purchase);
+            }
+
+            $this->flushCache();
+
+            return $purchaseReceipt;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function updateDirect(PurchaseReceipt $purchaseReceipt, PurchaseReceiptUpdateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
     {
         $timer_start = microtime(true);
 
@@ -306,32 +359,125 @@ class PurchaseReceiptActions
             $purchaseReceipt->purchase_id = $data->purchaseId;
             $purchaseReceipt->code = $this->generateUniqueCode($purchaseReceipt->company_id, $data->code, $purchaseReceipt->id);
             $purchaseReceipt->date = $this->generateDate($data->date);
-            $purchaseReceipt->is_from_direct_purchase = $data->isFromDirectPurchase;
+            $purchaseReceipt->is_from_direct_purchase = true;
             $purchaseReceipt->warehouse_id = $data->warehouseId;
             $purchaseReceipt->remarks = $data->remarks;
             $purchaseReceipt->is_posted = $data->isPosted;
             $purchaseReceipt->save();
 
-            foreach ($purchaseReceipt->items as $purchaseReceiptItem) {
+            foreach ($data->deleteItemIds as $deleteId) {
+                $purchaseReceiptItem = $purchaseReceipt->items()->findOrFail($deleteId);
                 $this->purchaseReceiptItemActions->delete($purchaseReceiptItem, false);
             }
 
             foreach ($data->items as $item) {
-                $dto = new PurchaseReceiptItemCreateDTO(
-                    companyId: $purchaseReceipt->company_id,
-                    branchId: $purchaseReceipt->branch_id,
-                    purchaseReceiptId: $purchaseReceipt->id,
-                    hasPurchaseItemProduct: false,
+                if (! empty($item['id'])) {
+                    $purchaseReceiptItem = $purchaseReceipt->items()->findOrFail($item['id']);
+                    $dto = new PurchaseReceiptDirectItemUpdateDTO(
+                        purchaseItemId: $item['purchase_item_id'],
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        remarks: $item['remarks'],
+                        deleteSerialIds: $item['delete_serial_ids'],
+                        serials: $item['serials'],
+                    );
 
-                    qty: $item['qty'],
-                    productUnitId: $item['product_unit_id'],
-                    productUnitConversionValue: $item['product_unit_conversion_value'],
-                    remarks: $item['remarks'],
+                    $this->purchaseReceiptItemActions->updateDirect($purchaseReceiptItem, $dto, false);
+                } else {
+                    $dto = new PurchaseReceiptDirectItemCreateDTO(
+                        companyId: $purchaseReceipt->company_id,
+                        branchId: $purchaseReceipt->branch_id,
+                        purchaseReceiptId: $purchaseReceipt->id,
+                        purchaseItemId: $item['purchase_item_id'],
 
-                    serials: $item['serials'],
-                );
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        remarks: $item['remarks'],
 
-                $this->purchaseReceiptItemActions->create($dto, false);
+                        serials: $item['serials'],
+                    );
+
+                    $this->purchaseReceiptItemActions->createDirect($dto, false);
+                }
+            }
+
+            self::updateSummary($purchaseReceipt);
+
+            if ($previousPurchase && $updatePurchaseSummary) {
+                PurchaseActions::updateSummary($previousPurchase->refresh());
+            }
+
+            if ($purchaseReceipt->purchase && $updatePurchaseSummary) {
+                if (! $previousPurchase || $purchaseReceipt->purchase->id !== $previousPurchase->id) {
+                    PurchaseActions::updateSummary($purchaseReceipt->purchase);
+                } else {
+                    PurchaseActions::updateSummary($purchaseReceipt->purchase->refresh());
+                }
+            }
+
+            $this->flushCache();
+
+            return $purchaseReceipt;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function updateManual(PurchaseReceipt $purchaseReceipt, PurchaseReceiptUpdateDTO $data, bool $updatePurchaseSummary): PurchaseReceipt
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $previousPurchase = $purchaseReceipt->purchase;
+
+            $purchaseReceipt->supplier_id = $data->supplierId;
+            $purchaseReceipt->purchase_id = $data->purchaseId;
+            $purchaseReceipt->code = $this->generateUniqueCode($purchaseReceipt->company_id, $data->code, $purchaseReceipt->id);
+            $purchaseReceipt->date = $this->generateDate($data->date);
+            $purchaseReceipt->is_from_direct_purchase = false;
+            $purchaseReceipt->warehouse_id = $data->warehouseId;
+            $purchaseReceipt->remarks = $data->remarks;
+            $purchaseReceipt->is_posted = $data->isPosted;
+            $purchaseReceipt->save();
+
+            foreach ($data->deleteItemIds as $deleteId) {
+                $purchaseReceiptItem = $purchaseReceipt->items()->findOrFail($deleteId);
+                $this->purchaseReceiptItemActions->delete($purchaseReceiptItem, false);
+            }
+
+            foreach ($data->items as $item) {
+                if (! empty($item['id'])) {
+                    $purchaseReceiptItem = $purchaseReceipt->items()->findOrFail($item['id']);
+                    $dto = new PurchaseReceiptManualItemUpdateDTO(
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        remarks: $item['remarks'],
+                        deleteSerialIds: $item['delete_serial_ids'],
+                        serials: $item['serials'],
+                    );
+
+                    $this->purchaseReceiptItemActions->updateManual($purchaseReceiptItem, $dto, false);
+                } else {
+                    $dto = new PurchaseReceiptManualItemCreateDTO(
+                        companyId: $purchaseReceipt->company_id,
+                        branchId: $purchaseReceipt->branch_id,
+                        purchaseReceiptId: $purchaseReceipt->id,
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        remarks: $item['remarks'],
+                        serials: $item['serials'],
+                    );
+
+                    $this->purchaseReceiptItemActions->createManual($dto, false);
+                }
             }
 
             self::updateSummary($purchaseReceipt);

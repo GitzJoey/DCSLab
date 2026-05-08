@@ -32,8 +32,16 @@ class PurchaseReceiptUpdateRequest extends FormRequest
             'supplier_id' => $this->filled('supplier_id') ? HashidsHelper::decodeId($this->supplier_id) : null,
             'purchase_id' => $this->filled('purchase_id') ? HashidsHelper::decodeId($this->purchase_id) : null,
             'warehouse_id' => $this->filled('warehouse_id') ? HashidsHelper::decodeId($this->warehouse_id) : null,
+            'delete_item_ids' => collect($this->delete_item_ids ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all(),
             'items' => collect($this->items ?? [])->map(function ($item) {
+                $item['id'] = ! empty($item['id']) ? HashidsHelper::decodeId($item['id']) : null;
                 $item['product_unit_id'] = ! empty($item['product_unit_id']) ? HashidsHelper::decodeId($item['product_unit_id']) : null;
+                $item['delete_serial_ids'] = collect($item['delete_serial_ids'] ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all();
+                $item['serials'] = collect($item['serials'] ?? [])->map(function ($serial) {
+                    $serial['id'] = ! empty($serial['id']) ? HashidsHelper::decodeId($serial['id']) : null;
+
+                    return $serial;
+                })->all();
 
                 return $item;
             })->all(),
@@ -54,12 +62,20 @@ class PurchaseReceiptUpdateRequest extends FormRequest
             'remarks' => ['present', 'nullable', 'string'],
             'is_posted' => ['required', 'boolean'],
 
+            'delete_item_ids' => ['present', 'array'],
+            'delete_item_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_receipt_items', $purchaseReceipt->company_id)],
+
             'items' => ['required', 'array', 'min:1'],
+            'items.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_receipt_items', $purchaseReceipt->company_id)],
             'items.*.qty' => ['required', 'numeric', 'gt:0'],
             'items.*.product_unit_id' => ['required', 'integer', new ExistsForCompany('product_units', $purchaseReceipt->company_id)],
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'gt:0'],
             'items.*.remarks' => ['present', 'nullable', 'string'],
+
+            'items.*.delete_serial_ids' => ['present', 'array'],
+            'items.*.delete_serial_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_receipt_item_serials', $purchaseReceipt->company_id)],
             'items.*.serials' => ['present', 'array'],
+            'items.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_receipt_item_serials', $purchaseReceipt->company_id)],
             'items.*.serials.*.serial' => ['required', 'string', 'max:255'],
         ];
     }
@@ -107,6 +123,11 @@ class PurchaseReceiptUpdateRequest extends FormRequest
             /** @var PurchaseReceipt $purchaseReceipt */
             $purchaseReceipt = $this->route('purchase_receipt');
             $purchaseId = $this->input('purchase_id');
+            $purchaseReceiptItems = $purchaseReceipt->items()
+                ->with('serials:id,purchase_receipt_item_id')
+                ->get()
+                ->keyBy('id');
+            $purchaseReceiptItemIds = $purchaseReceiptItems->keys()->all();
 
             if ($purchaseReceipt->is_from_direct_purchase) {
                 $validator->errors()->add('purchase_id', trans('rules.purchase_receipt.direct_mode_is_managed_from_purchase'));
@@ -127,6 +148,48 @@ class PurchaseReceiptUpdateRequest extends FormRequest
 
                     if ((int) $purchaseReceipt->branch_id !== (int) $purchase->branch_id) {
                         $validator->errors()->add('purchase_id', trans('rules.purchase_receipt.purchase_branch_must_match_receipt_branch'));
+                    }
+                }
+            }
+
+            foreach ($this->input('delete_item_ids', []) as $index => $deleteItemId) {
+                if (! in_array($deleteItemId, $purchaseReceiptItemIds, true)) {
+                    $validator->errors()->add(
+                        "delete_item_ids.$index",
+                        trans('rules.purchase_receipt.invalid_delete_item_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('items', []) as $index => $item) {
+                $itemId = $item['id'] ?? null;
+                $purchaseReceiptItem = ! is_null($itemId) ? $purchaseReceiptItems->get($itemId) : null;
+
+                if (! is_null($itemId) && is_null($purchaseReceiptItem)) {
+                    $validator->errors()->add(
+                        "items.$index.id",
+                        trans('rules.purchase_receipt.invalid_item_reference')
+                    );
+                }
+
+                $purchaseReceiptItemSerialIds = $purchaseReceiptItem?->serials->pluck('id')->all() ?? [];
+                foreach ($item['delete_serial_ids'] ?? [] as $serialIndex => $serialId) {
+                    if (! in_array($serialId, $purchaseReceiptItemSerialIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.delete_serial_ids.$serialIndex",
+                            trans('rules.purchase_receipt.invalid_serial_reference')
+                        );
+                    }
+                }
+
+                foreach ($item['serials'] ?? [] as $serialIndex => $serial) {
+                    $serialId = $serial['id'] ?? null;
+
+                    if (! is_null($serialId) && ! in_array($serialId, $purchaseReceiptItemSerialIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.serials.$serialIndex.id",
+                            trans('rules.purchase_receipt.invalid_serial_reference')
+                        );
                     }
                 }
             }
@@ -183,6 +246,7 @@ class PurchaseReceiptUpdateRequest extends FormRequest
             'items.*.product_unit_id' => 'product unit',
             'items.*.product_unit_conversion_value' => 'product unit conversion value',
             'items.*.remarks' => 'remarks',
+            'items.*.delete_serial_ids' => 'delete serial ids',
             'items.*.serials' => 'serials',
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Actions\PurchaseItem;
 use App\Actions\Purchase\PurchaseActions;
 use App\Actions\PurchaseItemProductUnitPriceDiscount\PurchaseItemProductUnitPriceDiscountActions;
 use App\Actions\PurchaseItemSubtotalDiscount\PurchaseItemSubtotalDiscountActions;
+use App\Actions\PurchaseReceiptItem\PurchaseReceiptItemActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseItemCreateDTO;
 use App\DTOs\PurchaseItemProductUnitPriceDiscountCreateDTO;
@@ -14,8 +15,8 @@ use App\DTOs\PurchaseItemSubtotalDiscountUpdateDTO;
 use App\DTOs\PurchaseItemUpdateDTO;
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
+use App\Models\ProductUnit;
 use App\Models\PurchaseItem;
-use App\Models\PurchaseReceiptItem;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -44,6 +45,7 @@ class PurchaseItemActions
     public function __construct(
         private readonly PurchaseItemProductUnitPriceDiscountActions $purchaseItemProductUnitPriceDiscountActions,
         private readonly PurchaseItemSubtotalDiscountActions $purchaseItemSubtotalDiscountActions,
+        private readonly PurchaseReceiptItemActions $purchaseReceiptItemActions,
     ) {
     }
 
@@ -67,7 +69,7 @@ class PurchaseItemActions
             ->join('companies', 'companies.id', '=', 'purchase_items.company_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')
             ->join('product_units', 'product_units.id', '=', 'purchase_items.product_unit_id')
-            ->join('products', 'products.id', '=', 'product_units.product_id')
+            ->join('products', 'products.id', '=', 'purchase_items.product_id')
             ->join('product_categories', 'product_categories.id', '=', 'products.category_id')
             ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
             ->whereCompanyId('purchase_items', $companyId)
@@ -215,6 +217,7 @@ class PurchaseItemActions
             $purchaseItem->purchase_id = $data->purchaseId;
             $purchaseItem->qty = $data->qty;
             $purchaseItem->product_unit_id = $data->productUnitId;
+            $purchaseItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
             $purchaseItem->product_unit_conversion_value = $data->productUnitConversionValue;
             $purchaseItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $purchaseItem->product_unit_price = $data->productUnitPrice;
@@ -327,6 +330,7 @@ class PurchaseItemActions
         try {
             $purchaseItem->qty = $data->qty;
             $purchaseItem->product_unit_id = $data->productUnitId;
+            $purchaseItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
             $purchaseItem->product_unit_conversion_value = $data->productUnitConversionValue;
             $purchaseItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $purchaseItem->product_unit_price = $data->productUnitPrice;
@@ -478,19 +482,9 @@ class PurchaseItemActions
                 $this->purchaseItemSubtotalDiscountActions->delete($purchaseItemSubtotalDiscount);
             }
 
-            $purchaseReceiptItems = PurchaseReceiptItem::query()
-                ->select('purchase_receipt_items.*')
-                ->join('purchase_receipts', 'purchase_receipts.id', '=', 'purchase_receipt_items.purchase_receipt_id')
-                ->where('purchase_receipts.purchase_id', $purchaseItem->purchase_id)
-                ->where('purchase_receipt_items.product_unit_id', $purchaseItem->product_unit_id)
-                ->where('purchase_receipt_items.has_purchase_item_product', true)
-                ->whereNull('purchase_receipts.deleted_at')
-                ->whereNull('purchase_receipt_items.deleted_at')
-                ->get();
-
-            foreach ($purchaseReceiptItems as $purchaseReceiptItem) {
-                $purchaseReceiptItem->has_purchase_item_product = false;
-                $purchaseReceiptItem->save();
+            $directReceiptItem = $purchaseItem->directReceiptItem;
+            if ($directReceiptItem) {
+                $this->purchaseReceiptItemActions->delete($directReceiptItem, false);
             }
 
             $result = $purchaseItem->delete();

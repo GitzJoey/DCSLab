@@ -59,6 +59,12 @@ class PurchaseDirectUpdateRequest extends FormRequest
 
                     return $discount;
                 })->all();
+                $item['delete_serial_ids'] = collect($item['delete_serial_ids'] ?? [])->map(fn ($id) => HashidsHelper::decodeId($id))->all();
+                $item['serials'] = collect($item['serials'] ?? [])->map(function ($serial) {
+                    $serial['id'] = ! empty($serial['id']) ? HashidsHelper::decodeId($serial['id']) : null;
+
+                    return $serial;
+                })->all();
 
                 return $item;
             })->all(),
@@ -99,7 +105,6 @@ class PurchaseDirectUpdateRequest extends FormRequest
             'tax_invoice_vat' => ['required', 'numeric', 'min:0'],
             'remarks' => ['present', 'nullable', 'string'],
             'is_posted' => ['required', 'boolean'],
-            'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
 
             'delete_item_ids' => ['present', 'array'],
@@ -130,7 +135,10 @@ class PurchaseDirectUpdateRequest extends FormRequest
             'items.*.vat_base_numerator' => ['required', 'integer', 'min:1'],
             'items.*.vat_base_denominator' => ['required', 'integer', 'min:1'],
             'items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'items.*.delete_serial_ids' => ['present', 'array'],
+            'items.*.delete_serial_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_receipt_item_serials', $this->company_id)],
             'items.*.serials' => ['present', 'array'],
+            'items.*.serials.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_receipt_item_serials', $this->company_id)],
             'items.*.serials.*.serial' => ['required', 'string'],
 
             'delete_global_discount_ids' => ['present', 'array'],
@@ -216,6 +224,13 @@ class PurchaseDirectUpdateRequest extends FormRequest
                 ])
                 ->get()
                 ->keyBy('id');
+            $purchaseReceiptItemsByPurchaseItemId = $purchase->directReceipt()
+                ->with('items.serials:id,purchase_receipt_item_id')
+                ->first()
+                ?->items
+                ->whereNotNull('purchase_item_id')
+                ->keyBy('purchase_item_id')
+                ?? collect();
             $purchaseItemIds = $purchaseItems->keys()->all();
             $purchaseGlobalDiscountIds = $purchase->globalDiscounts()->pluck('id')->all();
             $purchaseAdditionalCostIds = $purchase->additionalCosts()->pluck('id')->all();
@@ -243,9 +258,17 @@ class PurchaseDirectUpdateRequest extends FormRequest
             foreach ($this->input('items', []) as $index => $item) {
                 $itemId = $item['id'] ?? null;
                 $purchaseItem = ! is_null($itemId) ? $purchaseItems->get($itemId) : null;
+                $purchaseReceiptItem = ! is_null($itemId) ? $purchaseReceiptItemsByPurchaseItemId->get($itemId) : null;
 
                 if (! is_null($itemId) && is_null($purchaseItem)) {
                     $validator->errors()->add("items.$index.id", trans('rules.purchase.invalid_item_reference'));
+                }
+
+                if (! is_null($itemId) && is_null($purchaseReceiptItem)) {
+                    $validator->errors()->add(
+                        "items.$index.id",
+                        trans('rules.purchase_receipt.invalid_item_reference')
+                    );
                 }
 
                 $productUnitPriceDiscountIds = $purchaseItem?->productUnitPriceDiscounts->pluck('id')->all() ?? [];
@@ -286,6 +309,27 @@ class PurchaseDirectUpdateRequest extends FormRequest
                         $validator->errors()->add(
                             "items.$index.subtotal_discounts.$discountIndex.id",
                             trans('rules.purchase.invalid_subtotal_discount_reference')
+                        );
+                    }
+                }
+
+                $purchaseReceiptItemSerialIds = $purchaseReceiptItem?->serials->pluck('id')->all() ?? [];
+                foreach ($item['delete_serial_ids'] ?? [] as $serialIndex => $serialId) {
+                    if (! in_array($serialId, $purchaseReceiptItemSerialIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.delete_serial_ids.$serialIndex",
+                            trans('rules.purchase_receipt.invalid_serial_reference')
+                        );
+                    }
+                }
+
+                foreach ($item['serials'] ?? [] as $serialIndex => $serial) {
+                    $serialId = $serial['id'] ?? null;
+
+                    if (! is_null($serialId) && ! in_array($serialId, $purchaseReceiptItemSerialIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.serials.$serialIndex.id",
+                            trans('rules.purchase_receipt.invalid_serial_reference')
                         );
                     }
                 }
@@ -428,6 +472,7 @@ class PurchaseDirectUpdateRequest extends FormRequest
             'items.*.vat_base_numerator' => trans('validation_attributes.purchase_order_item.vat_base_numerator'),
             'items.*.vat_base_denominator' => trans('validation_attributes.purchase_order_item.vat_base_denominator'),
             'items.*.remarks' => trans('validation_attributes.purchase_order_item.remarks'),
+            'items.*.delete_serial_ids' => 'delete serial ids',
             'items.*.serials' => 'serials',
 
             'global_discounts.*.sequence' => trans('validation_attributes.purchase_order_global_discount.sequence'),

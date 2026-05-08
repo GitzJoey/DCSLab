@@ -6,12 +6,15 @@ use App\Actions\PurchaseReceipt\PurchaseReceiptActions;
 use App\Actions\PurchaseReceiptItemSerial\PurchaseReceiptItemSerialActions;
 use App\Actions\StockTransaction\StockTransactionActions;
 use App\DTOs\ExecuteDTO;
-use App\DTOs\PurchaseReceiptItemCreateDTO;
+use App\DTOs\PurchaseReceiptDirectItemCreateDTO;
+use App\DTOs\PurchaseReceiptDirectItemUpdateDTO;
 use App\DTOs\PurchaseReceiptItemSerialCreateDTO;
 use App\DTOs\PurchaseReceiptItemSerialUpdateDTO;
-use App\DTOs\PurchaseReceiptItemUpdateDTO;
+use App\DTOs\PurchaseReceiptManualItemCreateDTO;
+use App\DTOs\PurchaseReceiptManualItemUpdateDTO;
 use App\DTOs\StockTransactionCreateDTO;
 use App\DTOs\StockTransactionUpdateDTO;
+use App\Models\ProductUnit;
 use App\Models\PurchaseReceiptItem;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -178,7 +181,7 @@ class PurchaseReceiptItemActions
         return $purchaseReceiptItem->load(self::DETAIL_EAGER_LOADS);
     }
 
-    public function create(PurchaseReceiptItemCreateDTO $data, bool $updateParent): PurchaseReceiptItem
+    public function createDirect(PurchaseReceiptDirectItemCreateDTO $data, bool $updateParent): PurchaseReceiptItem
     {
         $timer_start = microtime(true);
 
@@ -187,9 +190,11 @@ class PurchaseReceiptItemActions
             $purchaseReceiptItem->company_id = $data->companyId;
             $purchaseReceiptItem->branch_id = $data->branchId;
             $purchaseReceiptItem->purchase_receipt_id = $data->purchaseReceiptId;
-            $purchaseReceiptItem->has_purchase_item_product = $data->hasPurchaseItemProduct;
+            $purchaseReceiptItem->purchase_item_id = $data->purchaseItemId;
+            $purchaseReceiptItem->has_purchase_item_product = false;
             $purchaseReceiptItem->qty = $data->qty;
             $purchaseReceiptItem->product_unit_id = $data->productUnitId;
+            $purchaseReceiptItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
             $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;
             $purchaseReceiptItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $purchaseReceiptItem->remarks = $data->remarks;
@@ -227,14 +232,131 @@ class PurchaseReceiptItemActions
         }
     }
 
-    public function update(PurchaseReceiptItem $purchaseReceiptItem, PurchaseReceiptItemUpdateDTO $data, bool $updateParent): PurchaseReceiptItem
+    public function createManual(PurchaseReceiptManualItemCreateDTO $data, bool $updateParent): PurchaseReceiptItem
     {
         $timer_start = microtime(true);
 
         try {
-            $purchaseReceiptItem->has_purchase_item_product = $data->hasPurchaseItemProduct;
+            $purchaseReceiptItem = new PurchaseReceiptItem();
+            $purchaseReceiptItem->company_id = $data->companyId;
+            $purchaseReceiptItem->branch_id = $data->branchId;
+            $purchaseReceiptItem->purchase_receipt_id = $data->purchaseReceiptId;
+            $purchaseReceiptItem->purchase_item_id = null;
+            $purchaseReceiptItem->has_purchase_item_product = false;
             $purchaseReceiptItem->qty = $data->qty;
             $purchaseReceiptItem->product_unit_id = $data->productUnitId;
+            $purchaseReceiptItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
+            $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;
+            $purchaseReceiptItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
+            $purchaseReceiptItem->remarks = $data->remarks;
+            $purchaseReceiptItem->save();
+
+            $this->stockTransactionActions->create(
+                data: StockTransactionCreateDTO::fromPurchaseReceiptItem($purchaseReceiptItem)
+            );
+
+            foreach ($data->serials as $serial) {
+                $dto = new PurchaseReceiptItemSerialCreateDTO(
+                    companyId: $purchaseReceiptItem->company_id,
+                    branchId: $purchaseReceiptItem->branch_id,
+                    purchaseReceiptId: $purchaseReceiptItem->purchase_receipt_id,
+                    purchaseReceiptItemId: $purchaseReceiptItem->id,
+                    serial: $serial['serial'],
+                );
+
+                $this->purchaseReceiptItemSerialActions->create($dto);
+            }
+
+            if ($updateParent) {
+                PurchaseReceiptActions::updateSummary($purchaseReceiptItem->purchaseReceipt);
+            }
+
+            $this->flushCache();
+
+            return $purchaseReceiptItem->refresh()->load(self::DETAIL_EAGER_LOADS);
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function updateDirect(PurchaseReceiptItem $purchaseReceiptItem, PurchaseReceiptDirectItemUpdateDTO $data, bool $updateParent): PurchaseReceiptItem
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $purchaseReceiptItem->purchase_item_id = $data->purchaseItemId;
+            $purchaseReceiptItem->qty = $data->qty;
+            $purchaseReceiptItem->product_unit_id = $data->productUnitId;
+            $purchaseReceiptItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
+            $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;
+            $purchaseReceiptItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
+            $purchaseReceiptItem->remarks = $data->remarks;
+            $purchaseReceiptItem->save();
+
+            $stockTransaction = $purchaseReceiptItem->stockTransaction;
+            if (! $stockTransaction) {
+                $dto = StockTransactionCreateDTO::fromPurchaseReceiptItem($purchaseReceiptItem);
+                $this->stockTransactionActions->create($dto);
+            } else {
+                $dto = StockTransactionUpdateDTO::fromPurchaseReceiptItem($purchaseReceiptItem);
+                $this->stockTransactionActions->update($stockTransaction, $dto);
+            }
+
+            foreach ($data->deleteSerialIds as $deleteId) {
+                $purchaseReceiptItemSerial = $purchaseReceiptItem->serials()->findOrFail($deleteId);
+                $this->purchaseReceiptItemSerialActions->delete($purchaseReceiptItemSerial);
+            }
+
+            foreach ($data->serials as $serial) {
+                if ($serial['id']) {
+                    $purchaseReceiptItemSerial = $purchaseReceiptItem->serials()->findOrFail($serial['id']);
+                    $dto = new PurchaseReceiptItemSerialUpdateDTO(
+                        serial: $serial['serial'],
+                    );
+
+                    $this->purchaseReceiptItemSerialActions->update($purchaseReceiptItemSerial, $dto);
+                } else {
+                    $dto = new PurchaseReceiptItemSerialCreateDTO(
+                        companyId: $purchaseReceiptItem->company_id,
+                        branchId: $purchaseReceiptItem->branch_id,
+                        purchaseReceiptId: $purchaseReceiptItem->purchase_receipt_id,
+                        purchaseReceiptItemId: $purchaseReceiptItem->id,
+                        serial: $serial['serial'],
+                    );
+
+                    $this->purchaseReceiptItemSerialActions->create($dto);
+                }
+            }
+
+            if ($updateParent) {
+                PurchaseReceiptActions::updateSummary($purchaseReceiptItem->purchaseReceipt);
+            }
+
+            $this->flushCache();
+
+            return $purchaseReceiptItem->refresh()->load(self::DETAIL_EAGER_LOADS);
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function updateManual(PurchaseReceiptItem $purchaseReceiptItem, PurchaseReceiptManualItemUpdateDTO $data, bool $updateParent): PurchaseReceiptItem
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $purchaseReceiptItem->purchase_item_id = null;
+            $purchaseReceiptItem->qty = $data->qty;
+            $purchaseReceiptItem->product_unit_id = $data->productUnitId;
+            $purchaseReceiptItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
             $purchaseReceiptItem->product_unit_conversion_value = $data->productUnitConversionValue;
             $purchaseReceiptItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $purchaseReceiptItem->remarks = $data->remarks;

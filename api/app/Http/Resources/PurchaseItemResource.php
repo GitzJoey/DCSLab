@@ -40,6 +40,7 @@ class PurchaseItemResource extends JsonResource
                 ),
             ]),
 
+            'has_purchase_order_item_product' => (bool) $this->has_purchase_order_item_product,
             'qty' => dec_trim($this->qty),
             'product_unit_conversion_value' => dec_trim($this->product_unit_conversion_value),
             'product_unit_qty_base' => dec_trim($this->product_unit_qty_base),

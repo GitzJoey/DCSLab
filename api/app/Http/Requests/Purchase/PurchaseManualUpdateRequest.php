@@ -97,7 +97,6 @@ class PurchaseManualUpdateRequest extends FormRequest
             'tax_invoice_vat' => ['required', 'numeric', 'min:0'],
             'remarks' => ['present', 'nullable', 'string'],
             'is_posted' => ['required', 'boolean'],
-            'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
 
             'delete_item_ids' => ['present', 'array'],

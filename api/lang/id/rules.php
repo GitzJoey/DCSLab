@@ -20,6 +20,13 @@ return [
     'purchase_order' => [
         'exceed_available_down_payment' => 'Total refund down payment melebihi down payment yang tersedia',
         'duplicate_product' => 'Produk yang sama tidak boleh dipakai lebih dari sekali dalam satu purchase order.',
+        'invalid_global_discount_reference' => 'Diskon global yang dipilih tidak valid untuk purchase order ini.',
+        'invalid_delete_item_reference' => 'ID item hapus yang dipilih tidak valid untuk purchase order ini.',
+        'invalid_item_reference' => 'Item yang dipilih tidak valid untuk purchase order ini.',
+        'invalid_product_unit_price_discount_reference' => 'Diskon harga satuan item yang dipilih tidak valid untuk purchase order ini.',
+        'invalid_subtotal_discount_reference' => 'Diskon subtotal item yang dipilih tidak valid untuk purchase order ini.',
+        'invalid_down_payment_reference' => 'Down payment yang dipilih tidak valid untuk purchase order ini.',
+        'invalid_refunded_down_payment_reference' => 'Refund down payment yang dipilih tidak valid untuk purchase order ini.',
     ],
     'purchase' => [
         'invalid_delete_item_reference' => 'ID item hapus yang dipilih tidak valid untuk pembelian ini.',
@@ -46,6 +53,9 @@ return [
         'branch_must_match_purchase' => 'Cabang harus sama dengan purchase yang terhubung.',
         'purchase_branch_must_match_receipt_branch' => 'Cabang purchase harus sama dengan cabang purchase receipt.',
         'direct_mode_cannot_be_deleted_here' => 'Purchase receipt mode direct tidak boleh dihapus dari pengelolaan purchase receipt.',
+        'invalid_delete_item_reference' => 'ID item hapus yang dipilih tidak valid untuk purchase receipt ini.',
+        'invalid_item_reference' => 'Item yang dipilih tidak valid untuk purchase receipt ini.',
+        'invalid_serial_reference' => 'Serial yang dipilih tidak valid untuk item purchase receipt ini.',
         'duplicate_product' => 'Produk yang sama tidak boleh dipakai lebih dari sekali dalam satu purchase receipt.',
         'duplicate_serial' => 'Serial yang sama tidak boleh dipakai lebih dari sekali dalam satu item purchase receipt.',
     ],

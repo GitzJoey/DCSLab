@@ -52,7 +52,7 @@ class PurchaseOrderItemProductUnitPriceDiscountActions
             ->join('purchase_order_items', 'purchase_order_items.id', '=', 'purchase_order_item_product_unit_price_discounts.purchase_order_item_id')
             ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_items.purchase_order_id')
             ->join('product_units', 'product_units.id', '=', 'purchase_order_items.product_unit_id')
-            ->join('products', 'products.id', '=', 'product_units.product_id')
+            ->join('products', 'products.id', '=', 'purchase_order_items.product_id')
             ->join('product_categories', 'product_categories.id', '=', 'products.category_id')
             ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
             ->whereCompanyId('purchase_order_item_product_unit_price_discounts', $companyId)

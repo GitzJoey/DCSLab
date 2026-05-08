@@ -7,7 +7,6 @@ use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseItem extends Model
@@ -22,8 +21,10 @@ class PurchaseItem extends Model
         'company_id',
         'branch_id',
         'purchase_id',
+        'has_purchase_order_item_product',
         'qty',
         'product_unit_id',
+        'product_id',
         'product_unit_conversion_value',
         'product_unit_qty_base',
         'qty_received_base',
@@ -55,6 +56,7 @@ class PurchaseItem extends Model
     ];
 
     protected $casts = [
+        'has_purchase_order_item_product' => 'boolean',
         'qty' => 'decimal:8',
         'product_unit_conversion_value' => 'decimal:8',
         'product_unit_qty_base' => 'decimal:8',
@@ -104,6 +106,11 @@ class PurchaseItem extends Model
         return $this->belongsTo(ProductUnit::class)->withTrashed();
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
+    }
+
     public function vatProfile()
     {
         return $this->belongsTo(VatProfile::class)->withTrashed();
@@ -119,25 +126,9 @@ class PurchaseItem extends Model
         return $this->hasMany(PurchaseItemSubtotalDiscount::class);
     }
 
-    public function receiptItemsWithSameProduct(): HasManyThrough
+    public function directReceiptItem()
     {
-        $query = $this->hasManyThrough(
-            PurchaseReceiptItem::class,
-            PurchaseReceipt::class,
-            'purchase_id',
-            'purchase_receipt_id',
-            'purchase_id',
-            'id'
-        );
-        $productId = $this->productUnit?->product_id;
-
-        if (is_null($productId)) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->whereHas('productUnit', function ($query) use ($productId) {
-            $query->where('product_id', $productId);
-        });
+        return $this->hasOne(PurchaseReceiptItem::class);
     }
 
     public function returnItems()

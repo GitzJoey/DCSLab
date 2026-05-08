@@ -308,7 +308,6 @@ class PurchaseActions
             $purchase->tax_invoice_vat = $data->taxInvoiceVat;
             $purchase->remarks = $data->remarks;
             $purchase->is_posted = $data->isPosted;
-            $purchase->additional_cost = $data->additionalCost;
             $purchase->rounding = $data->rounding;
             $purchase->save();
 
@@ -338,6 +337,7 @@ class PurchaseActions
             $items = [];
             foreach ($data->items as $item) {
                 $items[] = [
+                    'purchase_item_id' => $item['id'],
                     'qty' => $item['qty'],
                     'product_unit_id' => $item['product_unit_id'],
                     'product_unit_conversion_value' => $item['product_unit_conversion_value'],
@@ -352,7 +352,7 @@ class PurchaseActions
                 supplierId: $purchase->supplier_id,
                 purchaseId: $purchase->id,
                 isFromDirectPurchase: true,
-                code: config('dcslab.KEYWORDS.AUTO'),
+                code: $data->directReceiptCode,
                 date: $purchase->date,
                 warehouseId: $data->directReceiptWarehouseId,
                 remarks: $purchase->remarks,
@@ -360,7 +360,7 @@ class PurchaseActions
                 items: $items,
             );
 
-            $this->purchaseReceiptActions->create($dto, false);
+            $this->purchaseReceiptActions->createDirect($dto, false);
 
             foreach ($data->globalDiscounts as $globalDiscount) {
                 $dto = new PurchaseGlobalDiscountCreateDTO(
@@ -428,7 +428,6 @@ class PurchaseActions
             $purchase->tax_invoice_vat = $data->taxInvoiceVat;
             $purchase->remarks = $data->remarks;
             $purchase->is_posted = $data->isPosted;
-            $purchase->additional_cost = $data->additionalCost;
             $purchase->rounding = $data->rounding;
             $purchase->save();
 
@@ -507,6 +506,7 @@ class PurchaseActions
 
         try {
             $previousPurchaseOrder = $purchase->purchaseOrder;
+            $purchaseReceipt = $purchase->directReceipt()->firstOrFail();
 
             $purchase->code = $this->generateUniqueCode($purchase->company_id, $data->code, $purchase->id);
             $purchase->date = $this->generateDate($data->date);
@@ -519,7 +519,6 @@ class PurchaseActions
             $purchase->tax_invoice_vat = $data->taxInvoiceVat;
             $purchase->remarks = $data->remarks;
             $purchase->is_posted = $data->isPosted;
-            $purchase->additional_cost = $data->additionalCost;
             $purchase->rounding = $data->rounding;
             $purchase->save();
 
@@ -547,8 +546,10 @@ class PurchaseActions
                         vatBaseDenominator: $data->items[$i]['vat_base_denominator'],
                         remarks: $data->items[$i]['remarks'],
                     );
+                    $this->purchaseItemActions->update($purchaseItem, $dto, false);
 
-                    $result = $this->purchaseItemActions->update($purchaseItem, $dto, false);
+                    $data->items[$i]['id'] = $purchaseItem->id;
+                    $data->items[$i]['purchase_receipt_item_id'] = $purchaseItem->directReceiptItem->id;
                 } else {
                     $dto = new PurchaseItemCreateDTO(
                         companyId: $purchase->company_id,
@@ -567,56 +568,42 @@ class PurchaseActions
                         vatBaseDenominator: $data->items[$i]['vat_base_denominator'],
                         remarks: $data->items[$i]['remarks'],
                     );
+                    $purchaseItem = $this->purchaseItemActions->create($dto, false);
 
-                    $result = $this->purchaseItemActions->create($dto, false);
+                    $data->items[$i]['id'] = $purchaseItem->id;
+                    $data->items[$i]['purchase_receipt_item_id'] = null;
                 }
-
-                $data->items[$i]['id'] = $result->id;
             }
 
             $items = [];
             foreach ($data->items as $item) {
                 $items[] = [
+                    'id' => $item['purchase_receipt_item_id'],
+                    'purchase_item_id' => $item['id'],
                     'qty' => $item['qty'],
                     'product_unit_id' => $item['product_unit_id'],
                     'product_unit_conversion_value' => $item['product_unit_conversion_value'],
                     'remarks' => $item['remarks'],
+                    'delete_serial_ids' => $item['delete_serial_ids'],
                     'serials' => $item['serials'],
                 ];
             }
 
-            $purchaseReceipt = $purchase->directReceipt;
-            if ($purchaseReceipt) {
-                $dto = new PurchaseReceiptUpdateDTO(
-                    supplierId: $purchase->supplier_id,
-                    purchaseId: $purchase->id,
-                    code: $purchaseReceipt->code,
-                    date: $purchase->date,
-                    isFromDirectPurchase: true,
-                    warehouseId: $data->directReceiptWarehouseId,
-                    remarks: $purchase->remarks,
-                    isPosted: $purchase->is_posted,
-                    items: $items,
-                );
+            $dto = new PurchaseReceiptUpdateDTO(
+                supplierId: $purchase->supplier_id,
+                purchaseId: $purchase->id,
+                code: $purchaseReceipt->code,
+                date: $purchase->date,
+                isFromDirectPurchase: true,
+                warehouseId: $data->directReceiptWarehouseId,
+                remarks: $purchase->remarks,
+                isPosted: $purchase->is_posted,
 
-                $this->purchaseReceiptActions->update($purchaseReceipt, $dto, false);
-            } else {
-                $dto = new PurchaseReceiptCreateDTO(
-                    companyId: $purchase->company_id,
-                    branchId: $purchase->branch_id,
-                    supplierId: $purchase->supplier_id,
-                    purchaseId: $purchase->id,
-                    isFromDirectPurchase: true,
-                    code: config('dcslab.KEYWORDS.AUTO'),
-                    date: $purchase->date,
-                    warehouseId: $data->directReceiptWarehouseId,
-                    remarks: $purchase->remarks,
-                    isPosted: $purchase->is_posted,
-                    items: $items,
-                );
+                deleteItemIds: [],
+                items: $items,
+            );
 
-                $this->purchaseReceiptActions->create($dto, false);
-            }
+            $this->purchaseReceiptActions->updateDirect($purchaseReceipt, $dto, false);
 
             foreach ($data->deleteGlobalDiscountIds as $deleteId) {
                 $purchaseGlobalDiscount = $purchase->globalDiscounts()->findOrFail($deleteId);
@@ -727,7 +714,6 @@ class PurchaseActions
             $purchase->tax_invoice_vat = $data->taxInvoiceVat;
             $purchase->remarks = $data->remarks;
             $purchase->is_posted = $data->isPosted;
-            $purchase->additional_cost = $data->additionalCost;
             $purchase->rounding = $data->rounding;
             $purchase->save();
 
@@ -1099,10 +1085,11 @@ class PurchaseActions
         $purchase->is_paid_off = $purchase->amount_due == 0;
 
         foreach ($purchase->items as $purchaseItem) {
-            $qtyTargetBase = (float) $purchaseItem->product_unit_qty_base;
-            $purchaseItem->qty_received_base = (float) $purchaseItem->receiptItemsWithSameProduct()->sum('product_unit_qty_base');
-            $purchaseItem->qty_outstanding_base = max($qtyTargetBase - $purchaseItem->qty_received_base, 0);
-            $purchaseItem->qty_excess_base = max($purchaseItem->qty_received_base - $qtyTargetBase, 0);
+            $purchaseItem->qty_received_base = (float) $purchase->receiptItems()
+                ->where('product_id', $purchaseItem->product_id)
+                ->sum('product_unit_qty_base');
+            $purchaseItem->qty_outstanding_base = max($purchaseItem->product_unit_qty_base - $purchaseItem->qty_received_base, 0);
+            $purchaseItem->qty_excess_base = max($purchaseItem->qty_received_base - $purchaseItem->product_unit_qty_base, 0);
             $purchaseItem->save();
         }
 
@@ -1113,7 +1100,7 @@ class PurchaseActions
             $itemMatchedCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
+                if (! $purchase->receiptItems()->where('product_id', $purchaseItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -1134,7 +1121,7 @@ class PurchaseActions
             $itemLessCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
+                if (! $purchase->receiptItems()->where('product_id', $purchaseItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -1153,7 +1140,7 @@ class PurchaseActions
             $itemMoreCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
+                if (! $purchase->receiptItems()->where('product_id', $purchaseItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -1168,7 +1155,7 @@ class PurchaseActions
             $itemUnlinkedCount = 0;
 
             foreach ($purchase->items as $purchaseItem) {
-                if (! $purchaseItem->receiptItemsWithSameProduct()->exists()) {
+                if (! $purchase->receiptItems()->where('product_id', $purchaseItem->product_id)->exists()) {
                     $itemUnlinkedCount++;
                 }
             }
@@ -1191,27 +1178,9 @@ class PurchaseActions
             return PurchaseProgressStatusEnum::UNMATCHED;
         })();
 
-        $purchaseProductIds = $purchase->items
-            ->map(fn ($purchaseItem) => $purchaseItem->productUnit?->product_id)
-            ->filter()
-            ->unique()
-            ->mapWithKeys(fn ($productId) => [(int) $productId => true]);
-
-        $purchaseReceiptItems = $purchase->receipts()
-            ->with(['items.productUnit:id,product_id'])
-            ->get()
-            ->flatMap->items;
-
-        foreach ($purchaseReceiptItems as $purchaseReceiptItem) {
-            $hasPurchaseItemProduct = isset($purchaseProductIds[(int) $purchaseReceiptItem->productUnit?->product_id]);
-
-            if ((bool) $purchaseReceiptItem->has_purchase_item_product === $hasPurchaseItemProduct) {
-                continue;
-            }
-
-            $purchaseReceiptItem->has_purchase_item_product = $hasPurchaseItemProduct;
-            $purchaseReceiptItem->save();
-        }
+        $purchaseProductIds = $purchase->items()->distinct()->pluck('product_id')->filter()->values()->all();
+        $purchase->receiptItems()->whereIn('product_id', $purchaseProductIds)->update(['has_purchase_item_product' => true]);
+        $purchase->receiptItems()->whereNotIn('product_id', $purchaseProductIds)->update(['has_purchase_item_product' => false]);
 
         $purchase->save();
     }
@@ -1238,6 +1207,10 @@ class PurchaseActions
 
             foreach ($purchase->globalDiscounts as $purchaseGlobalDiscount) {
                 $this->purchaseGlobalDiscountActions->delete($purchaseGlobalDiscount);
+            }
+
+            foreach ($purchase->additionalCosts as $purchaseAdditionalCost) {
+                $this->purchaseAdditionalCostActions->delete($purchaseAdditionalCost);
             }
 
             foreach ($purchase->receipts as $purchaseReceipt) {

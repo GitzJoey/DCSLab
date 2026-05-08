@@ -15,9 +15,15 @@ return new class extends Migration
             $table->foreignId('company_id')->references('id')->on('companies');
             $table->foreignId('branch_id')->references('id')->on('branches');
             $table->foreignId('purchase_receipt_id')->references('id')->on('purchase_receipts');
+            $table->foreignId('purchase_item_id')
+                ->nullable()
+                ->references('id')
+                ->on('purchase_items')
+                ->comment('Only filled when the receipt item comes from direct purchase.');
             $table->boolean('has_purchase_item_product')->default(false);
             $table->decimal('qty', 30, 8)->default(0);
             $table->foreignId('product_unit_id')->references('id')->on('product_units');
+            $table->foreignId('product_id')->references('id')->on('products');
             $table->decimal('product_unit_conversion_value', 30, 8)->default(0);
             $table->decimal('product_unit_qty_base', 30, 8)->default(0);
             $table->string('remarks')->nullable();

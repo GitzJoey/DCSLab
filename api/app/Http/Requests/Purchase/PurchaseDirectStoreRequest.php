@@ -88,6 +88,7 @@ class PurchaseDirectStoreRequest extends FormRequest
                 new IsValidSupplier($this->company_id),
             ],
             'purchase_order_id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_orders', $this->company_id)],
+            'direct_receipt_code' => ['required', 'string'],
             'direct_receipt_warehouse_id' => [
                 'required',
                 'integer',
@@ -100,7 +101,6 @@ class PurchaseDirectStoreRequest extends FormRequest
             'tax_invoice_vat' => ['required', 'numeric', 'min:0'],
             'remarks' => ['present', 'nullable', 'string'],
             'is_posted' => ['required', 'boolean'],
-            'additional_cost' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
 
             'items' => ['required', 'array', 'min:1'],
@@ -296,6 +296,7 @@ class PurchaseDirectStoreRequest extends FormRequest
             'due_days' => trans('validation_attributes.purchase.due_days'),
             'supplier_id' => trans('validation_attributes.purchase.supplier_id'),
             'purchase_order_id' => trans('validation_attributes.purchase.purchase_order_id'),
+            'direct_receipt_code' => trans('validation_attributes.purchase.direct_receipt_code'),
             'direct_receipt_warehouse_id' => trans('validation_attributes.purchase.direct_receipt_warehouse_id'),
             'tax_invoice_number' => trans('validation_attributes.purchase.tax_invoice_number'),
             'tax_invoice_vat_base' => trans('validation_attributes.purchase.tax_invoice_vat_base'),

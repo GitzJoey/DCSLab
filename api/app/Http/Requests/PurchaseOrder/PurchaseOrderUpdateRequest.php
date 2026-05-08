@@ -235,6 +235,141 @@ class PurchaseOrderUpdateRequest extends FormRequest
                 $validator->errors()->add('code', trans('rules.unique_code'));
             }
 
+            $purchaseOrderItems = $purchaseOrder?->items()
+                ->with([
+                    'productUnitPriceDiscounts:id,purchase_order_item_id',
+                    'subtotalDiscounts:id,purchase_order_item_id',
+                ])
+                ->get()
+                ->keyBy('id') ?? collect();
+            $purchaseOrderItemIds = $purchaseOrderItems->keys()->all();
+            $purchaseOrderGlobalDiscountIds = $purchaseOrder?->globalDiscounts()->pluck('id')->all() ?? [];
+            $purchaseOrderDownPaymentIds = $purchaseOrder?->downPayments()->pluck('id')->all() ?? [];
+            $purchaseOrderRefundedDownPaymentIds = $purchaseOrder?->refundedDownPayments()->pluck('id')->all() ?? [];
+
+            foreach ($this->input('delete_global_discount_ids', []) as $index => $discountId) {
+                if (! in_array($discountId, $purchaseOrderGlobalDiscountIds, true)) {
+                    $validator->errors()->add(
+                        "delete_global_discount_ids.$index",
+                        trans('rules.purchase_order.invalid_global_discount_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('global_discounts', []) as $index => $discount) {
+                $discountId = $discount['id'] ?? null;
+
+                if (! is_null($discountId) && ! in_array($discountId, $purchaseOrderGlobalDiscountIds, true)) {
+                    $validator->errors()->add(
+                        "global_discounts.$index.id",
+                        trans('rules.purchase_order.invalid_global_discount_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('delete_item_ids', []) as $index => $deleteItemId) {
+                if (! in_array($deleteItemId, $purchaseOrderItemIds, true)) {
+                    $validator->errors()->add(
+                        "delete_item_ids.$index",
+                        trans('rules.purchase_order.invalid_delete_item_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('items', []) as $index => $item) {
+                $itemId = $item['id'] ?? null;
+                $purchaseOrderItem = ! is_null($itemId) ? $purchaseOrderItems->get($itemId) : null;
+
+                if (! is_null($itemId) && is_null($purchaseOrderItem)) {
+                    $validator->errors()->add(
+                        "items.$index.id",
+                        trans('rules.purchase_order.invalid_item_reference')
+                    );
+                }
+
+                $productUnitPriceDiscountIds = $purchaseOrderItem?->productUnitPriceDiscounts->pluck('id')->all() ?? [];
+                foreach ($item['delete_product_unit_price_discount_ids'] ?? [] as $discountIndex => $discountId) {
+                    if (! in_array($discountId, $productUnitPriceDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.delete_product_unit_price_discount_ids.$discountIndex",
+                            trans('rules.purchase_order.invalid_product_unit_price_discount_reference')
+                        );
+                    }
+                }
+
+                foreach ($item['product_unit_price_discounts'] ?? [] as $discountIndex => $discount) {
+                    $discountId = $discount['id'] ?? null;
+
+                    if (! is_null($discountId) && ! in_array($discountId, $productUnitPriceDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.product_unit_price_discounts.$discountIndex.id",
+                            trans('rules.purchase_order.invalid_product_unit_price_discount_reference')
+                        );
+                    }
+                }
+
+                $subtotalDiscountIds = $purchaseOrderItem?->subtotalDiscounts->pluck('id')->all() ?? [];
+                foreach ($item['delete_subtotal_discount_ids'] ?? [] as $discountIndex => $discountId) {
+                    if (! in_array($discountId, $subtotalDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.delete_subtotal_discount_ids.$discountIndex",
+                            trans('rules.purchase_order.invalid_subtotal_discount_reference')
+                        );
+                    }
+                }
+
+                foreach ($item['subtotal_discounts'] ?? [] as $discountIndex => $discount) {
+                    $discountId = $discount['id'] ?? null;
+
+                    if (! is_null($discountId) && ! in_array($discountId, $subtotalDiscountIds, true)) {
+                        $validator->errors()->add(
+                            "items.$index.subtotal_discounts.$discountIndex.id",
+                            trans('rules.purchase_order.invalid_subtotal_discount_reference')
+                        );
+                    }
+                }
+            }
+
+            foreach ($this->input('delete_down_payment_ids', []) as $index => $downPaymentId) {
+                if (! in_array($downPaymentId, $purchaseOrderDownPaymentIds, true)) {
+                    $validator->errors()->add(
+                        "delete_down_payment_ids.$index",
+                        trans('rules.purchase_order.invalid_down_payment_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('down_payments', []) as $index => $downPayment) {
+                $downPaymentId = $downPayment['id'] ?? null;
+
+                if (! is_null($downPaymentId) && ! in_array($downPaymentId, $purchaseOrderDownPaymentIds, true)) {
+                    $validator->errors()->add(
+                        "down_payments.$index.id",
+                        trans('rules.purchase_order.invalid_down_payment_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('delete_refunded_down_payment_ids', []) as $index => $refundedDownPaymentId) {
+                if (! in_array($refundedDownPaymentId, $purchaseOrderRefundedDownPaymentIds, true)) {
+                    $validator->errors()->add(
+                        "delete_refunded_down_payment_ids.$index",
+                        trans('rules.purchase_order.invalid_refunded_down_payment_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('refunded_down_payments', []) as $index => $refundedDownPayment) {
+                $refundedDownPaymentId = $refundedDownPayment['id'] ?? null;
+
+                if (! is_null($refundedDownPaymentId) && ! in_array($refundedDownPaymentId, $purchaseOrderRefundedDownPaymentIds, true)) {
+                    $validator->errors()->add(
+                        "refunded_down_payments.$index.id",
+                        trans('rules.purchase_order.invalid_refunded_down_payment_reference')
+                    );
+                }
+            }
+
             $downPaymentCodesInRequest = [];
             foreach ($this->input('down_payments', []) as $index => $downPayment) {
                 $downPaymentCode = $downPayment['code'] ?? null;

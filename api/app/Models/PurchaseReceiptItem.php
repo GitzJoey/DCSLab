@@ -21,9 +21,11 @@ class PurchaseReceiptItem extends Model
         'company_id',
         'branch_id',
         'purchase_receipt_id',
+        'purchase_item_id',
         'has_purchase_item_product',
         'qty',
         'product_unit_id',
+        'product_id',
         'product_unit_conversion_value',
         'product_unit_qty_base',
         'remarks',
@@ -51,9 +53,22 @@ class PurchaseReceiptItem extends Model
         return $this->belongsTo(PurchaseReceipt::class)->withTrashed();
     }
 
+    /**
+     * Only filled when this receipt item is created from direct purchase.
+     */
+    public function purchaseItem()
+    {
+        return $this->belongsTo(PurchaseItem::class)->withTrashed();
+    }
+
     public function productUnit()
     {
         return $this->belongsTo(ProductUnit::class)->withTrashed();
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 
     public function stockTransaction()

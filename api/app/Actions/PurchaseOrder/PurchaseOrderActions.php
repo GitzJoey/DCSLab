@@ -709,7 +709,9 @@ class PurchaseOrderActions
         $po->amount_available_down_payment = $po->amount_paid_down_payment - $po->amount_allocated_down_payment - $po->amount_refunded_down_payment;
         foreach ($po->items as $poItem) {
             $qtyTargetBase = (float) $poItem->product_unit_qty_base;
-            $poItem->qty_purchased_base = (float) $poItem->purchaseItemsWithSameProduct()->sum('product_unit_qty_base');
+            $poItem->qty_purchased_base = (float) $po->purchaseItems()
+                ->where('product_id', $poItem->product_id)
+                ->sum('product_unit_qty_base');
             $poItem->qty_outstanding_base = max($qtyTargetBase - $poItem->qty_purchased_base, 0);
             $poItem->qty_excess_base = max($poItem->qty_purchased_base - $qtyTargetBase, 0);
             $poItem->save();
@@ -722,7 +724,7 @@ class PurchaseOrderActions
             $itemMatchedCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -743,7 +745,7 @@ class PurchaseOrderActions
             $itemLessCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -762,7 +764,7 @@ class PurchaseOrderActions
             $itemMoreCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -777,7 +779,7 @@ class PurchaseOrderActions
             $itemUnlinkedCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $poItem->purchaseItemsWithSameProduct()->exists()) {
+                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
                     $itemUnlinkedCount++;
                 }
             }
@@ -799,6 +801,10 @@ class PurchaseOrderActions
 
             return PurchaseProgressStatusEnum::UNMATCHED;
         })();
+
+        $purchaseOrderProductIds = $po->items()->distinct()->pluck('product_id')->filter()->values()->all();
+        $po->purchaseItems()->whereIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => true]);
+        $po->purchaseItems()->whereNotIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => false]);
 
         $po->save();
     }

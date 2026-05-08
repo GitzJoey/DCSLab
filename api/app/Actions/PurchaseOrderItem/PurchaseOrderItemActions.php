@@ -14,6 +14,7 @@ use App\DTOs\PurchaseOrderItemSubtotalDiscountUpdateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
 use App\Enums\DiscountTypeEnum;
 use App\Helpers\TimezoneHelper;
+use App\Models\ProductUnit;
 use App\Models\PurchaseOrderItem;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -74,7 +75,7 @@ class PurchaseOrderItemActions
             ->join('companies', 'companies.id', '=', 'purchase_order_items.company_id')
             ->join('purchase_orders', 'purchase_orders.id', '=', 'purchase_order_items.purchase_order_id')
             ->join('product_units', 'product_units.id', '=', 'purchase_order_items.product_unit_id')
-            ->join('products', 'products.id', '=', 'product_units.product_id')
+            ->join('products', 'products.id', '=', 'purchase_order_items.product_id')
             ->join('product_categories', 'product_categories.id', '=', 'products.category_id')
             ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
             ->whereCompanyId('purchase_order_items', $companyId)
@@ -224,6 +225,7 @@ class PurchaseOrderItemActions
             $poItem->purchase_order_id = $data->purchaseOrderId;
             $poItem->qty = $data->qty;
             $poItem->product_unit_id = $data->productUnitId;
+            $poItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
             $poItem->product_unit_conversion_value = $data->productUnitConversionValue;
             $poItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $poItem->product_unit_price = $data->productUnitPrice;
@@ -339,6 +341,7 @@ class PurchaseOrderItemActions
         try {
             $poItem->qty = $data->qty;
             $poItem->product_unit_id = $data->productUnitId;
+            $poItem->product_id = ProductUnit::query()->whereKey($data->productUnitId)->value('product_id');
             $poItem->product_unit_conversion_value = $data->productUnitConversionValue;
             $poItem->product_unit_qty_base = $data->qty * $data->productUnitConversionValue;
             $poItem->product_unit_price = $data->productUnitPrice;

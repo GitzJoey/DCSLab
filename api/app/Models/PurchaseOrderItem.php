@@ -7,7 +7,6 @@ use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrderItem extends Model
@@ -24,6 +23,7 @@ class PurchaseOrderItem extends Model
         'purchase_order_id', // user_input
         'qty', // user_input
         'product_unit_id', // user_input
+        'product_id', // derived_from_product_unit
         'product_unit_conversion_value', // user_input
         'product_unit_qty_base', // calculated_when_saving_item_row
         'qty_purchased_base', // calculated_after_purchase_summary
@@ -103,6 +103,11 @@ class PurchaseOrderItem extends Model
         return $this->belongsTo(ProductUnit::class)->withTrashed();
     }
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
+    }
+
     public function vatProfile()
     {
         return $this->belongsTo(VatProfile::class)->withTrashed();
@@ -116,26 +121,5 @@ class PurchaseOrderItem extends Model
     public function subtotalDiscounts()
     {
         return $this->hasMany(PurchaseOrderItemSubtotalDiscount::class);
-    }
-
-    public function purchaseItemsWithSameProduct(): HasManyThrough
-    {
-        $query = $this->hasManyThrough(
-            PurchaseItem::class,
-            Purchase::class,
-            'purchase_order_id',
-            'purchase_id',
-            'purchase_order_id',
-            'id'
-        );
-        $productId = $this->productUnit?->product_id;
-
-        if (is_null($productId)) {
-            return $query->whereRaw('1 = 0');
-        }
-
-        return $query->whereHas('productUnit', function ($query) use ($productId) {
-            $query->where('product_id', $productId);
-        });
     }
 }

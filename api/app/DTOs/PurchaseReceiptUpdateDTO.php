@@ -14,6 +14,7 @@ final class PurchaseReceiptUpdateDTO
         public readonly ?string $remarks,
         public readonly bool $isPosted,
 
+        public readonly array $deleteItemIds,
         public readonly array $items,
     ) {
     }

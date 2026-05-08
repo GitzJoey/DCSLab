@@ -50,7 +50,7 @@ class PurchaseItemSubtotalDiscountActions
             ->join('purchase_items', 'purchase_items.id', '=', 'purchase_item_subtotal_discounts.purchase_item_id')
             ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')
             ->join('product_units', 'product_units.id', '=', 'purchase_items.product_unit_id')
-            ->join('products', 'products.id', '=', 'product_units.product_id')
+            ->join('products', 'products.id', '=', 'purchase_items.product_id')
             ->join('product_categories', 'product_categories.id', '=', 'products.category_id')
             ->leftJoin('brands', 'brands.id', '=', 'products.brand_id')
             ->whereCompanyId('purchase_item_subtotal_discounts', $companyId)

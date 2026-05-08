@@ -127,6 +127,9 @@ class PurchaseReceiptController extends BaseController
     public function storeManual(PurchaseReceiptStoreRequest $request)
     {
         $validatedRequest = $request->validated();
+        $items = collect($validatedRequest['items'])
+            ->map(fn ($item) => [...$item, 'purchase_item_id' => null])
+            ->all();
 
         $result = null;
         $errorMsg = '';
@@ -142,7 +145,7 @@ class PurchaseReceiptController extends BaseController
             }
 
             DB::beginTransaction();
-            $result = $this->purchaseReceiptActions->create(
+            $result = $this->purchaseReceiptActions->createManual(
                 data: new PurchaseReceiptCreateDTO(
                     companyId: $validatedRequest['company_id'],
                     branchId: $validatedRequest['branch_id'],
@@ -154,7 +157,7 @@ class PurchaseReceiptController extends BaseController
                     warehouseId: $validatedRequest['warehouse_id'],
                     remarks: $validatedRequest['remarks'] ?? null,
                     isPosted: $validatedRequest['is_posted'],
-                    items: $validatedRequest['items'],
+                    items: $items,
                 ),
                 updatePurchaseSummary: true,
             );
@@ -170,6 +173,9 @@ class PurchaseReceiptController extends BaseController
     public function updateManual(PurchaseReceiptUpdateRequest $request, PurchaseReceipt $purchaseReceipt)
     {
         $validatedRequest = $request->validated();
+        $items = collect($validatedRequest['items'])
+            ->map(fn ($item) => [...$item, 'purchase_item_id' => null])
+            ->all();
 
         $result = null;
         $errorMsg = '';
@@ -185,7 +191,7 @@ class PurchaseReceiptController extends BaseController
             }
 
             DB::beginTransaction();
-            $result = $this->purchaseReceiptActions->update(
+            $result = $this->purchaseReceiptActions->updateManual(
                 purchaseReceipt: $purchaseReceipt,
                 data: new PurchaseReceiptUpdateDTO(
                     supplierId: $validatedRequest['supplier_id'],
@@ -196,7 +202,9 @@ class PurchaseReceiptController extends BaseController
                     warehouseId: $validatedRequest['warehouse_id'],
                     remarks: $validatedRequest['remarks'] ?? null,
                     isPosted: $validatedRequest['is_posted'],
-                    items: $validatedRequest['items'],
+
+                    deleteItemIds: $validatedRequest['delete_item_ids'],
+                    items: $items,
                 ),
                 updatePurchaseSummary: true,
             );
