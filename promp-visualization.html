@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>copied_from_id</title>
+  <style>
+    :root {
+      --bg: #1d2127;
+      --paper: #262b33;
+      --ink: #edf1f7;
+      --muted: #a8b1bd;
+      --line: #3c434d;
+      --pink: #d68aa0;
+      --blue: #86a8f8;
+      --green: #81c8a8;
+      --yellow: #d9b574;
+      --shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(134, 168, 248, 0.08), transparent 25%),
+        radial-gradient(circle at top right, rgba(129, 200, 168, 0.07), transparent 22%),
+        var(--bg);
+    }
+
+    .deck {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .slide {
+      min-height: 88vh;
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(217, 181, 116, 0.10);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #3a3137;
+      color: #efbfd0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .page-no {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    h1, h2 {
+      margin: 0;
+      line-height: 1.12;
+    }
+
+    h1 {
+      margin-top: 18px;
+      max-width: 760px;
+      font-size: 54px;
+    }
+
+    h2 {
+      margin-top: 18px;
+      font-size: 40px;
+    }
+
+    .sub {
+      margin-top: 16px;
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 22px;
+      line-height: 1.7;
+    }
+
+    .card {
+      border: 2px solid var(--line);
+      border-radius: 24px;
+      background: #2d333c;
+      padding: 22px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 24px;
+    }
+
+    .card p,
+    .card li {
+      font-size: 20px;
+      line-height: 1.7;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    .big-box {
+      margin-top: 30px;
+      padding: 28px;
+      border: 3px dashed #6a5b45;
+      border-radius: 28px;
+      background: #2c2b29;
+      position: relative;
+      z-index: 1;
+    }
+
+    .big-box p {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .chip {
+      display: inline-block;
+      margin-right: 10px;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 17px;
+      font-weight: 700;
+      background: #313741;
+      border: 1px solid var(--line);
+    }
+
+    .story-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 26px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step {
+      border: 2px solid var(--line);
+      border-radius: 24px;
+      background: #2d333c;
+      padding: 20px;
+    }
+
+    .step span {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 24px;
+    }
+
+    .step p {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .story-2 {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      h2 {
+        font-size: 32px;
+      }
+
+      .sub,
+      .card p,
+      .step p {
+        font-size: 18px;
+      }
+
+      .big-box p {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <section class="slide">
+      <div class="page-no">Slide 1</div>
+      <div class="tag">Fokus Satu Topik</div>
+      <h1>Apa Itu <code>copied_from_id</code>?</h1>
+      <p class="sub">
+        Singkatnya, <code>copied_from_id</code> adalah penunjuk ke akun asal.
+        Jadi kalau ada akun baru yang dibuat dari akun lama, kolom ini menyimpan jejak asalnya.
+      </p>
+
+      <div class="big-box">
+        <p>Bahasa gampangnya: ini kolom yang bilang, “akun ini dulu nyontek dari akun yang mana?”</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="page-no">Slide 2</div>
+      <div class="tag">Contoh Visual</div>
+      <h2>Contoh paling gampang</h2>
+      <p class="sub">
+        Misalnya ada akun lama yang jadi sumber.
+        Lalu dibuat akun baru dari akun itu.
+        Nah, akun baru akan menyimpan ID akun sumbernya di <code>copied_from_id</code>.
+      </p>
+
+      <div class="story-2">
+        <div class="step">
+          <span>Sumber</span>
+          <strong>Akun System</strong>
+          <p>
+            <code>id = 10</code><br>
+            <code>10000 - Kas</code><br>
+            <code>scope = system</code>
+          </p>
+        </div>
+
+        <div class="step">
+          <span>Hasil</span>
+          <strong>Akun User</strong>
+          <p>
+            <code>id = 88</code><br>
+            <code>10000 - Kas Toko A</code><br>
+            <code>scope = user</code><br>
+            <code>copied_from_id = 10</code>
+          </p>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px;">
+        <span class="chip">akun baru</span>
+        <span class="chip">punya jejak asal</span>
+        <span class="chip">mudah dilacak</span>
+      </div>
+
+      <div class="big-box" style="margin-top: 28px;">
+        <p>Jadi arti <code>copied_from_id = 10</code> adalah: akun ini dulu dibuat dari akun system dengan id 10.</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

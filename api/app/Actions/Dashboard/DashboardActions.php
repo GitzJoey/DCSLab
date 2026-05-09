@@ -132,6 +132,12 @@ class DashboardActions
             'subMenu' => [],
         ];
 
+        $chartOfAccount = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-chart-of-account',
+            'title' => 'components.menu.chart-of-account',
+        ];
+
         $investor = [
             'icon' => 'ChevronRight',
             'pageName' => 'side-menu-company-investor',
@@ -260,6 +266,7 @@ class DashboardActions
 
         array_push(
             $financeManagement['subMenu'],
+            $chartOfAccount,
             $investor,
             $cashAccount,
             $expenseCategory,

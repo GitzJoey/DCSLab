@@ -81,6 +81,16 @@ return [
         'cannot_delete_with_children' => 'Income category cannot be deleted because it still has child categories.',
         'must_not_have_children' => 'Income category must be a category without child categories.',
     ],
+    'chart_of_account' => [
+        'parent_must_be_group' => 'Parent account must be a group account.',
+        'parent_must_not_be_self' => 'Parent account must not reference itself.',
+        'parent_must_not_be_descendant' => 'Parent account must not come from this account descendant.',
+        'cannot_delete_with_children' => 'Chart of account cannot be deleted because it still has child accounts.',
+        'non_group_must_not_have_children' => 'Non-group account must not still have child accounts.',
+        'system_scope_requires_system_key' => 'System key is required for accounts with system scope.',
+        'user_scope_must_not_have_system_key' => 'System key can only be used for accounts with system scope.',
+        'source_type_and_source_id_must_be_paired' => 'Source type and source id must be filled as a pair.',
+    ],
     'expense' => [
         'amount_total_must_be_positive' => 'Either immediate payment or payable amount must be greater than zero.',
         'payments_exceed_amount_payable' => 'Total payable payments must not exceed the payable amount.',

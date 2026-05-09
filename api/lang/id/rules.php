@@ -81,6 +81,16 @@ return [
         'cannot_delete_with_children' => 'Income category tidak boleh dihapus karena masih memiliki child category.',
         'must_not_have_children' => 'Income category harus memilih category yang tidak memiliki child lagi.',
     ],
+    'chart_of_account' => [
+        'parent_must_be_group' => 'Parent akun harus berupa group account.',
+        'parent_must_not_be_self' => 'Parent akun tidak boleh dirinya sendiri.',
+        'parent_must_not_be_descendant' => 'Parent akun tidak boleh berasal dari child akun ini.',
+        'cannot_delete_with_children' => 'Chart of account tidak boleh dihapus karena masih memiliki child account.',
+        'non_group_must_not_have_children' => 'Akun non-group tidak boleh masih memiliki child account.',
+        'system_scope_requires_system_key' => 'System key wajib diisi untuk akun dengan scope system.',
+        'user_scope_must_not_have_system_key' => 'System key hanya boleh dipakai untuk akun dengan scope system.',
+        'source_type_and_source_id_must_be_paired' => 'Source type dan source id harus diisi berpasangan.',
+    ],
     'expense' => [
         'amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
         'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',

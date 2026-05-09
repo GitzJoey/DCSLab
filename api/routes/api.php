@@ -7,6 +7,7 @@ use App\Http\Controllers\CapitalOpeningController;
 use App\Http\Controllers\CapitalTransactionController;
 use App\Http\Controllers\CashAccountController;
 use App\Http\Controllers\CashTransferController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CustomerController;
@@ -104,6 +105,19 @@ Route::prefix('warehouse')->middleware('auth:sanctum')->group(function () {
         Route::post('save', [WarehouseController::class, 'store'])->name('save');
         Route::post('edit/{warehouse:ulid}', [WarehouseController::class, 'update'])->name('edit');
         Route::post('delete/{warehouse:ulid}', [WarehouseController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('chart_of_account')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.chart_of_account.')->group(function () {
+        Route::get('read', [ChartOfAccountController::class, 'readAny'])->name('read_any');
+        Route::get('read/{chart_of_account:ulid}', [ChartOfAccountController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.chart_of_account.')->group(function () {
+        Route::post('save', [ChartOfAccountController::class, 'store'])->name('save');
+        Route::post('edit/{chart_of_account:ulid}', [ChartOfAccountController::class, 'update'])->name('edit');
+        Route::post('delete/{chart_of_account:ulid}', [ChartOfAccountController::class, 'delete'])->name('delete');
     });
 });
 

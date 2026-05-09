@@ -145,6 +145,11 @@ class Company extends Model
         return $this->hasMany(Supplier::class);
     }
 
+    public function chartOfAccounts()
+    {
+        return $this->hasMany(ChartOfAccount::class);
+    }
+
     public function investors()
     {
         return $this->hasMany(Investor::class);

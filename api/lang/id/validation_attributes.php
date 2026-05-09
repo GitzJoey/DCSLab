@@ -56,6 +56,21 @@ return [
         'is_active' => 'Aktif',
         'remarks' => 'Catatan',
     ],
+    'chart_of_account' => [
+        'company_id' => 'Perusahaan',
+        'scope' => 'Scope',
+        'system_key' => 'System Key',
+        'parent_id' => 'Parent Akun',
+        'source_type' => 'Tipe Sumber',
+        'source_id' => 'ID Sumber',
+        'code' => 'Kode',
+        'name' => 'Nama',
+        'account_type' => 'Tipe Akun',
+        'normal_balance' => 'Saldo Normal',
+        'is_group' => 'Group',
+        'is_active' => 'Aktif',
+        'remarks' => 'Catatan',
+    ],
 
     'product_category' => [
         'company' => 'Perusahaan',

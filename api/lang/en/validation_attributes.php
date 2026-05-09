@@ -57,6 +57,21 @@ return [
         'is_active' => 'Is Active',
         'remarks' => 'Remarks',
     ],
+    'chart_of_account' => [
+        'company_id' => 'Company',
+        'scope' => 'Scope',
+        'system_key' => 'System Key',
+        'parent_id' => 'Parent Account',
+        'source_type' => 'Source Type',
+        'source_id' => 'Source ID',
+        'code' => 'Code',
+        'name' => 'Name',
+        'account_type' => 'Account Type',
+        'normal_balance' => 'Normal Balance',
+        'is_group' => 'Group',
+        'is_active' => 'Active',
+        'remarks' => 'Remarks',
+    ],
 
     'product_category' => [
         'company' => 'Company',

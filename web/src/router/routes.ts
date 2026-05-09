@@ -32,6 +32,10 @@ import InvestorIndex from '@/pages/investor/InvestorIndex.vue';
 import InvestorList from '@/pages/investor/InvestorList.vue';
 import InvestorCreate from '@/pages/investor/InvestorCreate.vue';
 import InvestorEdit from '@/pages/investor/InvestorEdit.vue';
+import ChartOfAccountIndex from '@/pages/chart-of-account/ChartOfAccountIndex.vue';
+import ChartOfAccountList from '@/pages/chart-of-account/ChartOfAccountList.vue';
+import ChartOfAccountCreate from '@/pages/chart-of-account/ChartOfAccountCreate.vue';
+import ChartOfAccountEdit from '@/pages/chart-of-account/ChartOfAccountEdit.vue';
 import CashAccountIndex from '@/pages/cash-account/CashAccountIndex.vue';
 import CashAccountList from '@/pages/cash-account/CashAccountList.vue';
 import CashAccountCreate from '@/pages/cash-account/CashAccountCreate.vue';
@@ -367,6 +371,44 @@ export default [
       {
         path: '/dashboard/finance',
         children: [
+          // COA
+          {
+            path: '/dashboard/chart-of-account',
+            children: [
+              {
+                path: '/dashboard/chart-of-account',
+                name: 'side-menu-chart-of-account',
+                redirect: '/dashboard/chart-of-account/list',
+                component: ChartOfAccountIndex,
+                children: [
+                  {
+                    path: '/dashboard/chart-of-account/list',
+                    name: 'side-menu-chart-of-account-list',
+                    component: ChartOfAccountList,
+                    meta: {
+                      remember: true,
+                    },
+                  },
+                  {
+                    path: '/dashboard/chart-of-account/create',
+                    name: 'side-menu-chart-of-account-create',
+                    component: ChartOfAccountCreate,
+                    meta: {
+                      remember: true,
+                    },
+                  },
+                  {
+                    path: '/dashboard/chart-of-account/edit/:ulid',
+                    name: 'side-menu-chart-of-account-edit',
+                    component: ChartOfAccountEdit,
+                    meta: {
+                      remember: true,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
           // Investor
           {
             path: '/dashboard/finance/investor',

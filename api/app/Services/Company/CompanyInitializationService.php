@@ -7,9 +7,11 @@ use App\Actions\CashAccount\CashAccountActions;
 use App\Actions\Supplier\SupplierActions;
 use App\Actions\VatProfile\VatProfileActions;
 use App\Actions\Warehouse\WarehouseActions;
+use App\Enums\ChartOfAccountScopeEnum;
 use App\Enums\PaymentTermTypeEnum;
 use App\Enums\RecordStatusEnum;
 use App\Models\Branch;
+use App\Models\ChartOfAccount;
 use App\Models\Company;
 
 class CompanyInitializationService
@@ -27,6 +29,7 @@ class CompanyInitializationService
     {
         $mainBranch = $this->createMainBranch($company);
         $this->createDefaultWarehouses($company, $mainBranch);
+        $this->createDefaultChartOfAccounts($company);
         $this->createDefaultCashAccounts($company, $mainBranch);
         $this->createDefaultVatProfiles($company);
         $this->createDefaultSuppliers($company);
@@ -93,6 +96,42 @@ class CompanyInitializationService
 
         foreach ($defaultCashAccounts as $defaultCashAccount) {
             $this->cashAccountActions->create($defaultCashAccount);
+        }
+    }
+
+    private function createDefaultChartOfAccounts(Company $company): void
+    {
+        $defaultChartOfAccounts = config('chart_of_accounts', []);
+
+        $upsertChartOfAccountNode = function (array $node, ?ChartOfAccount $parent) use ($company, &$upsertChartOfAccountNode): void {
+            $chartOfAccount = ChartOfAccount::query()->firstOrNew([
+                'company_id' => $company->id,
+                'system_key' => $node['system_key'],
+            ]);
+
+            $chartOfAccount->company_id = $company->id;
+            $chartOfAccount->scope = ChartOfAccountScopeEnum::SYSTEM;
+            $chartOfAccount->system_key = $node['system_key'];
+            $chartOfAccount->parent_id = $parent?->id;
+            $chartOfAccount->source_type = null;
+            $chartOfAccount->source_id = null;
+            $chartOfAccount->code = $node['code'];
+            $chartOfAccount->name = $node['name'];
+            $chartOfAccount->account_type = $node['account_type'];
+            $chartOfAccount->normal_balance = $node['normal_balance'];
+            $chartOfAccount->level = $parent ? $parent->level + 1 : 1;
+            $chartOfAccount->is_group = $node['is_group'];
+            $chartOfAccount->is_active = $node['is_active'] ?? true;
+            $chartOfAccount->remarks = $node['remarks'] ?? null;
+            $chartOfAccount->save();
+
+            foreach ($node['children'] ?? [] as $childNode) {
+                $upsertChartOfAccountNode($childNode, $chartOfAccount);
+            }
+        };
+
+        foreach ($defaultChartOfAccounts as $node) {
+            $upsertChartOfAccountNode($node, null);
         }
     }
 
