@@ -210,6 +210,7 @@ const onSubmit = async () => {
     .submit()
     .then(() => {
       emits('update-profile');
+      showAlertPlaceholder('hidden', '', null);
       router.push({ name: 'side-menu-finance-capital-transaction-list' });
     })
     .catch((error) => {

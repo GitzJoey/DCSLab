@@ -141,6 +141,7 @@
       .then(() => {
         onReset();
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-supplier' });
       })
       .catch((error) => {

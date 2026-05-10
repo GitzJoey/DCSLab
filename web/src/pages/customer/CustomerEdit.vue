@@ -208,6 +208,7 @@
       .submit()
       .then(() => {
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-customer-list' });
       })
       .catch((error) => {

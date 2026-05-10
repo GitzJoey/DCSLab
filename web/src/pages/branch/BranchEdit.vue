@@ -141,6 +141,7 @@
       .submit()
       .then(() => {
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-company-branch-list' });
       })
       .catch((error) => {

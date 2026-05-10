@@ -193,6 +193,7 @@ const onSubmit = async () => {
     .submit()
     .then(() => {
       emits('update-profile');
+      showAlertPlaceholder('hidden', '', null);
       router.push({ name: 'side-menu-finance-capital-opening-list' });
     })
     .catch((error) => {

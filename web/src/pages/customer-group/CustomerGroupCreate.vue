@@ -149,6 +149,7 @@
       .then(() => {
         resetForm();
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-customer-group-list' });
       })
       .catch((error) => {

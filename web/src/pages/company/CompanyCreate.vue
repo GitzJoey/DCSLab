@@ -110,6 +110,7 @@
       .then(() => {
         resetForm();
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-company-company-list' });
       })
       .catch((error) => {

@@ -130,6 +130,7 @@
       .submit()
       .then(() => {
         resetForm();
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-administrator-user-list' });
       })
       .catch((error) => {

@@ -131,6 +131,7 @@
       .submit()
       .then(() => {
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-product-unit-list' });
       })
       .catch((error) => {

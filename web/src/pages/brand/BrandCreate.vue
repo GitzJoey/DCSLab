@@ -102,6 +102,7 @@
       .then((response: any) => {
         resetForm();
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-product-brand-list' });
       })
       .catch((error: any) => {

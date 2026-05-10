@@ -176,6 +176,7 @@
     await userForm
       .submit()
       .then(() => {
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-administrator-user-list' });
       })
       .catch((error) => {

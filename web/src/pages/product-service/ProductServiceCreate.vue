@@ -219,6 +219,7 @@
       .then(() => {
         resetForm();
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-product-product-service-list' }); // Make sure this route exists or is created
       })
       .catch((error) => {

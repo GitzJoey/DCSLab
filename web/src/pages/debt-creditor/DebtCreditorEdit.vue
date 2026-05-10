@@ -97,6 +97,7 @@ const onSubmit = async () => {
     .submit()
     .then(() => {
       emits('update-profile');
+      showAlertPlaceholder('hidden', '', null);
       router.push({ name: 'side-menu-debt-creditor-list' });
     })
     .catch((error) => {

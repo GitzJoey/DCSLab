@@ -130,6 +130,7 @@
       .submit()
       .then(() => {
         emits('update-profile');
+        showAlertPlaceholder('hidden', '', null);
         router.push({ name: 'side-menu-finance-cash-account-list' });
       })
       .catch((error) => {

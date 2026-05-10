@@ -181,6 +181,7 @@ const onSubmit = async () => {
     .then(() => {
       resetForm();
       emits('update-profile');
+      showAlertPlaceholder('hidden', '', null);
       router.push({ name: 'side-menu-finance-cash-transfer-list' });
     })
     .catch((error) => {

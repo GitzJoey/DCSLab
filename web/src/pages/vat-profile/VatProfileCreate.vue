@@ -97,6 +97,7 @@ const onSubmit = async () => {
     .then(() => {
       resetForm();
       emits('update-profile');
+      showAlertPlaceholder('hidden', '', null);
       router.push({ name: 'side-menu-product-vat-profile-list' });
     })
     .catch((error: any) => {
