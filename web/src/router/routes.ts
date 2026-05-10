@@ -36,6 +36,10 @@ import ChartOfAccountIndex from '@/pages/chart-of-account/ChartOfAccountIndex.vu
 import ChartOfAccountList from '@/pages/chart-of-account/ChartOfAccountList.vue';
 import ChartOfAccountCreate from '@/pages/chart-of-account/ChartOfAccountCreate.vue';
 import ChartOfAccountEdit from '@/pages/chart-of-account/ChartOfAccountEdit.vue';
+import JournalEntryIndex from '@/pages/journal-entry/JournalEntryIndex.vue';
+import JournalEntryList from '@/pages/journal-entry/JournalEntryList.vue';
+import JournalEntryCreate from '@/pages/journal-entry/JournalEntryCreate.vue';
+import JournalEntryEdit from '@/pages/journal-entry/JournalEntryEdit.vue';
 import CashAccountIndex from '@/pages/cash-account/CashAccountIndex.vue';
 import CashAccountList from '@/pages/cash-account/CashAccountList.vue';
 import CashAccountCreate from '@/pages/cash-account/CashAccountCreate.vue';
@@ -401,6 +405,44 @@ export default [
                     path: '/dashboard/chart-of-account/edit/:ulid',
                     name: 'side-menu-chart-of-account-edit',
                     component: ChartOfAccountEdit,
+                    meta: {
+                      remember: true,
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          // Journal Entry
+          {
+            path: '/dashboard/journal-entry',
+            children: [
+              {
+                path: '/dashboard/journal-entry',
+                name: 'side-menu-journal-entry',
+                redirect: '/dashboard/journal-entry/list',
+                component: JournalEntryIndex,
+                children: [
+                  {
+                    path: '/dashboard/journal-entry/list',
+                    name: 'side-menu-journal-entry-list',
+                    component: JournalEntryList,
+                    meta: {
+                      remember: true,
+                    },
+                  },
+                  {
+                    path: '/dashboard/journal-entry/create',
+                    name: 'side-menu-journal-entry-create',
+                    component: JournalEntryCreate,
+                    meta: {
+                      remember: true,
+                    },
+                  },
+                  {
+                    path: '/dashboard/journal-entry/edit/:ulid',
+                    name: 'side-menu-journal-entry-edit',
+                    component: JournalEntryEdit,
                     meta: {
                       remember: true,
                     },

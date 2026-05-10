@@ -1,0 +1,50 @@
+{
+  "page_title": "Jurnal Umum",
+  "actions": {
+    "create": "Tambah Jurnal Umum",
+    "edit": "Ubah Jurnal Umum",
+    "add_line": "Tambah Baris"
+  },
+  "table": {
+    "title": "Daftar Jurnal Umum"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "journal_entry_data": "Data Jurnal",
+    "lines": "Baris Jurnal"
+  },
+  "fields": {
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "source_type": "Tipe Sumber",
+    "source_id": "ID Sumber",
+    "reference_no": "Nomor Referensi",
+    "remarks": "Catatan",
+    "lines": "Baris Jurnal",
+    "line": "Baris",
+    "chart_of_account": "Akun",
+    "debit": "Debit",
+    "credit": "Kredit",
+    "line_remarks": "Catatan Baris",
+    "total_debit": "Total Debit",
+    "total_credit": "Total Kredit",
+    "balance_status": "Status Balance"
+  },
+  "options": {
+    "balance": {
+      "balanced": "Balance",
+      "unbalanced": "Belum Balance"
+    }
+  },
+  "helper": {
+    "single_side_amount": "Setiap baris hanya boleh diisi debit atau kredit."
+  },
+  "alert": {
+    "delete_journal_entry": {
+      "title": "Berhasil Menghapus Jurnal",
+      "content": "Jurnal berhasil dihapus."
+    }
+  }
+}

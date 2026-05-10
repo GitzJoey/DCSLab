@@ -26,6 +26,7 @@ use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\IncomeImageController;
 use App\Http\Controllers\IncomePaymentController;
 use App\Http\Controllers\InvestorController;
+use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PrepaidExpenseController;
 use App\Http\Controllers\PrepaidExpenseImageController;
 use App\Http\Controllers\PrepaidExpensePaymentController;
@@ -118,6 +119,19 @@ Route::prefix('chart_of_account')->middleware('auth:sanctum')->group(function ()
         Route::post('save', [ChartOfAccountController::class, 'store'])->name('save');
         Route::post('edit/{chart_of_account:ulid}', [ChartOfAccountController::class, 'update'])->name('edit');
         Route::post('delete/{chart_of_account:ulid}', [ChartOfAccountController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('journal_entry')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.journal_entry.')->group(function () {
+        Route::get('read', [JournalEntryController::class, 'readAny'])->name('read_any');
+        Route::get('read/{journal_entry:ulid}', [JournalEntryController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.journal_entry.')->group(function () {
+        Route::post('save', [JournalEntryController::class, 'store'])->name('save');
+        Route::post('edit/{journal_entry:ulid}', [JournalEntryController::class, 'update'])->name('edit');
+        Route::post('delete/{journal_entry:ulid}', [JournalEntryController::class, 'delete'])->name('delete');
     });
 });
 

@@ -49,6 +49,7 @@ import receivable_category from './en/views/receivable_category.json';
 import debt_creditor from './en/views/debt_creditor.json';
 import income_category from './en/views/income_category.json';
 import chart_of_account from './en/views/chart_of_account.json';
+import journal_entry from './en/views/journal_entry.json';
 import product_service from './en/views/product_service.json';
 import product from './en/views/product.json';
 import supplier from './en/views/supplier.json';
@@ -124,6 +125,7 @@ export default {
     debt_creditor: debt_creditor,
     income_category: income_category,
     chart_of_account: chart_of_account,
+    journal_entry: journal_entry,
     stock_adjustment_category: stock_adjustment_category,
     stock_adjustment: stock_adjustment,
     stock_adjustment_in_item: stock_adjustment_in_item,

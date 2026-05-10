@@ -71,6 +71,23 @@ return [
         'is_active' => 'Aktif',
         'remarks' => 'Catatan',
     ],
+    'journal_entry' => [
+        'company_id' => 'Perusahaan',
+        'branch_id' => 'Cabang',
+        'code' => 'Kode',
+        'date' => 'Tanggal',
+        'source_type' => 'Tipe Sumber',
+        'source_id' => 'ID Sumber',
+        'reference_no' => 'Nomor Referensi',
+        'remarks' => 'Catatan',
+        'lines' => 'Baris Jurnal',
+    ],
+    'journal_entry_line' => [
+        'chart_of_account_id' => 'Akun',
+        'debit' => 'Debit',
+        'credit' => 'Kredit',
+        'remarks' => 'Catatan Baris',
+    ],
 
     'product_category' => [
         'company' => 'Perusahaan',

@@ -1,292 +1,392 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>copied_from_id</title>
-  <style>
-    :root {
-      --bg: #1d2127;
-      --paper: #262b33;
-      --ink: #edf1f7;
-      --muted: #a8b1bd;
-      --line: #3c434d;
-      --pink: #d68aa0;
-      --blue: #86a8f8;
-      --green: #81c8a8;
-      --yellow: #d9b574;
-      --shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
-      --radius: 28px;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualisasi Jurnal</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0f172a;
+            --panel: #172033;
+            --panel-2: #1e293b;
+            --line: #334155;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-2: #22c55e;
+            --warn: #f59e0b;
+            --danger: #fb7185;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(134, 168, 248, 0.08), transparent 25%),
-        radial-gradient(circle at top right, rgba(129, 200, 168, 0.07), transparent 22%),
-        var(--bg);
-    }
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+            color: var(--text);
+        }
 
-    .deck {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px;
-      display: grid;
-      gap: 24px;
-    }
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 28px;
+        }
 
-    .slide {
-      min-height: 88vh;
-      background: var(--paper);
-      border: 3px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 32px;
-      position: relative;
-      overflow: hidden;
-    }
+        .hero,
+        .card,
+        .table-box,
+        .example,
+        .note {
+            background: rgba(23, 32, 51, 0.92);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.24);
+        }
 
-    .slide::after {
-      content: "";
-      position: absolute;
-      right: -40px;
-      bottom: -40px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: rgba(217, 181, 116, 0.10);
-    }
+        .hero {
+            padding: 28px;
+            margin-bottom: 22px;
+        }
 
-    .tag {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #3a3137;
-      color: #efbfd0;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            line-height: 1.15;
+        }
 
-    .page-no {
-      position: absolute;
-      top: 24px;
-      right: 28px;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--muted);
-    }
+        .hero p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.6;
+        }
 
-    h1, h2 {
-      margin: 0;
-      line-height: 1.12;
-    }
+        .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
 
-    h1 {
-      margin-top: 18px;
-      max-width: 760px;
-      font-size: 54px;
-    }
+        .badge {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: #111827;
+            color: var(--text);
+            font-size: 13px;
+        }
 
-    h2 {
-      margin-top: 18px;
-      font-size: 40px;
-    }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
 
-    .sub {
-      margin-top: 16px;
-      max-width: 820px;
-      color: var(--muted);
-      font-size: 22px;
-      line-height: 1.7;
-    }
+        .card {
+            padding: 22px;
+        }
 
-    .card {
-      border: 2px solid var(--line);
-      border-radius: 24px;
-      background: #2d333c;
-      padding: 22px;
-    }
+        .card h2 {
+            margin: 0 0 12px;
+            font-size: 24px;
+        }
 
-    .card h3 {
-      margin: 0 0 12px;
-      font-size: 24px;
-    }
+        .card p,
+        .card li,
+        .note li {
+            color: var(--muted);
+            line-height: 1.6;
+        }
 
-    .card p,
-    .card li {
-      font-size: 20px;
-      line-height: 1.7;
-    }
+        .pill {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--line);
+        }
 
-    .card p {
-      margin: 0;
-      color: var(--ink);
-    }
+        .pill.good {
+            color: #86efac;
+            border-color: rgba(34, 197, 94, 0.4);
+            background: rgba(34, 197, 94, 0.1);
+        }
 
-    .card ul {
-      margin: 0;
-      padding-left: 22px;
-    }
+        .pill.warn {
+            color: #fcd34d;
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.1);
+        }
 
-    .big-box {
-      margin-top: 30px;
-      padding: 28px;
-      border: 3px dashed #6a5b45;
-      border-radius: 28px;
-      background: #2c2b29;
-      position: relative;
-      z-index: 1;
-    }
+        .visual {
+            display: grid;
+            grid-template-columns: 1fr 90px 1fr;
+            gap: 14px;
+            align-items: center;
+            margin-bottom: 22px;
+        }
 
-    .big-box p {
-      margin: 0;
-      font-size: 30px;
-      line-height: 1.5;
-      font-weight: 700;
-    }
+        .table-box {
+            padding: 18px;
+        }
 
-    .chip {
-      display: inline-block;
-      margin-right: 10px;
-      margin-top: 10px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 17px;
-      font-weight: 700;
-      background: #313741;
-      border: 1px solid var(--line);
-    }
+        .table-title {
+            font-size: 20px;
+            margin: 0 0 12px;
+        }
 
-    .story-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(260px, 1fr));
-      gap: 18px;
-      margin-top: 26px;
-      position: relative;
-      z-index: 1;
-    }
+        .row {
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            background: var(--panel-2);
+        }
 
-    .step {
-      border: 2px solid var(--line);
-      border-radius: 24px;
-      background: #2d333c;
-      padding: 20px;
-    }
+        .row strong {
+            display: inline-block;
+            min-width: 120px;
+            color: var(--text);
+        }
 
-    .step span {
-      display: inline-block;
-      margin-bottom: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
+        .arrow {
+            text-align: center;
+            color: var(--accent);
+            font-size: 32px;
+            font-weight: bold;
+        }
 
-    .step strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 24px;
-    }
+        .arrow small {
+            display: block;
+            margin-top: 6px;
+            font-size: 12px;
+            color: var(--muted);
+        }
 
-    .step p {
-      margin: 0;
-      font-size: 19px;
-      line-height: 1.6;
-    }
+        .example {
+            padding: 22px;
+            margin-bottom: 22px;
+        }
 
-    @media (max-width: 900px) {
-      .story-2 {
-        grid-template-columns: 1fr;
-      }
+        .example h2 {
+            margin-top: 0;
+        }
 
-      h1 {
-        font-size: 40px;
-      }
+        .example-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
 
-      h2 {
-        font-size: 32px;
-      }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+        }
 
-      .sub,
-      .card p,
-      .step p {
-        font-size: 18px;
-      }
+        th,
+        td {
+            border-bottom: 1px solid var(--line);
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+        }
 
-      .big-box p {
-        font-size: 24px;
-      }
-    }
-  </style>
+        th {
+            background: #0f1a2f;
+            color: #cbd5e1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .money-in {
+            color: #86efac;
+            font-weight: bold;
+        }
+
+        .money-out {
+            color: #fda4af;
+            font-weight: bold;
+        }
+
+        .note {
+            padding: 22px;
+        }
+
+        .note h2 {
+            margin-top: 0;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2,
+            .visual,
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="deck">
-    <section class="slide">
-      <div class="page-no">Slide 1</div>
-      <div class="tag">Fokus Satu Topik</div>
-      <h1>Apa Itu <code>copied_from_id</code>?</h1>
-      <p class="sub">
-        Singkatnya, <code>copied_from_id</code> adalah penunjuk ke akun asal.
-        Jadi kalau ada akun baru yang dibuat dari akun lama, kolom ini menyimpan jejak asalnya.
-      </p>
+    <div class="wrap">
+        <section class="hero">
+            <h1>Kenapa Jurnal Biasanya Pakai 2 Tabel?</h1>
+            <p>
+                Buat programmer baru, ini sering bikin bingung. Di layar, kita merasa sedang bikin
+                <strong>1 jurnal</strong>. Tapi di database, 1 jurnal itu biasanya punya
+                <strong>1 header</strong> dan <strong>banyak baris debit/kredit</strong>.
+            </p>
+            <div class="badge-row">
+                <div class="badge">1 jurnal di UI</div>
+                <div class="badge">1 header di database</div>
+                <div class="badge">bisa punya banyak lines</div>
+                <div class="badge">lebih rapi dan fleksibel</div>
+            </div>
+        </section>
 
-      <div class="big-box">
-        <p>Bahasa gampangnya: ini kolom yang bilang, “akun ini dulu nyontek dari akun yang mana?”</p>
-      </div>
-    </section>
+        <section class="grid-2">
+            <div class="card">
+                <div class="pill warn">Yang sering terasa</div>
+                <h2>"Kayaknya cukup 1 tabel aja"</h2>
+                <p>
+                    Perasaan ini wajar, karena user memang input <strong>1 dokumen jurnal</strong>.
+                    Masalahnya, isi jurnal hampir selalu punya lebih dari 1 baris akun.
+                </p>
+                <ul>
+                    <li>Kas debit</li>
+                    <li>Pendapatan kredit</li>
+                    <li>PPN kredit</li>
+                    <li>Piutang debit</li>
+                </ul>
+            </div>
 
-    <section class="slide">
-      <div class="page-no">Slide 2</div>
-      <div class="tag">Contoh Visual</div>
-      <h2>Contoh paling gampang</h2>
-      <p class="sub">
-        Misalnya ada akun lama yang jadi sumber.
-        Lalu dibuat akun baru dari akun itu.
-        Nah, akun baru akan menyimpan ID akun sumbernya di <code>copied_from_id</code>.
-      </p>
+            <div class="card">
+                <div class="pill good">Yang lebih aman</div>
+                <h2>1 header + banyak line</h2>
+                <p>
+                    Header menyimpan data umum jurnal. Line menyimpan tiap akun dan nominalnya.
+                    Jadi data tidak diulang-ulang.
+                </p>
+                <ul>
+                    <li>Header: kode, tanggal, sumber, memo</li>
+                    <li>Line: akun, debit, kredit, urutan</li>
+                </ul>
+            </div>
+        </section>
 
-      <div class="story-2">
-        <div class="step">
-          <span>Sumber</span>
-          <strong>Akun System</strong>
-          <p>
-            <code>id = 10</code><br>
-            <code>10000 - Kas</code><br>
-            <code>scope = system</code>
-          </p>
-        </div>
+        <section class="visual">
+            <div class="table-box">
+                <h2 class="table-title">`journal_entries`</h2>
+                <div class="row"><strong>company_id</strong> 1</div>
+                <div class="row"><strong>code</strong> JRN-0001</div>
+                <div class="row"><strong>date</strong> 2026-05-10 10:15</div>
+                <div class="row"><strong>source_type</strong> Sale</div>
+                <div class="row"><strong>source_id</strong> 15</div>
+                <div class="row"><strong>remarks</strong> Jurnal dari penjualan</div>
+            </div>
 
-        <div class="step">
-          <span>Hasil</span>
-          <strong>Akun User</strong>
-          <p>
-            <code>id = 88</code><br>
-            <code>10000 - Kas Toko A</code><br>
-            <code>scope = user</code><br>
-            <code>copied_from_id = 10</code>
-          </p>
-        </div>
-      </div>
+            <div class="arrow">
+                1:N
+                <small>1 header punya banyak line</small>
+            </div>
 
-      <div style="margin-top: 18px;">
-        <span class="chip">akun baru</span>
-        <span class="chip">punya jejak asal</span>
-        <span class="chip">mudah dilacak</span>
-      </div>
+            <div class="table-box">
+                <h2 class="table-title">`journal_entry_lines`</h2>
+                <div class="row"><strong>line 1</strong> Kas, debit 150.000</div>
+                <div class="row"><strong>line 2</strong> Penjualan, kredit 135.000</div>
+                <div class="row"><strong>line 3</strong> PPN Keluaran, kredit 15.000</div>
+            </div>
+        </section>
 
-      <div class="big-box" style="margin-top: 28px;">
-        <p>Jadi arti <code>copied_from_id = 10</code> adalah: akun ini dulu dibuat dari akun system dengan id 10.</p>
-      </div>
-    </section>
-  </div>
+        <section class="example">
+            <h2>Contoh Nyata</h2>
+            <p style="color: var(--muted); margin-top: -2px;">
+                Misalnya ada penjualan tunai Rp150.000. User merasa input <strong>1 transaksi</strong>,
+                tapi jurnalnya punya beberapa baris.
+            </p>
+            <div class="example-grid">
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">Header Jurnal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Kode</td>
+                                <td>JRN-0001</td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal</td>
+                                <td>10 Mei 2026</td>
+                            </tr>
+                            <tr>
+                                <td>Sumber</td>
+                                <td>Penjualan #SALE-0015</td>
+                            </tr>
+                            <tr>
+                                <td>Memo</td>
+                                <td>Posting otomatis dari penjualan</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Akun</th>
+                                <th>Debit</th>
+                                <th>Kredit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Kas</td>
+                                <td class="money-in">150.000</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>Pendapatan Penjualan</td>
+                                <td>-</td>
+                                <td class="money-out">135.000</td>
+                            </tr>
+                            <tr>
+                                <td>PPN Keluaran</td>
+                                <td>-</td>
+                                <td class="money-out">15.000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="note">
+            <h2>Kenapa 2 Tabel Lebih Enak?</h2>
+            <ul>
+                <li><strong>Tidak duplikat data header</strong>: kode, tanggal, sumber tidak perlu diulang di setiap baris.</li>
+                <li><strong>Lebih fleksibel</strong>: 1 jurnal bisa 2 line, 3 line, 10 line, bebas.</li>
+                <li><strong>Lebih gampang validasi</strong>: total debit dan total kredit tinggal dicek dari line.</li>
+                <li><strong>Lebih nyambung ke transaksi lain</strong>: penjualan, pembelian, expense, semua bisa jadi sumber 1 header jurnal.</li>
+                <li><strong>Lebih aman untuk laporan</strong>: buku besar dan trial balance biasanya memang baca dari detail line.</li>
+            </ul>
+        </section>
+    </div>
 </body>
 </html>

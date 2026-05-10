@@ -91,6 +91,14 @@ return [
         'user_scope_must_not_have_system_key' => 'System key hanya boleh dipakai untuk akun dengan scope system.',
         'source_type_and_source_id_must_be_paired' => 'Source type dan source id harus diisi berpasangan.',
     ],
+    'journal_entry' => [
+        'source_type_and_source_id_must_be_paired' => 'Source type dan source id harus diisi berpasangan.',
+        'line_must_have_single_side_amount' => 'Setiap baris jurnal hanya boleh memiliki debit atau kredit saja.',
+        'total_must_be_positive' => 'Total debit dan kredit jurnal harus lebih dari nol.',
+        'total_debit_and_credit_must_balance' => 'Total debit dan kredit jurnal harus seimbang.',
+        'account_must_not_be_group' => 'Akun jurnal tidak boleh berupa group account.',
+        'account_must_be_active' => 'Akun jurnal harus aktif.',
+    ],
     'expense' => [
         'amount_total_must_be_positive' => 'Jumlah bayar langsung atau jumlah terhutang harus lebih dari nol.',
         'payments_exceed_amount_payable' => 'Total pembayaran hutang tidak boleh melebihi jumlah terhutang.',

@@ -72,6 +72,23 @@ return [
         'is_active' => 'Active',
         'remarks' => 'Remarks',
     ],
+    'journal_entry' => [
+        'company_id' => 'Company',
+        'branch_id' => 'Branch',
+        'code' => 'Code',
+        'date' => 'Date',
+        'source_type' => 'Source Type',
+        'source_id' => 'Source ID',
+        'reference_no' => 'Reference No',
+        'remarks' => 'Remarks',
+        'lines' => 'Journal Lines',
+    ],
+    'journal_entry_line' => [
+        'chart_of_account_id' => 'Account',
+        'debit' => 'Debit',
+        'credit' => 'Credit',
+        'remarks' => 'Line Remarks',
+    ],
 
     'product_category' => [
         'company' => 'Company',

@@ -150,6 +150,12 @@ class DashboardActions
             'title' => 'components.menu.cash-account',
         ];
 
+        $journalEntry = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-journal-entry',
+            'title' => 'components.menu.journal-entry',
+        ];
+
         $productManagement = [
             'icon' => 'Package',
             'pageName' => 'side-menu-product',
@@ -267,6 +273,7 @@ class DashboardActions
         array_push(
             $financeManagement['subMenu'],
             $chartOfAccount,
+            $journalEntry,
             $investor,
             $cashAccount,
             $expenseCategory,

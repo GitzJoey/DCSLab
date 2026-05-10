@@ -1,0 +1,50 @@
+{
+  "page_title": "Journal Entry",
+  "actions": {
+    "create": "Create Journal Entry",
+    "edit": "Edit Journal Entry",
+    "add_line": "Add Line"
+  },
+  "table": {
+    "title": "Journal Entry List"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "journal_entry_data": "Journal Entry Data",
+    "lines": "Journal Lines"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "source_type": "Source Type",
+    "source_id": "Source ID",
+    "reference_no": "Reference No",
+    "remarks": "Remarks",
+    "lines": "Journal Lines",
+    "line": "Line",
+    "chart_of_account": "Account",
+    "debit": "Debit",
+    "credit": "Credit",
+    "line_remarks": "Line Remarks",
+    "total_debit": "Total Debit",
+    "total_credit": "Total Credit",
+    "balance_status": "Balance Status"
+  },
+  "options": {
+    "balance": {
+      "balanced": "Balanced",
+      "unbalanced": "Unbalanced"
+    }
+  },
+  "helper": {
+    "single_side_amount": "Each line may only contain debit or credit amount."
+  },
+  "alert": {
+    "delete_journal_entry": {
+      "title": "Journal Deleted",
+      "content": "Journal entry has been deleted."
+    }
+  }
+}
