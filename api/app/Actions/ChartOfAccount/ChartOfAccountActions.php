@@ -3,13 +3,13 @@
 namespace App\Actions\ChartOfAccount;
 
 use App\DTOs\ChartOfAccountCreateDTO;
+use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\ChartOfAccount;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class ChartOfAccountActions
 {
@@ -239,15 +239,7 @@ class ChartOfAccountActions
             $chartOfAccount->source_id = $data->sourceId;
             $chartOfAccount->code = $data->code;
             $chartOfAccount->name = $data->name;
-            $chartOfAccount->account_type = (function () use ($parent): string {
-                $accountType = $parent?->account_type;
-
-                if (is_null($accountType)) {
-                    throw new InvalidArgumentException('Account type for root chart of account must be provided by the system.');
-                }
-
-                return $accountType;
-            })();
+            $chartOfAccount->account_type = $parent?->account_type;
             $chartOfAccount->normal_balance = $data->normalBalance;
             $chartOfAccount->level = $parent ? $parent->level + 1 : 1;
             $chartOfAccount->is_group = $data->isGroup;
@@ -267,30 +259,22 @@ class ChartOfAccountActions
         }
     }
 
-    public function update(ChartOfAccount $chartOfAccount, array $data): ChartOfAccount
+    public function update(ChartOfAccount $chartOfAccount, ChartOfAccountUpdateDTO $data): ChartOfAccount
     {
         $timer_start = microtime(true);
 
         try {
-            $parent = $data['parent_id'] ? ChartOfAccount::query()->find($data['parent_id']) : null;
+            $parent = $data->parentId ? ChartOfAccount::find($data->parentId) : null;
 
-            $chartOfAccount->parent_id = $data['parent_id'];
-            $chartOfAccount->code = $data['code'];
-            $chartOfAccount->name = $data['name'];
-            $chartOfAccount->account_type = (function () use ($parent, $chartOfAccount): string {
-                $accountType = $parent?->account_type ?? $chartOfAccount->account_type;
-
-                if (is_null($accountType)) {
-                    throw new InvalidArgumentException('Account type for root chart of account must be provided by the system.');
-                }
-
-                return $accountType;
-            })();
-            $chartOfAccount->normal_balance = $data['normal_balance'];
+            $chartOfAccount->parent_id = $data->parentId;
+            $chartOfAccount->code = $data->code;
+            $chartOfAccount->name = $data->name;
+            $chartOfAccount->account_type = $parent?->account_type ?? $chartOfAccount->account_type;
+            $chartOfAccount->normal_balance = $data->normalBalance;
             $chartOfAccount->level = $parent ? $parent->level + 1 : 1;
-            $chartOfAccount->is_group = $data['is_group'];
-            $chartOfAccount->is_active = $data['is_active'];
-            $chartOfAccount->remarks = $data['remarks'];
+            $chartOfAccount->is_group = $data->isGroup;
+            $chartOfAccount->is_active = $data->isActive;
+            $chartOfAccount->remarks = $data->remarks;
             $chartOfAccount->save();
 
             $this->flushCache();

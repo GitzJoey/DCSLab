@@ -2,6 +2,8 @@
 
 namespace App\Actions\DebtCreditor;
 
+use App\DTOs\DebtCreditorCreateDTO;
+use App\DTOs\DebtCreditorUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\DebtCreditor;
@@ -132,16 +134,16 @@ class DebtCreditorActions
         return $debtCreditor->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): DebtCreditor
+    public function create(DebtCreditorCreateDTO $data): DebtCreditor
     {
         $timer_start = microtime(true);
 
         try {
             $debtCreditor = new DebtCreditor();
-            $debtCreditor->company_id = $data['company_id'];
-            $debtCreditor->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $debtCreditor->name = $data['name'];
-            $debtCreditor->remarks = $data['remarks'];
+            $debtCreditor->company_id = $data->companyId;
+            $debtCreditor->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $debtCreditor->name = $data->name;
+            $debtCreditor->remarks = $data->remarks;
             $debtCreditor->save();
 
             $this->flushCache();
@@ -156,14 +158,14 @@ class DebtCreditorActions
         }
     }
 
-    public function update(DebtCreditor $debtCreditor, array $data): DebtCreditor
+    public function update(DebtCreditor $debtCreditor, DebtCreditorUpdateDTO $data): DebtCreditor
     {
         $timer_start = microtime(true);
 
         try {
-            $debtCreditor->code = $this->generateUniqueCode($debtCreditor->company_id, $data['code'], $debtCreditor->id);
-            $debtCreditor->name = $data['name'];
-            $debtCreditor->remarks = $data['remarks'];
+            $debtCreditor->code = $this->generateUniqueCode($debtCreditor->company_id, $data->code, $debtCreditor->id);
+            $debtCreditor->name = $data->name;
+            $debtCreditor->remarks = $data->remarks;
             $debtCreditor->save();
 
             $this->flushCache();

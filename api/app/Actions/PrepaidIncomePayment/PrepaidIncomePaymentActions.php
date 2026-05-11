@@ -7,6 +7,8 @@ use App\Actions\PrepaidIncome\PrepaidIncomeActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\PrepaidIncomePaymentCreateDTO;
+use App\DTOs\PrepaidIncomePaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\PrepaidIncomePayment;
 use App\Traits\CacheHelper;
@@ -190,22 +192,20 @@ class PrepaidIncomePaymentActions
         return $result->count() == 0;
     }
 
-    public function create(
-        array $data,
-        bool $updateParentSummary = true,
-    ): PrepaidIncomePayment {
+    public function create(PrepaidIncomePaymentCreateDTO $data, bool $updateParentSummary = true): PrepaidIncomePayment
+    {
         $timer_start = microtime(true);
 
         try {
             $prepaidIncomePayment = new PrepaidIncomePayment();
-            $prepaidIncomePayment->company_id = $data['company_id'];
-            $prepaidIncomePayment->branch_id = $data['branch_id'];
-            $prepaidIncomePayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $prepaidIncomePayment->date = $this->generateDate($data['date']);
-            $prepaidIncomePayment->prepaid_income_id = $data['prepaid_income_id'];
-            $prepaidIncomePayment->cash_account_id = $data['cash_account_id'];
-            $prepaidIncomePayment->amount = $data['amount'];
-            $prepaidIncomePayment->remarks = $data['remarks'];
+            $prepaidIncomePayment->company_id = $data->companyId;
+            $prepaidIncomePayment->branch_id = $data->branchId;
+            $prepaidIncomePayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $prepaidIncomePayment->date = $this->generateDate($data->date);
+            $prepaidIncomePayment->prepaid_income_id = $data->prepaidIncomeId;
+            $prepaidIncomePayment->cash_account_id = $data->cashAccountId;
+            $prepaidIncomePayment->amount = $data->amount;
+            $prepaidIncomePayment->remarks = $data->remarks;
             $prepaidIncomePayment->save();
 
             $this->cashTransactionActions->create(
@@ -229,19 +229,16 @@ class PrepaidIncomePaymentActions
         }
     }
 
-    public function update(
-        PrepaidIncomePayment $prepaidIncomePayment,
-        array $data,
-        bool $updateParentSummary = true,
-    ): PrepaidIncomePayment {
+    public function update(PrepaidIncomePayment $prepaidIncomePayment, PrepaidIncomePaymentUpdateDTO $data, bool $updateParentSummary = true): PrepaidIncomePayment
+    {
         $timer_start = microtime(true);
 
         try {
-            $prepaidIncomePayment->code = $this->generateUniqueCode($prepaidIncomePayment->company_id, $data['code'], $prepaidIncomePayment->id);
-            $prepaidIncomePayment->date = $this->generateDate($data['date']);
-            $prepaidIncomePayment->cash_account_id = $data['cash_account_id'];
-            $prepaidIncomePayment->amount = $data['amount'];
-            $prepaidIncomePayment->remarks = $data['remarks'];
+            $prepaidIncomePayment->code = $this->generateUniqueCode($prepaidIncomePayment->company_id, $data->code, $prepaidIncomePayment->id);
+            $prepaidIncomePayment->date = $this->generateDate($data->date);
+            $prepaidIncomePayment->cash_account_id = $data->cashAccountId;
+            $prepaidIncomePayment->amount = $data->amount;
+            $prepaidIncomePayment->remarks = $data->remarks;
             $prepaidIncomePayment->save();
 
             $cashTransaction = $prepaidIncomePayment->cashTransaction;

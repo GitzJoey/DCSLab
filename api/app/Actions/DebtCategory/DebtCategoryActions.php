@@ -2,6 +2,8 @@
 
 namespace App\Actions\DebtCategory;
 
+use App\DTOs\DebtCategoryCreateDTO;
+use App\DTOs\DebtCategoryUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\DebtCategory;
 use App\Traits\CacheHelper;
@@ -130,16 +132,16 @@ class DebtCategoryActions
         return $debtCategory->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): DebtCategory
+    public function create(DebtCategoryCreateDTO $data): DebtCategory
     {
         $timer_start = microtime(true);
 
         try {
             $debtCategory = new DebtCategory();
-            $debtCategory->company_id = $data['company_id'];
-            $debtCategory->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $debtCategory->name = $data['name'];
-            $debtCategory->sequence = $data['sequence'];
+            $debtCategory->company_id = $data->companyId;
+            $debtCategory->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $debtCategory->name = $data->name;
+            $debtCategory->sequence = $data->sequence;
             $debtCategory->save();
 
             $this->flushCache();
@@ -154,18 +156,18 @@ class DebtCategoryActions
         }
     }
 
-    public function update(DebtCategory $debtCategory, array $data): DebtCategory
+    public function update(DebtCategory $debtCategory, DebtCategoryUpdateDTO $data): DebtCategory
     {
         $timer_start = microtime(true);
 
         try {
             $debtCategory->code = $this->generateUniqueCode(
                 $debtCategory->company_id,
-                $data['code'],
+                $data->code,
                 $debtCategory->id,
             );
-            $debtCategory->name = $data['name'];
-            $debtCategory->sequence = $data['sequence'];
+            $debtCategory->name = $data->name;
+            $debtCategory->sequence = $data->sequence;
             $debtCategory->save();
 
             $this->flushCache();

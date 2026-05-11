@@ -2,6 +2,8 @@
 
 namespace App\Actions\Branch;
 
+use App\DTOs\BranchCreateDTO;
+use App\DTOs\BranchUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Branch;
 use App\Models\Company;
@@ -150,21 +152,21 @@ class BranchActions
         return is_null($result) ? false : $result;
     }
 
-    public function create(array $data): Branch
+    public function create(BranchCreateDTO $data): Branch
     {
         $timer_start = microtime(true);
 
         try {
             $branch = new Branch();
-            $branch->company_id = $data['company_id'];
-            $branch->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $branch->name = $data['name'];
-            $branch->address = $data['address'];
-            $branch->city = $data['city'];
-            $branch->contact = $data['contact'];
-            $branch->is_main = $data['is_main'];
-            $branch->remarks = $data['remarks'];
-            $branch->status = $data['status'];
+            $branch->company_id = $data->companyId;
+            $branch->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $branch->name = $data->name;
+            $branch->address = $data->address;
+            $branch->city = $data->city;
+            $branch->contact = $data->contact;
+            $branch->is_main = $data->isMain;
+            $branch->remarks = $data->remarks;
+            $branch->status = $data->status;
 
             $branch->save();
 
@@ -181,20 +183,19 @@ class BranchActions
     }
 
     public function update(
-        Branch $branch,
-        array $data,
-    ): Branch {
+        Branch $branch, BranchUpdateDTO $data): Branch
+    {
         $timer_start = microtime(true);
 
         try {
-            $branch->code = $this->generateUniqueCode($branch->company_id, $data['code'], $branch->id);
-            $branch->name = $data['name'];
-            $branch->address = $data['address'];
-            $branch->city = $data['city'];
-            $branch->contact = $data['contact'];
-            $branch->is_main = $data['is_main'];
-            $branch->remarks = $data['remarks'];
-            $branch->status = $data['status'];
+            $branch->code = $this->generateUniqueCode($branch->company_id, $data->code, $branch->id);
+            $branch->name = $data->name;
+            $branch->address = $data->address;
+            $branch->city = $data->city;
+            $branch->contact = $data->contact;
+            $branch->is_main = $data->isMain;
+            $branch->remarks = $data->remarks;
+            $branch->status = $data->status;
 
             $branch->save();
 

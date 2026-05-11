@@ -4,6 +4,7 @@ namespace App\Actions\Warehouse;
 
 use App\DTOs\ExecuteDTO;
 use App\DTOs\WarehouseCreateDTO;
+use App\DTOs\WarehouseUpdateDTO;
 use App\Models\Company;
 use App\Models\Warehouse;
 use App\Traits\CacheHelper;
@@ -175,18 +176,18 @@ class WarehouseActions
         }
     }
 
-    public function update(Warehouse $warehouse, array $data): Warehouse
+    public function update(Warehouse $warehouse, WarehouseUpdateDTO $data): Warehouse
     {
         $timer_start = microtime(true);
 
         try {
-            $warehouse->code = $this->generateUniqueCode($warehouse->company_id, $data['code'], $warehouse->id);
-            $warehouse->name = $data['name'];
-            $warehouse->address = $data['address'];
-            $warehouse->city = $data['city'];
-            $warehouse->contact = $data['contact'];
-            $warehouse->remarks = $data['remarks'];
-            $warehouse->status = $data['status'];
+            $warehouse->code = $this->generateUniqueCode($warehouse->company_id, $data->code, $warehouse->id);
+            $warehouse->name = $data->name;
+            $warehouse->address = $data->address;
+            $warehouse->city = $data->city;
+            $warehouse->contact = $data->contact;
+            $warehouse->remarks = $data->remarks;
+            $warehouse->status = $data->status;
             $warehouse->save();
 
             $this->flushCache();

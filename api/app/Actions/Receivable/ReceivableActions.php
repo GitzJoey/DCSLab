@@ -8,6 +8,8 @@ use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ReceivableCreateDTO;
+use App\DTOs\ReceivablePaymentCreateDTO;
+use App\DTOs\ReceivablePaymentUpdateDTO;
 use App\DTOs\ReceivableUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\Receivable;
@@ -259,16 +261,17 @@ class ReceivableActions
             }
 
             foreach ($data->payments as $payment) {
-                $this->receivablePaymentActions->create([
-                    'company_id' => $receivable->company_id,
-                    'branch_id' => $receivable->branch_id,
-                    'code' => $payment['code'],
-                    'date' => $payment['date'],
-                    'receivable_id' => $receivable->id,
-                    'cash_account_id' => $payment['cash_account_id'],
-                    'amount' => $payment['amount'],
-                    'remarks' => $payment['remarks'] ?? null,
-                ], false);
+                $dto = new ReceivablePaymentCreateDTO(
+                    companyId: $receivable->company_id,
+                    branchId: $receivable->branch_id,
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    receivableId: $receivable->id,
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: $payment['amount'],
+                    remarks: $payment['remarks'],
+                );
+                $this->receivablePaymentActions->create($dto, false);
             }
 
             self::updateSummary($receivable);
@@ -325,24 +328,26 @@ class ReceivableActions
             foreach ($data->payments as $payment) {
                 if (! empty($payment['id'])) {
                     $receivablePayment = $receivable->payments()->findOrFail($payment['id']);
-                    $this->receivablePaymentActions->update($receivablePayment, [
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new ReceivablePaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->receivablePaymentActions->update($receivablePayment, $dto, false);
                 } else {
-                    $this->receivablePaymentActions->create([
-                        'company_id' => $receivable->company_id,
-                        'branch_id' => $receivable->branch_id,
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'receivable_id' => $receivable->id,
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new ReceivablePaymentCreateDTO(
+                        companyId: $receivable->company_id,
+                        branchId: $receivable->branch_id,
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        receivableId: $receivable->id,
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->receivablePaymentActions->create($dto, false);
                 }
             }
 

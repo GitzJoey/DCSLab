@@ -3,6 +3,8 @@
 namespace App\Actions\ProductCategory;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\ProductCategoryCreateDTO;
+use App\DTOs\ProductCategoryUpdateDTO;
 use App\Models\Company;
 use App\Models\ProductCategory;
 use App\Traits\CacheHelper;
@@ -130,16 +132,16 @@ class ProductCategoryActions
         return $productCategory->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): ProductCategory
+    public function create(ProductCategoryCreateDTO $data): ProductCategory
     {
         $timer_start = microtime(true);
 
         try {
             $productCategory = new ProductCategory();
-            $productCategory->company_id = $data['company_id'];
-            $productCategory->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $productCategory->name = $data['name'];
-            $productCategory->type = $data['type'];
+            $productCategory->company_id = $data->companyId;
+            $productCategory->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $productCategory->name = $data->name;
+            $productCategory->type = $data->type;
             $productCategory->save();
 
             $this->flushCache();
@@ -154,14 +156,14 @@ class ProductCategoryActions
         }
     }
 
-    public function update(ProductCategory $productCategory, array $data): ProductCategory
+    public function update(ProductCategory $productCategory, ProductCategoryUpdateDTO $data): ProductCategory
     {
         $timer_start = microtime(true);
 
         try {
-            $productCategory->code = $this->generateUniqueCode($productCategory->company_id, $data['code'], $productCategory->id);
-            $productCategory->name = $data['name'];
-            $productCategory->type = $data['type'];
+            $productCategory->code = $this->generateUniqueCode($productCategory->company_id, $data->code, $productCategory->id);
+            $productCategory->name = $data->name;
+            $productCategory->type = $data->type;
             $productCategory->save();
 
             $this->flushCache();

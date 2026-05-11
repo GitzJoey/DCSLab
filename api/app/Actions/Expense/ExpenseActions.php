@@ -10,6 +10,8 @@ use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExpenseCreateDTO;
 use App\DTOs\ExpenseImageDTO;
+use App\DTOs\ExpensePaymentCreateDTO;
+use App\DTOs\ExpensePaymentUpdateDTO;
 use App\DTOs\ExpenseUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\Expense;
@@ -247,16 +249,17 @@ class ExpenseActions
             }
 
             foreach ($data->payments as $payment) {
-                $this->expensePaymentActions->create([
-                    'company_id' => $expense->company_id,
-                    'branch_id' => $expense->branch_id,
-                    'code' => $payment['code'],
-                    'date' => $payment['date'],
-                    'expense_id' => $expense->id,
-                    'cash_account_id' => $payment['cash_account_id'],
-                    'amount' => $payment['amount'],
-                    'remarks' => $payment['remarks'] ?? null,
-                ], false);
+                $dto = new ExpensePaymentCreateDTO(
+                    companyId: $expense->company_id,
+                    branchId: $expense->branch_id,
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    expenseId: $expense->id,
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: $payment['amount'],
+                    remarks: $payment['remarks'],
+                );
+                $this->expensePaymentActions->create($dto, false);
             }
 
             foreach ($data->images as $image) {
@@ -325,24 +328,26 @@ class ExpenseActions
             foreach ($data->payments as $payment) {
                 if (! empty($payment['id'])) {
                     $expensePayment = $expense->payments()->findOrFail($payment['id']);
-                    $this->expensePaymentActions->update($expensePayment, [
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new ExpensePaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->expensePaymentActions->update($expensePayment, $dto, false);
                 } else {
-                    $this->expensePaymentActions->create([
-                        'company_id' => $expense->company_id,
-                        'branch_id' => $expense->branch_id,
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'expense_id' => $expense->id,
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new ExpensePaymentCreateDTO(
+                        companyId: $expense->company_id,
+                        branchId: $expense->branch_id,
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        expenseId: $expense->id,
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->expensePaymentActions->create($dto, false);
                 }
             }
 

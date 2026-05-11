@@ -6,6 +6,8 @@ use App\Actions\CashTransaction\CashTransactionActions;
 use App\Actions\Debt\DebtActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
+use App\DTOs\DebtPaymentCreateDTO;
+use App\DTOs\DebtPaymentUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\DebtPayment;
@@ -192,22 +194,20 @@ class DebtPaymentActions
         return $result->count() == 0;
     }
 
-    public function create(
-        array $data,
-        bool $updateParentSummary = true,
-    ): DebtPayment {
+    public function create(DebtPaymentCreateDTO $data, bool $updateParentSummary = true): DebtPayment
+    {
         $timer_start = microtime(true);
 
         try {
             $debtPayment = new DebtPayment();
-            $debtPayment->company_id = $data['company_id'];
-            $debtPayment->branch_id = $data['branch_id'];
-            $debtPayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $debtPayment->date = $this->generateDate($data['date']);
-            $debtPayment->debt_id = $data['debt_id'];
-            $debtPayment->cash_account_id = $data['cash_account_id'];
-            $debtPayment->amount = $data['amount'];
-            $debtPayment->remarks = $data['remarks'];
+            $debtPayment->company_id = $data->companyId;
+            $debtPayment->branch_id = $data->branchId;
+            $debtPayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $debtPayment->date = $this->generateDate($data->date);
+            $debtPayment->debt_id = $data->debtId;
+            $debtPayment->cash_account_id = $data->cashAccountId;
+            $debtPayment->amount = $data->amount;
+            $debtPayment->remarks = $data->remarks;
             $debtPayment->save();
 
             $this->cashTransactionActions->create(
@@ -231,19 +231,16 @@ class DebtPaymentActions
         }
     }
 
-    public function update(
-        DebtPayment $debtPayment,
-        array $data,
-        bool $updateParentSummary = true,
-    ): DebtPayment {
+    public function update(DebtPayment $debtPayment, DebtPaymentUpdateDTO $data, bool $updateParentSummary = true): DebtPayment
+    {
         $timer_start = microtime(true);
 
         try {
-            $debtPayment->code = $this->generateUniqueCode($debtPayment->company_id, $data['code'], $debtPayment->id);
-            $debtPayment->date = $this->generateDate($data['date']);
-            $debtPayment->cash_account_id = $data['cash_account_id'];
-            $debtPayment->amount = $data['amount'];
-            $debtPayment->remarks = $data['remarks'];
+            $debtPayment->code = $this->generateUniqueCode($debtPayment->company_id, $data->code, $debtPayment->id);
+            $debtPayment->date = $this->generateDate($data->date);
+            $debtPayment->cash_account_id = $data->cashAccountId;
+            $debtPayment->amount = $data->amount;
+            $debtPayment->remarks = $data->remarks;
             $debtPayment->save();
 
             $cashTransaction = $debtPayment->cashTransaction;

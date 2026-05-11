@@ -2,6 +2,8 @@
 
 namespace App\Actions\CashAccount;
 
+use App\DTOs\CashAccountCreateDTO;
+use App\DTOs\CashAccountUpdateDTO;
 use App\DTOs\CashAccountWithRemainingBalanceDTO;
 use App\DTOs\ExecuteDTO;
 use App\Helpers\TimezoneHelper;
@@ -151,19 +153,19 @@ class CashAccountActions
         return $cashAccount->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): CashAccount
+    public function create(CashAccountCreateDTO $data): CashAccount
     {
         $timer_start = microtime(true);
 
         try {
             $cashAccount = new CashAccount();
-            $cashAccount->company_id = $data['company_id'];
-            $cashAccount->branch_id = $data['branch_id'];
-            $cashAccount->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $cashAccount->name = $data['name'];
-            $cashAccount->is_bank = $data['is_bank'];
-            $cashAccount->is_active = $data['is_active'];
-            $cashAccount->remarks = $data['remarks'];
+            $cashAccount->company_id = $data->companyId;
+            $cashAccount->branch_id = $data->branchId;
+            $cashAccount->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $cashAccount->name = $data->name;
+            $cashAccount->is_bank = $data->isBank;
+            $cashAccount->is_active = $data->isActive;
+            $cashAccount->remarks = $data->remarks;
             $cashAccount->save();
 
             $this->flushCache();
@@ -178,16 +180,16 @@ class CashAccountActions
         }
     }
 
-    public function update(CashAccount $cashAccount, array $data): CashAccount
+    public function update(CashAccount $cashAccount, CashAccountUpdateDTO $data): CashAccount
     {
         $timer_start = microtime(true);
 
         try {
-            $cashAccount->code = $this->generateUniqueCode($cashAccount->company_id, $data['code'], $cashAccount->id);
-            $cashAccount->name = $data['name'];
-            $cashAccount->is_bank = $data['is_bank'];
-            $cashAccount->is_active = $data['is_active'];
-            $cashAccount->remarks = $data['remarks'];
+            $cashAccount->code = $this->generateUniqueCode($cashAccount->company_id, $data->code, $cashAccount->id);
+            $cashAccount->name = $data->name;
+            $cashAccount->is_bank = $data->isBank;
+            $cashAccount->is_active = $data->isActive;
+            $cashAccount->remarks = $data->remarks;
             $cashAccount->save();
 
             $this->flushCache();

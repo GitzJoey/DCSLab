@@ -2,6 +2,8 @@
 
 namespace App\Actions\Company;
 
+use App\DTOs\CompanyCreateDTO;
+use App\DTOs\CompanyUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\User;
@@ -137,17 +139,17 @@ class CompanyActions
         return $company->load(self::DETAIL_EAGER_LOADS);
     }
 
-    public function create(User $user, array $data): Company
+    public function create(User $user, CompanyCreateDTO $data): Company
     {
         $timer_start = microtime(true);
 
         try {
             $company = new Company();
-            $company->code = $this->generateUniqueCode($user, $data['code'], null);
-            $company->name = $data['name'];
-            $company->address = $data['address'];
-            $company->default = $data['default'];
-            $company->status = $data['status'];
+            $company->code = $this->generateUniqueCode($user, $data->code, null);
+            $company->name = $data->name;
+            $company->address = $data->address;
+            $company->default = $data->default;
+            $company->status = $data->status;
             $company->save();
 
             $user->companies()->attach([$company->id]);
@@ -177,16 +179,16 @@ class CompanyActions
         return is_null($result) ? false : $result;
     }
 
-    public function update(User $user, Company $company, array $data): Company
+    public function update(User $user, Company $company, CompanyUpdateDTO $data): Company
     {
         $timer_start = microtime(true);
 
         try {
-            $company->code = $this->generateUniqueCode($user, $data['code'], $company->id);
-            $company->name = $data['name'];
-            $company->address = $data['address'];
-            $company->default = $data['default'];
-            $company->status = $data['status'];
+            $company->code = $this->generateUniqueCode($user, $data->code, $company->id);
+            $company->name = $data->name;
+            $company->address = $data->address;
+            $company->default = $data->default;
+            $company->status = $data->status;
             $company->save();
 
             $this->flushCache();

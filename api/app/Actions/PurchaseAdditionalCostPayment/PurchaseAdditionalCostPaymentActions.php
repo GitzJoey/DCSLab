@@ -8,6 +8,8 @@ use App\Actions\PurchaseAdditionalCost\PurchaseAdditionalCostActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\PurchaseAdditionalCostPaymentCreateDTO;
+use App\DTOs\PurchaseAdditionalCostPaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\PurchaseAdditionalCostPayment;
 use App\Traits\CacheHelper;
@@ -193,20 +195,20 @@ class PurchaseAdditionalCostPaymentActions
         return $result->count() == 0;
     }
 
-    public function create(array $data): PurchaseAdditionalCostPayment
+    public function create(PurchaseAdditionalCostPaymentCreateDTO $data): PurchaseAdditionalCostPayment
     {
         $timer_start = microtime(true);
 
         try {
             $purchaseAdditionalCostPayment = new PurchaseAdditionalCostPayment();
-            $purchaseAdditionalCostPayment->company_id = $data['company_id'];
-            $purchaseAdditionalCostPayment->branch_id = $data['branch_id'];
-            $purchaseAdditionalCostPayment->purchase_additional_cost_id = $data['purchase_additional_cost_id'];
-            $purchaseAdditionalCostPayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $purchaseAdditionalCostPayment->date = $this->generateDate($data['date']);
-            $purchaseAdditionalCostPayment->cash_account_id = $data['cash_account_id'];
-            $purchaseAdditionalCostPayment->amount = $data['amount'];
-            $purchaseAdditionalCostPayment->remarks = $data['remarks'];
+            $purchaseAdditionalCostPayment->company_id = $data->companyId;
+            $purchaseAdditionalCostPayment->branch_id = $data->branchId;
+            $purchaseAdditionalCostPayment->purchase_additional_cost_id = $data->purchaseAdditionalCostId;
+            $purchaseAdditionalCostPayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $purchaseAdditionalCostPayment->date = $this->generateDate($data->date);
+            $purchaseAdditionalCostPayment->cash_account_id = $data->cashAccountId;
+            $purchaseAdditionalCostPayment->amount = $data->amount;
+            $purchaseAdditionalCostPayment->remarks = $data->remarks;
             $purchaseAdditionalCostPayment->save();
 
             $this->cashTransactionActions->create(
@@ -230,16 +232,16 @@ class PurchaseAdditionalCostPaymentActions
         }
     }
 
-    public function update(PurchaseAdditionalCostPayment $purchaseAdditionalCostPayment, array $data): PurchaseAdditionalCostPayment
+    public function update(PurchaseAdditionalCostPayment $purchaseAdditionalCostPayment, PurchaseAdditionalCostPaymentUpdateDTO $data): PurchaseAdditionalCostPayment
     {
         $timer_start = microtime(true);
 
         try {
-            $purchaseAdditionalCostPayment->code = $this->generateUniqueCode($purchaseAdditionalCostPayment->company_id, $data['code'], $purchaseAdditionalCostPayment->id);
-            $purchaseAdditionalCostPayment->date = $this->generateDate($data['date']);
-            $purchaseAdditionalCostPayment->cash_account_id = $data['cash_account_id'];
-            $purchaseAdditionalCostPayment->amount = $data['amount'];
-            $purchaseAdditionalCostPayment->remarks = $data['remarks'];
+            $purchaseAdditionalCostPayment->code = $this->generateUniqueCode($purchaseAdditionalCostPayment->company_id, $data->code, $purchaseAdditionalCostPayment->id);
+            $purchaseAdditionalCostPayment->date = $this->generateDate($data->date);
+            $purchaseAdditionalCostPayment->cash_account_id = $data->cashAccountId;
+            $purchaseAdditionalCostPayment->amount = $data->amount;
+            $purchaseAdditionalCostPayment->remarks = $data->remarks;
             $purchaseAdditionalCostPayment->save();
 
             $cashTransaction = $purchaseAdditionalCostPayment->cashTransaction;

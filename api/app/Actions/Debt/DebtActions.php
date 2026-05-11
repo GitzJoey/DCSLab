@@ -7,6 +7,8 @@ use App\Actions\DebtPayment\DebtPaymentActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\DebtCreateDTO;
+use App\DTOs\DebtPaymentCreateDTO;
+use App\DTOs\DebtPaymentUpdateDTO;
 use App\DTOs\DebtUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Helpers\TimezoneHelper;
@@ -275,16 +277,17 @@ class DebtActions
             }
 
             foreach ($data->payments as $payment) {
-                $this->debtPaymentActions->create([
-                    'company_id' => $debt->company_id,
-                    'branch_id' => $debt->branch_id,
-                    'code' => $payment['code'],
-                    'date' => $payment['date'],
-                    'debt_id' => $debt->id,
-                    'cash_account_id' => $payment['cash_account_id'],
-                    'amount' => $payment['amount'],
-                    'remarks' => $payment['remarks'] ?? null,
-                ], false);
+                $dto = new DebtPaymentCreateDTO(
+                    companyId: $debt->company_id,
+                    branchId: $debt->branch_id,
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    debtId: $debt->id,
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: $payment['amount'],
+                    remarks: $payment['remarks'],
+                );
+                $this->debtPaymentActions->create($dto, false);
             }
 
             self::updateSummary($debt);
@@ -342,24 +345,26 @@ class DebtActions
             foreach ($data->payments as $payment) {
                 if (! empty($payment['id'])) {
                     $debtPayment = $debt->payments()->findOrFail($payment['id']);
-                    $this->debtPaymentActions->update($debtPayment, [
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new DebtPaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->debtPaymentActions->update($debtPayment, $dto, false);
                 } else {
-                    $this->debtPaymentActions->create([
-                        'company_id' => $debt->company_id,
-                        'branch_id' => $debt->branch_id,
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'debt_id' => $debt->id,
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new DebtPaymentCreateDTO(
+                        companyId: $debt->company_id,
+                        branchId: $debt->branch_id,
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        debtId: $debt->id,
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->debtPaymentActions->create($dto, false);
                 }
             }
 
@@ -388,8 +393,8 @@ class DebtActions
         $debt->amount_due = max(
             0,
             (float) $debt->amount_total
-            - (float) $debt->amount_paid_by_cash_account
-            - (float) $debt->amount_paid_by_stock_adjustment
+                - (float) $debt->amount_paid_by_cash_account
+                - (float) $debt->amount_paid_by_stock_adjustment
         );
         $debt->is_paid_off = $debt->amount_due == 0;
         $debt->save();

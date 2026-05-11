@@ -10,6 +10,8 @@ use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PrepaidExpenseCreateDTO;
 use App\DTOs\PrepaidExpenseImageDTO;
+use App\DTOs\PrepaidExpensePaymentCreateDTO;
+use App\DTOs\PrepaidExpensePaymentUpdateDTO;
 use App\DTOs\PrepaidExpenseUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\PrepaidExpense;
@@ -248,16 +250,17 @@ class PrepaidExpenseActions
             }
 
             foreach ($data->payments as $payment) {
-                $this->prepaidExpensePaymentActions->create([
-                    'company_id' => $prepaidExpense->company_id,
-                    'branch_id' => $prepaidExpense->branch_id,
-                    'code' => $payment['code'],
-                    'date' => $payment['date'],
-                    'prepaid_expense_id' => $prepaidExpense->id,
-                    'cash_account_id' => $payment['cash_account_id'],
-                    'amount' => $payment['amount'],
-                    'remarks' => $payment['remarks'] ?? null,
-                ], false);
+                $dto = new PrepaidExpensePaymentCreateDTO(
+                    companyId: $prepaidExpense->company_id,
+                    branchId: $prepaidExpense->branch_id,
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    prepaidExpenseId: $prepaidExpense->id,
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: $payment['amount'],
+                    remarks: $payment['remarks'],
+                );
+                $this->prepaidExpensePaymentActions->create($dto, false);
             }
 
             foreach ($data->images as $image) {
@@ -327,24 +330,26 @@ class PrepaidExpenseActions
             foreach ($data->payments as $payment) {
                 if (! empty($payment['id'])) {
                     $prepaidExpensePayment = $prepaidExpense->payments()->findOrFail($payment['id']);
-                    $this->prepaidExpensePaymentActions->update($prepaidExpensePayment, [
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new PrepaidExpensePaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->prepaidExpensePaymentActions->update($prepaidExpensePayment, $dto, false);
                 } else {
-                    $this->prepaidExpensePaymentActions->create([
-                        'company_id' => $prepaidExpense->company_id,
-                        'branch_id' => $prepaidExpense->branch_id,
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'prepaid_expense_id' => $prepaidExpense->id,
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new PrepaidExpensePaymentCreateDTO(
+                        companyId: $prepaidExpense->company_id,
+                        branchId: $prepaidExpense->branch_id,
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        prepaidExpenseId: $prepaidExpense->id,
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->prepaidExpensePaymentActions->create($dto, false);
                 }
             }
 

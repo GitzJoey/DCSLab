@@ -3,6 +3,8 @@
 namespace App\Actions\PurchaseAdditionalCostCategory;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\PurchaseAdditionalCostCategoryCreateDTO;
+use App\DTOs\PurchaseAdditionalCostCategoryUpdateDTO;
 use App\Models\Company;
 use App\Models\PurchaseAdditionalCostCategory;
 use App\Traits\CacheHelper;
@@ -128,19 +130,19 @@ class PurchaseAdditionalCostCategoryActions
         return $purchaseAdditionalCostCategory->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): PurchaseAdditionalCostCategory
+    public function create(PurchaseAdditionalCostCategoryCreateDTO $data): PurchaseAdditionalCostCategory
     {
         $timer_start = microtime(true);
 
         try {
             $purchaseAdditionalCostCategory = new PurchaseAdditionalCostCategory();
-            $purchaseAdditionalCostCategory->company_id = $data['company_id'];
+            $purchaseAdditionalCostCategory->company_id = $data->companyId;
             $purchaseAdditionalCostCategory->code = $this->generateUniqueCode(
-                $data['company_id'],
-                $data['code'],
+                $data->companyId,
+                $data->code,
                 null,
             );
-            $purchaseAdditionalCostCategory->name = $data['name'];
+            $purchaseAdditionalCostCategory->name = $data->name;
             $purchaseAdditionalCostCategory->save();
 
             $this->flushCache();
@@ -155,17 +157,17 @@ class PurchaseAdditionalCostCategoryActions
         }
     }
 
-    public function update(PurchaseAdditionalCostCategory $purchaseAdditionalCostCategory, array $data): PurchaseAdditionalCostCategory
+    public function update(PurchaseAdditionalCostCategory $purchaseAdditionalCostCategory, PurchaseAdditionalCostCategoryUpdateDTO $data): PurchaseAdditionalCostCategory
     {
         $timer_start = microtime(true);
 
         try {
             $purchaseAdditionalCostCategory->code = $this->generateUniqueCode(
                 $purchaseAdditionalCostCategory->company_id,
-                $data['code'],
+                $data->code,
                 $purchaseAdditionalCostCategory->id,
             );
-            $purchaseAdditionalCostCategory->name = $data['name'];
+            $purchaseAdditionalCostCategory->name = $data->name;
             $purchaseAdditionalCostCategory->save();
 
             $this->flushCache();

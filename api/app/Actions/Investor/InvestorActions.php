@@ -4,7 +4,10 @@ namespace App\Actions\Investor;
 
 use App\Actions\ChartOfAccount\ChartOfAccountActions;
 use App\DTOs\ChartOfAccountCreateDTO;
+use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\InvestorCreateDTO;
+use App\DTOs\InvestorUpdateDTO;
 use App\Models\Company;
 use App\Models\Investor;
 use App\Traits\CacheHelper;
@@ -135,16 +138,16 @@ class InvestorActions
         return $investor->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): Investor
+    public function create(InvestorCreateDTO $data): Investor
     {
         $timer_start = microtime(true);
 
         try {
             $investor = new Investor();
-            $investor->company_id = $data['company_id'];
-            $investor->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $investor->name = $data['name'];
-            $investor->remarks = $data['remarks'];
+            $investor->company_id = $data->companyId;
+            $investor->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $investor->name = $data->name;
+            $investor->remarks = $data->remarks;
             $investor->save();
 
             $chartOfAccountDTO = new ChartOfAccountCreateDTO(
@@ -175,27 +178,27 @@ class InvestorActions
         }
     }
 
-    public function update(Investor $investor, array $data): Investor
+    public function update(Investor $investor, InvestorUpdateDTO $data): Investor
     {
         $timer_start = microtime(true);
 
         try {
-            $investor->code = $this->generateUniqueCode($investor->company_id, $data['code'], $investor->id);
-            $investor->name = $data['name'];
-            $investor->remarks = $data['remarks'];
+            $investor->code = $this->generateUniqueCode($investor->company_id, $data->code, $investor->id);
+            $investor->name = $data->name;
+            $investor->remarks = $data->remarks;
             $investor->save();
 
             $chartOfAccount = $investor->chartOfAccount;
-            $this->chartOfAccountActions->update($chartOfAccount, [
-                'parent_id' => $chartOfAccount->parent_id,
-                'code' => $investor->code,
-                'name' => $investor->name,
-                'account_type' => $chartOfAccount->account_type,
-                'normal_balance' => $chartOfAccount->normal_balance,
-                'is_group' => $chartOfAccount->is_group,
-                'is_active' => $chartOfAccount->is_active,
-                'remarks' => $investor->remarks,
-            ]);
+            $dto = new ChartOfAccountUpdateDTO(
+                parentId: $chartOfAccount->parent_id,
+                code: $investor->code,
+                name: $investor->name,
+                normalBalance: $chartOfAccount->normal_balance,
+                isGroup: $chartOfAccount->is_group,
+                isActive: $chartOfAccount->is_active,
+                remarks: $investor->remarks,
+            );
+            $this->chartOfAccountActions->update($chartOfAccount, $dto);
 
             $this->flushCache();
 

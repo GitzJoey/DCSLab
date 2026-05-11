@@ -3,6 +3,8 @@
 namespace App\Actions\IncomeCategory;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\IncomeCategoryCreateDTO;
+use App\DTOs\IncomeCategoryUpdateDTO;
 use App\Models\IncomeCategory;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -176,17 +178,17 @@ class IncomeCategoryActions
         return $incomeCategory->children()->exists();
     }
 
-    public function create(array $data): IncomeCategory
+    public function create(IncomeCategoryCreateDTO $data): IncomeCategory
     {
         $timer_start = microtime(true);
 
         try {
             $incomeCategory = new IncomeCategory();
-            $incomeCategory->company_id = $data['company_id'];
-            $incomeCategory->parent_id = $data['parent_id'];
-            $incomeCategory->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $incomeCategory->name = $data['name'];
-            $incomeCategory->sequence = $data['sequence'];
+            $incomeCategory->company_id = $data->companyId;
+            $incomeCategory->parent_id = $data->parentId;
+            $incomeCategory->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $incomeCategory->name = $data->name;
+            $incomeCategory->sequence = $data->sequence;
             $incomeCategory->save();
 
             $this->flushCache();
@@ -201,18 +203,18 @@ class IncomeCategoryActions
         }
     }
 
-    public function update(IncomeCategory $incomeCategory, array $data): IncomeCategory
+    public function update(IncomeCategory $incomeCategory, IncomeCategoryUpdateDTO $data): IncomeCategory
     {
         $timer_start = microtime(true);
 
         try {
             $incomeCategory->code = $this->generateUniqueCode(
                 $incomeCategory->company_id,
-                $data['code'],
+                $data->code,
                 $incomeCategory->id,
             );
-            $incomeCategory->name = $data['name'];
-            $incomeCategory->sequence = $data['sequence'];
+            $incomeCategory->name = $data->name;
+            $incomeCategory->sequence = $data->sequence;
             $incomeCategory->save();
 
             $this->flushCache();

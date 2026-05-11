@@ -7,6 +7,8 @@ use App\Actions\PrepaidExpense\PrepaidExpenseActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\PrepaidExpensePaymentCreateDTO;
+use App\DTOs\PrepaidExpensePaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\PrepaidExpensePayment;
 use App\Traits\CacheHelper;
@@ -190,22 +192,20 @@ class PrepaidExpensePaymentActions
         return $result->count() == 0;
     }
 
-    public function create(
-        array $data,
-        bool $updateParentSummary = true,
-    ): PrepaidExpensePayment {
+    public function create(PrepaidExpensePaymentCreateDTO $data, bool $updateParentSummary = true): PrepaidExpensePayment
+    {
         $timer_start = microtime(true);
 
         try {
             $prepaidExpensePayment = new PrepaidExpensePayment();
-            $prepaidExpensePayment->company_id = $data['company_id'];
-            $prepaidExpensePayment->branch_id = $data['branch_id'];
-            $prepaidExpensePayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $prepaidExpensePayment->date = $this->generateDate($data['date']);
-            $prepaidExpensePayment->prepaid_expense_id = $data['prepaid_expense_id'];
-            $prepaidExpensePayment->cash_account_id = $data['cash_account_id'];
-            $prepaidExpensePayment->amount = $data['amount'];
-            $prepaidExpensePayment->remarks = $data['remarks'];
+            $prepaidExpensePayment->company_id = $data->companyId;
+            $prepaidExpensePayment->branch_id = $data->branchId;
+            $prepaidExpensePayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $prepaidExpensePayment->date = $this->generateDate($data->date);
+            $prepaidExpensePayment->prepaid_expense_id = $data->prepaidExpenseId;
+            $prepaidExpensePayment->cash_account_id = $data->cashAccountId;
+            $prepaidExpensePayment->amount = $data->amount;
+            $prepaidExpensePayment->remarks = $data->remarks;
             $prepaidExpensePayment->save();
 
             $this->cashTransactionActions->create(
@@ -229,19 +229,16 @@ class PrepaidExpensePaymentActions
         }
     }
 
-    public function update(
-        PrepaidExpensePayment $prepaidExpensePayment,
-        array $data,
-        bool $updateParentSummary = true,
-    ): PrepaidExpensePayment {
+    public function update(PrepaidExpensePayment $prepaidExpensePayment, PrepaidExpensePaymentUpdateDTO $data, bool $updateParentSummary = true): PrepaidExpensePayment
+    {
         $timer_start = microtime(true);
 
         try {
-            $prepaidExpensePayment->code = $this->generateUniqueCode($prepaidExpensePayment->company_id, $data['code'], $prepaidExpensePayment->id);
-            $prepaidExpensePayment->date = $this->generateDate($data['date']);
-            $prepaidExpensePayment->cash_account_id = $data['cash_account_id'];
-            $prepaidExpensePayment->amount = $data['amount'];
-            $prepaidExpensePayment->remarks = $data['remarks'];
+            $prepaidExpensePayment->code = $this->generateUniqueCode($prepaidExpensePayment->company_id, $data->code, $prepaidExpensePayment->id);
+            $prepaidExpensePayment->date = $this->generateDate($data->date);
+            $prepaidExpensePayment->cash_account_id = $data->cashAccountId;
+            $prepaidExpensePayment->amount = $data->amount;
+            $prepaidExpensePayment->remarks = $data->remarks;
             $prepaidExpensePayment->save();
 
             $cashTransaction = $prepaidExpensePayment->cashTransaction;

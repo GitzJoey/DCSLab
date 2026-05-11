@@ -3,6 +3,8 @@
 namespace App\Actions\ReceivableCategory;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\ReceivableCategoryCreateDTO;
+use App\DTOs\ReceivableCategoryUpdateDTO;
 use App\Models\ReceivableCategory;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -130,16 +132,16 @@ class ReceivableCategoryActions
         return $receivableCategory->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): ReceivableCategory
+    public function create(ReceivableCategoryCreateDTO $data): ReceivableCategory
     {
         $timer_start = microtime(true);
 
         try {
             $receivableCategory = new ReceivableCategory();
-            $receivableCategory->company_id = $data['company_id'];
-            $receivableCategory->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $receivableCategory->name = $data['name'];
-            $receivableCategory->sequence = $data['sequence'];
+            $receivableCategory->company_id = $data->companyId;
+            $receivableCategory->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $receivableCategory->name = $data->name;
+            $receivableCategory->sequence = $data->sequence;
             $receivableCategory->save();
 
             $this->flushCache();
@@ -154,18 +156,18 @@ class ReceivableCategoryActions
         }
     }
 
-    public function update(ReceivableCategory $receivableCategory, array $data): ReceivableCategory
+    public function update(ReceivableCategory $receivableCategory, ReceivableCategoryUpdateDTO $data): ReceivableCategory
     {
         $timer_start = microtime(true);
 
         try {
             $receivableCategory->code = $this->generateUniqueCode(
                 $receivableCategory->company_id,
-                $data['code'],
+                $data->code,
                 $receivableCategory->id,
             );
-            $receivableCategory->name = $data['name'];
-            $receivableCategory->sequence = $data['sequence'];
+            $receivableCategory->name = $data->name;
+            $receivableCategory->sequence = $data->sequence;
             $receivableCategory->save();
 
             $this->flushCache();

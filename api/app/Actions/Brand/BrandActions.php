@@ -2,6 +2,8 @@
 
 namespace App\Actions\Brand;
 
+use App\DTOs\BrandCreateDTO;
+use App\DTOs\BrandUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Brand;
 use App\Models\Company;
@@ -124,15 +126,15 @@ class BrandActions
         return $brand->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): Brand
+    public function create(BrandCreateDTO $data): Brand
     {
         $timer_start = microtime(true);
 
         try {
             $brand = new Brand();
-            $brand->company_id = $data['company_id'];
-            $brand->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $brand->name = $data['name'];
+            $brand->company_id = $data->companyId;
+            $brand->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $brand->name = $data->name;
             $brand->save();
 
             $this->flushCache();
@@ -147,13 +149,13 @@ class BrandActions
         }
     }
 
-    public function update(Brand $brand, array $data): Brand
+    public function update(Brand $brand, BrandUpdateDTO $data): Brand
     {
         $timer_start = microtime(true);
 
         try {
-            $brand->code = $this->generateUniqueCode($brand->company_id, $data['code'], $brand->id);
-            $brand->name = $data['name'];
+            $brand->code = $this->generateUniqueCode($brand->company_id, $data->code, $brand->id);
+            $brand->name = $data->name;
             $brand->save();
 
             $this->flushCache();

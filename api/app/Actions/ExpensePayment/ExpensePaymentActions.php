@@ -7,6 +7,8 @@ use App\Actions\Expense\ExpenseActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\ExpensePaymentCreateDTO;
+use App\DTOs\ExpensePaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\ExpensePayment;
 use App\Traits\CacheHelper;
@@ -190,22 +192,20 @@ class ExpensePaymentActions
         return $result->count() == 0;
     }
 
-    public function create(
-        array $data,
-        bool $updateParentSummary = true,
-    ): ExpensePayment {
+    public function create(ExpensePaymentCreateDTO $data, bool $updateParentSummary = true): ExpensePayment
+    {
         $timer_start = microtime(true);
 
         try {
             $expensePayment = new ExpensePayment();
-            $expensePayment->company_id = $data['company_id'];
-            $expensePayment->branch_id = $data['branch_id'];
-            $expensePayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $expensePayment->date = $this->generateDate($data['date']);
-            $expensePayment->expense_id = $data['expense_id'];
-            $expensePayment->cash_account_id = $data['cash_account_id'];
-            $expensePayment->amount = $data['amount'];
-            $expensePayment->remarks = $data['remarks'];
+            $expensePayment->company_id = $data->companyId;
+            $expensePayment->branch_id = $data->branchId;
+            $expensePayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $expensePayment->date = $this->generateDate($data->date);
+            $expensePayment->expense_id = $data->expenseId;
+            $expensePayment->cash_account_id = $data->cashAccountId;
+            $expensePayment->amount = $data->amount;
+            $expensePayment->remarks = $data->remarks;
             $expensePayment->save();
 
             $this->cashTransactionActions->create(
@@ -229,19 +229,16 @@ class ExpensePaymentActions
         }
     }
 
-    public function update(
-        ExpensePayment $expensePayment,
-        array $data,
-        bool $updateParentSummary = true,
-    ): ExpensePayment {
+    public function update(ExpensePayment $expensePayment, ExpensePaymentUpdateDTO $data, bool $updateParentSummary = true): ExpensePayment
+    {
         $timer_start = microtime(true);
 
         try {
-            $expensePayment->code = $this->generateUniqueCode($expensePayment->company_id, $data['code'], $expensePayment->id);
-            $expensePayment->date = $this->generateDate($data['date']);
-            $expensePayment->cash_account_id = $data['cash_account_id'];
-            $expensePayment->amount = $data['amount'];
-            $expensePayment->remarks = $data['remarks'];
+            $expensePayment->code = $this->generateUniqueCode($expensePayment->company_id, $data->code, $expensePayment->id);
+            $expensePayment->date = $this->generateDate($data->date);
+            $expensePayment->cash_account_id = $data->cashAccountId;
+            $expensePayment->amount = $data->amount;
+            $expensePayment->remarks = $data->remarks;
             $expensePayment->save();
 
             $cashTransaction = $expensePayment->cashTransaction;

@@ -2,6 +2,8 @@
 
 namespace App\Actions\Customer;
 
+use App\DTOs\CustomerCreateDTO;
+use App\DTOs\CustomerUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\Customer;
@@ -229,27 +231,27 @@ class CustomerActions
         return $customer->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): Customer
+    public function create(CustomerCreateDTO $data): Customer
     {
         $timer_start = microtime(true);
 
         try {
             $customer = new Customer();
-            $customer->company_id = $data['company_id'];
-            $customer->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $customer->is_member = $data['is_member'];
-            $customer->name = $data['name'];
-            $customer->group_id = $data['group_id'];
-            $customer->zone = $data['zone'];
-            $customer->max_open_invoice = $data['max_open_invoice'];
-            $customer->max_outstanding_invoice = $data['max_outstanding_invoice'];
-            $customer->max_invoice_age = $data['max_invoice_age'];
-            $customer->payment_term_type = $data['payment_term_type'];
-            $customer->payment_term = $data['payment_term'];
-            $customer->taxable_enterprise = $data['taxable_enterprise'];
-            $customer->tax_id = $data['tax_id'];
-            $customer->status = $data['status'];
-            $customer->remarks = $data['remarks'];
+            $customer->company_id = $data->companyId;
+            $customer->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $customer->is_member = $data->isMember;
+            $customer->name = $data->name;
+            $customer->group_id = $data->groupId;
+            $customer->zone = $data->zone;
+            $customer->max_open_invoice = $data->maxOpenInvoice;
+            $customer->max_outstanding_invoice = $data->maxOutstandingInvoice;
+            $customer->max_invoice_age = $data->maxInvoiceAge;
+            $customer->payment_term_type = $data->paymentTermType;
+            $customer->payment_term = $data->paymentTerm;
+            $customer->taxable_enterprise = $data->taxableEnterprise;
+            $customer->tax_id = $data->taxId;
+            $customer->status = $data->status;
+            $customer->remarks = $data->remarks;
             $customer->save();
 
             // save user (not yet implemented)
@@ -266,25 +268,25 @@ class CustomerActions
         }
     }
 
-    public function update(Customer $customer, array $data): Customer
+    public function update(Customer $customer, CustomerUpdateDTO $data): Customer
     {
         $timer_start = microtime(true);
 
         try {
-            $customer->code = $this->generateUniqueCode($customer->company_id, $data['code'], $customer->id);
-            $customer->is_member = $data['is_member'];
-            $customer->name = $data['name'];
-            $customer->group_id = $data['group_id'];
-            $customer->zone = $data['zone'];
-            $customer->max_open_invoice = $data['max_open_invoice'];
-            $customer->max_outstanding_invoice = $data['max_outstanding_invoice'];
-            $customer->max_invoice_age = $data['max_invoice_age'];
-            $customer->payment_term_type = $data['payment_term_type'];
-            $customer->payment_term = $data['payment_term'];
-            $customer->taxable_enterprise = $data['taxable_enterprise'];
-            $customer->tax_id = $data['tax_id'];
-            $customer->status = $data['status'];
-            $customer->remarks = $data['remarks'];
+            $customer->code = $this->generateUniqueCode($customer->company_id, $data->code, $customer->id);
+            $customer->is_member = $data->isMember;
+            $customer->name = $data->name;
+            $customer->group_id = $data->groupId;
+            $customer->zone = $data->zone;
+            $customer->max_open_invoice = $data->maxOpenInvoice;
+            $customer->max_outstanding_invoice = $data->maxOutstandingInvoice;
+            $customer->max_invoice_age = $data->maxInvoiceAge;
+            $customer->payment_term_type = $data->paymentTermType;
+            $customer->payment_term = $data->paymentTerm;
+            $customer->taxable_enterprise = $data->taxableEnterprise;
+            $customer->tax_id = $data->taxId;
+            $customer->status = $data->status;
+            $customer->remarks = $data->remarks;
             $customer->save();
 
             $this->flushCache();

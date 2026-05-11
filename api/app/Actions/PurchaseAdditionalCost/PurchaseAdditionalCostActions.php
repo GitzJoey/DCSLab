@@ -7,6 +7,8 @@ use App\Actions\Purchase\PurchaseActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\PurchaseAdditionalCostCreateDTO;
+use App\DTOs\PurchaseAdditionalCostUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\PurchaseAdditionalCost;
 use App\Traits\CacheHelper;
@@ -235,23 +237,23 @@ class PurchaseAdditionalCostActions
         return $result->count() == 0;
     }
 
-    public function create(array $data): PurchaseAdditionalCost
+    public function create(PurchaseAdditionalCostCreateDTO $data): PurchaseAdditionalCost
     {
         $timer_start = microtime(true);
 
         try {
             $purchaseAdditionalCost = new PurchaseAdditionalCost();
-            $purchaseAdditionalCost->company_id = $data['company_id'];
-            $purchaseAdditionalCost->branch_id = $data['branch_id'];
-            $purchaseAdditionalCost->purchase_id = $data['purchase_id'];
-            $purchaseAdditionalCost->purchase_additional_cost_category_id = $data['purchase_additional_cost_category_id'];
-            $purchaseAdditionalCost->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $purchaseAdditionalCost->date = $this->generateDate($data['date']);
-            $purchaseAdditionalCost->due_days = $data['due_days'];
-            $purchaseAdditionalCost->paid_immediately_cash_account_id = $data['paid_immediately_cash_account_id'];
-            $purchaseAdditionalCost->amount_paid_immediately = $data['amount_paid_immediately'];
-            $purchaseAdditionalCost->amount_payable = $data['amount_payable'];
-            $purchaseAdditionalCost->remarks = $data['remarks'];
+            $purchaseAdditionalCost->company_id = $data->companyId;
+            $purchaseAdditionalCost->branch_id = $data->branchId;
+            $purchaseAdditionalCost->purchase_id = $data->purchaseId;
+            $purchaseAdditionalCost->purchase_additional_cost_category_id = $data->purchaseAdditionalCostCategoryId;
+            $purchaseAdditionalCost->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $purchaseAdditionalCost->date = $this->generateDate($data->date);
+            $purchaseAdditionalCost->due_days = $data->dueDays;
+            $purchaseAdditionalCost->paid_immediately_cash_account_id = $data->paidImmediatelyCashAccountId;
+            $purchaseAdditionalCost->amount_paid_immediately = $data->amountPaidImmediately;
+            $purchaseAdditionalCost->amount_payable = $data->amountPayable;
+            $purchaseAdditionalCost->remarks = $data->remarks;
             $purchaseAdditionalCost->save();
 
             self::updateSummary($purchaseAdditionalCost);
@@ -280,20 +282,20 @@ class PurchaseAdditionalCostActions
         }
     }
 
-    public function update(PurchaseAdditionalCost $purchaseAdditionalCost, array $data): PurchaseAdditionalCost
+    public function update(PurchaseAdditionalCost $purchaseAdditionalCost, PurchaseAdditionalCostUpdateDTO $data): PurchaseAdditionalCost
     {
         $timer_start = microtime(true);
 
         try {
-            $purchaseAdditionalCost->purchase_id = $data['purchase_id'];
-            $purchaseAdditionalCost->purchase_additional_cost_category_id = $data['purchase_additional_cost_category_id'];
-            $purchaseAdditionalCost->code = $this->generateUniqueCode($purchaseAdditionalCost->company_id, $data['code'], $purchaseAdditionalCost->id);
-            $purchaseAdditionalCost->date = $this->generateDate($data['date']);
-            $purchaseAdditionalCost->due_days = $data['due_days'];
-            $purchaseAdditionalCost->paid_immediately_cash_account_id = $data['paid_immediately_cash_account_id'];
-            $purchaseAdditionalCost->amount_paid_immediately = $data['amount_paid_immediately'];
-            $purchaseAdditionalCost->amount_payable = $data['amount_payable'];
-            $purchaseAdditionalCost->remarks = $data['remarks'];
+            $purchaseAdditionalCost->purchase_id = $data->purchaseId;
+            $purchaseAdditionalCost->purchase_additional_cost_category_id = $data->purchaseAdditionalCostCategoryId;
+            $purchaseAdditionalCost->code = $this->generateUniqueCode($purchaseAdditionalCost->company_id, $data->code, $purchaseAdditionalCost->id);
+            $purchaseAdditionalCost->date = $this->generateDate($data->date);
+            $purchaseAdditionalCost->due_days = $data->dueDays;
+            $purchaseAdditionalCost->paid_immediately_cash_account_id = $data->paidImmediatelyCashAccountId;
+            $purchaseAdditionalCost->amount_paid_immediately = $data->amountPaidImmediately;
+            $purchaseAdditionalCost->amount_payable = $data->amountPayable;
+            $purchaseAdditionalCost->remarks = $data->remarks;
             $purchaseAdditionalCost->save();
 
             self::updateSummary($purchaseAdditionalCost);

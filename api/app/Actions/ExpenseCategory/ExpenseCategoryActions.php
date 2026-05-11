@@ -3,6 +3,8 @@
 namespace App\Actions\ExpenseCategory;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\ExpenseCategoryCreateDTO;
+use App\DTOs\ExpenseCategoryUpdateDTO;
 use App\Models\ExpenseCategory;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -176,17 +178,17 @@ class ExpenseCategoryActions
         return $expenseCategory->children()->exists();
     }
 
-    public function create(array $data): ExpenseCategory
+    public function create(ExpenseCategoryCreateDTO $data): ExpenseCategory
     {
         $timer_start = microtime(true);
 
         try {
             $expenseCategory = new ExpenseCategory();
-            $expenseCategory->company_id = $data['company_id'];
-            $expenseCategory->parent_id = $data['parent_id'];
-            $expenseCategory->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $expenseCategory->name = $data['name'];
-            $expenseCategory->sequence = $data['sequence'];
+            $expenseCategory->company_id = $data->companyId;
+            $expenseCategory->parent_id = $data->parentId;
+            $expenseCategory->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $expenseCategory->name = $data->name;
+            $expenseCategory->sequence = $data->sequence;
             $expenseCategory->save();
 
             $this->flushCache();
@@ -201,18 +203,18 @@ class ExpenseCategoryActions
         }
     }
 
-    public function update(ExpenseCategory $expenseCategory, array $data): ExpenseCategory
+    public function update(ExpenseCategory $expenseCategory, ExpenseCategoryUpdateDTO $data): ExpenseCategory
     {
         $timer_start = microtime(true);
 
         try {
             $expenseCategory->code = $this->generateUniqueCode(
                 $expenseCategory->company_id,
-                $data['code'],
+                $data->code,
                 $expenseCategory->id,
             );
-            $expenseCategory->name = $data['name'];
-            $expenseCategory->sequence = $data['sequence'];
+            $expenseCategory->name = $data->name;
+            $expenseCategory->sequence = $data->sequence;
             $expenseCategory->save();
 
             $this->flushCache();

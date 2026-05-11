@@ -282,7 +282,7 @@ class PurchaseOrderActions
                     vatRate: $item['vat_rate'],
                     vatBaseNumerator: $item['vat_base_numerator'],
                     vatBaseDenominator: $item['vat_base_denominator'],
-                    remarks: $item['remarks'] ?? null,
+                    remarks: $item['remarks'],
                 );
 
                 $this->purchaseOrderItemActions->create($dto, false);
@@ -310,7 +310,7 @@ class PurchaseOrderActions
                     date: $downPayment['date'],
                     cashAccountId: $downPayment['cash_account_id'],
                     amount: $downPayment['amount'],
-                    remarks: $downPayment['remarks'] ?? null,
+                    remarks: $downPayment['remarks'],
                 );
 
                 $this->purchaseOrderDownPaymentActions->create($dto, false);
@@ -325,7 +325,7 @@ class PurchaseOrderActions
                     date: $refundedDownPayment['date'],
                     cashAccountId: $refundedDownPayment['cash_account_id'],
                     amount: $refundedDownPayment['amount'],
-                    remarks: $refundedDownPayment['remarks'] ?? null,
+                    remarks: $refundedDownPayment['remarks'],
                 );
 
                 $this->purchaseOrderDownPaymentRefundActions->create($dto, false);
@@ -429,7 +429,7 @@ class PurchaseOrderActions
                         vatRate: $item['vat_rate'],
                         vatBaseNumerator: $item['vat_base_numerator'],
                         vatBaseDenominator: $item['vat_base_denominator'],
-                        remarks: $item['remarks'] ?? null,
+                        remarks: $item['remarks'],
                     );
 
                     $this->purchaseOrderItemActions->create($dto, false);
@@ -449,7 +449,7 @@ class PurchaseOrderActions
                         date: $downPayment['date'],
                         cashAccountId: $downPayment['cash_account_id'],
                         amount: $downPayment['amount'],
-                        remarks: $downPayment['remarks'] ?? null,
+                        remarks: $downPayment['remarks'],
                     );
 
                     $this->purchaseOrderDownPaymentActions->update($poDownPayment, $dto, false);
@@ -462,7 +462,7 @@ class PurchaseOrderActions
                         date: $downPayment['date'],
                         cashAccountId: $downPayment['cash_account_id'],
                         amount: $downPayment['amount'],
-                        remarks: $downPayment['remarks'] ?? null,
+                        remarks: $downPayment['remarks'],
                     );
 
                     $this->purchaseOrderDownPaymentActions->create($dto, false);
@@ -482,7 +482,7 @@ class PurchaseOrderActions
                         date: $refundedDownPayment['date'],
                         cashAccountId: $refundedDownPayment['cash_account_id'],
                         amount: $refundedDownPayment['amount'],
-                        remarks: $refundedDownPayment['remarks'] ?? null,
+                        remarks: $refundedDownPayment['remarks'],
                     );
 
                     $this->purchaseOrderDownPaymentRefundActions->update($poRefundedDownPayment, $dto, false);
@@ -495,7 +495,7 @@ class PurchaseOrderActions
                         date: $refundedDownPayment['date'],
                         cashAccountId: $refundedDownPayment['cash_account_id'],
                         amount: $refundedDownPayment['amount'],
-                        remarks: $refundedDownPayment['remarks'] ?? null,
+                        remarks: $refundedDownPayment['remarks'],
                     );
 
                     $this->purchaseOrderDownPaymentRefundActions->create($dto, false);

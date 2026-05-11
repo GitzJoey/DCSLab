@@ -2,6 +2,8 @@
 
 namespace App\Actions\CustomerGroup;
 
+use App\DTOs\CustomerGroupCreateDTO;
+use App\DTOs\CustomerGroupUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\CustomerGroup;
@@ -132,30 +134,30 @@ class CustomerGroupActions
         return $customerGroup->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): CustomerGroup
+    public function create(CustomerGroupCreateDTO $data): CustomerGroup
     {
         $timer_start = microtime(true);
 
         try {
             $customerGroup = new CustomerGroup();
-            $customerGroup->company_id = $data['company_id'];
-            $customerGroup->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $customerGroup->name = $data['name'];
-            $customerGroup->max_open_invoice = $data['max_open_invoice'];
-            $customerGroup->max_outstanding_invoice = $data['max_outstanding_invoice'];
-            $customerGroup->max_invoice_age = $data['max_invoice_age'];
-            $customerGroup->payment_term_type = $data['payment_term_type'];
-            $customerGroup->payment_term = $data['payment_term'];
-            $customerGroup->selling_point = $data['selling_point'];
-            $customerGroup->selling_point_multiple = $data['selling_point_multiple'];
-            $customerGroup->sell_at_cost = $data['sell_at_cost'];
-            $customerGroup->price_markup_percent = $data['price_markup_percent'];
-            $customerGroup->price_markup_nominal = $data['price_markup_nominal'];
-            $customerGroup->price_markdown_percent = $data['price_markdown_percent'];
-            $customerGroup->price_markdown_nominal = $data['price_markdown_nominal'];
-            $customerGroup->rounding_type = $data['rounding_type'];
-            $customerGroup->rounding_digit = $data['rounding_digit'];
-            $customerGroup->remarks = $data['remarks'];
+            $customerGroup->company_id = $data->companyId;
+            $customerGroup->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $customerGroup->name = $data->name;
+            $customerGroup->max_open_invoice = $data->maxOpenInvoice;
+            $customerGroup->max_outstanding_invoice = $data->maxOutstandingInvoice;
+            $customerGroup->max_invoice_age = $data->maxInvoiceAge;
+            $customerGroup->payment_term_type = $data->paymentTermType;
+            $customerGroup->payment_term = $data->paymentTerm;
+            $customerGroup->selling_point = $data->sellingPoint;
+            $customerGroup->selling_point_multiple = $data->sellingPointMultiple;
+            $customerGroup->sell_at_cost = $data->sellAtCost;
+            $customerGroup->price_markup_percent = $data->priceMarkupPercent;
+            $customerGroup->price_markup_nominal = $data->priceMarkupNominal;
+            $customerGroup->price_markdown_percent = $data->priceMarkdownPercent;
+            $customerGroup->price_markdown_nominal = $data->priceMarkdownNominal;
+            $customerGroup->rounding_type = $data->roundingType;
+            $customerGroup->rounding_digit = $data->roundingDigit;
+            $customerGroup->remarks = $data->remarks;
             $customerGroup->save();
 
             $this->flushCache();
@@ -170,28 +172,28 @@ class CustomerGroupActions
         }
     }
 
-    public function update(CustomerGroup $customerGroup, array $data): CustomerGroup
+    public function update(CustomerGroup $customerGroup, CustomerGroupUpdateDTO $data): CustomerGroup
     {
         $timer_start = microtime(true);
 
         try {
-            $customerGroup->code = $this->generateUniqueCode($customerGroup->company_id, $data['code'], $customerGroup->id);
-            $customerGroup->name = $data['name'];
-            $customerGroup->max_open_invoice = $data['max_open_invoice'];
-            $customerGroup->max_outstanding_invoice = $data['max_outstanding_invoice'];
-            $customerGroup->max_invoice_age = $data['max_invoice_age'];
-            $customerGroup->payment_term_type = $data['payment_term_type'];
-            $customerGroup->payment_term = $data['payment_term'];
-            $customerGroup->selling_point = $data['selling_point'];
-            $customerGroup->selling_point_multiple = $data['selling_point_multiple'];
-            $customerGroup->sell_at_cost = $data['sell_at_cost'];
-            $customerGroup->price_markup_percent = $data['price_markup_percent'];
-            $customerGroup->price_markup_nominal = $data['price_markup_nominal'];
-            $customerGroup->price_markdown_percent = $data['price_markdown_percent'];
-            $customerGroup->price_markdown_nominal = $data['price_markdown_nominal'];
-            $customerGroup->rounding_type = $data['rounding_type'];
-            $customerGroup->rounding_digit = $data['rounding_digit'];
-            $customerGroup->remarks = $data['remarks'];
+            $customerGroup->code = $this->generateUniqueCode($customerGroup->company_id, $data->code, $customerGroup->id);
+            $customerGroup->name = $data->name;
+            $customerGroup->max_open_invoice = $data->maxOpenInvoice;
+            $customerGroup->max_outstanding_invoice = $data->maxOutstandingInvoice;
+            $customerGroup->max_invoice_age = $data->maxInvoiceAge;
+            $customerGroup->payment_term_type = $data->paymentTermType;
+            $customerGroup->payment_term = $data->paymentTerm;
+            $customerGroup->selling_point = $data->sellingPoint;
+            $customerGroup->selling_point_multiple = $data->sellingPointMultiple;
+            $customerGroup->sell_at_cost = $data->sellAtCost;
+            $customerGroup->price_markup_percent = $data->priceMarkupPercent;
+            $customerGroup->price_markup_nominal = $data->priceMarkupNominal;
+            $customerGroup->price_markdown_percent = $data->priceMarkdownPercent;
+            $customerGroup->price_markdown_nominal = $data->priceMarkdownNominal;
+            $customerGroup->rounding_type = $data->roundingType;
+            $customerGroup->rounding_digit = $data->roundingDigit;
+            $customerGroup->remarks = $data->remarks;
             $customerGroup->save();
 
             $this->flushCache();

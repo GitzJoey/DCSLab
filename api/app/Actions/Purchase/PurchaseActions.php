@@ -8,6 +8,8 @@ use App\Actions\PurchaseItem\PurchaseItemActions;
 use App\Actions\PurchaseOrder\PurchaseOrderActions;
 use App\Actions\PurchaseReceipt\PurchaseReceiptActions;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\PurchaseAdditionalCostCreateDTO;
+use App\DTOs\PurchaseAdditionalCostUpdateDTO;
 use App\DTOs\PurchaseDirectCreateDTO;
 use App\DTOs\PurchaseDirectUpdateDTO;
 use App\DTOs\PurchaseGlobalDiscountCreateDTO;
@@ -376,19 +378,20 @@ class PurchaseActions
             }
 
             foreach ($data->additionalCosts as $additionalCost) {
-                $this->purchaseAdditionalCostActions->create([
-                    'company_id' => $purchase->company_id,
-                    'branch_id' => $purchase->branch_id,
-                    'purchase_id' => $purchase->id,
-                    'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                    'code' => $additionalCost['code'],
-                    'date' => $additionalCost['date'],
-                    'due_days' => $additionalCost['due_days'],
-                    'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                    'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                    'amount_payable' => $additionalCost['amount_payable'],
-                    'remarks' => $additionalCost['remarks'],
-                ]);
+                $dto = new PurchaseAdditionalCostCreateDTO(
+                    companyId: $purchase->company_id,
+                    branchId: $purchase->branch_id,
+                    purchaseId: $purchase->id,
+                    purchaseAdditionalCostCategoryId: $additionalCost['purchase_additional_cost_category_id'],
+                    code: $additionalCost['code'],
+                    date: $additionalCost['date'],
+                    dueDays: $additionalCost['due_days'],
+                    paidImmediatelyCashAccountId: $additionalCost['paid_immediately_cash_account_id'],
+                    amountPaidImmediately: $additionalCost['amount_paid_immediately'],
+                    amountPayable: $additionalCost['amount_payable'],
+                    remarks: $additionalCost['remarks'],
+                );
+                $this->purchaseAdditionalCostActions->create($dto);
             }
 
             self::updateSummary($purchase);
@@ -467,19 +470,20 @@ class PurchaseActions
             }
 
             foreach ($data->additionalCosts as $additionalCost) {
-                $this->purchaseAdditionalCostActions->create([
-                    'company_id' => $purchase->company_id,
-                    'branch_id' => $purchase->branch_id,
-                    'purchase_id' => $purchase->id,
-                    'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                    'code' => $additionalCost['code'],
-                    'date' => $additionalCost['date'],
-                    'due_days' => $additionalCost['due_days'],
-                    'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                    'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                    'amount_payable' => $additionalCost['amount_payable'],
-                    'remarks' => $additionalCost['remarks'],
-                ]);
+                $dto = new PurchaseAdditionalCostCreateDTO(
+                    companyId: $purchase->company_id,
+                    branchId: $purchase->branch_id,
+                    purchaseId: $purchase->id,
+                    purchaseAdditionalCostCategoryId: $additionalCost['purchase_additional_cost_category_id'],
+                    code: $additionalCost['code'],
+                    date: $additionalCost['date'],
+                    dueDays: $additionalCost['due_days'],
+                    paidImmediatelyCashAccountId: $additionalCost['paid_immediately_cash_account_id'],
+                    amountPaidImmediately: $additionalCost['amount_paid_immediately'],
+                    amountPayable: $additionalCost['amount_payable'],
+                    remarks: $additionalCost['remarks'],
+                );
+                $this->purchaseAdditionalCostActions->create($dto);
             }
 
             self::updateSummary($purchase);
@@ -643,30 +647,33 @@ class PurchaseActions
                 if (! empty($additionalCost['id'])) {
                     $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($additionalCost['id']);
 
-                    $this->purchaseAdditionalCostActions->update($purchaseAdditionalCost, [
-                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                        'code' => $additionalCost['code'],
-                        'date' => $additionalCost['date'],
-                        'due_days' => $additionalCost['due_days'],
-                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                        'amount_payable' => $additionalCost['amount_payable'],
-                        'remarks' => $additionalCost['remarks'],
-                    ]);
+                    $dto = new PurchaseAdditionalCostUpdateDTO(
+                        purchaseId: $purchase->id,
+                        purchaseAdditionalCostCategoryId: $additionalCost['purchase_additional_cost_category_id'],
+                        code: $additionalCost['code'],
+                        date: $additionalCost['date'],
+                        dueDays: $additionalCost['due_days'],
+                        paidImmediatelyCashAccountId: $additionalCost['paid_immediately_cash_account_id'],
+                        amountPaidImmediately: $additionalCost['amount_paid_immediately'],
+                        amountPayable: $additionalCost['amount_payable'],
+                        remarks: $additionalCost['remarks'],
+                    );
+                    $this->purchaseAdditionalCostActions->update($purchaseAdditionalCost, $dto);
                 } else {
-                    $this->purchaseAdditionalCostActions->create([
-                        'company_id' => $purchase->company_id,
-                        'branch_id' => $purchase->branch_id,
-                        'purchase_id' => $purchase->id,
-                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                        'code' => $additionalCost['code'],
-                        'date' => $additionalCost['date'],
-                        'due_days' => $additionalCost['due_days'],
-                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                        'amount_payable' => $additionalCost['amount_payable'],
-                        'remarks' => $additionalCost['remarks'],
-                    ]);
+                    $dto = new PurchaseAdditionalCostCreateDTO(
+                        companyId: $purchase->company_id,
+                        branchId: $purchase->branch_id,
+                        purchaseId: $purchase->id,
+                        purchaseAdditionalCostCategoryId: $additionalCost['purchase_additional_cost_category_id'],
+                        code: $additionalCost['code'],
+                        date: $additionalCost['date'],
+                        dueDays: $additionalCost['due_days'],
+                        paidImmediatelyCashAccountId: $additionalCost['paid_immediately_cash_account_id'],
+                        amountPaidImmediately: $additionalCost['amount_paid_immediately'],
+                        amountPayable: $additionalCost['amount_payable'],
+                        remarks: $additionalCost['remarks'],
+                    );
+                    $this->purchaseAdditionalCostActions->create($dto);
                 }
             }
 
@@ -804,30 +811,33 @@ class PurchaseActions
                 if (! empty($additionalCost['id'])) {
                     $purchaseAdditionalCost = $purchase->additionalCosts()->findOrFail($additionalCost['id']);
 
-                    $this->purchaseAdditionalCostActions->update($purchaseAdditionalCost, [
-                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                        'code' => $additionalCost['code'],
-                        'date' => $additionalCost['date'],
-                        'due_days' => $additionalCost['due_days'],
-                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                        'amount_payable' => $additionalCost['amount_payable'],
-                        'remarks' => $additionalCost['remarks'],
-                    ]);
+                    $dto = new PurchaseAdditionalCostUpdateDTO(
+                        purchaseId: $purchase->id,
+                        purchaseAdditionalCostCategoryId: $additionalCost['purchase_additional_cost_category_id'],
+                        code: $additionalCost['code'],
+                        date: $additionalCost['date'],
+                        dueDays: $additionalCost['due_days'],
+                        paidImmediatelyCashAccountId: $additionalCost['paid_immediately_cash_account_id'],
+                        amountPaidImmediately: $additionalCost['amount_paid_immediately'],
+                        amountPayable: $additionalCost['amount_payable'],
+                        remarks: $additionalCost['remarks'],
+                    );
+                    $this->purchaseAdditionalCostActions->update($purchaseAdditionalCost, $dto);
                 } else {
-                    $this->purchaseAdditionalCostActions->create([
-                        'company_id' => $purchase->company_id,
-                        'branch_id' => $purchase->branch_id,
-                        'purchase_id' => $purchase->id,
-                        'purchase_additional_cost_category_id' => $additionalCost['purchase_additional_cost_category_id'],
-                        'code' => $additionalCost['code'],
-                        'date' => $additionalCost['date'],
-                        'due_days' => $additionalCost['due_days'],
-                        'paid_immediately_cash_account_id' => $additionalCost['paid_immediately_cash_account_id'],
-                        'amount_paid_immediately' => $additionalCost['amount_paid_immediately'],
-                        'amount_payable' => $additionalCost['amount_payable'],
-                        'remarks' => $additionalCost['remarks'],
-                    ]);
+                    $dto = new PurchaseAdditionalCostCreateDTO(
+                        companyId: $purchase->company_id,
+                        branchId: $purchase->branch_id,
+                        purchaseId: $purchase->id,
+                        purchaseAdditionalCostCategoryId: $additionalCost['purchase_additional_cost_category_id'],
+                        code: $additionalCost['code'],
+                        date: $additionalCost['date'],
+                        dueDays: $additionalCost['due_days'],
+                        paidImmediatelyCashAccountId: $additionalCost['paid_immediately_cash_account_id'],
+                        amountPaidImmediately: $additionalCost['amount_paid_immediately'],
+                        amountPayable: $additionalCost['amount_payable'],
+                        remarks: $additionalCost['remarks'],
+                    );
+                    $this->purchaseAdditionalCostActions->create($dto);
                 }
             }
 

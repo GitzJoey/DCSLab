@@ -3,6 +3,8 @@
 namespace App\Actions\JournalEntry;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\JournalEntry;
 use App\Models\JournalEntryLine;
@@ -140,27 +142,27 @@ class JournalEntryActions
         return $journalEntry->load(self::EAGER_LOADS);
     }
 
-    public function create(array $data): JournalEntry
+    public function create(JournalEntryCreateDTO $data): JournalEntry
     {
         $timerStart = microtime(true);
 
         try {
-            [$totalDebit, $totalCredit] = $this->calculateTotals($data['lines']);
+            [$totalDebit, $totalCredit] = $this->calculateTotals($data->lines);
 
             $journalEntry = new JournalEntry();
-            $journalEntry->company_id = $data['company_id'];
-            $journalEntry->branch_id = $data['branch_id'];
-            $journalEntry->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $journalEntry->date = $this->resolveDate($data['date']);
-            $journalEntry->source_type = $data['source_type'];
-            $journalEntry->source_id = $data['source_id'];
-            $journalEntry->reference_no = $data['reference_no'];
+            $journalEntry->company_id = $data->companyId;
+            $journalEntry->branch_id = $data->branchId;
+            $journalEntry->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $journalEntry->date = $this->resolveDate($data->date);
+            $journalEntry->source_type = $data->sourceType;
+            $journalEntry->source_id = $data->sourceId;
+            $journalEntry->reference_no = $data->referenceNo;
             $journalEntry->total_debit = $totalDebit;
             $journalEntry->total_credit = $totalCredit;
-            $journalEntry->remarks = $data['remarks'];
+            $journalEntry->remarks = $data->remarks;
             $journalEntry->save();
 
-            $this->syncLines($journalEntry, $data['lines']);
+            $this->syncLines($journalEntry, $data->lines);
             $this->flushCache();
 
             return $journalEntry->refresh()->load(self::EAGER_LOADS);
@@ -173,24 +175,24 @@ class JournalEntryActions
         }
     }
 
-    public function update(JournalEntry $journalEntry, array $data): JournalEntry
+    public function update(JournalEntry $journalEntry, JournalEntryUpdateDTO $data): JournalEntry
     {
         $timerStart = microtime(true);
 
         try {
-            [$totalDebit, $totalCredit] = $this->calculateTotals($data['lines']);
+            [$totalDebit, $totalCredit] = $this->calculateTotals($data->lines);
 
-            $journalEntry->branch_id = $data['branch_id'];
-            $journalEntry->code = $this->generateUniqueCode($journalEntry->company_id, $data['code'], $journalEntry->id);
-            $journalEntry->date = $this->resolveDate($data['date']);
-            $journalEntry->reference_no = $data['reference_no'];
+            $journalEntry->branch_id = $data->branchId;
+            $journalEntry->code = $this->generateUniqueCode($journalEntry->company_id, $data->code, $journalEntry->id);
+            $journalEntry->date = $this->resolveDate($data->date);
+            $journalEntry->reference_no = $data->referenceNo;
             $journalEntry->total_debit = $totalDebit;
             $journalEntry->total_credit = $totalCredit;
-            $journalEntry->remarks = $data['remarks'];
+            $journalEntry->remarks = $data->remarks;
             $journalEntry->save();
 
             $journalEntry->lines()->delete();
-            $this->syncLines($journalEntry, $data['lines']);
+            $this->syncLines($journalEntry, $data->lines);
             $this->flushCache();
 
             return $journalEntry->refresh()->load(self::EAGER_LOADS);
@@ -279,7 +281,7 @@ class JournalEntryActions
             $journalEntryLine->sequence = $index + 1;
             $journalEntryLine->debit = max((float) ($line['debit'] ?? 0), 0);
             $journalEntryLine->credit = max((float) ($line['credit'] ?? 0), 0);
-            $journalEntryLine->remarks = $line['remarks'] ?? null;
+            $journalEntryLine->remarks = $line['remarks'];
             if (auth()->check()) {
                 $journalEntryLine->created_by = auth()->id();
                 $journalEntryLine->updated_by = auth()->id();

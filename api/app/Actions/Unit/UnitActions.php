@@ -3,6 +3,8 @@
 namespace App\Actions\Unit;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\UnitCreateDTO;
+use App\DTOs\UnitUpdateDTO;
 use App\Models\Company;
 use App\Models\Unit;
 use App\Traits\CacheHelper;
@@ -125,17 +127,17 @@ class UnitActions
         return $unit->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): Unit
+    public function create(UnitCreateDTO $data): Unit
     {
         $timer_start = microtime(true);
 
         try {
             $unit = new Unit();
-            $unit->company_id = $data['company_id'];
-            $unit->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $unit->name = $data['name'];
-            $unit->description = $data['description'];
-            $unit->type = $data['type'];
+            $unit->company_id = $data->companyId;
+            $unit->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $unit->name = $data->name;
+            $unit->description = $data->description;
+            $unit->type = $data->type;
             $unit->save();
 
             $this->flushCache();
@@ -150,15 +152,15 @@ class UnitActions
         }
     }
 
-    public function update(Unit $unit, array $data): Unit
+    public function update(Unit $unit, UnitUpdateDTO $data): Unit
     {
         $timer_start = microtime(true);
 
         try {
-            $unit->code = $this->generateUniqueCode($unit->company_id, $data['code'], $unit->id);
-            $unit->name = $data['name'];
-            $unit->description = $data['description'];
-            $unit->type = $data['type'];
+            $unit->code = $this->generateUniqueCode($unit->company_id, $data->code, $unit->id);
+            $unit->name = $data->name;
+            $unit->description = $data->description;
+            $unit->type = $data->type;
             $unit->save();
 
             $this->flushCache();

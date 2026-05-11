@@ -10,6 +10,8 @@ use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PrepaidIncomeCreateDTO;
 use App\DTOs\PrepaidIncomeImageDTO;
+use App\DTOs\PrepaidIncomePaymentCreateDTO;
+use App\DTOs\PrepaidIncomePaymentUpdateDTO;
 use App\DTOs\PrepaidIncomeUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\PrepaidIncome;
@@ -248,16 +250,17 @@ class PrepaidIncomeActions
             }
 
             foreach ($data->payments as $payment) {
-                $this->prepaidIncomePaymentActions->create([
-                    'company_id' => $prepaidIncome->company_id,
-                    'branch_id' => $prepaidIncome->branch_id,
-                    'code' => $payment['code'],
-                    'date' => $payment['date'],
-                    'prepaid_income_id' => $prepaidIncome->id,
-                    'cash_account_id' => $payment['cash_account_id'],
-                    'amount' => $payment['amount'],
-                    'remarks' => $payment['remarks'] ?? null,
-                ], false);
+                $dto = new PrepaidIncomePaymentCreateDTO(
+                    companyId: $prepaidIncome->company_id,
+                    branchId: $prepaidIncome->branch_id,
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    prepaidIncomeId: $prepaidIncome->id,
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: $payment['amount'],
+                    remarks: $payment['remarks'],
+                );
+                $this->prepaidIncomePaymentActions->create($dto, false);
             }
 
             foreach ($data->images as $image) {
@@ -327,24 +330,26 @@ class PrepaidIncomeActions
             foreach ($data->payments as $payment) {
                 if (! empty($payment['id'])) {
                     $prepaidIncomePayment = $prepaidIncome->payments()->findOrFail($payment['id']);
-                    $this->prepaidIncomePaymentActions->update($prepaidIncomePayment, [
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new PrepaidIncomePaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->prepaidIncomePaymentActions->update($prepaidIncomePayment, $dto, false);
                 } else {
-                    $this->prepaidIncomePaymentActions->create([
-                        'company_id' => $prepaidIncome->company_id,
-                        'branch_id' => $prepaidIncome->branch_id,
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'prepaid_income_id' => $prepaidIncome->id,
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new PrepaidIncomePaymentCreateDTO(
+                        companyId: $prepaidIncome->company_id,
+                        branchId: $prepaidIncome->branch_id,
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        prepaidIncomeId: $prepaidIncome->id,
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->prepaidIncomePaymentActions->create($dto, false);
                 }
             }
 

@@ -7,6 +7,8 @@ use App\Actions\Receivable\ReceivableActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\ReceivablePaymentCreateDTO;
+use App\DTOs\ReceivablePaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\ReceivablePayment;
 use App\Traits\CacheHelper;
@@ -191,22 +193,20 @@ class ReceivablePaymentActions
         return $result->count() == 0;
     }
 
-    public function create(
-        array $data,
-        bool $updateParentSummary = true,
-    ): ReceivablePayment {
+    public function create(ReceivablePaymentCreateDTO $data, bool $updateParentSummary = true): ReceivablePayment
+    {
         $timer_start = microtime(true);
 
         try {
             $receivablePayment = new ReceivablePayment();
-            $receivablePayment->company_id = $data['company_id'];
-            $receivablePayment->branch_id = $data['branch_id'];
-            $receivablePayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $receivablePayment->date = $this->generateDate($data['date']);
-            $receivablePayment->receivable_id = $data['receivable_id'];
-            $receivablePayment->cash_account_id = $data['cash_account_id'];
-            $receivablePayment->amount = $data['amount'];
-            $receivablePayment->remarks = $data['remarks'];
+            $receivablePayment->company_id = $data->companyId;
+            $receivablePayment->branch_id = $data->branchId;
+            $receivablePayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $receivablePayment->date = $this->generateDate($data->date);
+            $receivablePayment->receivable_id = $data->receivableId;
+            $receivablePayment->cash_account_id = $data->cashAccountId;
+            $receivablePayment->amount = $data->amount;
+            $receivablePayment->remarks = $data->remarks;
             $receivablePayment->save();
 
             $this->cashTransactionActions->create(
@@ -230,19 +230,16 @@ class ReceivablePaymentActions
         }
     }
 
-    public function update(
-        ReceivablePayment $receivablePayment,
-        array $data,
-        bool $updateParentSummary = true,
-    ): ReceivablePayment {
+    public function update(ReceivablePayment $receivablePayment, ReceivablePaymentUpdateDTO $data, bool $updateParentSummary = true): ReceivablePayment
+    {
         $timer_start = microtime(true);
 
         try {
-            $receivablePayment->code = $this->generateUniqueCode($receivablePayment->company_id, $data['code'], $receivablePayment->id);
-            $receivablePayment->date = $this->generateDate($data['date']);
-            $receivablePayment->cash_account_id = $data['cash_account_id'];
-            $receivablePayment->amount = $data['amount'];
-            $receivablePayment->remarks = $data['remarks'];
+            $receivablePayment->code = $this->generateUniqueCode($receivablePayment->company_id, $data->code, $receivablePayment->id);
+            $receivablePayment->date = $this->generateDate($data->date);
+            $receivablePayment->cash_account_id = $data->cashAccountId;
+            $receivablePayment->amount = $data->amount;
+            $receivablePayment->remarks = $data->remarks;
             $receivablePayment->save();
 
             $cashTransaction = $receivablePayment->cashTransaction;

@@ -2,6 +2,8 @@
 
 namespace App\Actions\CustomerAddress;
 
+use App\DTOs\CustomerAddressCreateDTO;
+use App\DTOs\CustomerAddressUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\CustomerAddress;
 use App\Traits\CacheHelper;
@@ -141,19 +143,19 @@ class CustomerAddressActions
         return $query->doesntExist();
     }
 
-    public function create(array $data): CustomerAddress
+    public function create(CustomerAddressCreateDTO $data): CustomerAddress
     {
         $timer_start = microtime(true);
 
         try {
             $customerAddress = new CustomerAddress();
-            $customerAddress->company_id = $data['company_id'];
-            $customerAddress->customer_id = $data['customer_id'];
-            $customerAddress->address = $data['address'];
-            $customerAddress->city = $data['city'];
-            $customerAddress->contact = $data['contact'];
-            $customerAddress->is_main = $data['is_main'];
-            $customerAddress->remarks = $data['remarks'];
+            $customerAddress->company_id = $data->companyId;
+            $customerAddress->customer_id = $data->customerId;
+            $customerAddress->address = $data->address;
+            $customerAddress->city = $data->city;
+            $customerAddress->contact = $data->contact;
+            $customerAddress->is_main = $data->isMain;
+            $customerAddress->remarks = $data->remarks;
             $customerAddress->save();
 
             $this->flushCache();
@@ -168,16 +170,16 @@ class CustomerAddressActions
         }
     }
 
-    public function update(CustomerAddress $customerAddress, array $data): CustomerAddress
+    public function update(CustomerAddress $customerAddress, CustomerAddressUpdateDTO $data): CustomerAddress
     {
         $timer_start = microtime(true);
 
         try {
-            $customerAddress->address = $data['address'];
-            $customerAddress->city = $data['city'];
-            $customerAddress->contact = $data['contact'];
-            $customerAddress->is_main = $data['is_main'];
-            $customerAddress->remarks = $data['remarks'];
+            $customerAddress->address = $data->address;
+            $customerAddress->city = $data->city;
+            $customerAddress->contact = $data->contact;
+            $customerAddress->is_main = $data->isMain;
+            $customerAddress->remarks = $data->remarks;
             $customerAddress->save();
 
             $this->flushCache();

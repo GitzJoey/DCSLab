@@ -3,6 +3,8 @@
 namespace App\Actions\Supplier;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\SupplierCreateDTO;
+use App\DTOs\SupplierUpdateDTO;
 use App\Models\Company;
 use App\Models\Supplier;
 use App\Traits\CacheHelper;
@@ -128,23 +130,23 @@ class SupplierActions
         return $supplier->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): Supplier
+    public function create(SupplierCreateDTO $data): Supplier
     {
         $timer_start = microtime(true);
 
         try {
             $supplier = new Supplier();
-            $supplier->company_id = $data['company_id'];
-            $supplier->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $supplier->name = $data['name'];
-            $supplier->address = $data['address'];
-            $supplier->city = $data['city'];
-            $supplier->payment_term_type = $data['payment_term_type'];
-            $supplier->payment_term = $data['payment_term'];
-            $supplier->taxable_enterprise = $data['taxable_enterprise'];
-            $supplier->tax_id = $data['tax_id'];
-            $supplier->status = $data['status'];
-            $supplier->remarks = $data['remarks'];
+            $supplier->company_id = $data->companyId;
+            $supplier->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $supplier->name = $data->name;
+            $supplier->address = $data->address;
+            $supplier->city = $data->city;
+            $supplier->payment_term_type = $data->paymentTermType;
+            $supplier->payment_term = $data->paymentTerm;
+            $supplier->taxable_enterprise = $data->taxableEnterprise;
+            $supplier->tax_id = $data->taxId;
+            $supplier->status = $data->status;
+            $supplier->remarks = $data->remarks;
             $supplier->save();
 
             $this->flushCache();
@@ -159,21 +161,21 @@ class SupplierActions
         }
     }
 
-    public function update(Supplier $supplier, array $data): Supplier
+    public function update(Supplier $supplier, SupplierUpdateDTO $data): Supplier
     {
         $timer_start = microtime(true);
 
         try {
-            $supplier->code = $this->generateUniqueCode($supplier->company_id, $data['code'], $supplier->id);
-            $supplier->name = $data['name'];
-            $supplier->address = $data['address'];
-            $supplier->city = $data['city'];
-            $supplier->payment_term_type = $data['payment_term_type'];
-            $supplier->payment_term = $data['payment_term'];
-            $supplier->taxable_enterprise = $data['taxable_enterprise'];
-            $supplier->tax_id = $data['tax_id'];
-            $supplier->status = $data['status'];
-            $supplier->remarks = $data['remarks'];
+            $supplier->code = $this->generateUniqueCode($supplier->company_id, $data->code, $supplier->id);
+            $supplier->name = $data->name;
+            $supplier->address = $data->address;
+            $supplier->city = $data->city;
+            $supplier->payment_term_type = $data->paymentTermType;
+            $supplier->payment_term = $data->paymentTerm;
+            $supplier->taxable_enterprise = $data->taxableEnterprise;
+            $supplier->tax_id = $data->taxId;
+            $supplier->status = $data->status;
+            $supplier->remarks = $data->remarks;
             $supplier->save();
 
             $this->flushCache();

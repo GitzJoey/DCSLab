@@ -10,6 +10,8 @@ use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\IncomeCreateDTO;
 use App\DTOs\IncomeImageDTO;
+use App\DTOs\IncomePaymentCreateDTO;
+use App\DTOs\IncomePaymentUpdateDTO;
 use App\DTOs\IncomeUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\Income;
@@ -247,16 +249,17 @@ class IncomeActions
             }
 
             foreach ($data->payments as $payment) {
-                $this->incomePaymentActions->create([
-                    'company_id' => $income->company_id,
-                    'branch_id' => $income->branch_id,
-                    'code' => $payment['code'],
-                    'date' => $payment['date'],
-                    'income_id' => $income->id,
-                    'cash_account_id' => $payment['cash_account_id'],
-                    'amount' => $payment['amount'],
-                    'remarks' => $payment['remarks'] ?? null,
-                ], false);
+                $dto = new IncomePaymentCreateDTO(
+                    companyId: $income->company_id,
+                    branchId: $income->branch_id,
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    incomeId: $income->id,
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: $payment['amount'],
+                    remarks: $payment['remarks'],
+                );
+                $this->incomePaymentActions->create($dto, false);
             }
 
             foreach ($data->images as $image) {
@@ -325,24 +328,26 @@ class IncomeActions
             foreach ($data->payments as $payment) {
                 if (! empty($payment['id'])) {
                     $incomePayment = $income->payments()->findOrFail($payment['id']);
-                    $this->incomePaymentActions->update($incomePayment, [
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new IncomePaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->incomePaymentActions->update($incomePayment, $dto, false);
                 } else {
-                    $this->incomePaymentActions->create([
-                        'company_id' => $income->company_id,
-                        'branch_id' => $income->branch_id,
-                        'code' => $payment['code'],
-                        'date' => $payment['date'],
-                        'income_id' => $income->id,
-                        'cash_account_id' => $payment['cash_account_id'],
-                        'amount' => $payment['amount'],
-                        'remarks' => $payment['remarks'] ?? null,
-                    ], false);
+                    $dto = new IncomePaymentCreateDTO(
+                        companyId: $income->company_id,
+                        branchId: $income->branch_id,
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        incomeId: $income->id,
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+                    $this->incomePaymentActions->create($dto, false);
                 }
             }
 

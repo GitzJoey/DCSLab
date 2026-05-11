@@ -3,6 +3,8 @@
 namespace App\Actions\StockAdjustmentCategory;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\StockAdjustmentCategoryCreateDTO;
+use App\DTOs\StockAdjustmentCategoryUpdateDTO;
 use App\Models\Company;
 use App\Models\StockAdjustmentCategory;
 use App\Traits\CacheHelper;
@@ -131,19 +133,19 @@ class StockAdjustmentCategoryActions
         return $stockAdjustmentCategory->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): StockAdjustmentCategory
+    public function create(StockAdjustmentCategoryCreateDTO $data): StockAdjustmentCategory
     {
         $timer_start = microtime(true);
 
         try {
             $stockAdjustmentCategory = new StockAdjustmentCategory();
-            $stockAdjustmentCategory->company_id = $data['company_id'];
+            $stockAdjustmentCategory->company_id = $data->companyId;
             $stockAdjustmentCategory->code = $this->generateUniqueCode(
-                $data['company_id'],
-                $data['code'],
+                $data->companyId,
+                $data->code,
                 null,
             );
-            $stockAdjustmentCategory->name = $data['name'];
+            $stockAdjustmentCategory->name = $data->name;
             $stockAdjustmentCategory->save();
 
             $this->flushCache();
@@ -158,17 +160,17 @@ class StockAdjustmentCategoryActions
         }
     }
 
-    public function update(StockAdjustmentCategory $stockAdjustmentCategory, array $data): StockAdjustmentCategory
+    public function update(StockAdjustmentCategory $stockAdjustmentCategory, StockAdjustmentCategoryUpdateDTO $data): StockAdjustmentCategory
     {
         $timer_start = microtime(true);
 
         try {
             $stockAdjustmentCategory->code = $this->generateUniqueCode(
                 $stockAdjustmentCategory->company_id,
-                $data['code'],
+                $data->code,
                 $stockAdjustmentCategory->id,
             );
-            $stockAdjustmentCategory->name = $data['name'];
+            $stockAdjustmentCategory->name = $data->name;
             $stockAdjustmentCategory->save();
 
             $this->flushCache();

@@ -3,6 +3,8 @@
 namespace App\Actions\VatProfile;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\VatProfileCreateDTO;
+use App\DTOs\VatProfileUpdateDTO;
 use App\Models\Company;
 use App\Models\VatProfile;
 use App\Traits\CacheHelper;
@@ -132,24 +134,24 @@ class VatProfileActions
         return $vatProfile->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): VatProfile
+    public function create(VatProfileCreateDTO $data): VatProfile
     {
         $timer_start = microtime(true);
 
         try {
             $vatProfile = new VatProfile();
-            $vatProfile->company_id = $data['company_id'];
+            $vatProfile->company_id = $data->companyId;
             $vatProfile->code = $this->generateUniqueCode(
-                $data['company_id'],
-                $data['code'],
+                $data->companyId,
+                $data->code,
                 null,
             );
-            $vatProfile->name = $data['name'];
-            $vatProfile->vat_rate = $data['vat_rate'];
-            $vatProfile->vat_base_numerator = $data['vat_base_numerator'];
-            $vatProfile->vat_base_denominator = $data['vat_base_denominator'];
-            $vatProfile->remarks = $data['remarks'];
-            $vatProfile->is_active = $data['is_active'];
+            $vatProfile->name = $data->name;
+            $vatProfile->vat_rate = $data->vatRate;
+            $vatProfile->vat_base_numerator = $data->vatBaseNumerator;
+            $vatProfile->vat_base_denominator = $data->vatBaseDenominator;
+            $vatProfile->remarks = $data->remarks;
+            $vatProfile->is_active = $data->isActive;
             $vatProfile->save();
 
             $this->flushCache();
@@ -164,22 +166,22 @@ class VatProfileActions
         }
     }
 
-    public function update(VatProfile $vatProfile, array $data): VatProfile
+    public function update(VatProfile $vatProfile, VatProfileUpdateDTO $data): VatProfile
     {
         $timer_start = microtime(true);
 
         try {
             $vatProfile->code = $this->generateUniqueCode(
                 $vatProfile->company_id,
-                $data['code'],
+                $data->code,
                 $vatProfile->id,
             );
-            $vatProfile->name = $data['name'];
-            $vatProfile->vat_rate = $data['vat_rate'];
-            $vatProfile->vat_base_numerator = $data['vat_base_numerator'];
-            $vatProfile->vat_base_denominator = $data['vat_base_denominator'];
-            $vatProfile->remarks = $data['remarks'];
-            $vatProfile->is_active = $data['is_active'];
+            $vatProfile->name = $data->name;
+            $vatProfile->vat_rate = $data->vatRate;
+            $vatProfile->vat_base_numerator = $data->vatBaseNumerator;
+            $vatProfile->vat_base_denominator = $data->vatBaseDenominator;
+            $vatProfile->remarks = $data->remarks;
+            $vatProfile->is_active = $data->isActive;
             $vatProfile->save();
 
             $this->flushCache();

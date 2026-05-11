@@ -2,6 +2,8 @@
 
 namespace App\Actions\Employee;
 
+use App\DTOs\EmployeeCreateDTO;
+use App\DTOs\EmployeeUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\Employee;
@@ -128,16 +130,16 @@ class EmployeeActions
         return $employee->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): Employee
+    public function create(EmployeeCreateDTO $data): Employee
     {
         $timer_start = microtime(true);
 
         try {
             $employee = new Employee();
-            $employee->company_id = $data['company_id'];
-            $employee->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $employee->name = $data['name'];
-            $employee->remarks = $data['remarks'];
+            $employee->company_id = $data->companyId;
+            $employee->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $employee->name = $data->name;
+            $employee->remarks = $data->remarks;
             $employee->save();
 
             $this->flushCache();
@@ -152,15 +154,15 @@ class EmployeeActions
         }
     }
 
-    public function update(Employee $employee, array $data): Employee
+    public function update(Employee $employee, EmployeeUpdateDTO $data): Employee
     {
         $timer_start = microtime(true);
 
         try {
-            $employee->company_id = $data['company_id'];
-            $employee->code = $this->generateUniqueCode($employee->company_id, $data['code'], $employee->id);
-            $employee->name = $data['name'];
-            $employee->remarks = $data['remarks'];
+            $employee->company_id = $data->companyId;
+            $employee->code = $this->generateUniqueCode($employee->company_id, $data->code, $employee->id);
+            $employee->name = $data->name;
+            $employee->remarks = $data->remarks;
             $employee->save();
 
             $this->flushCache();

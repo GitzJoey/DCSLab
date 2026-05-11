@@ -7,6 +7,8 @@ use App\Actions\Income\IncomeActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\IncomePaymentCreateDTO;
+use App\DTOs\IncomePaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\IncomePayment;
 use App\Traits\CacheHelper;
@@ -190,22 +192,20 @@ class IncomePaymentActions
         return $result->count() == 0;
     }
 
-    public function create(
-        array $data,
-        bool $updateParentSummary = true,
-    ): IncomePayment {
+    public function create(IncomePaymentCreateDTO $data, bool $updateParentSummary = true): IncomePayment
+    {
         $timer_start = microtime(true);
 
         try {
             $incomePayment = new IncomePayment();
-            $incomePayment->company_id = $data['company_id'];
-            $incomePayment->branch_id = $data['branch_id'];
-            $incomePayment->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $incomePayment->date = $this->generateDate($data['date']);
-            $incomePayment->income_id = $data['income_id'];
-            $incomePayment->cash_account_id = $data['cash_account_id'];
-            $incomePayment->amount = $data['amount'];
-            $incomePayment->remarks = $data['remarks'];
+            $incomePayment->company_id = $data->companyId;
+            $incomePayment->branch_id = $data->branchId;
+            $incomePayment->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $incomePayment->date = $this->generateDate($data->date);
+            $incomePayment->income_id = $data->incomeId;
+            $incomePayment->cash_account_id = $data->cashAccountId;
+            $incomePayment->amount = $data->amount;
+            $incomePayment->remarks = $data->remarks;
             $incomePayment->save();
 
             $this->cashTransactionActions->create(
@@ -229,19 +229,16 @@ class IncomePaymentActions
         }
     }
 
-    public function update(
-        IncomePayment $incomePayment,
-        array $data,
-        bool $updateParentSummary = true,
-    ): IncomePayment {
+    public function update(IncomePayment $incomePayment, IncomePaymentUpdateDTO $data, bool $updateParentSummary = true): IncomePayment
+    {
         $timer_start = microtime(true);
 
         try {
-            $incomePayment->code = $this->generateUniqueCode($incomePayment->company_id, $data['code'], $incomePayment->id);
-            $incomePayment->date = $this->generateDate($data['date']);
-            $incomePayment->cash_account_id = $data['cash_account_id'];
-            $incomePayment->amount = $data['amount'];
-            $incomePayment->remarks = $data['remarks'];
+            $incomePayment->code = $this->generateUniqueCode($incomePayment->company_id, $data->code, $incomePayment->id);
+            $incomePayment->date = $this->generateDate($data->date);
+            $incomePayment->cash_account_id = $data->cashAccountId;
+            $incomePayment->amount = $data->amount;
+            $incomePayment->remarks = $data->remarks;
             $incomePayment->save();
 
             $cashTransaction = $incomePayment->cashTransaction;
