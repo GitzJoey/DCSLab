@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class Receivable extends Model
 {
-    use BootableModel;
     use HasFactory;
     use ScopeableByBranch;
     use ScopeableByCompany;
@@ -47,6 +47,79 @@ class Receivable extends Model
         'due_days' => 'integer',
         'is_paid_off' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        $validateRelations = static function (self $receivable): void {
+            $validateCompanyRelation = static function (
+                ?int $relationId,
+                string $modelClass,
+                string $errorMessage
+            ) use ($receivable): void {
+                if (is_null($relationId)) {
+                    return;
+                }
+
+                $relation = $modelClass::find($relationId);
+
+                if (! $relation || (int) $relation->company_id !== (int) $receivable->company_id) {
+                    throw new InvalidArgumentException($errorMessage);
+                }
+            };
+
+            $validateCompanyRelation(
+                relationId: $receivable->branch_id,
+                modelClass: Branch::class,
+                errorMessage: 'Receivable branch must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $receivable->category_id,
+                modelClass: ReceivableCategory::class,
+                errorMessage: 'Receivable category must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $receivable->customer_id,
+                modelClass: Customer::class,
+                errorMessage: 'Receivable customer must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $receivable->cash_account_id,
+                modelClass: CashAccount::class,
+                errorMessage: 'Receivable cash account must exist in the same company.',
+            );
+        };
+
+        static::creating(function (self $receivable) use ($validateRelations) {
+            $receivable->ulid = Str::ulid()->generate();
+
+            if (auth()->check()) {
+                $receivable->created_by = auth()->id();
+                $receivable->updated_by = auth()->id();
+            }
+
+            $validateRelations($receivable);
+        });
+
+        static::updating(function (self $receivable) use ($validateRelations) {
+            if (auth()->check()) {
+                $receivable->updated_by = auth()->id();
+            }
+
+            $validateRelations($receivable);
+        });
+
+        static::deleting(function (self $receivable) {
+            if (! auth()->check()) {
+                return;
+            }
+
+            $receivable->deleted_by = auth()->id();
+            $receivable->save();
+        });
+    }
 
     public function company()
     {

@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class PurchaseReturn extends Model
 {
-    use BootableModel;
     use HasFactory;
     use ScopeableByBranch;
     use ScopeableByCompany;
@@ -60,6 +60,73 @@ class PurchaseReturn extends Model
         'amount_available' => 'decimal:8',
         'is_settled' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        $validateRelations = static function (self $purchaseReturn): void {
+            $validateCompanyRelation = static function (
+                ?int $relationId,
+                string $modelClass,
+                string $errorMessage
+            ) use ($purchaseReturn): void {
+                if (is_null($relationId)) {
+                    return;
+                }
+
+                $relation = $modelClass::find($relationId);
+
+                if (! $relation || (int) $relation->company_id !== (int) $purchaseReturn->company_id) {
+                    throw new InvalidArgumentException($errorMessage);
+                }
+            };
+
+            $validateCompanyRelation(
+                relationId: $purchaseReturn->branch_id,
+                modelClass: Branch::class,
+                errorMessage: 'Purchase return branch must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $purchaseReturn->purchase_id,
+                modelClass: Purchase::class,
+                errorMessage: 'Purchase return purchase must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $purchaseReturn->supplier_id,
+                modelClass: Supplier::class,
+                errorMessage: 'Purchase return supplier must exist in the same company.',
+            );
+        };
+
+        static::creating(function (self $purchaseReturn) use ($validateRelations) {
+            $purchaseReturn->ulid = Str::ulid()->generate();
+
+            if (auth()->check()) {
+                $purchaseReturn->created_by = auth()->id();
+                $purchaseReturn->updated_by = auth()->id();
+            }
+
+            $validateRelations($purchaseReturn);
+        });
+
+        static::updating(function (self $purchaseReturn) use ($validateRelations) {
+            if (auth()->check()) {
+                $purchaseReturn->updated_by = auth()->id();
+            }
+
+            $validateRelations($purchaseReturn);
+        });
+
+        static::deleting(function (self $purchaseReturn) {
+            if (! auth()->check()) {
+                return;
+            }
+
+            $purchaseReturn->deleted_by = auth()->id();
+            $purchaseReturn->save();
+        });
+    }
 
     public function company()
     {

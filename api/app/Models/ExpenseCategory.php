@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\Traits\BootableModel;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class ExpenseCategory extends Model
 {
-    use BootableModel;
     use HasFactory;
     use ScopeableByCompany;
     use SoftDeletes;
@@ -28,6 +28,53 @@ class ExpenseCategory extends Model
         return [
             'sequence' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        $validateParent = static function (self $expenseCategory): void {
+            if (! $expenseCategory->parent_id) {
+                return;
+            }
+
+            if ((int) $expenseCategory->parent_id === (int) $expenseCategory->id) {
+                throw new InvalidArgumentException('Expense category parent must not reference itself.');
+            }
+
+            $parent = self::find($expenseCategory->parent_id);
+
+            if (! $parent || (int) $parent->company_id !== (int) $expenseCategory->company_id) {
+                throw new InvalidArgumentException('Expense category parent must exist in the same company.');
+            }
+        };
+
+        static::creating(function (self $expenseCategory) use ($validateParent) {
+            $expenseCategory->ulid = Str::ulid()->generate();
+
+            if (auth()->check()) {
+                $expenseCategory->created_by = auth()->id();
+                $expenseCategory->updated_by = auth()->id();
+            }
+
+            $validateParent($expenseCategory);
+        });
+
+        static::updating(function (self $expenseCategory) use ($validateParent) {
+            if (auth()->check()) {
+                $expenseCategory->updated_by = auth()->id();
+            }
+
+            $validateParent($expenseCategory);
+        });
+
+        static::deleting(function (self $expenseCategory) {
+            if (! auth()->check()) {
+                return;
+            }
+
+            $expenseCategory->deleted_by = auth()->id();
+            $expenseCategory->save();
+        });
     }
 
     public function company()

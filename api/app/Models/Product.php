@@ -4,16 +4,16 @@ namespace App\Models;
 
 use App\Enums\ProductTypeEnum;
 use App\Enums\RecordStatusEnum;
-use App\Traits\BootableModel;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class Product extends Model
 {
-    use BootableModel;
     use HasFactory;
     use ScopeableByCompany;
     use SoftDeletes;
@@ -42,6 +42,73 @@ class Product extends Model
             'type' => ProductTypeEnum::class,
             'status' => RecordStatusEnum::class,
         ];
+    }
+
+    protected static function booted(): void
+    {
+        $validateRelations = static function (self $product): void {
+            $validateCompanyRelation = static function (
+                ?int $relationId,
+                string $modelClass,
+                string $errorMessage
+            ) use ($product): void {
+                if (is_null($relationId)) {
+                    return;
+                }
+
+                $relation = $modelClass::find($relationId);
+
+                if (! $relation || (int) $relation->company_id !== (int) $product->company_id) {
+                    throw new InvalidArgumentException($errorMessage);
+                }
+            };
+
+            $validateCompanyRelation(
+                relationId: $product->category_id,
+                modelClass: ProductCategory::class,
+                errorMessage: 'Product category must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $product->brand_id,
+                modelClass: Brand::class,
+                errorMessage: 'Product brand must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $product->default_vat_profile_id,
+                modelClass: VatProfile::class,
+                errorMessage: 'Product default VAT profile must exist in the same company.',
+            );
+        };
+
+        static::creating(function (self $product) use ($validateRelations) {
+            $product->ulid = Str::ulid()->generate();
+
+            if (auth()->check()) {
+                $product->created_by = auth()->id();
+                $product->updated_by = auth()->id();
+            }
+
+            $validateRelations($product);
+        });
+
+        static::updating(function (self $product) use ($validateRelations) {
+            if (auth()->check()) {
+                $product->updated_by = auth()->id();
+            }
+
+            $validateRelations($product);
+        });
+
+        static::deleting(function (self $product) {
+            if (! auth()->check()) {
+                return;
+            }
+
+            $product->deleted_by = auth()->id();
+            $product->save();
+        });
     }
 
     public function company()

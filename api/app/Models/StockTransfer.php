@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
-use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class StockTransfer extends Model
 {
-    use BootableModel;
     use HasFactory;
     use ScopeableByBranch;
     use ScopeableByCompany;
@@ -32,6 +32,73 @@ class StockTransfer extends Model
         'date' => 'datetime',
         'is_posted' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        $validateRelations = static function (self $stockTransfer): void {
+            $validateCompanyRelation = static function (
+                ?int $relationId,
+                string $modelClass,
+                string $errorMessage
+            ) use ($stockTransfer): void {
+                if (is_null($relationId)) {
+                    return;
+                }
+
+                $relation = $modelClass::find($relationId);
+
+                if (! $relation || (int) $relation->company_id !== (int) $stockTransfer->company_id) {
+                    throw new InvalidArgumentException($errorMessage);
+                }
+            };
+
+            $validateCompanyRelation(
+                relationId: $stockTransfer->branch_id,
+                modelClass: Branch::class,
+                errorMessage: 'Stock transfer branch must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $stockTransfer->source_warehouse_id,
+                modelClass: Warehouse::class,
+                errorMessage: 'Stock transfer source warehouse must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $stockTransfer->destination_warehouse_id,
+                modelClass: Warehouse::class,
+                errorMessage: 'Stock transfer destination warehouse must exist in the same company.',
+            );
+        };
+
+        static::creating(function (self $stockTransfer) use ($validateRelations) {
+            $stockTransfer->ulid = Str::ulid()->generate();
+
+            if (auth()->check()) {
+                $stockTransfer->created_by = auth()->id();
+                $stockTransfer->updated_by = auth()->id();
+            }
+
+            $validateRelations($stockTransfer);
+        });
+
+        static::updating(function (self $stockTransfer) use ($validateRelations) {
+            if (auth()->check()) {
+                $stockTransfer->updated_by = auth()->id();
+            }
+
+            $validateRelations($stockTransfer);
+        });
+
+        static::deleting(function (self $stockTransfer) {
+            if (! auth()->check()) {
+                return;
+            }
+
+            $stockTransfer->deleted_by = auth()->id();
+            $stockTransfer->save();
+        });
+    }
 
     public function company()
     {

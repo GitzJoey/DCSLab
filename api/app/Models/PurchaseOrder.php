@@ -3,17 +3,17 @@
 namespace App\Models;
 
 use App\Enums\PurchaseProgressStatusEnum;
-use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class PurchaseOrder extends Model
 {
-    use BootableModel;
     use HasFactory;
     use ScopeableByBranch;
     use ScopeableByCompany;
@@ -70,6 +70,67 @@ class PurchaseOrder extends Model
         'item_more_count' => 'integer',
         'item_unlinked_count' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        $validateRelations = static function (self $purchaseOrder): void {
+            $validateCompanyRelation = static function (
+                ?int $relationId,
+                string $modelClass,
+                string $errorMessage
+            ) use ($purchaseOrder): void {
+                if (is_null($relationId)) {
+                    return;
+                }
+
+                $relation = $modelClass::find($relationId);
+
+                if (! $relation || (int) $relation->company_id !== (int) $purchaseOrder->company_id) {
+                    throw new InvalidArgumentException($errorMessage);
+                }
+            };
+
+            $validateCompanyRelation(
+                relationId: $purchaseOrder->branch_id,
+                modelClass: Branch::class,
+                errorMessage: 'Purchase order branch must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $purchaseOrder->supplier_id,
+                modelClass: Supplier::class,
+                errorMessage: 'Purchase order supplier must exist in the same company.',
+            );
+        };
+
+        static::creating(function (self $purchaseOrder) use ($validateRelations) {
+            $purchaseOrder->ulid = Str::ulid()->generate();
+
+            if (auth()->check()) {
+                $purchaseOrder->created_by = auth()->id();
+                $purchaseOrder->updated_by = auth()->id();
+            }
+
+            $validateRelations($purchaseOrder);
+        });
+
+        static::updating(function (self $purchaseOrder) use ($validateRelations) {
+            if (auth()->check()) {
+                $purchaseOrder->updated_by = auth()->id();
+            }
+
+            $validateRelations($purchaseOrder);
+        });
+
+        static::deleting(function (self $purchaseOrder) {
+            if (! auth()->check()) {
+                return;
+            }
+
+            $purchaseOrder->deleted_by = auth()->id();
+            $purchaseOrder->save();
+        });
+    }
 
     public function company()
     {

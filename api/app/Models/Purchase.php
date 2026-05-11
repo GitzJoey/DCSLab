@@ -4,17 +4,17 @@ namespace App\Models;
 
 use App\Enums\PurchaseProgressStatusEnum;
 use App\Enums\PurchaseReceiptModeEnum;
-use App\Traits\BootableModel;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class Purchase extends Model
 {
-    use BootableModel;
     use HasFactory;
     use ScopeableByBranch;
     use ScopeableByCompany;
@@ -86,6 +86,73 @@ class Purchase extends Model
         'item_more_count' => 'integer',
         'item_unlinked_count' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        $validateRelations = static function (self $purchase): void {
+            $validateCompanyRelation = static function (
+                ?int $relationId,
+                string $modelClass,
+                string $errorMessage
+            ) use ($purchase): void {
+                if (is_null($relationId)) {
+                    return;
+                }
+
+                $relation = $modelClass::find($relationId);
+
+                if (! $relation || (int) $relation->company_id !== (int) $purchase->company_id) {
+                    throw new InvalidArgumentException($errorMessage);
+                }
+            };
+
+            $validateCompanyRelation(
+                relationId: $purchase->branch_id,
+                modelClass: Branch::class,
+                errorMessage: 'Purchase branch must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $purchase->supplier_id,
+                modelClass: Supplier::class,
+                errorMessage: 'Purchase supplier must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $purchase->purchase_order_id,
+                modelClass: PurchaseOrder::class,
+                errorMessage: 'Purchase order must exist in the same company.',
+            );
+        };
+
+        static::creating(function (self $purchase) use ($validateRelations) {
+            $purchase->ulid = Str::ulid()->generate();
+
+            if (auth()->check()) {
+                $purchase->created_by = auth()->id();
+                $purchase->updated_by = auth()->id();
+            }
+
+            $validateRelations($purchase);
+        });
+
+        static::updating(function (self $purchase) use ($validateRelations) {
+            if (auth()->check()) {
+                $purchase->updated_by = auth()->id();
+            }
+
+            $validateRelations($purchase);
+        });
+
+        static::deleting(function (self $purchase) {
+            if (! auth()->check()) {
+                return;
+            }
+
+            $purchase->deleted_by = auth()->id();
+            $purchase->save();
+        });
+    }
 
     public function company()
     {
