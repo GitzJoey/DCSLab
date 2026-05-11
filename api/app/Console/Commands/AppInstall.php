@@ -12,11 +12,7 @@ use Database\Seeders\CashAccountSeeder;
 use Database\Seeders\CompanySeeder;
 use Database\Seeders\CustomerGroupSeeder;
 use Database\Seeders\CustomerSeeder;
-use Database\Seeders\InvestorSeeder;
 use Database\Seeders\ProductCategorySeeder;
-use Database\Seeders\StockAdjustmentCategorySeeder;
-use Database\Seeders\StockAdjustmentSeeder;
-use Database\Seeders\SupplierSeeder;
 use Database\Seeders\UnitSeeder;
 use Exception;
 use Illuminate\Console\Command;
@@ -60,20 +56,13 @@ class AppInstall extends Command
 
         (new CompanySeeder())->run();
 
-        (new CashAccountSeeder())->run();
-        (new InvestorSeeder())->run();
-
         (new ProductCategorySeeder())->run();
         (new BrandSeeder())->run();
         (new UnitSeeder())->run();
         // (new ProductSeeder())->run();
 
-        (new SupplierSeeder())->run();
-
         (new CustomerGroupSeeder())->run();
         (new CustomerSeeder())->run();
-
-        (new StockAdjustmentCategorySeeder())->run();
         // (new StockAdjustmentSeeder())->run();
 
         $this->info('Done!');

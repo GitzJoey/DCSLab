@@ -4,11 +4,15 @@ namespace App\Services\Company;
 
 use App\Actions\Branch\BranchActions;
 use App\Actions\CashAccount\CashAccountActions;
+use App\Actions\Investor\InvestorActions;
+use App\Actions\StockAdjustmentCategory\StockAdjustmentCategoryActions;
 use App\Actions\Supplier\SupplierActions;
 use App\Actions\VatProfile\VatProfileActions;
 use App\Actions\Warehouse\WarehouseActions;
 use App\DTOs\BranchCreateDTO;
 use App\DTOs\CashAccountCreateDTO;
+use App\DTOs\InvestorCreateDTO;
+use App\DTOs\StockAdjustmentCategoryCreateDTO;
 use App\DTOs\SupplierCreateDTO;
 use App\DTOs\VatProfileCreateDTO;
 use App\DTOs\WarehouseCreateDTO;
@@ -26,7 +30,9 @@ class CompanyInitializationService
         private WarehouseActions $warehouseActions,
         private CashAccountActions $cashAccountActions,
         private VatProfileActions $vatProfileActions,
+        private InvestorActions $investorActions,
         private SupplierActions $supplierActions,
+        private StockAdjustmentCategoryActions $stockAdjustmentCategoryActions,
     ) {
     }
 
@@ -34,10 +40,16 @@ class CompanyInitializationService
     {
         $mainBranch = $this->createMainBranch($company);
         $this->createDefaultWarehouses($company, $mainBranch);
+
         $this->createDefaultChartOfAccounts($company);
+        $this->createDefaultInvestors($company);
         $this->createDefaultCashAccounts($company, $mainBranch);
+
         $this->createDefaultVatProfiles($company);
+
         $this->createDefaultSuppliers($company);
+
+        $this->createDefaultStockAdjustmentCategories($company);
     }
 
     private function createMainBranch(Company $company): Branch
@@ -63,7 +75,7 @@ class CompanyInitializationService
             companyId: $company->id,
             branchId: $branch->id,
             code: config('dcslab.KEYWORDS.AUTO'),
-            name: 'G. Utama',
+            name: 'G. Toko',
             address: null,
             city: null,
             contact: null,
@@ -80,7 +92,7 @@ class CompanyInitializationService
                 'company_id' => $company->id,
                 'branch_id' => $branch->id,
                 'code' => config('dcslab.KEYWORDS.AUTO'),
-                'name' => 'Kas Utama',
+                'name' => 'Kas Tunai Toko',
                 'is_bank' => false,
                 'is_active' => true,
                 'remarks' => 'Kas utama default saat perusahaan dibuat',
@@ -89,7 +101,7 @@ class CompanyInitializationService
                 'company_id' => $company->id,
                 'branch_id' => $branch->id,
                 'code' => config('dcslab.KEYWORDS.AUTO'),
-                'name' => 'Bank Utama',
+                'name' => 'Kas Bank',
                 'is_bank' => true,
                 'is_active' => true,
                 'remarks' => 'Bank utama default saat perusahaan dibuat',
@@ -97,17 +109,16 @@ class CompanyInitializationService
         ];
 
         foreach ($defaultCashAccounts as $defaultCashAccount) {
-            $this->cashAccountActions->create(
-                new CashAccountCreateDTO(
-                    companyId: $defaultCashAccount['company_id'],
-                    branchId: $defaultCashAccount['branch_id'],
-                    code: $defaultCashAccount['code'],
-                    name: $defaultCashAccount['name'],
-                    isBank: $defaultCashAccount['is_bank'],
-                    isActive: $defaultCashAccount['is_active'],
-                    remarks: $defaultCashAccount['remarks'],
-                )
+            $dto = new CashAccountCreateDTO(
+                companyId: $defaultCashAccount['company_id'],
+                branchId: $defaultCashAccount['branch_id'],
+                code: $defaultCashAccount['code'],
+                name: $defaultCashAccount['name'],
+                isBank: $defaultCashAccount['is_bank'],
+                isActive: $defaultCashAccount['is_active'],
+                remarks: $defaultCashAccount['remarks'],
             );
+            $this->cashAccountActions->create($dto);
         }
     }
 
@@ -183,18 +194,17 @@ class CompanyInitializationService
         ];
 
         foreach ($defaultVatProfiles as $defaultVatProfile) {
-            $this->vatProfileActions->create(
-                new VatProfileCreateDTO(
-                    companyId: $defaultVatProfile['company_id'],
-                    code: $defaultVatProfile['code'],
-                    name: $defaultVatProfile['name'],
-                    vatRate: $defaultVatProfile['vat_rate'],
-                    vatBaseNumerator: $defaultVatProfile['vat_base_numerator'],
-                    vatBaseDenominator: $defaultVatProfile['vat_base_denominator'],
-                    remarks: $defaultVatProfile['remarks'],
-                    isActive: $defaultVatProfile['is_active'],
-                )
+            $dto = new VatProfileCreateDTO(
+                companyId: $defaultVatProfile['company_id'],
+                code: $defaultVatProfile['code'],
+                name: $defaultVatProfile['name'],
+                vatRate: $defaultVatProfile['vat_rate'],
+                vatBaseNumerator: $defaultVatProfile['vat_base_numerator'],
+                vatBaseDenominator: $defaultVatProfile['vat_base_denominator'],
+                remarks: $defaultVatProfile['remarks'],
+                isActive: $defaultVatProfile['is_active'],
             );
+            $this->vatProfileActions->create($dto);
         }
     }
 
@@ -232,6 +242,63 @@ class CompanyInitializationService
                     status: $defaultSupplier['status'],
                 )
             );
+        }
+    }
+
+    private function createDefaultInvestors(Company $company): void
+    {
+        $defaultInvestors = [
+            [
+                'company_id' => $company->id,
+                'code' => config('dcslab.KEYWORDS.AUTO'),
+                'name' => 'Investor Umum',
+                'remarks' => 'Investor default saat perusahaan dibuat',
+            ],
+        ];
+
+        foreach ($defaultInvestors as $defaultInvestor) {
+            $dto = new InvestorCreateDTO(
+                companyId: $defaultInvestor['company_id'],
+                code: $defaultInvestor['code'],
+                name: $defaultInvestor['name'],
+                remarks: $defaultInvestor['remarks'],
+            );
+            $this->investorActions->create($dto);
+        }
+    }
+
+    private function createDefaultStockAdjustmentCategories(Company $company): void
+    {
+        $defaultStockAdjustmentCategories = [
+            [
+                'company_id' => $company->id,
+                'code' => config('dcslab.KEYWORDS.AUTO'),
+                'name' => 'Koreksi Pencatatan',
+            ],
+            [
+                'company_id' => $company->id,
+                'code' => config('dcslab.KEYWORDS.AUTO'),
+                'name' => 'Stock Opname',
+            ],
+            [
+                'company_id' => $company->id,
+                'code' => config('dcslab.KEYWORDS.AUTO'),
+                'name' => 'Hilang',
+            ],
+            [
+                'company_id' => $company->id,
+                'code' => config('dcslab.KEYWORDS.AUTO'),
+                'name' => 'Rusak',
+            ],
+        ];
+
+        foreach ($defaultStockAdjustmentCategories as $defaultStockAdjustmentCategory) {
+            $dto = new StockAdjustmentCategoryCreateDTO(
+                companyId: $defaultStockAdjustmentCategory['company_id'],
+                code: $defaultStockAdjustmentCategory['code'],
+                name: $defaultStockAdjustmentCategory['name'],
+            );
+            $this->stockAdjustmentCategoryActions->create($dto);
         }
     }
 }
