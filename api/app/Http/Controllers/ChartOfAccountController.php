@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\ChartOfAccount\ChartOfAccountActions;
 use App\DTOs\ChartOfAccountCreateDTO;
+use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -158,22 +159,21 @@ class ChartOfAccountController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->chartOfAccountActions->create(
-                new ChartOfAccountCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    scope: $validatedRequest['scope'],
-                    systemKey: $validatedRequest['system_key'],
-                    parentId: $validatedRequest['parent_id'],
-                    sourceType: $validatedRequest['source_type'],
-                    sourceId: $validatedRequest['source_id'],
-                    code: $validatedRequest['code'],
-                    name: $validatedRequest['name'],
-                    normalBalance: $validatedRequest['normal_balance'],
-                    isGroup: $validatedRequest['is_group'],
-                    isActive: $validatedRequest['is_active'],
-                    remarks: $validatedRequest['remarks'],
-                )
+            $dto = new ChartOfAccountCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                scope: $validatedRequest['scope'],
+                systemKey: $validatedRequest['system_key'],
+                parentId: $validatedRequest['parent_id'],
+                sourceType: $validatedRequest['source_type'],
+                sourceId: $validatedRequest['source_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                normalBalance: $validatedRequest['normal_balance'],
+                isGroup: $validatedRequest['is_group'],
+                isActive: $validatedRequest['is_active'],
+                remarks: $validatedRequest['remarks'],
             );
+            $result = $this->chartOfAccountActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -210,7 +210,15 @@ class ChartOfAccountController extends BaseController
 
             $result = $this->chartOfAccountActions->update(
                 chartOfAccount: $chartOfAccount,
-                data: $validatedRequest,
+                data: new ChartOfAccountUpdateDTO(
+                    parentId: $validatedRequest['parent_id'],
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    normalBalance: $validatedRequest['normal_balance'],
+                    isGroup: $validatedRequest['is_group'],
+                    isActive: $validatedRequest['is_active'],
+                    remarks: $validatedRequest['remarks'],
+                )
             );
 
             DB::commit();

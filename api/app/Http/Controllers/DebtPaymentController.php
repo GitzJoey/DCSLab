@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\DebtPayment\DebtPaymentActions;
+use App\DTOs\DebtPaymentCreateDTO;
+use App\DTOs\DebtPaymentUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -122,7 +124,17 @@ class DebtPaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->debtPaymentActions->create($validatedRequest);
+            $dto = new DebtPaymentCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                debtId: $validatedRequest['debt_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->debtPaymentActions->create($dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -148,7 +160,13 @@ class DebtPaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->debtPaymentActions->update($debt_payment, $validatedRequest);
+            $result = $this->debtPaymentActions->update($debt_payment, new DebtPaymentUpdateDTO(
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            ));
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

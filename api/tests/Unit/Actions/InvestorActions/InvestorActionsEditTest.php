@@ -32,7 +32,11 @@ class InvestorActionsEditTest extends ActionsTestCase
 
         $investorArr = Investor::factory()->make()->toArray();
 
-        $result = $this->investorActions->update($investor, $investorArr);
+        $result = $this->investorActions->update($investor, new \App\DTOs\InvestorUpdateDTO(
+            code: $investorArr['code'],
+            name: $investorArr['name'],
+            remarks: $investorArr['remarks']
+        ));
 
         $this->assertInstanceOf(Investor::class, $result);
         $this->assertDatabaseHas('investors', [
@@ -57,6 +61,6 @@ class InvestorActionsEditTest extends ActionsTestCase
 
         $investorArr = [];
 
-        $this->investorActions->update($investor, $investorArr);
+        $this->investorActions->update($investor, new \App\DTOs\InvestorUpdateDTO());
     }
 }

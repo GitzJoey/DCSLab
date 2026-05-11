@@ -148,17 +148,18 @@ class CapitalOpeningController extends BaseController
 
             DB::beginTransaction();
 
+            $dto = new CapitalOpeningCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                investorId: $validatedRequest['investor_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            );
             $result = $this->capitalOpeningActions->create(
-                data: new CapitalOpeningCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    investorId: $validatedRequest['investor_id'],
-                    cashAccountId: $validatedRequest['cash_account_id'],
-                    amount: $validatedRequest['amount'],
-                    remarks: $validatedRequest['remarks'],
-                )
+                data: $dto
             );
 
             DB::commit();

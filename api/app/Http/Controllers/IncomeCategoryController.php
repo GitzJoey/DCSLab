@@ -6,6 +6,8 @@ use App\Actions\IncomeCategory\IncomeCategoryActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\IncomeCategoryCreateDTO;
+use App\DTOs\IncomeCategoryUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\IncomeCategory\IncomeCategoryStoreRequest;
 use App\Http\Requests\IncomeCategory\IncomeCategoryUpdateRequest;
@@ -130,7 +132,14 @@ class IncomeCategoryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->incomeCategoryActions->create($validatedRequest);
+            $dto = new IncomeCategoryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                parentId: $validatedRequest['parent_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                sequence: $validatedRequest['sequence'],
+            );
+            $result = $this->incomeCategoryActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -167,11 +176,11 @@ class IncomeCategoryController extends BaseController
 
             $result = $this->incomeCategoryActions->update(
                 incomeCategory: $incomeCategory,
-                data: [
-                    'code' => $validatedRequest['code'],
-                    'name' => $validatedRequest['name'],
-                    'sequence' => $validatedRequest['sequence'],
-                ],
+                data: new IncomeCategoryUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    sequence: $validatedRequest['sequence'],
+                )
             );
 
             DB::commit();

@@ -6,7 +6,6 @@ use App\Actions\ProductCategory\ProductCategoryActions;
 use App\Models\Company;
 use App\Models\ProductCategory;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class ProductCategoryActionsCreateTest extends ActionsTestCase
@@ -31,7 +30,12 @@ class ProductCategoryActionsCreateTest extends ActionsTestCase
         $productCategoryArr = ProductCategory::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->productCategoryActions->create($productCategoryArr);
+        $result = $this->productCategoryActions->create(new \App\DTOs\ProductCategoryCreateDTO(
+            companyId: $productCategoryArr['company_id'],
+            code: $productCategoryArr['code'],
+            name: $productCategoryArr['name'],
+            type: $productCategoryArr['type']
+        ));
 
         $this->assertDatabaseHas('product_categories', [
             'id' => $result->id,
@@ -45,6 +49,7 @@ class ProductCategoryActionsCreateTest extends ActionsTestCase
     public function test_product_category_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->productCategoryActions->create([]);
+        $this->productCategoryActions->create(new \App\DTOs\ProductCategoryCreateDTO());
+
     }
 }

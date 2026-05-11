@@ -138,17 +138,18 @@ class CashTransferController extends BaseController
 
             DB::beginTransaction();
 
+            $dto = new CashTransferCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                sourceCashAccountId: $validatedRequest['source_cash_account_id'],
+                destinationCashAccountId: $validatedRequest['destination_cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            );
             $result = $this->cashTransferActions->create(
-                data: new CashTransferCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    sourceCashAccountId: $validatedRequest['source_cash_account_id'],
-                    destinationCashAccountId: $validatedRequest['destination_cash_account_id'],
-                    amount: $validatedRequest['amount'],
-                    remarks: $validatedRequest['remarks'],
-                )
+                data: $dto
             );
 
             DB::commit();

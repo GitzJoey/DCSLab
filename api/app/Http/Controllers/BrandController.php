@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Brand\BrandActions;
+use App\DTOs\BrandCreateDTO;
+use App\DTOs\BrandUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -141,7 +143,12 @@ class BrandController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->brandActions->create($validatedRequest);
+            $dto = new BrandCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+            );
+            $result = $this->brandActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -174,7 +181,13 @@ class BrandController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->brandActions->update($brand, $validatedRequest);
+            $result = $this->brandActions->update(
+                brand: $brand,
+                data: new BrandUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                )
+            );
 
             DB::commit();
         } catch (Exception $e) {

@@ -3,11 +3,11 @@
 namespace Tests\Unit\Actions\CashAccountActions;
 
 use App\Actions\CashAccount\CashAccountActions;
+use App\DTOs\CashAccountUpdateDTO;
 use App\Models\Branch;
 use App\Models\CashAccount;
 use App\Models\Company;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class CashAccountActionsEditTest extends ActionsTestCase
@@ -41,7 +41,13 @@ class CashAccountActionsEditTest extends ActionsTestCase
         $cashAccountArr = CashAccount::factory()->make()->toArray();
         $cashAccountArr['company_id'] = $company->id;
 
-        $result = $this->cashAccountActions->update($cashAccount, $cashAccountArr);
+        $result = $this->cashAccountActions->update($cashAccount, new CashAccountUpdateDTO(
+            code: $cashAccountArr['code'],
+            name: $cashAccountArr['name'],
+            isBank: $cashAccountArr['is_bank'],
+            isActive: $cashAccountArr['is_active'],
+            remarks: $cashAccountArr['remarks']
+        ));
 
         $this->assertInstanceOf(CashAccount::class, $result);
         $this->assertDatabaseHas('cash_accounts', [
@@ -54,7 +60,8 @@ class CashAccountActionsEditTest extends ActionsTestCase
 
     public function test_cash_account_actions_call_update_with_empty_array_parameters_expect_exception()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\ArgumentCountError::class);
+        $dtoClass = \App\DTOs\CashAccountUpdateDTO::class;
 
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
@@ -71,8 +78,6 @@ class CashAccountActionsEditTest extends ActionsTestCase
         $cashAccount = $user->companies()->inRandomOrder()->first()
             ->cashAccounts()->inRandomOrder()->first();
 
-        $cashAccountArr = [];
-
-        $this->cashAccountActions->update($cashAccount, $cashAccountArr);
+        $this->cashAccountActions->update($cashAccount, new $dtoClass(...[]));
     }
 }

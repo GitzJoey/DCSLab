@@ -126,21 +126,22 @@ class ExpenseController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
+            $dto = new ExpenseCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                expenseCategoryId: $validatedRequest['expense_category_id'],
+                paidImmediatelyCashAccountId: $validatedRequest['paid_immediately_cash_account_id'],
+                amountPaidImmediately: (float) $validatedRequest['amount_paid_immediately'],
+                amountPayable: (float) $validatedRequest['amount_payable'],
+                dueDays: $validatedRequest['due_days'],
+                remarks: $validatedRequest['remarks'],
+                images: $validatedRequest['image_hashes'],
+                payments: $validatedRequest['payments'],
+            );
             $result = $this->expenseActions->create(
-                data: new ExpenseCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    expenseCategoryId: $validatedRequest['expense_category_id'],
-                    paidImmediatelyCashAccountId: $validatedRequest['paid_immediately_cash_account_id'],
-                    amountPaidImmediately: (float) $validatedRequest['amount_paid_immediately'],
-                    amountPayable: (float) $validatedRequest['amount_payable'],
-                    dueDays: $validatedRequest['due_days'],
-                    remarks: $validatedRequest['remarks'],
-                    images: $validatedRequest['image_hashes'],
-                    payments: $validatedRequest['payments'],
-                ),
+                data: $dto,
             );
             DB::commit();
         } catch (Exception $e) {

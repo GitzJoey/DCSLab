@@ -6,6 +6,8 @@ use App\Actions\Supplier\SupplierActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\SupplierCreateDTO;
+use App\DTOs\SupplierUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\Supplier\SupplierStoreRequest;
 use App\Http\Requests\Supplier\SupplierUpdateRequest;
@@ -148,7 +150,20 @@ class SupplierController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->supplierActions->create($validatedRequest);
+            $dto = new SupplierCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                address: $validatedRequest['address'],
+                city: $validatedRequest['city'],
+                paymentTermType: $validatedRequest['payment_term_type'],
+                paymentTerm: $validatedRequest['payment_term'],
+                taxableEnterprise: $validatedRequest['taxable_enterprise'],
+                taxId: $validatedRequest['tax_id'],
+                remarks: $validatedRequest['remarks'],
+                status: $validatedRequest['status'],
+            );
+            $result = $this->supplierActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -187,7 +202,18 @@ class SupplierController extends BaseController
 
             $result = $this->supplierActions->update(
                 supplier: $supplier,
-                data: $validatedRequest
+                data: new SupplierUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    address: $validatedRequest['address'],
+                    city: $validatedRequest['city'],
+                    paymentTermType: $validatedRequest['payment_term_type'],
+                    paymentTerm: $validatedRequest['payment_term'],
+                    taxableEnterprise: $validatedRequest['taxable_enterprise'],
+                    taxId: $validatedRequest['tax_id'],
+                    remarks: $validatedRequest['remarks'],
+                    status: $validatedRequest['status'],
+                )
             );
 
             DB::commit();

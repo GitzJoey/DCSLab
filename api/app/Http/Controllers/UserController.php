@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\Randomizer\RandomizerActions;
 use App\Actions\User\UserActions;
+use App\DTOs\UserCreateDTO;
+use App\DTOs\UserUpdateDTO;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -132,9 +134,11 @@ class UserController extends BaseController
 
         try {
             $result = $this->userActions->create(
-                $userArr,
-                $rolesArr,
-                $profileArr
+                UserCreateDTO::fromParts(
+                    user: $userArr,
+                    roles: $rolesArr,
+                    profile: $profileArr,
+                )
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -189,10 +193,12 @@ class UserController extends BaseController
         try {
             $result = $this->userActions->update(
                 $user,
-                $userArr,
-                $rolesArr,
-                $profileArr,
-                $settingsArr
+                UserUpdateDTO::fromParts(
+                    user: $userArr,
+                    roles: $rolesArr,
+                    profile: $profileArr,
+                    settings: $settingsArr,
+                )
             );
 
             if (array_key_exists('api_token', $request) && (bool) $request['api_token']) {

@@ -156,7 +156,7 @@ class StockAdjustmentOutItemController extends BaseController
         $errorMsg = '';
 
         try {
-            $data = new StockAdjustmentOutItemCreateDTO(
+            $dto = new StockAdjustmentOutItemCreateDTO(
                 companyId: $validated['company_id'],
                 branchId: $validated['branch_id'],
                 stockAdjustmentId: $validated['stock_adjustment_id'],
@@ -167,7 +167,7 @@ class StockAdjustmentOutItemController extends BaseController
                 serials: $validated['serials'],
             );
 
-            $result = $this->stockAdjustmentOutItemActions->create($data);
+            $result = $this->stockAdjustmentOutItemActions->create($dto);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

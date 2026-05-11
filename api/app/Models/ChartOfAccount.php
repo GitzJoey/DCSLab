@@ -45,7 +45,31 @@ class ChartOfAccount extends Model
 
     protected static function booted(): void
     {
-        static::creating(function (self $chartOfAccount) {
+        $validateParent = static function (self $chartOfAccount): void {
+            if (! $chartOfAccount->parent_id) {
+                return;
+            }
+
+            if ((int) $chartOfAccount->parent_id === (int) $chartOfAccount->id) {
+                throw new InvalidArgumentException('Parent chart of account must not reference itself.');
+            }
+
+            $parent = self::find($chartOfAccount->parent_id);
+
+            if (! $parent || (int) $parent->company_id !== (int) $chartOfAccount->company_id) {
+                throw new InvalidArgumentException('Parent chart of account must exist in the same company.');
+            }
+        };
+
+        $validateAccountType = static function (self $chartOfAccount): void {
+            $isRoot = is_null($chartOfAccount->parent_id);
+
+            if ($isRoot && is_null($chartOfAccount->account_type)) {
+                throw new InvalidArgumentException('Account type for root chart of account must be provided by the system.');
+            }
+        };
+
+        static::creating(function (self $chartOfAccount) use ($validateParent, $validateAccountType) {
             $chartOfAccount->ulid = Str::ulid()->generate();
 
             if (auth()->check()) {
@@ -53,35 +77,17 @@ class ChartOfAccount extends Model
                 $chartOfAccount->updated_by = auth()->id();
             }
 
-            if ($chartOfAccount->parent_id) {
-                if ((int) $chartOfAccount->parent_id === (int) $chartOfAccount->id) {
-                    throw new InvalidArgumentException('Parent chart of account must not reference itself.');
-                }
-
-                $parent = self::query()->find($chartOfAccount->parent_id);
-
-                if (! $parent || (int) $parent->company_id !== (int) $chartOfAccount->company_id) {
-                    throw new InvalidArgumentException('Parent chart of account must exist in the same company.');
-                }
-            }
+            $validateParent($chartOfAccount);
+            $validateAccountType($chartOfAccount);
         });
 
-        static::updating(function (self $chartOfAccount) {
+        static::updating(function (self $chartOfAccount) use ($validateParent, $validateAccountType) {
             if (auth()->check()) {
                 $chartOfAccount->updated_by = auth()->id();
             }
 
-            if ($chartOfAccount->parent_id) {
-                if ((int) $chartOfAccount->parent_id === (int) $chartOfAccount->id) {
-                    throw new InvalidArgumentException('Parent chart of account must not reference itself.');
-                }
-
-                $parent = self::query()->find($chartOfAccount->parent_id);
-
-                if (! $parent || (int) $parent->company_id !== (int) $chartOfAccount->company_id) {
-                    throw new InvalidArgumentException('Parent chart of account must exist in the same company.');
-                }
-            }
+            $validateParent($chartOfAccount);
+            $validateAccountType($chartOfAccount);
         });
     }
 

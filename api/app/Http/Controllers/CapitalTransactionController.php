@@ -158,18 +158,19 @@ class CapitalTransactionController extends BaseController
 
             DB::beginTransaction();
 
+            $dto = new CapitalTransactionCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                investorId: $validatedRequest['investor_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                type: $validatedRequest['type'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            );
             $result = $this->capitalTransactionActions->create(
-                data: new CapitalTransactionCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    investorId: $validatedRequest['investor_id'],
-                    cashAccountId: $validatedRequest['cash_account_id'],
-                    type: $validatedRequest['type'],
-                    amount: $validatedRequest['amount'],
-                    remarks: $validatedRequest['remarks'],
-                )
+                data: $dto
             );
 
             DB::commit();

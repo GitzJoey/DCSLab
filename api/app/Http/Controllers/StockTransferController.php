@@ -154,19 +154,18 @@ class StockTransferController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->stockTransferActions->create(
-                new StockTransferCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    sourceWarehouseId: $validatedRequest['source_warehouse_id'],
-                    destinationWarehouseId: $validatedRequest['destination_warehouse_id'],
-                    remarks: $validatedRequest['remarks'],
-                    isPosted: $validatedRequest['is_posted'],
-                    items: $validatedRequest['items'],
-                )
+            $dto = new StockTransferCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                sourceWarehouseId: $validatedRequest['source_warehouse_id'],
+                destinationWarehouseId: $validatedRequest['destination_warehouse_id'],
+                remarks: $validatedRequest['remarks'],
+                isPosted: $validatedRequest['is_posted'],
+                items: $validatedRequest['items'],
             );
+            $result = $this->stockTransferActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {

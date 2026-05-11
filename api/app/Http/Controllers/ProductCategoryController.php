@@ -6,6 +6,8 @@ use App\Actions\ProductCategory\ProductCategoryActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\ProductCategoryCreateDTO;
+use App\DTOs\ProductCategoryUpdateDTO;
 use App\Enums\ProductCategoryTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\ProductCategory\ProductCategoryStoreRequest;
@@ -52,7 +54,13 @@ class ProductCategoryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->productCategoryActions->create($validatedRequest);
+            $dto = new ProductCategoryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                type: $validatedRequest['type'],
+            );
+            $result = $this->productCategoryActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -192,7 +200,11 @@ class ProductCategoryController extends BaseController
 
             $result = $this->productCategoryActions->update(
                 productCategory: $productCategory,
-                data: $validatedRequest
+                data: new ProductCategoryUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    type: $validatedRequest['type'],
+                )
             );
 
             DB::commit();

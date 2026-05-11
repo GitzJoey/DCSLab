@@ -6,6 +6,8 @@ use App\Actions\IncomePayment\IncomePaymentActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\IncomePaymentCreateDTO;
+use App\DTOs\IncomePaymentUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\IncomePayment\IncomePaymentStoreRequest;
 use App\Http\Requests\IncomePayment\IncomePaymentUpdateRequest;
@@ -122,7 +124,17 @@ class IncomePaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->incomePaymentActions->create($validatedRequest);
+            $dto = new IncomePaymentCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                incomeId: $validatedRequest['income_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->incomePaymentActions->create($dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -148,7 +160,13 @@ class IncomePaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->incomePaymentActions->update($income_payment, $validatedRequest);
+            $result = $this->incomePaymentActions->update($income_payment, new IncomePaymentUpdateDTO(
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            ));
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

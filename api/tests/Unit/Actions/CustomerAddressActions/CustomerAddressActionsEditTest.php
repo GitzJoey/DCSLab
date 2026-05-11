@@ -32,7 +32,13 @@ class CustomerAddressActionsEditTest extends ActionsTestCase
 
         $customerAddressArr = CustomerAddress::factory()->make()->toArray();
 
-        $result = $this->customerAddressActions->update($customerAddress, $customerAddressArr);
+        $result = $this->customerAddressActions->update($customerAddress, new \App\DTOs\CustomerAddressUpdateDTO(
+            address: $customerAddressArr['address'],
+            city: $customerAddressArr['city'],
+            contact: $customerAddressArr['contact'],
+            isMain: $customerAddressArr['is_main'],
+            remarks: $customerAddressArr['remarks']
+        ));
 
         $this->assertInstanceOf(CustomerAddress::class, $result);
         $this->assertDatabaseHas('customer_addresses', [
@@ -57,6 +63,6 @@ class CustomerAddressActionsEditTest extends ActionsTestCase
 
         $customerAddressArr = [];
 
-        $this->customerAddressActions->update($customerAddress, $customerAddressArr);
+        $this->customerAddressActions->update($customerAddress, new \App\DTOs\CustomerAddressUpdateDTO());
     }
 }

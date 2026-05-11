@@ -6,6 +6,8 @@ use App\Actions\PurchaseAdditionalCostCategory\PurchaseAdditionalCostCategoryAct
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\PurchaseAdditionalCostCategoryCreateDTO;
+use App\DTOs\PurchaseAdditionalCostCategoryUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\PurchaseAdditionalCostCategory\PurchaseAdditionalCostCategoryStoreRequest;
 use App\Http\Requests\PurchaseAdditionalCostCategory\PurchaseAdditionalCostCategoryUpdateRequest;
@@ -122,7 +124,12 @@ class PurchaseAdditionalCostCategoryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->purchaseAdditionalCostCategoryActions->create($validatedRequest);
+            $dto = new PurchaseAdditionalCostCategoryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+            );
+            $result = $this->purchaseAdditionalCostCategoryActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -161,7 +168,10 @@ class PurchaseAdditionalCostCategoryController extends BaseController
 
             $result = $this->purchaseAdditionalCostCategoryActions->update(
                 purchaseAdditionalCostCategory: $purchaseAdditionalCostCategory,
-                data: $validatedRequest,
+                data: new PurchaseAdditionalCostCategoryUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                )
             );
 
             DB::commit();

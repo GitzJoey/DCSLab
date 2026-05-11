@@ -7,6 +7,7 @@ use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
 use App\DTOs\WarehouseCreateDTO;
+use App\DTOs\WarehouseUpdateDTO;
 use App\Enums\RecordStatusEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\Warehouse\WarehouseStoreRequest;
@@ -153,19 +154,18 @@ class WarehouseController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->warehouseActions->create(
-                new WarehouseCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    name: $validatedRequest['name'],
-                    address: $validatedRequest['address'],
-                    city: $validatedRequest['city'],
-                    contact: $validatedRequest['contact'],
-                    remarks: $validatedRequest['remarks'],
-                    status: $validatedRequest['status'],
-                )
+            $dto = new WarehouseCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                address: $validatedRequest['address'],
+                city: $validatedRequest['city'],
+                contact: $validatedRequest['contact'],
+                remarks: $validatedRequest['remarks'],
+                status: $validatedRequest['status'],
             );
+            $result = $this->warehouseActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -200,7 +200,15 @@ class WarehouseController extends BaseController
 
             $result = $this->warehouseActions->update(
                 warehouse: $warehouse,
-                data: $validatedRequest
+                data: new WarehouseUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    address: $validatedRequest['address'],
+                    city: $validatedRequest['city'],
+                    contact: $validatedRequest['contact'],
+                    remarks: $validatedRequest['remarks'],
+                    status: $validatedRequest['status'],
+                )
             );
 
             DB::commit();

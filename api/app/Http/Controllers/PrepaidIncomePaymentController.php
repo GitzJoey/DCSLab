@@ -6,6 +6,8 @@ use App\Actions\PrepaidIncomePayment\PrepaidIncomePaymentActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\PrepaidIncomePaymentCreateDTO;
+use App\DTOs\PrepaidIncomePaymentUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\PrepaidIncomePayment\PrepaidIncomePaymentStoreRequest;
 use App\Http\Requests\PrepaidIncomePayment\PrepaidIncomePaymentUpdateRequest;
@@ -122,7 +124,17 @@ class PrepaidIncomePaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->prepaidIncomePaymentActions->create($validatedRequest);
+            $dto = new PrepaidIncomePaymentCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                prepaidIncomeId: $validatedRequest['prepaid_income_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->prepaidIncomePaymentActions->create($dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -148,7 +160,13 @@ class PrepaidIncomePaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->prepaidIncomePaymentActions->update($prepaidIncomePayment, $validatedRequest);
+            $result = $this->prepaidIncomePaymentActions->update($prepaidIncomePayment, new PrepaidIncomePaymentUpdateDTO(
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            ));
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

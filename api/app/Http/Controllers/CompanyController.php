@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Company\CompanyActions;
+use App\DTOs\CompanyCreateDTO;
+use App\DTOs\CompanyUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -152,9 +154,16 @@ class CompanyController extends BaseController
                 $this->companyActions->resetDefault(Auth::user());
             }
 
+            $dto = new CompanyCreateDTO(
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                address: $validatedRequest['address'],
+                default: $validatedRequest['default'],
+                status: $validatedRequest['status'],
+            );
             $result = $this->companyActions->create(
                 user: Auth::user(),
-                data: $validatedRequest
+                data: $dto
             );
 
             DB::commit();
@@ -196,7 +205,13 @@ class CompanyController extends BaseController
             $result = $this->companyActions->update(
                 user: Auth::user(),
                 company: $company,
-                data: $validatedRequest
+                data: new CompanyUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    address: $validatedRequest['address'],
+                    default: $validatedRequest['default'],
+                    status: $validatedRequest['status'],
+                )
             );
 
             DB::commit();

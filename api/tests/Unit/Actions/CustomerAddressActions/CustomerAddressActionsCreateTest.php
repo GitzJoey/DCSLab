@@ -7,7 +7,6 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\CustomerAddress;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class CustomerAddressActionsCreateTest extends ActionsTestCase
@@ -36,7 +35,15 @@ class CustomerAddressActionsCreateTest extends ActionsTestCase
                 'customer_id' => $customer->id,
             ])->toArray();
 
-        $result = $this->customerAddressActions->create($customerAddressArr);
+        $result = $this->customerAddressActions->create(new \App\DTOs\CustomerAddressCreateDTO(
+            companyId: $customerAddressArr['company_id'],
+            customerId: $customerAddressArr['customer_id'],
+            address: $customerAddressArr['address'],
+            city: $customerAddressArr['city'],
+            contact: $customerAddressArr['contact'],
+            isMain: $customerAddressArr['is_main'],
+            remarks: $customerAddressArr['remarks']
+        ));
 
         $this->assertDatabaseHas('customer_addresses', [
             'id' => $result->id,
@@ -53,6 +60,7 @@ class CustomerAddressActionsCreateTest extends ActionsTestCase
     public function test_customer_address_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->customerAddressActions->create([]);
+        $this->customerAddressActions->create(new \App\DTOs\CustomerAddressCreateDTO());
+
     }
 }

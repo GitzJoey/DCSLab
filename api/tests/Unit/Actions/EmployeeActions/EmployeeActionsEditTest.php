@@ -32,7 +32,12 @@ class EmployeeActionsEditTest extends ActionsTestCase
 
         $employeeArr = Employee::factory()->make()->toArray();
 
-        $result = $this->employeeActions->update($employee, $employeeArr);
+        $result = $this->employeeActions->update($employee, new \App\DTOs\EmployeeUpdateDTO(
+            companyId: $employeeArr['company_id'],
+            code: $employeeArr['code'],
+            name: $employeeArr['name'],
+            remarks: $employeeArr['remarks']
+        ));
 
         $this->assertInstanceOf(Employee::class, $result);
         $this->assertDatabaseHas('employees', [
@@ -57,6 +62,6 @@ class EmployeeActionsEditTest extends ActionsTestCase
 
         $employeeArr = [];
 
-        $this->employeeActions->update($employee, $employeeArr);
+        $this->employeeActions->update($employee, new \App\DTOs\EmployeeUpdateDTO());
     }
 }

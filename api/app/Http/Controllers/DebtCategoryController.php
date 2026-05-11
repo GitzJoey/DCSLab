@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\DebtCategory\DebtCategoryActions;
+use App\DTOs\DebtCategoryCreateDTO;
+use App\DTOs\DebtCategoryUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -123,7 +125,13 @@ class DebtCategoryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->debtCategoryActions->create($validatedRequest);
+            $dto = new DebtCategoryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                sequence: $validatedRequest['sequence'],
+            );
+            $result = $this->debtCategoryActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -160,11 +168,11 @@ class DebtCategoryController extends BaseController
 
             $result = $this->debtCategoryActions->update(
                 debtCategory: $debtCategory,
-                data: [
-                    'code' => $validatedRequest['code'],
-                    'name' => $validatedRequest['name'],
-                    'sequence' => $validatedRequest['sequence'],
-                ],
+                data: new DebtCategoryUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    sequence: $validatedRequest['sequence'],
+                )
             );
 
             DB::commit();

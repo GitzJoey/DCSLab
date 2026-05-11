@@ -69,5 +69,9 @@ class UserActionsCreateTest extends ActionsTestCase
             $rolesArr,
             $profileArr
         );
+
+        $userArr = [];
+        $rolesArr = [];
+        $profileArr = [];
     }
 }

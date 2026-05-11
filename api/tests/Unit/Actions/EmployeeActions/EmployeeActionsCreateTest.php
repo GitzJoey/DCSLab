@@ -6,7 +6,6 @@ use App\Actions\Employee\EmployeeActions;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class EmployeeActionsCreateTest extends ActionsTestCase
@@ -31,7 +30,12 @@ class EmployeeActionsCreateTest extends ActionsTestCase
         $employeeArr = Employee::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->employeeActions->create($employeeArr);
+        $result = $this->employeeActions->create(new \App\DTOs\EmployeeCreateDTO(
+            companyId: $employeeArr['company_id'],
+            code: $employeeArr['code'],
+            name: $employeeArr['name'],
+            remarks: $employeeArr['remarks']
+        ));
 
         $this->assertDatabaseHas('employees', [
             'id' => $result->id,
@@ -44,6 +48,7 @@ class EmployeeActionsCreateTest extends ActionsTestCase
     public function test_employee_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->employeeActions->create([]);
+        $this->employeeActions->create(new \App\DTOs\EmployeeCreateDTO());
+
     }
 }

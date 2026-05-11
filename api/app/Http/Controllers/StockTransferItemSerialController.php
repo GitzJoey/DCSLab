@@ -161,14 +161,14 @@ class StockTransferItemSerialController extends BaseController
         try {
             DB::beginTransaction();
 
-            $data = new StockTransferItemSerialCreateDTO(
+            $dto = new StockTransferItemSerialCreateDTO(
                 companyId: $validated['company_id'],
                 branchId: $validated['branch_id'],
                 stockTransferId: $validated['stock_transfer_id'],
                 stockTransferItemId: $validated['stock_transfer_item_id'],
                 serial: $validated['serial'],
             );
-            $result = $this->stockTransferItemSerialActions->create($data);
+            $result = $this->stockTransferItemSerialActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {

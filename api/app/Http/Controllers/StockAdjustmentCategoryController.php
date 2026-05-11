@@ -6,6 +6,8 @@ use App\Actions\StockAdjustmentCategory\StockAdjustmentCategoryActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\StockAdjustmentCategoryCreateDTO;
+use App\DTOs\StockAdjustmentCategoryUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\StockAdjustmentCategory\StockAdjustmentCategoryStoreRequest;
 use App\Http\Requests\StockAdjustmentCategory\StockAdjustmentCategoryUpdateRequest;
@@ -47,11 +49,12 @@ class StockAdjustmentCategoryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->stockAdjustmentCategoryActions->create([
-                'company_id' => $validatedRequest['company_id'],
-                'code' => $validatedRequest['code'],
-                'name' => $validatedRequest['name'],
-            ]);
+            $dto = new StockAdjustmentCategoryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+            );
+            $result = $this->stockAdjustmentCategoryActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -181,10 +184,10 @@ class StockAdjustmentCategoryController extends BaseController
 
             $result = $this->stockAdjustmentCategoryActions->update(
                 stockAdjustmentCategory: $stockAdjustmentCategory,
-                data: [
-                    'code' => $validatedRequest['code'],
-                    'name' => $validatedRequest['name'],
-                ]
+                data: new StockAdjustmentCategoryUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                )
             );
 
             DB::commit();

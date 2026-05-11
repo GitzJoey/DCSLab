@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Customer\CustomerActions;
+use App\DTOs\CustomerCreateDTO;
+use App\DTOs\CustomerUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -59,7 +61,24 @@ class CustomerController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->customerActions->create($validatedRequest);
+            $dto = new CustomerCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                groupId: $validatedRequest['group_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                paymentTermType: $validatedRequest['payment_term_type'],
+                paymentTerm: $validatedRequest['payment_term'],
+                taxableEnterprise: $validatedRequest['taxable_enterprise'],
+                taxId: $validatedRequest['tax_id'],
+                isMember: $validatedRequest['is_member'],
+                maxOpenInvoice: $validatedRequest['max_open_invoice'],
+                maxInvoiceAge: $validatedRequest['max_invoice_age'],
+                maxOutstandingInvoice: $validatedRequest['max_outstanding_invoice'],
+                zone: $validatedRequest['zone'],
+                remarks: $validatedRequest['remarks'],
+                status: $validatedRequest['status'],
+            );
+            $result = $this->customerActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -222,7 +241,22 @@ class CustomerController extends BaseController
 
             $result = $this->customerActions->update(
                 customer: $customer,
-                data: $validatedRequest
+                data: new CustomerUpdateDTO(
+                    groupId: $validatedRequest['group_id'],
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    paymentTermType: $validatedRequest['payment_term_type'],
+                    paymentTerm: $validatedRequest['payment_term'],
+                    taxableEnterprise: $validatedRequest['taxable_enterprise'],
+                    taxId: $validatedRequest['tax_id'],
+                    isMember: $validatedRequest['is_member'],
+                    maxOpenInvoice: $validatedRequest['max_open_invoice'],
+                    maxInvoiceAge: $validatedRequest['max_invoice_age'],
+                    maxOutstandingInvoice: $validatedRequest['max_outstanding_invoice'],
+                    zone: $validatedRequest['zone'],
+                    remarks: $validatedRequest['remarks'],
+                    status: $validatedRequest['status'],
+                )
             );
 
             DB::commit();

@@ -15,7 +15,7 @@ class CompanyActionsDeleteTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->companyActions = new CompanyActions();
+        $this->companyActions = app(CompanyActions::class);
     }
 
     public function test_company_actions_call_delete_expect_bool()

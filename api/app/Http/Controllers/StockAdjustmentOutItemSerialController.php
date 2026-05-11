@@ -160,7 +160,7 @@ class StockAdjustmentOutItemSerialController extends BaseController
         try {
             DB::beginTransaction();
 
-            $data = new StockAdjustmentOutItemSerialCreateDTO(
+            $dto = new StockAdjustmentOutItemSerialCreateDTO(
                 companyId: $validated['company_id'],
                 branchId: $validated['branch_id'],
                 stockAdjustmentId: $validated['stock_adjustment_id'],
@@ -168,7 +168,7 @@ class StockAdjustmentOutItemSerialController extends BaseController
                 serial: $validated['serial'],
             );
 
-            $result = $this->stockAdjustmentOutItemSerialActions->create($data);
+            $result = $this->stockAdjustmentOutItemSerialActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {

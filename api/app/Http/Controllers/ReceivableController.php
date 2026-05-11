@@ -129,21 +129,22 @@ class ReceivableController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
+            $dto = new ReceivableCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                categoryId: $validatedRequest['category_id'],
+                customerId: $validatedRequest['customer_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                directAmountReceived: (float) $validatedRequest['direct_amount_received'],
+                openingAmountDue: (float) $validatedRequest['opening_amount_due'],
+                dueDays: $validatedRequest['due_days'],
+                remarks: $validatedRequest['remarks'],
+                payments: $validatedRequest['payments'],
+            );
             $result = $this->receivableActions->create(
-                data: new ReceivableCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    categoryId: $validatedRequest['category_id'],
-                    customerId: $validatedRequest['customer_id'],
-                    cashAccountId: $validatedRequest['cash_account_id'],
-                    directAmountReceived: (float) $validatedRequest['direct_amount_received'],
-                    openingAmountDue: (float) $validatedRequest['opening_amount_due'],
-                    dueDays: $validatedRequest['due_days'],
-                    remarks: $validatedRequest['remarks'],
-                    payments: $validatedRequest['payments'],
-                ),
+                data: $dto,
             );
             DB::commit();
         } catch (Exception $e) {

@@ -6,6 +6,8 @@ use App\Actions\ReceivableCategory\ReceivableCategoryActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\ReceivableCategoryCreateDTO;
+use App\DTOs\ReceivableCategoryUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\ReceivableCategory\ReceivableCategoryStoreRequest;
 use App\Http\Requests\ReceivableCategory\ReceivableCategoryUpdateRequest;
@@ -123,7 +125,13 @@ class ReceivableCategoryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->receivableCategoryActions->create($validatedRequest);
+            $dto = new ReceivableCategoryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                sequence: $validatedRequest['sequence'],
+            );
+            $result = $this->receivableCategoryActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -160,11 +168,11 @@ class ReceivableCategoryController extends BaseController
 
             $result = $this->receivableCategoryActions->update(
                 receivableCategory: $receivableCategory,
-                data: [
-                    'code' => $validatedRequest['code'],
-                    'name' => $validatedRequest['name'],
-                    'sequence' => $validatedRequest['sequence'],
-                ],
+                data: new ReceivableCategoryUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    sequence: $validatedRequest['sequence'],
+                )
             );
 
             DB::commit();

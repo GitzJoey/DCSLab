@@ -7,7 +7,6 @@ use App\Models\Company;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class CustomerActionsCreateTest extends ActionsTestCase
@@ -36,7 +35,23 @@ class CustomerActionsCreateTest extends ActionsTestCase
                 'group_id' => $group->id,
             ])->toArray();
 
-        $result = $this->customerActions->create($customerArr);
+        $result = $this->customerActions->create(new \App\DTOs\CustomerCreateDTO(
+            companyId: $customerArr['company_id'],
+            groupId: $customerArr['group_id'],
+            code: $customerArr['code'],
+            name: $customerArr['name'],
+            paymentTermType: $customerArr['payment_term_type'],
+            paymentTerm: $customerArr['payment_term'],
+            taxableEnterprise: $customerArr['taxable_enterprise'],
+            taxId: $customerArr['tax_id'],
+            isMember: $customerArr['is_member'],
+            maxOpenInvoice: $customerArr['max_open_invoice'],
+            maxInvoiceAge: $customerArr['max_invoice_age'],
+            maxOutstandingInvoice: $customerArr['max_outstanding_invoice'],
+            zone: $customerArr['zone'],
+            remarks: $customerArr['remarks'],
+            status: $customerArr['status']
+        ));
 
         $this->assertDatabaseHas('customers', [
             'id' => $result->id,
@@ -61,6 +76,7 @@ class CustomerActionsCreateTest extends ActionsTestCase
     public function test_customer_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->customerActions->create([]);
+        $this->customerActions->create(new \App\DTOs\CustomerCreateDTO());
+
     }
 }

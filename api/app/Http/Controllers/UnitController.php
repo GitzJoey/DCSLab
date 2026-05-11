@@ -6,6 +6,8 @@ use App\Actions\Unit\UnitActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\UnitCreateDTO;
+use App\DTOs\UnitUpdateDTO;
 use App\Enums\UnitTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\Unit\UnitStoreRequest;
@@ -141,7 +143,14 @@ class UnitController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->unitActions->create($validatedRequest);
+            $dto = new UnitCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                description: $validatedRequest['description'],
+                type: $validatedRequest['type'],
+            );
+            $result = $this->unitActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -174,7 +183,15 @@ class UnitController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->unitActions->update($unit, $validatedRequest);
+            $result = $this->unitActions->update(
+                unit: $unit,
+                data: new UnitUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    description: $validatedRequest['description'],
+                    type: $validatedRequest['type'],
+                )
+            );
 
             DB::commit();
         } catch (Exception $e) {

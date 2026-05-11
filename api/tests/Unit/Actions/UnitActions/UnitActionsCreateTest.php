@@ -6,7 +6,6 @@ use App\Actions\Unit\UnitActions;
 use App\Models\Company;
 use App\Models\Unit;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class UnitActionsCreateTest extends ActionsTestCase
@@ -31,7 +30,13 @@ class UnitActionsCreateTest extends ActionsTestCase
         $unitArr = Unit::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->unitActions->create($unitArr);
+        $result = $this->unitActions->create(new \App\DTOs\UnitCreateDTO(
+            companyId: $unitArr['company_id'],
+            code: $unitArr['code'],
+            name: $unitArr['name'],
+            description: $unitArr['description'],
+            type: $unitArr['type']
+        ));
 
         $this->assertDatabaseHas('units', [
             'id' => $result->id,
@@ -46,6 +51,7 @@ class UnitActionsCreateTest extends ActionsTestCase
     public function test_unit_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->unitActions->create([]);
+        $this->unitActions->create(new \App\DTOs\UnitCreateDTO());
+
     }
 }

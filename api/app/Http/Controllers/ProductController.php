@@ -253,25 +253,24 @@ class ProductController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->productPhysicalActions->create(
-                new ProductPhysicalCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    code: $validatedRequest['code'],
-                    categoryId: $validatedRequest['category_id'],
-                    brandId: $validatedRequest['brand_id'] ?? null,
-                    defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
-                    name: $validatedRequest['name'],
-                    isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
-                    isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? false,
-                    isExpirable: $validatedRequest['is_expirable'] ?? false,
-                    remarks: $validatedRequest['remarks'] ?? null,
-                    type: $validatedRequest['type'],
-                    status: $validatedRequest['status'],
+            $dto = new ProductPhysicalCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                categoryId: $validatedRequest['category_id'],
+                brandId: $validatedRequest['brand_id'] ?? null,
+                defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
+                name: $validatedRequest['name'],
+                isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
+                isUseSerialNumber: $validatedRequest['is_use_serial_number'] ?? false,
+                isExpirable: $validatedRequest['is_expirable'] ?? false,
+                remarks: $validatedRequest['remarks'] ?? null,
+                type: $validatedRequest['type'],
+                status: $validatedRequest['status'],
 
-                    productUnits: $validatedRequest['product_units'],
-                    images: $validatedRequest['image_hashes'] ?? [],
-                )
+                productUnits: $validatedRequest['product_units'],
+                images: $validatedRequest['image_hashes'] ?? [],
             );
+            $result = $this->productPhysicalActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -304,23 +303,22 @@ class ProductController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->productServiceActions->create(
-                new ProductServiceCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    code: $validatedRequest['code'],
-                    categoryId: $validatedRequest['category_id'],
-                    defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
-                    name: $validatedRequest['name'],
-                    isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
-                    remarks: $validatedRequest['remarks'] ?? null,
-                    status: $validatedRequest['status'],
-                    unitId: $validatedRequest['unit_id'],
-                    price: $validatedRequest['price'],
-                    point: $validatedRequest['point'],
+            $dto = new ProductServiceCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                categoryId: $validatedRequest['category_id'],
+                defaultVatProfileId: $validatedRequest['default_vat_profile_id'] ?? null,
+                name: $validatedRequest['name'],
+                isPriceIncludeVat: $validatedRequest['is_price_include_vat'],
+                remarks: $validatedRequest['remarks'] ?? null,
+                status: $validatedRequest['status'],
+                unitId: $validatedRequest['unit_id'],
+                price: $validatedRequest['price'],
+                point: $validatedRequest['point'],
 
-                    images: $validatedRequest['image_hashes'] ?? [],
-                )
+                images: $validatedRequest['image_hashes'] ?? [],
             );
+            $result = $this->productServiceActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {

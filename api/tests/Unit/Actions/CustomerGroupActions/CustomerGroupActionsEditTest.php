@@ -32,7 +32,25 @@ class CustomerGroupActionsEditTest extends ActionsTestCase
 
         $customerGroupArr = CustomerGroup::factory()->make()->toArray();
 
-        $result = $this->customerGroupActions->update($customerGroup, $customerGroupArr);
+        $result = $this->customerGroupActions->update($customerGroup, new \App\DTOs\CustomerGroupUpdateDTO(
+            code: $customerGroupArr['code'],
+            name: $customerGroupArr['name'],
+            paymentTermType: $customerGroupArr['payment_term_type'],
+            paymentTerm: $customerGroupArr['payment_term'],
+            sellAtCost: $customerGroupArr['sell_at_cost'],
+            sellingPoint: $customerGroupArr['selling_point'],
+            sellingPointMultiple: $customerGroupArr['selling_point_multiple'],
+            priceMarkupPercent: $customerGroupArr['price_markup_percent'],
+            priceMarkupNominal: $customerGroupArr['price_markup_nominal'],
+            priceMarkdownPercent: $customerGroupArr['price_markdown_percent'],
+            priceMarkdownNominal: $customerGroupArr['price_markdown_nominal'],
+            roundingType: $customerGroupArr['rounding_type'],
+            roundingDigit: $customerGroupArr['rounding_digit'],
+            maxOpenInvoice: $customerGroupArr['max_open_invoice'],
+            maxInvoiceAge: $customerGroupArr['max_invoice_age'],
+            maxOutstandingInvoice: $customerGroupArr['max_outstanding_invoice'],
+            remarks: $customerGroupArr['remarks']
+        ));
 
         $this->assertInstanceOf(CustomerGroup::class, $result);
         $this->assertDatabaseHas('customer_groups', [
@@ -57,6 +75,6 @@ class CustomerGroupActionsEditTest extends ActionsTestCase
 
         $customerGroupArr = [];
 
-        $this->customerGroupActions->update($customerGroup, $customerGroupArr);
+        $this->customerGroupActions->update($customerGroup, new \App\DTOs\CustomerGroupUpdateDTO());
     }
 }

@@ -32,7 +32,12 @@ class UnitActionsEditTest extends ActionsTestCase
 
         $unitArr = Unit::factory()->make()->toArray();
 
-        $result = $this->unitActions->update($unit, $unitArr);
+        $result = $this->unitActions->update($unit, new \App\DTOs\UnitUpdateDTO(
+            code: $unitArr['code'],
+            name: $unitArr['name'],
+            description: $unitArr['description'],
+            type: $unitArr['type']
+        ));
 
         $this->assertInstanceOf(Unit::class, $result);
         $this->assertDatabaseHas('units', [
@@ -59,6 +64,6 @@ class UnitActionsEditTest extends ActionsTestCase
 
         $unitArr = [];
 
-        $this->unitActions->update($unit, $unitArr);
+        $this->unitActions->update($unit, new \App\DTOs\UnitUpdateDTO());
     }
 }

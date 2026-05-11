@@ -145,20 +145,21 @@ class PurchaseReceiptController extends BaseController
             }
 
             DB::beginTransaction();
+            $dto = new PurchaseReceiptCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                supplierId: $validatedRequest['supplier_id'],
+                purchaseId: $validatedRequest['purchase_id'] ?? null,
+                isFromDirectPurchase: false,
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                warehouseId: $validatedRequest['warehouse_id'],
+                remarks: $validatedRequest['remarks'] ?? null,
+                isPosted: $validatedRequest['is_posted'],
+                items: $items,
+            );
             $result = $this->purchaseReceiptActions->createManual(
-                data: new PurchaseReceiptCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    supplierId: $validatedRequest['supplier_id'],
-                    purchaseId: $validatedRequest['purchase_id'] ?? null,
-                    isFromDirectPurchase: false,
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    warehouseId: $validatedRequest['warehouse_id'],
-                    remarks: $validatedRequest['remarks'] ?? null,
-                    isPosted: $validatedRequest['is_posted'],
-                    items: $items,
-                ),
+                data: $dto,
                 updatePurchaseSummary: true,
             );
             DB::commit();

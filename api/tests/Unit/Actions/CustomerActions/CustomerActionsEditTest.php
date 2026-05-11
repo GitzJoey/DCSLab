@@ -38,7 +38,22 @@ class CustomerActionsEditTest extends ActionsTestCase
                 'group_id' => $group->id,
             ])->toArray();
 
-        $result = $this->customerActions->update($customer, $customerArr);
+        $result = $this->customerActions->update($customer, new \App\DTOs\CustomerUpdateDTO(
+            groupId: $customerArr['group_id'],
+            code: $customerArr['code'],
+            name: $customerArr['name'],
+            paymentTermType: $customerArr['payment_term_type'],
+            paymentTerm: $customerArr['payment_term'],
+            taxableEnterprise: $customerArr['taxable_enterprise'],
+            taxId: $customerArr['tax_id'],
+            isMember: $customerArr['is_member'],
+            maxOpenInvoice: $customerArr['max_open_invoice'],
+            maxInvoiceAge: $customerArr['max_invoice_age'],
+            maxOutstandingInvoice: $customerArr['max_outstanding_invoice'],
+            zone: $customerArr['zone'],
+            remarks: $customerArr['remarks'],
+            status: $customerArr['status']
+        ));
 
         $this->assertInstanceOf(Customer::class, $result);
         $this->assertDatabaseHas('customers', [
@@ -75,6 +90,6 @@ class CustomerActionsEditTest extends ActionsTestCase
 
         $customerArr = [];
 
-        $this->customerActions->update($customer, $customerArr);
+        $this->customerActions->update($customer, new \App\DTOs\CustomerUpdateDTO());
     }
 }

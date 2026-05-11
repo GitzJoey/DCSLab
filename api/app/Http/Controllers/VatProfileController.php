@@ -6,6 +6,8 @@ use App\Actions\VatProfile\VatProfileActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\VatProfileCreateDTO;
+use App\DTOs\VatProfileUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\VatProfile\VatProfileStoreRequest;
 use App\Http\Requests\VatProfile\VatProfileUpdateRequest;
@@ -54,16 +56,17 @@ class VatProfileController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->vatProfileActions->create([
-                'company_id' => $validatedRequest['company_id'],
-                'code' => $validatedRequest['code'],
-                'name' => $validatedRequest['name'],
-                'vat_rate' => $validatedRequest['vat_rate'],
-                'vat_base_numerator' => $validatedRequest['vat_base_numerator'],
-                'vat_base_denominator' => $validatedRequest['vat_base_denominator'],
-                'remarks' => $validatedRequest['remarks'],
-                'is_active' => $validatedRequest['is_active'],
-            ]);
+            $dto = new VatProfileCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                vatRate: $validatedRequest['vat_rate'],
+                vatBaseNumerator: $validatedRequest['vat_base_numerator'],
+                vatBaseDenominator: $validatedRequest['vat_base_denominator'],
+                remarks: $validatedRequest['remarks'],
+                isActive: $validatedRequest['is_active'],
+            );
+            $result = $this->vatProfileActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -193,15 +196,15 @@ class VatProfileController extends BaseController
 
             $result = $this->vatProfileActions->update(
                 vatProfile: $vatProfile,
-                data: [
-                    'code' => $validatedRequest['code'],
-                    'name' => $validatedRequest['name'],
-                    'vat_rate' => $validatedRequest['vat_rate'],
-                    'vat_base_numerator' => $validatedRequest['vat_base_numerator'],
-                    'vat_base_denominator' => $validatedRequest['vat_base_denominator'],
-                    'remarks' => $validatedRequest['remarks'],
-                    'is_active' => $validatedRequest['is_active'],
-                ]
+                data: new VatProfileUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    vatRate: $validatedRequest['vat_rate'],
+                    vatBaseNumerator: $validatedRequest['vat_base_numerator'],
+                    vatBaseDenominator: $validatedRequest['vat_base_denominator'],
+                    remarks: $validatedRequest['remarks'],
+                    isActive: $validatedRequest['is_active'],
+                )
             );
 
             DB::commit();

@@ -7,7 +7,6 @@ use App\Models\Branch;
 use App\Models\CashAccount;
 use App\Models\Company;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class CashAccountActionsCreateTest extends ActionsTestCase
@@ -34,7 +33,15 @@ class CashAccountActionsCreateTest extends ActionsTestCase
             ->make()->toArray();
         $cashAccountArr['branch_id'] = $branch->id;
 
-        $result = $this->cashAccountActions->create($cashAccountArr);
+        $result = $this->cashAccountActions->create(new \App\DTOs\CashAccountCreateDTO(
+            companyId: $cashAccountArr['company_id'],
+            branchId: $cashAccountArr['branch_id'],
+            code: $cashAccountArr['code'],
+            name: $cashAccountArr['name'],
+            isBank: $cashAccountArr['is_bank'],
+            isActive: $cashAccountArr['is_active'],
+            remarks: $cashAccountArr['remarks']
+        ));
 
         $this->assertDatabaseHas('cash_accounts', [
             'id' => $result->id,
@@ -47,6 +54,7 @@ class CashAccountActionsCreateTest extends ActionsTestCase
     public function test_cash_account_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->cashAccountActions->create([]);
+        $this->cashAccountActions->create(new \App\DTOs\CashAccountCreateDTO());
+
     }
 }

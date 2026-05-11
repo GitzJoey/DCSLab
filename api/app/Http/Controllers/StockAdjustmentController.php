@@ -157,7 +157,7 @@ class StockAdjustmentController extends BaseController
 
             DB::beginTransaction();
 
-            $data = new StockAdjustmentCreateDTO(
+            $dto = new StockAdjustmentCreateDTO(
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'],
                 code: $validatedRequest['code'],
@@ -171,7 +171,7 @@ class StockAdjustmentController extends BaseController
                 outItems: $validatedRequest['out_items'] ?? [],
             );
 
-            $result = $this->stockAdjustmentActions->create($data);
+            $result = $this->stockAdjustmentActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {

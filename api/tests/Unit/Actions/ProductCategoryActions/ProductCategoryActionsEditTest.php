@@ -32,7 +32,11 @@ class ProductCategoryActionsEditTest extends ActionsTestCase
 
         $productCategoryArr = ProductCategory::factory()->make()->toArray();
 
-        $result = $this->productCategoryActions->update($productCategory, $productCategoryArr);
+        $result = $this->productCategoryActions->update($productCategory, new \App\DTOs\ProductCategoryUpdateDTO(
+            code: $productCategoryArr['code'],
+            name: $productCategoryArr['name'],
+            type: $productCategoryArr['type']
+        ));
 
         $this->assertInstanceOf(ProductCategory::class, $result);
         $this->assertDatabaseHas('product_categories', [
@@ -57,6 +61,6 @@ class ProductCategoryActionsEditTest extends ActionsTestCase
 
         $productCategoryArr = [];
 
-        $this->productCategoryActions->update($productCategory, $productCategoryArr);
+        $this->productCategoryActions->update($productCategory, new \App\DTOs\ProductCategoryUpdateDTO());
     }
 }

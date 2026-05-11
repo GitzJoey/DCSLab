@@ -6,6 +6,8 @@ use App\Actions\PurchaseAdditionalCost\PurchaseAdditionalCostActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\PurchaseAdditionalCostCreateDTO;
+use App\DTOs\PurchaseAdditionalCostUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\PurchaseAdditionalCost\PurchaseAdditionalCostStoreRequest;
 use App\Http\Requests\PurchaseAdditionalCost\PurchaseAdditionalCostUpdateRequest;
@@ -127,7 +129,20 @@ class PurchaseAdditionalCostController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->purchaseAdditionalCostActions->create($validatedRequest);
+            $dto = new PurchaseAdditionalCostCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                purchaseId: $validatedRequest['purchase_id'],
+                purchaseAdditionalCostCategoryId: $validatedRequest['purchase_additional_cost_category_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                dueDays: $validatedRequest['due_days'],
+                paidImmediatelyCashAccountId: $validatedRequest['paid_immediately_cash_account_id'],
+                amountPaidImmediately: $validatedRequest['amount_paid_immediately'],
+                amountPayable: $validatedRequest['amount_payable'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->purchaseAdditionalCostActions->create($dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -153,7 +168,17 @@ class PurchaseAdditionalCostController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->purchaseAdditionalCostActions->update($purchase_additional_cost, $validatedRequest);
+            $result = $this->purchaseAdditionalCostActions->update($purchase_additional_cost, new PurchaseAdditionalCostUpdateDTO(
+                purchaseId: $validatedRequest['purchase_id'],
+                purchaseAdditionalCostCategoryId: $validatedRequest['purchase_additional_cost_category_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                dueDays: $validatedRequest['due_days'],
+                paidImmediatelyCashAccountId: $validatedRequest['paid_immediately_cash_account_id'],
+                amountPaidImmediately: $validatedRequest['amount_paid_immediately'],
+                amountPayable: $validatedRequest['amount_payable'],
+                remarks: $validatedRequest['remarks'],
+            ));
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

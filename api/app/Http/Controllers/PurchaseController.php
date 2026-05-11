@@ -161,30 +161,31 @@ class PurchaseController extends BaseController
             }
 
             DB::beginTransaction();
+            $dto = new PurchaseDirectCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                dueDays: $validatedRequest['due_days'],
+                supplierId: $validatedRequest['supplier_id'],
+                purchaseOrderId: $validatedRequest['purchase_order_id'],
+                directReceiptCode: $validatedRequest['direct_receipt_code'],
+                directReceiptWarehouseId: $validatedRequest['direct_receipt_warehouse_id'],
+                taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
+                taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
+                taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
+                remarks: $validatedRequest['remarks'],
+                isPosted: $validatedRequest['is_posted'],
+                rounding: (float) $validatedRequest['rounding'],
+
+                items: $validatedRequest['items'],
+
+                globalDiscounts: $validatedRequest['global_discounts'],
+
+                additionalCosts: $validatedRequest['additional_costs'],
+            );
             $result = $this->purchaseActions->createDirect(
-                data: new PurchaseDirectCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    dueDays: $validatedRequest['due_days'],
-                    supplierId: $validatedRequest['supplier_id'],
-                    purchaseOrderId: $validatedRequest['purchase_order_id'],
-                    directReceiptCode: $validatedRequest['direct_receipt_code'],
-                    directReceiptWarehouseId: $validatedRequest['direct_receipt_warehouse_id'],
-                    taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
-                    taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
-                    taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
-                    remarks: $validatedRequest['remarks'],
-                    isPosted: $validatedRequest['is_posted'],
-                    rounding: (float) $validatedRequest['rounding'],
-
-                    items: $validatedRequest['items'],
-
-                    globalDiscounts: $validatedRequest['global_discounts'],
-
-                    additionalCosts: $validatedRequest['additional_costs'],
-                )
+                data: $dto
             );
 
             DB::commit();
@@ -215,28 +216,29 @@ class PurchaseController extends BaseController
 
             DB::beginTransaction();
 
+            $dto = new PurchaseManualCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                dueDays: $validatedRequest['due_days'],
+                supplierId: $validatedRequest['supplier_id'],
+                purchaseOrderId: $validatedRequest['purchase_order_id'],
+                taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
+                taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
+                taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
+                remarks: $validatedRequest['remarks'],
+                isPosted: $validatedRequest['is_posted'],
+                rounding: (float) $validatedRequest['rounding'],
+
+                items: $validatedRequest['items'],
+
+                globalDiscounts: $validatedRequest['global_discounts'],
+
+                additionalCosts: $validatedRequest['additional_costs'],
+            );
             $result = $this->purchaseActions->createManual(
-                data: new PurchaseManualCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    dueDays: $validatedRequest['due_days'],
-                    supplierId: $validatedRequest['supplier_id'],
-                    purchaseOrderId: $validatedRequest['purchase_order_id'],
-                    taxInvoiceNumber: $validatedRequest['tax_invoice_number'],
-                    taxInvoiceVatBase: (float) $validatedRequest['tax_invoice_vat_base'],
-                    taxInvoiceVat: (float) $validatedRequest['tax_invoice_vat'],
-                    remarks: $validatedRequest['remarks'],
-                    isPosted: $validatedRequest['is_posted'],
-                    rounding: (float) $validatedRequest['rounding'],
-
-                    items: $validatedRequest['items'],
-
-                    globalDiscounts: $validatedRequest['global_discounts'],
-
-                    additionalCosts: $validatedRequest['additional_costs'],
-                )
+                data: $dto
             );
 
             DB::commit();

@@ -6,7 +6,6 @@ use App\Actions\Investor\InvestorActions;
 use App\Models\Company;
 use App\Models\Investor;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class InvestorActionsCreateTest extends ActionsTestCase
@@ -31,7 +30,12 @@ class InvestorActionsCreateTest extends ActionsTestCase
         $investorArr = Investor::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->investorActions->create($investorArr);
+        $result = $this->investorActions->create(new \App\DTOs\InvestorCreateDTO(
+            companyId: $investorArr['company_id'],
+            code: $investorArr['code'],
+            name: $investorArr['name'],
+            remarks: $investorArr['remarks']
+        ));
 
         $this->assertDatabaseHas('investors', [
             'id' => $result->id,
@@ -44,6 +48,7 @@ class InvestorActionsCreateTest extends ActionsTestCase
     public function test_investor_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->investorActions->create([]);
+        $this->investorActions->create(new \App\DTOs\InvestorCreateDTO());
+
     }
 }

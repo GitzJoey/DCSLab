@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CashAccount\CashAccountActions;
+use App\DTOs\CashAccountCreateDTO;
+use App\DTOs\CashAccountUpdateDTO;
 use App\DTOs\CashAccountWithRemainingBalanceDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
@@ -152,7 +154,16 @@ class CashAccountController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->cashAccountActions->create($validatedRequest);
+            $dto = new CashAccountCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                isBank: $validatedRequest['is_bank'],
+                isActive: $validatedRequest['is_active'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->cashAccountActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -185,7 +196,16 @@ class CashAccountController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->cashAccountActions->update($cashAccount, $validatedRequest);
+            $result = $this->cashAccountActions->update(
+                cashAccount: $cashAccount,
+                data: new CashAccountUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    isBank: $validatedRequest['is_bank'],
+                    isActive: $validatedRequest['is_active'],
+                    remarks: $validatedRequest['remarks'],
+                )
+            );
 
             DB::commit();
         } catch (Exception $e) {

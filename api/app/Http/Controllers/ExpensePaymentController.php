@@ -6,6 +6,8 @@ use App\Actions\ExpensePayment\ExpensePaymentActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\ExpensePaymentCreateDTO;
+use App\DTOs\ExpensePaymentUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\ExpensePayment\ExpensePaymentStoreRequest;
 use App\Http\Requests\ExpensePayment\ExpensePaymentUpdateRequest;
@@ -122,7 +124,17 @@ class ExpensePaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->expensePaymentActions->create($validatedRequest);
+            $dto = new ExpensePaymentCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                expenseId: $validatedRequest['expense_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->expensePaymentActions->create($dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -148,7 +160,13 @@ class ExpensePaymentController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
-            $result = $this->expensePaymentActions->update($expense_payment, $validatedRequest);
+            $result = $this->expensePaymentActions->update($expense_payment, new ExpensePaymentUpdateDTO(
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                amount: $validatedRequest['amount'],
+                remarks: $validatedRequest['remarks'],
+            ));
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

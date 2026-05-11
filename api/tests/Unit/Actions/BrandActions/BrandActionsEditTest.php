@@ -32,7 +32,10 @@ class BrandActionsEditTest extends ActionsTestCase
 
         $brandArr = Brand::factory()->make()->toArray();
 
-        $result = $this->brandActions->update($brand, $brandArr);
+        $result = $this->brandActions->update($brand, new \App\DTOs\BrandUpdateDTO(
+            code: $brandArr['code'],
+            name: $brandArr['name']
+        ));
 
         $this->assertInstanceOf(Brand::class, $result);
         $this->assertDatabaseHas('brands', [
@@ -57,6 +60,6 @@ class BrandActionsEditTest extends ActionsTestCase
 
         $brandArr = [];
 
-        $this->brandActions->update($brand, $brandArr);
+        $this->brandActions->update($brand, new \App\DTOs\BrandUpdateDTO());
     }
 }

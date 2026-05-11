@@ -32,7 +32,18 @@ class SupplierActionsEditTest extends ActionsTestCase
 
         $supplierArr = Supplier::factory()->make()->toArray();
 
-        $result = $this->supplierActions->update($supplier, $supplierArr);
+        $result = $this->supplierActions->update($supplier, new \App\DTOs\SupplierUpdateDTO(
+            code: $supplierArr['code'],
+            name: $supplierArr['name'],
+            address: $supplierArr['address'],
+            city: $supplierArr['city'],
+            paymentTermType: $supplierArr['payment_term_type'],
+            paymentTerm: $supplierArr['payment_term'],
+            taxableEnterprise: $supplierArr['taxable_enterprise'],
+            taxId: $supplierArr['tax_id'],
+            remarks: $supplierArr['remarks'],
+            status: $supplierArr['status']
+        ));
 
         $this->assertInstanceOf(Supplier::class, $result);
         $this->assertDatabaseHas('suppliers', [
@@ -65,6 +76,6 @@ class SupplierActionsEditTest extends ActionsTestCase
 
         $supplierArr = [];
 
-        $this->supplierActions->update($supplier, $supplierArr);
+        $this->supplierActions->update($supplier, new \App\DTOs\SupplierUpdateDTO());
     }
 }

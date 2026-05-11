@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CustomerAddress\CustomerAddressActions;
+use App\DTOs\CustomerAddressCreateDTO;
+use App\DTOs\CustomerAddressUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -136,7 +138,16 @@ class CustomerAddressController extends BaseController
 
             if (! $isUniqueAddress) return response()->error(['address' => [trans('rules.unique_address')]], 422);
 
-            $result = $this->customerAddressActions->create($validatedRequest);
+            $dto = new CustomerAddressCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                customerId: $validatedRequest['customer_id'],
+                address: $validatedRequest['address'],
+                city: $validatedRequest['city'],
+                contact: $validatedRequest['contact'],
+                isMain: $validatedRequest['is_main'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->customerAddressActions->create($dto);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
@@ -163,7 +174,13 @@ class CustomerAddressController extends BaseController
 
             $result = $this->customerAddressActions->update(
                 customerAddress: $customerAddress,
-                data: $validatedRequest
+                data: new CustomerAddressUpdateDTO(
+                    address: $validatedRequest['address'],
+                    city: $validatedRequest['city'],
+                    contact: $validatedRequest['contact'],
+                    isMain: $validatedRequest['is_main'],
+                    remarks: $validatedRequest['remarks'],
+                )
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();

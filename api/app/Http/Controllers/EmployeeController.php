@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Employee\EmployeeActions;
+use App\DTOs\EmployeeCreateDTO;
+use App\DTOs\EmployeeUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -134,7 +136,13 @@ class EmployeeController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->employeeActions->create($validatedRequest);
+            $dto = new EmployeeCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->employeeActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -173,7 +181,12 @@ class EmployeeController extends BaseController
 
             $result = $this->employeeActions->update(
                 employee: $employee,
-                data: $validatedRequest
+                data: new EmployeeUpdateDTO(
+                    companyId: $validatedRequest['company_id'],
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    remarks: $validatedRequest['remarks'],
+                )
             );
 
             DB::commit();

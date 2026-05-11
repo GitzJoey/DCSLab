@@ -158,7 +158,7 @@ class StockTransferItemController extends BaseController
         $errorMsg = '';
 
         try {
-            $data = new StockTransferItemCreateDTO(
+            $dto = new StockTransferItemCreateDTO(
                 companyId: $validated['company_id'],
                 branchId: $validated['branch_id'],
                 stockTransferId: $validated['stock_transfer_id'],
@@ -168,7 +168,7 @@ class StockTransferItemController extends BaseController
                 remarks: $validated['remarks'],
                 serials: $validated['serials'],
             );
-            $result = $this->stockTransferItemActions->create($data);
+            $result = $this->stockTransferItemActions->create($dto);
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }

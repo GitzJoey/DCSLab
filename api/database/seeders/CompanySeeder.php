@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Actions\Company\CompanyActions;
+use App\DTOs\CompanyCreateDTO;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -29,7 +30,13 @@ class CompanySeeder extends Seeder
                 ->toArray();
 
             $companyActions->resetDefault($user);
-            $companyActions->create($user, $defaultCompanyData);
+            $companyActions->create($user, new CompanyCreateDTO(
+                code: $defaultCompanyData['code'],
+                name: $defaultCompanyData['name'],
+                address: $defaultCompanyData['address'],
+                default: $defaultCompanyData['default'],
+                status: $defaultCompanyData['status'],
+            ));
 
             $remaining = max(0, $companiesPerUser - 1);
 
@@ -38,7 +45,13 @@ class CompanySeeder extends Seeder
 
                 random_int(0, 1) ? $company->setStatusActive() : $company->setStatusInactive();
 
-                $companyActions->create($user, $company->make()->toArray());
+                $companyActions->create($user, new CompanyCreateDTO(
+                    code: $company->make()->toArray()['code'],
+                    name: $company->make()->toArray()['name'],
+                    address: $company->make()->toArray()['address'],
+                    default: $company->make()->toArray()['default'],
+                    status: $company->make()->toArray()['status'],
+                ));
             }
         }
     }

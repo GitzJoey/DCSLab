@@ -32,7 +32,16 @@ class BranchActionsEditTest extends ActionsTestCase
 
         $payload = Branch::factory()->make()->toArray();
 
-        $result = $this->branchActions->update($branch, $payload);
+        $result = $this->branchActions->update($branch, new \App\DTOs\BranchUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            address: $payload['address'],
+            city: $payload['city'],
+            contact: $payload['contact'],
+            isMain: $payload['is_main'],
+            remarks: $payload['remarks'],
+            status: $payload['status']
+        ));
 
         $this->assertInstanceOf(Branch::class, $result);
         $this->assertDatabaseHas('branches', [
@@ -57,6 +66,6 @@ class BranchActionsEditTest extends ActionsTestCase
 
         $payload = [];
 
-        $this->branchActions->update($branch, $payload);
+        $this->branchActions->update($branch, new \App\DTOs\BranchUpdateDTO());
     }
 }

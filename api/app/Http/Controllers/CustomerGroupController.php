@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CustomerGroup\CustomerGroupActions;
+use App\DTOs\CustomerGroupCreateDTO;
+use App\DTOs\CustomerGroupUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -131,7 +133,27 @@ class CustomerGroupController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->customerGroupActions->create($validatedRequest);
+            $dto = new CustomerGroupCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                paymentTermType: $validatedRequest['payment_term_type'],
+                paymentTerm: $validatedRequest['payment_term'],
+                sellAtCost: $validatedRequest['sell_at_cost'],
+                sellingPoint: $validatedRequest['selling_point'],
+                sellingPointMultiple: $validatedRequest['selling_point_multiple'],
+                priceMarkupPercent: $validatedRequest['price_markup_percent'],
+                priceMarkupNominal: $validatedRequest['price_markup_nominal'],
+                priceMarkdownPercent: $validatedRequest['price_markdown_percent'],
+                priceMarkdownNominal: $validatedRequest['price_markdown_nominal'],
+                roundingType: $validatedRequest['rounding_type'],
+                roundingDigit: $validatedRequest['rounding_digit'],
+                maxOpenInvoice: $validatedRequest['max_open_invoice'],
+                maxInvoiceAge: $validatedRequest['max_invoice_age'],
+                maxOutstandingInvoice: $validatedRequest['max_outstanding_invoice'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->customerGroupActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -166,7 +188,25 @@ class CustomerGroupController extends BaseController
 
             $result = $this->customerGroupActions->update(
                 customerGroup: $customerGroup,
-                data: $validatedRequest
+                data: new CustomerGroupUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    paymentTermType: $validatedRequest['payment_term_type'],
+                    paymentTerm: $validatedRequest['payment_term'],
+                    sellAtCost: $validatedRequest['sell_at_cost'],
+                    sellingPoint: $validatedRequest['selling_point'],
+                    sellingPointMultiple: $validatedRequest['selling_point_multiple'],
+                    priceMarkupPercent: $validatedRequest['price_markup_percent'],
+                    priceMarkupNominal: $validatedRequest['price_markup_nominal'],
+                    priceMarkdownPercent: $validatedRequest['price_markdown_percent'],
+                    priceMarkdownNominal: $validatedRequest['price_markdown_nominal'],
+                    roundingType: $validatedRequest['rounding_type'],
+                    roundingDigit: $validatedRequest['rounding_digit'],
+                    maxOpenInvoice: $validatedRequest['max_open_invoice'],
+                    maxInvoiceAge: $validatedRequest['max_invoice_age'],
+                    maxOutstandingInvoice: $validatedRequest['max_outstanding_invoice'],
+                    remarks: $validatedRequest['remarks'],
+                )
             );
 
             DB::commit();

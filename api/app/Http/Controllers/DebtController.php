@@ -132,22 +132,23 @@ class DebtController extends BaseController
             if (! $isUniqueCode) return response()->error(['code' => [trans('rules.unique_code')]], 422);
 
             DB::beginTransaction();
+            $dto = new DebtCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                categoryId: $validatedRequest['category_id'],
+                creditorId: $validatedRequest['creditor_id'],
+                supplierId: $validatedRequest['supplier_id'],
+                cashAccountId: $validatedRequest['cash_account_id'],
+                directAmountReceived: (float) $validatedRequest['direct_amount_received'],
+                openingAmountDue: (float) $validatedRequest['opening_amount_due'],
+                dueDays: $validatedRequest['due_days'],
+                remarks: $validatedRequest['remarks'],
+                payments: $validatedRequest['payments'],
+            );
             $result = $this->debtActions->create(
-                data: new DebtCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    categoryId: $validatedRequest['category_id'],
-                    creditorId: $validatedRequest['creditor_id'],
-                    supplierId: $validatedRequest['supplier_id'],
-                    cashAccountId: $validatedRequest['cash_account_id'],
-                    directAmountReceived: (float) $validatedRequest['direct_amount_received'],
-                    openingAmountDue: (float) $validatedRequest['opening_amount_due'],
-                    dueDays: $validatedRequest['due_days'],
-                    remarks: $validatedRequest['remarks'],
-                    payments: $validatedRequest['payments'],
-                ),
+                data: $dto,
             );
             DB::commit();
         } catch (Exception $e) {

@@ -3,9 +3,9 @@
 namespace Tests\Unit\Actions\CompanyActions;
 
 use App\Actions\Company\CompanyActions;
+use App\DTOs\CompanyUpdateDTO;
 use App\Models\Company;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class CompanyActionsEditTest extends ActionsTestCase
@@ -16,7 +16,7 @@ class CompanyActionsEditTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->companyActions = new CompanyActions();
+        $this->companyActions = app(CompanyActions::class);
     }
 
     public function test_company_service_call_update_expect_db_updated()
@@ -28,7 +28,13 @@ class CompanyActionsEditTest extends ActionsTestCase
         $company = $user->companies->first();
         $companyArr = Company::factory()->make()->toArray();
 
-        $result = $this->companyActions->update($user, $company, $companyArr);
+        $result = $this->companyActions->update($user, $company, new \App\DTOs\CompanyUpdateDTO(
+            code: $companyArr['code'],
+            name: $companyArr['name'],
+            address: $companyArr['address'],
+            default: $companyArr['default'],
+            status: $companyArr['status'],
+        ));
 
         $this->assertInstanceOf(Company::class, $result);
         $this->assertDatabaseHas('companies', [
@@ -40,15 +46,15 @@ class CompanyActionsEditTest extends ActionsTestCase
 
     public function test_company_service_call_update_with_empty_array_parameters_expect_exception()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\ArgumentCountError::class);
+        $dtoClass = CompanyUpdateDTO::class;
 
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault())
             ->create();
 
         $company = $user->companies->first();
-        $companyArr = [];
 
-        $this->companyActions->update($user, $company, $companyArr);
+        $this->companyActions->update($user, $company, new $dtoClass(...[]));
     }
 }

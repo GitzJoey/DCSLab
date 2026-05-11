@@ -6,6 +6,8 @@ use App\Actions\ExpenseCategory\ExpenseCategoryActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\ExpenseCategoryCreateDTO;
+use App\DTOs\ExpenseCategoryUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\ExpenseCategory\ExpenseCategoryStoreRequest;
 use App\Http\Requests\ExpenseCategory\ExpenseCategoryUpdateRequest;
@@ -130,7 +132,14 @@ class ExpenseCategoryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->expenseCategoryActions->create($validatedRequest);
+            $dto = new ExpenseCategoryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                parentId: $validatedRequest['parent_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                sequence: $validatedRequest['sequence'],
+            );
+            $result = $this->expenseCategoryActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -167,11 +176,11 @@ class ExpenseCategoryController extends BaseController
 
             $result = $this->expenseCategoryActions->update(
                 expenseCategory: $expenseCategory,
-                data: [
-                    'code' => $validatedRequest['code'],
-                    'name' => $validatedRequest['name'],
-                    'sequence' => $validatedRequest['sequence'],
-                ],
+                data: new ExpenseCategoryUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    sequence: $validatedRequest['sequence'],
+                )
             );
 
             DB::commit();

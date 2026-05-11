@@ -7,6 +7,10 @@ use App\Actions\CashAccount\CashAccountActions;
 use App\Actions\Supplier\SupplierActions;
 use App\Actions\VatProfile\VatProfileActions;
 use App\Actions\Warehouse\WarehouseActions;
+use App\DTOs\BranchCreateDTO;
+use App\DTOs\CashAccountCreateDTO;
+use App\DTOs\SupplierCreateDTO;
+use App\DTOs\VatProfileCreateDTO;
 use App\DTOs\WarehouseCreateDTO;
 use App\Enums\ChartOfAccountScopeEnum;
 use App\Enums\PaymentTermTypeEnum;
@@ -38,17 +42,19 @@ class CompanyInitializationService
 
     private function createMainBranch(Company $company): Branch
     {
-        return $this->branchActions->create([
-            'company_id' => $company->id,
-            'code' => config('dcslab.KEYWORDS.AUTO'),
-            'name' => 'Cab. Utama',
-            'address' => null,
-            'city' => null,
-            'contact' => null,
-            'is_main' => true,
-            'remarks' => 'Cabang utama default saat perusahaan dibuat',
-            'status' => RecordStatusEnum::ACTIVE,
-        ]);
+        return $this->branchActions->create(
+            new BranchCreateDTO(
+                companyId: $company->id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                name: 'Cab. Utama',
+                address: null,
+                city: null,
+                contact: null,
+                isMain: true,
+                remarks: 'Cabang utama default saat perusahaan dibuat',
+                status: RecordStatusEnum::ACTIVE,
+            )
+        );
     }
 
     private function createDefaultWarehouses(Company $company, Branch $branch): void
@@ -91,7 +97,17 @@ class CompanyInitializationService
         ];
 
         foreach ($defaultCashAccounts as $defaultCashAccount) {
-            $this->cashAccountActions->create($defaultCashAccount);
+            $this->cashAccountActions->create(
+                new CashAccountCreateDTO(
+                    companyId: $defaultCashAccount['company_id'],
+                    branchId: $defaultCashAccount['branch_id'],
+                    code: $defaultCashAccount['code'],
+                    name: $defaultCashAccount['name'],
+                    isBank: $defaultCashAccount['is_bank'],
+                    isActive: $defaultCashAccount['is_active'],
+                    remarks: $defaultCashAccount['remarks'],
+                )
+            );
         }
     }
 
@@ -167,7 +183,18 @@ class CompanyInitializationService
         ];
 
         foreach ($defaultVatProfiles as $defaultVatProfile) {
-            $this->vatProfileActions->create($defaultVatProfile);
+            $this->vatProfileActions->create(
+                new VatProfileCreateDTO(
+                    companyId: $defaultVatProfile['company_id'],
+                    code: $defaultVatProfile['code'],
+                    name: $defaultVatProfile['name'],
+                    vatRate: $defaultVatProfile['vat_rate'],
+                    vatBaseNumerator: $defaultVatProfile['vat_base_numerator'],
+                    vatBaseDenominator: $defaultVatProfile['vat_base_denominator'],
+                    remarks: $defaultVatProfile['remarks'],
+                    isActive: $defaultVatProfile['is_active'],
+                )
+            );
         }
     }
 
@@ -190,7 +217,21 @@ class CompanyInitializationService
         ];
 
         foreach ($defaultSuppliers as $defaultSupplier) {
-            $this->supplierActions->create($defaultSupplier);
+            $this->supplierActions->create(
+                new SupplierCreateDTO(
+                    companyId: $defaultSupplier['company_id'],
+                    code: $defaultSupplier['code'],
+                    name: $defaultSupplier['name'],
+                    address: $defaultSupplier['address'],
+                    city: $defaultSupplier['city'],
+                    paymentTermType: $defaultSupplier['payment_term_type'],
+                    paymentTerm: $defaultSupplier['payment_term'],
+                    taxableEnterprise: $defaultSupplier['taxable_enterprise'],
+                    taxId: $defaultSupplier['tax_id'],
+                    remarks: $defaultSupplier['remarks'],
+                    status: $defaultSupplier['status'],
+                )
+            );
         }
     }
 }

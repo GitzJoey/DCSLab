@@ -6,7 +6,6 @@ use App\Actions\Brand\BrandActions;
 use App\Models\Brand;
 use App\Models\Company;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class BrandActionsCreateTest extends ActionsTestCase
@@ -30,7 +29,11 @@ class BrandActionsCreateTest extends ActionsTestCase
 
         $brandArr = Brand::factory()->for($company)->make()->toArray();
 
-        $result = $this->brandActions->create($brandArr);
+        $result = $this->brandActions->create(new \App\DTOs\BrandCreateDTO(
+            companyId: $brandArr['company_id'],
+            code: $brandArr['code'],
+            name: $brandArr['name']
+        ));
 
         $this->assertDatabaseHas('brands', [
             'id' => $result->id,
@@ -43,6 +46,7 @@ class BrandActionsCreateTest extends ActionsTestCase
     public function test_brand_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->brandActions->create([]);
+        $this->brandActions->create(new \App\DTOs\BrandCreateDTO());
+
     }
 }

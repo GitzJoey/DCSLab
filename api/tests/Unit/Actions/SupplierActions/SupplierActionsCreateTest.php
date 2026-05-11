@@ -6,7 +6,6 @@ use App\Actions\Supplier\SupplierActions;
 use App\Models\Company;
 use App\Models\Supplier;
 use App\Models\User;
-use Exception;
 use Tests\ActionsTestCase;
 
 class SupplierActionsCreateTest extends ActionsTestCase
@@ -31,7 +30,19 @@ class SupplierActionsCreateTest extends ActionsTestCase
         $supplierArr = Supplier::factory()->for($company)->for($user)
             ->make()->toArray();
 
-        $result = $this->supplierActions->create($supplierArr);
+        $result = $this->supplierActions->create(new \App\DTOs\SupplierCreateDTO(
+            companyId: $supplierArr['company_id'],
+            code: $supplierArr['code'],
+            name: $supplierArr['name'],
+            address: $supplierArr['address'],
+            city: $supplierArr['city'],
+            paymentTermType: $supplierArr['payment_term_type'],
+            paymentTerm: $supplierArr['payment_term'],
+            taxableEnterprise: $supplierArr['taxable_enterprise'],
+            taxId: $supplierArr['tax_id'],
+            remarks: $supplierArr['remarks'],
+            status: $supplierArr['status']
+        ));
 
         $this->assertDatabaseHas('suppliers', [
             'id' => $result->id,
@@ -53,6 +64,7 @@ class SupplierActionsCreateTest extends ActionsTestCase
     public function test_supplier_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->supplierActions->create([]);
+        $this->supplierActions->create(new \App\DTOs\SupplierCreateDTO());
+
     }
 }

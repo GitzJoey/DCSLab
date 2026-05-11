@@ -6,6 +6,8 @@ use App\Actions\JournalEntry\JournalEntryActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\JournalEntry\JournalEntryStoreRequest;
 use App\Http\Requests\JournalEntry\JournalEntryUpdateRequest;
@@ -124,7 +126,18 @@ class JournalEntryController extends BaseController
             }
 
             DB::beginTransaction();
-            $result = $this->journalEntryActions->create($validatedRequest);
+            $dto = new JournalEntryCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                sourceType: $validatedRequest['source_type'],
+                sourceId: $validatedRequest['source_id'],
+                referenceNo: $validatedRequest['reference_no'],
+                remarks: $validatedRequest['remarks'],
+                lines: $validatedRequest['lines'],
+            );
+            $result = $this->journalEntryActions->create($dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -152,7 +165,14 @@ class JournalEntryController extends BaseController
             }
 
             DB::beginTransaction();
-            $result = $this->journalEntryActions->update($journalEntry, $validatedRequest);
+            $result = $this->journalEntryActions->update($journalEntry, new JournalEntryUpdateDTO(
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                referenceNo: $validatedRequest['reference_no'],
+                remarks: $validatedRequest['remarks'],
+                lines: $validatedRequest['lines'],
+            ));
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

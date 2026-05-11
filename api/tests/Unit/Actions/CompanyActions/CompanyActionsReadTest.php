@@ -20,7 +20,7 @@ class CompanyActionsReadTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->companyActions = new CompanyActions();
+        $this->companyActions = app(CompanyActions::class);
     }
 
     public function test_company_actions_call_read_any_with_paginate_true_expect_paginator_object()

@@ -6,6 +6,8 @@ use App\Actions\Investor\InvestorActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\InvestorCreateDTO;
+use App\DTOs\InvestorUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\Investor\InvestorStoreRequest;
 use App\Http\Requests\Investor\InvestorUpdateRequest;
@@ -58,7 +60,13 @@ class InvestorController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->investorActions->create($validatedRequest);
+            $dto = new InvestorCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->investorActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -199,7 +207,11 @@ class InvestorController extends BaseController
 
             $result = $this->investorActions->update(
                 investor: $investor,
-                data: $validatedRequest
+                data: new InvestorUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    remarks: $validatedRequest['remarks'],
+                )
             );
 
             DB::commit();

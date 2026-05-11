@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Branch\BranchActions;
+use App\DTOs\BranchCreateDTO;
+use App\DTOs\BranchUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -156,7 +158,18 @@ class BranchController extends BaseController
                 $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
             }
 
-            $result = $this->branchActions->create($validatedRequest);
+            $dto = new BranchCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                address: $validatedRequest['address'],
+                city: $validatedRequest['city'],
+                contact: $validatedRequest['contact'],
+                isMain: $validatedRequest['is_main'],
+                remarks: $validatedRequest['remarks'],
+                status: $validatedRequest['status'],
+            );
+            $result = $this->branchActions->create($dto);
 
             DB::commit();
         } catch (Exception $e) {
@@ -196,7 +209,16 @@ class BranchController extends BaseController
 
             $result = $this->branchActions->update(
                 branch: $branch,
-                data: $validatedRequest
+                data: new BranchUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    address: $validatedRequest['address'],
+                    city: $validatedRequest['city'],
+                    contact: $validatedRequest['contact'],
+                    isMain: $validatedRequest['is_main'],
+                    remarks: $validatedRequest['remarks'],
+                    status: $validatedRequest['status'],
+                )
             );
 
             DB::commit();

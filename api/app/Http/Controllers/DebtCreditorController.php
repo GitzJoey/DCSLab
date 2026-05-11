@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Actions\DebtCreditor\DebtCreditorActions;
+use App\DTOs\DebtCreditorCreateDTO;
+use App\DTOs\DebtCreditorUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
@@ -119,7 +121,13 @@ class DebtCreditorController extends BaseController
             if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
 
             DB::beginTransaction();
-            $result = $this->debtCreditorActions->create($validatedRequest);
+            $dto = new DebtCreditorCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                remarks: $validatedRequest['remarks'],
+            );
+            $result = $this->debtCreditorActions->create($dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -154,7 +162,11 @@ class DebtCreditorController extends BaseController
             DB::beginTransaction();
             $result = $this->debtCreditorActions->update(
                 debtCreditor: $debtCreditor,
-                data: $validatedRequest,
+                data: new DebtCreditorUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    remarks: $validatedRequest['remarks'],
+                )
             );
             DB::commit();
         } catch (Exception $e) {

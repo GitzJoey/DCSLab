@@ -165,21 +165,22 @@ class PurchaseOrderController extends BaseController
 
             DB::beginTransaction();
 
+            $dto = new PurchaseOrderCreateDTO(
+                companyId: $validatedRequest['company_id'],
+                branchId: $validatedRequest['branch_id'],
+                code: $validatedRequest['code'],
+                date: $validatedRequest['date'],
+                dueDays: $validatedRequest['due_days'],
+                supplierId: $validatedRequest['supplier_id'],
+                remarks: $validatedRequest['remarks'],
+                rounding: (float) $validatedRequest['rounding'],
+                globalDiscounts: $validatedRequest['global_discounts'],
+                items: $validatedRequest['items'],
+                downPayments: $validatedRequest['down_payments'],
+                refundedDownPayments: $validatedRequest['refunded_down_payments'],
+            );
             $result = $this->purchaseOrderActions->create(
-                data: new PurchaseOrderCreateDTO(
-                    companyId: $validatedRequest['company_id'],
-                    branchId: $validatedRequest['branch_id'],
-                    code: $validatedRequest['code'],
-                    date: $validatedRequest['date'],
-                    dueDays: $validatedRequest['due_days'],
-                    supplierId: $validatedRequest['supplier_id'],
-                    remarks: $validatedRequest['remarks'],
-                    rounding: (float) $validatedRequest['rounding'],
-                    globalDiscounts: $validatedRequest['global_discounts'],
-                    items: $validatedRequest['items'],
-                    downPayments: $validatedRequest['down_payments'],
-                    refundedDownPayments: $validatedRequest['refunded_down_payments'],
-                )
+                data: $dto
             );
 
             DB::commit();
