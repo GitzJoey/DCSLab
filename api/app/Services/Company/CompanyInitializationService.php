@@ -7,6 +7,7 @@ use App\Actions\CashAccount\CashAccountActions;
 use App\Actions\Supplier\SupplierActions;
 use App\Actions\VatProfile\VatProfileActions;
 use App\Actions\Warehouse\WarehouseActions;
+use App\DTOs\WarehouseCreateDTO;
 use App\Enums\ChartOfAccountScopeEnum;
 use App\Enums\PaymentTermTypeEnum;
 use App\Enums\RecordStatusEnum;
@@ -40,8 +41,8 @@ class CompanyInitializationService
         return $this->branchActions->create([
             'company_id' => $company->id,
             'code' => config('dcslab.KEYWORDS.AUTO'),
-            'name' => 'Cabang Utama',
-            'address' => $company->address,
+            'name' => 'Cab. Utama',
+            'address' => null,
             'city' => null,
             'contact' => null,
             'is_main' => true,
@@ -52,23 +53,18 @@ class CompanyInitializationService
 
     private function createDefaultWarehouses(Company $company, Branch $branch): void
     {
-        $defaultWarehouses = [
-            [
-                'company_id' => $company->id,
-                'branch_id' => $branch->id,
-                'code' => config('dcslab.KEYWORDS.AUTO'),
-                'name' => 'Gudang Utama',
-                'address' => $company->address,
-                'city' => null,
-                'contact' => null,
-                'remarks' => 'Gudang utama default saat perusahaan dibuat',
-                'status' => RecordStatusEnum::ACTIVE,
-            ],
-        ];
-
-        foreach ($defaultWarehouses as $defaultWarehouse) {
-            $this->warehouseActions->create($defaultWarehouse);
-        }
+        $dto = new WarehouseCreateDTO(
+            companyId: $company->id,
+            branchId: $branch->id,
+            code: config('dcslab.KEYWORDS.AUTO'),
+            name: 'G. Utama',
+            address: null,
+            city: null,
+            contact: null,
+            remarks: 'Gudang utama default saat perusahaan dibuat',
+            status: RecordStatusEnum::ACTIVE->value,
+        );
+        $this->warehouseActions->create($dto);
     }
 
     private function createDefaultCashAccounts(Company $company, Branch $branch): void

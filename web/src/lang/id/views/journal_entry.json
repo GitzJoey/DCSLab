@@ -1,12 +1,14 @@
 {
   "page_title": "Jurnal Umum",
+  "report_entry_detail_title": "Jurnal Umum per Item",
   "actions": {
     "create": "Tambah Jurnal Umum",
     "edit": "Ubah Jurnal Umum",
     "add_line": "Tambah Baris"
   },
   "table": {
-    "title": "Daftar Jurnal Umum"
+    "title": "Daftar Jurnal Umum",
+    "entry_detail_title": "Daftar Jurnal Umum per Item"
   },
   "field_groups": {
     "company_info": "Informasi Perusahaan",
@@ -18,6 +20,8 @@
     "branch": "Cabang",
     "code": "Kode",
     "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
     "source_type": "Tipe Sumber",
     "source_id": "ID Sumber",
     "reference_no": "Nomor Referensi",

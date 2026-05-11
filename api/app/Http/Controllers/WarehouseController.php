@@ -6,6 +6,7 @@ use App\Actions\Warehouse\WarehouseActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\DTOs\WarehouseCreateDTO;
 use App\Enums\RecordStatusEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\Warehouse\WarehouseStoreRequest;
@@ -152,7 +153,19 @@ class WarehouseController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->warehouseActions->create($validatedRequest);
+            $result = $this->warehouseActions->create(
+                new WarehouseCreateDTO(
+                    companyId: $validatedRequest['company_id'],
+                    branchId: $validatedRequest['branch_id'],
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    address: $validatedRequest['address'],
+                    city: $validatedRequest['city'],
+                    contact: $validatedRequest['contact'],
+                    remarks: $validatedRequest['remarks'],
+                    status: $validatedRequest['status'],
+                )
+            );
 
             DB::commit();
         } catch (Exception $e) {

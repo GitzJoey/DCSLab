@@ -2,28 +2,16 @@
 
 namespace App\Http\Requests\ChartOfAccount;
 
+use App\Enums\ChartOfAccountNormalBalanceEnum;
 use App\Helpers\HashidsHelper;
 use App\Models\ChartOfAccount;
 use App\Rules\ExistsForCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class ChartOfAccountUpdateRequest extends FormRequest
 {
-    private const ACCOUNT_TYPES = [
-        'asset',
-        'liability',
-        'equity',
-        'income',
-        'expense',
-    ];
-
-    private const NORMAL_BALANCES = [
-        'debit',
-        'credit',
-    ];
-
     public function authorize()
     {
         if (! Auth::check()) {
@@ -56,8 +44,7 @@ class ChartOfAccountUpdateRequest extends FormRequest
             'parent_id' => ['present', 'nullable', 'integer', new ExistsForCompany('chart_of_accounts', $this->company_id)],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'account_type' => ['required', 'string', Rule::in(self::ACCOUNT_TYPES)],
-            'normal_balance' => ['required', 'string', Rule::in(self::NORMAL_BALANCES)],
+            'normal_balance' => ['required', new Enum(ChartOfAccountNormalBalanceEnum::class)],
             'is_group' => ['required', 'boolean'],
             'is_active' => ['required', 'boolean'],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
@@ -76,6 +63,10 @@ class ChartOfAccountUpdateRequest extends FormRequest
 
             if ($this->parent_id === $chartOfAccount->id) {
                 $validator->errors()->add('parent_id', trans('rules.chart_of_account.parent_must_not_be_self'));
+            }
+
+            if (is_null($this->parent_id) && ! is_null($chartOfAccount->parent_id)) {
+                $validator->errors()->add('parent_id', trans('rules.chart_of_account.parent_is_required_for_account_type'));
             }
 
             if (

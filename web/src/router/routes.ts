@@ -40,6 +40,8 @@ import JournalEntryIndex from '@/pages/journal-entry/JournalEntryIndex.vue';
 import JournalEntryList from '@/pages/journal-entry/JournalEntryList.vue';
 import JournalEntryCreate from '@/pages/journal-entry/JournalEntryCreate.vue';
 import JournalEntryEdit from '@/pages/journal-entry/JournalEntryEdit.vue';
+import JournalEntryDetailIndex from '@/pages/journal-entry/JournalEntryDetailIndex.vue';
+import JournalEntryDetailList from '@/pages/journal-entry/JournalEntryDetailList.vue';
 import CashAccountIndex from '@/pages/cash-account/CashAccountIndex.vue';
 import CashAccountList from '@/pages/cash-account/CashAccountList.vue';
 import CashAccountCreate from '@/pages/cash-account/CashAccountCreate.vue';
@@ -1878,6 +1880,23 @@ export default [
             path: '/dashboard/product/product-with-remaining-stock/list',
             name: 'side-menu-product-with-remaining-stock-list',
             component: ProductWithRemainingStockList,
+            meta: {
+              remember: true,
+            },
+          },
+        ],
+      },
+      // Journal Entry Detail Report
+      {
+        path: '/dashboard/report/journal-entry-detail',
+        name: 'side-menu-report-journal-entry-detail',
+        redirect: '/dashboard/report/journal-entry-detail/list',
+        component: JournalEntryDetailIndex,
+        children: [
+          {
+            path: '/dashboard/report/journal-entry-detail/list',
+            name: 'side-menu-report-journal-entry-detail-list',
+            component: JournalEntryDetailList,
             meta: {
               remember: true,
             },

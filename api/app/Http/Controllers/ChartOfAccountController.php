@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ChartOfAccount\ChartOfAccountActions;
+use App\DTOs\ChartOfAccountCreateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\Enums\ChartOfAccountNormalBalanceEnum;
 use App\Enums\ChartOfAccountScopeEnum;
 use App\Enums\ChartOfAccountSystemKeyEnum;
 use App\Helpers\HashidsHelper;
@@ -30,11 +32,6 @@ class ChartOfAccountController extends BaseController
         'equity',
         'income',
         'expense',
-    ];
-
-    private const NORMAL_BALANCES = [
-        'debit',
-        'credit',
     ];
 
     public function __construct(
@@ -67,7 +64,7 @@ class ChartOfAccountController extends BaseController
             'scope' => ['nullable', new Enum(ChartOfAccountScopeEnum::class)],
             'system_key' => ['nullable', new Enum(ChartOfAccountSystemKeyEnum::class)],
             'account_type' => ['nullable', 'string', Rule::in(self::ACCOUNT_TYPES)],
-            'normal_balance' => ['nullable', 'string', Rule::in(self::NORMAL_BALANCES)],
+            'normal_balance' => ['nullable', new Enum(ChartOfAccountNormalBalanceEnum::class)],
             'is_group' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],
             'include_id' => ['nullable', 'integer', new ExistsForCompany('chart_of_accounts', $request->company_id)],
@@ -161,7 +158,22 @@ class ChartOfAccountController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->chartOfAccountActions->create($validatedRequest);
+            $result = $this->chartOfAccountActions->create(
+                new ChartOfAccountCreateDTO(
+                    companyId: $validatedRequest['company_id'],
+                    scope: $validatedRequest['scope'],
+                    systemKey: $validatedRequest['system_key'],
+                    parentId: $validatedRequest['parent_id'],
+                    sourceType: $validatedRequest['source_type'],
+                    sourceId: $validatedRequest['source_id'],
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    normalBalance: $validatedRequest['normal_balance'],
+                    isGroup: $validatedRequest['is_group'],
+                    isActive: $validatedRequest['is_active'],
+                    remarks: $validatedRequest['remarks'],
+                )
+            );
 
             DB::commit();
         } catch (Exception $e) {

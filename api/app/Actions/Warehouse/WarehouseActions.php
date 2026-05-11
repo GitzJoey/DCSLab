@@ -3,6 +3,7 @@
 namespace App\Actions\Warehouse;
 
 use App\DTOs\ExecuteDTO;
+use App\DTOs\WarehouseCreateDTO;
 use App\Models\Company;
 use App\Models\Warehouse;
 use App\Traits\CacheHelper;
@@ -145,21 +146,21 @@ class WarehouseActions
         return $warehouse->load(self::LIST_EAGER_LOADS);
     }
 
-    public function create(array $data): Warehouse
+    public function create(WarehouseCreateDTO $data): Warehouse
     {
         $timer_start = microtime(true);
 
         try {
             $warehouse = new Warehouse();
-            $warehouse->company_id = $data['company_id'];
-            $warehouse->branch_id = $data['branch_id'];
-            $warehouse->code = $this->generateUniqueCode($data['company_id'], $data['code'], null);
-            $warehouse->name = $data['name'];
-            $warehouse->address = $data['address'];
-            $warehouse->city = $data['city'];
-            $warehouse->contact = $data['contact'];
-            $warehouse->remarks = $data['remarks'];
-            $warehouse->status = $data['status'];
+            $warehouse->company_id = $data->companyId;
+            $warehouse->branch_id = $data->branchId;
+            $warehouse->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $warehouse->name = $data->name;
+            $warehouse->address = $data->address;
+            $warehouse->city = $data->city;
+            $warehouse->contact = $data->contact;
+            $warehouse->remarks = $data->remarks;
+            $warehouse->status = $data->status;
             $warehouse->save();
 
             $this->flushCache();

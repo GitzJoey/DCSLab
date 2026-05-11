@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ChartOfAccount;
 
+use App\Enums\ChartOfAccountNormalBalanceEnum;
 use App\Enums\ChartOfAccountScopeEnum;
 use App\Enums\ChartOfAccountSystemKeyEnum;
 use App\Helpers\HashidsHelper;
@@ -15,19 +16,6 @@ use Illuminate\Validation\Rules\Enum;
 
 class ChartOfAccountStoreRequest extends FormRequest
 {
-    private const ACCOUNT_TYPES = [
-        'asset',
-        'liability',
-        'equity',
-        'income',
-        'expense',
-    ];
-
-    private const NORMAL_BALANCES = [
-        'debit',
-        'credit',
-    ];
-
     public function authorize()
     {
         if (! Auth::check()) {
@@ -69,8 +57,7 @@ class ChartOfAccountStoreRequest extends FormRequest
             'source_id' => ['present', 'nullable', 'integer', 'min:1'],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'account_type' => ['required', 'string', Rule::in(self::ACCOUNT_TYPES)],
-            'normal_balance' => ['required', 'string', Rule::in(self::NORMAL_BALANCES)],
+            'normal_balance' => ['required', new Enum(ChartOfAccountNormalBalanceEnum::class)],
             'is_group' => ['required', 'boolean'],
             'is_active' => ['required', 'boolean'],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
@@ -93,9 +80,14 @@ class ChartOfAccountStoreRequest extends FormRequest
                 $validator->errors()->add('source_id', trans('rules.chart_of_account.source_type_and_source_id_must_be_paired'));
             }
 
+            if (is_null($this->parent_id)) {
+                $validator->errors()->add('parent_id', trans('rules.chart_of_account.parent_is_required_for_account_type'));
+
+                return;
+            }
+
             if (
-                is_null($this->parent_id)
-                || $validator->errors()->has('company_id')
+                $validator->errors()->has('company_id')
                 || $validator->errors()->has('parent_id')
             ) {
                 return;

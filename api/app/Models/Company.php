@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ChartOfAccountSystemKeyEnum;
 use App\Enums\RecordStatusEnum;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -148,6 +149,12 @@ class Company extends Model
     public function chartOfAccounts()
     {
         return $this->hasMany(ChartOfAccount::class);
+    }
+
+    public function equityRootChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::EQUITY_ROOT);
     }
 
     public function investors()

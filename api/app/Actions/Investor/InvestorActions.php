@@ -2,6 +2,8 @@
 
 namespace App\Actions\Investor;
 
+use App\Actions\ChartOfAccount\ChartOfAccountActions;
+use App\DTOs\ChartOfAccountCreateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Models\Company;
 use App\Models\Investor;
@@ -19,8 +21,9 @@ class InvestorActions
         'company',
     ];
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ChartOfAccountActions $chartOfAccountActions,
+    ) {
     }
 
     public function readAny(
@@ -144,6 +147,22 @@ class InvestorActions
             $investor->remarks = $data['remarks'];
             $investor->save();
 
+            $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                companyId: $investor->company_id,
+                scope: 'user',
+                systemKey: null,
+                parentId: $investor->company->equityRootChartOfAccount->id,
+                sourceType: Investor::class,
+                sourceId: $investor->id,
+                code: $investor->company->equityRootChartOfAccount->code.$investor->code,
+                name: $investor->name,
+                normalBalance: 'credit',
+                isGroup: false,
+                isActive: true,
+                remarks: $investor->remarks,
+            );
+            $this->chartOfAccountActions->create($chartOfAccountDTO);
+
             $this->flushCache();
 
             return $investor;
@@ -166,6 +185,18 @@ class InvestorActions
             $investor->remarks = $data['remarks'];
             $investor->save();
 
+            $chartOfAccount = $investor->chartOfAccount;
+            $this->chartOfAccountActions->update($chartOfAccount, [
+                'parent_id' => $chartOfAccount->parent_id,
+                'code' => $investor->code,
+                'name' => $investor->name,
+                'account_type' => $chartOfAccount->account_type,
+                'normal_balance' => $chartOfAccount->normal_balance,
+                'is_group' => $chartOfAccount->is_group,
+                'is_active' => $chartOfAccount->is_active,
+                'remarks' => $investor->remarks,
+            ]);
+
             $this->flushCache();
 
             return $investor->refresh();
@@ -185,6 +216,9 @@ class InvestorActions
         $retval = false;
 
         try {
+            $chartOfAccount = $investor->chartOfAccount;
+            if ($chartOfAccount) $this->chartOfAccountActions->delete($chartOfAccount);
+
             $retval = $investor->delete();
 
             $this->flushCache();

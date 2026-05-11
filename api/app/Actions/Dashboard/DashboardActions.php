@@ -150,12 +150,6 @@ class DashboardActions
             'title' => 'components.menu.cash-account',
         ];
 
-        $journalEntry = [
-            'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-journal-entry',
-            'title' => 'components.menu.journal-entry',
-        ];
-
         $productManagement = [
             'icon' => 'Package',
             'pageName' => 'side-menu-product',
@@ -273,7 +267,6 @@ class DashboardActions
         array_push(
             $financeManagement['subMenu'],
             $chartOfAccount,
-            $journalEntry,
             $investor,
             $cashAccount,
             $expenseCategory,
@@ -365,6 +358,12 @@ class DashboardActions
             'title' => 'components.menu.receivable',
         ];
 
+        $journalEntry = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-journal-entry',
+            'title' => 'components.menu.journal-entry',
+        ];
+
         array_push(
             $root_array['subMenu'],
             $capitalOpening,
@@ -375,7 +374,8 @@ class DashboardActions
             $income,
             $prepaidIncome,
             $debt,
-            $receivable
+            $receivable,
+            $journalEntry
         );
 
         array_push($menu, $root_array);
@@ -576,6 +576,12 @@ class DashboardActions
             'title' => 'components.menu.stock-transfer-item-serial',
         ];
 
+        $journalEntryDetail = [
+            'icon' => 'FileText',
+            'pageName' => 'side-menu-report-journal-entry-detail',
+            'title' => 'components.menu.journal-entry-detail',
+        ];
+
         array_push(
             $stockAdjustment['subMenu'],
             $stockAdjustmentInItem,
@@ -598,7 +604,7 @@ class DashboardActions
             $purchaseOrderDownPaymentRefund
         );
 
-        array_push($root_array['subMenu'], $cashAccount, $product, $stockAdjustment, $purchaseOrder, $stockTransfer);
+        array_push($root_array['subMenu'], $cashAccount, $product, $stockAdjustment, $purchaseOrder, $stockTransfer, $journalEntryDetail);
 
         array_push($menu, $root_array);
 

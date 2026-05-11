@@ -71,13 +71,6 @@ const scopeOptions = computed(() => [
   { value: 'user', label: t('views.chart_of_account.options.scope.user') },
   { value: 'system', label: t('views.chart_of_account.options.scope.system') },
 ]);
-const accountTypeOptions = computed(() => [
-  { value: 'asset', label: t('views.chart_of_account.options.account_type.asset') },
-  { value: 'liability', label: t('views.chart_of_account.options.account_type.liability') },
-  { value: 'equity', label: t('views.chart_of_account.options.account_type.equity') },
-  { value: 'income', label: t('views.chart_of_account.options.account_type.income') },
-  { value: 'expense', label: t('views.chart_of_account.options.account_type.expense') },
-]);
 const normalBalanceOptions = computed(() => [
   { value: 'debit', label: t('views.chart_of_account.options.normal_balance.debit') },
   { value: 'credit', label: t('views.chart_of_account.options.normal_balance.credit') },
@@ -151,7 +144,6 @@ const normalizeFormDefaults = () => {
     source_id: chartOfAccountForm.source_id || null,
     code: chartOfAccountForm.code || '_AUTO_',
     name: chartOfAccountForm.name || '',
-    account_type: chartOfAccountForm.account_type || 'asset',
     normal_balance: chartOfAccountForm.normal_balance || 'debit',
     is_group: chartOfAccountForm.is_group ?? false,
     is_active: chartOfAccountForm.is_active ?? true,
@@ -163,7 +155,8 @@ const loadFromCache = () => {
   const data = cacheService.getLastEntity('CHART_OF_ACCOUNT_CREATE') as Record<string, unknown> | null;
   if (!data) return;
 
-  chartOfAccountForm.setData(data);
+  const { account_type: _ignoredAccountType, ...sanitizedData } = data;
+  chartOfAccountForm.setData(sanitizedData);
 };
 
 const loadParentDDL = async (search = ''): Promise<void> => {
@@ -219,7 +212,6 @@ const resetForm = async () => {
     source_id: null,
     code: '_AUTO_',
     name: '',
-    account_type: 'asset',
     normal_balance: 'debit',
     is_group: false,
     is_active: true,
@@ -370,23 +362,6 @@ const showAlertPlaceholder = (
                 @change="chartOfAccountForm.validate('name')"
               />
               <FormErrorMessages :messages="chartOfAccountForm.errors.name" />
-            </div>
-
-            <div class="col-span-12 sm:col-span-6 lg:col-span-4">
-              <FormLabel :class="{ 'text-danger': chartOfAccountForm.invalid('account_type') }">
-                {{ t('views.chart_of_account.fields.account_type') }}
-              </FormLabel>
-              <FormSelect
-                id="account_type"
-                v-model="chartOfAccountForm.account_type"
-                :class="{ 'border-danger': chartOfAccountForm.invalid('account_type') }"
-                @change="chartOfAccountForm.validate('account_type')"
-              >
-                <option v-for="item in accountTypeOptions" :key="item.value" :value="item.value">
-                  {{ item.label }}
-                </option>
-              </FormSelect>
-              <FormErrorMessages :messages="chartOfAccountForm.errors.account_type" />
             </div>
 
             <div class="col-span-12 sm:col-span-6 lg:col-span-4">

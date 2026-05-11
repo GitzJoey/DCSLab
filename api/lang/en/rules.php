@@ -85,6 +85,7 @@ return [
         'parent_must_be_group' => 'Parent account must be a group account.',
         'parent_must_not_be_self' => 'Parent account must not reference itself.',
         'parent_must_not_be_descendant' => 'Parent account must not come from this account descendant.',
+        'parent_is_required_for_account_type' => 'A parent account must be selected so account type can be derived automatically.',
         'cannot_delete_with_children' => 'Chart of account cannot be deleted because it still has child accounts.',
         'non_group_must_not_have_children' => 'Non-group account must not still have child accounts.',
         'system_scope_requires_system_key' => 'System key is required for accounts with system scope.',

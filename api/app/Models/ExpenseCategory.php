@@ -58,6 +58,11 @@ class ExpenseCategory extends Model
             ->orderBy('id');
     }
 
+    public function chartOfAccount()
+    {
+        return $this->morphOne(ChartOfAccount::class, 'source');
+    }
+
     public function getDisplayCodeAttribute(): string
     {
         $segments = [$this->code];

@@ -24,7 +24,12 @@ enum ChartOfAccountSystemKeyEnum: string
     case LIABILITY_TAX_PAYABLE = 'liability_tax_payable';
 
     case EQUITY_ROOT = 'equity_root';
-    case EQUITY_OWNER_CAPITAL = 'equity_owner_capital';
+    case EQUITY_CAPITAL = 'equity_capital';
+    case EQUITY_CAPITAL_OPENING_CAPITAL = 'equity_capital_opening_capital';
+    case EQUITY_CAPITAL_ADDITIONAL_CAPITAL = 'equity_capital_additional_capital';
+    case EQUITY_CAPITAL_DRAWING = 'equity_capital_drawing';
+    case EQUITY_CURRENT_MONTH_EARNINGS = 'equity_current_month_earnings';
+    case EQUITY_CURRENT_YEAR_EARNINGS = 'equity_current_year_earnings';
     case EQUITY_RETAINED_EARNINGS = 'equity_retained_earnings';
 
     case INCOME_ROOT = 'income_root';

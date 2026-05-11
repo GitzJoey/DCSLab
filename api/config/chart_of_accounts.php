@@ -5,7 +5,7 @@ use App\Enums\ChartOfAccountSystemKeyEnum;
 return [
     'asset_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_ROOT->value,
-        'code' => '10000',
+        'code' => '01',
         'name' => 'Aset',
         'account_type' => 'asset',
         'normal_balance' => 'debit',
@@ -13,7 +13,7 @@ return [
         'children' => [
             'current_asset' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT->value,
-                'code' => '11000',
+                'code' => '01.01',
                 'name' => 'Aset Lancar',
                 'account_type' => 'asset',
                 'normal_balance' => 'debit',
@@ -21,7 +21,7 @@ return [
                 'children' => [
                     'cash_and_cash_equivalents' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT_CASH_AND_CASH_EQUIVALENTS->value,
-                        'code' => '11100',
+                        'code' => '01.01.01',
                         'name' => 'Kas dan Setara Kas',
                         'account_type' => 'asset',
                         'normal_balance' => 'debit',
@@ -30,7 +30,7 @@ return [
                     ],
                     'account_receivable' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT_ACCOUNT_RECEIVABLE->value,
-                        'code' => '11200',
+                        'code' => '01.01.02',
                         'name' => 'Piutang Usaha',
                         'account_type' => 'asset',
                         'normal_balance' => 'debit',
@@ -38,7 +38,7 @@ return [
                     ],
                     'inventory' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT_INVENTORY->value,
-                        'code' => '11300',
+                        'code' => '01.01.03',
                         'name' => 'Persediaan',
                         'account_type' => 'asset',
                         'normal_balance' => 'debit',
@@ -46,7 +46,7 @@ return [
                     ],
                     'prepaid_expense' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT_PREPAID_EXPENSE->value,
-                        'code' => '11400',
+                        'code' => '01.01.04',
                         'name' => 'Biaya Dibayar Dimuka',
                         'account_type' => 'asset',
                         'normal_balance' => 'debit',
@@ -56,7 +56,7 @@ return [
             ],
             'non_current_asset' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::ASSET_NON_CURRENT->value,
-                'code' => '12000',
+                'code' => '01.02',
                 'name' => 'Aset Tidak Lancar',
                 'account_type' => 'asset',
                 'normal_balance' => 'debit',
@@ -64,7 +64,7 @@ return [
                 'children' => [
                     'fixed_asset' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_NON_CURRENT_FIXED_ASSET->value,
-                        'code' => '12100',
+                        'code' => '01.02.01',
                         'name' => 'Aset Tetap',
                         'account_type' => 'asset',
                         'normal_balance' => 'debit',
@@ -72,7 +72,7 @@ return [
                     ],
                     'accumulated_depreciation' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_NON_CURRENT_ACCUMULATED_DEPRECIATION->value,
-                        'code' => '12200',
+                        'code' => '01.02.02',
                         'name' => 'Akumulasi Penyusutan',
                         'account_type' => 'asset',
                         'normal_balance' => 'credit',
@@ -80,7 +80,7 @@ return [
                     ],
                     'intangible_asset' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_NON_CURRENT_INTANGIBLE_ASSET->value,
-                        'code' => '12300',
+                        'code' => '01.02.03',
                         'name' => 'Aset Tidak Berwujud',
                         'account_type' => 'asset',
                         'normal_balance' => 'debit',
@@ -92,7 +92,7 @@ return [
     ],
     'liability_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::LIABILITY_ROOT->value,
-        'code' => '20000',
+        'code' => '02',
         'name' => 'Liabilitas',
         'account_type' => 'liability',
         'normal_balance' => 'credit',
@@ -100,7 +100,7 @@ return [
         'children' => [
             'account_payable' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::LIABILITY_ACCOUNT_PAYABLE->value,
-                'code' => '21000',
+                'code' => '02.01',
                 'name' => 'Utang Usaha',
                 'account_type' => 'liability',
                 'normal_balance' => 'credit',
@@ -108,7 +108,7 @@ return [
             ],
             'tax_payable' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::LIABILITY_TAX_PAYABLE->value,
-                'code' => '22000',
+                'code' => '02.02',
                 'name' => 'Utang Pajak',
                 'account_type' => 'liability',
                 'normal_balance' => 'credit',
@@ -118,15 +118,65 @@ return [
     ],
     'equity_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_ROOT->value,
-        'code' => '30000',
+        'code' => '03',
         'name' => 'Ekuitas',
         'account_type' => 'equity',
         'normal_balance' => 'credit',
         'is_group' => true,
         'children' => [
+            'capital' => [
+                'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL->value,
+                'code' => '03.01',
+                'name' => 'Modal',
+                'account_type' => 'equity',
+                'normal_balance' => 'credit',
+                'is_group' => true,
+                'children' => [
+                    'opening_capital' => [
+                        'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL_OPENING_CAPITAL->value,
+                        'code' => '03.01.01',
+                        'name' => 'Modal Awal',
+                        'account_type' => 'equity',
+                        'normal_balance' => 'credit',
+                        'is_group' => false,
+                    ],
+                    'additional_capital' => [
+                        'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL_ADDITIONAL_CAPITAL->value,
+                        'code' => '03.01.02',
+                        'name' => 'Modal Tambahan',
+                        'account_type' => 'equity',
+                        'normal_balance' => 'credit',
+                        'is_group' => false,
+                    ],
+                    'drawing' => [
+                        'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL_DRAWING->value,
+                        'code' => '03.01.03',
+                        'name' => 'Prive/Penarikan Modal',
+                        'account_type' => 'equity',
+                        'normal_balance' => 'debit',
+                        'is_group' => false,
+                    ],
+                ],
+            ],
+            'current_month_earnings' => [
+                'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_CURRENT_MONTH_EARNINGS->value,
+                'code' => '03.02',
+                'name' => 'Laba Bulan Berjalan',
+                'account_type' => 'equity',
+                'normal_balance' => 'credit',
+                'is_group' => false,
+            ],
+            'current_year_earnings' => [
+                'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_CURRENT_YEAR_EARNINGS->value,
+                'code' => '03.03',
+                'name' => 'Laba Tahun Berjalan',
+                'account_type' => 'equity',
+                'normal_balance' => 'credit',
+                'is_group' => false,
+            ],
             'retained_earnings' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::EQUITY_RETAINED_EARNINGS->value,
-                'code' => '32000',
+                'code' => '03.04',
                 'name' => 'Laba Ditahan',
                 'account_type' => 'equity',
                 'normal_balance' => 'credit',
@@ -136,7 +186,7 @@ return [
     ],
     'income_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::INCOME_ROOT->value,
-        'code' => '40000',
+        'code' => '04',
         'name' => 'Pendapatan',
         'account_type' => 'income',
         'normal_balance' => 'credit',
@@ -144,7 +194,7 @@ return [
         'children' => [
             'sales_income' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::INCOME_SALES->value,
-                'code' => '41000',
+                'code' => '04.01',
                 'name' => 'Pendapatan Penjualan',
                 'account_type' => 'income',
                 'normal_balance' => 'credit',
@@ -152,7 +202,7 @@ return [
             ],
             'service_income' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::INCOME_SERVICE->value,
-                'code' => '42000',
+                'code' => '04.02',
                 'name' => 'Pendapatan Jasa',
                 'account_type' => 'income',
                 'normal_balance' => 'credit',
@@ -162,7 +212,7 @@ return [
     ],
     'cogs_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::COGS_ROOT->value,
-        'code' => '50000',
+        'code' => '05',
         'name' => 'Harga Pokok Penjualan',
         'account_type' => 'expense',
         'normal_balance' => 'debit',
@@ -170,7 +220,7 @@ return [
         'children' => [
             'material_cost' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::COGS_MATERIAL_COST->value,
-                'code' => '51000',
+                'code' => '05.01',
                 'name' => 'Beban Bahan Baku',
                 'account_type' => 'expense',
                 'normal_balance' => 'debit',
@@ -178,7 +228,7 @@ return [
             ],
             'direct_labor_cost' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::COGS_DIRECT_LABOR_COST->value,
-                'code' => '52000',
+                'code' => '05.02',
                 'name' => 'Beban Tenaga Kerja Langsung',
                 'account_type' => 'expense',
                 'normal_balance' => 'debit',
@@ -188,7 +238,7 @@ return [
     ],
     'expense_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::EXPENSE_ROOT->value,
-        'code' => '60000',
+        'code' => '06',
         'name' => 'Beban Operasional',
         'account_type' => 'expense',
         'normal_balance' => 'debit',
@@ -197,7 +247,7 @@ return [
     ],
     'other_income_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::OTHER_INCOME_ROOT->value,
-        'code' => '70000',
+        'code' => '07',
         'name' => 'Pendapatan Lain-lain',
         'account_type' => 'income',
         'normal_balance' => 'credit',
@@ -206,7 +256,7 @@ return [
     ],
     'other_expense_root' => [
         'system_key' => ChartOfAccountSystemKeyEnum::OTHER_EXPENSE_ROOT->value,
-        'code' => '80000',
+        'code' => '08',
         'name' => 'Beban Lain-lain',
         'account_type' => 'expense',
         'normal_balance' => 'debit',

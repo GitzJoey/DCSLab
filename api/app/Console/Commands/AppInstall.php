@@ -7,7 +7,6 @@ use App\Actions\System\SystemActions;
 use App\Actions\User\UserActions;
 use App\Enums\RecordStatusEnum;
 use App\Enums\UserRolesEnum;
-use Database\Seeders\BranchSeeder;
 use Database\Seeders\BrandSeeder;
 use Database\Seeders\CashAccountSeeder;
 use Database\Seeders\CompanySeeder;
@@ -19,7 +18,6 @@ use Database\Seeders\StockAdjustmentCategorySeeder;
 use Database\Seeders\StockAdjustmentSeeder;
 use Database\Seeders\SupplierSeeder;
 use Database\Seeders\UnitSeeder;
-use Database\Seeders\WarehouseSeeder;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -61,8 +59,6 @@ class AppInstall extends Command
         }
 
         (new CompanySeeder())->run();
-        (new BranchSeeder())->run();
-        (new WarehouseSeeder())->run();
 
         (new CashAccountSeeder())->run();
         (new InvestorSeeder())->run();

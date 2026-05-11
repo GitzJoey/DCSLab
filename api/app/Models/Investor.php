@@ -32,4 +32,9 @@ class Investor extends Model
     {
         return $this->belongsTo(Company::class)->withTrashed();
     }
+
+    public function chartOfAccount()
+    {
+        return $this->morphOne(ChartOfAccount::class, 'source');
+    }
 }
