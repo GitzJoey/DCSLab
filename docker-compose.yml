@@ -18,6 +18,8 @@ services:
       dockerfile: Dockerfile-Web
     image: dcslab/web:latest
     container_name: dcslab-web
+    # Make sure the container keeps running to allow for development and testing
+    command: tail -f /dev/null
     ports:
       - "5173:5173"
     volumes:

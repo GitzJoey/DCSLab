@@ -1,0 +1,9 @@
+{
+    "name": "DCSLab API",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "api",
+    "workspaceFolder": "/var/www/html",
+    "shutdownAction": "none"
+}
