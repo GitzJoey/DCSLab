@@ -32,6 +32,7 @@ services:
   mysql:
     image: mysql:8.0
     container_name: dcslab-mysql
+    hostname: dcslab-mysql
     environment:
       MYSQL_DATABASE: dcslab
       MYSQL_ROOT_PASSWORD: root
@@ -45,6 +46,7 @@ services:
   redis:
     image: redis:alpine
     container_name: dcslab-redis
+    hostname: dcslab-redis
     networks:
       - dcslab-net
 
