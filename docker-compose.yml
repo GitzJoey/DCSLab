@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile-API
     image: dcslab/api:latest
     container_name: dcslab-api
+    hostname: dcslab-api
     ports:
       - "8173:80"
     volumes:
@@ -18,6 +19,7 @@ services:
       dockerfile: Dockerfile-Web
     image: dcslab/web:latest
     container_name: dcslab-web
+    hostname: dcslab-web
     # Make sure the container keeps running to allow for development and testing
     command: tail -f /dev/null
     ports:
