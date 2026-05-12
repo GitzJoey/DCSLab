@@ -1,0 +1,49 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-API
+    image: dcslab/api:latest
+    container_name: dcslab-api
+    ports:
+      - "8000:80"
+    volumes:
+      - ./api:/var/www/html
+    networks:
+      - dcslab-net
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-Web
+    image: dcslab/web:latest
+    container_name: dcslab-web
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web:/app
+    networks:
+      - dcslab-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: dcslab-mysql
+    environment:
+      MYSQL_DATABASE: dcslab
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: dcslab
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - dcslab-net
+
+  redis:
+    image: redis:alpine
+    container_name: dcslab-redis
+    networks:
+      - dcslab-net
+
+networks:
+  dcslab-net:
+    driver: bridge
