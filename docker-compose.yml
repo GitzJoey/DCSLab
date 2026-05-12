@@ -6,7 +6,7 @@ services:
     image: dcslab/api:latest
     container_name: dcslab-api
     ports:
-      - "8000:80"
+      - "8173:80"
     volumes:
       - ./api:/var/www/html
     networks:
