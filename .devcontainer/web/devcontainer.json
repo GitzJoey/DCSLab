@@ -1,0 +1,9 @@
+{
+    "name": "DCSLab Web",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "web",
+    "workspaceFolder": "/app",
+    "shutdownAction": "none"
+}
