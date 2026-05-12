@@ -4,6 +4,7 @@
         "../../docker-compose.yml"
     ],
     "service": "web",
+    "remoteUser": "node",
     "workspaceFolder": "/app",
     "shutdownAction": "none"
 }

@@ -4,6 +4,7 @@
         "../../docker-compose.yml"
     ],
     "service": "api",
+    "remoteUser": "www-data",
     "workspaceFolder": "/var/www/html",
     "shutdownAction": "none"
 }

@@ -26,6 +26,19 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
+# 1. Forcibly remove the 'ubuntu' user and its group to free up UID/GID 1000
+RUN touch /var/mail/ubuntu && chown root:mail /var/mail/ubuntu && \
+    userdel -f ubuntu && \
+    if getent group ubuntu; then groupdel ubuntu; fi
+
+# 2. Assign UID 1000 and GID 1000 to the existing www-data user
+RUN usermod -u 1000 www-data && \
+    groupmod -g 1000 www-data
+
+# 3. Ensure the home directory and webroot are correctly owned
+RUN mkdir -p /var/www/html && \
+    chown -R www-data:www-data /var/www
+
 WORKDIR /var/www/html
 
 EXPOSE 80
