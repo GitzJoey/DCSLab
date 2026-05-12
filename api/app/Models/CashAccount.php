@@ -84,6 +84,11 @@ class CashAccount extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
+    public function chartOfAccount()
+    {
+        return $this->morphOne(ChartOfAccount::class, 'source');
+    }
+
     public function scopeWithRemainingBalance($query, ?string $endDate)
     {
         $cashAccountsWithRemainingBalanceQuery = CashTransaction::select(

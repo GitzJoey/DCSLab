@@ -3,17 +3,22 @@
 namespace App\Actions\CapitalOpening;
 
 use App\Actions\CashTransaction\CashTransactionActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\DTOs\CapitalOpeningCreateDTO;
 use App\DTOs\CapitalOpeningUpdateDTO;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\CapitalOpening;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class CapitalOpeningActions
 {
@@ -28,7 +33,8 @@ class CapitalOpeningActions
     ];
 
     public function __construct(
-        private CashTransactionActions $cashTransactionActions
+        private CashTransactionActions $cashTransactionActions,
+        private JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -174,6 +180,42 @@ class CapitalOpeningActions
                 data: CashTransactionCreateDTO::fromCapitalOpening($capitalOpening)
             );
 
+            $cashAccountChartOfAccount = $capitalOpening->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Capital opening cash account chart of account must exist.');
+            }
+
+            $investorChartOfAccount = $capitalOpening->investor->openingCapitalChartOfAccount;
+            if (! $investorChartOfAccount) {
+                throw new InvalidArgumentException('Capital opening investor opening capital chart of account must exist.');
+            }
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $capitalOpening->company_id,
+                branchId: $capitalOpening->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $capitalOpening->date,
+                sourceType: CapitalOpening::class,
+                sourceId: $capitalOpening->id,
+                referenceNo: $capitalOpening->code,
+                remarks: $capitalOpening->remarks,
+                lines: [
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                        debit: (float) $capitalOpening->amount,
+                        credit: 0,
+                        remarks: $capitalOpening->remarks,
+                    ),
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $investorChartOfAccount->id,
+                        debit: 0,
+                        credit: (float) $capitalOpening->amount,
+                        remarks: $capitalOpening->remarks,
+                    ),
+                ],
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             $this->flushCache();
 
             return $capitalOpening;
@@ -211,6 +253,68 @@ class CapitalOpeningActions
                 );
             }
 
+            $cashAccountChartOfAccount = $capitalOpening->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Capital opening cash account chart of account must exist.');
+            }
+
+            $investorChartOfAccount = $capitalOpening->investor->openingCapitalChartOfAccount;
+            if (! $investorChartOfAccount) {
+                throw new InvalidArgumentException('Capital opening investor opening capital chart of account must exist.');
+            }
+
+            $journalEntry = $capitalOpening->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $capitalOpening->company_id,
+                    branchId: $capitalOpening->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $capitalOpening->date,
+                    sourceType: CapitalOpening::class,
+                    sourceId: $capitalOpening->id,
+                    referenceNo: $capitalOpening->code,
+                    remarks: $capitalOpening->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: (float) $capitalOpening->amount,
+                            credit: 0,
+                            remarks: $capitalOpening->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $investorChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $capitalOpening->amount,
+                            remarks: $capitalOpening->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $capitalOpening->branch_id,
+                    code: $journalEntry->code,
+                    date: $capitalOpening->date,
+                    referenceNo: $capitalOpening->code,
+                    remarks: $capitalOpening->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: (float) $capitalOpening->amount,
+                            credit: 0,
+                            remarks: $capitalOpening->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $investorChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $capitalOpening->amount,
+                            remarks: $capitalOpening->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             $this->flushCache();
 
             return $capitalOpening->refresh();
@@ -231,6 +335,9 @@ class CapitalOpeningActions
         try {
             $cashTransaction = $capitalOpening->cashTransaction;
             if ($cashTransaction) $this->cashTransactionActions->delete($cashTransaction);
+
+            $journalEntry = $capitalOpening->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $capitalOpening->delete();
 

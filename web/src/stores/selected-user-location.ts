@@ -20,90 +20,85 @@ export interface SelectedUserLocationState {
   selectedUserLocation: SelectedUserLocation;
 }
 
+const SELECTED_USER_LOCATION_STORAGE_KEY = 'selectedUserLocation';
+
+const createEmptySelectedUserLocation = (): SelectedUserLocation => ({
+  company: {
+    id: '',
+    ulid: '',
+    code: '',
+    name: '',
+  },
+  branch: {
+    id: '',
+    ulid: '',
+    code: '',
+    name: '',
+  },
+});
+
+const isDebugMode = (): boolean => import.meta.env.VITE_APP_DEBUG === 'true';
+
+const serializeSelectedUserLocation = (selectedUserLocation: SelectedUserLocation): string => {
+  const serializedSelectedUserLocation = JSON.stringify(selectedUserLocation);
+
+  return isDebugMode() ? serializedSelectedUserLocation : btoa(serializedSelectedUserLocation);
+};
+
+const deserializeSelectedUserLocation = (serializedSelectedUserLocation: string): SelectedUserLocation => {
+  return JSON.parse(isDebugMode() ? serializedSelectedUserLocation : atob(serializedSelectedUserLocation));
+};
+
+const clearStoredSelectedUserLocation = (): void => {
+  localStorage.removeItem(SELECTED_USER_LOCATION_STORAGE_KEY);
+  sessionStorage.removeItem(SELECTED_USER_LOCATION_STORAGE_KEY);
+};
+
+const getStoredSelectedUserLocation = (): SelectedUserLocation | null => {
+  const serializedSelectedUserLocation =
+    localStorage.getItem(SELECTED_USER_LOCATION_STORAGE_KEY) ??
+    sessionStorage.getItem(SELECTED_USER_LOCATION_STORAGE_KEY);
+
+  if (!serializedSelectedUserLocation) {
+    return null;
+  }
+
+  try {
+    const selectedUserLocation = deserializeSelectedUserLocation(serializedSelectedUserLocation);
+
+    // Migrate legacy session storage selection to local storage for new tabs.
+    localStorage.setItem(
+      SELECTED_USER_LOCATION_STORAGE_KEY,
+      serializeSelectedUserLocation(selectedUserLocation),
+    );
+    sessionStorage.removeItem(SELECTED_USER_LOCATION_STORAGE_KEY);
+
+    return selectedUserLocation;
+  } catch (_error) {
+    clearStoredSelectedUserLocation();
+
+    return null;
+  }
+};
+
+const initialSelectedUserLocation = getStoredSelectedUserLocation();
+
 export const useSelectedUserLocationStore = defineStore('selectedUserLocation', {
   state: (): SelectedUserLocationState => ({
-    isUserLocationSelected: false,
-    selectedUserLocation: {
-      company: {
-        id: '',
-        ulid: '',
-        code: '',
-        name: '',
-      },
-      branch: {
-        id: '',
-        ulid: '',
-        code: '',
-        name: '',
-      },
-    },
+    isUserLocationSelected: initialSelectedUserLocation !== null,
+    selectedUserLocation: initialSelectedUserLocation ?? createEmptySelectedUserLocation(),
   }),
   getters: {
-    getSelectedUserLocation: (state) => {
-      const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
-
-      if (serializedSelectedUserLocation) {
-        const debug = import.meta.env.VITE_APP_DEBUG === 'true';
-        const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(
-          debug ? serializedSelectedUserLocation : atob(serializedSelectedUserLocation),
-        );
-
-        state.selectedUserLocation = derializedSelectedUserLocation;
-
-        state.isUserLocationSelected = true;
-      }
-
-      return state.selectedUserLocation;
-    },
-    getSelectedUserCompany: (state) => {
-      const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
-
-      if (serializedSelectedUserLocation) {
-        const debug = import.meta.env.VITE_APP_DEBUG === 'true';
-        const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(
-          debug ? serializedSelectedUserLocation : atob(serializedSelectedUserLocation),
-        );
-
-        state.selectedUserLocation = derializedSelectedUserLocation;
-
-        state.isUserLocationSelected = true;
-      }
-
-      return state.selectedUserLocation.company;
-    },
-    getSelectedUserBranch: (state) => {
-      const serializedSelectedUserLocation = sessionStorage.getItem('selectedUserLocation');
-
-      if (serializedSelectedUserLocation) {
-        const debug = import.meta.env.VITE_APP_DEBUG === 'true';
-        const derializedSelectedUserLocation: SelectedUserLocation = JSON.parse(
-          debug ? serializedSelectedUserLocation : atob(serializedSelectedUserLocation),
-        );
-
-        state.selectedUserLocation = derializedSelectedUserLocation;
-
-        state.isUserLocationSelected = true;
-      }
-
-      return state.selectedUserLocation.branch;
-    },
+    getSelectedUserLocation: (state) => state.selectedUserLocation,
+    getSelectedUserCompany: (state) => state.selectedUserLocation.company,
+    getSelectedUserBranch: (state) => state.selectedUserLocation.branch,
   },
   actions: {
     clearSelectedUserLocation() {
-      this.selectedUserLocation.company = {
-        id: '',
-        ulid: '',
-        code: '',
-        name: '',
-      };
-      this.selectedUserLocation.branch = {
-        id: '',
-        ulid: '',
-        code: '',
-        name: '',
-      };
-
+      this.selectedUserLocation = createEmptySelectedUserLocation();
       this.isUserLocationSelected = false;
+
+      clearStoredSelectedUserLocation();
     },
     setSelectedUserLocation(
       companyId: string,
@@ -130,11 +125,11 @@ export const useSelectedUserLocationStore = defineStore('selectedUserLocation', 
 
       if (branchName) this.selectedUserLocation.branch.name = branchName;
 
-      const debug = import.meta.env.VITE_APP_DEBUG === 'true';
-      sessionStorage.setItem(
-        'selectedUserLocation',
-        debug ? JSON.stringify(this.selectedUserLocation) : btoa(JSON.stringify(this.selectedUserLocation)),
+      localStorage.setItem(
+        SELECTED_USER_LOCATION_STORAGE_KEY,
+        serializeSelectedUserLocation(this.selectedUserLocation),
       );
+      sessionStorage.removeItem(SELECTED_USER_LOCATION_STORAGE_KEY);
 
       this.isUserLocationSelected = true;
 

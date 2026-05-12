@@ -2,9 +2,12 @@
 
 namespace App\Actions\CashAccount;
 
+use App\Actions\ChartOfAccount\ChartOfAccountActions;
 use App\DTOs\CashAccountCreateDTO;
 use App\DTOs\CashAccountUpdateDTO;
 use App\DTOs\CashAccountWithRemainingBalanceDTO;
+use App\DTOs\ChartOfAccountCreateDTO;
+use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\CashAccount;
@@ -13,6 +16,7 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class CashAccountActions
 {
@@ -24,8 +28,9 @@ class CashAccountActions
         'branch',
     ];
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ChartOfAccountActions $chartOfAccountActions,
+    ) {
     }
 
     public function readAny(
@@ -168,6 +173,33 @@ class CashAccountActions
             $cashAccount->remarks = $data->remarks;
             $cashAccount->save();
 
+            $parentChartOfAccount = (function () use ($cashAccount) {
+                if ($cashAccount->is_bank) {
+                    return $cashAccount->company->assetCurrentBankChartOfAccount;
+                }
+
+                return $cashAccount->company->assetCurrentCashChartOfAccount;
+            })();
+            if (! $parentChartOfAccount) {
+                throw new InvalidArgumentException('Cash account chart of account parent must exist in company.');
+            }
+
+            $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                companyId: $cashAccount->company_id,
+                scope: 'user',
+                systemKey: null,
+                parentId: $parentChartOfAccount->id,
+                sourceType: CashAccount::class,
+                sourceId: $cashAccount->id,
+                code: $parentChartOfAccount->code.'.'.$cashAccount->code,
+                name: $cashAccount->name,
+                normalBalance: 'debit',
+                isGroup: false,
+                isActive: $cashAccount->is_active,
+                remarks: $cashAccount->remarks,
+            );
+            $this->chartOfAccountActions->create($chartOfAccountDTO);
+
             $this->flushCache();
 
             return $cashAccount;
@@ -192,6 +224,47 @@ class CashAccountActions
             $cashAccount->remarks = $data->remarks;
             $cashAccount->save();
 
+            $parentChartOfAccount = (function () use ($cashAccount) {
+                if ($cashAccount->is_bank) {
+                    return $cashAccount->company->assetCurrentBankChartOfAccount;
+                }
+
+                return $cashAccount->company->assetCurrentCashChartOfAccount;
+            })();
+            if (! $parentChartOfAccount) {
+                throw new InvalidArgumentException('Cash account chart of account parent must exist in company.');
+            }
+
+            $chartOfAccount = $cashAccount->chartOfAccount;
+            if ($chartOfAccount) {
+                $chartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $parentChartOfAccount->id,
+                    code: $parentChartOfAccount->code.'.'.$cashAccount->code,
+                    name: $cashAccount->name,
+                    normalBalance: 'debit',
+                    isGroup: false,
+                    isActive: $cashAccount->is_active,
+                    remarks: $cashAccount->remarks,
+                );
+                $this->chartOfAccountActions->update($chartOfAccount, $chartOfAccountDTO);
+            } else {
+                $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                    companyId: $cashAccount->company_id,
+                    scope: 'user',
+                    systemKey: null,
+                    parentId: $parentChartOfAccount->id,
+                    sourceType: CashAccount::class,
+                    sourceId: $cashAccount->id,
+                    code: $parentChartOfAccount->code.'.'.$cashAccount->code,
+                    name: $cashAccount->name,
+                    normalBalance: 'debit',
+                    isGroup: false,
+                    isActive: $cashAccount->is_active,
+                    remarks: $cashAccount->remarks,
+                );
+                $this->chartOfAccountActions->create($chartOfAccountDTO);
+            }
+
             $this->flushCache();
 
             return $cashAccount->refresh();
@@ -211,6 +284,9 @@ class CashAccountActions
         $retval = false;
 
         try {
+            $chartOfAccount = $cashAccount->chartOfAccount;
+            if ($chartOfAccount) $this->chartOfAccountActions->delete($chartOfAccount);
+
             $retval = $cashAccount->delete();
 
             $this->flushCache();

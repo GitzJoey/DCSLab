@@ -26,7 +26,26 @@ return [
                         'account_type' => 'asset',
                         'normal_balance' => 'debit',
                         'is_group' => true,
-                        'children' => [],
+                        'children' => [
+                            'cash' => [
+                                'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT_CASH->value,
+                                'code' => '01.01.01.01',
+                                'name' => 'Kas',
+                                'account_type' => 'asset',
+                                'normal_balance' => 'debit',
+                                'is_group' => true,
+                                'children' => [],
+                            ],
+                            'bank' => [
+                                'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT_BANK->value,
+                                'code' => '01.01.01.02',
+                                'name' => 'Bank',
+                                'account_type' => 'asset',
+                                'normal_balance' => 'debit',
+                                'is_group' => true,
+                                'children' => [],
+                            ],
+                        ],
                     ],
                     'account_receivable' => [
                         'system_key' => ChartOfAccountSystemKeyEnum::ASSET_CURRENT_ACCOUNT_RECEIVABLE->value,
@@ -104,7 +123,7 @@ return [
                 'name' => 'Utang Usaha',
                 'account_type' => 'liability',
                 'normal_balance' => 'credit',
-                'is_group' => false,
+                'is_group' => true,
             ],
             'tax_payable' => [
                 'system_key' => ChartOfAccountSystemKeyEnum::LIABILITY_TAX_PAYABLE->value,

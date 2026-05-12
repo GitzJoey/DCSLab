@@ -1,0 +1,31 @@
+{
+  "page_title": "Balance Sheet",
+  "table": {
+    "title": "Balance Sheet"
+  },
+  "fields": {
+    "end_date": "As Of Date",
+    "code": "Code",
+    "name": "Account",
+    "debit": "Debit",
+    "credit": "Credit",
+    "balance": "Balance"
+  },
+  "actions": {
+    "expand_all": "Expand All",
+    "collapse_all": "Collapse All"
+  },
+  "labels": {
+    "group_total": "Group Total",
+    "direct_mutation": "Direct Activity"
+  },
+  "summary": {
+    "asset": "Total Assets",
+    "liability": "Total Liabilities",
+    "equity": "Total Equity",
+    "liability_and_equity": "Total Liabilities + Equity",
+    "difference": "Balance Sheet Difference",
+    "status_balanced": "Balance Sheet Balanced",
+    "status_unbalanced": "Balance Sheet Not Balanced"
+  }
+}

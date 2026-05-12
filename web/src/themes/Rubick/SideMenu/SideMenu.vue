@@ -140,7 +140,7 @@
                     @click="
                       (event: MouseEvent) => {
                         event.preventDefault();
-                        linkTo(menu, router);
+                        linkTo(menu, formattedMenu, router);
                         setFormattedMenu([...formattedMenu]);
                       }
                     "
@@ -189,7 +189,7 @@
                           @click="
                             (event: MouseEvent) => {
                               event.preventDefault();
-                              linkTo(subMenu, router);
+                              linkTo(subMenu, menu.subMenu ?? [], router);
                               setFormattedMenu([...formattedMenu]);
                             }
                           "
@@ -244,7 +244,7 @@
                                 @click="
                                   (event: MouseEvent) => {
                                     event.preventDefault();
-                                    linkTo(lastSubMenu, router);
+                                    linkTo(lastSubMenu, subMenu.subMenu ?? [], router);
                                     setFormattedMenu([...formattedMenu]);
                                   }
                                 "

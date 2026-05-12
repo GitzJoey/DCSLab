@@ -2,15 +2,20 @@
 
 namespace App\Actions\Supplier;
 
+use App\Actions\ChartOfAccount\ChartOfAccountActions;
+use App\DTOs\ChartOfAccountCreateDTO;
+use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\SupplierCreateDTO;
 use App\DTOs\SupplierUpdateDTO;
+use App\Enums\RecordStatusEnum;
 use App\Models\Company;
 use App\Models\Supplier;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class SupplierActions
 {
@@ -21,8 +26,9 @@ class SupplierActions
         'company',
     ];
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ChartOfAccountActions $chartOfAccountActions,
+    ) {
     }
 
     public function readAny(
@@ -149,6 +155,27 @@ class SupplierActions
             $supplier->remarks = $data->remarks;
             $supplier->save();
 
+            $parentChartOfAccount = $supplier->company->liabilityAccountPayableChartOfAccount;
+            if (! $parentChartOfAccount) {
+                throw new InvalidArgumentException('Supplier chart of account parent must exist in company.');
+            }
+
+            $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                companyId: $supplier->company_id,
+                scope: 'user',
+                systemKey: null,
+                parentId: $parentChartOfAccount->id,
+                sourceType: Supplier::class,
+                sourceId: $supplier->id,
+                code: $parentChartOfAccount->code.'.'.$supplier->code,
+                name: $supplier->name,
+                normalBalance: 'credit',
+                isGroup: false,
+                isActive: $supplier->status === RecordStatusEnum::ACTIVE,
+                remarks: $supplier->remarks,
+            );
+            $this->chartOfAccountActions->create($chartOfAccountDTO);
+
             $this->flushCache();
 
             return $supplier;
@@ -178,6 +205,41 @@ class SupplierActions
             $supplier->remarks = $data->remarks;
             $supplier->save();
 
+            $parentChartOfAccount = $supplier->company->liabilityAccountPayableChartOfAccount;
+            if (! $parentChartOfAccount) {
+                throw new InvalidArgumentException('Supplier chart of account parent must exist in company.');
+            }
+
+            $chartOfAccount = $supplier->chartOfAccount;
+            if ($chartOfAccount) {
+                $chartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $parentChartOfAccount->id,
+                    code: $parentChartOfAccount->code.'.'.$supplier->code,
+                    name: $supplier->name,
+                    normalBalance: 'credit',
+                    isGroup: false,
+                    isActive: $supplier->status === RecordStatusEnum::ACTIVE,
+                    remarks: $supplier->remarks,
+                );
+                $this->chartOfAccountActions->update($chartOfAccount, $chartOfAccountDTO);
+            } else {
+                $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                    companyId: $supplier->company_id,
+                    scope: 'user',
+                    systemKey: null,
+                    parentId: $parentChartOfAccount->id,
+                    sourceType: Supplier::class,
+                    sourceId: $supplier->id,
+                    code: $parentChartOfAccount->code.'.'.$supplier->code,
+                    name: $supplier->name,
+                    normalBalance: 'credit',
+                    isGroup: false,
+                    isActive: $supplier->status === RecordStatusEnum::ACTIVE,
+                    remarks: $supplier->remarks,
+                );
+                $this->chartOfAccountActions->create($chartOfAccountDTO);
+            }
+
             $this->flushCache();
 
             return $supplier->refresh();
@@ -197,6 +259,11 @@ class SupplierActions
         $retval = false;
 
         try {
+            $chartOfAccount = $supplier->chartOfAccount;
+            if ($chartOfAccount) {
+                $this->chartOfAccountActions->delete($chartOfAccount);
+            }
+
             $retval = $supplier->delete();
 
             $this->flushCache();

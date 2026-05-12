@@ -108,4 +108,9 @@ class Customer extends Model
     {
         return $this->hasMany(CustomerAddress::class);
     }
+
+    public function chartOfAccount()
+    {
+        return $this->morphOne(ChartOfAccount::class, 'source');
+    }
 }

@@ -157,6 +157,48 @@ class Company extends Model
             ->where('system_key', ChartOfAccountSystemKeyEnum::EQUITY_ROOT);
     }
 
+    public function assetCurrentCashChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_CASH);
+    }
+
+    public function assetCurrentBankChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_BANK);
+    }
+
+    public function liabilityAccountPayableChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::LIABILITY_ACCOUNT_PAYABLE);
+    }
+
+    public function assetCurrentAccountReceivableChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_ACCOUNT_RECEIVABLE);
+    }
+
+    public function equityCapitalOpeningCapitalChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL_OPENING_CAPITAL);
+    }
+
+    public function equityCapitalAdditionalCapitalChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL_ADDITIONAL_CAPITAL);
+    }
+
+    public function equityCapitalDrawingChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL_DRAWING);
+    }
+
     public function investors()
     {
         return $this->hasMany(Investor::class);

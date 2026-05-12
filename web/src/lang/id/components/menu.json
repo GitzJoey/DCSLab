@@ -65,6 +65,8 @@
   "stock-transfer-item-serial": "Serial Transfer Stok per Item",
   "master-data": "Master Data",
   "report": "Laporan",
+  "financial-statement": "Laporan Keuangan",
+  "balance-sheet": "Neraca",
   "product-with-remaining-stock": "Produk dengan Stok Tersisa",
   "cash-account-with-remaining-balance": "Akun Kas dengan Sisa Saldo",
   "journal-entry-detail": "Jurnal Umum per Item",

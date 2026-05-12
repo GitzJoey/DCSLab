@@ -59,6 +59,7 @@
 
     axios.post('/logout').then(() => {
       sessionStorage.clear();
+      localStorage.removeItem('selectedUserLocation');
       window.location.href = '/';
     });
   };

@@ -14,6 +14,7 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class InvestorActions
 {
@@ -150,21 +151,68 @@ class InvestorActions
             $investor->remarks = $data->remarks;
             $investor->save();
 
-            $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+            $openingCapitalParentChartOfAccount = $investor->company->equityCapitalOpeningCapitalChartOfAccount;
+            if (! $openingCapitalParentChartOfAccount) {
+                throw new InvalidArgumentException('Opening capital chart of account parent must exist in company.');
+            }
+
+            $openingCapitalChartOfAccountDTO = new ChartOfAccountCreateDTO(
                 companyId: $investor->company_id,
                 scope: 'user',
                 systemKey: null,
-                parentId: $investor->company->equityRootChartOfAccount->id,
+                parentId: $openingCapitalParentChartOfAccount->id,
                 sourceType: Investor::class,
                 sourceId: $investor->id,
-                code: $investor->company->equityRootChartOfAccount->code.$investor->code,
+                code: $openingCapitalParentChartOfAccount->code.'.'.$investor->code,
                 name: $investor->name,
                 normalBalance: 'credit',
                 isGroup: false,
                 isActive: true,
                 remarks: $investor->remarks,
             );
-            $this->chartOfAccountActions->create($chartOfAccountDTO);
+            $this->chartOfAccountActions->create($openingCapitalChartOfAccountDTO);
+
+            $additionalCapitalParentChartOfAccount = $investor->company->equityCapitalAdditionalCapitalChartOfAccount;
+            if (! $additionalCapitalParentChartOfAccount) {
+                throw new InvalidArgumentException('Additional capital chart of account parent must exist in company.');
+            }
+
+            $additionalCapitalChartOfAccountDTO = new ChartOfAccountCreateDTO(
+                companyId: $investor->company_id,
+                scope: 'user',
+                systemKey: null,
+                parentId: $additionalCapitalParentChartOfAccount->id,
+                sourceType: Investor::class,
+                sourceId: $investor->id,
+                code: $additionalCapitalParentChartOfAccount->code.'.'.$investor->code,
+                name: $investor->name,
+                normalBalance: 'credit',
+                isGroup: false,
+                isActive: true,
+                remarks: $investor->remarks,
+            );
+            $this->chartOfAccountActions->create($additionalCapitalChartOfAccountDTO);
+
+            $drawingParentChartOfAccount = $investor->company->equityCapitalDrawingChartOfAccount;
+            if (! $drawingParentChartOfAccount) {
+                throw new InvalidArgumentException('Drawing chart of account parent must exist in company.');
+            }
+
+            $drawingChartOfAccountDTO = new ChartOfAccountCreateDTO(
+                companyId: $investor->company_id,
+                scope: 'user',
+                systemKey: null,
+                parentId: $drawingParentChartOfAccount->id,
+                sourceType: Investor::class,
+                sourceId: $investor->id,
+                code: $drawingParentChartOfAccount->code.'.'.$investor->code,
+                name: $investor->name,
+                normalBalance: 'debit',
+                isGroup: false,
+                isActive: true,
+                remarks: $investor->remarks,
+            );
+            $this->chartOfAccountActions->create($drawingChartOfAccountDTO);
 
             $this->flushCache();
 
@@ -188,17 +236,122 @@ class InvestorActions
             $investor->remarks = $data->remarks;
             $investor->save();
 
-            $chartOfAccount = $investor->chartOfAccount;
-            $dto = new ChartOfAccountUpdateDTO(
-                parentId: $chartOfAccount->parent_id,
-                code: $investor->code,
-                name: $investor->name,
-                normalBalance: $chartOfAccount->normal_balance,
-                isGroup: $chartOfAccount->is_group,
-                isActive: $chartOfAccount->is_active,
-                remarks: $investor->remarks,
-            );
-            $this->chartOfAccountActions->update($chartOfAccount, $dto);
+            $openingCapitalParentChartOfAccount = $investor->company->equityCapitalOpeningCapitalChartOfAccount;
+            if (! $openingCapitalParentChartOfAccount) {
+                throw new InvalidArgumentException('Opening capital chart of account parent must exist in company.');
+            }
+
+            $openingCapitalChartOfAccount = $investor->openingCapitalChartOfAccount;
+            if ($openingCapitalChartOfAccount) {
+                $openingCapitalChartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $openingCapitalParentChartOfAccount->id,
+                    code: $openingCapitalParentChartOfAccount->code.'.'.$investor->code,
+                    name: $investor->name,
+                    normalBalance: 'credit',
+                    isGroup: false,
+                    isActive: true,
+                    remarks: $investor->remarks,
+                );
+                $openingCapitalChartOfAccount = $this->chartOfAccountActions->update($openingCapitalChartOfAccount, $openingCapitalChartOfAccountDTO);
+            } else {
+                $openingCapitalChartOfAccountDTO = new ChartOfAccountCreateDTO(
+                    companyId: $investor->company_id,
+                    scope: 'user',
+                    systemKey: null,
+                    parentId: $openingCapitalParentChartOfAccount->id,
+                    sourceType: Investor::class,
+                    sourceId: $investor->id,
+                    code: $openingCapitalParentChartOfAccount->code.'.'.$investor->code,
+                    name: $investor->name,
+                    normalBalance: 'credit',
+                    isGroup: false,
+                    isActive: true,
+                    remarks: $investor->remarks,
+                );
+                $openingCapitalChartOfAccount = $this->chartOfAccountActions->create($openingCapitalChartOfAccountDTO);
+            }
+
+            $additionalCapitalParentChartOfAccount = $investor->company->equityCapitalAdditionalCapitalChartOfAccount;
+            if (! $additionalCapitalParentChartOfAccount) {
+                throw new InvalidArgumentException('Additional capital chart of account parent must exist in company.');
+            }
+
+            $additionalCapitalChartOfAccount = $investor->additionalCapitalChartOfAccount;
+            if ($additionalCapitalChartOfAccount) {
+                $additionalCapitalChartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $additionalCapitalParentChartOfAccount->id,
+                    code: $additionalCapitalParentChartOfAccount->code.'.'.$investor->code,
+                    name: $investor->name,
+                    normalBalance: 'credit',
+                    isGroup: false,
+                    isActive: true,
+                    remarks: $investor->remarks,
+                );
+                $additionalCapitalChartOfAccount = $this->chartOfAccountActions->update($additionalCapitalChartOfAccount, $additionalCapitalChartOfAccountDTO);
+            } else {
+                $additionalCapitalChartOfAccountDTO = new ChartOfAccountCreateDTO(
+                    companyId: $investor->company_id,
+                    scope: 'user',
+                    systemKey: null,
+                    parentId: $additionalCapitalParentChartOfAccount->id,
+                    sourceType: Investor::class,
+                    sourceId: $investor->id,
+                    code: $additionalCapitalParentChartOfAccount->code.'.'.$investor->code,
+                    name: $investor->name,
+                    normalBalance: 'credit',
+                    isGroup: false,
+                    isActive: true,
+                    remarks: $investor->remarks,
+                );
+                $additionalCapitalChartOfAccount = $this->chartOfAccountActions->create($additionalCapitalChartOfAccountDTO);
+            }
+
+            $drawingParentChartOfAccount = $investor->company->equityCapitalDrawingChartOfAccount;
+            if (! $drawingParentChartOfAccount) {
+                throw new InvalidArgumentException('Drawing chart of account parent must exist in company.');
+            }
+
+            $drawingChartOfAccount = $investor->drawingChartOfAccount;
+            if ($drawingChartOfAccount) {
+                $drawingChartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $drawingParentChartOfAccount->id,
+                    code: $drawingParentChartOfAccount->code.'.'.$investor->code,
+                    name: $investor->name,
+                    normalBalance: 'debit',
+                    isGroup: false,
+                    isActive: true,
+                    remarks: $investor->remarks,
+                );
+                $drawingChartOfAccount = $this->chartOfAccountActions->update($drawingChartOfAccount, $drawingChartOfAccountDTO);
+            } else {
+                $drawingChartOfAccountDTO = new ChartOfAccountCreateDTO(
+                    companyId: $investor->company_id,
+                    scope: 'user',
+                    systemKey: null,
+                    parentId: $drawingParentChartOfAccount->id,
+                    sourceType: Investor::class,
+                    sourceId: $investor->id,
+                    code: $drawingParentChartOfAccount->code.'.'.$investor->code,
+                    name: $investor->name,
+                    normalBalance: 'debit',
+                    isGroup: false,
+                    isActive: true,
+                    remarks: $investor->remarks,
+                );
+                $drawingChartOfAccount = $this->chartOfAccountActions->create($drawingChartOfAccountDTO);
+            }
+
+            $usedChartOfAccountIds = [
+                $openingCapitalChartOfAccount->id,
+                $additionalCapitalChartOfAccount->id,
+                $drawingChartOfAccount->id,
+            ];
+
+            foreach ($investor->chartOfAccounts as $chartOfAccount) {
+                if (! in_array($chartOfAccount->id, $usedChartOfAccountIds, true)) {
+                    $this->chartOfAccountActions->delete($chartOfAccount);
+                }
+            }
 
             $this->flushCache();
 
@@ -219,8 +372,9 @@ class InvestorActions
         $retval = false;
 
         try {
-            $chartOfAccount = $investor->chartOfAccount;
-            if ($chartOfAccount) $this->chartOfAccountActions->delete($chartOfAccount);
+            foreach ($investor->chartOfAccounts()->get() as $chartOfAccount) {
+                $this->chartOfAccountActions->delete($chartOfAccount);
+            }
 
             $retval = $investor->delete();
 

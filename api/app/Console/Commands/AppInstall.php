@@ -8,7 +8,6 @@ use App\Actions\User\UserActions;
 use App\Enums\RecordStatusEnum;
 use App\Enums\UserRolesEnum;
 use Database\Seeders\BrandSeeder;
-use Database\Seeders\CashAccountSeeder;
 use Database\Seeders\CompanySeeder;
 use Database\Seeders\CustomerGroupSeeder;
 use Database\Seeders\CustomerSeeder;

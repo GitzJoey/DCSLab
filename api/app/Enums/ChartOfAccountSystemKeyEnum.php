@@ -11,6 +11,8 @@ enum ChartOfAccountSystemKeyEnum: string
     case ASSET_ROOT = 'asset_root';
     case ASSET_CURRENT = 'asset_current';
     case ASSET_CURRENT_CASH_AND_CASH_EQUIVALENTS = 'asset_current_cash_and_cash_equivalents';
+    case ASSET_CURRENT_CASH = 'asset_current_cash';
+    case ASSET_CURRENT_BANK = 'asset_current_bank';
     case ASSET_CURRENT_ACCOUNT_RECEIVABLE = 'asset_current_account_receivable';
     case ASSET_CURRENT_INVENTORY = 'asset_current_inventory';
     case ASSET_CURRENT_PREPAID_EXPENSE = 'asset_current_prepaid_expense';

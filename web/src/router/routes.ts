@@ -42,6 +42,8 @@ import JournalEntryCreate from '@/pages/journal-entry/JournalEntryCreate.vue';
 import JournalEntryEdit from '@/pages/journal-entry/JournalEntryEdit.vue';
 import JournalEntryDetailIndex from '@/pages/journal-entry/JournalEntryDetailIndex.vue';
 import JournalEntryDetailList from '@/pages/journal-entry/JournalEntryDetailList.vue';
+import BalanceSheetIndex from '@/pages/balance-sheet/BalanceSheetIndex.vue';
+import BalanceSheetList from '@/pages/balance-sheet/BalanceSheetList.vue';
 import CashAccountIndex from '@/pages/cash-account/CashAccountIndex.vue';
 import CashAccountList from '@/pages/cash-account/CashAccountList.vue';
 import CashAccountCreate from '@/pages/cash-account/CashAccountCreate.vue';
@@ -270,17 +272,17 @@ export default [
 
       // Company Management
       {
-        path: '/dashboard/company',
+        path: '/company',
         children: [
           // Company
           {
-            path: '/dashboard/company/company',
+            path: '/company',
             name: 'side-menu-company-company',
-            redirect: '/dashboard/company/company/list',
+            redirect: '/company/list',
             component: CompanyIndex,
             children: [
               {
-                path: '/dashboard/company/company/list',
+                path: '/company/list',
                 name: 'side-menu-company-company-list',
                 component: CompanyList,
                 meta: {
@@ -288,7 +290,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/company/company/create',
+                path: '/company/create',
                 name: 'side-menu-company-company-create',
                 component: CompanyCreate,
                 meta: {
@@ -296,7 +298,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/company/company/edit/:ulid',
+                path: '/company/edit/:ulid',
                 name: 'side-menu-company-company-edit',
                 component: CompanyEdit,
                 meta: {
@@ -307,13 +309,13 @@ export default [
           },
           // Branch
           {
-            path: '/dashboard/company/branch',
+            path: '/company/branch',
             name: 'side-menu-company-branch',
-            redirect: '/dashboard/company/branch/list',
+            redirect: '/company/branch/list',
             component: BranchIndex,
             children: [
               {
-                path: '/dashboard/company/branch/list',
+                path: '/company/branch/list',
                 name: 'side-menu-company-branch-list',
                 component: BranchList,
                 meta: {
@@ -321,7 +323,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/company/branch/create',
+                path: '/company/branch/create',
                 name: 'side-menu-company-branch-create',
                 component: BranchCreate,
                 meta: {
@@ -329,7 +331,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/company/branch/edit/:ulid',
+                path: '/company/branch/edit/:ulid',
                 name: 'side-menu-company-branch-edit',
                 component: BranchEdit,
                 meta: {
@@ -340,13 +342,13 @@ export default [
           },
           // Warehouse
           {
-            path: '/dashboard/company/warehouse',
+            path: '/company/warehouse',
             name: 'side-menu-company-warehouse',
-            redirect: '/dashboard/company/warehouse/list',
+            redirect: '/company/warehouse/list',
             component: WarehouseIndex,
             children: [
               {
-                path: '/dashboard/company/warehouse/list',
+                path: '/company/warehouse/list',
                 name: 'side-menu-company-warehouse-list',
                 component: WarehouseList,
                 meta: {
@@ -354,7 +356,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/company/warehouse/create',
+                path: '/company/warehouse/create',
                 name: 'side-menu-company-warehouse-create',
                 component: WarehouseCreate,
                 meta: {
@@ -362,7 +364,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/company/warehouse/edit/:ulid',
+                path: '/company/warehouse/edit/:ulid',
                 name: 'side-menu-company-warehouse-edit',
                 component: WarehouseEdit,
                 meta: {
@@ -375,20 +377,20 @@ export default [
       },
       // Finance Management
       {
-        path: '/dashboard/finance',
+        path: '/finance',
         children: [
           // COA
           {
-            path: '/dashboard/chart-of-account',
+            path: '/chart-of-account',
             children: [
               {
-                path: '/dashboard/chart-of-account',
+                path: '/chart-of-account',
                 name: 'side-menu-chart-of-account',
-                redirect: '/dashboard/chart-of-account/list',
+                redirect: '/chart-of-account/list',
                 component: ChartOfAccountIndex,
                 children: [
                   {
-                    path: '/dashboard/chart-of-account/list',
+                    path: '/chart-of-account/list',
                     name: 'side-menu-chart-of-account-list',
                     component: ChartOfAccountList,
                     meta: {
@@ -396,7 +398,7 @@ export default [
                     },
                   },
                   {
-                    path: '/dashboard/chart-of-account/create',
+                    path: '/chart-of-account/create',
                     name: 'side-menu-chart-of-account-create',
                     component: ChartOfAccountCreate,
                     meta: {
@@ -404,7 +406,7 @@ export default [
                     },
                   },
                   {
-                    path: '/dashboard/chart-of-account/edit/:ulid',
+                    path: '/chart-of-account/edit/:ulid',
                     name: 'side-menu-chart-of-account-edit',
                     component: ChartOfAccountEdit,
                     meta: {
@@ -417,16 +419,16 @@ export default [
           },
           // Journal Entry
           {
-            path: '/dashboard/journal-entry',
+            path: '/journal-entry',
             children: [
               {
-                path: '/dashboard/journal-entry',
+                path: '/journal-entry',
                 name: 'side-menu-journal-entry',
-                redirect: '/dashboard/journal-entry/list',
+                redirect: '/journal-entry/list',
                 component: JournalEntryIndex,
                 children: [
                   {
-                    path: '/dashboard/journal-entry/list',
+                    path: '/journal-entry/list',
                     name: 'side-menu-journal-entry-list',
                     component: JournalEntryList,
                     meta: {
@@ -434,7 +436,7 @@ export default [
                     },
                   },
                   {
-                    path: '/dashboard/journal-entry/create',
+                    path: '/journal-entry/create',
                     name: 'side-menu-journal-entry-create',
                     component: JournalEntryCreate,
                     meta: {
@@ -442,7 +444,7 @@ export default [
                     },
                   },
                   {
-                    path: '/dashboard/journal-entry/edit/:ulid',
+                    path: '/journal-entry/edit/:ulid',
                     name: 'side-menu-journal-entry-edit',
                     component: JournalEntryEdit,
                     meta: {
@@ -455,13 +457,13 @@ export default [
           },
           // Investor
           {
-            path: '/dashboard/finance/investor',
+            path: '/finance/investor',
             name: 'side-menu-company-investor',
-            redirect: '/dashboard/finance/investor/list',
+            redirect: '/finance/investor/list',
             component: InvestorIndex,
             children: [
               {
-                path: '/dashboard/finance/investor/list',
+                path: '/finance/investor/list',
                 name: 'side-menu-company-investor-list',
                 component: InvestorList,
                 meta: {
@@ -469,7 +471,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/investor/create',
+                path: '/finance/investor/create',
                 name: 'side-menu-company-investor-create',
                 component: InvestorCreate,
                 meta: {
@@ -477,7 +479,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/investor/edit/:ulid',
+                path: '/finance/investor/edit/:ulid',
                 name: 'side-menu-company-investor-edit',
                 component: InvestorEdit,
                 meta: {
@@ -488,13 +490,13 @@ export default [
           },
           // Cash Account
           {
-            path: '/dashboard/finance/cash-account',
+            path: '/finance/cash-account',
             name: 'side-menu-finance-cash-account',
-            redirect: '/dashboard/finance/cash-account/list',
+            redirect: '/finance/cash-account/list',
             component: CashAccountIndex,
             children: [
               {
-                path: '/dashboard/finance/cash-account/list',
+                path: '/finance/cash-account/list',
                 name: 'side-menu-finance-cash-account-list',
                 component: CashAccountList,
                 meta: {
@@ -502,7 +504,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/cash-account/create',
+                path: '/finance/cash-account/create',
                 name: 'side-menu-finance-cash-account-create',
                 component: CashAccountCreate,
                 meta: {
@@ -510,7 +512,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/cash-account/edit/:ulid',
+                path: '/finance/cash-account/edit/:ulid',
                 name: 'side-menu-finance-cash-account-edit',
                 component: CashAccountEdit,
                 meta: {
@@ -523,16 +525,16 @@ export default [
       },
       // Product Management
       {
-        path: '/dashboard/product',
+        path: '/product',
         children: [
           {
-            path: '/dashboard/product/product-category',
+            path: '/product/product-category',
             name: 'side-menu-product-product-category',
-            redirect: '/dashboard/product/product-category/list',
+            redirect: '/product/product-category/list',
             component: ProductCategoryIndex,
             children: [
               {
-                path: '/dashboard/product/product-category/list',
+                path: '/product/product-category/list',
                 name: 'side-menu-product-product-category-list',
                 component: ProductCategoryList,
                 meta: {
@@ -540,7 +542,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/product-category/create',
+                path: '/product/product-category/create',
                 name: 'side-menu-product-product-category-create',
                 component: ProductCategoryCreate,
                 meta: {
@@ -548,7 +550,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/product-category/edit/:ulid',
+                path: '/product/product-category/edit/:ulid',
                 name: 'side-menu-product-product-category-edit',
                 component: ProductCategoryEdit,
                 meta: {
@@ -558,13 +560,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/product/brand',
+            path: '/product/brand',
             name: 'side-menu-product-brand',
-            redirect: '/dashboard/product/brand/list',
+            redirect: '/product/brand/list',
             component: BrandIndex,
             children: [
               {
-                path: '/dashboard/product/brand/list',
+                path: '/product/brand/list',
                 name: 'side-menu-product-brand-list',
                 component: BrandList,
                 meta: {
@@ -572,7 +574,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/brand/create',
+                path: '/product/brand/create',
                 name: 'side-menu-product-brand-create',
                 component: BrandCreate,
                 meta: {
@@ -580,7 +582,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/brand/edit/:ulid',
+                path: '/product/brand/edit/:ulid',
                 name: 'side-menu-product-brand-edit',
                 component: BrandEdit,
                 meta: {
@@ -590,13 +592,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/product/unit',
+            path: '/product/unit',
             name: 'side-menu-product-unit',
-            redirect: '/dashboard/product/unit/list',
+            redirect: '/product/unit/list',
             component: UnitIndex,
             children: [
               {
-                path: '/dashboard/product/unit/list',
+                path: '/product/unit/list',
                 name: 'side-menu-product-unit-list',
                 component: UnitList,
                 meta: {
@@ -604,7 +606,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/unit/create',
+                path: '/product/unit/create',
                 name: 'side-menu-product-unit-create',
                 component: UnitCreate,
                 meta: {
@@ -612,7 +614,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/unit/edit/:ulid',
+                path: '/product/unit/edit/:ulid',
                 name: 'side-menu-product-unit-edit',
                 component: UnitEdit,
                 meta: {
@@ -622,13 +624,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/product/vat-profile',
+            path: '/product/vat-profile',
             name: 'side-menu-product-vat-profile',
-            redirect: '/dashboard/product/vat-profile/list',
+            redirect: '/product/vat-profile/list',
             component: VatProfileIndex,
             children: [
               {
-                path: '/dashboard/product/vat-profile/list',
+                path: '/product/vat-profile/list',
                 name: 'side-menu-product-vat-profile-list',
                 component: VatProfileList,
                 meta: {
@@ -636,7 +638,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/vat-profile/create',
+                path: '/product/vat-profile/create',
                 name: 'side-menu-product-vat-profile-create',
                 component: VatProfileCreate,
                 meta: {
@@ -644,7 +646,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/vat-profile/edit/:ulid',
+                path: '/product/vat-profile/edit/:ulid',
                 name: 'side-menu-product-vat-profile-edit',
                 component: VatProfileEdit,
                 meta: {
@@ -654,13 +656,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/product/product',
+            path: '/product',
             name: 'side-menu-product-product',
-            redirect: '/dashboard/product/product/list',
+            redirect: '/product/list',
             component: ProductIndex,
             children: [
               {
-                path: '/dashboard/product/product/list',
+                path: '/product/list',
                 name: 'side-menu-product-product-list',
                 component: ProductList,
                 meta: {
@@ -668,7 +670,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/product/create',
+                path: '/product/create',
                 name: 'side-menu-product-product-create',
                 component: ProductCreate,
                 meta: {
@@ -676,7 +678,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/product/edit/:ulid',
+                path: '/product/edit/:ulid',
                 name: 'side-menu-product-product-edit',
                 component: ProductEdit,
                 meta: {
@@ -686,13 +688,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/product/product-service',
+            path: '/product/product-service',
             name: 'side-menu-product-product-service',
-            redirect: '/dashboard/product/product-service/list',
+            redirect: '/product/product-service/list',
             component: ProductServiceIndex,
             children: [
               {
-                path: '/dashboard/product/product-service/list',
+                path: '/product/product-service/list',
                 name: 'side-menu-product-product-service-list',
                 component: ProductServiceList,
                 meta: {
@@ -700,7 +702,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/product-service/create',
+                path: '/product/product-service/create',
                 name: 'side-menu-product-product-service-create',
                 component: ProductServiceCreate,
                 meta: {
@@ -708,7 +710,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/product/product-service/edit/:ulid',
+                path: '/product/product-service/edit/:ulid',
                 name: 'side-menu-product-product-service-edit',
                 component: ProductServiceEdit,
                 meta: {
@@ -721,16 +723,16 @@ export default [
       },
       // Supplier
       {
-        path: '/dashboard/supplier',
+        path: '/supplier',
         children: [
           {
-            path: '/dashboard/supplier/supplier',
+            path: '/supplier',
             name: 'side-menu-supplier',
-            redirect: '/dashboard/supplier/supplier/list',
+            redirect: '/supplier/list',
             component: SupplierIndex,
             children: [
               {
-                path: '/dashboard/supplier/supplier/list',
+                path: '/supplier/list',
                 name: 'side-menu-supplier-supplier-list',
                 component: SupplierList,
                 meta: {
@@ -738,7 +740,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/supplier/supplier/create',
+                path: '/supplier/create',
                 name: 'side-menu-supplier-supplier-create',
                 component: SupplierCreate,
                 meta: {
@@ -746,7 +748,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/supplier/supplier/edit/:ulid',
+                path: '/supplier/edit/:ulid',
                 name: 'side-menu-supplier-supplier-edit',
                 component: SupplierEdit,
                 meta: {
@@ -759,17 +761,17 @@ export default [
       },
       // Customer Management
       {
-        path: '/dashboard/customer',
+        path: '/customer',
         children: [
           // Customer Group
           {
-            path: '/dashboard/customer/customer-group',
+            path: '/customer/customer-group',
             name: 'side-menu-customer-group',
-            redirect: '/dashboard/customer/customer-group/list',
+            redirect: '/customer/customer-group/list',
             component: CustomerGroupIndex,
             children: [
               {
-                path: '/dashboard/customer/customer-group/list',
+                path: '/customer/customer-group/list',
                 name: 'side-menu-customer-group-list',
                 component: CustomerGroupList,
                 meta: {
@@ -777,7 +779,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/customer/customer-group/create',
+                path: '/customer/customer-group/create',
                 name: 'side-menu-customer-group-create',
                 component: CustomerGroupCreate,
                 meta: {
@@ -785,7 +787,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/customer/customer-group/edit/:ulid',
+                path: '/customer/customer-group/edit/:ulid',
                 name: 'side-menu-customer-group-edit',
                 component: CustomerGroupEdit,
                 meta: {
@@ -796,13 +798,13 @@ export default [
           },
           // Customer
           {
-            path: '/dashboard/customer/customer',
+            path: '/customer',
             name: 'side-menu-customer',
-            redirect: '/dashboard/customer/customer/list',
+            redirect: '/customer/list',
             component: CustomerIndex,
             children: [
               {
-                path: '/dashboard/customer/customer/list',
+                path: '/customer/list',
                 name: 'side-menu-customer-list',
                 component: CustomerList,
                 meta: {
@@ -810,7 +812,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/customer/customer/create',
+                path: '/customer/create',
                 name: 'side-menu-customer-create',
                 component: CustomerCreate,
                 meta: {
@@ -818,7 +820,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/customer/customer/edit/:ulid',
+                path: '/customer/edit/:ulid',
                 name: 'side-menu-customer-edit',
                 component: CustomerEdit,
                 meta: {
@@ -831,16 +833,16 @@ export default [
       },
       // Stock Adjustment Category
       {
-        path: '/dashboard/stock-adjustment-category',
+        path: '/stock-adjustment-category',
         children: [
           {
-            path: '/dashboard/stock-adjustment-category',
+            path: '/stock-adjustment-category',
             name: 'side-menu-stock-adjustment-category',
-            redirect: '/dashboard/stock-adjustment-category/list',
+            redirect: '/stock-adjustment-category/list',
             component: StockAdjustmentCategoryIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-category/list',
+                path: '/stock-adjustment-category/list',
                 name: 'side-menu-stock-adjustment-category-list',
                 component: StockAdjustmentCategoryList,
                 meta: {
@@ -848,7 +850,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/stock-adjustment-category/create',
+                path: '/stock-adjustment-category/create',
                 name: 'side-menu-stock-adjustment-category-create',
                 component: StockAdjustmentCategoryCreate,
                 meta: {
@@ -856,7 +858,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/stock-adjustment-category/edit/:ulid',
+                path: '/stock-adjustment-category/edit/:ulid',
                 name: 'side-menu-stock-adjustment-category-edit',
                 component: StockAdjustmentCategoryEdit,
                 meta: {
@@ -869,16 +871,16 @@ export default [
       },
       // Purchase Additional Cost Category
       {
-        path: '/dashboard/expense-category',
+        path: '/expense-category',
         children: [
           {
-            path: '/dashboard/expense-category',
+            path: '/expense-category',
             name: 'side-menu-expense-category',
-            redirect: '/dashboard/expense-category/list',
+            redirect: '/expense-category/list',
             component: ExpenseCategoryIndex,
             children: [
               {
-                path: '/dashboard/expense-category/list',
+                path: '/expense-category/list',
                 name: 'side-menu-expense-category-list',
                 component: ExpenseCategoryList,
                 meta: {
@@ -886,7 +888,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/expense-category/create',
+                path: '/expense-category/create',
                 name: 'side-menu-expense-category-create',
                 component: ExpenseCategoryCreate,
                 meta: {
@@ -894,7 +896,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/expense-category/edit/:ulid',
+                path: '/expense-category/edit/:ulid',
                 name: 'side-menu-expense-category-edit',
                 component: ExpenseCategoryEdit,
                 meta: {
@@ -906,16 +908,16 @@ export default [
         ],
       },
       {
-        path: '/dashboard/debt-category',
+        path: '/debt-category',
         children: [
           {
-            path: '/dashboard/debt-category',
+            path: '/debt-category',
             name: 'side-menu-debt-category',
-            redirect: '/dashboard/debt-category/list',
+            redirect: '/debt-category/list',
             component: DebtCategoryIndex,
             children: [
               {
-                path: '/dashboard/debt-category/list',
+                path: '/debt-category/list',
                 name: 'side-menu-debt-category-list',
                 component: DebtCategoryList,
                 meta: {
@@ -923,7 +925,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/debt-category/create',
+                path: '/debt-category/create',
                 name: 'side-menu-debt-category-create',
                 component: DebtCategoryCreate,
                 meta: {
@@ -931,7 +933,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/debt-category/edit/:ulid',
+                path: '/debt-category/edit/:ulid',
                 name: 'side-menu-debt-category-edit',
                 component: DebtCategoryEdit,
                 meta: {
@@ -943,16 +945,16 @@ export default [
         ],
       },
       {
-        path: '/dashboard/receivable-category',
+        path: '/receivable-category',
         children: [
           {
-            path: '/dashboard/receivable-category',
+            path: '/receivable-category',
             name: 'side-menu-receivable-category',
-            redirect: '/dashboard/receivable-category/list',
+            redirect: '/receivable-category/list',
             component: ReceivableCategoryIndex,
             children: [
               {
-                path: '/dashboard/receivable-category/list',
+                path: '/receivable-category/list',
                 name: 'side-menu-receivable-category-list',
                 component: ReceivableCategoryList,
                 meta: {
@@ -960,7 +962,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/receivable-category/create',
+                path: '/receivable-category/create',
                 name: 'side-menu-receivable-category-create',
                 component: ReceivableCategoryCreate,
                 meta: {
@@ -968,7 +970,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/receivable-category/edit/:ulid',
+                path: '/receivable-category/edit/:ulid',
                 name: 'side-menu-receivable-category-edit',
                 component: ReceivableCategoryEdit,
                 meta: {
@@ -980,16 +982,16 @@ export default [
         ],
       },
       {
-        path: '/dashboard/debt-creditor',
+        path: '/debt-creditor',
         children: [
           {
-            path: '/dashboard/debt-creditor',
+            path: '/debt-creditor',
             name: 'side-menu-debt-creditor',
-            redirect: '/dashboard/debt-creditor/list',
+            redirect: '/debt-creditor/list',
             component: DebtCreditorIndex,
             children: [
               {
-                path: '/dashboard/debt-creditor/list',
+                path: '/debt-creditor/list',
                 name: 'side-menu-debt-creditor-list',
                 component: DebtCreditorList,
                 meta: {
@@ -997,7 +999,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/debt-creditor/create',
+                path: '/debt-creditor/create',
                 name: 'side-menu-debt-creditor-create',
                 component: DebtCreditorCreate,
                 meta: {
@@ -1005,7 +1007,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/debt-creditor/edit/:ulid',
+                path: '/debt-creditor/edit/:ulid',
                 name: 'side-menu-debt-creditor-edit',
                 component: DebtCreditorEdit,
                 meta: {
@@ -1017,16 +1019,16 @@ export default [
         ],
       },
       {
-        path: '/dashboard/income-category',
+        path: '/income-category',
         children: [
           {
-            path: '/dashboard/income-category',
+            path: '/income-category',
             name: 'side-menu-income-category',
-            redirect: '/dashboard/income-category/list',
+            redirect: '/income-category/list',
             component: IncomeCategoryIndex,
             children: [
               {
-                path: '/dashboard/income-category/list',
+                path: '/income-category/list',
                 name: 'side-menu-income-category-list',
                 component: IncomeCategoryList,
                 meta: {
@@ -1034,7 +1036,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/income-category/create',
+                path: '/income-category/create',
                 name: 'side-menu-income-category-create',
                 component: IncomeCategoryCreate,
                 meta: {
@@ -1042,7 +1044,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/income-category/edit/:ulid',
+                path: '/income-category/edit/:ulid',
                 name: 'side-menu-income-category-edit',
                 component: IncomeCategoryEdit,
                 meta: {
@@ -1055,16 +1057,16 @@ export default [
       },
       // Purchase Additional Cost Category
       {
-        path: '/dashboard/purchase-additional-cost-category',
+        path: '/purchase-additional-cost-category',
         children: [
           {
-            path: '/dashboard/purchase-additional-cost-category',
+            path: '/purchase-additional-cost-category',
             name: 'side-menu-purchase-additional-cost-category',
-            redirect: '/dashboard/purchase-additional-cost-category/list',
+            redirect: '/purchase-additional-cost-category/list',
             component: PurchaseAdditionalCostCategoryIndex,
             children: [
               {
-                path: '/dashboard/purchase-additional-cost-category/list',
+                path: '/purchase-additional-cost-category/list',
                 name: 'side-menu-purchase-additional-cost-category-list',
                 component: PurchaseAdditionalCostCategoryList,
                 meta: {
@@ -1072,7 +1074,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase-additional-cost-category/create',
+                path: '/purchase-additional-cost-category/create',
                 name: 'side-menu-purchase-additional-cost-category-create',
                 component: PurchaseAdditionalCostCategoryCreate,
                 meta: {
@@ -1080,7 +1082,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase-additional-cost-category/edit/:ulid',
+                path: '/purchase-additional-cost-category/edit/:ulid',
                 name: 'side-menu-purchase-additional-cost-category-edit',
                 component: PurchaseAdditionalCostCategoryEdit,
                 meta: {
@@ -1093,28 +1095,28 @@ export default [
       },
       // Purchase Additional Cost
       {
-        path: '/dashboard/purchase-additional-cost',
+        path: '/purchase-additional-cost',
         children: [
           {
-            path: '/dashboard/purchase-additional-cost',
+            path: '/purchase-additional-cost',
             name: 'side-menu-purchase-additional-cost',
-            redirect: '/dashboard/purchase-additional-cost/list',
+            redirect: '/purchase-additional-cost/list',
             component: PurchaseAdditionalCostIndex,
             children: [
               {
-                path: '/dashboard/purchase-additional-cost/list',
+                path: '/purchase-additional-cost/list',
                 name: 'side-menu-purchase-additional-cost-list',
                 component: PurchaseAdditionalCostList,
                 meta: { remember: true },
               },
               {
-                path: '/dashboard/purchase-additional-cost/create',
+                path: '/purchase-additional-cost/create',
                 name: 'side-menu-purchase-additional-cost-create',
                 component: PurchaseAdditionalCostCreate,
                 meta: { remember: true },
               },
               {
-                path: '/dashboard/purchase-additional-cost/edit/:ulid',
+                path: '/purchase-additional-cost/edit/:ulid',
                 name: 'side-menu-purchase-additional-cost-edit',
                 component: PurchaseAdditionalCostEdit,
                 meta: { remember: true },
@@ -1125,28 +1127,28 @@ export default [
       },
       // Purchase Additional Cost Payment
       {
-        path: '/dashboard/purchase-additional-cost-payment',
+        path: '/purchase-additional-cost-payment',
         children: [
           {
-            path: '/dashboard/purchase-additional-cost-payment',
+            path: '/purchase-additional-cost-payment',
             name: 'side-menu-purchase-additional-cost-payment',
-            redirect: '/dashboard/purchase-additional-cost-payment/list',
+            redirect: '/purchase-additional-cost-payment/list',
             component: PurchaseAdditionalCostPaymentIndex,
             children: [
               {
-                path: '/dashboard/purchase-additional-cost-payment/list',
+                path: '/purchase-additional-cost-payment/list',
                 name: 'side-menu-purchase-additional-cost-payment-list',
                 component: PurchaseAdditionalCostPaymentList,
                 meta: { remember: true },
               },
               {
-                path: '/dashboard/purchase-additional-cost-payment/create',
+                path: '/purchase-additional-cost-payment/create',
                 name: 'side-menu-purchase-additional-cost-payment-create',
                 component: PurchaseAdditionalCostPaymentCreate,
                 meta: { remember: true },
               },
               {
-                path: '/dashboard/purchase-additional-cost-payment/edit/:ulid',
+                path: '/purchase-additional-cost-payment/edit/:ulid',
                 name: 'side-menu-purchase-additional-cost-payment-edit',
                 component: PurchaseAdditionalCostPaymentEdit,
                 meta: { remember: true },
@@ -1157,18 +1159,18 @@ export default [
       },
       // Transaction
       {
-        path: '/dashboard/transaction',
+        path: '/transaction',
         name: 'side-menu-transaction',
         children: [
           // Stock Adjustment
           {
-            path: '/dashboard/stock-adjustment',
+            path: '/stock-adjustment',
             name: 'side-menu-stock-adjustment',
-            redirect: '/dashboard/stock-adjustment/list',
+            redirect: '/stock-adjustment/list',
             component: StockAdjustmentIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment/list',
+                path: '/stock-adjustment/list',
                 name: 'side-menu-stock-adjustment-list',
                 component: StockAdjustmentList,
                 meta: {
@@ -1176,7 +1178,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/stock-adjustment/create',
+                path: '/stock-adjustment/create',
                 name: 'side-menu-stock-adjustment-create',
                 component: StockAdjustmentCreate,
                 meta: {
@@ -1184,7 +1186,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/stock-adjustment/edit/:ulid',
+                path: '/stock-adjustment/edit/:ulid',
                 name: 'side-menu-stock-adjustment-edit',
                 component: StockAdjustmentEdit,
                 meta: {
@@ -1195,13 +1197,13 @@ export default [
           },
           // Purchase Order
           {
-            path: '/dashboard/purchase-order',
+            path: '/purchase-order',
             name: 'side-menu-purchase-order',
-            redirect: '/dashboard/purchase-order/list',
+            redirect: '/purchase-order/list',
             component: PurchaseOrderIndex,
             children: [
               {
-                path: '/dashboard/purchase-order/list',
+                path: '/purchase-order/list',
                 name: 'side-menu-purchase-order-list',
                 component: PurchaseOrderList,
                 meta: {
@@ -1209,7 +1211,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase-order/create',
+                path: '/purchase-order/create',
                 name: 'side-menu-purchase-order-create',
                 component: PurchaseOrderCreate,
                 meta: {
@@ -1217,7 +1219,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase-order/edit/:ulid',
+                path: '/purchase-order/edit/:ulid',
                 name: 'side-menu-purchase-order-edit',
                 component: PurchaseOrderEdit,
                 meta: {
@@ -1227,13 +1229,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/purchase',
+            path: '/purchase',
             name: 'side-menu-purchase',
-            redirect: '/dashboard/purchase/list',
+            redirect: '/purchase/list',
             component: PurchaseIndex,
             children: [
               {
-                path: '/dashboard/purchase/list',
+                path: '/purchase/list',
                 name: 'side-menu-purchase-list',
                 component: PurchaseList,
                 meta: {
@@ -1241,15 +1243,15 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase/create',
+                path: '/purchase/create',
                 name: 'side-menu-purchase-create',
-                redirect: '/dashboard/purchase/create/manual',
+                redirect: '/purchase/create/manual',
                 meta: {
                   remember: true,
                 },
               },
               {
-                path: '/dashboard/purchase/create/direct',
+                path: '/purchase/create/direct',
                 name: 'side-menu-purchase-create-direct',
                 component: PurchaseCreateDirect,
                 meta: {
@@ -1257,7 +1259,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase/create/manual',
+                path: '/purchase/create/manual',
                 name: 'side-menu-purchase-create-manual',
                 component: PurchaseCreateManual,
                 meta: {
@@ -1265,7 +1267,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase/edit/direct/:ulid',
+                path: '/purchase/edit/direct/:ulid',
                 name: 'side-menu-purchase-edit-direct',
                 component: PurchaseEditDirect,
                 meta: {
@@ -1273,7 +1275,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase/edit/manual/:ulid',
+                path: '/purchase/edit/manual/:ulid',
                 name: 'side-menu-purchase-edit-manual',
                 component: PurchaseEditManual,
                 meta: {
@@ -1283,13 +1285,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/purchase-receipt',
+            path: '/purchase-receipt',
             name: 'side-menu-purchase-receipt',
-            redirect: '/dashboard/purchase-receipt/list',
+            redirect: '/purchase-receipt/list',
             component: PurchaseReceiptIndex,
             children: [
               {
-                path: '/dashboard/purchase-receipt/list',
+                path: '/purchase-receipt/list',
                 name: 'side-menu-purchase-receipt-list',
                 component: PurchaseReceiptList,
                 meta: {
@@ -1297,7 +1299,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase-receipt/create',
+                path: '/purchase-receipt/create',
                 name: 'side-menu-purchase-receipt-create',
                 component: PurchaseReceiptCreate,
                 meta: {
@@ -1305,7 +1307,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/purchase-receipt/edit/:ulid',
+                path: '/purchase-receipt/edit/:ulid',
                 name: 'side-menu-purchase-receipt-edit',
                 component: PurchaseReceiptEdit,
                 meta: {
@@ -1315,13 +1317,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/purchase-order-item',
+            path: '/purchase-order-item',
             name: 'side-menu-purchase-order-item',
-            redirect: '/dashboard/purchase-order-item/list',
+            redirect: '/purchase-order-item/list',
             component: PurchaseOrderItemIndex,
             children: [
               {
-                path: '/dashboard/purchase-order-item/list',
+                path: '/purchase-order-item/list',
                 name: 'side-menu-purchase-order-item-list',
                 component: PurchaseOrderItemList,
                 meta: {
@@ -1331,13 +1333,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/purchase-order-down-payment',
+            path: '/purchase-order-down-payment',
             name: 'side-menu-purchase-order-down-payment',
-            redirect: '/dashboard/purchase-order-down-payment/list',
+            redirect: '/purchase-order-down-payment/list',
             component: PurchaseOrderDownPaymentIndex,
             children: [
               {
-                path: '/dashboard/purchase-order-down-payment/list',
+                path: '/purchase-order-down-payment/list',
                 name: 'side-menu-purchase-order-down-payment-list',
                 component: PurchaseOrderDownPaymentList,
                 meta: {
@@ -1347,7 +1349,7 @@ export default [
             ],
           },
           {
-            path: '/dashboard/purchase-order-down-payment-not-fully-allocated',
+            path: '/purchase-order-down-payment-not-fully-allocated',
             name: 'side-menu-purchase-order-down-payment-not-fully-allocated',
             component: PurchaseOrderDownPaymentNotFullyAllocatedIndex,
             meta: {
@@ -1355,13 +1357,13 @@ export default [
             },
           },
           {
-            path: '/dashboard/purchase-order-down-payment-refund',
+            path: '/purchase-order-down-payment-refund',
             name: 'side-menu-purchase-order-down-payment-refund',
-            redirect: '/dashboard/purchase-order-down-payment-refund/list',
+            redirect: '/purchase-order-down-payment-refund/list',
             component: PurchaseOrderDownPaymentRefundIndex,
             children: [
               {
-                path: '/dashboard/purchase-order-down-payment-refund/list',
+                path: '/purchase-order-down-payment-refund/list',
                 name: 'side-menu-purchase-order-down-payment-refund-list',
                 component: PurchaseOrderDownPaymentRefundList,
                 meta: {
@@ -1372,13 +1374,13 @@ export default [
           },
           // Capital Opening
           {
-            path: '/dashboard/finance/capital-opening',
+            path: '/finance/capital-opening',
             name: 'side-menu-finance-capital-opening',
-            redirect: '/dashboard/finance/capital-opening/list',
+            redirect: '/finance/capital-opening/list',
             component: CapitalOpeningIndex,
             children: [
               {
-                path: '/dashboard/finance/capital-opening/list',
+                path: '/finance/capital-opening/list',
                 name: 'side-menu-finance-capital-opening-list',
                 component: CapitalOpeningList,
                 meta: {
@@ -1386,7 +1388,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/capital-opening/create',
+                path: '/finance/capital-opening/create',
                 name: 'side-menu-finance-capital-opening-create',
                 component: CapitalOpeningCreate,
                 meta: {
@@ -1394,7 +1396,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/capital-opening/edit/:ulid',
+                path: '/finance/capital-opening/edit/:ulid',
                 name: 'side-menu-finance-capital-opening-edit',
                 component: CapitalOpeningEdit,
                 meta: {
@@ -1405,13 +1407,13 @@ export default [
           },
           // Capital Transaction
           {
-            path: '/dashboard/finance/capital-transaction',
+            path: '/finance/capital-transaction',
             name: 'side-menu-finance-capital-transaction',
-            redirect: '/dashboard/finance/capital-transaction/list',
+            redirect: '/finance/capital-transaction/list',
             component: CapitalTransactionIndex,
             children: [
               {
-                path: '/dashboard/finance/capital-transaction/list',
+                path: '/finance/capital-transaction/list',
                 name: 'side-menu-finance-capital-transaction-list',
                 component: CapitalTransactionList,
                 meta: {
@@ -1419,7 +1421,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/capital-transaction/create',
+                path: '/finance/capital-transaction/create',
                 name: 'side-menu-finance-capital-transaction-create',
                 component: CapitalTransactionCreate,
                 meta: {
@@ -1427,7 +1429,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/capital-transaction/edit/:ulid',
+                path: '/finance/capital-transaction/edit/:ulid',
                 name: 'side-menu-finance-capital-transaction-edit',
                 component: CapitalTransactionEdit,
                 meta: {
@@ -1438,13 +1440,13 @@ export default [
           },
           // Cash Account Transfer
           {
-            path: '/dashboard/finance/cash-transfer',
+            path: '/finance/cash-transfer',
             name: 'side-menu-finance-cash-transfer',
-            redirect: '/dashboard/finance/cash-transfer/list',
+            redirect: '/finance/cash-transfer/list',
             component: CashTransferIndex,
             children: [
               {
-                path: '/dashboard/finance/cash-transfer/list',
+                path: '/finance/cash-transfer/list',
                 name: 'side-menu-finance-cash-transfer-list',
                 component: CashTransferList,
                 meta: {
@@ -1452,7 +1454,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/cash-transfer/create',
+                path: '/finance/cash-transfer/create',
                 name: 'side-menu-finance-cash-transfer-create',
                 component: CashTransferCreate,
                 meta: {
@@ -1460,7 +1462,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/finance/cash-transfer/edit/:ulid',
+                path: '/finance/cash-transfer/edit/:ulid',
                 name: 'side-menu-finance-cash-transfer-edit',
                 component: CashTransferEdit,
                 meta: {
@@ -1471,13 +1473,13 @@ export default [
           },
           // Expense
           {
-            path: '/dashboard/expense',
+            path: '/expense',
             name: 'side-menu-expense',
-            redirect: '/dashboard/expense/list',
+            redirect: '/expense/list',
             component: ExpenseIndex,
             children: [
               {
-                path: '/dashboard/expense/list',
+                path: '/expense/list',
                 name: 'side-menu-expense-list',
                 component: ExpenseList,
                 meta: {
@@ -1485,7 +1487,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/expense/create',
+                path: '/expense/create',
                 name: 'side-menu-expense-create',
                 component: ExpenseCreate,
                 meta: {
@@ -1493,7 +1495,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/expense/edit/:ulid',
+                path: '/expense/edit/:ulid',
                 name: 'side-menu-expense-edit',
                 component: ExpenseEdit,
                 meta: {
@@ -1504,13 +1506,13 @@ export default [
           },
           // Debt
           {
-            path: '/dashboard/debt',
+            path: '/debt',
             name: 'side-menu-debt',
-            redirect: '/dashboard/debt/list',
+            redirect: '/debt/list',
             component: DebtIndex,
             children: [
               {
-                path: '/dashboard/debt/list',
+                path: '/debt/list',
                 name: 'side-menu-debt-list',
                 component: DebtList,
                 meta: {
@@ -1518,7 +1520,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/debt/create',
+                path: '/debt/create',
                 name: 'side-menu-debt-create',
                 component: DebtCreate,
                 meta: {
@@ -1526,7 +1528,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/debt/edit/:ulid',
+                path: '/debt/edit/:ulid',
                 name: 'side-menu-debt-edit',
                 component: DebtEdit,
                 meta: {
@@ -1537,13 +1539,13 @@ export default [
           },
           // Prepaid Expense
           {
-            path: '/dashboard/prepaid-expense',
+            path: '/prepaid-expense',
             name: 'side-menu-prepaid-expense',
-            redirect: '/dashboard/prepaid-expense/list',
+            redirect: '/prepaid-expense/list',
             component: PrepaidExpenseIndex,
             children: [
               {
-                path: '/dashboard/prepaid-expense/list',
+                path: '/prepaid-expense/list',
                 name: 'side-menu-prepaid-expense-list',
                 component: PrepaidExpenseList,
                 meta: {
@@ -1551,7 +1553,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/prepaid-expense/create',
+                path: '/prepaid-expense/create',
                 name: 'side-menu-prepaid-expense-create',
                 component: PrepaidExpenseCreate,
                 meta: {
@@ -1559,7 +1561,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/prepaid-expense/edit/:ulid',
+                path: '/prepaid-expense/edit/:ulid',
                 name: 'side-menu-prepaid-expense-edit',
                 component: PrepaidExpenseEdit,
                 meta: {
@@ -1570,13 +1572,13 @@ export default [
           },
           // Expense Payment
           {
-            path: '/dashboard/expense-payment',
+            path: '/expense-payment',
             name: 'side-menu-expense-payment',
-            redirect: '/dashboard/expense-payment/list',
+            redirect: '/expense-payment/list',
             component: ExpensePaymentIndex,
             children: [
               {
-                path: '/dashboard/expense-payment/list',
+                path: '/expense-payment/list',
                 name: 'side-menu-expense-payment-list',
                 component: ExpensePaymentList,
                 meta: {
@@ -1584,7 +1586,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/expense-payment/create',
+                path: '/expense-payment/create',
                 name: 'side-menu-expense-payment-create',
                 component: ExpensePaymentCreate,
                 meta: {
@@ -1592,7 +1594,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/expense-payment/edit/:ulid',
+                path: '/expense-payment/edit/:ulid',
                 name: 'side-menu-expense-payment-edit',
                 component: ExpensePaymentEdit,
                 meta: {
@@ -1602,13 +1604,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/income',
+            path: '/income',
             name: 'side-menu-income',
-            redirect: '/dashboard/income/list',
+            redirect: '/income/list',
             component: IncomeIndex,
             children: [
               {
-                path: '/dashboard/income/list',
+                path: '/income/list',
                 name: 'side-menu-income-list',
                 component: IncomeList,
                 meta: {
@@ -1616,7 +1618,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/income/create',
+                path: '/income/create',
                 name: 'side-menu-income-create',
                 component: IncomeCreate,
                 meta: {
@@ -1624,7 +1626,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/income/edit/:ulid',
+                path: '/income/edit/:ulid',
                 name: 'side-menu-income-edit',
                 component: IncomeEdit,
                 meta: {
@@ -1634,13 +1636,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/receivable',
+            path: '/receivable',
             name: 'side-menu-receivable',
-            redirect: '/dashboard/receivable/list',
+            redirect: '/receivable/list',
             component: ReceivableIndex,
             children: [
               {
-                path: '/dashboard/receivable/list',
+                path: '/receivable/list',
                 name: 'side-menu-receivable-list',
                 component: ReceivableList,
                 meta: {
@@ -1648,7 +1650,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/receivable/create',
+                path: '/receivable/create',
                 name: 'side-menu-receivable-create',
                 component: ReceivableCreate,
                 meta: {
@@ -1656,7 +1658,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/receivable/edit/:ulid',
+                path: '/receivable/edit/:ulid',
                 name: 'side-menu-receivable-edit',
                 component: ReceivableEdit,
                 meta: {
@@ -1666,13 +1668,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/prepaid-income',
+            path: '/prepaid-income',
             name: 'side-menu-prepaid-income',
-            redirect: '/dashboard/prepaid-income/list',
+            redirect: '/prepaid-income/list',
             component: PrepaidIncomeIndex,
             children: [
               {
-                path: '/dashboard/prepaid-income/list',
+                path: '/prepaid-income/list',
                 name: 'side-menu-prepaid-income-list',
                 component: PrepaidIncomeList,
                 meta: {
@@ -1680,7 +1682,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/prepaid-income/create',
+                path: '/prepaid-income/create',
                 name: 'side-menu-prepaid-income-create',
                 component: PrepaidIncomeCreate,
                 meta: {
@@ -1688,7 +1690,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/prepaid-income/edit/:ulid',
+                path: '/prepaid-income/edit/:ulid',
                 name: 'side-menu-prepaid-income-edit',
                 component: PrepaidIncomeEdit,
                 meta: {
@@ -1698,13 +1700,13 @@ export default [
             ],
           },
           {
-            path: '/dashboard/income-payment',
+            path: '/income-payment',
             name: 'side-menu-income-payment',
-            redirect: '/dashboard/income-payment/list',
+            redirect: '/income-payment/list',
             component: IncomePaymentIndex,
             children: [
               {
-                path: '/dashboard/income-payment/list',
+                path: '/income-payment/list',
                 name: 'side-menu-income-payment-list',
                 component: IncomePaymentList,
                 meta: {
@@ -1712,7 +1714,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/income-payment/create',
+                path: '/income-payment/create',
                 name: 'side-menu-income-payment-create',
                 component: IncomePaymentCreate,
                 meta: {
@@ -1720,7 +1722,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/income-payment/edit/:ulid',
+                path: '/income-payment/edit/:ulid',
                 name: 'side-menu-income-payment-edit',
                 component: IncomePaymentEdit,
                 meta: {
@@ -1732,13 +1734,13 @@ export default [
 
           // Stock Transfer
           {
-            path: '/dashboard/stock-transfer',
+            path: '/stock-transfer',
             name: 'side-menu-stock-transfer',
-            redirect: '/dashboard/stock-transfer/list',
+            redirect: '/stock-transfer/list',
             component: StockTransferIndex,
             children: [
               {
-                path: '/dashboard/stock-transfer/list',
+                path: '/stock-transfer/list',
                 name: 'side-menu-stock-transfer-list',
                 component: StockTransferList,
                 meta: {
@@ -1746,7 +1748,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/stock-transfer/create',
+                path: '/stock-transfer/create',
                 name: 'side-menu-stock-transfer-create',
                 component: StockTransferCreate,
                 meta: {
@@ -1754,7 +1756,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/stock-transfer/edit/:ulid',
+                path: '/stock-transfer/edit/:ulid',
                 name: 'side-menu-stock-transfer-edit',
                 component: StockTransferEdit,
                 meta: {
@@ -1765,13 +1767,13 @@ export default [
           },
           // Stock Adjustment In Item
           {
-            path: '/dashboard/stock-adjustment-in-item',
+            path: '/stock-adjustment-in-item',
             name: 'side-menu-stock-adjustment-in-item',
-            redirect: '/dashboard/stock-adjustment-in-item/list',
+            redirect: '/stock-adjustment-in-item/list',
             component: StockAdjustmentInItemIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-in-item/list',
+                path: '/stock-adjustment-in-item/list',
                 name: 'side-menu-stock-adjustment-in-item-list',
                 component: StockAdjustmentInItemList,
                 meta: {
@@ -1782,13 +1784,13 @@ export default [
           },
           // Stock Adjustment In Item Serial
           {
-            path: '/dashboard/stock-adjustment-in-item-serial',
+            path: '/stock-adjustment-in-item-serial',
             name: 'side-menu-stock-adjustment-in-item-serial',
-            redirect: '/dashboard/stock-adjustment-in-item-serial/list',
+            redirect: '/stock-adjustment-in-item-serial/list',
             component: StockAdjustmentInItemSerialIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-in-item-serial/list',
+                path: '/stock-adjustment-in-item-serial/list',
                 name: 'side-menu-stock-adjustment-in-item-serial-list',
                 component: StockAdjustmentInItemSerialList,
                 meta: {
@@ -1799,13 +1801,13 @@ export default [
           },
           // Stock Adjustment Out Item
           {
-            path: '/dashboard/stock-adjustment-out-item',
+            path: '/stock-adjustment-out-item',
             name: 'side-menu-stock-adjustment-out-item',
-            redirect: '/dashboard/stock-adjustment-out-item/list',
+            redirect: '/stock-adjustment-out-item/list',
             component: StockAdjustmentOutItemIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-out-item/list',
+                path: '/stock-adjustment-out-item/list',
                 name: 'side-menu-stock-adjustment-out-item-list',
                 component: StockAdjustmentOutItemList,
                 meta: {
@@ -1816,13 +1818,13 @@ export default [
           },
           // Stock Adjustment Out Item Serial
           {
-            path: '/dashboard/stock-adjustment-out-item-serial',
+            path: '/stock-adjustment-out-item-serial',
             name: 'side-menu-stock-adjustment-out-item-serial',
-            redirect: '/dashboard/stock-adjustment-out-item-serial/list',
+            redirect: '/stock-adjustment-out-item-serial/list',
             component: StockAdjustmentOutItemSerialIndex,
             children: [
               {
-                path: '/dashboard/stock-adjustment-out-item-serial/list',
+                path: '/stock-adjustment-out-item-serial/list',
                 name: 'side-menu-stock-adjustment-out-item-serial-list',
                 component: StockAdjustmentOutItemSerialList,
                 meta: {
@@ -1833,7 +1835,7 @@ export default [
           },
           // Stock Transfer Product Unit
           {
-            path: '/dashboard/stock-transfer-item',
+            path: '/stock-transfer-item',
             name: 'side-menu-stock-transfer-item',
             component: StockTransferItemList,
             meta: {
@@ -1842,7 +1844,7 @@ export default [
           },
           // Stock Transfer Product Unit Serial
           {
-            path: '/dashboard/stock-transfer-item-serial',
+            path: '/stock-transfer-item-serial',
             name: 'side-menu-stock-transfer-item-serial',
             component: StockTransferItemSerialList,
             meta: {
@@ -1854,13 +1856,13 @@ export default [
 
       // Cash Account With Remaining Balance
       {
-        path: '/dashboard/finance/cash-account-with-remaining-balance',
+        path: '/finance/cash-account-with-remaining-balance',
         name: 'side-menu-cash-account-with-remaining-balance',
-        redirect: '/dashboard/finance/cash-account-with-remaining-balance/list',
+        redirect: '/finance/cash-account-with-remaining-balance/list',
         component: CashAccountWithRemainingBalanceIndex,
         children: [
           {
-            path: '/dashboard/finance/cash-account-with-remaining-balance/list',
+            path: '/finance/cash-account-with-remaining-balance/list',
             name: 'side-menu-cash-account-with-remaining-balance-list',
             component: CashAccountWithRemainingBalanceList,
             meta: {
@@ -1871,13 +1873,13 @@ export default [
       },
       // Product With Remaining Stock
       {
-        path: '/dashboard/product/product-with-remaining-stock',
+        path: '/product/product-with-remaining-stock',
         name: 'side-menu-product-with-remaining-stock',
-        redirect: '/dashboard/product/product-with-remaining-stock/list',
+        redirect: '/product/product-with-remaining-stock/list',
         component: ProductWithRemainingStockIndex,
         children: [
           {
-            path: '/dashboard/product/product-with-remaining-stock/list',
+            path: '/product/product-with-remaining-stock/list',
             name: 'side-menu-product-with-remaining-stock-list',
             component: ProductWithRemainingStockList,
             meta: {
@@ -1888,13 +1890,30 @@ export default [
       },
       // Journal Entry Detail Report
       {
-        path: '/dashboard/report/journal-entry-detail',
+        path: '/report/balance-sheet',
+        name: 'side-menu-report-balance-sheet',
+        redirect: '/report/balance-sheet/list',
+        component: BalanceSheetIndex,
+        children: [
+          {
+            path: '/report/balance-sheet/list',
+            name: 'side-menu-report-balance-sheet-list',
+            component: BalanceSheetList,
+            meta: {
+              remember: true,
+            },
+          },
+        ],
+      },
+      // Journal Entry Detail Report
+      {
+        path: '/report/journal-entry-detail',
         name: 'side-menu-report-journal-entry-detail',
-        redirect: '/dashboard/report/journal-entry-detail/list',
+        redirect: '/report/journal-entry-detail/list',
         component: JournalEntryDetailIndex,
         children: [
           {
-            path: '/dashboard/report/journal-entry-detail/list',
+            path: '/report/journal-entry-detail/list',
             name: 'side-menu-report-journal-entry-detail-list',
             component: JournalEntryDetailList,
             meta: {
@@ -1905,17 +1924,17 @@ export default [
       },
       // user
       {
-        path: '/dashboard/administrator',
+        path: '/administrator',
         name: 'side-menu-administrator',
         children: [
           {
-            path: '/dashboard/administrator/user',
+            path: '/administrator/user',
             name: 'side-menu-administrator-user',
-            redirect: '/dashboard/administrator/user/list',
+            redirect: '/administrator/user/list',
             component: UserIndex,
             children: [
               {
-                path: '/dashboard/administrator/user/list',
+                path: '/administrator/user/list',
                 name: 'side-menu-administrator-user-list',
                 component: UserList,
                 meta: {
@@ -1923,7 +1942,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/administrator/user/create',
+                path: '/administrator/user/create',
                 name: 'side-menu-administrator-user-create',
                 component: UserCreate,
                 meta: {
@@ -1931,7 +1950,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/administrator/user/edit/:ulid',
+                path: '/administrator/user/edit/:ulid',
                 name: 'side-menu-administrator-user-edit',
                 component: UserEdit,
                 meta: {
@@ -1944,11 +1963,11 @@ export default [
       },
       // devtool
       {
-        path: '/dashboard/devtool',
+        path: '/devtool',
         name: 'side-menu-devtool',
         children: [
           {
-            path: '/dashboard/devtool/devtool',
+            path: '/devtool',
             name: 'side-menu-devtool-devtool',
             component: DevTool,
             meta: {
@@ -1956,11 +1975,11 @@ export default [
             },
           },
           {
-            path: '/dashboard/devtool/playground',
+            path: '/devtool/playground',
             name: 'side-menu-devtool-playground',
             children: [
               {
-                path: '/dashboard/devtool/playground/p1',
+                path: '/devtool/playground/p1',
                 name: 'side-menu-devtool-playground-p1',
                 component: PlayOne,
                 meta: {
@@ -1968,7 +1987,7 @@ export default [
                 },
               },
               {
-                path: '/dashboard/devtool/playground/p2',
+                path: '/devtool/playground/p2',
                 name: 'side-menu-devtool-playground-p2',
                 component: PlayTwo,
                 meta: {
@@ -1981,7 +2000,7 @@ export default [
       },
       // error
       {
-        path: '/dashboard/error' + '/:code',
+        path: '/error' + '/:code',
         name: 'side-menu-error-code',
         component: ErrorView,
         meta: {
@@ -2008,3 +2027,4 @@ export default [
     },
   },
 ];
+

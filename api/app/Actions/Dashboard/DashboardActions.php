@@ -472,6 +472,13 @@ class DashboardActions
             'subMenu' => [],
         ];
 
+        $financialStatement = [
+            'icon' => 'FileBarChart',
+            'pageName' => 'side-menu-report-financial-statement',
+            'title' => 'components.menu.financial-statement',
+            'subMenu' => [],
+        ];
+
         $cashAccountWithRemainingBalance = [
             'icon' => 'WalletCards',
             'pageName' => 'side-menu-cash-account-with-remaining-balance',
@@ -582,6 +589,14 @@ class DashboardActions
             'title' => 'components.menu.journal-entry-detail',
         ];
 
+        $balanceSheet = [
+            'icon' => 'Scale',
+            'pageName' => 'side-menu-report-balance-sheet',
+            'title' => 'components.menu.balance-sheet',
+        ];
+
+        array_push($financialStatement['subMenu'], $balanceSheet, $journalEntryDetail);
+
         array_push(
             $stockAdjustment['subMenu'],
             $stockAdjustmentInItem,
@@ -604,7 +619,7 @@ class DashboardActions
             $purchaseOrderDownPaymentRefund
         );
 
-        array_push($root_array['subMenu'], $cashAccount, $product, $stockAdjustment, $purchaseOrder, $stockTransfer, $journalEntryDetail);
+        array_push($root_array['subMenu'], $financialStatement, $cashAccount, $product, $stockAdjustment, $purchaseOrder, $stockTransfer);
 
         array_push($menu, $root_array);
 

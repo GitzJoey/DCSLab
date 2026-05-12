@@ -119,14 +119,33 @@ defineExpose({
 </script>
 
 <template>
-  <template v-for="row in visibleRows" :key="String(getItemKey(row.item))">
-    <slot
-      name="row"
-      :item="row.item"
-      :depth="row.depth"
-      :has-children="row.hasChildren"
-      :is-expanded="row.isExpanded"
-      :toggle="() => toggleExpanded(row.item)"
-    />
-  </template>
+  <TransitionGroup name="tree-row">
+    <template v-for="row in visibleRows" :key="String(getItemKey(row.item))">
+      <slot
+        name="row"
+        :item="row.item"
+        :depth="row.depth"
+        :has-children="row.hasChildren"
+        :is-expanded="row.isExpanded"
+        :toggle="() => toggleExpanded(row.item)"
+      />
+    </template>
+  </TransitionGroup>
 </template>
+
+<style>
+.tree-row-enter-active,
+.tree-row-leave-active {
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.tree-row-enter-from,
+.tree-row-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+.tree-row-move {
+  transition: transform 180ms ease;
+}
+</style>

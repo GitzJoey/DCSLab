@@ -121,7 +121,7 @@
               @click="
                 (event) => {
                   event.preventDefault();
-                  linkTo(menu, router, setActiveMobileMenu);
+                  linkTo(menu, formattedMenu, router, setActiveMobileMenu);
                   setFormattedMenu([...formattedMenu]);
                 }
               "
@@ -157,7 +157,7 @@
                     @click="
                       (event) => {
                         event.preventDefault();
-                        linkTo(subMenu, router, setActiveMobileMenu);
+                        linkTo(subMenu, menu.subMenu ?? [], router, setActiveMobileMenu);
                         setFormattedMenu([...formattedMenu]);
                       }
                     "
@@ -199,7 +199,7 @@
                           @click="
                             (event) => {
                               event.preventDefault();
-                              linkTo(lastSubMenu, router, setActiveMobileMenu);
+                              linkTo(lastSubMenu, subMenu.subMenu ?? [], router, setActiveMobileMenu);
                               setFormattedMenu([...formattedMenu]);
                             }
                           "

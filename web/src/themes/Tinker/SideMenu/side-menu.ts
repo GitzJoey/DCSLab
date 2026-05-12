@@ -70,9 +70,31 @@ const nestedMenu = (menu: Array<Menu | 'divider'>, route: Route) => {
   return formattedMenu;
 };
 
-const linkTo = (menu: FormattedMenu, router: Router) => {
+const closeDropdown = (menu: FormattedMenu): void => {
+  menu.activeDropdown = false;
+
   if (menu.subMenu) {
-    menu.activeDropdown = !menu.activeDropdown;
+    menu.subMenu.forEach((subMenu) => closeDropdown(subMenu));
+  }
+};
+
+const closeSiblingDropdowns = (menus: Array<FormattedMenu | 'divider'>, currentMenu: FormattedMenu): void => {
+  menus.forEach((menu) => {
+    if (menu !== 'divider' && menu !== currentMenu) {
+      closeDropdown(menu);
+    }
+  });
+};
+
+const linkTo = (menu: FormattedMenu, menus: Array<FormattedMenu | 'divider'>, router: Router) => {
+  if (menu.subMenu) {
+    const nextActiveDropdown = !menu.activeDropdown;
+    closeSiblingDropdowns(menus, menu);
+    menu.activeDropdown = nextActiveDropdown;
+
+    if (!nextActiveDropdown) {
+      menu.subMenu.forEach((subMenu) => closeDropdown(subMenu));
+    }
   } else {
     if (menu.pageName !== undefined) {
       router.push({

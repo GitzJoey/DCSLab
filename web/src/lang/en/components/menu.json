@@ -65,6 +65,8 @@
   "purchase-additional-cost-payment": "Purchase Additional Cost Payment",
   "master-data": "Master Data",
   "report": "Report",
+  "financial-statement": "Financial Statement",
+  "balance-sheet": "Balance Sheet",
   "product-with-remaining-stock": "Products With Remaining Stock",
   "cash-account-with-remaining-balance": "Cash Accounts With Remaining Balance",
   "journal-entry-detail": "Journal Entry per Item",

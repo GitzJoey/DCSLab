@@ -4,6 +4,7 @@ namespace App\Actions\JournalEntry;
 
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\JournalEntry;
@@ -265,8 +266,8 @@ class JournalEntryActions
 
     private function calculateTotals(array $lines): array
     {
-        $totalDebit = collect($lines)->sum(fn ($line) => max((float) ($line['debit'] ?? 0), 0));
-        $totalCredit = collect($lines)->sum(fn ($line) => max((float) ($line['credit'] ?? 0), 0));
+        $totalDebit = collect($lines)->sum(fn (JournalEntryLineDTO $line) => $line->debit);
+        $totalCredit = collect($lines)->sum(fn (JournalEntryLineDTO $line) => $line->credit);
 
         return [$totalDebit, $totalCredit];
     }
@@ -277,11 +278,11 @@ class JournalEntryActions
             $journalEntryLine = new JournalEntryLine();
             $journalEntryLine->company_id = $journalEntry->company_id;
             $journalEntryLine->journal_entry_id = $journalEntry->id;
-            $journalEntryLine->chart_of_account_id = $line['chart_of_account_id'];
+            $journalEntryLine->chart_of_account_id = $line->chartOfAccountId;
             $journalEntryLine->sequence = $index + 1;
-            $journalEntryLine->debit = max((float) ($line['debit'] ?? 0), 0);
-            $journalEntryLine->credit = max((float) ($line['credit'] ?? 0), 0);
-            $journalEntryLine->remarks = $line['remarks'];
+            $journalEntryLine->debit = $line->debit;
+            $journalEntryLine->credit = $line->credit;
+            $journalEntryLine->remarks = $line->remarks;
             if (auth()->check()) {
                 $journalEntryLine->created_by = auth()->id();
                 $journalEntryLine->updated_by = auth()->id();

@@ -10,6 +10,7 @@ final class JournalEntryUpdateDTO
         public readonly string $date,
         public readonly ?string $referenceNo,
         public readonly ?string $remarks,
+        /** @var JournalEntryLineDTO[] */
         public readonly array $lines,
     ) {
     }

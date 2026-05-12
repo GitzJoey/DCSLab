@@ -1,0 +1,31 @@
+{
+  "page_title": "Neraca",
+  "table": {
+    "title": "Daftar Neraca"
+  },
+  "fields": {
+    "end_date": "Sampai Tanggal",
+    "code": "Kode",
+    "name": "Akun",
+    "debit": "Debit",
+    "credit": "Kredit",
+    "balance": "Saldo"
+  },
+  "actions": {
+    "expand_all": "Buka Semua",
+    "collapse_all": "Tutup Semua"
+  },
+  "labels": {
+    "group_total": "Total Grup",
+    "direct_mutation": "Mutasi Langsung"
+  },
+  "summary": {
+    "asset": "Total Aset",
+    "liability": "Total Liabilitas",
+    "equity": "Total Ekuitas",
+    "liability_and_equity": "Total Liabilitas + Ekuitas",
+    "difference": "Selisih Neraca",
+    "status_balanced": "Neraca Balance",
+    "status_unbalanced": "Neraca Belum Balance"
+  }
+}

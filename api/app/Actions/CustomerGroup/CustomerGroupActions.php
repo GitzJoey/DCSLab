@@ -2,6 +2,9 @@
 
 namespace App\Actions\CustomerGroup;
 
+use App\Actions\ChartOfAccount\ChartOfAccountActions;
+use App\DTOs\ChartOfAccountCreateDTO;
+use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\CustomerGroupCreateDTO;
 use App\DTOs\CustomerGroupUpdateDTO;
 use App\DTOs\ExecuteDTO;
@@ -11,6 +14,7 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class CustomerGroupActions
 {
@@ -21,8 +25,9 @@ class CustomerGroupActions
         'company',
     ];
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ChartOfAccountActions $chartOfAccountActions,
+    ) {
     }
 
     public function readAny(
@@ -160,6 +165,27 @@ class CustomerGroupActions
             $customerGroup->remarks = $data->remarks;
             $customerGroup->save();
 
+            $parentChartOfAccount = $customerGroup->company->assetCurrentAccountReceivableChartOfAccount;
+            if (! $parentChartOfAccount) {
+                throw new InvalidArgumentException('Customer group chart of account parent must exist in company.');
+            }
+
+            $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                companyId: $customerGroup->company_id,
+                scope: 'user',
+                systemKey: null,
+                parentId: $parentChartOfAccount->id,
+                sourceType: CustomerGroup::class,
+                sourceId: $customerGroup->id,
+                code: $parentChartOfAccount->code.'.'.$customerGroup->code,
+                name: $customerGroup->name,
+                normalBalance: 'debit',
+                isGroup: true,
+                isActive: true,
+                remarks: $customerGroup->remarks,
+            );
+            $this->chartOfAccountActions->create($chartOfAccountDTO);
+
             $this->flushCache();
 
             return $customerGroup;
@@ -196,6 +222,59 @@ class CustomerGroupActions
             $customerGroup->remarks = $data->remarks;
             $customerGroup->save();
 
+            $parentChartOfAccount = $customerGroup->company->assetCurrentAccountReceivableChartOfAccount;
+            if (! $parentChartOfAccount) {
+                throw new InvalidArgumentException('Customer group chart of account parent must exist in company.');
+            }
+
+            $chartOfAccount = $customerGroup->chartOfAccount;
+            if ($chartOfAccount) {
+                $chartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $parentChartOfAccount->id,
+                    code: $parentChartOfAccount->code.'.'.$customerGroup->code,
+                    name: $customerGroup->name,
+                    normalBalance: 'debit',
+                    isGroup: true,
+                    isActive: true,
+                    remarks: $customerGroup->remarks,
+                );
+                $chartOfAccount = $this->chartOfAccountActions->update($chartOfAccount, $chartOfAccountDTO);
+            } else {
+                $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                    companyId: $customerGroup->company_id,
+                    scope: 'user',
+                    systemKey: null,
+                    parentId: $parentChartOfAccount->id,
+                    sourceType: CustomerGroup::class,
+                    sourceId: $customerGroup->id,
+                    code: $parentChartOfAccount->code.'.'.$customerGroup->code,
+                    name: $customerGroup->name,
+                    normalBalance: 'debit',
+                    isGroup: true,
+                    isActive: true,
+                    remarks: $customerGroup->remarks,
+                );
+                $chartOfAccount = $this->chartOfAccountActions->create($chartOfAccountDTO);
+            }
+
+            foreach ($customerGroup->customers as $customer) {
+                $customerChartOfAccount = $customer->chartOfAccount;
+                if (! $customerChartOfAccount) {
+                    continue;
+                }
+
+                $customerChartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $chartOfAccount->id,
+                    code: $chartOfAccount->code.'.'.$customer->code,
+                    name: $customer->name,
+                    normalBalance: 'debit',
+                    isGroup: false,
+                    isActive: $customer->status === \App\Enums\RecordStatusEnum::ACTIVE,
+                    remarks: $customer->remarks,
+                );
+                $this->chartOfAccountActions->update($customerChartOfAccount, $customerChartOfAccountDTO);
+            }
+
             $this->flushCache();
 
             return $customerGroup->refresh();
@@ -215,6 +294,18 @@ class CustomerGroupActions
         $retval = false;
 
         try {
+            $chartOfAccount = $customerGroup->chartOfAccount;
+            if ($chartOfAccount) {
+                foreach ($customerGroup->customers as $customer) {
+                    $customerChartOfAccount = $customer->chartOfAccount;
+                    if ($customerChartOfAccount) {
+                        $this->chartOfAccountActions->delete($customerChartOfAccount);
+                    }
+                }
+
+                $this->chartOfAccountActions->delete($chartOfAccount);
+            }
+
             $retval = $customerGroup->delete();
 
             $this->flushCache();

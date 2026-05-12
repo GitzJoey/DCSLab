@@ -50,6 +50,7 @@ import debt_creditor from './id/views/debt_creditor.json';
 import income_category from './id/views/income_category.json';
 import chart_of_account from './id/views/chart_of_account.json';
 import journal_entry from './id/views/journal_entry.json';
+import balance_sheet from './id/views/balance_sheet.json';
 import product_service from './id/views/product_service.json';
 import product from './id/views/product.json';
 import supplier from './id/views/supplier.json';
@@ -126,6 +127,7 @@ export default {
     income_category: income_category,
     chart_of_account: chart_of_account,
     journal_entry: journal_entry,
+    balance_sheet: balance_sheet,
     stock_adjustment_category: stock_adjustment_category,
     stock_adjustment: stock_adjustment,
     stock_adjustment_in_item: stock_adjustment_in_item,
