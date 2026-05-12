@@ -3,10 +3,14 @@
 namespace App\Actions\PrepaidExpensePayment;
 
 use App\Actions\CashTransaction\CashTransactionActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\Actions\PrepaidExpense\PrepaidExpenseActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\DTOs\PrepaidExpensePaymentCreateDTO;
 use App\DTOs\PrepaidExpensePaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
@@ -15,6 +19,7 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class PrepaidExpensePaymentActions
 {
@@ -30,6 +35,7 @@ class PrepaidExpensePaymentActions
 
     public function __construct(
         private readonly CashTransactionActions $cashTransactionActions,
+        private readonly JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -212,6 +218,42 @@ class PrepaidExpensePaymentActions
                 data: CashTransactionCreateDTO::fromPrepaidExpensePayment($prepaidExpensePayment)
             );
 
+            $payableChartOfAccount = $prepaidExpensePayment->company->liabilityAccountPayableChartOfAccount;
+            if (! $payableChartOfAccount) {
+                throw new InvalidArgumentException('Prepaid expense payment payable chart of account must exist.');
+            }
+
+            $cashAccountChartOfAccount = $prepaidExpensePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Prepaid expense payment cash account chart of account must exist.');
+            }
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $prepaidExpensePayment->company_id,
+                branchId: $prepaidExpensePayment->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $prepaidExpensePayment->date,
+                sourceType: PrepaidExpensePayment::class,
+                sourceId: $prepaidExpensePayment->id,
+                referenceNo: $prepaidExpensePayment->code,
+                remarks: $prepaidExpensePayment->remarks,
+                lines: [
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $payableChartOfAccount->id,
+                        debit: (float) $prepaidExpensePayment->amount,
+                        credit: 0,
+                        remarks: $prepaidExpensePayment->remarks,
+                    ),
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                        debit: 0,
+                        credit: (float) $prepaidExpensePayment->amount,
+                        remarks: $prepaidExpensePayment->remarks,
+                    ),
+                ],
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             if ($updateParentSummary) {
                 PrepaidExpenseActions::updateSummary($prepaidExpensePayment->prepaidExpense);
                 $prepaidExpensePayment->refresh();
@@ -253,6 +295,68 @@ class PrepaidExpensePaymentActions
                 );
             }
 
+            $payableChartOfAccount = $prepaidExpensePayment->company->liabilityAccountPayableChartOfAccount;
+            if (! $payableChartOfAccount) {
+                throw new InvalidArgumentException('Prepaid expense payment payable chart of account must exist.');
+            }
+
+            $cashAccountChartOfAccount = $prepaidExpensePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Prepaid expense payment cash account chart of account must exist.');
+            }
+
+            $journalEntry = $prepaidExpensePayment->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $prepaidExpensePayment->company_id,
+                    branchId: $prepaidExpensePayment->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $prepaidExpensePayment->date,
+                    sourceType: PrepaidExpensePayment::class,
+                    sourceId: $prepaidExpensePayment->id,
+                    referenceNo: $prepaidExpensePayment->code,
+                    remarks: $prepaidExpensePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $payableChartOfAccount->id,
+                            debit: (float) $prepaidExpensePayment->amount,
+                            credit: 0,
+                            remarks: $prepaidExpensePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $prepaidExpensePayment->amount,
+                            remarks: $prepaidExpensePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $prepaidExpensePayment->branch_id,
+                    code: $journalEntry->code,
+                    date: $prepaidExpensePayment->date,
+                    referenceNo: $prepaidExpensePayment->code,
+                    remarks: $prepaidExpensePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $payableChartOfAccount->id,
+                            debit: (float) $prepaidExpensePayment->amount,
+                            credit: 0,
+                            remarks: $prepaidExpensePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $prepaidExpensePayment->amount,
+                            remarks: $prepaidExpensePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             if ($updateParentSummary) {
                 PrepaidExpenseActions::updateSummary($prepaidExpensePayment->prepaidExpense);
                 $prepaidExpensePayment->refresh();
@@ -282,6 +386,9 @@ class PrepaidExpensePaymentActions
             if ($cashTransaction) {
                 $this->cashTransactionActions->delete($cashTransaction);
             }
+
+            $journalEntry = $prepaidExpensePayment->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $prepaidExpensePayment->delete();
 

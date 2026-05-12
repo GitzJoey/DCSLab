@@ -4,6 +4,7 @@ namespace App\Actions\Debt;
 
 use App\Actions\CashTransaction\CashTransactionActions;
 use App\Actions\DebtPayment\DebtPaymentActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\DebtCreateDTO;
@@ -11,12 +12,16 @@ use App\DTOs\DebtPaymentCreateDTO;
 use App\DTOs\DebtPaymentUpdateDTO;
 use App\DTOs\DebtUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\Debt;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class DebtActions
 {
@@ -45,6 +50,7 @@ class DebtActions
     public function __construct(
         private readonly CashTransactionActions $cashTransactionActions,
         private readonly DebtPaymentActions $debtPaymentActions,
+        private readonly JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -290,6 +296,75 @@ class DebtActions
                 $this->debtPaymentActions->create($dto, false);
             }
 
+            $lines = [];
+
+            if ((float) $debt->direct_amount_received > 0) {
+                $cashAccountChartOfAccount = $debt->cashAccount?->chartOfAccount;
+                if (! $cashAccountChartOfAccount) {
+                    throw new InvalidArgumentException('Debt cash account chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $cashAccountChartOfAccount->id,
+                    debit: (float) $debt->direct_amount_received,
+                    credit: 0,
+                    remarks: $debt->remarks,
+                );
+            }
+
+            if ((float) $debt->opening_amount_due > 0) {
+                $openingCapitalChartOfAccount = $debt->company->equityCapitalOpeningCapitalChartOfAccount;
+                if (! $openingCapitalChartOfAccount) {
+                    throw new InvalidArgumentException('Debt opening capital chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $openingCapitalChartOfAccount->id,
+                    debit: (float) $debt->opening_amount_due,
+                    credit: 0,
+                    remarks: $debt->remarks,
+                );
+            }
+
+            if ($debt->supplier_id) {
+                $partyChartOfAccount = $debt->supplier?->chartOfAccount;
+                if (! $partyChartOfAccount) {
+                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
+                }
+            } elseif ($debt->creditor_id) {
+                $partyChartOfAccount = $debt->creditor?->chartOfAccount;
+                if (! $partyChartOfAccount) {
+                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
+                }
+            } else {
+                $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
+            }
+
+            if (! $partyChartOfAccount) {
+                throw new InvalidArgumentException('Debt payable chart of account must exist.');
+            }
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $debt->company_id,
+                branchId: $debt->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $debt->date,
+                sourceType: Debt::class,
+                sourceId: $debt->id,
+                referenceNo: $debt->code,
+                remarks: $debt->remarks,
+                lines: [
+                    ...$lines,
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $partyChartOfAccount->id,
+                        debit: 0,
+                        credit: (float) $debt->amount_total,
+                        remarks: $debt->remarks,
+                    ),
+                ],
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             self::updateSummary($debt);
 
             $this->flushCache();
@@ -368,6 +443,96 @@ class DebtActions
                 }
             }
 
+            $lines = [];
+
+            if ((float) $debt->direct_amount_received > 0) {
+                $cashAccountChartOfAccount = $debt->cashAccount?->chartOfAccount;
+                if (! $cashAccountChartOfAccount) {
+                    throw new InvalidArgumentException('Debt cash account chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $cashAccountChartOfAccount->id,
+                    debit: (float) $debt->direct_amount_received,
+                    credit: 0,
+                    remarks: $debt->remarks,
+                );
+            }
+
+            if ((float) $debt->opening_amount_due > 0) {
+                $openingCapitalChartOfAccount = $debt->company->equityCapitalOpeningCapitalChartOfAccount;
+                if (! $openingCapitalChartOfAccount) {
+                    throw new InvalidArgumentException('Debt opening capital chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $openingCapitalChartOfAccount->id,
+                    debit: (float) $debt->opening_amount_due,
+                    credit: 0,
+                    remarks: $debt->remarks,
+                );
+            }
+
+            if ($debt->supplier_id) {
+                $partyChartOfAccount = $debt->supplier?->chartOfAccount;
+                if (! $partyChartOfAccount) {
+                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
+                }
+            } elseif ($debt->creditor_id) {
+                $partyChartOfAccount = $debt->creditor?->chartOfAccount;
+                if (! $partyChartOfAccount) {
+                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
+                }
+            } else {
+                $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
+            }
+
+            if (! $partyChartOfAccount) {
+                throw new InvalidArgumentException('Debt payable chart of account must exist.');
+            }
+
+            $journalEntry = $debt->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $debt->company_id,
+                    branchId: $debt->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $debt->date,
+                    sourceType: Debt::class,
+                    sourceId: $debt->id,
+                    referenceNo: $debt->code,
+                    remarks: $debt->remarks,
+                    lines: [
+                        ...$lines,
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $partyChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $debt->amount_total,
+                            remarks: $debt->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $debt->branch_id,
+                    code: $journalEntry->code,
+                    date: $debt->date,
+                    referenceNo: $debt->code,
+                    remarks: $debt->remarks,
+                    lines: [
+                        ...$lines,
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $partyChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $debt->amount_total,
+                            remarks: $debt->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             self::updateSummary($debt);
 
             $this->flushCache();
@@ -414,6 +579,9 @@ class DebtActions
             foreach ($debt->payments as $payment) {
                 $this->debtPaymentActions->delete($payment, false);
             }
+
+            $journalEntry = $debt->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $debt->delete();
 

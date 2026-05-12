@@ -155,4 +155,9 @@ class PrepaidIncome extends Model
     {
         return $this->morphOne(CashTransaction::class, 'referable');
     }
+
+    public function journalEntry()
+    {
+        return $this->morphOne(JournalEntry::class, 'source');
+    }
 }

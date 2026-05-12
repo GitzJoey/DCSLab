@@ -3,22 +3,29 @@
 namespace App\Actions\PrepaidIncome;
 
 use App\Actions\CashTransaction\CashTransactionActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\Actions\PrepaidIncomeImage\PrepaidIncomeImageActions;
 use App\Actions\PrepaidIncomePayment\PrepaidIncomePaymentActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\DTOs\PrepaidIncomeCreateDTO;
 use App\DTOs\PrepaidIncomeImageDTO;
 use App\DTOs\PrepaidIncomePaymentCreateDTO;
 use App\DTOs\PrepaidIncomePaymentUpdateDTO;
 use App\DTOs\PrepaidIncomeUpdateDTO;
+use App\Enums\ChartOfAccountSystemKeyEnum;
 use App\Helpers\TimezoneHelper;
+use App\Models\ChartOfAccount;
 use App\Models\PrepaidIncome;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class PrepaidIncomeActions
 {
@@ -47,6 +54,7 @@ class PrepaidIncomeActions
         private readonly CashTransactionActions $cashTransactionActions,
         private readonly PrepaidIncomeImageActions $prepaidIncomeImageActions,
         private readonly PrepaidIncomePaymentActions $prepaidIncomePaymentActions,
+        private readonly JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -272,6 +280,63 @@ class PrepaidIncomeActions
                 $this->prepaidIncomeImageActions->attachByHash($prepaidIncome, $prepaidIncomeImageDTO);
             }
 
+            $lines = [];
+
+            if ((float) $prepaidIncome->amount_paid_immediately > 0) {
+                $cashAccountChartOfAccount = $prepaidIncome->paidImmediatelyCashAccount?->chartOfAccount;
+                if (! $cashAccountChartOfAccount) {
+                    throw new InvalidArgumentException('Prepaid income paid immediately cash account chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $cashAccountChartOfAccount->id,
+                    debit: (float) $prepaidIncome->amount_paid_immediately,
+                    credit: 0,
+                    remarks: $prepaidIncome->remarks,
+                );
+            }
+
+            if ((float) $prepaidIncome->amount_receivable > 0) {
+                $receivableChartOfAccount = $prepaidIncome->company->assetCurrentAccountReceivableChartOfAccount;
+                if (! $receivableChartOfAccount) {
+                    throw new InvalidArgumentException('Prepaid income receivable chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $receivableChartOfAccount->id,
+                    debit: (float) $prepaidIncome->amount_receivable,
+                    credit: 0,
+                    remarks: $prepaidIncome->remarks,
+                );
+            }
+
+            $deferredIncomeChartOfAccount = ChartOfAccount::where('company_id', $prepaidIncome->company_id)
+                ->where('system_key', ChartOfAccountSystemKeyEnum::LIABILITY_DEFERRED_INCOME)
+                ->first();
+            if (! $deferredIncomeChartOfAccount) {
+                throw new InvalidArgumentException('Prepaid income deferred income chart of account must exist.');
+            }
+
+            $lines[] = new JournalEntryLineDTO(
+                chartOfAccountId: $deferredIncomeChartOfAccount->id,
+                debit: 0,
+                credit: (float) $prepaidIncome->amount_total,
+                remarks: $prepaidIncome->remarks,
+            );
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $prepaidIncome->company_id,
+                branchId: $prepaidIncome->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $prepaidIncome->date,
+                sourceType: PrepaidIncome::class,
+                sourceId: $prepaidIncome->id,
+                referenceNo: $prepaidIncome->code,
+                remarks: $prepaidIncome->remarks,
+                lines: $lines,
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             self::updateSummary($prepaidIncome);
 
             $this->flushCache();
@@ -362,6 +427,76 @@ class PrepaidIncomeActions
                 $this->prepaidIncomeImageActions->attachByHash($prepaidIncome, $prepaidIncomeImageDTO);
             }
 
+            $lines = [];
+
+            if ((float) $prepaidIncome->amount_paid_immediately > 0) {
+                $cashAccountChartOfAccount = $prepaidIncome->paidImmediatelyCashAccount?->chartOfAccount;
+                if (! $cashAccountChartOfAccount) {
+                    throw new InvalidArgumentException('Prepaid income paid immediately cash account chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $cashAccountChartOfAccount->id,
+                    debit: (float) $prepaidIncome->amount_paid_immediately,
+                    credit: 0,
+                    remarks: $prepaidIncome->remarks,
+                );
+            }
+
+            if ((float) $prepaidIncome->amount_receivable > 0) {
+                $receivableChartOfAccount = $prepaidIncome->company->assetCurrentAccountReceivableChartOfAccount;
+                if (! $receivableChartOfAccount) {
+                    throw new InvalidArgumentException('Prepaid income receivable chart of account must exist.');
+                }
+
+                $lines[] = new JournalEntryLineDTO(
+                    chartOfAccountId: $receivableChartOfAccount->id,
+                    debit: (float) $prepaidIncome->amount_receivable,
+                    credit: 0,
+                    remarks: $prepaidIncome->remarks,
+                );
+            }
+
+            $deferredIncomeChartOfAccount = ChartOfAccount::where('company_id', $prepaidIncome->company_id)
+                ->where('system_key', ChartOfAccountSystemKeyEnum::LIABILITY_DEFERRED_INCOME)
+                ->first();
+            if (! $deferredIncomeChartOfAccount) {
+                throw new InvalidArgumentException('Prepaid income deferred income chart of account must exist.');
+            }
+
+            $lines[] = new JournalEntryLineDTO(
+                chartOfAccountId: $deferredIncomeChartOfAccount->id,
+                debit: 0,
+                credit: (float) $prepaidIncome->amount_total,
+                remarks: $prepaidIncome->remarks,
+            );
+
+            $journalEntry = $prepaidIncome->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $prepaidIncome->company_id,
+                    branchId: $prepaidIncome->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $prepaidIncome->date,
+                    sourceType: PrepaidIncome::class,
+                    sourceId: $prepaidIncome->id,
+                    referenceNo: $prepaidIncome->code,
+                    remarks: $prepaidIncome->remarks,
+                    lines: $lines,
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $prepaidIncome->branch_id,
+                    code: $journalEntry->code,
+                    date: $prepaidIncome->date,
+                    referenceNo: $prepaidIncome->code,
+                    remarks: $prepaidIncome->remarks,
+                    lines: $lines,
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             self::updateSummary($prepaidIncome);
 
             $this->flushCache();
@@ -401,6 +536,9 @@ class PrepaidIncomeActions
             if ($cashTransaction) {
                 $this->cashTransactionActions->delete($cashTransaction);
             }
+
+            $journalEntry = $prepaidIncome->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $prepaidIncome->delete();
 

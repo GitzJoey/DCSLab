@@ -4,17 +4,22 @@ namespace App\Actions\ExpensePayment;
 
 use App\Actions\CashTransaction\CashTransactionActions;
 use App\Actions\Expense\ExpenseActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExpensePaymentCreateDTO;
 use App\DTOs\ExpensePaymentUpdateDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\ExpensePayment;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class ExpensePaymentActions
 {
@@ -30,6 +35,7 @@ class ExpensePaymentActions
 
     public function __construct(
         private readonly CashTransactionActions $cashTransactionActions,
+        private readonly JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -212,6 +218,42 @@ class ExpensePaymentActions
                 data: CashTransactionCreateDTO::fromExpensePayment($expensePayment)
             );
 
+            $payableChartOfAccount = $expensePayment->company->liabilityAccountPayableChartOfAccount;
+            if (! $payableChartOfAccount) {
+                throw new InvalidArgumentException('Expense payment payable chart of account must exist.');
+            }
+
+            $cashAccountChartOfAccount = $expensePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Expense payment cash account chart of account must exist.');
+            }
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $expensePayment->company_id,
+                branchId: $expensePayment->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $expensePayment->date,
+                sourceType: ExpensePayment::class,
+                sourceId: $expensePayment->id,
+                referenceNo: $expensePayment->code,
+                remarks: $expensePayment->remarks,
+                lines: [
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $payableChartOfAccount->id,
+                        debit: (float) $expensePayment->amount,
+                        credit: 0,
+                        remarks: $expensePayment->remarks,
+                    ),
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                        debit: 0,
+                        credit: (float) $expensePayment->amount,
+                        remarks: $expensePayment->remarks,
+                    ),
+                ],
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             if ($updateParentSummary) {
                 ExpenseActions::updateSummary($expensePayment->expense);
                 $expensePayment->refresh();
@@ -253,6 +295,68 @@ class ExpensePaymentActions
                 );
             }
 
+            $payableChartOfAccount = $expensePayment->company->liabilityAccountPayableChartOfAccount;
+            if (! $payableChartOfAccount) {
+                throw new InvalidArgumentException('Expense payment payable chart of account must exist.');
+            }
+
+            $cashAccountChartOfAccount = $expensePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Expense payment cash account chart of account must exist.');
+            }
+
+            $journalEntry = $expensePayment->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $expensePayment->company_id,
+                    branchId: $expensePayment->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $expensePayment->date,
+                    sourceType: ExpensePayment::class,
+                    sourceId: $expensePayment->id,
+                    referenceNo: $expensePayment->code,
+                    remarks: $expensePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $payableChartOfAccount->id,
+                            debit: (float) $expensePayment->amount,
+                            credit: 0,
+                            remarks: $expensePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $expensePayment->amount,
+                            remarks: $expensePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $expensePayment->branch_id,
+                    code: $journalEntry->code,
+                    date: $expensePayment->date,
+                    referenceNo: $expensePayment->code,
+                    remarks: $expensePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $payableChartOfAccount->id,
+                            debit: (float) $expensePayment->amount,
+                            credit: 0,
+                            remarks: $expensePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $expensePayment->amount,
+                            remarks: $expensePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             if ($updateParentSummary) {
                 ExpenseActions::updateSummary($expensePayment->expense);
                 $expensePayment->refresh();
@@ -282,6 +386,9 @@ class ExpensePaymentActions
             if ($cashTransaction) {
                 $this->cashTransactionActions->delete($cashTransaction);
             }
+
+            $journalEntry = $expensePayment->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $expensePayment->delete();
 

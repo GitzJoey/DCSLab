@@ -24,6 +24,7 @@ enum ChartOfAccountSystemKeyEnum: string
     case LIABILITY_ROOT = 'liability_root';
     case LIABILITY_ACCOUNT_PAYABLE = 'liability_account_payable';
     case LIABILITY_TAX_PAYABLE = 'liability_tax_payable';
+    case LIABILITY_DEFERRED_INCOME = 'liability_deferred_income';
 
     case EQUITY_ROOT = 'equity_root';
     case EQUITY_CAPITAL = 'equity_capital';

@@ -3,10 +3,14 @@
 namespace App\Actions\ReceivablePayment;
 
 use App\Actions\CashTransaction\CashTransactionActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\Actions\Receivable\ReceivableActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\DTOs\ReceivablePaymentCreateDTO;
 use App\DTOs\ReceivablePaymentUpdateDTO;
 use App\Helpers\TimezoneHelper;
@@ -15,6 +19,7 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class ReceivablePaymentActions
 {
@@ -31,6 +36,7 @@ class ReceivablePaymentActions
 
     public function __construct(
         private readonly CashTransactionActions $cashTransactionActions,
+        private readonly JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -213,6 +219,45 @@ class ReceivablePaymentActions
                 data: CashTransactionCreateDTO::fromReceivablePayment($receivablePayment)
             );
 
+            $customerChartOfAccount = $receivablePayment->receivable->customer?->chartOfAccount;
+            if (! $customerChartOfAccount) {
+                $customerChartOfAccount = $receivablePayment->company->assetCurrentAccountReceivableChartOfAccount;
+            }
+            if (! $customerChartOfAccount) {
+                throw new InvalidArgumentException('Receivable payment receivable chart of account must exist.');
+            }
+
+            $cashAccountChartOfAccount = $receivablePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Receivable payment cash account chart of account must exist.');
+            }
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $receivablePayment->company_id,
+                branchId: $receivablePayment->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $receivablePayment->date,
+                sourceType: ReceivablePayment::class,
+                sourceId: $receivablePayment->id,
+                referenceNo: $receivablePayment->code,
+                remarks: $receivablePayment->remarks,
+                lines: [
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                        debit: (float) $receivablePayment->amount,
+                        credit: 0,
+                        remarks: $receivablePayment->remarks,
+                    ),
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $customerChartOfAccount->id,
+                        debit: 0,
+                        credit: (float) $receivablePayment->amount,
+                        remarks: $receivablePayment->remarks,
+                    ),
+                ],
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             if ($updateParentSummary) {
                 ReceivableActions::updateSummary($receivablePayment->receivable);
                 $receivablePayment->refresh();
@@ -254,6 +299,71 @@ class ReceivablePaymentActions
                 );
             }
 
+            $customerChartOfAccount = $receivablePayment->receivable->customer?->chartOfAccount;
+            if (! $customerChartOfAccount) {
+                $customerChartOfAccount = $receivablePayment->company->assetCurrentAccountReceivableChartOfAccount;
+            }
+            if (! $customerChartOfAccount) {
+                throw new InvalidArgumentException('Receivable payment receivable chart of account must exist.');
+            }
+
+            $cashAccountChartOfAccount = $receivablePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Receivable payment cash account chart of account must exist.');
+            }
+
+            $journalEntry = $receivablePayment->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $receivablePayment->company_id,
+                    branchId: $receivablePayment->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $receivablePayment->date,
+                    sourceType: ReceivablePayment::class,
+                    sourceId: $receivablePayment->id,
+                    referenceNo: $receivablePayment->code,
+                    remarks: $receivablePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: (float) $receivablePayment->amount,
+                            credit: 0,
+                            remarks: $receivablePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $customerChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $receivablePayment->amount,
+                            remarks: $receivablePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $receivablePayment->branch_id,
+                    code: $journalEntry->code,
+                    date: $receivablePayment->date,
+                    referenceNo: $receivablePayment->code,
+                    remarks: $receivablePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: (float) $receivablePayment->amount,
+                            credit: 0,
+                            remarks: $receivablePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $customerChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $receivablePayment->amount,
+                            remarks: $receivablePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             if ($updateParentSummary) {
                 ReceivableActions::updateSummary($receivablePayment->receivable);
                 $receivablePayment->refresh();
@@ -283,6 +393,9 @@ class ReceivablePaymentActions
             if ($cashTransaction) {
                 $this->cashTransactionActions->delete($cashTransaction);
             }
+
+            $journalEntry = $receivablePayment->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $receivablePayment->delete();
 

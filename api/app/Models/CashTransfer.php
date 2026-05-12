@@ -131,4 +131,9 @@ class CashTransfer extends Model
         return $this->morphOne(CashTransaction::class, 'referable')
             ->where('cash_account_id', $this->destination_cash_account_id);
     }
+
+    public function journalEntry()
+    {
+        return $this->morphOne(JournalEntry::class, 'source');
+    }
 }

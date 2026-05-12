@@ -3,16 +3,21 @@
 namespace App\Actions\CashTransfer;
 
 use App\Actions\CashTransaction\CashTransactionActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\CashTransferCreateDTO;
 use App\DTOs\CashTransferUpdateDTO;
 use App\DTOs\ExecuteDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\Models\CashTransfer;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class CashTransferActions
 {
@@ -27,7 +32,8 @@ class CashTransferActions
     ];
 
     public function __construct(
-        private CashTransactionActions $cashTransactionActions
+        private CashTransactionActions $cashTransactionActions,
+        private JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -150,6 +156,42 @@ class CashTransferActions
             $dto = CashTransactionCreateDTO::fromCashTransferDestination($cashTransfer);
             $this->cashTransactionActions->create($dto);
 
+            $sourceChartOfAccount = $cashTransfer->sourceCashAccount->chartOfAccount;
+            if (! $sourceChartOfAccount) {
+                throw new InvalidArgumentException('Cash transfer source cash account chart of account must exist.');
+            }
+
+            $destinationChartOfAccount = $cashTransfer->destinationCashAccount->chartOfAccount;
+            if (! $destinationChartOfAccount) {
+                throw new InvalidArgumentException('Cash transfer destination cash account chart of account must exist.');
+            }
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $cashTransfer->company_id,
+                branchId: $cashTransfer->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $cashTransfer->date,
+                sourceType: CashTransfer::class,
+                sourceId: $cashTransfer->id,
+                referenceNo: $cashTransfer->code,
+                remarks: $cashTransfer->remarks,
+                lines: [
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $destinationChartOfAccount->id,
+                        debit: (float) $cashTransfer->amount,
+                        credit: 0,
+                        remarks: $cashTransfer->remarks,
+                    ),
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $sourceChartOfAccount->id,
+                        debit: 0,
+                        credit: (float) $cashTransfer->amount,
+                        remarks: $cashTransfer->remarks,
+                    ),
+                ],
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             $this->flushCache();
 
             return $cashTransfer;
@@ -194,6 +236,68 @@ class CashTransferActions
                 $this->cashTransactionActions->update($cashTransactionDestination, $dto);
             }
 
+            $sourceChartOfAccount = $cashTransfer->sourceCashAccount->chartOfAccount;
+            if (! $sourceChartOfAccount) {
+                throw new InvalidArgumentException('Cash transfer source cash account chart of account must exist.');
+            }
+
+            $destinationChartOfAccount = $cashTransfer->destinationCashAccount->chartOfAccount;
+            if (! $destinationChartOfAccount) {
+                throw new InvalidArgumentException('Cash transfer destination cash account chart of account must exist.');
+            }
+
+            $journalEntry = $cashTransfer->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $cashTransfer->company_id,
+                    branchId: $cashTransfer->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $cashTransfer->date,
+                    sourceType: CashTransfer::class,
+                    sourceId: $cashTransfer->id,
+                    referenceNo: $cashTransfer->code,
+                    remarks: $cashTransfer->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $destinationChartOfAccount->id,
+                            debit: (float) $cashTransfer->amount,
+                            credit: 0,
+                            remarks: $cashTransfer->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $sourceChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $cashTransfer->amount,
+                            remarks: $cashTransfer->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $cashTransfer->branch_id,
+                    code: $journalEntry->code,
+                    date: $cashTransfer->date,
+                    referenceNo: $cashTransfer->code,
+                    remarks: $cashTransfer->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $destinationChartOfAccount->id,
+                            debit: (float) $cashTransfer->amount,
+                            credit: 0,
+                            remarks: $cashTransfer->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $sourceChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $cashTransfer->amount,
+                            remarks: $cashTransfer->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             $this->flushCache();
 
             return $cashTransfer->refresh();
@@ -221,6 +325,9 @@ class CashTransferActions
             if ($cashTransactionDestination) {
                 $this->cashTransactionActions->delete($cashTransactionDestination);
             }
+
+            $journalEntry = $cashTransfer->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $cashTransfer->delete();
 

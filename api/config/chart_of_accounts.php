@@ -133,6 +133,14 @@ return [
                 'normal_balance' => 'credit',
                 'is_group' => false,
             ],
+            'deferred_income' => [
+                'system_key' => ChartOfAccountSystemKeyEnum::LIABILITY_DEFERRED_INCOME->value,
+                'code' => '02.03',
+                'name' => 'Pendapatan Diterima Dimuka',
+                'account_type' => 'liability',
+                'normal_balance' => 'credit',
+                'is_group' => false,
+            ],
         ],
     ],
     'equity_root' => [

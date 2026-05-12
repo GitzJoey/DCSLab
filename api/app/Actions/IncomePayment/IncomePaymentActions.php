@@ -4,17 +4,22 @@ namespace App\Actions\IncomePayment;
 
 use App\Actions\CashTransaction\CashTransactionActions;
 use App\Actions\Income\IncomeActions;
+use App\Actions\JournalEntry\JournalEntryActions;
 use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\IncomePaymentCreateDTO;
 use App\DTOs\IncomePaymentUpdateDTO;
+use App\DTOs\JournalEntryCreateDTO;
+use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\IncomePayment;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class IncomePaymentActions
 {
@@ -30,6 +35,7 @@ class IncomePaymentActions
 
     public function __construct(
         private readonly CashTransactionActions $cashTransactionActions,
+        private readonly JournalEntryActions $journalEntryActions,
     ) {
     }
 
@@ -212,6 +218,42 @@ class IncomePaymentActions
                 data: CashTransactionCreateDTO::fromIncomePayment($incomePayment)
             );
 
+            $cashAccountChartOfAccount = $incomePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Income payment cash account chart of account must exist.');
+            }
+
+            $receivableChartOfAccount = $incomePayment->company->assetCurrentAccountReceivableChartOfAccount;
+            if (! $receivableChartOfAccount) {
+                throw new InvalidArgumentException('Income payment receivable chart of account must exist.');
+            }
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $incomePayment->company_id,
+                branchId: $incomePayment->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $incomePayment->date,
+                sourceType: IncomePayment::class,
+                sourceId: $incomePayment->id,
+                referenceNo: $incomePayment->code,
+                remarks: $incomePayment->remarks,
+                lines: [
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                        debit: (float) $incomePayment->amount,
+                        credit: 0,
+                        remarks: $incomePayment->remarks,
+                    ),
+                    new JournalEntryLineDTO(
+                        chartOfAccountId: $receivableChartOfAccount->id,
+                        debit: 0,
+                        credit: (float) $incomePayment->amount,
+                        remarks: $incomePayment->remarks,
+                    ),
+                ],
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
             if ($updateParentSummary) {
                 IncomeActions::updateSummary($incomePayment->income);
                 $incomePayment->refresh();
@@ -253,6 +295,68 @@ class IncomePaymentActions
                 );
             }
 
+            $cashAccountChartOfAccount = $incomePayment->cashAccount->chartOfAccount;
+            if (! $cashAccountChartOfAccount) {
+                throw new InvalidArgumentException('Income payment cash account chart of account must exist.');
+            }
+
+            $receivableChartOfAccount = $incomePayment->company->assetCurrentAccountReceivableChartOfAccount;
+            if (! $receivableChartOfAccount) {
+                throw new InvalidArgumentException('Income payment receivable chart of account must exist.');
+            }
+
+            $journalEntry = $incomePayment->journalEntry;
+            if (! $journalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $incomePayment->company_id,
+                    branchId: $incomePayment->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $incomePayment->date,
+                    sourceType: IncomePayment::class,
+                    sourceId: $incomePayment->id,
+                    referenceNo: $incomePayment->code,
+                    remarks: $incomePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: (float) $incomePayment->amount,
+                            credit: 0,
+                            remarks: $incomePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $receivableChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $incomePayment->amount,
+                            remarks: $incomePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $incomePayment->branch_id,
+                    code: $journalEntry->code,
+                    date: $incomePayment->date,
+                    referenceNo: $incomePayment->code,
+                    remarks: $incomePayment->remarks,
+                    lines: [
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                            debit: (float) $incomePayment->amount,
+                            credit: 0,
+                            remarks: $incomePayment->remarks,
+                        ),
+                        new JournalEntryLineDTO(
+                            chartOfAccountId: $receivableChartOfAccount->id,
+                            debit: 0,
+                            credit: (float) $incomePayment->amount,
+                            remarks: $incomePayment->remarks,
+                        ),
+                    ],
+                );
+                $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
             if ($updateParentSummary) {
                 IncomeActions::updateSummary($incomePayment->income);
                 $incomePayment->refresh();
@@ -282,6 +386,9 @@ class IncomePaymentActions
             if ($cashTransaction) {
                 $this->cashTransactionActions->delete($cashTransaction);
             }
+
+            $journalEntry = $incomePayment->journalEntry;
+            if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
 
             $retval = $incomePayment->delete();
 
