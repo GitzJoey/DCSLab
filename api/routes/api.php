@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\AssetCategoryController;
+use App\Http\Controllers\AssetController;
+use App\Http\Controllers\AssetUnitController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CapitalOpeningController;
@@ -379,6 +381,32 @@ Route::prefix('asset_category')->middleware('auth:sanctum')->group(function () {
         Route::post('save', [AssetCategoryController::class, 'store'])->name('save');
         Route::post('edit/{asset_category:ulid}', [AssetCategoryController::class, 'update'])->name('edit');
         Route::post('delete/{asset_category:ulid}', [AssetCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('asset_unit')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.asset_unit.')->group(function () {
+        Route::get('read', [AssetUnitController::class, 'readAny'])->name('read_any');
+        Route::get('read/{asset_unit:ulid}', [AssetUnitController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.asset_unit.')->group(function () {
+        Route::post('save', [AssetUnitController::class, 'store'])->name('save');
+        Route::post('edit/{asset_unit:ulid}', [AssetUnitController::class, 'update'])->name('edit');
+        Route::post('delete/{asset_unit:ulid}', [AssetUnitController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('asset')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.asset.')->group(function () {
+        Route::get('read', [AssetController::class, 'readAny'])->name('read_any');
+        Route::get('read/{asset:ulid}', [AssetController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.asset.')->group(function () {
+        Route::post('save', [AssetController::class, 'store'])->name('save');
+        Route::post('edit/{asset:ulid}', [AssetController::class, 'update'])->name('edit');
+        Route::post('delete/{asset:ulid}', [AssetController::class, 'delete'])->name('delete');
     });
 });
 

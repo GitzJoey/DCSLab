@@ -2,13 +2,12 @@
 
 namespace App\DTOs;
 
-final class AssetCategoryUpdateDTO
+final class AssetUnitUpdateDTO
 {
     public function __construct(
         public readonly string $code,
         public readonly string $name,
-        public readonly int $estimatedUsefulLifeMonths,
-        public readonly string $remarks,
+        public readonly string $description,
     ) {
     }
 }

@@ -364,6 +364,21 @@ return [
         'estimated_useful_life_months' => 'Estimated Useful Life (Months)',
         'remarks' => 'Remarks',
     ],
+    'asset_unit' => [
+        'company_id' => 'Company',
+        'code' => 'Code',
+        'name' => 'Name',
+        'description' => 'Description',
+    ],
+    'asset' => [
+        'company_id' => 'Company',
+        'asset_category_id' => 'Asset Category',
+        'asset_unit_id' => 'Asset Unit',
+        'code' => 'Code',
+        'name' => 'Name',
+        'status' => 'Status',
+        'remarks' => 'Remarks',
+    ],
     'receivable_category' => [
         'company_id' => 'Company',
         'code' => 'Code',

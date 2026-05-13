@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssetCategory extends Model
+class AssetUnit extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -19,16 +19,8 @@ class AssetCategory extends Model
         'company_id',
         'code',
         'name',
-        'estimated_useful_life_months',
-        'remarks',
+        'description',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'estimated_useful_life_months' => 'integer',
-        ];
-    }
 
     public function company()
     {

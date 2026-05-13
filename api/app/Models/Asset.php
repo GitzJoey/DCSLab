@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\RecordStatusEnum;
 use App\Traits\BootableModel;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AssetCategory extends Model
+class Asset extends Model
 {
     use BootableModel;
     use HasFactory;
@@ -17,16 +18,18 @@ class AssetCategory extends Model
 
     protected $fillable = [
         'company_id',
+        'asset_category_id',
         'code',
         'name',
-        'estimated_useful_life_months',
+        'asset_unit_id',
+        'status',
         'remarks',
     ];
 
     protected function casts(): array
     {
         return [
-            'estimated_useful_life_months' => 'integer',
+            'status' => RecordStatusEnum::class,
         ];
     }
 
@@ -35,8 +38,13 @@ class AssetCategory extends Model
         return $this->belongsTo(Company::class)->withTrashed();
     }
 
-    public function assets()
+    public function assetCategory()
     {
-        return $this->hasMany(Asset::class);
+        return $this->belongsTo(AssetCategory::class)->withTrashed();
+    }
+
+    public function assetUnit()
+    {
+        return $this->belongsTo(AssetUnit::class)->withTrashed();
     }
 }

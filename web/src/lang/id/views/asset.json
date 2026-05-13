@@ -1,0 +1,35 @@
+{
+  "page_title": "Aset",
+  "actions": {
+    "create": "Tambah Aset",
+    "edit": "Ubah Aset"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "asset_data": "Data Aset"
+  },
+  "fields": {
+    "asset_category_id": "Kategori Aset",
+    "asset_unit_id": "Satuan Aset",
+    "code": "Kode",
+    "name": "Nama",
+    "status": "Status",
+    "remarks": "Catatan"
+  },
+  "table": {
+    "title": "Daftar Aset",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama",
+      "asset_category": "Kategori",
+      "asset_unit": "Satuan",
+      "status": "Status"
+    }
+  },
+  "alert": {
+    "delete_asset": {
+      "title": "Aset berhasil dihapus",
+      "content": "Data aset telah berhasil dihapus."
+    }
+  }
+}

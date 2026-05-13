@@ -1,0 +1,29 @@
+{
+  "page_title": "Satuan Aset",
+  "actions": {
+    "create": "Tambah Satuan Aset",
+    "edit": "Ubah Satuan Aset"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "asset_unit_data": "Data Satuan Aset"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "description": "Deskripsi"
+  },
+  "table": {
+    "title": "Daftar Satuan Aset",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama"
+    }
+  },
+  "alert": {
+    "delete_asset_unit": {
+      "title": "Satuan aset berhasil dihapus",
+      "content": "Data satuan aset telah berhasil dihapus."
+    }
+  }
+}

@@ -59,6 +59,8 @@
   "expense-category": "Expense Category",
   "income-category": "Income Category",
   "asset-category": "Asset Category",
+  "asset-unit": "Asset Unit",
+  "asset": "Asset",
   "chart-of-account": "Chart of Account",
   "journal-entry": "Journal Entry",
   "purchase-additional-cost-category": "Purchase Additional Cost Category",

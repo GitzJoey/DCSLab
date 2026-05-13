@@ -383,6 +383,21 @@ return [
         'estimated_useful_life_months' => 'Taksiran Masa Manfaat (Bulan)',
         'remarks' => 'Catatan',
     ],
+    'asset_unit' => [
+        'company_id' => 'Perusahaan',
+        'code' => 'Kode',
+        'name' => 'Nama',
+        'description' => 'Deskripsi',
+    ],
+    'asset' => [
+        'company_id' => 'Perusahaan',
+        'asset_category_id' => 'Kategori Aset',
+        'asset_unit_id' => 'Satuan Aset',
+        'code' => 'Kode',
+        'name' => 'Nama',
+        'status' => 'Status',
+        'remarks' => 'Catatan',
+    ],
     'receivable_category' => [
         'company_id' => 'Perusahaan',
         'code' => 'Kode',

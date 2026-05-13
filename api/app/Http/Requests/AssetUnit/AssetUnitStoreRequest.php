@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Requests\AssetCategory;
+namespace App\Http\Requests\AssetUnit;
 
 use App\Helpers\HashidsHelper;
-use App\Models\AssetCategory;
+use App\Models\AssetUnit;
 use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class AssetCategoryStoreRequest extends FormRequest
+class AssetUnitStoreRequest extends FormRequest
 {
     public function authorize()
     {
@@ -16,10 +16,10 @@ class AssetCategoryStoreRequest extends FormRequest
             return false;
         }
 
-        /** @var \App\User */
+        /** @var \App\User $user */
         $user = Auth::user();
 
-        return $user->can('create', AssetCategory::class);
+        return $user->can('create', AssetUnit::class);
     }
 
     public function prepareForValidation()
@@ -35,13 +35,12 @@ class AssetCategoryStoreRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'code' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
-            'estimated_useful_life_months' => ['required', 'integer', 'min:1'],
-            'remarks' => ['present', 'string', 'max:255'],
+            'description' => ['present', 'string', 'max:255'],
         ];
     }
 
     public function attributes()
     {
-        return trans('validation_attributes.asset_category');
+        return trans('validation_attributes.asset_unit');
     }
 }

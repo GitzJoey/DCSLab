@@ -94,6 +94,14 @@ import AssetCategoryIndex from '@/pages/asset-category/AssetCategoryIndex.vue';
 import AssetCategoryList from '@/pages/asset-category/AssetCategoryList.vue';
 import AssetCategoryCreate from '@/pages/asset-category/AssetCategoryCreate.vue';
 import AssetCategoryEdit from '@/pages/asset-category/AssetCategoryEdit.vue';
+import AssetUnitIndex from '@/pages/asset-unit/AssetUnitIndex.vue';
+import AssetUnitList from '@/pages/asset-unit/AssetUnitList.vue';
+import AssetUnitCreate from '@/pages/asset-unit/AssetUnitCreate.vue';
+import AssetUnitEdit from '@/pages/asset-unit/AssetUnitEdit.vue';
+import AssetIndex from '@/pages/asset/AssetIndex.vue';
+import AssetList from '@/pages/asset/AssetList.vue';
+import AssetCreate from '@/pages/asset/AssetCreate.vue';
+import AssetEdit from '@/pages/asset/AssetEdit.vue';
 import ReceivableCategoryIndex from '@/pages/receivable-category/ReceivableCategoryIndex.vue';
 import ReceivableCategoryList from '@/pages/receivable-category/ReceivableCategoryList.vue';
 import ReceivableCategoryCreate from '@/pages/receivable-category/ReceivableCategoryCreate.vue';
@@ -977,6 +985,80 @@ export default [
                 path: '/asset-category/edit/:ulid',
                 name: 'side-menu-asset-category-edit',
                 component: AssetCategoryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/asset-unit',
+        children: [
+          {
+            path: '/asset-unit',
+            name: 'side-menu-asset-unit',
+            redirect: '/asset-unit/list',
+            component: AssetUnitIndex,
+            children: [
+              {
+                path: '/asset-unit/list',
+                name: 'side-menu-asset-unit-list',
+                component: AssetUnitList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-unit/create',
+                name: 'side-menu-asset-unit-create',
+                component: AssetUnitCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-unit/edit/:ulid',
+                name: 'side-menu-asset-unit-edit',
+                component: AssetUnitEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/asset',
+        children: [
+          {
+            path: '/asset',
+            name: 'side-menu-asset',
+            redirect: '/asset/list',
+            component: AssetIndex,
+            children: [
+              {
+                path: '/asset/list',
+                name: 'side-menu-asset-list',
+                component: AssetList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset/create',
+                name: 'side-menu-asset-create',
+                component: AssetCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset/edit/:ulid',
+                name: 'side-menu-asset-edit',
+                component: AssetEdit,
                 meta: {
                   remember: true,
                 },

@@ -35,8 +35,8 @@ class AssetCategoryUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer'],
             'code' => ['required', 'string'],
             'name' => ['required', 'string', 'max:255'],
-            'estimated_useful_life_months' => ['nullable', 'integer', 'min:1'],
-            'remarks' => ['nullable', 'string', 'max:255'],
+            'estimated_useful_life_months' => ['required', 'integer', 'min:1'],
+            'remarks' => ['present', 'string', 'max:255'],
         ];
     }
 

@@ -270,6 +270,18 @@ class DashboardActions
             'title' => 'components.menu.asset-category',
         ];
 
+        $assetUnit = [
+            'icon' => 'Ruler',
+            'pageName' => 'side-menu-asset-unit',
+            'title' => 'components.menu.asset-unit',
+        ];
+
+        $asset = [
+            'icon' => 'Laptop',
+            'pageName' => 'side-menu-asset',
+            'title' => 'components.menu.asset',
+        ];
+
         array_push(
             $financeManagement['subMenu'],
             $chartOfAccount,
@@ -281,6 +293,8 @@ class DashboardActions
             $receivableCategory,
             $debtCreditor,
             $assetCategory,
+            $assetUnit,
+            $asset,
         );
 
         array_push(

@@ -49,6 +49,8 @@
   "expense-category": "Kategori Biaya",
   "income-category": "Kategori Pendapatan",
   "asset-category": "Kategori Aset",
+  "asset-unit": "Satuan Aset",
+  "asset": "Aset",
   "chart-of-account": "Chart of Account",
   "journal-entry": "Jurnal Umum",
   "purchase-additional-cost-category": "Kategori Biaya Tambahan Purchase",
