@@ -264,6 +264,12 @@ class DashboardActions
             'title' => 'components.menu.purchase-additional-cost-category',
         ];
 
+        $assetCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-asset-category',
+            'title' => 'components.menu.asset-category',
+        ];
+
         array_push(
             $financeManagement['subMenu'],
             $chartOfAccount,
@@ -273,7 +279,8 @@ class DashboardActions
             $incomeCategory,
             $debtCategory,
             $receivableCategory,
-            $debtCreditor
+            $debtCreditor,
+            $assetCategory,
         );
 
         array_push(

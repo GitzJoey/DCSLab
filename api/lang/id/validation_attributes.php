@@ -376,6 +376,13 @@ return [
         'name' => 'Nama',
         'sequence' => 'Urutan',
     ],
+    'asset_category' => [
+        'company_id' => 'Perusahaan',
+        'code' => 'Kode',
+        'name' => 'Nama',
+        'estimated_useful_life_months' => 'Taksiran Masa Manfaat (Bulan)',
+        'remarks' => 'Catatan',
+    ],
     'receivable_category' => [
         'company_id' => 'Perusahaan',
         'code' => 'Kode',

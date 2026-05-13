@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\AssetCategoryController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CapitalOpeningController;
@@ -365,6 +366,19 @@ Route::prefix('purchase_additional_cost_category')->middleware('auth:sanctum')->
         Route::post('save', [PurchaseAdditionalCostCategoryController::class, 'store'])->name('save');
         Route::post('edit/{pacc:ulid}', [PurchaseAdditionalCostCategoryController::class, 'update'])->name('edit');
         Route::post('delete/{pacc:ulid}', [PurchaseAdditionalCostCategoryController::class, 'delete'])->name('delete');
+    });
+});
+
+Route::prefix('asset_category')->middleware('auth:sanctum')->group(function () {
+    Route::middleware('throttle:100,1')->name('api.get.asset_category.')->group(function () {
+        Route::get('read', [AssetCategoryController::class, 'readAny'])->name('read_any');
+        Route::get('read/{asset_category:ulid}', [AssetCategoryController::class, 'read'])->name('read');
+    });
+
+    Route::middleware(['throttle:50,1', 'precognitive'])->name('api.post.asset_category.')->group(function () {
+        Route::post('save', [AssetCategoryController::class, 'store'])->name('save');
+        Route::post('edit/{asset_category:ulid}', [AssetCategoryController::class, 'update'])->name('edit');
+        Route::post('delete/{asset_category:ulid}', [AssetCategoryController::class, 'delete'])->name('delete');
     });
 });
 

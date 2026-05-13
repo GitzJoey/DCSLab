@@ -51,6 +51,7 @@ return [
             'receivable_category' => 'c,r,ra,u,d',
             'debt_creditor' => 'c,r,ra,u,d',
             'stock_adjustment_category' => 'c,r,ra,u,d',
+            'asset_category' => 'c,r,ra,u,d',
 
             'capital_opening' => 'c,r,ra,u,d',
             'capital_transaction' => 'c,r,ra,u,d',

@@ -357,6 +357,13 @@ return [
         'name' => 'Name',
         'sequence' => 'Sequence',
     ],
+    'asset_category' => [
+        'company_id' => 'Company',
+        'code' => 'Code',
+        'name' => 'Name',
+        'estimated_useful_life_months' => 'Estimated Useful Life (Months)',
+        'remarks' => 'Remarks',
+    ],
     'receivable_category' => [
         'company_id' => 'Company',
         'code' => 'Code',

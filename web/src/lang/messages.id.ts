@@ -45,6 +45,7 @@ import purchase from './id/views/purchase.json';
 import purchase_receipt from './id/views/purchase_receipt.json';
 import expense_category from './id/views/expense_category.json';
 import debt_category from './id/views/debt_category.json';
+import asset_category from './id/views/asset_category.json';
 import receivable_category from './id/views/receivable_category.json';
 import debt_creditor from './id/views/debt_creditor.json';
 import income_category from './id/views/income_category.json';
@@ -122,6 +123,7 @@ export default {
     purchase_receipt: purchase_receipt,
     expense_category: expense_category,
     debt_category: debt_category,
+    asset_category: asset_category,
     receivable_category: receivable_category,
     debt_creditor: debt_creditor,
     income_category: income_category,

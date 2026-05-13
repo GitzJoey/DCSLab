@@ -90,6 +90,10 @@ import DebtCategoryIndex from '@/pages/debt-category/DebtCategoryIndex.vue';
 import DebtCategoryList from '@/pages/debt-category/DebtCategoryList.vue';
 import DebtCategoryCreate from '@/pages/debt-category/DebtCategoryCreate.vue';
 import DebtCategoryEdit from '@/pages/debt-category/DebtCategoryEdit.vue';
+import AssetCategoryIndex from '@/pages/asset-category/AssetCategoryIndex.vue';
+import AssetCategoryList from '@/pages/asset-category/AssetCategoryList.vue';
+import AssetCategoryCreate from '@/pages/asset-category/AssetCategoryCreate.vue';
+import AssetCategoryEdit from '@/pages/asset-category/AssetCategoryEdit.vue';
 import ReceivableCategoryIndex from '@/pages/receivable-category/ReceivableCategoryIndex.vue';
 import ReceivableCategoryList from '@/pages/receivable-category/ReceivableCategoryList.vue';
 import ReceivableCategoryCreate from '@/pages/receivable-category/ReceivableCategoryCreate.vue';
@@ -936,6 +940,43 @@ export default [
                 path: '/debt-category/edit/:ulid',
                 name: 'side-menu-debt-category-edit',
                 component: DebtCategoryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: '/asset-category',
+        children: [
+          {
+            path: '/asset-category',
+            name: 'side-menu-asset-category',
+            redirect: '/asset-category/list',
+            component: AssetCategoryIndex,
+            children: [
+              {
+                path: '/asset-category/list',
+                name: 'side-menu-asset-category-list',
+                component: AssetCategoryList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-category/create',
+                name: 'side-menu-asset-category-create',
+                component: AssetCategoryCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-category/edit/:ulid',
+                name: 'side-menu-asset-category-edit',
+                component: AssetCategoryEdit,
                 meta: {
                   remember: true,
                 },
