@@ -11,7 +11,7 @@ use App\DTOs\DebtPaymentCreateDTO;
 use App\DTOs\DebtPaymentUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\DebtPayment;
@@ -19,7 +19,6 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class DebtPaymentActions
 {
@@ -220,30 +219,6 @@ class DebtPaymentActions
                 data: CashTransactionCreateDTO::fromDebtPayment($debtPayment)
             );
 
-            $debt = $debtPayment->debt;
-            if ($debt->supplier_id) {
-                $partyChartOfAccount = $debt->supplier?->chartOfAccount;
-                if (! $partyChartOfAccount) {
-                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
-                }
-            } elseif ($debt->creditor_id) {
-                $partyChartOfAccount = $debt->creditor?->chartOfAccount;
-                if (! $partyChartOfAccount) {
-                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
-                }
-            } else {
-                $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
-            }
-
-            if (! $partyChartOfAccount) {
-                throw new InvalidArgumentException('Debt payment payable chart of account must exist.');
-            }
-
-            $cashAccountChartOfAccount = $debtPayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Debt payment cash account chart of account must exist.');
-            }
-
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $debtPayment->company_id,
                 branchId: $debtPayment->branch_id,
@@ -253,20 +228,37 @@ class DebtPaymentActions
                 sourceId: $debtPayment->id,
                 referenceNo: $debtPayment->code,
                 remarks: $debtPayment->remarks,
-                lines: [
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $partyChartOfAccount->id,
+                items: (function () use ($debtPayment) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: (function () use ($debtPayment) {
+                            if ($debtPayment->debt->supplier_id) {
+                                return $debtPayment->debt->supplier?->chartOfAccount?->id;
+                            }
+
+                            if ($debtPayment->debt->creditor_id) {
+                                return $debtPayment->debt->creditor?->chartOfAccount?->id;
+                            }
+
+                            return $debtPayment->debt->company->liabilityAccountPayableChartOfAccount?->id;
+                        })(),
                         debit: (float) $debtPayment->amount,
                         credit: 0,
                         remarks: $debtPayment->remarks,
-                    ),
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $debtPayment->cashAccount?->chartOfAccount?->id,
                         debit: 0,
                         credit: (float) $debtPayment->amount,
                         remarks: $debtPayment->remarks,
-                    ),
-                ],
+                    );
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
 
@@ -311,30 +303,6 @@ class DebtPaymentActions
                 );
             }
 
-            $debt = $debtPayment->debt;
-            if ($debt->supplier_id) {
-                $partyChartOfAccount = $debt->supplier?->chartOfAccount;
-                if (! $partyChartOfAccount) {
-                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
-                }
-            } elseif ($debt->creditor_id) {
-                $partyChartOfAccount = $debt->creditor?->chartOfAccount;
-                if (! $partyChartOfAccount) {
-                    $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
-                }
-            } else {
-                $partyChartOfAccount = $debt->company->liabilityAccountPayableChartOfAccount;
-            }
-
-            if (! $partyChartOfAccount) {
-                throw new InvalidArgumentException('Debt payment payable chart of account must exist.');
-            }
-
-            $cashAccountChartOfAccount = $debtPayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Debt payment cash account chart of account must exist.');
-            }
-
             $journalEntry = $debtPayment->journalEntry;
             if (! $journalEntry) {
                 $journalEntryDTO = new JournalEntryCreateDTO(
@@ -346,20 +314,37 @@ class DebtPaymentActions
                     sourceId: $debtPayment->id,
                     referenceNo: $debtPayment->code,
                     remarks: $debtPayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $partyChartOfAccount->id,
+                    items: (function () use ($debtPayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: (function () use ($debtPayment) {
+                                if ($debtPayment->debt->supplier_id) {
+                                    return $debtPayment->debt->supplier?->chartOfAccount?->id;
+                                }
+
+                                if ($debtPayment->debt->creditor_id) {
+                                    return $debtPayment->debt->creditor?->chartOfAccount?->id;
+                                }
+
+                                return $debtPayment->debt->company->liabilityAccountPayableChartOfAccount?->id;
+                            })(),
                             debit: (float) $debtPayment->amount,
                             credit: 0,
                             remarks: $debtPayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $debtPayment->cashAccount?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $debtPayment->amount,
                             remarks: $debtPayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -369,20 +354,37 @@ class DebtPaymentActions
                     date: $debtPayment->date,
                     referenceNo: $debtPayment->code,
                     remarks: $debtPayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $partyChartOfAccount->id,
+                    items: (function () use ($debtPayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: (function () use ($debtPayment) {
+                                if ($debtPayment->debt->supplier_id) {
+                                    return $debtPayment->debt->supplier?->chartOfAccount?->id;
+                                }
+
+                                if ($debtPayment->debt->creditor_id) {
+                                    return $debtPayment->debt->creditor?->chartOfAccount?->id;
+                                }
+
+                                return $debtPayment->debt->company->liabilityAccountPayableChartOfAccount?->id;
+                            })(),
                             debit: (float) $debtPayment->amount,
                             credit: 0,
                             remarks: $debtPayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $debtPayment->cashAccount?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $debtPayment->amount,
                             remarks: $debtPayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }

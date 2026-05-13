@@ -15,17 +15,14 @@ use App\DTOs\IncomePaymentCreateDTO;
 use App\DTOs\IncomePaymentUpdateDTO;
 use App\DTOs\IncomeUpdateDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
-use App\Enums\ChartOfAccountSystemKeyEnum;
 use App\Helpers\TimezoneHelper;
-use App\Models\ChartOfAccount;
 use App\Models\Income;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class IncomeActions
 {
@@ -279,53 +276,6 @@ class IncomeActions
                 $this->incomeImageActions->attachByHash($income, $incomeImageDTO);
             }
 
-            $lines = [];
-
-            if ((float) $income->amount_paid_immediately > 0) {
-                $cashAccountChartOfAccount = $income->paidImmediatelyCashAccount?->chartOfAccount;
-                if (! $cashAccountChartOfAccount) {
-                    throw new InvalidArgumentException('Income paid immediately cash account chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $cashAccountChartOfAccount->id,
-                    debit: (float) $income->amount_paid_immediately,
-                    credit: 0,
-                    remarks: $income->remarks,
-                );
-            }
-
-            if ((float) $income->amount_receivable > 0) {
-                $receivableChartOfAccount = $income->company->assetCurrentAccountReceivableChartOfAccount;
-                if (! $receivableChartOfAccount) {
-                    throw new InvalidArgumentException('Income receivable chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $receivableChartOfAccount->id,
-                    debit: (float) $income->amount_receivable,
-                    credit: 0,
-                    remarks: $income->remarks,
-                );
-            }
-
-            $incomeChartOfAccount = $income->category?->chartOfAccount;
-            if (! $incomeChartOfAccount) {
-                $incomeChartOfAccount = ChartOfAccount::where('company_id', $income->company_id)
-                    ->where('system_key', ChartOfAccountSystemKeyEnum::INCOME_ROOT)
-                    ->first();
-            }
-            if (! $incomeChartOfAccount) {
-                throw new InvalidArgumentException('Income chart of account must exist.');
-            }
-
-            $lines[] = new JournalEntryLineDTO(
-                chartOfAccountId: $incomeChartOfAccount->id,
-                debit: 0,
-                credit: (float) $income->amount_total,
-                remarks: $income->remarks,
-            );
-
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $income->company_id,
                 branchId: $income->branch_id,
@@ -335,7 +285,39 @@ class IncomeActions
                 sourceId: $income->id,
                 referenceNo: $income->code,
                 remarks: $income->remarks,
-                lines: $lines,
+                items: (function () use ($income) {
+                    $items = [];
+
+                    if ((float) $income->amount_paid_immediately > 0) {
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $income->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                            debit: (float) $income->amount_paid_immediately,
+                            credit: 0,
+                            remarks: $income->remarks,
+                        );
+                    }
+
+                    if ((float) $income->amount_receivable > 0) {
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $income->company->assetCurrentAccountReceivableChartOfAccount,
+                            debit: (float) $income->amount_receivable,
+                            credit: 0,
+                            remarks: $income->remarks,
+                        );
+                    }
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $income->category?->chartOfAccount?->id,
+                        debit: 0,
+                        credit: (float) $income->amount_total,
+                        remarks: $income->remarks,
+                    );
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
 
@@ -428,53 +410,6 @@ class IncomeActions
                 $this->incomeImageActions->attachByHash($income, $incomeImageDTO);
             }
 
-            $lines = [];
-
-            if ((float) $income->amount_paid_immediately > 0) {
-                $cashAccountChartOfAccount = $income->paidImmediatelyCashAccount?->chartOfAccount;
-                if (! $cashAccountChartOfAccount) {
-                    throw new InvalidArgumentException('Income paid immediately cash account chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $cashAccountChartOfAccount->id,
-                    debit: (float) $income->amount_paid_immediately,
-                    credit: 0,
-                    remarks: $income->remarks,
-                );
-            }
-
-            if ((float) $income->amount_receivable > 0) {
-                $receivableChartOfAccount = $income->company->assetCurrentAccountReceivableChartOfAccount;
-                if (! $receivableChartOfAccount) {
-                    throw new InvalidArgumentException('Income receivable chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $receivableChartOfAccount->id,
-                    debit: (float) $income->amount_receivable,
-                    credit: 0,
-                    remarks: $income->remarks,
-                );
-            }
-
-            $incomeChartOfAccount = $income->category?->chartOfAccount;
-            if (! $incomeChartOfAccount) {
-                $incomeChartOfAccount = ChartOfAccount::where('company_id', $income->company_id)
-                    ->where('system_key', ChartOfAccountSystemKeyEnum::INCOME_ROOT)
-                    ->first();
-            }
-            if (! $incomeChartOfAccount) {
-                throw new InvalidArgumentException('Income chart of account must exist.');
-            }
-
-            $lines[] = new JournalEntryLineDTO(
-                chartOfAccountId: $incomeChartOfAccount->id,
-                debit: 0,
-                credit: (float) $income->amount_total,
-                remarks: $income->remarks,
-            );
-
             $journalEntry = $income->journalEntry;
             if (! $journalEntry) {
                 $journalEntryDTO = new JournalEntryCreateDTO(
@@ -486,7 +421,39 @@ class IncomeActions
                     sourceId: $income->id,
                     referenceNo: $income->code,
                     remarks: $income->remarks,
-                    lines: $lines,
+                    items: (function () use ($income) {
+                        $items = [];
+
+                        if ((float) $income->amount_paid_immediately > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $income->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                debit: (float) $income->amount_paid_immediately,
+                                credit: 0,
+                                remarks: $income->remarks,
+                            );
+                        }
+
+                        if ((float) $income->amount_receivable > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $income->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                                debit: (float) $income->amount_receivable,
+                                credit: 0,
+                                remarks: $income->remarks,
+                            );
+                        }
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $income->category?->chartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $income->amount_total,
+                            remarks: $income->remarks,
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -496,7 +463,39 @@ class IncomeActions
                     date: $income->date,
                     referenceNo: $income->code,
                     remarks: $income->remarks,
-                    lines: $lines,
+                    items: (function () use ($income) {
+                        $items = [];
+
+                        if ((float) $income->amount_paid_immediately > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $income->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                debit: (float) $income->amount_paid_immediately,
+                                credit: 0,
+                                remarks: $income->remarks,
+                            );
+                        }
+
+                        if ((float) $income->amount_receivable > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $income->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                                debit: (float) $income->amount_receivable,
+                                credit: 0,
+                                remarks: $income->remarks,
+                            );
+                        }
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $income->category?->chartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $income->amount_total,
+                            remarks: $income->remarks,
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }

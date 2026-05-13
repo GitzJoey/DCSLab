@@ -4,7 +4,7 @@
   "actions": {
     "create": "Create Journal Entry",
     "edit": "Edit Journal Entry",
-    "add_line": "Add Line"
+    "add_item": "Add Item"
   },
   "table": {
     "title": "Journal Entry List",
@@ -13,7 +13,7 @@
   "field_groups": {
     "company_info": "Company Information",
     "journal_entry_data": "Journal Entry Data",
-    "lines": "Journal Lines"
+    "items": "Journal Items"
   },
   "fields": {
     "company": "Company",
@@ -26,12 +26,12 @@
     "source_id": "Source ID",
     "reference_no": "Reference No",
     "remarks": "Remarks",
-    "lines": "Journal Lines",
-    "line": "Line",
+    "items": "Journal Items",
+    "item": "Item",
     "chart_of_account": "Account",
     "debit": "Debit",
     "credit": "Credit",
-    "line_remarks": "Line Remarks",
+    "item_remarks": "Item Remarks",
     "total_debit": "Total Debit",
     "total_credit": "Total Credit",
     "balance_status": "Balance Status"
@@ -43,7 +43,7 @@
     }
   },
   "helper": {
-    "single_side_amount": "Each line may only contain debit or credit amount."
+    "single_side_amount": "Each item may only contain debit or credit amount."
   },
   "alert": {
     "delete_journal_entry": {

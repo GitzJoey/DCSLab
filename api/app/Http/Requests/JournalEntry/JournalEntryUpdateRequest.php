@@ -37,13 +37,13 @@ class JournalEntryUpdateRequest extends FormRequest
             'branch_id' => $this->filled('branch_id') ? HashidsHelper::decodeId($this->branch_id) : null,
             'reference_no' => $this->filled('reference_no') ? $this->reference_no : null,
             'remarks' => $this->filled('remarks') ? $this->remarks : null,
-            'lines' => collect($this->lines ?? [])->map(function ($line) {
-                $line['chart_of_account_id'] = ! empty($line['chart_of_account_id'])
-                    ? HashidsHelper::decodeId($line['chart_of_account_id'])
+            'items' => collect($this->items ?? [])->map(function ($item) {
+                $item['chart_of_account_id'] = ! empty($item['chart_of_account_id'])
+                    ? HashidsHelper::decodeId($item['chart_of_account_id'])
                     : null;
-                $line['remarks'] = ! empty($line['remarks']) ? $line['remarks'] : null;
+                $item['remarks'] = ! empty($item['remarks']) ? $item['remarks'] : null;
 
-                return $line;
+                return $item;
             })->all(),
         ]);
     }
@@ -58,45 +58,45 @@ class JournalEntryUpdateRequest extends FormRequest
             'reference_no' => ['present', 'nullable', 'string', 'max:255'],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'lines' => ['required', 'array', 'min:2'],
-            'lines.*.chart_of_account_id' => ['required', 'integer', new ExistsForCompany('chart_of_accounts', $this->company_id)],
-            'lines.*.debit' => ['required', 'numeric', 'min:0'],
-            'lines.*.credit' => ['required', 'numeric', 'min:0'],
-            'lines.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'items' => ['required', 'array', 'min:2'],
+            'items.*.chart_of_account_id' => ['required', 'integer', new ExistsForCompany('chart_of_accounts', $this->company_id)],
+            'items.*.debit' => ['required', 'numeric', 'min:0'],
+            'items.*.credit' => ['required', 'numeric', 'min:0'],
+            'items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $lines = collect($this->input('lines', []));
+            $items = collect($this->input('items', []));
             $totalDebit = 0.0;
             $totalCredit = 0.0;
 
             $chartOfAccounts = ChartOfAccount::query()
                 ->where('company_id', $this->company_id)
-                ->whereIn('id', $lines->pluck('chart_of_account_id')->filter()->all())
+                ->whereIn('id', $items->pluck('chart_of_account_id')->filter()->all())
                 ->get()
                 ->keyBy('id');
 
-            foreach ($lines as $index => $line) {
-                $debit = max((float) ($line['debit'] ?? 0), 0);
-                $credit = max((float) ($line['credit'] ?? 0), 0);
+            foreach ($items as $index => $item) {
+                $debit = max((float) ($item['debit'] ?? 0), 0);
+                $credit = max((float) ($item['credit'] ?? 0), 0);
 
                 if (($debit > 0 && $credit > 0) || ($debit <= 0 && $credit <= 0)) {
-                    $validator->errors()->add("lines.$index.debit", trans('rules.journal_entry.line_must_have_single_side_amount'));
-                    $validator->errors()->add("lines.$index.credit", trans('rules.journal_entry.line_must_have_single_side_amount'));
+                    $validator->errors()->add("items.$index.debit", trans('rules.journal_entry.item_must_have_single_side_amount'));
+                    $validator->errors()->add("items.$index.credit", trans('rules.journal_entry.item_must_have_single_side_amount'));
                 }
 
-                $chartOfAccountId = $line['chart_of_account_id'] ?? null;
+                $chartOfAccountId = $item['chart_of_account_id'] ?? null;
                 $chartOfAccount = $chartOfAccounts->get($chartOfAccountId);
                 if ($chartOfAccount) {
                     if ($chartOfAccount->is_group) {
-                        $validator->errors()->add("lines.$index.chart_of_account_id", trans('rules.journal_entry.account_must_not_be_group'));
+                        $validator->errors()->add("items.$index.chart_of_account_id", trans('rules.journal_entry.account_must_not_be_group'));
                     }
 
                     if (! $chartOfAccount->is_active) {
-                        $validator->errors()->add("lines.$index.chart_of_account_id", trans('rules.journal_entry.account_must_be_active'));
+                        $validator->errors()->add("items.$index.chart_of_account_id", trans('rules.journal_entry.account_must_be_active'));
                     }
                 }
 
@@ -105,11 +105,11 @@ class JournalEntryUpdateRequest extends FormRequest
             }
 
             if ($totalDebit <= 0 || $totalCredit <= 0) {
-                $validator->errors()->add('lines', trans('rules.journal_entry.total_must_be_positive'));
+                $validator->errors()->add('items', trans('rules.journal_entry.total_must_be_positive'));
             }
 
             if (round($totalDebit, 8) !== round($totalCredit, 8)) {
-                $validator->errors()->add('lines', trans('rules.journal_entry.total_debit_and_credit_must_balance'));
+                $validator->errors()->add('items', trans('rules.journal_entry.total_debit_and_credit_must_balance'));
             }
         });
     }
@@ -119,10 +119,10 @@ class JournalEntryUpdateRequest extends FormRequest
         return array_merge(
             trans('validation_attributes.journal_entry'),
             [
-                'lines.*.chart_of_account_id' => trans('validation_attributes.journal_entry_line.chart_of_account_id'),
-                'lines.*.debit' => trans('validation_attributes.journal_entry_line.debit'),
-                'lines.*.credit' => trans('validation_attributes.journal_entry_line.credit'),
-                'lines.*.remarks' => trans('validation_attributes.journal_entry_line.remarks'),
+                'items.*.chart_of_account_id' => trans('validation_attributes.journal_entry_item.chart_of_account_id'),
+                'items.*.debit' => trans('validation_attributes.journal_entry_item.debit'),
+                'items.*.credit' => trans('validation_attributes.journal_entry_item.credit'),
+                'items.*.remarks' => trans('validation_attributes.journal_entry_item.remarks'),
             ],
         );
     }

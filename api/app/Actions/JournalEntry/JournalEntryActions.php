@@ -2,13 +2,13 @@
 
 namespace App\Actions\JournalEntry;
 
+use App\Actions\JournalEntryItem\JournalEntryItemActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\JournalEntry;
-use App\Models\JournalEntryLine;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
@@ -22,9 +22,14 @@ class JournalEntryActions
     private const EAGER_LOADS = [
         'company',
         'branch',
-        'lines',
-        'lines.chartOfAccount',
+        'items',
+        'items.chartOfAccount',
     ];
+
+    public function __construct(
+        private readonly JournalEntryItemActions $journalEntryItemActions,
+    ) {
+    }
 
     public function readAny(
         bool $withTrashed,
@@ -51,8 +56,8 @@ class JournalEntryActions
                     ->orWhere('journal_entries.reference_no', 'like', '%'.$search.'%')
                     ->orWhere('journal_entries.source_type', 'like', '%'.$search.'%')
                     ->orWhere('journal_entries.remarks', 'like', '%'.$search.'%')
-                    ->orWhereHas('lines.chartOfAccount', function ($lineQuery) use ($search) {
-                        $lineQuery->where('chart_of_accounts.code', 'like', '%'.$search.'%')
+                    ->orWhereHas('items.chartOfAccount', function ($itemQuery) use ($search) {
+                        $itemQuery->where('chart_of_accounts.code', 'like', '%'.$search.'%')
                             ->orWhere('chart_of_accounts.name', 'like', '%'.$search.'%');
                     });
             });
@@ -148,8 +153,6 @@ class JournalEntryActions
         $timerStart = microtime(true);
 
         try {
-            [$totalDebit, $totalCredit] = $this->calculateTotals($data->lines);
-
             $journalEntry = new JournalEntry();
             $journalEntry->company_id = $data->companyId;
             $journalEntry->branch_id = $data->branchId;
@@ -158,12 +161,14 @@ class JournalEntryActions
             $journalEntry->source_type = $data->sourceType;
             $journalEntry->source_id = $data->sourceId;
             $journalEntry->reference_no = $data->referenceNo;
-            $journalEntry->total_debit = $totalDebit;
-            $journalEntry->total_credit = $totalCredit;
+            $journalEntry->total_debit = collect($data->items)->sum(fn (JournalEntryItemDTO $item) => $item->debit);
+            $journalEntry->total_credit = collect($data->items)->sum(fn (JournalEntryItemDTO $item) => $item->credit);
             $journalEntry->remarks = $data->remarks;
             $journalEntry->save();
 
-            $this->syncLines($journalEntry, $data->lines);
+            foreach ($data->items as $item) {
+                $this->journalEntryItemActions->create($journalEntry, $item);
+            }
             $this->flushCache();
 
             return $journalEntry->refresh()->load(self::EAGER_LOADS);
@@ -181,19 +186,21 @@ class JournalEntryActions
         $timerStart = microtime(true);
 
         try {
-            [$totalDebit, $totalCredit] = $this->calculateTotals($data->lines);
-
             $journalEntry->branch_id = $data->branchId;
             $journalEntry->code = $this->generateUniqueCode($journalEntry->company_id, $data->code, $journalEntry->id);
             $journalEntry->date = $this->resolveDate($data->date);
             $journalEntry->reference_no = $data->referenceNo;
-            $journalEntry->total_debit = $totalDebit;
-            $journalEntry->total_credit = $totalCredit;
+            $journalEntry->total_debit = collect($data->items)->sum(fn (JournalEntryItemDTO $item) => $item->debit);
+            $journalEntry->total_credit = collect($data->items)->sum(fn (JournalEntryItemDTO $item) => $item->credit);
             $journalEntry->remarks = $data->remarks;
             $journalEntry->save();
 
-            $journalEntry->lines()->delete();
-            $this->syncLines($journalEntry, $data->lines);
+            foreach ($journalEntry->items as $journalEntryItem) {
+                $this->journalEntryItemActions->delete($journalEntryItem);
+            }
+            foreach ($data->items as $item) {
+                $this->journalEntryItemActions->create($journalEntry, $item);
+            }
             $this->flushCache();
 
             return $journalEntry->refresh()->load(self::EAGER_LOADS);
@@ -262,32 +269,5 @@ class JournalEntryActions
         }
 
         return TimezoneHelper::convertToUTC($date);
-    }
-
-    private function calculateTotals(array $lines): array
-    {
-        $totalDebit = collect($lines)->sum(fn (JournalEntryLineDTO $line) => $line->debit);
-        $totalCredit = collect($lines)->sum(fn (JournalEntryLineDTO $line) => $line->credit);
-
-        return [$totalDebit, $totalCredit];
-    }
-
-    private function syncLines(JournalEntry $journalEntry, array $lines): void
-    {
-        foreach ($lines as $index => $line) {
-            $journalEntryLine = new JournalEntryLine();
-            $journalEntryLine->company_id = $journalEntry->company_id;
-            $journalEntryLine->journal_entry_id = $journalEntry->id;
-            $journalEntryLine->chart_of_account_id = $line->chartOfAccountId;
-            $journalEntryLine->sequence = $index + 1;
-            $journalEntryLine->debit = $line->debit;
-            $journalEntryLine->credit = $line->credit;
-            $journalEntryLine->remarks = $line->remarks;
-            if (auth()->check()) {
-                $journalEntryLine->created_by = auth()->id();
-                $journalEntryLine->updated_by = auth()->id();
-            }
-            $journalEntryLine->save();
-        }
     }
 }

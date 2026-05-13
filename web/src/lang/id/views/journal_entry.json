@@ -4,7 +4,7 @@
   "actions": {
     "create": "Tambah Jurnal Umum",
     "edit": "Ubah Jurnal Umum",
-    "add_line": "Tambah Baris"
+    "add_item": "Tambah Item"
   },
   "table": {
     "title": "Daftar Jurnal Umum",
@@ -13,7 +13,7 @@
   "field_groups": {
     "company_info": "Informasi Perusahaan",
     "journal_entry_data": "Data Jurnal",
-    "lines": "Baris Jurnal"
+    "items": "Item Jurnal"
   },
   "fields": {
     "company": "Perusahaan",
@@ -26,12 +26,12 @@
     "source_id": "ID Sumber",
     "reference_no": "Nomor Referensi",
     "remarks": "Catatan",
-    "lines": "Baris Jurnal",
-    "line": "Baris",
+    "items": "Item Jurnal",
+    "item": "Item",
     "chart_of_account": "Akun",
     "debit": "Debit",
     "credit": "Kredit",
-    "line_remarks": "Catatan Baris",
+    "item_remarks": "Catatan Item",
     "total_debit": "Total Debit",
     "total_credit": "Total Kredit",
     "balance_status": "Status Balance"
@@ -43,7 +43,7 @@
     }
   },
   "helper": {
-    "single_side_amount": "Setiap baris hanya boleh diisi debit atau kredit."
+    "single_side_amount": "Setiap item hanya boleh diisi debit atau kredit."
   },
   "alert": {
     "delete_journal_entry": {

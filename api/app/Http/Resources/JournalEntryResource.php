@@ -28,7 +28,7 @@ class JournalEntryResource extends JsonResource
             'total_debit' => dec_trim($this->total_debit),
             'total_credit' => dec_trim($this->total_credit),
             'remarks' => $this->remarks,
-            'lines' => JournalEntryLineResource::collection($this->whenLoaded('lines')),
+            'items' => JournalEntryItemResource::collection($this->whenLoaded('items')),
         ];
     }
 }

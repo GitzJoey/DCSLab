@@ -61,9 +61,9 @@ class JournalEntry extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function lines()
+    public function items()
     {
-        return $this->hasMany(JournalEntryLine::class)
+        return $this->hasMany(JournalEntryItem::class)
             ->orderBy('sequence')
             ->orderBy('id');
     }

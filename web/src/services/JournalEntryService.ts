@@ -36,7 +36,7 @@ export default class JournalEntryService {
       source_id: null as number | null,
       reference_no: '',
       remarks: '',
-      lines: [] as Array<{
+      items: [] as Array<{
         chart_of_account_id: string;
         debit: number;
         credit: number;
@@ -65,7 +65,7 @@ export default class JournalEntryService {
       date: '_AUTO_',
       reference_no: '',
       remarks: '',
-      lines: [] as Array<{
+      items: [] as Array<{
         chart_of_account_id: string;
         debit: number;
         credit: number;

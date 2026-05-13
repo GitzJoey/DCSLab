@@ -223,18 +223,18 @@ const showAlertPlaceholder = (
                           <Table.Th>{{ t('views.journal_entry.fields.chart_of_account') }}</Table.Th>
                           <Table.Th class="text-right">{{ t('views.journal_entry.fields.debit') }}</Table.Th>
                           <Table.Th class="text-right">{{ t('views.journal_entry.fields.credit') }}</Table.Th>
-                          <Table.Th>{{ t('views.journal_entry.fields.line_remarks') }}</Table.Th>
+                          <Table.Th>{{ t('views.journal_entry.fields.item_remarks') }}</Table.Th>
                         </Table.Tr>
                       </Table.Thead>
                       <Table.Tbody>
-                        <Table.Tr v-for="line in item.lines" :key="line.id">
-                          <Table.Td>{{ line.sequence }}</Table.Td>
+                        <Table.Tr v-for="journalEntryItem in item.items" :key="journalEntryItem.id">
+                          <Table.Td>{{ journalEntryItem.sequence }}</Table.Td>
                           <Table.Td>
-                            {{ line.chart_of_account?.code ?? '-' }} - {{ line.chart_of_account?.name ?? '-' }}
+                            {{ journalEntryItem.chart_of_account?.code ?? '-' }} - {{ journalEntryItem.chart_of_account?.name ?? '-' }}
                           </Table.Td>
-                          <Table.Td class="text-right">{{ formatCurrency(line.debit) }}</Table.Td>
-                          <Table.Td class="text-right">{{ formatCurrency(line.credit) }}</Table.Td>
-                          <Table.Td>{{ line.remarks || '-' }}</Table.Td>
+                          <Table.Td class="text-right">{{ formatCurrency(journalEntryItem.debit) }}</Table.Td>
+                          <Table.Td class="text-right">{{ formatCurrency(journalEntryItem.credit) }}</Table.Td>
+                          <Table.Td>{{ journalEntryItem.remarks || '-' }}</Table.Td>
                         </Table.Tr>
                       </Table.Tbody>
                     </Table>

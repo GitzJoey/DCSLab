@@ -80,13 +80,13 @@ return [
         'source_id' => 'ID Sumber',
         'reference_no' => 'Nomor Referensi',
         'remarks' => 'Catatan',
-        'lines' => 'Baris Jurnal',
+        'items' => 'Item Jurnal',
     ],
-    'journal_entry_line' => [
+    'journal_entry_item' => [
         'chart_of_account_id' => 'Akun',
         'debit' => 'Debit',
         'credit' => 'Kredit',
-        'remarks' => 'Catatan Baris',
+        'remarks' => 'Catatan Item',
     ],
 
     'product_category' => [

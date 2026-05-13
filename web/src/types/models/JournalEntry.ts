@@ -2,7 +2,7 @@ import type { Branch } from './Branch';
 import type { ChartOfAccount } from './ChartOfAccount';
 import type { Company } from './Company';
 
-export interface JournalEntryLine {
+export interface JournalEntryItem {
   id: string;
   journal_entry_id: string;
   chart_of_account_id: string;
@@ -26,5 +26,5 @@ export interface JournalEntry {
   total_debit: number;
   total_credit: number;
   remarks: string | null;
-  lines: JournalEntryLine[];
+  items: JournalEntryItem[];
 }

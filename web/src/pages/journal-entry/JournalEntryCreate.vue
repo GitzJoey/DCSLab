@@ -44,7 +44,7 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     state: CardState.Expanded,
   },
   {
-    title: 'views.journal_entry.field_groups.lines',
+    title: 'views.journal_entry.field_groups.items',
     state: CardState.Expanded,
   },
   { title: '', state: CardState.Hidden, id: 'button' },
@@ -68,10 +68,10 @@ const branchLabel = computed(() =>
     : '',
 );
 const totalDebit = computed(() =>
-  journalEntryForm.lines.reduce((total, line) => total + Number(line.debit || 0), 0),
+  journalEntryForm.items.reduce((total, item) => total + Number(item.debit || 0), 0),
 );
 const totalCredit = computed(() =>
-  journalEntryForm.lines.reduce((total, line) => total + Number(line.credit || 0), 0),
+  journalEntryForm.items.reduce((total, item) => total + Number(item.credit || 0), 0),
 );
 const isBalanced = computed(() => Number(totalDebit.value.toFixed(8)) === Number(totalCredit.value.toFixed(8)));
 
@@ -88,7 +88,7 @@ onMounted(async () => {
 
   loadFromCache();
   setDefaultHeaderData();
-  ensureMinimumLines();
+  ensureMinimumItems();
   await loadChartOfAccountDDL();
 });
 
@@ -160,8 +160,8 @@ const setCode = () => {
   }
 };
 
-const addLine = () => {
-  journalEntryForm.lines.push({
+const addItem = () => {
+  journalEntryForm.items.push({
     chart_of_account_id: '',
     debit: 0,
     credit: 0,
@@ -169,21 +169,21 @@ const addLine = () => {
   });
 };
 
-const ensureMinimumLines = () => {
-  while (journalEntryForm.lines.length < 2) {
-    addLine();
+const ensureMinimumItems = () => {
+  while (journalEntryForm.items.length < 2) {
+    addItem();
   }
 };
 
-const removeLine = (index: number) => {
-  journalEntryForm.lines.splice(index, 1);
-  if (journalEntryForm.lines.length === 0) {
-    ensureMinimumLines();
+const removeItem = (index: number) => {
+  journalEntryForm.items.splice(index, 1);
+  if (journalEntryForm.items.length === 0) {
+    ensureMinimumItems();
   }
 };
 
-const invalidLineField = (field: string) => journalEntryForm.invalid(field as any);
-const lineFieldErrors = (field: string): string | undefined => {
+const invalidItemField = (field: string) => journalEntryForm.invalid(field as any);
+const itemFieldErrors = (field: string): string | undefined => {
   const error = (journalEntryForm.errors as Record<string, Array<string> | string | undefined>)[field];
 
   if (Array.isArray(error)) {
@@ -211,9 +211,9 @@ const resetForm = async () => {
     source_id: null,
     reference_no: '',
     remarks: '',
-    lines: [],
+    items: [],
   });
-  ensureMinimumLines();
+  ensureMinimumItems();
 };
 
 const onSubmit = async () => {
@@ -357,86 +357,86 @@ const showAlertPlaceholder = (
         <div class="p-5">
           <div class="mb-4 flex items-center justify-between">
             <div>
-              <div class="text-base font-medium">{{ t('views.journal_entry.fields.lines') }}</div>
+              <div class="text-base font-medium">{{ t('views.journal_entry.fields.items') }}</div>
               <div class="text-sm text-slate-500">
                 {{ t('views.journal_entry.helper.single_side_amount') }}
               </div>
             </div>
-            <Button type="button" variant="outline-primary" @click="addLine">
+            <Button type="button" variant="outline-primary" @click="addItem">
               <Lucide icon="Plus" class="mr-1 h-4 w-4" />
-              {{ t('views.journal_entry.actions.add_line') }}
+              {{ t('views.journal_entry.actions.add_item') }}
             </Button>
           </div>
 
-          <FormErrorMessages :messages="journalEntryForm.errors.lines" />
+          <FormErrorMessages :messages="journalEntryForm.errors.items" />
 
           <div class="space-y-4">
             <div
-              v-for="(line, index) in journalEntryForm.lines"
+              v-for="(item, index) in journalEntryForm.items"
               :key="index"
               class="rounded-md border border-slate-200/60 p-4 dark:border-darkmode-400"
             >
               <div class="mb-3 flex items-center justify-between">
-                <div class="font-medium">{{ t('views.journal_entry.fields.line') }} #{{ index + 1 }}</div>
-                <Button type="button" variant="outline-danger" @click="removeLine(index)">
+                <div class="font-medium">{{ t('views.journal_entry.fields.item') }} #{{ index + 1 }}</div>
+                <Button type="button" variant="outline-danger" @click="removeItem(index)">
                   <Lucide icon="Trash2" class="h-4 w-4" />
                 </Button>
               </div>
 
               <div class="grid grid-cols-12 gap-4 gap-y-3">
                 <div class="col-span-12 lg:col-span-4">
-                  <FormLabel :class="{ 'text-danger': invalidLineField(`lines.${index}.chart_of_account_id`) }">
+                  <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.chart_of_account_id`) }">
                     {{ t('views.journal_entry.fields.chart_of_account') }}
                   </FormLabel>
                   <FormSelect
-                    :id="`lines.${index}.chart_of_account_id`"
-                    v-model="line.chart_of_account_id"
+                    :id="`items.${index}.chart_of_account_id`"
+                    v-model="item.chart_of_account_id"
                     :options="accountOptionsDDL"
-                    :class="{ 'border-danger': invalidLineField(`lines.${index}.chart_of_account_id`) }"
-                    @change="journalEntryForm.validate(`lines.${index}.chart_of_account_id` as any)"
+                    :class="{ 'border-danger': invalidItemField(`items.${index}.chart_of_account_id`) }"
+                    @change="journalEntryForm.validate(`items.${index}.chart_of_account_id` as any)"
                   />
-                  <FormErrorMessages :messages="lineFieldErrors(`lines.${index}.chart_of_account_id`)" />
+                  <FormErrorMessages :messages="itemFieldErrors(`items.${index}.chart_of_account_id`)" />
                 </div>
 
                 <div class="col-span-12 lg:col-span-2">
-                  <FormLabel :class="{ 'text-danger': invalidLineField(`lines.${index}.debit`) }">
+                  <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.debit`) }">
                     {{ t('views.journal_entry.fields.debit') }}
                   </FormLabel>
                   <FormInputCurrency
-                    :id="`lines.${index}.debit`"
-                    v-model="line.debit"
+                    :id="`items.${index}.debit`"
+                    v-model="item.debit"
                     :allow-negative="false"
-                    :class="{ 'border-danger': invalidLineField(`lines.${index}.debit`) }"
-                    @change="journalEntryForm.validate(`lines.${index}.debit` as any)"
+                    :class="{ 'border-danger': invalidItemField(`items.${index}.debit`) }"
+                    @change="journalEntryForm.validate(`items.${index}.debit` as any)"
                   />
-                  <FormErrorMessages :messages="lineFieldErrors(`lines.${index}.debit`)" />
+                  <FormErrorMessages :messages="itemFieldErrors(`items.${index}.debit`)" />
                 </div>
 
                 <div class="col-span-12 lg:col-span-2">
-                  <FormLabel :class="{ 'text-danger': invalidLineField(`lines.${index}.credit`) }">
+                  <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.credit`) }">
                     {{ t('views.journal_entry.fields.credit') }}
                   </FormLabel>
                   <FormInputCurrency
-                    :id="`lines.${index}.credit`"
-                    v-model="line.credit"
+                    :id="`items.${index}.credit`"
+                    v-model="item.credit"
                     :allow-negative="false"
-                    :class="{ 'border-danger': invalidLineField(`lines.${index}.credit`) }"
-                    @change="journalEntryForm.validate(`lines.${index}.credit` as any)"
+                    :class="{ 'border-danger': invalidItemField(`items.${index}.credit`) }"
+                    @change="journalEntryForm.validate(`items.${index}.credit` as any)"
                   />
-                  <FormErrorMessages :messages="lineFieldErrors(`lines.${index}.credit`)" />
+                  <FormErrorMessages :messages="itemFieldErrors(`items.${index}.credit`)" />
                 </div>
 
                 <div class="col-span-12 lg:col-span-4">
-                  <FormLabel :class="{ 'text-danger': invalidLineField(`lines.${index}.remarks`) }">
-                    {{ t('views.journal_entry.fields.line_remarks') }}
+                  <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.remarks`) }">
+                    {{ t('views.journal_entry.fields.item_remarks') }}
                   </FormLabel>
                   <FormInput
-                    :id="`lines.${index}.remarks`"
-                    v-model="line.remarks"
-                    :class="{ 'border-danger': invalidLineField(`lines.${index}.remarks`) }"
-                    @change="journalEntryForm.validate(`lines.${index}.remarks` as any)"
+                    :id="`items.${index}.remarks`"
+                    v-model="item.remarks"
+                    :class="{ 'border-danger': invalidItemField(`items.${index}.remarks`) }"
+                    @change="journalEntryForm.validate(`items.${index}.remarks` as any)"
                   />
-                  <FormErrorMessages :messages="lineFieldErrors(`lines.${index}.remarks`)" />
+                  <FormErrorMessages :messages="itemFieldErrors(`items.${index}.remarks`)" />
                 </div>
               </div>
             </div>

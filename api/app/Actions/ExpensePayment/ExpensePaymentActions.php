@@ -11,7 +11,7 @@ use App\DTOs\ExecuteDTO;
 use App\DTOs\ExpensePaymentCreateDTO;
 use App\DTOs\ExpensePaymentUpdateDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\ExpensePayment;
@@ -19,7 +19,6 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class ExpensePaymentActions
 {
@@ -218,16 +217,6 @@ class ExpensePaymentActions
                 data: CashTransactionCreateDTO::fromExpensePayment($expensePayment)
             );
 
-            $payableChartOfAccount = $expensePayment->company->liabilityAccountPayableChartOfAccount;
-            if (! $payableChartOfAccount) {
-                throw new InvalidArgumentException('Expense payment payable chart of account must exist.');
-            }
-
-            $cashAccountChartOfAccount = $expensePayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Expense payment cash account chart of account must exist.');
-            }
-
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $expensePayment->company_id,
                 branchId: $expensePayment->branch_id,
@@ -237,20 +226,27 @@ class ExpensePaymentActions
                 sourceId: $expensePayment->id,
                 referenceNo: $expensePayment->code,
                 remarks: $expensePayment->remarks,
-                lines: [
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $payableChartOfAccount->id,
+                items: (function () use ($expensePayment) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expensePayment->company->liabilityAccountPayableChartOfAccount?->id,
                         debit: (float) $expensePayment->amount,
                         credit: 0,
                         remarks: $expensePayment->remarks,
-                    ),
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expensePayment->cashAccount?->chartOfAccount?->id,
                         debit: 0,
                         credit: (float) $expensePayment->amount,
                         remarks: $expensePayment->remarks,
-                    ),
-                ],
+                    );
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
 
@@ -295,16 +291,6 @@ class ExpensePaymentActions
                 );
             }
 
-            $payableChartOfAccount = $expensePayment->company->liabilityAccountPayableChartOfAccount;
-            if (! $payableChartOfAccount) {
-                throw new InvalidArgumentException('Expense payment payable chart of account must exist.');
-            }
-
-            $cashAccountChartOfAccount = $expensePayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Expense payment cash account chart of account must exist.');
-            }
-
             $journalEntry = $expensePayment->journalEntry;
             if (! $journalEntry) {
                 $journalEntryDTO = new JournalEntryCreateDTO(
@@ -316,20 +302,27 @@ class ExpensePaymentActions
                     sourceId: $expensePayment->id,
                     referenceNo: $expensePayment->code,
                     remarks: $expensePayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $payableChartOfAccount->id,
+                    items: (function () use ($expensePayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expensePayment->company->liabilityAccountPayableChartOfAccount?->id,
                             debit: (float) $expensePayment->amount,
                             credit: 0,
                             remarks: $expensePayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expensePayment->cashAccount?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $expensePayment->amount,
                             remarks: $expensePayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -339,20 +332,27 @@ class ExpensePaymentActions
                     date: $expensePayment->date,
                     referenceNo: $expensePayment->code,
                     remarks: $expensePayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $payableChartOfAccount->id,
+                    items: (function () use ($expensePayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expensePayment->company->liabilityAccountPayableChartOfAccount?->id,
                             debit: (float) $expensePayment->amount,
                             credit: 0,
                             remarks: $expensePayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expensePayment->cashAccount?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $expensePayment->amount,
                             remarks: $expensePayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }

@@ -7,7 +7,7 @@ use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\JournalEntry\JournalEntryStoreRequest;
@@ -127,14 +127,7 @@ class JournalEntryController extends BaseController
             }
 
             DB::beginTransaction();
-            $lines = collect($validatedRequest['lines'])
-                ->map(fn (array $line) => new JournalEntryLineDTO(
-                    chartOfAccountId: (int) $line['chart_of_account_id'],
-                    debit: max((float) ($line['debit'] ?? 0), 0),
-                    credit: max((float) ($line['credit'] ?? 0), 0),
-                    remarks: $line['remarks'] ?? null,
-                ))
-                ->all();
+
             $dto = new JournalEntryCreateDTO(
                 companyId: $validatedRequest['company_id'],
                 branchId: $validatedRequest['branch_id'],
@@ -144,7 +137,15 @@ class JournalEntryController extends BaseController
                 sourceId: $validatedRequest['source_id'],
                 referenceNo: $validatedRequest['reference_no'],
                 remarks: $validatedRequest['remarks'],
-                lines: $lines,
+                items: collect($validatedRequest['items'])
+                    ->map(fn (array $item, int $index) => new JournalEntryItemDTO(
+                        sequence: $index + 1,
+                        chartOfAccountId: (int) $item['chart_of_account_id'],
+                        debit: max((float) ($item['debit'] ?? 0), 0),
+                        credit: max((float) ($item['credit'] ?? 0), 0),
+                        remarks: $item['remarks'] ?? null,
+                    ))
+                    ->all(),
             );
             $result = $this->journalEntryActions->create($dto);
             DB::commit();
@@ -174,21 +175,22 @@ class JournalEntryController extends BaseController
             }
 
             DB::beginTransaction();
-            $lines = collect($validatedRequest['lines'])
-                ->map(fn (array $line) => new JournalEntryLineDTO(
-                    chartOfAccountId: (int) $line['chart_of_account_id'],
-                    debit: max((float) ($line['debit'] ?? 0), 0),
-                    credit: max((float) ($line['credit'] ?? 0), 0),
-                    remarks: $line['remarks'] ?? null,
-                ))
-                ->all();
+
             $result = $this->journalEntryActions->update($journalEntry, new JournalEntryUpdateDTO(
                 branchId: $validatedRequest['branch_id'],
                 code: $validatedRequest['code'],
                 date: $validatedRequest['date'],
                 referenceNo: $validatedRequest['reference_no'],
                 remarks: $validatedRequest['remarks'],
-                lines: $lines,
+                items: collect($validatedRequest['items'])
+                    ->map(fn (array $item, int $index) => new JournalEntryItemDTO(
+                        sequence: $index + 1,
+                        chartOfAccountId: (int) $item['chart_of_account_id'],
+                        debit: max((float) ($item['debit'] ?? 0), 0),
+                        credit: max((float) ($item['credit'] ?? 0), 0),
+                        remarks: $item['remarks'] ?? null,
+                    ))
+                    ->all(),
             ));
             DB::commit();
         } catch (Exception $e) {

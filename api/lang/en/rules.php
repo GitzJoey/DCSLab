@@ -94,7 +94,7 @@ return [
     ],
     'journal_entry' => [
         'source_type_and_source_id_must_be_paired' => 'Source type and source id must be filled as a pair.',
-        'line_must_have_single_side_amount' => 'Each journal line may only contain debit or credit amount.',
+        'item_must_have_single_side_amount' => 'Each journal item may only contain debit or credit amount.',
         'total_must_be_positive' => 'Journal total debit and credit must be greater than zero.',
         'total_debit_and_credit_must_balance' => 'Journal total debit and credit must be balanced.',
         'account_must_not_be_group' => 'Journal account must not be a group account.',

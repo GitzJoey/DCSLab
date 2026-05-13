@@ -68,11 +68,11 @@ const accountBalances = computed(() => {
   const result = new Map<string, { debit: number; credit: number }>();
 
   for (const journalEntry of journalEntryLists.value?.data ?? []) {
-    for (const line of journalEntry.lines) {
-      const current = result.get(line.chart_of_account_id) ?? { debit: 0, credit: 0 };
-      current.debit += Number(line.debit ?? 0);
-      current.credit += Number(line.credit ?? 0);
-      result.set(line.chart_of_account_id, current);
+    for (const item of journalEntry.items) {
+      const current = result.get(item.chart_of_account_id) ?? { debit: 0, credit: 0 };
+      current.debit += Number(item.debit ?? 0);
+      current.credit += Number(item.credit ?? 0);
+      result.set(item.chart_of_account_id, current);
     }
   }
 

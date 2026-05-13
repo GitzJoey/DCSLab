@@ -81,13 +81,13 @@ return [
         'source_id' => 'Source ID',
         'reference_no' => 'Reference No',
         'remarks' => 'Remarks',
-        'lines' => 'Journal Lines',
+        'items' => 'Journal Items',
     ],
-    'journal_entry_line' => [
+    'journal_entry_item' => [
         'chart_of_account_id' => 'Account',
         'debit' => 'Debit',
         'credit' => 'Credit',
-        'remarks' => 'Line Remarks',
+        'remarks' => 'Item Remarks',
     ],
 
     'product_category' => [

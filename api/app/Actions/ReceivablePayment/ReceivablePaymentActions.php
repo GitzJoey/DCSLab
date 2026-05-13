@@ -9,7 +9,7 @@ use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\DTOs\ReceivablePaymentCreateDTO;
 use App\DTOs\ReceivablePaymentUpdateDTO;
@@ -19,7 +19,6 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class ReceivablePaymentActions
 {
@@ -219,19 +218,6 @@ class ReceivablePaymentActions
                 data: CashTransactionCreateDTO::fromReceivablePayment($receivablePayment)
             );
 
-            $customerChartOfAccount = $receivablePayment->receivable->customer?->chartOfAccount;
-            if (! $customerChartOfAccount) {
-                $customerChartOfAccount = $receivablePayment->company->assetCurrentAccountReceivableChartOfAccount;
-            }
-            if (! $customerChartOfAccount) {
-                throw new InvalidArgumentException('Receivable payment receivable chart of account must exist.');
-            }
-
-            $cashAccountChartOfAccount = $receivablePayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Receivable payment cash account chart of account must exist.');
-            }
-
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $receivablePayment->company_id,
                 branchId: $receivablePayment->branch_id,
@@ -241,20 +227,27 @@ class ReceivablePaymentActions
                 sourceId: $receivablePayment->id,
                 referenceNo: $receivablePayment->code,
                 remarks: $receivablePayment->remarks,
-                lines: [
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                items: (function () use ($receivablePayment) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $receivablePayment->cashAccount?->chartOfAccount?->id,
                         debit: (float) $receivablePayment->amount,
                         credit: 0,
                         remarks: $receivablePayment->remarks,
-                    ),
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $customerChartOfAccount->id,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $receivablePayment->receivable->customer?->chartOfAccount?->id,
                         debit: 0,
                         credit: (float) $receivablePayment->amount,
                         remarks: $receivablePayment->remarks,
-                    ),
-                ],
+                    );
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
 
@@ -299,19 +292,6 @@ class ReceivablePaymentActions
                 );
             }
 
-            $customerChartOfAccount = $receivablePayment->receivable->customer?->chartOfAccount;
-            if (! $customerChartOfAccount) {
-                $customerChartOfAccount = $receivablePayment->company->assetCurrentAccountReceivableChartOfAccount;
-            }
-            if (! $customerChartOfAccount) {
-                throw new InvalidArgumentException('Receivable payment receivable chart of account must exist.');
-            }
-
-            $cashAccountChartOfAccount = $receivablePayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Receivable payment cash account chart of account must exist.');
-            }
-
             $journalEntry = $receivablePayment->journalEntry;
             if (! $journalEntry) {
                 $journalEntryDTO = new JournalEntryCreateDTO(
@@ -323,20 +303,27 @@ class ReceivablePaymentActions
                     sourceId: $receivablePayment->id,
                     referenceNo: $receivablePayment->code,
                     remarks: $receivablePayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                    items: (function () use ($receivablePayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $receivablePayment->cashAccount?->chartOfAccount?->id,
                             debit: (float) $receivablePayment->amount,
                             credit: 0,
                             remarks: $receivablePayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $customerChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $receivablePayment->receivable->customer?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $receivablePayment->amount,
                             remarks: $receivablePayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -346,20 +333,27 @@ class ReceivablePaymentActions
                     date: $receivablePayment->date,
                     referenceNo: $receivablePayment->code,
                     remarks: $receivablePayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                    items: (function () use ($receivablePayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $receivablePayment->cashAccount?->chartOfAccount?->id,
                             debit: (float) $receivablePayment->amount,
                             credit: 0,
                             remarks: $receivablePayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $customerChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $receivablePayment->receivable->customer?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $receivablePayment->amount,
                             remarks: $receivablePayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }

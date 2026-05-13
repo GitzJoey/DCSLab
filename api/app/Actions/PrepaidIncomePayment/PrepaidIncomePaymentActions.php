@@ -9,7 +9,7 @@ use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\DTOs\PrepaidIncomePaymentCreateDTO;
 use App\DTOs\PrepaidIncomePaymentUpdateDTO;
@@ -19,7 +19,6 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class PrepaidIncomePaymentActions
 {
@@ -218,16 +217,6 @@ class PrepaidIncomePaymentActions
                 data: CashTransactionCreateDTO::fromPrepaidIncomePayment($prepaidIncomePayment)
             );
 
-            $cashAccountChartOfAccount = $prepaidIncomePayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Prepaid income payment cash account chart of account must exist.');
-            }
-
-            $receivableChartOfAccount = $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount;
-            if (! $receivableChartOfAccount) {
-                throw new InvalidArgumentException('Prepaid income payment receivable chart of account must exist.');
-            }
-
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $prepaidIncomePayment->company_id,
                 branchId: $prepaidIncomePayment->branch_id,
@@ -237,20 +226,27 @@ class PrepaidIncomePaymentActions
                 sourceId: $prepaidIncomePayment->id,
                 referenceNo: $prepaidIncomePayment->code,
                 remarks: $prepaidIncomePayment->remarks,
-                lines: [
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                items: (function () use ($prepaidIncomePayment) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $prepaidIncomePayment->cashAccount?->chartOfAccount?->id,
                         debit: (float) $prepaidIncomePayment->amount,
                         credit: 0,
                         remarks: $prepaidIncomePayment->remarks,
-                    ),
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $receivableChartOfAccount->id,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
                         debit: 0,
                         credit: (float) $prepaidIncomePayment->amount,
                         remarks: $prepaidIncomePayment->remarks,
-                    ),
-                ],
+                    );
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
 
@@ -295,16 +291,6 @@ class PrepaidIncomePaymentActions
                 );
             }
 
-            $cashAccountChartOfAccount = $prepaidIncomePayment->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Prepaid income payment cash account chart of account must exist.');
-            }
-
-            $receivableChartOfAccount = $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount;
-            if (! $receivableChartOfAccount) {
-                throw new InvalidArgumentException('Prepaid income payment receivable chart of account must exist.');
-            }
-
             $journalEntry = $prepaidIncomePayment->journalEntry;
             if (! $journalEntry) {
                 $journalEntryDTO = new JournalEntryCreateDTO(
@@ -316,20 +302,27 @@ class PrepaidIncomePaymentActions
                     sourceId: $prepaidIncomePayment->id,
                     referenceNo: $prepaidIncomePayment->code,
                     remarks: $prepaidIncomePayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                    items: (function () use ($prepaidIncomePayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $prepaidIncomePayment->cashAccount?->chartOfAccount?->id,
                             debit: (float) $prepaidIncomePayment->amount,
                             credit: 0,
                             remarks: $prepaidIncomePayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $receivableChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
                             debit: 0,
                             credit: (float) $prepaidIncomePayment->amount,
                             remarks: $prepaidIncomePayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -339,20 +332,27 @@ class PrepaidIncomePaymentActions
                     date: $prepaidIncomePayment->date,
                     referenceNo: $prepaidIncomePayment->code,
                     remarks: $prepaidIncomePayment->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                    items: (function () use ($prepaidIncomePayment) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $prepaidIncomePayment->cashAccount?->chartOfAccount?->id,
                             debit: (float) $prepaidIncomePayment->amount,
                             credit: 0,
                             remarks: $prepaidIncomePayment->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $receivableChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
                             debit: 0,
                             credit: (float) $prepaidIncomePayment->amount,
                             remarks: $prepaidIncomePayment->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }

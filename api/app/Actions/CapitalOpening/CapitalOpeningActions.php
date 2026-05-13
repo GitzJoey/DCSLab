@@ -10,7 +10,7 @@ use App\DTOs\CashTransactionCreateDTO;
 use App\DTOs\CashTransactionUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\Helpers\TimezoneHelper;
 use App\Models\CapitalOpening;
@@ -18,7 +18,6 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class CapitalOpeningActions
 {
@@ -180,16 +179,6 @@ class CapitalOpeningActions
                 data: CashTransactionCreateDTO::fromCapitalOpening($capitalOpening)
             );
 
-            $cashAccountChartOfAccount = $capitalOpening->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Capital opening cash account chart of account must exist.');
-            }
-
-            $investorChartOfAccount = $capitalOpening->investor->openingCapitalChartOfAccount;
-            if (! $investorChartOfAccount) {
-                throw new InvalidArgumentException('Capital opening investor opening capital chart of account must exist.');
-            }
-
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $capitalOpening->company_id,
                 branchId: $capitalOpening->branch_id,
@@ -199,20 +188,27 @@ class CapitalOpeningActions
                 sourceId: $capitalOpening->id,
                 referenceNo: $capitalOpening->code,
                 remarks: $capitalOpening->remarks,
-                lines: [
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $cashAccountChartOfAccount->id,
+                items: (function () use ($capitalOpening) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $capitalOpening->cashAccount?->chartOfAccount?->id,
                         debit: (float) $capitalOpening->amount,
                         credit: 0,
                         remarks: $capitalOpening->remarks,
-                    ),
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $investorChartOfAccount->id,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $capitalOpening->investor?->openingCapitalChartOfAccount?->id,
                         debit: 0,
                         credit: (float) $capitalOpening->amount,
                         remarks: $capitalOpening->remarks,
-                    ),
-                ],
+                    );
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
 
@@ -253,16 +249,6 @@ class CapitalOpeningActions
                 );
             }
 
-            $cashAccountChartOfAccount = $capitalOpening->cashAccount->chartOfAccount;
-            if (! $cashAccountChartOfAccount) {
-                throw new InvalidArgumentException('Capital opening cash account chart of account must exist.');
-            }
-
-            $investorChartOfAccount = $capitalOpening->investor->openingCapitalChartOfAccount;
-            if (! $investorChartOfAccount) {
-                throw new InvalidArgumentException('Capital opening investor opening capital chart of account must exist.');
-            }
-
             $journalEntry = $capitalOpening->journalEntry;
             if (! $journalEntry) {
                 $journalEntryDTO = new JournalEntryCreateDTO(
@@ -274,20 +260,27 @@ class CapitalOpeningActions
                     sourceId: $capitalOpening->id,
                     referenceNo: $capitalOpening->code,
                     remarks: $capitalOpening->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                    items: (function () use ($capitalOpening) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $capitalOpening->cashAccount?->chartOfAccount?->id,
                             debit: (float) $capitalOpening->amount,
                             credit: 0,
                             remarks: $capitalOpening->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $investorChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $capitalOpening->investor?->openingCapitalChartOfAccount?->id,
                             debit: 0,
                             credit: (float) $capitalOpening->amount,
                             remarks: $capitalOpening->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -297,20 +290,27 @@ class CapitalOpeningActions
                     date: $capitalOpening->date,
                     referenceNo: $capitalOpening->code,
                     remarks: $capitalOpening->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $cashAccountChartOfAccount->id,
+                    items: (function () use ($capitalOpening) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $capitalOpening->cashAccount?->chartOfAccount?->id,
                             debit: (float) $capitalOpening->amount,
                             credit: 0,
                             remarks: $capitalOpening->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $investorChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $capitalOpening->investor?->openingCapitalChartOfAccount?->id,
                             debit: 0,
                             credit: (float) $capitalOpening->amount,
                             remarks: $capitalOpening->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }

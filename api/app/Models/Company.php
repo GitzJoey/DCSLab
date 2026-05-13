@@ -181,6 +181,12 @@ class Company extends Model
             ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_ACCOUNT_RECEIVABLE);
     }
 
+    public function assetCurrentPrepaidExpenseChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_PREPAID_EXPENSE);
+    }
+
     public function equityCapitalOpeningCapitalChartOfAccount()
     {
         return $this->hasOne(ChartOfAccount::class)
@@ -197,6 +203,24 @@ class Company extends Model
     {
         return $this->hasOne(ChartOfAccount::class)
             ->where('system_key', ChartOfAccountSystemKeyEnum::EQUITY_CAPITAL_DRAWING);
+    }
+
+    public function incomeRootChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::INCOME_ROOT);
+    }
+
+    public function expenseRootChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::EXPENSE_ROOT);
+    }
+
+    public function liabilityDeferredIncomeChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::LIABILITY_DEFERRED_INCOME);
     }
 
     public function investors()

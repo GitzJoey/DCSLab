@@ -6,7 +6,7 @@ use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JournalEntryLine extends Model
+class JournalEntryItem extends Model
 {
     use HasFactory;
     use ScopeableByCompany;

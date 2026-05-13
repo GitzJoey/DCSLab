@@ -2,6 +2,9 @@
 
 namespace App\Actions\ExpenseCategory;
 
+use App\Actions\ChartOfAccount\ChartOfAccountActions;
+use App\DTOs\ChartOfAccountCreateDTO;
+use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExpenseCategoryCreateDTO;
 use App\DTOs\ExpenseCategoryUpdateDTO;
@@ -10,6 +13,7 @@ use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
 
 class ExpenseCategoryActions
 {
@@ -27,8 +31,9 @@ class ExpenseCategoryActions
         'childrenRecursive',
     ];
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly ChartOfAccountActions $chartOfAccountActions,
+    ) {
     }
 
     public function readAny(
@@ -191,6 +196,50 @@ class ExpenseCategoryActions
             $expenseCategory->sequence = $data->sequence;
             $expenseCategory->save();
 
+            if ($expenseCategory->parent_id) {
+                $parentChartOfAccount = $expenseCategory->parent?->chartOfAccount;
+                if (! $parentChartOfAccount) {
+                    throw new InvalidArgumentException('Expense category parent chart of account must exist in company.');
+                }
+            } else {
+                $parentChartOfAccount = $expenseCategory->company->expenseRootChartOfAccount;
+                if (! $parentChartOfAccount) {
+                    throw new InvalidArgumentException('Expense category chart of account parent must exist in company.');
+                }
+            }
+
+            $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                companyId: $expenseCategory->company_id,
+                scope: 'user',
+                systemKey: null,
+                parentId: $parentChartOfAccount->id,
+                sourceType: ExpenseCategory::class,
+                sourceId: $expenseCategory->id,
+                code: $parentChartOfAccount->code.'.'.$expenseCategory->code,
+                name: $expenseCategory->name,
+                normalBalance: 'debit',
+                isGroup: false,
+                isActive: true,
+                remarks: null,
+            );
+            $this->chartOfAccountActions->create($chartOfAccountDTO);
+
+            if ($expenseCategory->parent_id) {
+                $parentExpenseCategoryChartOfAccount = $expenseCategory->parent?->chartOfAccount;
+                if ($parentExpenseCategoryChartOfAccount && ! $parentExpenseCategoryChartOfAccount->is_group) {
+                    $parentExpenseCategoryChartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                        parentId: $parentExpenseCategoryChartOfAccount->parent_id,
+                        code: $parentExpenseCategoryChartOfAccount->code,
+                        name: $parentExpenseCategoryChartOfAccount->name,
+                        normalBalance: 'debit',
+                        isGroup: true,
+                        isActive: $parentExpenseCategoryChartOfAccount->is_active,
+                        remarks: $parentExpenseCategoryChartOfAccount->remarks,
+                    );
+                    $this->chartOfAccountActions->update($parentExpenseCategoryChartOfAccount, $parentExpenseCategoryChartOfAccountDTO);
+                }
+            }
+
             $this->flushCache();
 
             return $expenseCategory;
@@ -217,6 +266,66 @@ class ExpenseCategoryActions
             $expenseCategory->sequence = $data->sequence;
             $expenseCategory->save();
 
+            if ($expenseCategory->parent_id) {
+                $parentChartOfAccount = $expenseCategory->parent?->chartOfAccount;
+                if (! $parentChartOfAccount) {
+                    throw new InvalidArgumentException('Expense category parent chart of account must exist in company.');
+                }
+            } else {
+                $parentChartOfAccount = $expenseCategory->company->expenseRootChartOfAccount;
+                if (! $parentChartOfAccount) {
+                    throw new InvalidArgumentException('Expense category chart of account parent must exist in company.');
+                }
+            }
+
+            $chartOfAccount = $expenseCategory->chartOfAccount;
+            if ($chartOfAccount) {
+                $chartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $parentChartOfAccount->id,
+                    code: $parentChartOfAccount->code.'.'.$expenseCategory->code,
+                    name: $expenseCategory->name,
+                    normalBalance: 'debit',
+                    isGroup: $expenseCategory->children()->exists(),
+                    isActive: true,
+                    remarks: null,
+                );
+                $chartOfAccount = $this->chartOfAccountActions->update($chartOfAccount, $chartOfAccountDTO);
+            } else {
+                $chartOfAccountDTO = new ChartOfAccountCreateDTO(
+                    companyId: $expenseCategory->company_id,
+                    scope: 'user',
+                    systemKey: null,
+                    parentId: $parentChartOfAccount->id,
+                    sourceType: ExpenseCategory::class,
+                    sourceId: $expenseCategory->id,
+                    code: $parentChartOfAccount->code.'.'.$expenseCategory->code,
+                    name: $expenseCategory->name,
+                    normalBalance: 'debit',
+                    isGroup: $expenseCategory->children()->exists(),
+                    isActive: true,
+                    remarks: null,
+                );
+                $chartOfAccount = $this->chartOfAccountActions->create($chartOfAccountDTO);
+            }
+
+            foreach ($expenseCategory->children as $childExpenseCategory) {
+                $childChartOfAccount = $childExpenseCategory->chartOfAccount;
+                if (! $childChartOfAccount) {
+                    continue;
+                }
+
+                $childChartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                    parentId: $chartOfAccount->id,
+                    code: $chartOfAccount->code.'.'.$childExpenseCategory->code,
+                    name: $childExpenseCategory->name,
+                    normalBalance: 'debit',
+                    isGroup: $childExpenseCategory->children()->exists(),
+                    isActive: true,
+                    remarks: null,
+                );
+                $this->chartOfAccountActions->update($childChartOfAccount, $childChartOfAccountDTO);
+            }
+
             $this->flushCache();
 
             return $expenseCategory->refresh();
@@ -236,7 +345,29 @@ class ExpenseCategoryActions
         $retval = false;
 
         try {
+            $parentExpenseCategory = $expenseCategory->parent;
+            $chartOfAccount = $expenseCategory->chartOfAccount;
+            if ($chartOfAccount) {
+                $this->chartOfAccountActions->delete($chartOfAccount);
+            }
+
             $retval = $expenseCategory->delete();
+
+            if ($parentExpenseCategory && ! $parentExpenseCategory->children()->exists()) {
+                $parentExpenseCategoryChartOfAccount = $parentExpenseCategory->chartOfAccount;
+                if ($parentExpenseCategoryChartOfAccount) {
+                    $parentExpenseCategoryChartOfAccountDTO = new ChartOfAccountUpdateDTO(
+                        parentId: $parentExpenseCategoryChartOfAccount->parent_id,
+                        code: $parentExpenseCategoryChartOfAccount->code,
+                        name: $parentExpenseCategoryChartOfAccount->name,
+                        normalBalance: 'debit',
+                        isGroup: false,
+                        isActive: $parentExpenseCategoryChartOfAccount->is_active,
+                        remarks: $parentExpenseCategoryChartOfAccount->remarks,
+                    );
+                    $this->chartOfAccountActions->update($parentExpenseCategoryChartOfAccount, $parentExpenseCategoryChartOfAccountDTO);
+                }
+            }
 
             $this->flushCache();
 

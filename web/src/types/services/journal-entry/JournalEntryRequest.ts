@@ -11,7 +11,7 @@ export interface JournalEntryReadAnyGetRequest {
   limit: number;
 }
 
-export interface JournalEntryLineStoreRequest {
+export interface JournalEntryItemStoreRequest {
   chart_of_account_id: string;
   debit: number;
   credit: number;
@@ -27,7 +27,7 @@ export interface JournalEntryStoreRequest {
   source_id: number | null;
   reference_no: string | null;
   remarks: string | null;
-  lines: JournalEntryLineStoreRequest[];
+  items: JournalEntryItemStoreRequest[];
 }
 
 export interface JournalEntryUpdateRequest {
@@ -37,5 +37,5 @@ export interface JournalEntryUpdateRequest {
   date: string;
   reference_no: string | null;
   remarks: string | null;
-  lines: JournalEntryLineStoreRequest[];
+  items: JournalEntryItemStoreRequest[];
 }

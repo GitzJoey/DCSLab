@@ -13,8 +13,8 @@ final class JournalEntryCreateDTO
         public readonly ?int $sourceId,
         public readonly ?string $referenceNo,
         public readonly ?string $remarks,
-        /** @var JournalEntryLineDTO[] */
-        public readonly array $lines,
+        /** @var JournalEntryItemDTO[] */
+        public readonly array $items,
     ) {
     }
 }

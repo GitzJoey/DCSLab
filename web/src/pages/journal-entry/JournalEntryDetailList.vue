@@ -61,18 +61,18 @@ const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUs
 
 const entryDetails = computed<JournalEntryDetailRow[]>(() =>
   (journalEntryLists.value?.data ?? []).flatMap((journalEntry) =>
-    journalEntry.lines.map((line) => ({
-      id: line.id,
-      sequence: line.sequence,
+    journalEntry.items.map((item) => ({
+      id: item.id,
+      sequence: item.sequence,
       journal_code: journalEntry.code,
       date: journalEntry.date,
       reference_no: journalEntry.reference_no,
       branch_name: journalEntry.branch?.name ?? null,
-      account_code: line.chart_of_account?.code ?? null,
-      account_name: line.chart_of_account?.name ?? null,
-      debit: line.debit,
-      credit: line.credit,
-      remarks: line.remarks,
+      account_code: item.chart_of_account?.code ?? null,
+      account_name: item.chart_of_account?.name ?? null,
+      debit: item.debit,
+      credit: item.credit,
+      remarks: item.remarks,
       journal_remarks: journalEntry.remarks,
     })),
   ),
@@ -185,7 +185,7 @@ const showAlertPlaceholder = (
             <Table.Th>{{ t('views.journal_entry.fields.chart_of_account') }}</Table.Th>
             <Table.Th class="text-right">{{ t('views.journal_entry.fields.debit') }}</Table.Th>
             <Table.Th class="text-right">{{ t('views.journal_entry.fields.credit') }}</Table.Th>
-            <Table.Th>{{ t('views.journal_entry.fields.line_remarks') }}</Table.Th>
+            <Table.Th>{{ t('views.journal_entry.fields.item_remarks') }}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>

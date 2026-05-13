@@ -10,14 +10,13 @@ use App\DTOs\CashTransferCreateDTO;
 use App\DTOs\CashTransferUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
 use App\Models\CashTransfer;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class CashTransferActions
 {
@@ -156,16 +155,6 @@ class CashTransferActions
             $dto = CashTransactionCreateDTO::fromCashTransferDestination($cashTransfer);
             $this->cashTransactionActions->create($dto);
 
-            $sourceChartOfAccount = $cashTransfer->sourceCashAccount->chartOfAccount;
-            if (! $sourceChartOfAccount) {
-                throw new InvalidArgumentException('Cash transfer source cash account chart of account must exist.');
-            }
-
-            $destinationChartOfAccount = $cashTransfer->destinationCashAccount->chartOfAccount;
-            if (! $destinationChartOfAccount) {
-                throw new InvalidArgumentException('Cash transfer destination cash account chart of account must exist.');
-            }
-
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $cashTransfer->company_id,
                 branchId: $cashTransfer->branch_id,
@@ -175,20 +164,27 @@ class CashTransferActions
                 sourceId: $cashTransfer->id,
                 referenceNo: $cashTransfer->code,
                 remarks: $cashTransfer->remarks,
-                lines: [
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $destinationChartOfAccount->id,
+                items: (function () use ($cashTransfer) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $cashTransfer->destinationCashAccount?->chartOfAccount?->id,
                         debit: (float) $cashTransfer->amount,
                         credit: 0,
                         remarks: $cashTransfer->remarks,
-                    ),
-                    new JournalEntryLineDTO(
-                        chartOfAccountId: $sourceChartOfAccount->id,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $cashTransfer->sourceCashAccount?->chartOfAccount?->id,
                         debit: 0,
                         credit: (float) $cashTransfer->amount,
                         remarks: $cashTransfer->remarks,
-                    ),
-                ],
+                    );
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
 
@@ -236,16 +232,6 @@ class CashTransferActions
                 $this->cashTransactionActions->update($cashTransactionDestination, $dto);
             }
 
-            $sourceChartOfAccount = $cashTransfer->sourceCashAccount->chartOfAccount;
-            if (! $sourceChartOfAccount) {
-                throw new InvalidArgumentException('Cash transfer source cash account chart of account must exist.');
-            }
-
-            $destinationChartOfAccount = $cashTransfer->destinationCashAccount->chartOfAccount;
-            if (! $destinationChartOfAccount) {
-                throw new InvalidArgumentException('Cash transfer destination cash account chart of account must exist.');
-            }
-
             $journalEntry = $cashTransfer->journalEntry;
             if (! $journalEntry) {
                 $journalEntryDTO = new JournalEntryCreateDTO(
@@ -257,20 +243,27 @@ class CashTransferActions
                     sourceId: $cashTransfer->id,
                     referenceNo: $cashTransfer->code,
                     remarks: $cashTransfer->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $destinationChartOfAccount->id,
+                    items: (function () use ($cashTransfer) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $cashTransfer->destinationCashAccount?->chartOfAccount?->id,
                             debit: (float) $cashTransfer->amount,
                             credit: 0,
                             remarks: $cashTransfer->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $sourceChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $cashTransfer->sourceCashAccount?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $cashTransfer->amount,
                             remarks: $cashTransfer->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -280,20 +273,27 @@ class CashTransferActions
                     date: $cashTransfer->date,
                     referenceNo: $cashTransfer->code,
                     remarks: $cashTransfer->remarks,
-                    lines: [
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $destinationChartOfAccount->id,
+                    items: (function () use ($cashTransfer) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $cashTransfer->destinationCashAccount?->chartOfAccount?->id,
                             debit: (float) $cashTransfer->amount,
                             credit: 0,
                             remarks: $cashTransfer->remarks,
-                        ),
-                        new JournalEntryLineDTO(
-                            chartOfAccountId: $sourceChartOfAccount->id,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $cashTransfer->sourceCashAccount?->chartOfAccount?->id,
                             debit: 0,
                             credit: (float) $cashTransfer->amount,
                             remarks: $cashTransfer->remarks,
-                        ),
-                    ],
+                        );
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }

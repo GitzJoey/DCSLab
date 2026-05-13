@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('journal_entry_lines', function (Blueprint $table) {
+        Schema::create('journal_entry_items', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('company_id')->references('id')->on('companies');
@@ -31,6 +31,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('journal_entry_lines');
+        Schema::dropIfExists('journal_entry_items');
     }
 };

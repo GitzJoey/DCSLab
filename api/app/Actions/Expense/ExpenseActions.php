@@ -15,17 +15,14 @@ use App\DTOs\ExpensePaymentCreateDTO;
 use App\DTOs\ExpensePaymentUpdateDTO;
 use App\DTOs\ExpenseUpdateDTO;
 use App\DTOs\JournalEntryCreateDTO;
-use App\DTOs\JournalEntryLineDTO;
+use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
-use App\Enums\ChartOfAccountSystemKeyEnum;
 use App\Helpers\TimezoneHelper;
-use App\Models\ChartOfAccount;
 use App\Models\Expense;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
 use Exception;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 
 class ExpenseActions
 {
@@ -279,52 +276,7 @@ class ExpenseActions
                 $this->expenseImageActions->attachByHash($expense, $expenseImageDTO);
             }
 
-            $lines = [];
-
-            $expenseChartOfAccount = $expense->category?->chartOfAccount;
-            if (! $expenseChartOfAccount) {
-                $expenseChartOfAccount = ChartOfAccount::where('company_id', $expense->company_id)
-                    ->where('system_key', ChartOfAccountSystemKeyEnum::EXPENSE_ROOT)
-                    ->first();
-            }
-            if (! $expenseChartOfAccount) {
-                throw new InvalidArgumentException('Expense chart of account must exist.');
-            }
-
-            $lines[] = new JournalEntryLineDTO(
-                chartOfAccountId: $expenseChartOfAccount->id,
-                debit: (float) $expense->amount_total,
-                credit: 0,
-                remarks: $expense->remarks,
-            );
-
-            if ((float) $expense->amount_paid_immediately > 0) {
-                $cashAccountChartOfAccount = $expense->paidImmediatelyCashAccount?->chartOfAccount;
-                if (! $cashAccountChartOfAccount) {
-                    throw new InvalidArgumentException('Expense paid immediately cash account chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $cashAccountChartOfAccount->id,
-                    debit: 0,
-                    credit: (float) $expense->amount_paid_immediately,
-                    remarks: $expense->remarks,
-                );
-            }
-
-            if ((float) $expense->amount_payable > 0) {
-                $payableChartOfAccount = $expense->company->liabilityAccountPayableChartOfAccount;
-                if (! $payableChartOfAccount) {
-                    throw new InvalidArgumentException('Expense payable chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $payableChartOfAccount->id,
-                    debit: 0,
-                    credit: (float) $expense->amount_payable,
-                    remarks: $expense->remarks,
-                );
-            }
+            self::updateSummary($expense);
 
             $journalEntryDTO = new JournalEntryCreateDTO(
                 companyId: $expense->company_id,
@@ -335,11 +287,41 @@ class ExpenseActions
                 sourceId: $expense->id,
                 referenceNo: $expense->code,
                 remarks: $expense->remarks,
-                lines: $lines,
+                items: (function () use ($expense) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                        debit: (float) $expense->amount_total,
+                        credit: 0,
+                        remarks: $expense->remarks,
+                    );
+
+                    if ((float) $expense->amount_paid_immediately > 0) {
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_paid_immediately,
+                            remarks: $expense->remarks,
+                        );
+                    }
+
+                    if ((float) $expense->amount_payable > 0) {
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->liabilityAccountPayableChartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_payable,
+                            remarks: $expense->remarks,
+                        );
+                    }
+
+                    return $items;
+                })(),
             );
             $this->journalEntryActions->create($journalEntryDTO);
-
-            self::updateSummary($expense);
 
             $this->flushCache();
 
@@ -428,52 +410,7 @@ class ExpenseActions
                 $this->expenseImageActions->attachByHash($expense, $expenseImageDTO);
             }
 
-            $lines = [];
-
-            $expenseChartOfAccount = $expense->category?->chartOfAccount;
-            if (! $expenseChartOfAccount) {
-                $expenseChartOfAccount = ChartOfAccount::where('company_id', $expense->company_id)
-                    ->where('system_key', ChartOfAccountSystemKeyEnum::EXPENSE_ROOT)
-                    ->first();
-            }
-            if (! $expenseChartOfAccount) {
-                throw new InvalidArgumentException('Expense chart of account must exist.');
-            }
-
-            $lines[] = new JournalEntryLineDTO(
-                chartOfAccountId: $expenseChartOfAccount->id,
-                debit: (float) $expense->amount_total,
-                credit: 0,
-                remarks: $expense->remarks,
-            );
-
-            if ((float) $expense->amount_paid_immediately > 0) {
-                $cashAccountChartOfAccount = $expense->paidImmediatelyCashAccount?->chartOfAccount;
-                if (! $cashAccountChartOfAccount) {
-                    throw new InvalidArgumentException('Expense paid immediately cash account chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $cashAccountChartOfAccount->id,
-                    debit: 0,
-                    credit: (float) $expense->amount_paid_immediately,
-                    remarks: $expense->remarks,
-                );
-            }
-
-            if ((float) $expense->amount_payable > 0) {
-                $payableChartOfAccount = $expense->company->liabilityAccountPayableChartOfAccount;
-                if (! $payableChartOfAccount) {
-                    throw new InvalidArgumentException('Expense payable chart of account must exist.');
-                }
-
-                $lines[] = new JournalEntryLineDTO(
-                    chartOfAccountId: $payableChartOfAccount->id,
-                    debit: 0,
-                    credit: (float) $expense->amount_payable,
-                    remarks: $expense->remarks,
-                );
-            }
+            self::updateSummary($expense);
 
             $journalEntry = $expense->journalEntry;
             if (! $journalEntry) {
@@ -486,7 +423,39 @@ class ExpenseActions
                     sourceId: $expense->id,
                     referenceNo: $expense->code,
                     remarks: $expense->remarks,
-                    lines: $lines,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        if ((float) $expense->amount_paid_immediately > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $expense->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                debit: 0,
+                                credit: (float) $expense->amount_paid_immediately,
+                                remarks: $expense->remarks,
+                            );
+                        }
+
+                        if ((float) $expense->amount_payable > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $expense->company->liabilityAccountPayableChartOfAccount?->id,
+                                debit: 0,
+                                credit: (float) $expense->amount_payable,
+                                remarks: $expense->remarks,
+                            );
+                        }
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->create($journalEntryDTO);
             } else {
@@ -496,12 +465,42 @@ class ExpenseActions
                     date: $expense->date,
                     referenceNo: $expense->code,
                     remarks: $expense->remarks,
-                    lines: $lines,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        if ((float) $expense->amount_paid_immediately > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $expense->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                debit: 0,
+                                credit: (float) $expense->amount_paid_immediately,
+                                remarks: $expense->remarks,
+                            );
+                        }
+
+                        if ((float) $expense->amount_payable > 0) {
+                            $items[] = new JournalEntryItemDTO(
+                                sequence: count($items) + 1,
+                                chartOfAccountId: $expense->company->liabilityAccountPayableChartOfAccount?->id,
+                                debit: 0,
+                                credit: (float) $expense->amount_payable,
+                                remarks: $expense->remarks,
+                            );
+                        }
+
+                        return $items;
+                    })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
             }
-
-            self::updateSummary($expense);
 
             $this->flushCache();
 
