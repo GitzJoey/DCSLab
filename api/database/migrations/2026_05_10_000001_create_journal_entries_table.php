@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('branch_id')->nullable()->references('id')->on('branches');
             $table->string('code');
             $table->dateTime('date');
+            $table->string('journal_type')->nullable();
             $table->string('source_type')->nullable();
             $table->unsignedBigInteger('source_id')->nullable();
             $table->string('reference_no')->nullable();
@@ -28,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['company_id', 'code']);
-            $table->unique(['source_type', 'source_id']);
+            $table->unique(['source_type', 'source_id', 'journal_type']);
 
             $table->index(['company_id', 'date']);
             $table->index(['branch_id', 'date']);

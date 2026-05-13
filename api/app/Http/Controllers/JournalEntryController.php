@@ -9,6 +9,7 @@ use App\DTOs\ExecutePaginationDTO;
 use App\DTOs\JournalEntryCreateDTO;
 use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
+use App\Enums\JournalEntryTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\JournalEntry\JournalEntryStoreRequest;
 use App\Http\Requests\JournalEntry\JournalEntryUpdateRequest;
@@ -39,6 +40,7 @@ class JournalEntryController extends BaseController
         $request->merge([
             'company_id' => $request->filled('company_id') ? HashidsHelper::decodeId($request->company_id) : null,
             'branch_id' => $request->filled('branch_id') ? HashidsHelper::decodeId($request->branch_id) : null,
+            'journal_type' => JournalEntryTypeEnum::isValid($request->journal_type) ? JournalEntryTypeEnum::resolveToEnum($request->journal_type)->value : null,
             'source_id' => $request->filled('source_id') ? (int) $request->source_id : null,
         ]);
 
@@ -49,6 +51,7 @@ class JournalEntryController extends BaseController
             'search' => ['nullable', 'string'],
             'start_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'end_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'journal_type' => ['nullable', new \Illuminate\Validation\Rules\Enum(JournalEntryTypeEnum::class)],
             'source_type' => ['nullable', 'string', 'max:255'],
             'source_id' => ['nullable', 'integer', 'min:1'],
             'refresh' => ['required', 'boolean'],
@@ -70,6 +73,7 @@ class JournalEntryController extends BaseController
                 search: $validatedRequest['search'] ?? null,
                 startDate: $validatedRequest['start_date'] ?? null,
                 endDate: $validatedRequest['end_date'] ?? null,
+                journalType: $validatedRequest['journal_type'] ?? null,
                 sourceType: $validatedRequest['source_type'] ?? null,
                 sourceId: $validatedRequest['source_id'] ?? null,
                 execute: new ExecuteDTO(
@@ -133,6 +137,7 @@ class JournalEntryController extends BaseController
                 branchId: $validatedRequest['branch_id'],
                 code: $validatedRequest['code'],
                 date: $validatedRequest['date'],
+                journalType: $validatedRequest['journal_type'],
                 sourceType: $validatedRequest['source_type'],
                 sourceId: $validatedRequest['source_id'],
                 referenceNo: $validatedRequest['reference_no'],
@@ -180,6 +185,7 @@ class JournalEntryController extends BaseController
                 branchId: $validatedRequest['branch_id'],
                 code: $validatedRequest['code'],
                 date: $validatedRequest['date'],
+                journalType: $validatedRequest['journal_type'],
                 referenceNo: $validatedRequest['reference_no'],
                 remarks: $validatedRequest['remarks'],
                 items: collect($validatedRequest['items'])

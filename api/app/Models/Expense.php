@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JournalEntryTypeEnum;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -156,6 +157,35 @@ class Expense extends Model
 
     public function journalEntry()
     {
-        return $this->morphOne(JournalEntry::class, 'source');
+        return $this->morphOne(JournalEntry::class, 'source')
+            ->where('journal_type', JournalEntryTypeEnum::TRANSACTION->value);
+    }
+
+    public function currentMonthEarningsJournalEntry()
+    {
+        return $this->hasOne(JournalEntry::class, 'source_id', 'id')
+            ->where('source_type', self::class)
+            ->where('journal_type', JournalEntryTypeEnum::CURRENT_MONTH_EARNINGS->value);
+    }
+
+    public function monthEndClosingJournalEntry()
+    {
+        return $this->hasOne(JournalEntry::class, 'source_id', 'id')
+            ->where('source_type', self::class)
+            ->where('journal_type', JournalEntryTypeEnum::MONTH_END_CLOSING->value);
+    }
+
+    public function monthToYearClosingJournalEntry()
+    {
+        return $this->hasOne(JournalEntry::class, 'source_id', 'id')
+            ->where('source_type', self::class)
+            ->where('journal_type', JournalEntryTypeEnum::MONTH_TO_YEAR_CLOSING->value);
+    }
+
+    public function yearToRetainedEarningsClosingJournalEntry()
+    {
+        return $this->hasOne(JournalEntry::class, 'source_id', 'id')
+            ->where('source_type', self::class)
+            ->where('journal_type', JournalEntryTypeEnum::YEAR_TO_RETAINED_EARNINGS_CLOSING->value);
     }
 }

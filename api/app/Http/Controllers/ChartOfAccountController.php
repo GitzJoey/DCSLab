@@ -8,6 +8,7 @@ use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
+use App\Enums\ChartOfAccountAccountTypeEnum;
 use App\Enums\ChartOfAccountNormalBalanceEnum;
 use App\Enums\ChartOfAccountScopeEnum;
 use App\Enums\ChartOfAccountSystemKeyEnum;
@@ -22,19 +23,10 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class ChartOfAccountController extends BaseController
 {
-    private const ACCOUNT_TYPES = [
-        'asset',
-        'liability',
-        'equity',
-        'income',
-        'expense',
-    ];
-
     public function __construct(
         private readonly ChartOfAccountActions $chartOfAccountActions,
     ) {
@@ -64,7 +56,7 @@ class ChartOfAccountController extends BaseController
             'has_children' => ['nullable', 'boolean'],
             'scope' => ['nullable', new Enum(ChartOfAccountScopeEnum::class)],
             'system_key' => ['nullable', new Enum(ChartOfAccountSystemKeyEnum::class)],
-            'account_type' => ['nullable', 'string', Rule::in(self::ACCOUNT_TYPES)],
+            'account_type' => ['nullable', new Enum(ChartOfAccountAccountTypeEnum::class)],
             'normal_balance' => ['nullable', new Enum(ChartOfAccountNormalBalanceEnum::class)],
             'is_group' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],

@@ -6,6 +6,7 @@ import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import Table from '@/components/Base/Table';
 import { Dialog } from '@/components/Base/Headless';
+import { FormInputDateTime, FormLabel } from '@/components/Base/Form';
 import { useRouter } from 'vue-router';
 import JournalEntryService from '@/services/JournalEntryService';
 import { JournalEntry } from '@/types/models/JournalEntry';
@@ -34,6 +35,13 @@ const emits = defineEmits([
 const deleteUlid = ref<string>('');
 const deleteModalShow = ref<boolean>(false);
 const expandDetail = ref<string | number | null>(null);
+const filters = ref<{
+  start_date: string | null;
+  end_date: string | null;
+}>({
+  start_date: null,
+  end_date: null,
+});
 const journalEntryLists = ref<Resource<Array<JournalEntry>> | null>({
   data: [],
 });
@@ -52,6 +60,12 @@ onMounted(async () => {
     return;
   }
 
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+  filters.value.start_date = formatDate(startOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
+  filters.value.end_date = formatDate(endOfMonth.toString(), 'YYYY-MM-DD HH:mm:ss');
+
   await getJournalEntries(true);
 });
 
@@ -62,6 +76,8 @@ const getJournalEntries = async (refresh: boolean) => {
     with_trashed: false,
     company_id: selectedUserLocation.value.company.id,
     branch_id: selectedUserLocation.value.branch.id,
+    start_date: filters.value.start_date || undefined,
+    end_date: filters.value.end_date || undefined,
     refresh,
     limit: 1000,
   });
@@ -78,6 +94,10 @@ const getJournalEntries = async (refresh: boolean) => {
 
 const onDataListChanged = async () => {
   await getJournalEntries(false);
+};
+
+const handleFilter = async () => {
+  await getJournalEntries(true);
 };
 
 const viewSelected = (itemId: string | number) => {
@@ -150,6 +170,34 @@ const showAlertPlaceholder = (
     :pagination="null"
     @dataListChanged="onDataListChanged"
   >
+    <template #toolbar-actions>
+      <div class="grid grid-cols-12 gap-3">
+        <div class="col-span-12 md:col-span-4">
+          <FormLabel>
+            {{ t('views.journal_entry.fields.start_date') }}
+          </FormLabel>
+          <FormInputDateTime
+            v-model="filters.start_date"
+            :placeholder="t('views.journal_entry.fields.start_date')"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-4">
+          <FormLabel>
+            {{ t('views.journal_entry.fields.end_date') }}
+          </FormLabel>
+          <FormInputDateTime
+            v-model="filters.end_date"
+            :placeholder="t('views.journal_entry.fields.end_date')"
+          />
+        </div>
+        <div class="col-span-12 md:col-span-4 flex items-end">
+          <Button variant="primary" @click="handleFilter">
+            <Lucide icon="Search" class="mr-1 h-4 w-4" />
+            {{ t('components.buttons.search') }}
+          </Button>
+        </div>
+      </div>
+    </template>
     <template #content>
       <Table class="mt-5" :hover="true">
         <Table.Thead variant="light">

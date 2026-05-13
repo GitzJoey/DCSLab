@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JournalEntryTypeEnum;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,7 @@ class JournalEntry extends Model
         'branch_id',
         'code',
         'date',
+        'journal_type',
         'source_type',
         'source_id',
         'reference_no',
@@ -29,6 +31,7 @@ class JournalEntry extends Model
 
     protected $casts = [
         'date' => 'datetime',
+        'journal_type' => JournalEntryTypeEnum::class,
         'total_debit' => 'decimal:8',
         'total_credit' => 'decimal:8',
     ];

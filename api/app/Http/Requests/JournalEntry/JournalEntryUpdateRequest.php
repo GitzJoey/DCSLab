@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\JournalEntry;
 
+use App\Enums\JournalEntryTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Models\ChartOfAccount;
 use App\Models\JournalEntry;
@@ -10,6 +11,7 @@ use App\Rules\IsValidBranch;
 use App\Rules\IsValidDate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Enum;
 
 class JournalEntryUpdateRequest extends FormRequest
 {
@@ -35,6 +37,7 @@ class JournalEntryUpdateRequest extends FormRequest
         $this->merge([
             'company_id' => $journalEntry?->company_id,
             'branch_id' => $this->filled('branch_id') ? HashidsHelper::decodeId($this->branch_id) : null,
+            'journal_type' => $this->filled('journal_type') ? $this->journal_type : $journalEntry?->journal_type?->value,
             'reference_no' => $this->filled('reference_no') ? $this->reference_no : null,
             'remarks' => $this->filled('remarks') ? $this->remarks : null,
             'items' => collect($this->items ?? [])->map(function ($item) {
@@ -55,6 +58,7 @@ class JournalEntryUpdateRequest extends FormRequest
             'branch_id' => ['required', 'integer', 'bail', new IsValidBranch($this->company_id, true)],
             'code' => ['required', 'string', 'max:255'],
             'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'journal_type' => ['present', 'nullable', new Enum(JournalEntryTypeEnum::class)],
             'reference_no' => ['present', 'nullable', 'string', 'max:255'],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
 
@@ -119,6 +123,7 @@ class JournalEntryUpdateRequest extends FormRequest
         return array_merge(
             trans('validation_attributes.journal_entry'),
             [
+                'journal_type' => trans('validation_attributes.journal_entry.journal_type'),
                 'items.*.chart_of_account_id' => trans('validation_attributes.journal_entry_item.chart_of_account_id'),
                 'items.*.debit' => trans('validation_attributes.journal_entry_item.debit'),
                 'items.*.credit' => trans('validation_attributes.journal_entry_item.credit'),

@@ -7,6 +7,7 @@ use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryCreateDTO;
 use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
+use App\Enums\JournalEntryTypeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\JournalEntry;
 use App\Traits\CacheHelper;
@@ -38,6 +39,7 @@ class JournalEntryActions
         ?string $search,
         ?string $startDate,
         ?string $endDate,
+        ?string $journalType,
         ?string $sourceType,
         ?int $sourceId,
         ?ExecuteDTO $execute,
@@ -54,6 +56,7 @@ class JournalEntryActions
             $query->where(function ($query) use ($search) {
                 $query->where('journal_entries.code', 'like', '%'.$search.'%')
                     ->orWhere('journal_entries.reference_no', 'like', '%'.$search.'%')
+                    ->orWhere('journal_entries.journal_type', 'like', '%'.$search.'%')
                     ->orWhere('journal_entries.source_type', 'like', '%'.$search.'%')
                     ->orWhere('journal_entries.remarks', 'like', '%'.$search.'%')
                     ->orWhereHas('items.chartOfAccount', function ($itemQuery) use ($search) {
@@ -71,6 +74,10 @@ class JournalEntryActions
             $query->where('journal_entries.date', '<=', TimezoneHelper::convertToUTC($endDate));
         }
 
+        if ($journalType) {
+            $query->where('journal_entries.journal_type', $journalType);
+        }
+
         if ($sourceType) {
             $query->where('journal_entries.source_type', $sourceType);
         }
@@ -80,7 +87,7 @@ class JournalEntryActions
         }
 
         $query->orderBy('journal_entries.date', 'desc')
-            ->orderBy('journal_entries.id', 'desc');
+            ->orderBy('journal_entries.id', 'asc');
 
         if ($execute) {
             $timerStart = microtime(true);
@@ -94,6 +101,7 @@ class JournalEntryActions
                     empty($search) ? '[empty]' : $search,
                     $startDate ?? '[null]',
                     $endDate ?? '[null]',
+                    $journalType ?? '[null]',
                     $sourceType ?? '[null]',
                     $sourceId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
@@ -158,6 +166,12 @@ class JournalEntryActions
             $journalEntry->branch_id = $data->branchId;
             $journalEntry->code = $this->generateUniqueCode($data->companyId, $data->code, null);
             $journalEntry->date = $this->resolveDate($data->date);
+            $journalEntry->journal_type = (function () use ($data): ?string {
+                if ($data->journalType) return $data->journalType;
+                if ($data->sourceType && $data->sourceId) return JournalEntryTypeEnum::TRANSACTION->value;
+
+                return null;
+            })();
             $journalEntry->source_type = $data->sourceType;
             $journalEntry->source_id = $data->sourceId;
             $journalEntry->reference_no = $data->referenceNo;
@@ -189,6 +203,13 @@ class JournalEntryActions
             $journalEntry->branch_id = $data->branchId;
             $journalEntry->code = $this->generateUniqueCode($journalEntry->company_id, $data->code, $journalEntry->id);
             $journalEntry->date = $this->resolveDate($data->date);
+            $journalEntry->journal_type = (function () use ($data, $journalEntry): ?string {
+                if ($data->journalType) return $data->journalType;
+                if ($journalEntry->journal_type) return $journalEntry->journal_type->value;
+                if ($journalEntry->source_type && $journalEntry->source_id) return JournalEntryTypeEnum::TRANSACTION->value;
+
+                return null;
+            })();
             $journalEntry->reference_no = $data->referenceNo;
             $journalEntry->total_debit = collect($data->items)->sum(fn (JournalEntryItemDTO $item) => $item->debit);
             $journalEntry->total_credit = collect($data->items)->sum(fn (JournalEntryItemDTO $item) => $item->credit);

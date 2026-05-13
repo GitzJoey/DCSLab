@@ -77,6 +77,7 @@ return [
         'branch_id' => 'Branch',
         'code' => 'Code',
         'date' => 'Date',
+        'journal_type' => 'Journal Type',
         'source_type' => 'Source Type',
         'source_id' => 'Source ID',
         'reference_no' => 'Reference No',

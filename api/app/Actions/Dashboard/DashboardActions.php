@@ -595,7 +595,7 @@ class DashboardActions
             'title' => 'components.menu.balance-sheet',
         ];
 
-        array_push($financialStatement['subMenu'], $balanceSheet, $journalEntryDetail);
+        array_push($financialStatement['subMenu'], $journalEntryDetail, $balanceSheet);
 
         array_push(
             $stockAdjustment['subMenu'],

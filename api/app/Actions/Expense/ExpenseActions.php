@@ -17,10 +17,12 @@ use App\DTOs\ExpenseUpdateDTO;
 use App\DTOs\JournalEntryCreateDTO;
 use App\DTOs\JournalEntryItemDTO;
 use App\DTOs\JournalEntryUpdateDTO;
+use App\Enums\JournalEntryTypeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\Expense;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Config;
 
@@ -283,6 +285,7 @@ class ExpenseActions
                 branchId: $expense->branch_id,
                 code: config('dcslab.KEYWORDS.AUTO'),
                 date: $expense->date,
+                journalType: JournalEntryTypeEnum::TRANSACTION->value,
                 sourceType: Expense::class,
                 sourceId: $expense->id,
                 referenceNo: $expense->code,
@@ -317,6 +320,160 @@ class ExpenseActions
                             remarks: $expense->remarks,
                         );
                     }
+
+                    return $items;
+                })(),
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $expense->company_id,
+                branchId: $expense->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: $expense->date,
+                journalType: JournalEntryTypeEnum::CURRENT_MONTH_EARNINGS->value,
+                sourceType: Expense::class,
+                sourceId: $expense->id,
+                referenceNo: $expense->code,
+                remarks: $expense->remarks,
+                items: (function () use ($expense) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                        debit: (float) $expense->amount_total,
+                        credit: 0,
+                        remarks: $expense->remarks,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                        debit: 0,
+                        credit: (float) $expense->amount_total,
+                        remarks: $expense->remarks,
+                    );
+
+                    return $items;
+                })(),
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $expense->company_id,
+                branchId: $expense->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: (function () use ($expense) {
+                    return ($expense->date instanceof Carbon
+                        ? $expense->date->copy()
+                        : Carbon::parse((string) $expense->date))
+                        ->endOfMonth()
+                        ->format('Y-m-d H:i:s');
+                })(),
+                journalType: JournalEntryTypeEnum::MONTH_END_CLOSING->value,
+                sourceType: Expense::class,
+                sourceId: $expense->id,
+                referenceNo: $expense->code,
+                remarks: $expense->remarks,
+                items: (function () use ($expense) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                        debit: (float) $expense->amount_total,
+                        credit: 0,
+                        remarks: $expense->remarks,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                        debit: 0,
+                        credit: (float) $expense->amount_total,
+                        remarks: $expense->remarks,
+                    );
+
+                    return $items;
+                })(),
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $expense->company_id,
+                branchId: $expense->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: (function () use ($expense) {
+                    return ($expense->date instanceof Carbon
+                        ? $expense->date->copy()
+                        : Carbon::parse((string) $expense->date))
+                        ->endOfMonth()
+                        ->format('Y-m-d H:i:s');
+                })(),
+                journalType: JournalEntryTypeEnum::MONTH_TO_YEAR_CLOSING->value,
+                sourceType: Expense::class,
+                sourceId: $expense->id,
+                referenceNo: $expense->code,
+                remarks: $expense->remarks,
+                items: (function () use ($expense) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                        debit: (float) $expense->amount_total,
+                        credit: 0,
+                        remarks: $expense->remarks,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                        debit: 0,
+                        credit: (float) $expense->amount_total,
+                        remarks: $expense->remarks,
+                    );
+
+                    return $items;
+                })(),
+            );
+            $this->journalEntryActions->create($journalEntryDTO);
+
+            $journalEntryDTO = new JournalEntryCreateDTO(
+                companyId: $expense->company_id,
+                branchId: $expense->branch_id,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                date: (function () use ($expense) {
+                    return ($expense->date instanceof Carbon
+                        ? $expense->date->copy()
+                        : Carbon::parse((string) $expense->date))
+                        ->endOfYear()
+                        ->format('Y-m-d H:i:s');
+                })(),
+                journalType: JournalEntryTypeEnum::YEAR_TO_RETAINED_EARNINGS_CLOSING->value,
+                sourceType: Expense::class,
+                sourceId: $expense->id,
+                referenceNo: $expense->code,
+                remarks: $expense->remarks,
+                items: (function () use ($expense) {
+                    $items = [];
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->company->equityRetainedEarningsChartOfAccount?->id,
+                        debit: (float) $expense->amount_total,
+                        credit: 0,
+                        remarks: $expense->remarks,
+                    );
+
+                    $items[] = new JournalEntryItemDTO(
+                        sequence: count($items) + 1,
+                        chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                        debit: 0,
+                        credit: (float) $expense->amount_total,
+                        remarks: $expense->remarks,
+                    );
 
                     return $items;
                 })(),
@@ -419,6 +576,7 @@ class ExpenseActions
                     branchId: $expense->branch_id,
                     code: config('dcslab.KEYWORDS.AUTO'),
                     date: $expense->date,
+                    journalType: JournalEntryTypeEnum::TRANSACTION->value,
                     sourceType: Expense::class,
                     sourceId: $expense->id,
                     referenceNo: $expense->code,
@@ -463,6 +621,7 @@ class ExpenseActions
                     branchId: $expense->branch_id,
                     code: $journalEntry->code,
                     date: $expense->date,
+                    journalType: JournalEntryTypeEnum::TRANSACTION->value,
                     referenceNo: $expense->code,
                     remarks: $expense->remarks,
                     items: (function () use ($expense) {
@@ -500,6 +659,314 @@ class ExpenseActions
                     })(),
                 );
                 $this->journalEntryActions->update($journalEntry, $journalEntryDTO);
+            }
+
+            $currentMonthEarningsJournalEntry = $expense->currentMonthEarningsJournalEntry;
+            if (! $currentMonthEarningsJournalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $expense->company_id,
+                    branchId: $expense->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: $expense->date,
+                    journalType: JournalEntryTypeEnum::CURRENT_MONTH_EARNINGS->value,
+                    sourceType: Expense::class,
+                    sourceId: $expense->id,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $expense->branch_id,
+                    code: $currentMonthEarningsJournalEntry->code,
+                    date: $expense->date,
+                    journalType: JournalEntryTypeEnum::CURRENT_MONTH_EARNINGS->value,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->update($currentMonthEarningsJournalEntry, $journalEntryDTO);
+            }
+
+            $monthEndClosingJournalEntry = $expense->monthEndClosingJournalEntry;
+            if (! $monthEndClosingJournalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $expense->company_id,
+                    branchId: $expense->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: (function () use ($expense) {
+                        return ($expense->date instanceof Carbon
+                            ? $expense->date->copy()
+                            : Carbon::parse((string) $expense->date))
+                            ->endOfMonth()
+                            ->format('Y-m-d H:i:s');
+                    })(),
+                    journalType: JournalEntryTypeEnum::MONTH_END_CLOSING->value,
+                    sourceType: Expense::class,
+                    sourceId: $expense->id,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $expense->branch_id,
+                    code: $monthEndClosingJournalEntry->code,
+                    date: (function () use ($expense) {
+                        return ($expense->date instanceof Carbon
+                            ? $expense->date->copy()
+                            : Carbon::parse((string) $expense->date))
+                            ->endOfMonth()
+                            ->format('Y-m-d H:i:s');
+                    })(),
+                    journalType: JournalEntryTypeEnum::MONTH_END_CLOSING->value,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->update($monthEndClosingJournalEntry, $journalEntryDTO);
+            }
+
+            $monthToYearClosingJournalEntry = $expense->monthToYearClosingJournalEntry;
+            if (! $monthToYearClosingJournalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $expense->company_id,
+                    branchId: $expense->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: (function () use ($expense) {
+                        return ($expense->date instanceof Carbon
+                            ? $expense->date->copy()
+                            : Carbon::parse((string) $expense->date))
+                            ->endOfMonth()
+                            ->format('Y-m-d H:i:s');
+                    })(),
+                    journalType: JournalEntryTypeEnum::MONTH_TO_YEAR_CLOSING->value,
+                    sourceType: Expense::class,
+                    sourceId: $expense->id,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $expense->branch_id,
+                    code: $monthToYearClosingJournalEntry->code,
+                    date: (function () use ($expense) {
+                        return ($expense->date instanceof Carbon
+                            ? $expense->date->copy()
+                            : Carbon::parse((string) $expense->date))
+                            ->endOfMonth()
+                            ->format('Y-m-d H:i:s');
+                    })(),
+                    journalType: JournalEntryTypeEnum::MONTH_TO_YEAR_CLOSING->value,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->update($monthToYearClosingJournalEntry, $journalEntryDTO);
+            }
+
+            $yearToRetainedEarningsClosingJournalEntry = $expense->yearToRetainedEarningsClosingJournalEntry;
+            if (! $yearToRetainedEarningsClosingJournalEntry) {
+                $journalEntryDTO = new JournalEntryCreateDTO(
+                    companyId: $expense->company_id,
+                    branchId: $expense->branch_id,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    date: (function () use ($expense) {
+                        return ($expense->date instanceof Carbon
+                            ? $expense->date->copy()
+                            : Carbon::parse((string) $expense->date))
+                            ->endOfYear()
+                            ->format('Y-m-d H:i:s');
+                    })(),
+                    journalType: JournalEntryTypeEnum::YEAR_TO_RETAINED_EARNINGS_CLOSING->value,
+                    sourceType: Expense::class,
+                    sourceId: $expense->id,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityRetainedEarningsChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->create($journalEntryDTO);
+            } else {
+                $journalEntryDTO = new JournalEntryUpdateDTO(
+                    branchId: $expense->branch_id,
+                    code: $yearToRetainedEarningsClosingJournalEntry->code,
+                    date: (function () use ($expense) {
+                        return ($expense->date instanceof Carbon
+                            ? $expense->date->copy()
+                            : Carbon::parse((string) $expense->date))
+                            ->endOfYear()
+                            ->format('Y-m-d H:i:s');
+                    })(),
+                    journalType: JournalEntryTypeEnum::YEAR_TO_RETAINED_EARNINGS_CLOSING->value,
+                    referenceNo: $expense->code,
+                    remarks: $expense->remarks,
+                    items: (function () use ($expense) {
+                        $items = [];
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityRetainedEarningsChartOfAccount?->id,
+                            debit: (float) $expense->amount_total,
+                            credit: 0,
+                            remarks: $expense->remarks,
+                        );
+
+                        $items[] = new JournalEntryItemDTO(
+                            sequence: count($items) + 1,
+                            chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            debit: 0,
+                            credit: (float) $expense->amount_total,
+                            remarks: $expense->remarks,
+                        );
+
+                        return $items;
+                    })(),
+                );
+                $this->journalEntryActions->update($yearToRetainedEarningsClosingJournalEntry, $journalEntryDTO);
             }
 
             $this->flushCache();
@@ -542,6 +1009,18 @@ class ExpenseActions
 
             $journalEntry = $expense->journalEntry;
             if ($journalEntry) $this->journalEntryActions->delete($journalEntry);
+
+            $currentMonthEarningsJournalEntry = $expense->currentMonthEarningsJournalEntry;
+            if ($currentMonthEarningsJournalEntry) $this->journalEntryActions->delete($currentMonthEarningsJournalEntry);
+
+            $monthEndClosingJournalEntry = $expense->monthEndClosingJournalEntry;
+            if ($monthEndClosingJournalEntry) $this->journalEntryActions->delete($monthEndClosingJournalEntry);
+
+            $monthToYearClosingJournalEntry = $expense->monthToYearClosingJournalEntry;
+            if ($monthToYearClosingJournalEntry) $this->journalEntryActions->delete($monthToYearClosingJournalEntry);
+
+            $yearToRetainedEarningsClosingJournalEntry = $expense->yearToRetainedEarningsJournalEntry;
+            if ($yearToRetainedEarningsClosingJournalEntry) $this->journalEntryActions->delete($yearToRetainedEarningsClosingJournalEntry);
 
             $retval = $expense->delete();
 

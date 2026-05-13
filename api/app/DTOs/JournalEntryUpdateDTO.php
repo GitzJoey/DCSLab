@@ -8,6 +8,7 @@ final class JournalEntryUpdateDTO
         public readonly int $branchId,
         public readonly string $code,
         public readonly string $date,
+        public readonly ?string $journalType,
         public readonly ?string $referenceNo,
         public readonly ?string $remarks,
         /** @var JournalEntryItemDTO[] */

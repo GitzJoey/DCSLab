@@ -52,4 +52,6 @@ enum ChartOfAccountSystemKeyEnum: string
     case OTHER_INCOME_INTEREST = 'other_income_interest';
     case OTHER_EXPENSE_ROOT = 'other_expense_root';
     case OTHER_EXPENSE_INTEREST = 'other_expense_interest';
+
+    case SYSTEM_SUSPENSE = 'system_suspense';
 }

@@ -76,6 +76,7 @@ return [
         'branch_id' => 'Cabang',
         'code' => 'Kode',
         'date' => 'Tanggal',
+        'journal_type' => 'Tipe Jurnal',
         'source_type' => 'Tipe Sumber',
         'source_id' => 'ID Sumber',
         'reference_no' => 'Nomor Referensi',

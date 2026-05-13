@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\ChartOfAccountAccountTypeEnum;
+use App\Enums\ChartOfAccountNormalBalanceEnum;
 use App\Enums\ChartOfAccountScopeEnum;
 use App\Enums\ChartOfAccountSystemKeyEnum;
 use App\Traits\ScopeableByCompany;
@@ -37,6 +39,8 @@ class ChartOfAccount extends Model
         return [
             'scope' => ChartOfAccountScopeEnum::class,
             'system_key' => ChartOfAccountSystemKeyEnum::class,
+            'account_type' => ChartOfAccountAccountTypeEnum::class,
+            'normal_balance' => ChartOfAccountNormalBalanceEnum::class,
             'level' => 'integer',
             'is_group' => 'boolean',
             'is_active' => 'boolean',

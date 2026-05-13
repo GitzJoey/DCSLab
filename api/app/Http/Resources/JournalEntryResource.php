@@ -22,6 +22,7 @@ class JournalEntryResource extends JsonResource
             ]),
             'code' => $this->code,
             'date' => TimezoneHelper::convertFromUTCIfValid($this->date),
+            'journal_type' => $this->journal_type?->value,
             'source_type' => $this->source_type,
             'source_id' => $this->source_id,
             'reference_no' => $this->reference_no,
