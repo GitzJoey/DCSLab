@@ -14,6 +14,7 @@ import {
   FormLabel,
   FormErrorMessages,
   FormInputCode,
+  FormSelect,
   FormSelectSearch,
 } from '@/components/Base/Form';
 import { CardState } from '@/types/enums/CardState';
@@ -63,6 +64,16 @@ const parentOptions = computed(() =>
     label: item.name,
   })),
 );
+const categoryTypeOptions = computed(() => [
+  {
+    value: 'expense',
+    label: t('views.expense_category.options.category_type.expense'),
+  },
+  {
+    value: 'other_expense',
+    label: t('views.expense_category.options.category_type.other_expense'),
+  },
+]);
 // #endregion
 
 // #region Vue Core
@@ -122,6 +133,10 @@ const loadFromCache = () => {
     data.parent_id = null;
   }
 
+  if (!('category_type' in data) || !data.category_type) {
+    data.category_type = 'expense';
+  }
+
   expenseCategoryForm.setData(data);
 };
 
@@ -155,6 +170,21 @@ const setCode = () => {
     expenseCategoryForm.setData({ code: '_AUTO_' });
   }
 };
+
+const handleParentChange = () => {
+  if (expenseCategoryForm.parent_id) {
+    expenseCategoryForm.setData({
+      category_type: null,
+    });
+    expenseCategoryForm.forgetError('category_type');
+  } else if (!expenseCategoryForm.category_type) {
+    expenseCategoryForm.setData({
+      category_type: 'expense',
+    });
+  }
+
+  expenseCategoryForm.validate('parent_id');
+};
 // #endregion
 
 // #region Actions
@@ -169,6 +199,7 @@ const resetForm = async () => {
   expenseCategoryForm.setErrors({});
   expenseCategoryForm.setData({
     parent_id: null,
+    category_type: 'expense',
     code: '_AUTO_',
     name: '',
     sequence: 0,
@@ -254,11 +285,37 @@ const showAlertPlaceholder = (
                 :class="{
                   'border-danger': expenseCategoryForm.invalid('parent_id'),
                 }"
-                @change="expenseCategoryForm.validate('parent_id')"
+                @change="handleParentChange"
                 @search="loadParentDDL"
-                @clear="expenseCategoryForm.validate('parent_id')"
+                @clear="handleParentChange"
               />
               <FormErrorMessages :messages="expenseCategoryForm.errors.parent_id" />
+            </div>
+
+            <div v-if="!expenseCategoryForm.parent_id" class="col-span-12 sm:col-span-4">
+              <FormLabel
+                :class="{
+                  'text-danger': expenseCategoryForm.invalid('category_type'),
+                }"
+              >
+                {{ t('views.expense_category.fields.category_type') }}
+              </FormLabel>
+              <FormSelect
+                id="category_type"
+                v-model="expenseCategoryForm.category_type"
+                :class="{
+                  'border-danger': expenseCategoryForm.invalid('category_type'),
+                }"
+                @change="expenseCategoryForm.validate('category_type')"
+              >
+                <option v-for="item in categoryTypeOptions" :key="item.value" :value="item.value">
+                  {{ item.label }}
+                </option>
+              </FormSelect>
+              <div class="mt-1 text-xs text-slate-500">
+                {{ t('views.expense_category.descriptions.category_type') }}
+              </div>
+              <FormErrorMessages :messages="expenseCategoryForm.errors.category_type" />
             </div>
 
             <div class="col-span-12 sm:col-span-4">

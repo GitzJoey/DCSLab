@@ -357,6 +357,7 @@ return [
     'expense_category' => [
         'company_id' => 'Perusahaan',
         'parent_id' => 'Parent',
+        'category_type' => 'Jenis Kategori',
         'code' => 'Kode',
         'name' => 'Nama',
         'sequence' => 'Urutan',

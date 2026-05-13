@@ -33,6 +33,7 @@ export default class ExpenseCategoryService {
     const form = useForm('post', url, {
       company_id: '',
       parent_id: null as string | null,
+      category_type: 'expense' as 'expense' | 'other_expense' | null,
       code: '_AUTO_',
       name: '',
       sequence: 0,
@@ -207,6 +208,7 @@ export default class ExpenseCategoryService {
     client.axios().defaults.withXSRFToken = true;
     const form = useForm('post', url, {
       company_id: '',
+      category_type: null as 'expense' | 'other_expense' | null,
       code: '_AUTO_',
       name: '',
       sequence: 0,

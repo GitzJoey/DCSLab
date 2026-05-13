@@ -75,6 +75,8 @@ return [
         'parent_must_be_active' => 'Parent expense category harus aktif.',
         'cannot_delete_with_children' => 'Expense category tidak boleh dihapus karena masih memiliki child category.',
         'must_not_have_children' => 'Expense category harus memilih category yang tidak memiliki child lagi.',
+        'category_type_required_without_parent' => 'Jenis kategori wajib dipilih jika parent tidak diisi.',
+        'category_type_must_follow_parent' => 'Jenis kategori harus mengikuti parent yang dipilih.',
     ],
     'income_category' => [
         'parent_must_be_active' => 'Parent income category harus aktif.',

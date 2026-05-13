@@ -7,7 +7,7 @@ import { convertErrorTypeToAlertListType } from '@/utils/helper';
 import ExpenseCategoryService from '@/services/ExpenseCategoryService';
 import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
 import { TwoColumnsLayoutCards } from '@/components/Base/Form/FormLayout/TwoColumnsLayout.vue';
-import { FormInput, FormLabel, FormErrorMessages, FormInputCode } from '@/components/Base/Form';
+import { FormInput, FormLabel, FormErrorMessages, FormInputCode, FormSelect } from '@/components/Base/Form';
 import { CardState } from '@/types/enums/CardState';
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
@@ -40,6 +40,7 @@ const expenseCategoryForm = expenseCategoryService.useExpenseCategoryEditForm(ro
 const companyCode = ref<string>('');
 const companyName = ref<string>('');
 const parentLabel = ref<string>('-');
+const categoryTypeLabel = ref<string>('-');
 // #endregion
 
 // #region Props, Emits
@@ -48,6 +49,16 @@ const emits = defineEmits(['mode-state', 'loading-state', 'update-profile', 'sho
 
 // #region Computed
 const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
+const categoryTypeOptions = computed(() => [
+  {
+    value: 'expense',
+    label: t('views.expense_category.options.category_type.expense'),
+  },
+  {
+    value: 'other_expense',
+    label: t('views.expense_category.options.category_type.other_expense'),
+  },
+]);
 // #endregion
 
 // #region Vue Core
@@ -86,9 +97,13 @@ const loadData = async () => {
     parentLabel.value = result.data.parent
       ? `${result.data.parent.display_code} - ${result.data.parent.name}`
       : '-';
+    categoryTypeLabel.value = result.data.category_type
+      ? t(`views.expense_category.options.category_type.${result.data.category_type}`)
+      : '-';
 
     expenseCategoryForm.setData({
       company_id: result.data.company?.id ?? '',
+      category_type: result.data.category_type ?? 'expense',
       code: result.data.code,
       name: result.data.name,
       sequence: result.data.sequence,
@@ -182,6 +197,37 @@ const showAlertPlaceholder = (
             <div class="col-span-12">
               <FormLabel>{{ t('views.expense_category.fields.parent') }}</FormLabel>
               <FormInput :model-value="parentLabel" type="text" readonly />
+            </div>
+
+            <div v-if="parentLabel === '-'" class="col-span-12 sm:col-span-4">
+              <FormLabel
+                :class="{
+                  'text-danger': expenseCategoryForm.invalid('category_type'),
+                }"
+              >
+                {{ t('views.expense_category.fields.category_type') }}
+              </FormLabel>
+              <FormSelect
+                id="category_type"
+                v-model="expenseCategoryForm.category_type"
+                :class="{
+                  'border-danger': expenseCategoryForm.invalid('category_type'),
+                }"
+                @change="expenseCategoryForm.validate('category_type')"
+              >
+                <option v-for="item in categoryTypeOptions" :key="item.value" :value="item.value">
+                  {{ item.label }}
+                </option>
+              </FormSelect>
+              <div class="mt-1 text-xs text-slate-500">
+                {{ t('views.expense_category.descriptions.category_type') }}
+              </div>
+              <FormErrorMessages :messages="expenseCategoryForm.errors.category_type" />
+            </div>
+
+            <div v-else class="col-span-12 sm:col-span-4">
+              <FormLabel>{{ t('views.expense_category.fields.category_type') }}</FormLabel>
+              <FormInput :model-value="categoryTypeLabel" type="text" readonly />
             </div>
 
             <div class="col-span-12 sm:col-span-4">

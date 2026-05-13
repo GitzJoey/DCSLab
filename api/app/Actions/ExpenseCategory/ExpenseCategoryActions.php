@@ -8,6 +8,7 @@ use App\DTOs\ChartOfAccountUpdateDTO;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\ExpenseCategoryCreateDTO;
 use App\DTOs\ExpenseCategoryUpdateDTO;
+use App\Enums\ExpenseCategoryTypeEnum;
 use App\Models\ExpenseCategory;
 use App\Traits\CacheHelper;
 use App\Traits\LoggerHelper;
@@ -23,12 +24,14 @@ class ExpenseCategoryActions
     private const PAGINATED_LIST_EAGER_LOADS = [
         'company',
         'parent',
+        'chartOfAccount.parent',
     ];
 
     private const TREE_LIST_EAGER_LOADS = [
         'company',
         'parent',
         'childrenRecursive',
+        'chartOfAccount.parent',
     ];
 
     public function __construct(
@@ -202,7 +205,12 @@ class ExpenseCategoryActions
                     throw new InvalidArgumentException('Expense category parent chart of account must exist in company.');
                 }
             } else {
-                $parentChartOfAccount = $expenseCategory->company->expenseRootChartOfAccount;
+                if ($data->categoryType === ExpenseCategoryTypeEnum::OTHER_EXPENSE->value) {
+                    $parentChartOfAccount = $expenseCategory->company->otherExpenseRootChartOfAccount;
+                } else {
+                    $parentChartOfAccount = $expenseCategory->company->expenseRootChartOfAccount;
+                }
+
                 if (! $parentChartOfAccount) {
                     throw new InvalidArgumentException('Expense category chart of account parent must exist in company.');
                 }
@@ -272,7 +280,12 @@ class ExpenseCategoryActions
                     throw new InvalidArgumentException('Expense category parent chart of account must exist in company.');
                 }
             } else {
-                $parentChartOfAccount = $expenseCategory->company->expenseRootChartOfAccount;
+                if ($data->categoryType === ExpenseCategoryTypeEnum::OTHER_EXPENSE->value) {
+                    $parentChartOfAccount = $expenseCategory->company->otherExpenseRootChartOfAccount;
+                } else {
+                    $parentChartOfAccount = $expenseCategory->company->expenseRootChartOfAccount;
+                }
+
                 if (! $parentChartOfAccount) {
                     throw new InvalidArgumentException('Expense category chart of account parent must exist in company.');
                 }

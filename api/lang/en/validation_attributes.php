@@ -338,6 +338,7 @@ return [
     'expense_category' => [
         'company_id' => 'Company',
         'parent_id' => 'Parent',
+        'category_type' => 'Category Type',
         'code' => 'Code',
         'name' => 'Name',
         'sequence' => 'Sequence',

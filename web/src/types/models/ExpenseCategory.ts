@@ -13,6 +13,7 @@ export interface ExpenseCategory {
   ulid: string;
   company: Company;
   parent?: ExpenseCategoryParent | null;
+  category_type?: 'expense' | 'other_expense' | null;
   code: string;
   display_code: string;
   name: string;

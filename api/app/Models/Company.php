@@ -217,6 +217,12 @@ class Company extends Model
             ->where('system_key', ChartOfAccountSystemKeyEnum::EXPENSE_ROOT);
     }
 
+    public function otherExpenseRootChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::OTHER_EXPENSE_ROOT);
+    }
+
     public function liabilityDeferredIncomeChartOfAccount()
     {
         return $this->hasOne(ChartOfAccount::class)

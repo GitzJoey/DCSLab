@@ -75,6 +75,8 @@ return [
         'parent_must_be_active' => 'Parent expense category must be active.',
         'cannot_delete_with_children' => 'Expense category cannot be deleted because it still has child categories.',
         'must_not_have_children' => 'Expense category must be a category without child categories.',
+        'category_type_required_without_parent' => 'Category type is required when parent is empty.',
+        'category_type_must_follow_parent' => 'Category type must follow the selected parent.',
     ],
     'income_category' => [
         'parent_must_be_active' => 'Parent income category must be active.',

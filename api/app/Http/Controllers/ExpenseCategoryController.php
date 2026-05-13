@@ -135,6 +135,7 @@ class ExpenseCategoryController extends BaseController
             $dto = new ExpenseCategoryCreateDTO(
                 companyId: $validatedRequest['company_id'],
                 parentId: $validatedRequest['parent_id'],
+                categoryType: $validatedRequest['category_type'],
                 code: $validatedRequest['code'],
                 name: $validatedRequest['name'],
                 sequence: $validatedRequest['sequence'],
@@ -177,6 +178,7 @@ class ExpenseCategoryController extends BaseController
             $result = $this->expenseCategoryActions->update(
                 expenseCategory: $expenseCategory,
                 data: new ExpenseCategoryUpdateDTO(
+                    categoryType: $validatedRequest['category_type'],
                     code: $validatedRequest['code'],
                     name: $validatedRequest['name'],
                     sequence: $validatedRequest['sequence'],

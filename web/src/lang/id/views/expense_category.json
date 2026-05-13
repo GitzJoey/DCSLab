@@ -13,10 +13,20 @@
   },
   "fields": {
     "parent": "Parent",
+    "category_type": "Jenis Kategori",
     "code": "Kode",
     "name": "Nama",
     "sequence": "Urutan",
     "child_count": "Jumlah Child"
+  },
+  "options": {
+    "category_type": {
+      "expense": "Beban Operasional",
+      "other_expense": "Beban Lain-lain"
+    }
+  },
+  "descriptions": {
+    "category_type": "Dipakai hanya jika kategori ini tidak punya parent."
   },
   "alert": {
     "delete_expense_category": {

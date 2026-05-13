@@ -4,6 +4,7 @@ namespace App\Services\Company;
 
 use App\Actions\Branch\BranchActions;
 use App\Actions\CashAccount\CashAccountActions;
+use App\Actions\ExpenseCategory\ExpenseCategoryActions;
 use App\Actions\Investor\InvestorActions;
 use App\Actions\StockAdjustmentCategory\StockAdjustmentCategoryActions;
 use App\Actions\Supplier\SupplierActions;
@@ -11,12 +12,14 @@ use App\Actions\VatProfile\VatProfileActions;
 use App\Actions\Warehouse\WarehouseActions;
 use App\DTOs\BranchCreateDTO;
 use App\DTOs\CashAccountCreateDTO;
+use App\DTOs\ExpenseCategoryCreateDTO;
 use App\DTOs\InvestorCreateDTO;
 use App\DTOs\StockAdjustmentCategoryCreateDTO;
 use App\DTOs\SupplierCreateDTO;
 use App\DTOs\VatProfileCreateDTO;
 use App\DTOs\WarehouseCreateDTO;
 use App\Enums\ChartOfAccountScopeEnum;
+use App\Enums\ExpenseCategoryTypeEnum;
 use App\Enums\PaymentTermTypeEnum;
 use App\Enums\RecordStatusEnum;
 use App\Models\Branch;
@@ -30,6 +33,7 @@ class CompanyInitializationService
         private WarehouseActions $warehouseActions,
         private CashAccountActions $cashAccountActions,
         private VatProfileActions $vatProfileActions,
+        private ExpenseCategoryActions $expenseCategoryActions,
         private InvestorActions $investorActions,
         private SupplierActions $supplierActions,
         private StockAdjustmentCategoryActions $stockAdjustmentCategoryActions,
@@ -44,6 +48,8 @@ class CompanyInitializationService
         $this->createDefaultChartOfAccounts($company);
         $this->createDefaultInvestors($company);
         $this->createDefaultCashAccounts($company, $mainBranch);
+        $this->createDefaultOperationalExpenseCategory($company);
+        $this->createDefaultOtherExpenseCategory($company);
 
         $this->createDefaultVatProfiles($company);
 
@@ -85,6 +91,42 @@ class CompanyInitializationService
         $this->warehouseActions->create($dto);
     }
 
+    private function createDefaultChartOfAccounts(Company $company): void
+    {
+        $defaultChartOfAccounts = config('chart_of_accounts', []);
+
+        $upsertChartOfAccountNode = function (array $node, ?ChartOfAccount $parent) use ($company, &$upsertChartOfAccountNode): void {
+            $chartOfAccount = ChartOfAccount::query()->firstOrNew([
+                'company_id' => $company->id,
+                'system_key' => $node['system_key'],
+            ]);
+
+            $chartOfAccount->company_id = $company->id;
+            $chartOfAccount->scope = ChartOfAccountScopeEnum::SYSTEM;
+            $chartOfAccount->system_key = $node['system_key'];
+            $chartOfAccount->parent_id = $parent?->id;
+            $chartOfAccount->source_type = null;
+            $chartOfAccount->source_id = null;
+            $chartOfAccount->code = $node['code'];
+            $chartOfAccount->name = $node['name'];
+            $chartOfAccount->account_type = $node['account_type'];
+            $chartOfAccount->normal_balance = $node['normal_balance'];
+            $chartOfAccount->level = $parent ? $parent->level + 1 : 1;
+            $chartOfAccount->is_group = $node['is_group'];
+            $chartOfAccount->is_active = $node['is_active'] ?? true;
+            $chartOfAccount->remarks = $node['remarks'] ?? null;
+            $chartOfAccount->save();
+
+            foreach ($node['children'] ?? [] as $childNode) {
+                $upsertChartOfAccountNode($childNode, $chartOfAccount);
+            }
+        };
+
+        foreach ($defaultChartOfAccounts as $node) {
+            $upsertChartOfAccountNode($node, null);
+        }
+    }
+
     private function createDefaultCashAccounts(Company $company, Branch $branch): void
     {
         $defaultCashAccounts = [
@@ -122,39 +164,146 @@ class CompanyInitializationService
         }
     }
 
-    private function createDefaultChartOfAccounts(Company $company): void
+    private function createDefaultOperationalExpenseCategory(Company $company): void
     {
-        $defaultChartOfAccounts = config('chart_of_accounts', []);
+        $defaultExpenseCategories = [
+            [
+                'name' => 'Biaya Operasional Tetap',
+                'sequence' => 0,
+                'children' => [
+                    [
+                        'name' => 'Sewa',
+                        'sequence' => 0,
+                    ],
+                    [
+                        'name' => 'Gaji dan Upah',
+                        'sequence' => 1,
+                    ],
+                    [
+                        'name' => 'BPJS dan Tunjangan Tetap',
+                        'sequence' => 2,
+                    ],
+                    [
+                        'name' => 'Internet dan Langganan Software',
+                        'sequence' => 3,
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Biaya Operasional Variabel',
+                'sequence' => 1,
+                'children' => [
+                    [
+                        'name' => 'Listrik dan Air',
+                        'sequence' => 0,
+                    ],
+                    [
+                        'name' => 'Bahan Habis Pakai',
+                        'sequence' => 1,
+                    ],
+                    [
+                        'name' => 'Transportasi Operasional',
+                        'sequence' => 2,
+                    ],
+                    [
+                        'name' => 'Perawatan dan Perbaikan',
+                        'sequence' => 3,
+                    ],
+                    [
+                        'name' => 'Biaya Pengiriman',
+                        'sequence' => 4,
+                    ],
+                ],
+            ],
+            [
+                'name' => 'Biaya Operasional Umum',
+                'sequence' => 2,
+                'children' => [
+                    [
+                        'name' => 'ATK dan Perlengkapan Kantor',
+                        'sequence' => 0,
+                    ],
+                    [
+                        'name' => 'Biaya Administrasi Bank',
+                        'sequence' => 1,
+                    ],
+                    [
+                        'name' => 'Biaya Telepon',
+                        'sequence' => 2,
+                    ],
+                    [
+                        'name' => 'Biaya Kebersihan',
+                        'sequence' => 3,
+                    ],
+                    [
+                        'name' => 'Biaya Keamanan',
+                        'sequence' => 4,
+                    ],
+                    [
+                        'name' => 'Biaya Operasional Umum Lainnya',
+                        'sequence' => 5,
+                    ],
+                ],
+            ],
+        ];
 
-        $upsertChartOfAccountNode = function (array $node, ?ChartOfAccount $parent) use ($company, &$upsertChartOfAccountNode): void {
-            $chartOfAccount = ChartOfAccount::query()->firstOrNew([
-                'company_id' => $company->id,
-                'system_key' => $node['system_key'],
-            ]);
+        foreach ($defaultExpenseCategories as $defaultExpenseCategory) {
+            $parentDTO = new ExpenseCategoryCreateDTO(
+                companyId: $company->id,
+                parentId: null,
+                categoryType: ExpenseCategoryTypeEnum::EXPENSE->value,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                name: $defaultExpenseCategory['name'],
+                sequence: $defaultExpenseCategory['sequence'],
+            );
+            $parentExpenseCategory = $this->expenseCategoryActions->create($parentDTO);
 
-            $chartOfAccount->company_id = $company->id;
-            $chartOfAccount->scope = ChartOfAccountScopeEnum::SYSTEM;
-            $chartOfAccount->system_key = $node['system_key'];
-            $chartOfAccount->parent_id = $parent?->id;
-            $chartOfAccount->source_type = null;
-            $chartOfAccount->source_id = null;
-            $chartOfAccount->code = $node['code'];
-            $chartOfAccount->name = $node['name'];
-            $chartOfAccount->account_type = $node['account_type'];
-            $chartOfAccount->normal_balance = $node['normal_balance'];
-            $chartOfAccount->level = $parent ? $parent->level + 1 : 1;
-            $chartOfAccount->is_group = $node['is_group'];
-            $chartOfAccount->is_active = $node['is_active'] ?? true;
-            $chartOfAccount->remarks = $node['remarks'] ?? null;
-            $chartOfAccount->save();
-
-            foreach ($node['children'] ?? [] as $childNode) {
-                $upsertChartOfAccountNode($childNode, $chartOfAccount);
+            foreach ($defaultExpenseCategory['children'] as $defaultExpenseCategoryChild) {
+                $childDTO = new ExpenseCategoryCreateDTO(
+                    companyId: $company->id,
+                    parentId: $parentExpenseCategory->id,
+                    categoryType: null,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    name: $defaultExpenseCategoryChild['name'],
+                    sequence: $defaultExpenseCategoryChild['sequence'],
+                );
+                $this->expenseCategoryActions->create($childDTO);
             }
-        };
+        }
+    }
 
-        foreach ($defaultChartOfAccounts as $node) {
-            $upsertChartOfAccountNode($node, null);
+    private function createDefaultOtherExpenseCategory(Company $company): void
+    {
+        $defaultExpenseCategories = [
+            [
+                'name' => 'Biaya Lain-lain Umum',
+                'sequence' => 0,
+                'children' => [],
+            ],
+        ];
+
+        foreach ($defaultExpenseCategories as $defaultExpenseCategory) {
+            $parentDTO = new ExpenseCategoryCreateDTO(
+                companyId: $company->id,
+                parentId: null,
+                categoryType: ExpenseCategoryTypeEnum::OTHER_EXPENSE->value,
+                code: config('dcslab.KEYWORDS.AUTO'),
+                name: $defaultExpenseCategory['name'],
+                sequence: $defaultExpenseCategory['sequence'],
+            );
+            $parentExpenseCategory = $this->expenseCategoryActions->create($parentDTO);
+
+            foreach ($defaultExpenseCategory['children'] as $defaultExpenseCategoryChild) {
+                $childDTO = new ExpenseCategoryCreateDTO(
+                    companyId: $company->id,
+                    parentId: $parentExpenseCategory->id,
+                    categoryType: null,
+                    code: config('dcslab.KEYWORDS.AUTO'),
+                    name: $defaultExpenseCategoryChild['name'],
+                    sequence: $defaultExpenseCategoryChild['sequence'],
+                );
+                $this->expenseCategoryActions->create($childDTO);
+            }
         }
     }
 

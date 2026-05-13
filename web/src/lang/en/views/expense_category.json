@@ -13,10 +13,20 @@
   },
   "fields": {
     "parent": "Parent",
+    "category_type": "Category Type",
     "code": "Code",
     "name": "Name",
     "sequence": "Sequence",
     "child_count": "Child Count"
+  },
+  "options": {
+    "category_type": {
+      "expense": "Operating Expense",
+      "other_expense": "Other Expense"
+    }
+  },
+  "descriptions": {
+    "category_type": "Used only when this category has no parent."
   },
   "alert": {
     "delete_expense_category": {
