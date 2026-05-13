@@ -46,7 +46,6 @@ class AppInstall extends Command
         $this->components->task('Generating Application Key', fn() => $this->generateAppKey());
         $this->components->task('Migrating & Seeding', fn() => $this->migrateAndSeed());
         $this->components->task('Linking Storage', fn() => $this->storageLinking());
-        $this->components->task('Creating Admin Account', fn() => $this->createAdminOrDevAccount('admin'));
     }
 
     private function generateAppKey(): bool
@@ -65,12 +64,10 @@ class AppInstall extends Command
     private function migrateAndSeed(): bool
     {
         if (App::isProduction()) {
-            $this->info('[PROD] Migrating & Seeding ...');
             Artisan::call('migrate', [
                 '--seed' => true,
             ]);
         } else {
-            $this->info('Migrating & Seeding ...');
             Artisan::call('migrate', ['--seed' => true]);
         }
 
@@ -79,7 +76,6 @@ class AppInstall extends Command
 
     private function storageLinking(): bool
     {
-        $this->info('Storage Linking ...');
         if (is_link(public_path().'/storage')) {
             $this->info('Found Storage Link, Skipping ...');
         } else {
