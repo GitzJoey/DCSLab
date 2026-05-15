@@ -24,13 +24,13 @@ class WarehouseActionsDeleteTest extends ActionsTestCase
     {
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch()
-                    ->has(Warehouse::factory())
-                )
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )
             ->create();
 
-        $warehouse = Warehouse::first();
+        $company = $user->companies()->first();
+        $branch = $company->branches()->first();
+        $warehouse = Warehouse::factory()->for($company)->for($branch)->create();
 
         $result = $this->warehouseActions->delete($warehouse);
 

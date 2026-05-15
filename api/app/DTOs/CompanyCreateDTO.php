@@ -8,7 +8,7 @@ final class CompanyCreateDTO
         public readonly string $code,
         public readonly string $name,
         public readonly ?string $address,
-        public readonly string $default,
+        public readonly bool $default,
         public readonly mixed $status,
     ) {
     }

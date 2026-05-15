@@ -28,13 +28,13 @@ class WarehouseActionsReadTest extends ActionsTestCase
     {
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch()
-                    ->has(Warehouse::factory()->count(2))
-                )
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )
             ->create();
 
         $company = $user->companies()->first();
+        $branch = $company->branches()->first();
+        Warehouse::factory()->count(2)->for($company)->for($branch)->create();
 
         $result = $this->warehouseActions->readAny(
             withTrashed: false,
@@ -60,13 +60,13 @@ class WarehouseActionsReadTest extends ActionsTestCase
     {
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch()
-                    ->has(Warehouse::factory()->count(2))
-                )
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )
             ->create();
 
         $company = $user->companies()->first();
+        $branch = $company->branches()->first();
+        Warehouse::factory()->count(2)->for($company)->for($branch)->create();
 
         $result = $this->warehouseActions->readAny(
             withTrashed: false,
@@ -89,13 +89,13 @@ class WarehouseActionsReadTest extends ActionsTestCase
     {
         $user = User::factory()
             ->has(Company::factory()->setStatusActive()->setIsDefault()
-                ->has(Branch::factory()->setStatusActive()->setIsMainBranch()
-                    ->has(Warehouse::factory())
-                )
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
             )
             ->create();
 
-        $warehouse = Warehouse::first();
+        $company = $user->companies()->first();
+        $branch = $company->branches()->first();
+        $warehouse = Warehouse::factory()->for($company)->for($branch)->create();
 
         $result = $this->warehouseActions->read($warehouse);
 
