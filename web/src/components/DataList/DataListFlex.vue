@@ -163,16 +163,14 @@
   };
 
   const searchTextboxChanged = () => {
-    if (props.pagination != null)
-      emits('dataListChanged', createDataEmittedPayload(search.value, 1, props.pagination.per_page));
+    emits('dataListChanged', createDataEmittedPayload(search.value, 1, props.pagination?.per_page ?? perPage.value));
   };
 
   const refreshButtonClicked = () => {
-    if (props.pagination != null)
-      emits(
-        'dataListChanged',
-        createDataEmittedPayload(search.value, props.pagination.current_page, props.pagination.per_page),
-      );
+    emits(
+      'dataListChanged',
+      createDataEmittedPayload(search.value, props.pagination?.current_page ?? 1, props.pagination?.per_page ?? perPage.value),
+    );
   };
 
   const printButtonClicked = () => {

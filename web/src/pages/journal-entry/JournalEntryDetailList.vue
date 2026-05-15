@@ -2,14 +2,13 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import Button from '@/components/Base/Button';
-import Lucide from '@/components/Base/Lucide';
-import { FormInput, FormInputDateTime, FormLabel } from '@/components/Base/Form';
-import Table from '@/components/Base/Table';
+import { DataListFlex } from '@/components/DataList';
+import type { DataListEmittedData } from '@/components/DataList/DataList.vue';
+import { FormInputDateTime, FormLabel } from '@/components/Base/Form';
 import JournalEntryService from '@/services/JournalEntryService';
-import { JournalEntry } from '@/types/models/JournalEntry';
-import { Resource } from '@/types/resources/Resource';
-import { ServiceResponse } from '@/types/services/ServiceResponse';
+import type { JournalEntry } from '@/types/models/JournalEntry';
+import type { Resource } from '@/types/resources/Resource';
+import type { ServiceResponse } from '@/types/services/ServiceResponse';
 import { ViewMode } from '@/types/enums/ViewMode';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
 import { formatCurrency, formatDate } from '@/utils/helper';
@@ -122,7 +121,12 @@ const getEntryDetails = async (refresh: boolean) => {
   emits('loading-state', false);
 };
 
-const handleSearch = async () => {
+const handleDataListChange = async (data: DataListEmittedData) => {
+  filters.value.search = data.search.text;
+  await getEntryDetails(false);
+};
+
+const handleDateFilterChange = async () => {
   await getEntryDetails(true);
 };
 
@@ -144,89 +148,110 @@ const showAlertPlaceholder = (
 <template>
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
-      <div class="grid grid-cols-12 gap-4 gap-y-3 mb-3">
-        <div class="col-span-12 lg:col-span-4 md:col-span-12">
-          <FormLabel>
-            {{ t('components.buttons.search') }}
-          </FormLabel>
-          <FormInput
-            v-model="filters.search"
-            :placeholder="t('components.buttons.search')"
-            @keyup.enter="handleSearch"
-          />
-        </div>
-        <div class="col-span-12 lg:col-span-3 md:col-span-6">
+      <div class="mb-3 grid grid-cols-12 gap-4 gap-y-3">
+        <div class="col-span-12 lg:col-span-6 md:col-span-6">
           <FormLabel>
             {{ t('views.journal_entry.fields.start_date') }}
           </FormLabel>
           <FormInputDateTime
             v-model="filters.start_date"
             :placeholder="t('views.journal_entry.fields.start_date')"
+            @change="handleDateFilterChange"
           />
         </div>
-        <div class="col-span-12 lg:col-span-3 md:col-span-6">
+        <div class="col-span-12 lg:col-span-6 md:col-span-6">
           <FormLabel>
             {{ t('views.journal_entry.fields.end_date') }}
           </FormLabel>
           <FormInputDateTime
             v-model="filters.end_date"
             :placeholder="t('views.journal_entry.fields.end_date')"
+            @change="handleDateFilterChange"
           />
-        </div>
-        <div class="col-span-12 lg:col-span-2 md:col-span-12 flex items-end">
-          <Button variant="primary" class="w-full shadow-md" @click="handleSearch">
-            <Lucide icon="Search" class="w-4 h-4" />
-            &nbsp;{{ t('components.buttons.search') }}
-          </Button>
         </div>
       </div>
 
-      <Table class="mt-5" :hover="true">
-        <Table.Thead variant="light">
-          <Table.Tr>
-            <Table.Th>{{ t('views.journal_entry.fields.code') }}</Table.Th>
-            <Table.Th>{{ t('views.journal_entry.fields.date') }}</Table.Th>
-            <Table.Th>{{ t('views.journal_entry.fields.reference_no') }}</Table.Th>
-            <Table.Th>{{ t('views.journal_entry.fields.branch') }}</Table.Th>
-            <Table.Th>{{ t('views.journal_entry.fields.chart_of_account') }}</Table.Th>
-            <Table.Th class="text-right">{{ t('views.journal_entry.fields.debit') }}</Table.Th>
-            <Table.Th class="text-right">{{ t('views.journal_entry.fields.credit') }}</Table.Th>
-            <Table.Th>{{ t('views.journal_entry.fields.item_remarks') }}</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          <template v-if="entryDetails.length === 0">
-            <Table.Tr class="intro-x">
-              <Table.Td colspan="8">
-                <div class="flex justify-center italic">
-                  {{ t('components.data-list.data_not_found') }}
+      <DataListFlex
+        :enable-search="true"
+        :can-print="false"
+        :can-export="false"
+        :rows="entryDetails"
+        row-class="bg-white dark:bg-darkmode-600"
+        :pagination="null"
+        @dataListChanged="handleDataListChange"
+      >
+        <template #row="{ item }">
+          <div class="col-span-12 md:col-span-4 self-start">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.journal_entry.page_title') }}
+              </div>
+              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.code') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as JournalEntryDetailRow).journal_code }}
                 </div>
-              </Table.Td>
-            </Table.Tr>
-          </template>
-          <template v-else>
-            <Table.Tr v-for="item in entryDetails" :key="item.id" class="intro-x">
-              <Table.Td class="font-medium">
-                {{ item.journal_code }}
-                <div class="text-slate-500 text-xs">
-                  #{{ item.sequence }}
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.item') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200">
+                  #{{ (item as JournalEntryDetailRow).sequence }}
                 </div>
-              </Table.Td>
-              <Table.Td>{{ item.date ? formatDate(item.date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}</Table.Td>
-              <Table.Td>{{ item.reference_no || '-' }}</Table.Td>
-              <Table.Td>{{ item.branch_name || '-' }}</Table.Td>
-              <Table.Td>
-                {{ item.account_code || '-' }} - {{ item.account_name || '-' }}
-              </Table.Td>
-              <Table.Td class="text-right">{{ formatCurrency(item.debit) }}</Table.Td>
-              <Table.Td class="text-right">{{ formatCurrency(item.credit) }}</Table.Td>
-              <Table.Td>
-                {{ item.remarks || item.journal_remarks || '-' }}
-              </Table.Td>
-            </Table.Tr>
-          </template>
-        </Table.Tbody>
-      </Table>
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.date') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as JournalEntryDetailRow).date ? formatDate((item as JournalEntryDetailRow).date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.reference_no') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as JournalEntryDetailRow).reference_no || '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.branch') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as JournalEntryDetailRow).branch_name || '-' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-12 md:col-span-5 self-start md:px-3">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.journal_entry.field_groups.items') }}
+              </div>
+              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.chart_of_account') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as JournalEntryDetailRow).account_code || '-' }} - {{ (item as JournalEntryDetailRow).account_name || '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.item_remarks') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as JournalEntryDetailRow).remarks || '-' }}
+                </div>
+                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.remarks') }}</div>
+                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  {{ (item as JournalEntryDetailRow).journal_remarks || '-' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-12 md:col-span-3 self-start">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.journal_entry.field_groups.summary') }}
+              </div>
+              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
+                <div class="col-span-6 text-slate-500">{{ t('views.journal_entry.fields.debit') }}</div>
+                <div class="col-span-6 text-right text-slate-700 dark:text-slate-200">
+                  {{ formatCurrency((item as JournalEntryDetailRow).debit) }}
+                </div>
+                <div class="col-span-6 text-slate-500">{{ t('views.journal_entry.fields.credit') }}</div>
+                <div class="col-span-6 text-right text-slate-700 dark:text-slate-200">
+                  {{ formatCurrency((item as JournalEntryDetailRow).credit) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </DataListFlex>
     </div>
   </div>
 </template>
