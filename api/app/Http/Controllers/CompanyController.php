@@ -136,23 +136,7 @@ class CompanyController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($validatedRequest['code'] != config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->companyActions->isUniqueCode(
-                    Auth::user(), $validatedRequest['code'], null,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->companyActions->isUniqueName(
-                Auth::user(), $validatedRequest['name'], null,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
             DB::beginTransaction();
-
-            if ($validatedRequest['default']) {
-                $this->companyActions->resetDefault(Auth::user());
-            }
 
             $dto = new CompanyCreateDTO(
                 code: $validatedRequest['code'],
@@ -183,24 +167,7 @@ class CompanyController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($validatedRequest['code'] != config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->companyActions->isUniqueCode(
-                    Auth::user(), $validatedRequest['code'], $company->id,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->companyActions->isUniqueName(
-                Auth::user(), $validatedRequest['name'], $company->id,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
             DB::beginTransaction();
-
-            if ($validatedRequest['default']) {
-                $this->companyActions->resetDefault(Auth::user());
-                $company->refresh();
-            }
 
             $result = $this->companyActions->update(
                 user: Auth::user(),

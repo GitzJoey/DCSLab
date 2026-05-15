@@ -4,10 +4,10 @@ namespace App\Http\Requests\Warehouse;
 
 use App\Enums\RecordStatusEnum;
 use App\Helpers\HashidsHelper;
-use App\Models\Warehouse;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
-use App\Rules\WarehouseUpdateValidStatus;
+use App\Rules\WarehouseUpdateValidCode;
+use App\Rules\WarehouseUpdateValidName;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -27,9 +27,8 @@ class WarehouseUpdateRequest extends FormRequest
 
         /** @var \App\User */
         $user = Auth::user();
-        $warehouse = $this->route('warehouse');
 
-        return $user->can('update', Warehouse::class, $warehouse) ? true : false;
+        return $user->can('update', $this->route('warehouse')) ? true : false;
     }
 
     /**
@@ -42,13 +41,13 @@ class WarehouseUpdateRequest extends FormRequest
         return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', 'bail', new IsValidBranch($this->input('company_id'), true)],
-            'code' => ['required', 'string', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255', new WarehouseUpdateValidCode($this->input('company_id'), $this->route('warehouse'))],
+            'name' => ['required', 'string', 'max:255', new WarehouseUpdateValidName($this->input('company_id'), $this->route('warehouse'))],
             'address' => ['present', 'nullable', 'string', 'max:255'],
             'city' => ['present', 'nullable', 'string', 'max:255'],
             'contact' => ['present', 'nullable', 'string', 'max:255'],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
-            'status' => ['required', new Enum(RecordStatusEnum::class), new WarehouseUpdateValidStatus($this->input('default'))],
+            'status' => ['required', new Enum(RecordStatusEnum::class)],
         ];
     }
 

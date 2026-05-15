@@ -157,6 +157,10 @@ class BranchActions
         $timer_start = microtime(true);
 
         try {
+            if ($data->isMain) {
+                $this->resetMainByCompany($data->companyId);
+            }
+
             $branch = new Branch();
             $branch->company_id = $data->companyId;
             $branch->code = $this->generateUniqueCode($data->companyId, $data->code, null);
@@ -188,6 +192,11 @@ class BranchActions
         $timer_start = microtime(true);
 
         try {
+            if ($data->isMain) {
+                $this->resetMainByCompany($branch->company_id);
+                $branch->refresh();
+            }
+
             $branch->code = $this->generateUniqueCode($branch->company_id, $data->code, $branch->id);
             $branch->name = $data->name;
             $branch->address = $data->address;
@@ -201,7 +210,7 @@ class BranchActions
 
             $this->flushCache();
 
-            return $branch->refresh();
+            return $branch;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -211,7 +220,7 @@ class BranchActions
         }
     }
 
-    public function resetMainByCompany(int $companyId): bool
+    public function resetMainByCompany(int $companyId)
     {
         $timer_start = microtime(true);
 

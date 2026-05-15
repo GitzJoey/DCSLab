@@ -140,18 +140,6 @@ class WarehouseController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->warehouseActions->isUniqueCode(
-                    $validatedRequest['company_id'], $validatedRequest['code'], null,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->warehouseActions->isUniqueName(
-                $validatedRequest['company_id'], $validatedRequest['name'], null,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
             DB::beginTransaction();
 
             $dto = new WarehouseCreateDTO(
@@ -184,18 +172,6 @@ class WarehouseController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->warehouseActions->isUniqueCode(
-                    $validatedRequest['company_id'], $validatedRequest['code'], $warehouse->id,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->warehouseActions->isUniqueName(
-                $validatedRequest['company_id'], $validatedRequest['name'], $warehouse->id,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
             DB::beginTransaction();
 
             $result = $this->warehouseActions->update(

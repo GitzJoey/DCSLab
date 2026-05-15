@@ -140,23 +140,7 @@ class BranchController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->branchActions->isUniqueCode(
-                    $validatedRequest['company_id'], $validatedRequest['code'], null,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->branchActions->isUniqueName(
-                $validatedRequest['company_id'], $validatedRequest['name'], null,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
             DB::beginTransaction();
-
-            if ($validatedRequest['is_main']) {
-                $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
-            }
 
             $dto = new BranchCreateDTO(
                 companyId: $validatedRequest['company_id'],
@@ -188,24 +172,7 @@ class BranchController extends BaseController
         $errorMsg = '';
 
         try {
-            if ($validatedRequest['code'] !== config('dcslab.KEYWORDS.AUTO')) {
-                $isUnique = $this->branchActions->isUniqueCode(
-                    $validatedRequest['company_id'], $validatedRequest['code'], $branch->id,
-                );
-                if (! $isUnique) return response()->error(['code' => [trans('rules.unique_code')]], 422);
-            }
-
-            $isUniqueName = $this->branchActions->isUniqueName(
-                $validatedRequest['company_id'], $validatedRequest['name'], $branch->id,
-            );
-            if (! $isUniqueName) return response()->error(['name' => [trans('rules.unique_name')]], 422);
-
             DB::beginTransaction();
-
-            if ($validatedRequest['is_main']) {
-                $this->branchActions->resetMainByCompany($validatedRequest['company_id']);
-                $branch->refresh();
-            }
 
             $result = $this->branchActions->update(
                 branch: $branch,

@@ -144,6 +144,10 @@ class CompanyActions
         $timer_start = microtime(true);
 
         try {
+            if ($data->default) {
+                $this->resetDefault($user);
+            }
+
             $company = new Company();
             $company->code = $this->generateUniqueCode($user, $data->code, null);
             $company->name = $data->name;
@@ -184,6 +188,11 @@ class CompanyActions
         $timer_start = microtime(true);
 
         try {
+            if ($data->default) {
+                $this->resetDefault($user);
+                $company->refresh();
+            }
+
             $company->code = $this->generateUniqueCode($user, $data->code, $company->id);
             $company->name = $data->name;
             $company->address = $data->address;
@@ -193,7 +202,7 @@ class CompanyActions
 
             $this->flushCache();
 
-            return $company->refresh();
+            return $company;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;

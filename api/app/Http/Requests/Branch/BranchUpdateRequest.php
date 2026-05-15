@@ -4,8 +4,9 @@ namespace App\Http\Requests\Branch;
 
 use App\Enums\RecordStatusEnum;
 use App\Helpers\HashidsHelper;
-use App\Models\Branch;
+use App\Rules\BranchUpdateValidCode;
 use App\Rules\BranchUpdateValidIsMain;
+use App\Rules\BranchUpdateValidName;
 use App\Rules\BranchUpdateValidStatus;
 use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,9 +28,8 @@ class BranchUpdateRequest extends FormRequest
 
         /** @var \App\User */
         $user = Auth::user();
-        $branch = $this->route('branch');
 
-        return $user->can('update', Branch::class, $branch) ? true : false;
+        return $user->can('update', $this->route('branch')) ? true : false;
     }
 
     /**
@@ -41,8 +41,8 @@ class BranchUpdateRequest extends FormRequest
     {
         return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
-            'code' => ['required', 'string', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255', new BranchUpdateValidCode($this->input('company_id'), $this->route('branch'))],
+            'name' => ['required', 'string', 'max:255', new BranchUpdateValidName($this->input('company_id'), $this->route('branch'))],
             'address' => ['present', 'nullable', 'string', 'max:255'],
             'city' => ['present', 'nullable', 'string', 'max:255'],
             'contact' => ['present', 'nullable', 'string', 'max:255'],

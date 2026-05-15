@@ -5,6 +5,8 @@ namespace App\Http\Requests\Branch;
 use App\Enums\RecordStatusEnum;
 use App\Helpers\HashidsHelper;
 use App\Models\Branch;
+use App\Rules\BranchStoreValidCode;
+use App\Rules\BranchStoreValidName;
 use App\Rules\BranchStoreValidStatus;
 use App\Rules\IsValidCompany;
 use Illuminate\Foundation\Http\FormRequest;
@@ -39,8 +41,8 @@ class BranchStoreRequest extends FormRequest
     {
         return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
-            'code' => ['required', 'string', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255', new BranchStoreValidCode($this->input('company_id'))],
+            'name' => ['required', 'string', 'max:255', new BranchStoreValidName($this->input('company_id'))],
             'address' => ['present', 'nullable', 'string', 'max:255'],
             'city' => ['present', 'nullable', 'string', 'max:255'],
             'contact' => ['present', 'nullable', 'string', 'max:255'],

@@ -7,7 +7,8 @@ use App\Helpers\HashidsHelper;
 use App\Models\Warehouse;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
-use App\Rules\WarehouseStoreValidStatus;
+use App\Rules\WarehouseStoreValidCode;
+use App\Rules\WarehouseStoreValidName;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Enum;
@@ -41,13 +42,13 @@ class WarehouseStoreRequest extends FormRequest
         return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', 'bail', new IsValidBranch($this->input('company_id'), true)],
-            'code' => ['required', 'string', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:255', new WarehouseStoreValidCode($this->input('company_id'))],
+            'name' => ['required', 'string', 'max:255', new WarehouseStoreValidName($this->input('company_id'))],
             'address' => ['present', 'nullable', 'string', 'max:255'],
             'city' => ['present', 'nullable', 'string', 'max:255'],
             'contact' => ['present', 'nullable', 'string', 'max:255'],
             'remarks' => ['present', 'nullable', 'string', 'max:255'],
-            'status' => ['required', new Enum(RecordStatusEnum::class), new WarehouseStoreValidStatus($this->input('default'))],
+            'status' => ['required', new Enum(RecordStatusEnum::class)],
         ];
     }
 

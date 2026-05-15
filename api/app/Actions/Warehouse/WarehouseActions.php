@@ -192,7 +192,7 @@ class WarehouseActions
 
             $this->flushCache();
 
-            return $warehouse->refresh();
+            return $warehouse;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
