@@ -18,13 +18,19 @@ final class PurchaseDirectUpdateDTO
         public readonly bool $isPosted,
         public readonly float $rounding,
 
+        /** @var int[] */
         public readonly array $deleteItemIds,
+        /** @var array<int, array<string, mixed>> */
         public array $items,
 
+        /** @var int[] */
         public readonly array $deleteGlobalDiscountIds,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $globalDiscounts,
 
+        /** @var int[] */
         public readonly array $deleteAdditionalCostIds,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $additionalCosts,
     ) {
     }

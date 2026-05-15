@@ -1,0 +1,16 @@
+{
+  "page_title": "Aset Keluar",
+  "actions": {
+    "create": "Tambah Aset Keluar"
+  },
+  "fields": {
+    "qty": "Qty",
+    "remarks": "Catatan"
+  },
+  "table": {
+    "title": "Daftar Aset Keluar",
+    "cols": {
+      "asset": "Aset"
+    }
+  }
+}

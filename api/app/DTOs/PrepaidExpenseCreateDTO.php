@@ -17,7 +17,9 @@ final class PrepaidExpenseCreateDTO
         public readonly int $dueDays,
         public readonly ?string $remarks,
 
+        /** @var array<int, array<string, mixed>> */
         public readonly array $payments,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $images,
     ) {
     }

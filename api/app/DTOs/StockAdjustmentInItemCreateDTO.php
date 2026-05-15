@@ -13,6 +13,7 @@ final class StockAdjustmentInItemCreateDTO
         public readonly float $productUnitConversionValue,
         public readonly float $productUnitCogs,
         public readonly ?string $remarks,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $serials,
     ) {
     }

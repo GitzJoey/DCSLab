@@ -150,6 +150,20 @@ return [
         'invalid_in_item_serial_reference' => 'Incoming item serial data is invalid for this stock adjustment.',
         'invalid_out_item_serial_reference' => 'Outgoing item serial data is invalid for this stock adjustment.',
     ],
+    'asset_adjustment' => [
+        'invalid_in_item_reference' => 'Incoming asset item data is invalid for this asset adjustment.',
+        'invalid_out_item_reference' => 'Outgoing asset item data is invalid for this asset adjustment.',
+        'invalid_in_item_serial_reference' => 'Incoming asset serial data is invalid for this asset adjustment.',
+        'invalid_out_item_serial_reference' => 'Outgoing asset serial data is invalid for this asset adjustment.',
+    ],
+    'asset_purchase' => [
+        'invalid_item_reference' => 'Asset item data is invalid for this asset purchase.',
+        'invalid_item_serial_reference' => 'Asset serial data is invalid for this asset purchase item.',
+    ],
+    'asset_sale' => [
+        'invalid_item_reference' => 'Asset item data is invalid for this asset sale.',
+        'invalid_item_serial_reference' => 'Asset serial data is invalid for this asset sale item.',
+    ],
     'stock_transfer' => [
         'serial_base_qty_must_be_integer' => 'Base qty must be an integer for serial products.',
         'serial_count_must_match_base_qty' => 'The serial count must match the base qty.',

@@ -18,7 +18,9 @@ final class ProductPhysicalCreateDTO
         public readonly int $type,
         public readonly int $status,
 
+        /** @var array<int, array<string, mixed>> */
         public readonly array $productUnits,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $images,
     ) {
     }

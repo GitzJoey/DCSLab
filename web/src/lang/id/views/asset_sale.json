@@ -1,0 +1,42 @@
+{
+  "page_title": "Penjualan Aset",
+  "actions": {
+    "create": "Tambah Penjualan Aset",
+    "edit": "Ubah Penjualan Aset"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "asset_sale_data": "Data Penjualan Aset",
+    "items": "Item Aset",
+    "summary": "Ringkasan"
+  },
+  "fields": {
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Mulai",
+    "end_date": "Tanggal Akhir",
+    "due_days": "Jatuh Tempo (Hari)",
+    "customer_id": "Customer",
+    "remarks": "Catatan",
+    "is_posted": "Terposting",
+    "item_total": "Total Item",
+    "rounding": "Pembulatan",
+    "amount_receivable": "Jumlah Piutang"
+  },
+  "table": {
+    "title": "Daftar Penjualan Aset",
+    "cols": {
+      "asset": "Aset",
+      "qty": "Qty",
+      "unit_price": "Harga Satuan",
+      "subtotal": "Subtotal",
+      "serials": "Serial"
+    }
+  },
+  "alert": {
+    "delete": {
+      "title": "Penjualan aset berhasil dihapus",
+      "message": "Data penjualan aset telah berhasil dihapus."
+    }
+  }
+}

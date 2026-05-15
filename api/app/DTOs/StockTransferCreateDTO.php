@@ -13,6 +13,7 @@ final class StockTransferCreateDTO
         public readonly int $destinationWarehouseId,
         public readonly ?string $remarks,
         public readonly bool $isPosted,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $items,
     ) {
     }

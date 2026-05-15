@@ -13,7 +13,9 @@ final class PurchaseOrderItemCreateDTO
         public readonly float $productUnitConversionValue,
         public readonly float $productUnitPrice,
         public readonly bool $productUnitIsPriceIncludeVat,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $productUnitPriceDiscounts,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $subtotalDiscounts,
         public readonly ?int $vatProfileId,
         public readonly float $vatRate,

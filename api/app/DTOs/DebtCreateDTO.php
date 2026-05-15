@@ -18,6 +18,7 @@ final class DebtCreateDTO
         public readonly int $dueDays,
         public readonly ?string $remarks,
 
+        /** @var array<int, array<string, mixed>> */
         public readonly array $payments,
     ) {
     }

@@ -18,10 +18,14 @@ final class ProductPhysicalUpdateDTO
         public readonly int $type,
         public readonly int $status,
 
+        /** @var int[] */
         public readonly array $deleteProductUnitIds,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $productUnits,
 
+        /** @var int[] */
         public readonly array $deleteImageIds,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $images,
     ) {
     }

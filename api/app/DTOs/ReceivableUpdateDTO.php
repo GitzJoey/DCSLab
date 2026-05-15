@@ -15,7 +15,9 @@ final class ReceivableUpdateDTO
         public readonly int $dueDays,
         public readonly ?string $remarks,
 
+        /** @var int[] */
         public readonly array $deletePaymentIds,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $payments,
     ) {
     }

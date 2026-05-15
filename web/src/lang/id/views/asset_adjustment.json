@@ -1,0 +1,37 @@
+{
+  "page_title": "Penyesuaian Aset",
+  "actions": {
+    "create": "Tambah Penyesuaian Aset",
+    "edit": "Ubah Penyesuaian Aset"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "asset_adjustment_data": "Data Penyesuaian Aset",
+    "in_items": "Aset Masuk",
+    "out_items": "Aset Keluar"
+  },
+  "fields": {
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Mulai",
+    "end_date": "Tanggal Akhir",
+    "remarks": "Catatan",
+    "is_posted": "Terposting",
+    "total_incoming_asset_qty": "Total Qty Aset Masuk",
+    "total_outgoing_asset_qty": "Total Qty Aset Keluar"
+  },
+  "table": {
+    "title": "Daftar Penyesuaian Aset",
+    "cols": {
+      "asset": "Aset",
+      "qty": "Qty",
+      "serials": "Serial"
+    }
+  },
+  "alert": {
+    "delete": {
+      "title": "Penyesuaian aset berhasil dihapus",
+      "message": "Data penyesuaian aset telah berhasil dihapus."
+    }
+  }
+}

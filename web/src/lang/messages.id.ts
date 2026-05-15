@@ -48,6 +48,13 @@ import debt_category from './id/views/debt_category.json';
 import asset_category from './id/views/asset_category.json';
 import asset_unit from './id/views/asset_unit.json';
 import asset from './id/views/asset.json';
+import asset_adjustment from './id/views/asset_adjustment.json';
+import asset_adjustment_in_item from './id/views/asset_adjustment_in_item.json';
+import asset_adjustment_out_item from './id/views/asset_adjustment_out_item.json';
+import asset_purchase from './id/views/asset_purchase.json';
+import asset_purchase_item from './id/views/asset_purchase_item.json';
+import asset_sale from './id/views/asset_sale.json';
+import asset_sale_item from './id/views/asset_sale_item.json';
 import receivable_category from './id/views/receivable_category.json';
 import debt_creditor from './id/views/debt_creditor.json';
 import income_category from './id/views/income_category.json';
@@ -128,6 +135,13 @@ export default {
     asset_category: asset_category,
     asset_unit: asset_unit,
     asset: asset,
+    asset_adjustment: asset_adjustment,
+    asset_adjustment_in_item: asset_adjustment_in_item,
+    asset_adjustment_out_item: asset_adjustment_out_item,
+    asset_purchase: asset_purchase,
+    asset_purchase_item: asset_purchase_item,
+    asset_sale: asset_sale,
+    asset_sale_item: asset_sale_item,
     receivable_category: receivable_category,
     debt_creditor: debt_creditor,
     income_category: income_category,

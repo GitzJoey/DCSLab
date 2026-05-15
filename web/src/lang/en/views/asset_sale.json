@@ -1,0 +1,42 @@
+{
+  "page_title": "Asset Sale",
+  "actions": {
+    "create": "Create Asset Sale",
+    "edit": "Edit Asset Sale"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "asset_sale_data": "Asset Sale Data",
+    "items": "Asset Items",
+    "summary": "Summary"
+  },
+  "fields": {
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "due_days": "Due Days",
+    "customer_id": "Customer",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "item_total": "Item Total",
+    "rounding": "Rounding",
+    "amount_receivable": "Amount Receivable"
+  },
+  "table": {
+    "title": "Asset Sale List",
+    "cols": {
+      "asset": "Asset",
+      "qty": "Qty",
+      "unit_price": "Unit Price",
+      "subtotal": "Subtotal",
+      "serials": "Serials"
+    }
+  },
+  "alert": {
+    "delete": {
+      "title": "Asset sale deleted successfully",
+      "message": "The asset sale data has been deleted successfully."
+    }
+  }
+}

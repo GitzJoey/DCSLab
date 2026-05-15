@@ -17,7 +17,9 @@ final class ProductServiceUpdateDTO
         public readonly float $price,
         public readonly int $point,
 
+        /** @var int[] */
         public readonly array $deleteImageIds,
+        /** @var array<int, array<string, mixed>> */
         public readonly array $images,
     ) {
     }

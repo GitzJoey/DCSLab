@@ -1,0 +1,12 @@
+{
+  "page_title": "Item Pembelian Aset",
+  "actions": {
+    "create": "Tambah Item Aset"
+  },
+  "fields": {
+    "qty": "Qty",
+    "unit_price": "Harga Satuan",
+    "subtotal": "Subtotal",
+    "remarks": "Catatan"
+  }
+}

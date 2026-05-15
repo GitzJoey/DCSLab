@@ -47,4 +47,24 @@ class Asset extends Model
     {
         return $this->belongsTo(AssetUnit::class)->withTrashed();
     }
+
+    public function assetAdjustmentInItems()
+    {
+        return $this->hasMany(AssetAdjustmentInItem::class);
+    }
+
+    public function assetAdjustmentOutItems()
+    {
+        return $this->hasMany(AssetAdjustmentOutItem::class);
+    }
+
+    public function assetPurchaseItems()
+    {
+        return $this->hasMany(AssetPurchaseItem::class);
+    }
+
+    public function assetSaleItems()
+    {
+        return $this->hasMany(AssetSaleItem::class);
+    }
 }

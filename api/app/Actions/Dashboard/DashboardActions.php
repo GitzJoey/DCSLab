@@ -461,11 +461,44 @@ class DashboardActions
             'title' => 'components.menu.stock-transfer',
         ];
 
+        $assetTransactions = [
+            'icon' => 'Laptop',
+            'pageName' => 'side-menu-transaction-asset',
+            'title' => 'components.menu.asset',
+            'subMenu' => [],
+        ];
+
+        $assetAdjustment = [
+            'icon' => 'ArrowLeftRight',
+            'pageName' => 'side-menu-asset-adjustment',
+            'title' => 'components.menu.asset-adjustment',
+        ];
+
+        $assetPurchase = [
+            'icon' => 'PackagePlus',
+            'pageName' => 'side-menu-asset-purchase',
+            'title' => 'components.menu.asset-purchase',
+        ];
+
+        $assetSale = [
+            'icon' => 'PackageMinus',
+            'pageName' => 'side-menu-asset-sale',
+            'title' => 'components.menu.asset-sale',
+        ];
+
+        array_push(
+            $assetTransactions['subMenu'],
+            $assetAdjustment,
+            $assetPurchase,
+            $assetSale
+        );
+
         array_push(
             $root_array['subMenu'],
             $stockAdjustment,
             $purchasing,
-            $stockTransfer
+            $stockTransfer,
+            $assetTransactions
         );
 
         array_push($menu, $root_array);

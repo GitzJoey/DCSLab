@@ -1,0 +1,16 @@
+{
+  "page_title": "Incoming Asset",
+  "actions": {
+    "create": "Add Incoming Asset"
+  },
+  "fields": {
+    "qty": "Qty",
+    "remarks": "Remarks"
+  },
+  "table": {
+    "title": "Incoming Asset List",
+    "cols": {
+      "asset": "Asset"
+    }
+  }
+}

@@ -150,6 +150,20 @@ return [
         'invalid_in_item_serial_reference' => 'Data serial barang masuk tidak valid untuk stock adjustment ini.',
         'invalid_out_item_serial_reference' => 'Data serial barang keluar tidak valid untuk stock adjustment ini.',
     ],
+    'asset_adjustment' => [
+        'invalid_in_item_reference' => 'Data item aset masuk tidak valid untuk penyesuaian aset ini.',
+        'invalid_out_item_reference' => 'Data item aset keluar tidak valid untuk penyesuaian aset ini.',
+        'invalid_in_item_serial_reference' => 'Data serial aset masuk tidak valid untuk penyesuaian aset ini.',
+        'invalid_out_item_serial_reference' => 'Data serial aset keluar tidak valid untuk penyesuaian aset ini.',
+    ],
+    'asset_purchase' => [
+        'invalid_item_reference' => 'Data item aset tidak valid untuk pembelian aset ini.',
+        'invalid_item_serial_reference' => 'Data serial aset tidak valid untuk item pembelian aset ini.',
+    ],
+    'asset_sale' => [
+        'invalid_item_reference' => 'Data item aset tidak valid untuk penjualan aset ini.',
+        'invalid_item_serial_reference' => 'Data serial aset tidak valid untuk item penjualan aset ini.',
+    ],
     'stock_transfer' => [
         'serial_base_qty_must_be_integer' => 'Qty base harus bilangan bulat untuk produk serial.',
         'serial_count_must_match_base_qty' => 'Jumlah serial harus sama dengan qty base.',

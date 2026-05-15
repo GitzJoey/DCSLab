@@ -335,7 +335,7 @@ class PurchaseOrderActions
 
             $this->flushCache();
 
-            return $purchaseOrder->refresh();
+            return $purchaseOrder;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -506,7 +506,7 @@ class PurchaseOrderActions
 
             $this->flushCache();
 
-            return $purchaseOrder->refresh();
+            return $purchaseOrder;
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;

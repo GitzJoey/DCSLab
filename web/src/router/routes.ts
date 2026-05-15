@@ -182,6 +182,18 @@ import StockAdjustmentIndex from '@/pages/stock-adjustment/StockAdjustmentIndex.
 import StockAdjustmentList from '@/pages/stock-adjustment/StockAdjustmentList.vue';
 import StockAdjustmentCreate from '@/pages/stock-adjustment/StockAdjustmentCreate.vue';
 import StockAdjustmentEdit from '@/pages/stock-adjustment/StockAdjustmentEdit.vue';
+import AssetAdjustmentIndex from '@/pages/asset-adjustment/AssetAdjustmentIndex.vue';
+import AssetAdjustmentList from '@/pages/asset-adjustment/AssetAdjustmentList.vue';
+import AssetAdjustmentCreate from '@/pages/asset-adjustment/AssetAdjustmentCreate.vue';
+import AssetAdjustmentEdit from '@/pages/asset-adjustment/AssetAdjustmentEdit.vue';
+import AssetPurchaseIndex from '@/pages/asset-purchase/AssetPurchaseIndex.vue';
+import AssetPurchaseList from '@/pages/asset-purchase/AssetPurchaseList.vue';
+import AssetPurchaseCreate from '@/pages/asset-purchase/AssetPurchaseCreate.vue';
+import AssetPurchaseEdit from '@/pages/asset-purchase/AssetPurchaseEdit.vue';
+import AssetSaleIndex from '@/pages/asset-sale/AssetSaleIndex.vue';
+import AssetSaleList from '@/pages/asset-sale/AssetSaleList.vue';
+import AssetSaleCreate from '@/pages/asset-sale/AssetSaleCreate.vue';
+import AssetSaleEdit from '@/pages/asset-sale/AssetSaleEdit.vue';
 import StockAdjustmentInItemIndex from '@/pages/stock-adjustment/StockAdjustmentInItemIndex.vue';
 import StockAdjustmentInItemList from '@/pages/stock-adjustment/StockAdjustmentInItemList.vue';
 import StockAdjustmentOutItemIndex from '@/pages/stock-adjustment/StockAdjustmentOutItemIndex.vue';
@@ -1312,6 +1324,103 @@ export default [
                 path: '/stock-adjustment/edit/:ulid',
                 name: 'side-menu-stock-adjustment-edit',
                 component: StockAdjustmentEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Asset Adjustment
+          {
+            path: '/asset-adjustment',
+            name: 'side-menu-asset-adjustment',
+            redirect: '/asset-adjustment/list',
+            component: AssetAdjustmentIndex,
+            children: [
+              {
+                path: '/asset-adjustment/list',
+                name: 'side-menu-asset-adjustment-list',
+                component: AssetAdjustmentList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-adjustment/create',
+                name: 'side-menu-asset-adjustment-create',
+                component: AssetAdjustmentCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-adjustment/edit/:ulid',
+                name: 'side-menu-asset-adjustment-edit',
+                component: AssetAdjustmentEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/asset-purchase',
+            name: 'side-menu-asset-purchase',
+            redirect: '/asset-purchase/list',
+            component: AssetPurchaseIndex,
+            children: [
+              {
+                path: '/asset-purchase/list',
+                name: 'side-menu-asset-purchase-list',
+                component: AssetPurchaseList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-purchase/create',
+                name: 'side-menu-asset-purchase-create',
+                component: AssetPurchaseCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-purchase/edit/:ulid',
+                name: 'side-menu-asset-purchase-edit',
+                component: AssetPurchaseEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/asset-sale',
+            name: 'side-menu-asset-sale',
+            redirect: '/asset-sale/list',
+            component: AssetSaleIndex,
+            children: [
+              {
+                path: '/asset-sale/list',
+                name: 'side-menu-asset-sale-list',
+                component: AssetSaleList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-sale/create',
+                name: 'side-menu-asset-sale-create',
+                component: AssetSaleCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/asset-sale/edit/:ulid',
+                name: 'side-menu-asset-sale-edit',
+                component: AssetSaleEdit,
                 meta: {
                   remember: true,
                 },

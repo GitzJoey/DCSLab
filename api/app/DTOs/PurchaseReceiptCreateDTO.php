@@ -16,6 +16,7 @@ final class PurchaseReceiptCreateDTO
         public readonly ?string $remarks,
         public readonly bool $isPosted,
 
+        /** @var array<int, array<string, mixed>> */
         public readonly array $items,
     ) {
     }

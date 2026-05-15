@@ -17,6 +17,7 @@ final class ProductServiceCreateDTO
         public readonly float $price,
         public readonly int $point,
 
+        /** @var array<int, array<string, mixed>> */
         public readonly array $images,
     ) {
     }

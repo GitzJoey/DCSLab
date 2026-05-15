@@ -21,10 +21,13 @@ final class PurchaseDirectCreateDTO
         public readonly bool $isPosted,
         public readonly float $rounding,
 
+        /** @var array<int, array<string, mixed>> */
         public array $items,
 
+        /** @var array<int, array<string, mixed>> */
         public readonly array $globalDiscounts,
 
+        /** @var array<int, array<string, mixed>> */
         public readonly array $additionalCosts,
     ) {
     }
