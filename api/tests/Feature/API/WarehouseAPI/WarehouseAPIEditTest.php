@@ -206,6 +206,36 @@ class WarehouseAPIEditTest extends APITestCase
         $api->assertSuccessful();
     }
 
+    public function test_warehouse_api_call_update_and_use_existing_name_in_same_company_expect_failed()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+        Warehouse::factory()->for($company)->for($branch)->count(2)->create();
+
+        $warehouses = $company->warehouses()->inRandomOrder()->take(2)->get();
+        $warehouse_1 = $warehouses[0];
+        $warehouse_2 = $warehouses[1];
+
+        $payload = Warehouse::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'branch_id' => Hashids::encode($branch->id),
+            'name' => $warehouse_1->name,
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.warehouse.edit', $warehouse_2->ulid), $payload);
+
+        $api->assertUnprocessable();
+        $api->assertJsonValidationErrors(['name']);
+    }
+
     public function test_warehouse_api_call_update_with_sql_injection_payload_expect_failed()
     {
         $user = User::factory()

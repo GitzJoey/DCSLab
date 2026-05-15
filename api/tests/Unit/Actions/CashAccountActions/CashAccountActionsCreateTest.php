@@ -29,32 +29,34 @@ class CashAccountActionsCreateTest extends ActionsTestCase
         $company = $user->companies()->whereHas('branches')->inRandomOrder()->first();
         $branch = $company->branches()->inRandomOrder()->first();
 
-        $cashAccountArr = CashAccount::factory()->for($company)
+        $payload = CashAccount::factory()->for($company)
             ->make()->toArray();
-        $cashAccountArr['branch_id'] = $branch->id;
+        $payload['branch_id'] = $branch->id;
 
-        $result = $this->cashAccountActions->create(new \App\DTOs\CashAccountCreateDTO(
-            companyId: $cashAccountArr['company_id'],
-            branchId: $cashAccountArr['branch_id'],
-            code: $cashAccountArr['code'],
-            name: $cashAccountArr['name'],
-            isBank: $cashAccountArr['is_bank'],
-            isActive: $cashAccountArr['is_active'],
-            remarks: $cashAccountArr['remarks']
-        ));
+        $dto = new \App\DTOs\CashAccountCreateDTO(
+            companyId: $payload['company_id'],
+            branchId: $payload['branch_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            isBank: $payload['is_bank'],
+            isActive: $payload['is_active'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->cashAccountActions->create($dto);
         $this->assertDatabaseHas('cash_accounts', [
             'id' => $result->id,
-            'company_id' => $cashAccountArr['company_id'],
-            'code' => $cashAccountArr['code'],
-            'name' => $cashAccountArr['name'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
     public function test_cash_account_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->cashAccountActions->create(new \App\DTOs\CashAccountCreateDTO());
+        $dto = new \App\DTOs\CashAccountCreateDTO();
 
+        $this->cashAccountActions->create($dto);
     }
 }

@@ -163,6 +163,33 @@ class BranchAPICreateTest extends APITestCase
         ]);
     }
 
+    public function test_branch_api_call_store_with_existing_name_in_same_company_expect_failed()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(Company::factory()->setIsDefault())
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        Branch::factory()->for($company)->create([
+            'name' => 'Branch Sama',
+        ]);
+
+        $payload = array_merge([
+            'company_id' => Hashids::encode($company->id),
+        ], Branch::factory()->make([
+            'name' => 'Branch Sama',
+        ])->toArray());
+
+        $api = $this->json('POST', route('api.post.branch.save'), $payload);
+
+        $api->assertUnprocessable();
+        $api->assertJsonValidationErrors(['name']);
+    }
+
     public function test_branch_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
         $user = User::factory()

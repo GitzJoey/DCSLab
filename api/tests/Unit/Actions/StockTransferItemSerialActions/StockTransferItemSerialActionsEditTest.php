@@ -30,16 +30,16 @@ class StockTransferItemSerialActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $stockTransferItemSerial = $company->stockTransferItemSerials()->inRandomOrder()->first();
 
-        $stockTransferItemSerialArr = StockTransferItemSerial::factory()->make()->toArray();
+        $payload = StockTransferItemSerial::factory()->make()->toArray();
 
-        $result = $this->stockTransferItemSerialActions->update($stockTransferItemSerial, $stockTransferItemSerialArr);
+        $result = $this->stockTransferItemSerialActions->update($stockTransferItemSerial, $payload);
 
         $this->assertInstanceOf(StockTransferItemSerial::class, $result);
         $this->assertDatabaseHas('stock_transfer_item_serials', [
             'id' => $stockTransferItemSerial->id,
             'company_id' => $stockTransferItemSerial->company_id,
-            'code' => $stockTransferItemSerialArr['code'],
-            'name' => $stockTransferItemSerialArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -55,8 +55,8 @@ class StockTransferItemSerialActionsEditTest extends ActionsTestCase
         $stockTransferItemSerial = $user->companies()->inRandomOrder()->first()
             ->stockTransferItemSerials()->inRandomOrder()->first();
 
-        $stockTransferItemSerialArr = [];
+        $payload = [];
 
-        $this->stockTransferItemSerialActions->update($stockTransferItemSerial, $stockTransferItemSerialArr);
+        $this->stockTransferItemSerialActions->update($stockTransferItemSerial, $payload);
     }
 }

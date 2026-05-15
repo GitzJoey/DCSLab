@@ -3,6 +3,8 @@
 namespace Tests\Unit\Actions\CompanyActions;
 
 use App\Actions\Company\CompanyActions;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecutePaginationDTO;
 use App\Enums\UserRolesEnum;
 use App\Models\Company;
 use App\Models\Role;
@@ -31,18 +33,19 @@ class CompanyActionsReadTest extends ActionsTestCase
 
         $result = $this->companyActions->readAny(
             user: $user,
-            useCache: true,
-            with: [],
             withTrashed: false,
-
             search: null,
             default: null,
             status: null,
-
-            paginate: true,
-            page: 1,
-            perPage: 10,
-            limit: null
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: 10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -56,18 +59,16 @@ class CompanyActionsReadTest extends ActionsTestCase
 
         $result = $this->companyActions->readAny(
             user: $user,
-            useCache: true,
-            with: [],
             withTrashed: false,
-
             search: null,
             default: null,
             status: null,
-
-            paginate: false,
-            page: null,
-            perPage: null,
-            limit: null
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: null,
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -94,18 +95,19 @@ class CompanyActionsReadTest extends ActionsTestCase
 
         $result = $this->companyActions->readAny(
             user: $user,
-            useCache: true,
-            with: [],
             withTrashed: false,
-
             search: 'testing',
             default: null,
             status: null,
-
-            paginate: true,
-            page: 1,
-            perPage: 10,
-            limit: null
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: 10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -130,18 +132,19 @@ class CompanyActionsReadTest extends ActionsTestCase
 
         $result = $this->companyActions->readAny(
             user: $user,
-            useCache: true,
-            with: [],
             withTrashed: false,
-
             search: '',
             default: null,
             status: null,
-
-            paginate: true,
-            page: -1,
-            perPage: 10,
-            limit: null
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: -1,
+                    perPage: 10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -166,18 +169,19 @@ class CompanyActionsReadTest extends ActionsTestCase
 
         $result = $this->companyActions->readAny(
             user: $user,
-            useCache: true,
-            with: [],
             withTrashed: false,
-
             search: '',
             default: null,
             status: null,
-
-            paginate: true,
-            page: 1,
-            perPage: -10,
-            limit: null
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: -10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);

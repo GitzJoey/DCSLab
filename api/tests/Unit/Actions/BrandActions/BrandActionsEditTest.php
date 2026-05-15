@@ -30,19 +30,20 @@ class BrandActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $brand = $company->brands()->inRandomOrder()->first();
 
-        $brandArr = Brand::factory()->make()->toArray();
+        $payload = Brand::factory()->make()->toArray();
 
-        $result = $this->brandActions->update($brand, new \App\DTOs\BrandUpdateDTO(
-            code: $brandArr['code'],
-            name: $brandArr['name']
-        ));
+        $dto = new \App\DTOs\BrandUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name']
+        );
 
+        $result = $this->brandActions->update($brand, $dto);
         $this->assertInstanceOf(Brand::class, $result);
         $this->assertDatabaseHas('brands', [
             'id' => $brand->id,
             'company_id' => $brand->company_id,
-            'code' => $brandArr['code'],
-            'name' => $brandArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -58,8 +59,10 @@ class BrandActionsEditTest extends ActionsTestCase
         $brand = $user->companies()->inRandomOrder()->first()
             ->brands()->inRandomOrder()->first();
 
-        $brandArr = [];
+        $payload = [];
 
-        $this->brandActions->update($brand, new \App\DTOs\BrandUpdateDTO());
+        $dto = new \App\DTOs\BrandUpdateDTO();
+
+        $this->brandActions->update($brand, $dto);
     }
 }

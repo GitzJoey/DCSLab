@@ -30,21 +30,22 @@ class EmployeeActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $employee = $company->employees()->inRandomOrder()->first();
 
-        $employeeArr = Employee::factory()->make()->toArray();
+        $payload = Employee::factory()->make()->toArray();
 
-        $result = $this->employeeActions->update($employee, new \App\DTOs\EmployeeUpdateDTO(
-            companyId: $employeeArr['company_id'],
-            code: $employeeArr['code'],
-            name: $employeeArr['name'],
-            remarks: $employeeArr['remarks']
-        ));
+        $dto = new \App\DTOs\EmployeeUpdateDTO(
+            companyId: $payload['company_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->employeeActions->update($employee, $dto);
         $this->assertInstanceOf(Employee::class, $result);
         $this->assertDatabaseHas('employees', [
             'id' => $employee->id,
             'company_id' => $employee->company_id,
-            'code' => $employeeArr['code'],
-            'name' => $employeeArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -60,8 +61,10 @@ class EmployeeActionsEditTest extends ActionsTestCase
         $employee = $user->companies()->inRandomOrder()->first()
             ->employees()->inRandomOrder()->first();
 
-        $employeeArr = [];
+        $payload = [];
 
-        $this->employeeActions->update($employee, new \App\DTOs\EmployeeUpdateDTO());
+        $dto = new \App\DTOs\EmployeeUpdateDTO();
+
+        $this->employeeActions->update($employee, $dto);
     }
 }

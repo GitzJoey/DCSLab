@@ -30,35 +30,36 @@ class SupplierActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $supplier = $company->suppliers()->inRandomOrder()->first();
 
-        $supplierArr = Supplier::factory()->make()->toArray();
+        $payload = Supplier::factory()->make()->toArray();
 
-        $result = $this->supplierActions->update($supplier, new \App\DTOs\SupplierUpdateDTO(
-            code: $supplierArr['code'],
-            name: $supplierArr['name'],
-            address: $supplierArr['address'],
-            city: $supplierArr['city'],
-            paymentTermType: $supplierArr['payment_term_type'],
-            paymentTerm: $supplierArr['payment_term'],
-            taxableEnterprise: $supplierArr['taxable_enterprise'],
-            taxId: $supplierArr['tax_id'],
-            remarks: $supplierArr['remarks'],
-            status: $supplierArr['status']
-        ));
+        $dto = new \App\DTOs\SupplierUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            address: $payload['address'],
+            city: $payload['city'],
+            paymentTermType: $payload['payment_term_type'],
+            paymentTerm: $payload['payment_term'],
+            taxableEnterprise: $payload['taxable_enterprise'],
+            taxId: $payload['tax_id'],
+            remarks: $payload['remarks'],
+            status: $payload['status']
+        );
 
+        $result = $this->supplierActions->update($supplier, $dto);
         $this->assertInstanceOf(Supplier::class, $result);
         $this->assertDatabaseHas('suppliers', [
             'id' => $supplier->id,
             'company_id' => $supplier->company_id,
-            'code' => $supplierArr['code'],
-            'name' => $supplierArr['name'],
-            'address' => $supplierArr['address'],
-            'city' => $supplierArr['city'],
-            'payment_term_type' => $supplierArr['payment_term_type'],
-            'payment_term' => $supplierArr['payment_term'],
-            'taxable_enterprise' => $supplierArr['taxable_enterprise'],
-            'tax_id' => $supplierArr['tax_id'],
-            'status' => $supplierArr['status'],
-            'remarks' => $supplierArr['remarks'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'address' => $payload['address'],
+            'city' => $payload['city'],
+            'payment_term_type' => $payload['payment_term_type'],
+            'payment_term' => $payload['payment_term'],
+            'taxable_enterprise' => $payload['taxable_enterprise'],
+            'tax_id' => $payload['tax_id'],
+            'status' => $payload['status'],
+            'remarks' => $payload['remarks'],
         ]);
     }
 
@@ -74,8 +75,10 @@ class SupplierActionsEditTest extends ActionsTestCase
         $supplier = $user->companies()->inRandomOrder()->first()
             ->suppliers()->inRandomOrder()->first();
 
-        $supplierArr = [];
+        $payload = [];
 
-        $this->supplierActions->update($supplier, new \App\DTOs\SupplierUpdateDTO());
+        $dto = new \App\DTOs\SupplierUpdateDTO();
+
+        $this->supplierActions->update($supplier, $dto);
     }
 }

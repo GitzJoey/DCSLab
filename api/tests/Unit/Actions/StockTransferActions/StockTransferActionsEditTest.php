@@ -30,16 +30,16 @@ class StockTransferActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $stockTransfer = $company->stockTransfers()->inRandomOrder()->first();
 
-        $stockTransferArr = StockTransfer::factory()->make()->toArray();
+        $payload = StockTransfer::factory()->make()->toArray();
 
-        $result = $this->stockTransferActions->update($stockTransfer, $stockTransferArr);
+        $result = $this->stockTransferActions->update($stockTransfer, $payload);
 
         $this->assertInstanceOf(StockTransfer::class, $result);
         $this->assertDatabaseHas('stock_transfers', [
             'id' => $stockTransfer->id,
             'company_id' => $stockTransfer->company_id,
-            'code' => $stockTransferArr['code'],
-            'name' => $stockTransferArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -55,8 +55,8 @@ class StockTransferActionsEditTest extends ActionsTestCase
         $stockTransfer = $user->companies()->inRandomOrder()->first()
             ->stockTransfers()->inRandomOrder()->first();
 
-        $stockTransferArr = [];
+        $payload = [];
 
-        $this->stockTransferActions->update($stockTransfer, $stockTransferArr);
+        $this->stockTransferActions->update($stockTransfer, $payload);
     }
 }

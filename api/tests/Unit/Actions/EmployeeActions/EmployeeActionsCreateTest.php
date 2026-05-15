@@ -27,28 +27,30 @@ class EmployeeActionsCreateTest extends ActionsTestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
-        $employeeArr = Employee::factory()->for($company)
+        $payload = Employee::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->employeeActions->create(new \App\DTOs\EmployeeCreateDTO(
-            companyId: $employeeArr['company_id'],
-            code: $employeeArr['code'],
-            name: $employeeArr['name'],
-            remarks: $employeeArr['remarks']
-        ));
+        $dto = new \App\DTOs\EmployeeCreateDTO(
+            companyId: $payload['company_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->employeeActions->create($dto);
         $this->assertDatabaseHas('employees', [
             'id' => $result->id,
-            'company_id' => $employeeArr['company_id'],
-            'code' => $employeeArr['code'],
-            'name' => $employeeArr['name'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
     public function test_employee_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->employeeActions->create(new \App\DTOs\EmployeeCreateDTO());
+        $dto = new \App\DTOs\EmployeeCreateDTO();
 
+        $this->employeeActions->create($dto);
     }
 }

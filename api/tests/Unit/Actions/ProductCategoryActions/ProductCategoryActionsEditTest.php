@@ -30,20 +30,21 @@ class ProductCategoryActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $productCategory = $company->productCategories()->inRandomOrder()->first();
 
-        $productCategoryArr = ProductCategory::factory()->make()->toArray();
+        $payload = ProductCategory::factory()->make()->toArray();
 
-        $result = $this->productCategoryActions->update($productCategory, new \App\DTOs\ProductCategoryUpdateDTO(
-            code: $productCategoryArr['code'],
-            name: $productCategoryArr['name'],
-            type: $productCategoryArr['type']
-        ));
+        $dto = new \App\DTOs\ProductCategoryUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            type: $payload['type']
+        );
 
+        $result = $this->productCategoryActions->update($productCategory, $dto);
         $this->assertInstanceOf(ProductCategory::class, $result);
         $this->assertDatabaseHas('product_categories', [
             'id' => $productCategory->id,
             'company_id' => $productCategory->company_id,
-            'code' => $productCategoryArr['code'],
-            'name' => $productCategoryArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -59,8 +60,10 @@ class ProductCategoryActionsEditTest extends ActionsTestCase
         $productCategory = $user->companies()->inRandomOrder()->first()
             ->productCategories()->inRandomOrder()->first();
 
-        $productCategoryArr = [];
+        $payload = [];
 
-        $this->productCategoryActions->update($productCategory, new \App\DTOs\ProductCategoryUpdateDTO());
+        $dto = new \App\DTOs\ProductCategoryUpdateDTO();
+
+        $this->productCategoryActions->update($productCategory, $dto);
     }
 }

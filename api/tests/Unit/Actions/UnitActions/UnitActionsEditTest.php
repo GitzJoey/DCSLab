@@ -30,23 +30,24 @@ class UnitActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $unit = $company->units()->inRandomOrder()->first();
 
-        $unitArr = Unit::factory()->make()->toArray();
+        $payload = Unit::factory()->make()->toArray();
 
-        $result = $this->unitActions->update($unit, new \App\DTOs\UnitUpdateDTO(
-            code: $unitArr['code'],
-            name: $unitArr['name'],
-            description: $unitArr['description'],
-            type: $unitArr['type']
-        ));
+        $dto = new \App\DTOs\UnitUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            description: $payload['description'],
+            type: $payload['type']
+        );
 
+        $result = $this->unitActions->update($unit, $dto);
         $this->assertInstanceOf(Unit::class, $result);
         $this->assertDatabaseHas('units', [
             'id' => $unit->id,
             'company_id' => $unit->company_id,
-            'code' => $unitArr['code'],
-            'name' => $unitArr['name'],
-            'description' => $unitArr['description'],
-            'type' => $unitArr['type'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'description' => $payload['description'],
+            'type' => $payload['type'],
         ]);
     }
 
@@ -62,8 +63,10 @@ class UnitActionsEditTest extends ActionsTestCase
         $unit = $user->companies()->inRandomOrder()->first()
             ->units()->inRandomOrder()->first();
 
-        $unitArr = [];
+        $payload = [];
 
-        $this->unitActions->update($unit, new \App\DTOs\UnitUpdateDTO());
+        $dto = new \App\DTOs\UnitUpdateDTO();
+
+        $this->unitActions->update($unit, $dto);
     }
 }

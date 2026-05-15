@@ -30,22 +30,23 @@ class CustomerAddressActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $customerAddress = $company->customerAddresses()->inRandomOrder()->first();
 
-        $customerAddressArr = CustomerAddress::factory()->make()->toArray();
+        $payload = CustomerAddress::factory()->make()->toArray();
 
-        $result = $this->customerAddressActions->update($customerAddress, new \App\DTOs\CustomerAddressUpdateDTO(
-            address: $customerAddressArr['address'],
-            city: $customerAddressArr['city'],
-            contact: $customerAddressArr['contact'],
-            isMain: $customerAddressArr['is_main'],
-            remarks: $customerAddressArr['remarks']
-        ));
+        $dto = new \App\DTOs\CustomerAddressUpdateDTO(
+            address: $payload['address'],
+            city: $payload['city'],
+            contact: $payload['contact'],
+            isMain: $payload['is_main'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->customerAddressActions->update($customerAddress, $dto);
         $this->assertInstanceOf(CustomerAddress::class, $result);
         $this->assertDatabaseHas('customer_addresses', [
             'id' => $customerAddress->id,
             'company_id' => $customerAddress->company_id,
-            'code' => $customerAddressArr['code'],
-            'name' => $customerAddressArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -61,8 +62,10 @@ class CustomerAddressActionsEditTest extends ActionsTestCase
         $customerAddress = $user->companies()->inRandomOrder()->first()
             ->customerAddresses()->inRandomOrder()->first();
 
-        $customerAddressArr = [];
+        $payload = [];
 
-        $this->customerAddressActions->update($customerAddress, new \App\DTOs\CustomerAddressUpdateDTO());
+        $dto = new \App\DTOs\CustomerAddressUpdateDTO();
+
+        $this->customerAddressActions->update($customerAddress, $dto);
     }
 }

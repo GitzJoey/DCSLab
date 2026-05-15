@@ -30,20 +30,21 @@ class InvestorActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $investor = $company->investors()->inRandomOrder()->first();
 
-        $investorArr = Investor::factory()->make()->toArray();
+        $payload = Investor::factory()->make()->toArray();
 
-        $result = $this->investorActions->update($investor, new \App\DTOs\InvestorUpdateDTO(
-            code: $investorArr['code'],
-            name: $investorArr['name'],
-            remarks: $investorArr['remarks']
-        ));
+        $dto = new \App\DTOs\InvestorUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->investorActions->update($investor, $dto);
         $this->assertInstanceOf(Investor::class, $result);
         $this->assertDatabaseHas('investors', [
             'id' => $investor->id,
             'company_id' => $investor->company_id,
-            'code' => $investorArr['code'],
-            'name' => $investorArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -59,8 +60,10 @@ class InvestorActionsEditTest extends ActionsTestCase
         $investor = $user->companies()->inRandomOrder()->first()
             ->investors()->inRandomOrder()->first();
 
-        $investorArr = [];
+        $payload = [];
 
-        $this->investorActions->update($investor, new \App\DTOs\InvestorUpdateDTO());
+        $dto = new \App\DTOs\InvestorUpdateDTO();
+
+        $this->investorActions->update($investor, $dto);
     }
 }

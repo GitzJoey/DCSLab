@@ -38,23 +38,24 @@ class CashAccountActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $cashAccount = $company->cashAccounts()->inRandomOrder()->first();
 
-        $cashAccountArr = CashAccount::factory()->make()->toArray();
-        $cashAccountArr['company_id'] = $company->id;
+        $payload = CashAccount::factory()->make()->toArray();
+        $payload['company_id'] = $company->id;
 
-        $result = $this->cashAccountActions->update($cashAccount, new CashAccountUpdateDTO(
-            code: $cashAccountArr['code'],
-            name: $cashAccountArr['name'],
-            isBank: $cashAccountArr['is_bank'],
-            isActive: $cashAccountArr['is_active'],
-            remarks: $cashAccountArr['remarks']
-        ));
+        $dto = new CashAccountUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            isBank: $payload['is_bank'],
+            isActive: $payload['is_active'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->cashAccountActions->update($cashAccount, $dto);
         $this->assertInstanceOf(CashAccount::class, $result);
         $this->assertDatabaseHas('cash_accounts', [
             'id' => $cashAccount->id,
             'company_id' => $cashAccount->company_id,
-            'code' => $cashAccountArr['code'],
-            'name' => $cashAccountArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -78,6 +79,8 @@ class CashAccountActionsEditTest extends ActionsTestCase
         $cashAccount = $user->companies()->inRandomOrder()->first()
             ->cashAccounts()->inRandomOrder()->first();
 
-        $this->cashAccountActions->update($cashAccount, new $dtoClass(...[]));
+        $dto = new $dtoClass(...[]);
+
+        $this->cashAccountActions->update($cashAccount, $dto);
     }
 }

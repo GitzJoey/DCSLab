@@ -169,11 +169,34 @@ class BranchAPIEditTest extends APITestCase
 
         $api = $this->json('POST', route('api.post.branch.edit', $company_2->branches()->first()->ulid), $payload);
 
-        if ($api->status() !== 200) {
-            dd($api->json());
-        }
-
         $api->assertSuccessful();
+    }
+
+    public function test_branch_api_call_update_and_use_existing_name_in_same_company_expect_failed()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->count(3))
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies->first();
+        $branches = $company->branches()->inRandomOrder()->take(2)->get();
+        $branch_1 = $branches[0];
+        $branch_2 = $branches[1];
+
+        $payload = Branch::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'name' => $branch_1->name,
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.branch.edit', $branch_2->ulid), $payload);
+
+        $api->assertUnprocessable();
+        $api->assertJsonValidationErrors(['name']);
     }
 
     public function test_branch_api_call_update_with_auto_code_expect_successful()

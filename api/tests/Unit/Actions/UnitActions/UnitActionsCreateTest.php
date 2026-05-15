@@ -27,31 +27,33 @@ class UnitActionsCreateTest extends ActionsTestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
-        $unitArr = Unit::factory()->for($company)
+        $payload = Unit::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->unitActions->create(new \App\DTOs\UnitCreateDTO(
-            companyId: $unitArr['company_id'],
-            code: $unitArr['code'],
-            name: $unitArr['name'],
-            description: $unitArr['description'],
-            type: $unitArr['type']
-        ));
+        $dto = new \App\DTOs\UnitCreateDTO(
+            companyId: $payload['company_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            description: $payload['description'],
+            type: $payload['type']
+        );
 
+        $result = $this->unitActions->create($dto);
         $this->assertDatabaseHas('units', [
             'id' => $result->id,
-            'company_id' => $unitArr['company_id'],
-            'code' => $unitArr['code'],
-            'name' => $unitArr['name'],
-            'description' => $unitArr['description'],
-            'type' => $unitArr['type'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'description' => $payload['description'],
+            'type' => $payload['type'],
         ]);
     }
 
     public function test_unit_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->unitActions->create(new \App\DTOs\UnitCreateDTO());
+        $dto = new \App\DTOs\UnitCreateDTO();
 
+        $this->unitActions->create($dto);
     }
 }

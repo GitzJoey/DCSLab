@@ -30,37 +30,39 @@ class CustomerAddressActionsCreateTest extends ActionsTestCase
 
         $customer = Customer::factory()->for($company)->create();
 
-        $customerAddressArr = CustomerAddress::factory()->for($company)
+        $payload = CustomerAddress::factory()->for($company)
             ->make([
                 'customer_id' => $customer->id,
             ])->toArray();
 
-        $result = $this->customerAddressActions->create(new \App\DTOs\CustomerAddressCreateDTO(
-            companyId: $customerAddressArr['company_id'],
-            customerId: $customerAddressArr['customer_id'],
-            address: $customerAddressArr['address'],
-            city: $customerAddressArr['city'],
-            contact: $customerAddressArr['contact'],
-            isMain: $customerAddressArr['is_main'],
-            remarks: $customerAddressArr['remarks']
-        ));
+        $dto = new \App\DTOs\CustomerAddressCreateDTO(
+            companyId: $payload['company_id'],
+            customerId: $payload['customer_id'],
+            address: $payload['address'],
+            city: $payload['city'],
+            contact: $payload['contact'],
+            isMain: $payload['is_main'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->customerAddressActions->create($dto);
         $this->assertDatabaseHas('customer_addresses', [
             'id' => $result->id,
-            'company_id' => $customerAddressArr['company_id'],
-            'customer_id' => $customerAddressArr['customer_id'],
-            'address' => $customerAddressArr['address'],
-            'city' => $customerAddressArr['city'],
-            'contact' => $customerAddressArr['contact'],
-            'is_main' => $customerAddressArr['is_main'],
-            'remarks' => $customerAddressArr['remarks'],
+            'company_id' => $payload['company_id'],
+            'customer_id' => $payload['customer_id'],
+            'address' => $payload['address'],
+            'city' => $payload['city'],
+            'contact' => $payload['contact'],
+            'is_main' => $payload['is_main'],
+            'remarks' => $payload['remarks'],
         ]);
     }
 
     public function test_customer_address_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->customerAddressActions->create(new \App\DTOs\CustomerAddressCreateDTO());
+        $dto = new \App\DTOs\CustomerAddressCreateDTO();
 
+        $this->customerAddressActions->create($dto);
     }
 }

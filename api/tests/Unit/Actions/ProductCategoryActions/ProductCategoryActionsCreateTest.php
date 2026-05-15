@@ -27,29 +27,31 @@ class ProductCategoryActionsCreateTest extends ActionsTestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
-        $productCategoryArr = ProductCategory::factory()->for($company)
+        $payload = ProductCategory::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->productCategoryActions->create(new \App\DTOs\ProductCategoryCreateDTO(
-            companyId: $productCategoryArr['company_id'],
-            code: $productCategoryArr['code'],
-            name: $productCategoryArr['name'],
-            type: $productCategoryArr['type']
-        ));
+        $dto = new \App\DTOs\ProductCategoryCreateDTO(
+            companyId: $payload['company_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            type: $payload['type']
+        );
 
+        $result = $this->productCategoryActions->create($dto);
         $this->assertDatabaseHas('product_categories', [
             'id' => $result->id,
-            'company_id' => $productCategoryArr['company_id'],
-            'code' => $productCategoryArr['code'],
-            'name' => $productCategoryArr['name'],
-            'type' => $productCategoryArr['type'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'type' => $payload['type'],
         ]);
     }
 
     public function test_product_category_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->productCategoryActions->create(new \App\DTOs\ProductCategoryCreateDTO());
+        $dto = new \App\DTOs\ProductCategoryCreateDTO();
 
+        $this->productCategoryActions->create($dto);
     }
 }

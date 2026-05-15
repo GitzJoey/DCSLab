@@ -27,28 +27,30 @@ class InvestorActionsCreateTest extends ActionsTestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
-        $investorArr = Investor::factory()->for($company)
+        $payload = Investor::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->investorActions->create(new \App\DTOs\InvestorCreateDTO(
-            companyId: $investorArr['company_id'],
-            code: $investorArr['code'],
-            name: $investorArr['name'],
-            remarks: $investorArr['remarks']
-        ));
+        $dto = new \App\DTOs\InvestorCreateDTO(
+            companyId: $payload['company_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->investorActions->create($dto);
         $this->assertDatabaseHas('investors', [
             'id' => $result->id,
-            'company_id' => $investorArr['company_id'],
-            'code' => $investorArr['code'],
-            'name' => $investorArr['name'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
     public function test_investor_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->investorActions->create(new \App\DTOs\InvestorCreateDTO());
+        $dto = new \App\DTOs\InvestorCreateDTO();
 
+        $this->investorActions->create($dto);
     }
 }

@@ -214,6 +214,36 @@ class WarehouseAPICreateTest extends APITestCase
         ]);
     }
 
+    public function test_warehouse_api_call_store_with_existing_name_in_same_company_expect_failed()
+    {
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
+            ->has(
+                Company::factory()->setStatusActive()->setIsDefault()
+                    ->has(Branch::factory()->setStatusActive()->setIsMainBranch())
+            )->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+        $branch = $company->branches()->inRandomOrder()->first();
+
+        Warehouse::factory()->for($company)->for($branch)->create([
+            'name' => 'Gudang Sama',
+        ]);
+
+        $payload = Warehouse::factory()->make([
+            'company_id' => Hashids::encode($company->id),
+            'branch_id' => Hashids::encode($branch->id),
+            'name' => 'Gudang Sama',
+        ])->toArray();
+
+        $api = $this->json('POST', route('api.post.warehouse.save'), $payload);
+
+        $api->assertUnprocessable();
+        $api->assertJsonValidationErrors(['name']);
+    }
+
     public function test_warehouse_api_call_store_with_empty_string_parameters_expect_validation_error()
     {
         $user = User::factory()

@@ -27,44 +27,46 @@ class SupplierActionsCreateTest extends ActionsTestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
-        $supplierArr = Supplier::factory()->for($company)->for($user)
+        $payload = Supplier::factory()->for($company)->for($user)
             ->make()->toArray();
 
-        $result = $this->supplierActions->create(new \App\DTOs\SupplierCreateDTO(
-            companyId: $supplierArr['company_id'],
-            code: $supplierArr['code'],
-            name: $supplierArr['name'],
-            address: $supplierArr['address'],
-            city: $supplierArr['city'],
-            paymentTermType: $supplierArr['payment_term_type'],
-            paymentTerm: $supplierArr['payment_term'],
-            taxableEnterprise: $supplierArr['taxable_enterprise'],
-            taxId: $supplierArr['tax_id'],
-            remarks: $supplierArr['remarks'],
-            status: $supplierArr['status']
-        ));
+        $dto = new \App\DTOs\SupplierCreateDTO(
+            companyId: $payload['company_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            address: $payload['address'],
+            city: $payload['city'],
+            paymentTermType: $payload['payment_term_type'],
+            paymentTerm: $payload['payment_term'],
+            taxableEnterprise: $payload['taxable_enterprise'],
+            taxId: $payload['tax_id'],
+            remarks: $payload['remarks'],
+            status: $payload['status']
+        );
 
+        $result = $this->supplierActions->create($dto);
         $this->assertDatabaseHas('suppliers', [
             'id' => $result->id,
-            'user_id' => $supplierArr['user_id'],
-            'company_id' => $supplierArr['company_id'],
-            'code' => $supplierArr['code'],
-            'name' => $supplierArr['name'],
-            'address' => $supplierArr['address'],
-            'city' => $supplierArr['city'],
-            'payment_term_type' => $supplierArr['payment_term_type'],
-            'payment_term' => $supplierArr['payment_term'],
-            'taxable_enterprise' => $supplierArr['taxable_enterprise'],
-            'tax_id' => $supplierArr['tax_id'],
-            'status' => $supplierArr['status'],
-            'remarks' => $supplierArr['remarks'],
+            'user_id' => $payload['user_id'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'address' => $payload['address'],
+            'city' => $payload['city'],
+            'payment_term_type' => $payload['payment_term_type'],
+            'payment_term' => $payload['payment_term'],
+            'taxable_enterprise' => $payload['taxable_enterprise'],
+            'tax_id' => $payload['tax_id'],
+            'status' => $payload['status'],
+            'remarks' => $payload['remarks'],
         ]);
     }
 
     public function test_supplier_actions_call_create_with_empty_array_parameters_expect_exception()
     {
         $this->expectException(Exception::class);
-        $this->supplierActions->create(new \App\DTOs\SupplierCreateDTO());
+        $dto = new \App\DTOs\SupplierCreateDTO();
 
+        $this->supplierActions->create($dto);
     }
 }

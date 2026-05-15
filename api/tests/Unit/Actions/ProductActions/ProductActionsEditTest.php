@@ -45,8 +45,8 @@ class ProductActionsEditTest extends ActionsTestCase
 
         $productUnit = \App\Models\ProductUnit::factory()->for($product)->create(['point' => 10]);
 
-        $productArr = $product->toArray();
-        $productArr['product_units'] = [
+        $payload = $product->toArray();
+        $payload['product_units'] = [
             [
                 'id' => $productUnit->id,
                 'code' => $productUnit->code,
@@ -60,22 +60,22 @@ class ProductActionsEditTest extends ActionsTestCase
             ],
         ];
 
-        $result = $this->productActions->update($product, $productArr);
+        $result = $this->productActions->update($product, $payload);
 
         $this->assertInstanceOf(Product::class, $result);
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
-            'category_id' => $productArr['category_id'],
-            'brand_id' => $productArr['brand_id'],
+            'category_id' => $payload['category_id'],
+            'brand_id' => $payload['brand_id'],
             'company_id' => $product->company_id,
-            'code' => $productArr['code'],
-            'name' => $productArr['name'],
-            'type' => $productArr['type'],
-            'is_price_include_vat' => $productArr['is_price_include_vat'],
-            'is_use_serial_number' => $productArr['is_use_serial_number'],
-            'is_expirable' => $productArr['is_expirable'],
-            'status' => $productArr['status'],
-            'remarks' => $productArr['remarks'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'type' => $payload['type'],
+            'is_price_include_vat' => $payload['is_price_include_vat'],
+            'is_use_serial_number' => $payload['is_use_serial_number'],
+            'is_expirable' => $payload['is_expirable'],
+            'status' => $payload['status'],
+            'remarks' => $payload['remarks'],
         ]);
 
         $this->assertDatabaseHas('product_units', [
@@ -96,8 +96,8 @@ class ProductActionsEditTest extends ActionsTestCase
         $product = $user->companies()->inRandomOrder()->first()
             ->products()->inRandomOrder()->first();
 
-        $productArr = [];
+        $payload = [];
 
-        $this->productActions->update($product, $productArr);
+        $this->productActions->update($product, $payload);
     }
 }

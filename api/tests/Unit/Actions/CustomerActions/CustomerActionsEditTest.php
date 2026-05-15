@@ -33,46 +33,47 @@ class CustomerActionsEditTest extends ActionsTestCase
 
         $group = CustomerGroup::factory()->for($company)->create();
 
-        $customerArr = Customer::factory()->for($company)
+        $payload = Customer::factory()->for($company)
             ->make([
                 'group_id' => $group->id,
             ])->toArray();
 
-        $result = $this->customerActions->update($customer, new \App\DTOs\CustomerUpdateDTO(
-            groupId: $customerArr['group_id'],
-            code: $customerArr['code'],
-            name: $customerArr['name'],
-            paymentTermType: $customerArr['payment_term_type'],
-            paymentTerm: $customerArr['payment_term'],
-            taxableEnterprise: $customerArr['taxable_enterprise'],
-            taxId: $customerArr['tax_id'],
-            isMember: $customerArr['is_member'],
-            maxOpenInvoice: $customerArr['max_open_invoice'],
-            maxInvoiceAge: $customerArr['max_invoice_age'],
-            maxOutstandingInvoice: $customerArr['max_outstanding_invoice'],
-            zone: $customerArr['zone'],
-            remarks: $customerArr['remarks'],
-            status: $customerArr['status']
-        ));
+        $dto = new \App\DTOs\CustomerUpdateDTO(
+            groupId: $payload['group_id'],
+            code: $payload['code'],
+            name: $payload['name'],
+            paymentTermType: $payload['payment_term_type'],
+            paymentTerm: $payload['payment_term'],
+            taxableEnterprise: $payload['taxable_enterprise'],
+            taxId: $payload['tax_id'],
+            isMember: $payload['is_member'],
+            maxOpenInvoice: $payload['max_open_invoice'],
+            maxInvoiceAge: $payload['max_invoice_age'],
+            maxOutstandingInvoice: $payload['max_outstanding_invoice'],
+            zone: $payload['zone'],
+            remarks: $payload['remarks'],
+            status: $payload['status']
+        );
 
+        $result = $this->customerActions->update($customer, $dto);
         $this->assertInstanceOf(Customer::class, $result);
         $this->assertDatabaseHas('customers', [
             'id' => $customer->id,
             'company_id' => $customer->company_id,
-            'code' => $customerArr['code'],
-            'is_member' => $customerArr['is_member'],
-            'name' => $customerArr['name'],
-            'group_id' => $customerArr['group_id'],
-            'zone' => $customerArr['zone'],
-            'max_open_invoice' => $customerArr['max_open_invoice'],
-            'max_outstanding_invoice' => $customerArr['max_outstanding_invoice'],
-            'max_invoice_age' => $customerArr['max_invoice_age'],
-            'payment_term_type' => $customerArr['payment_term_type'],
-            'payment_term' => $customerArr['payment_term'],
-            'taxable_enterprise' => $customerArr['taxable_enterprise'],
-            'tax_id' => $customerArr['tax_id'],
-            'status' => $customerArr['status'],
-            'remarks' => $customerArr['remarks'],
+            'code' => $payload['code'],
+            'is_member' => $payload['is_member'],
+            'name' => $payload['name'],
+            'group_id' => $payload['group_id'],
+            'zone' => $payload['zone'],
+            'max_open_invoice' => $payload['max_open_invoice'],
+            'max_outstanding_invoice' => $payload['max_outstanding_invoice'],
+            'max_invoice_age' => $payload['max_invoice_age'],
+            'payment_term_type' => $payload['payment_term_type'],
+            'payment_term' => $payload['payment_term'],
+            'taxable_enterprise' => $payload['taxable_enterprise'],
+            'tax_id' => $payload['tax_id'],
+            'status' => $payload['status'],
+            'remarks' => $payload['remarks'],
         ]);
     }
 
@@ -88,8 +89,10 @@ class CustomerActionsEditTest extends ActionsTestCase
         $customer = $user->companies()->inRandomOrder()->first()
             ->customers()->inRandomOrder()->first();
 
-        $customerArr = [];
+        $payload = [];
 
-        $this->customerActions->update($customer, new \App\DTOs\CustomerUpdateDTO());
+        $dto = new \App\DTOs\CustomerUpdateDTO();
+
+        $this->customerActions->update($customer, $dto);
     }
 }

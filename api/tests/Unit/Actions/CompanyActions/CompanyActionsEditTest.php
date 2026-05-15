@@ -26,21 +26,50 @@ class CompanyActionsEditTest extends ActionsTestCase
             ->create();
 
         $company = $user->companies->first();
-        $companyArr = Company::factory()->make()->toArray();
+        $payload = Company::factory()->make()->toArray();
 
-        $result = $this->companyActions->update($user, $company, new \App\DTOs\CompanyUpdateDTO(
-            code: $companyArr['code'],
-            name: $companyArr['name'],
-            address: $companyArr['address'],
-            default: $companyArr['default'],
-            status: $companyArr['status'],
-        ));
+        $dto = new CompanyUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            address: $payload['address'],
+            default: $payload['default'],
+            status: $payload['status'],
+        );
 
+        $result = $this->companyActions->update($user, $company, $dto);
         $this->assertInstanceOf(Company::class, $result);
         $this->assertDatabaseHas('companies', [
             'id' => $company->id,
-            'code' => $companyArr['code'],
-            'name' => $companyArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+        ]);
+    }
+
+    public function test_company_service_call_update_with_default_true_expect_other_default_reset()
+    {
+        $user = User::factory()
+            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()->state(['default' => false]))
+            ->create();
+
+        $companies = $user->companies()->orderBy('id')->take(2)->get();
+        $previousDefaultCompany = $companies[0];
+        $targetCompany = $companies[1];
+        $payload = Company::factory()->setStatusActive()->setIsDefault()->make()->toArray();
+
+        $dto = new CompanyUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            address: $payload['address'],
+            default: true,
+            status: $payload['status'],
+        );
+
+        $result = $this->companyActions->update($user, $targetCompany, $dto);
+        $this->assertTrue((bool) $result->default);
+        $this->assertDatabaseHas('companies', [
+            'id' => $previousDefaultCompany->id,
+            'default' => false,
         ]);
     }
 
@@ -55,6 +84,8 @@ class CompanyActionsEditTest extends ActionsTestCase
 
         $company = $user->companies->first();
 
-        $this->companyActions->update($user, $company, new $dtoClass(...[]));
+        $dto = new $dtoClass(...[]);
+
+        $this->companyActions->update($user, $company, $dto);
     }
 }

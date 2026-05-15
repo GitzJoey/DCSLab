@@ -28,16 +28,16 @@ class StockTransferItemActionsCreateTest extends ActionsTestCase
 
         $company = $user->companies()->inRandomOrder()->first();
 
-        $stockTransferItemArr = StockTransferItem::factory()->for($company)
+        $payload = StockTransferItem::factory()->for($company)
             ->make()->toArray();
 
-        $result = $this->stockTransferItemActions->create($stockTransferItemArr);
+        $result = $this->stockTransferItemActions->create($payload);
 
         $this->assertDatabaseHas('stock_transfer_items', [
             'id' => $result->id,
-            'company_id' => $stockTransferItemArr['company_id'],
-            'code' => $stockTransferItemArr['code'],
-            'name' => $stockTransferItemArr['name'],
+            'company_id' => $payload['company_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 

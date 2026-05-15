@@ -30,34 +30,35 @@ class CustomerGroupActionsEditTest extends ActionsTestCase
         $company = $user->companies()->inRandomOrder()->first();
         $customerGroup = $company->customerGroups()->inRandomOrder()->first();
 
-        $customerGroupArr = CustomerGroup::factory()->make()->toArray();
+        $payload = CustomerGroup::factory()->make()->toArray();
 
-        $result = $this->customerGroupActions->update($customerGroup, new \App\DTOs\CustomerGroupUpdateDTO(
-            code: $customerGroupArr['code'],
-            name: $customerGroupArr['name'],
-            paymentTermType: $customerGroupArr['payment_term_type'],
-            paymentTerm: $customerGroupArr['payment_term'],
-            sellAtCost: $customerGroupArr['sell_at_cost'],
-            sellingPoint: $customerGroupArr['selling_point'],
-            sellingPointMultiple: $customerGroupArr['selling_point_multiple'],
-            priceMarkupPercent: $customerGroupArr['price_markup_percent'],
-            priceMarkupNominal: $customerGroupArr['price_markup_nominal'],
-            priceMarkdownPercent: $customerGroupArr['price_markdown_percent'],
-            priceMarkdownNominal: $customerGroupArr['price_markdown_nominal'],
-            roundingType: $customerGroupArr['rounding_type'],
-            roundingDigit: $customerGroupArr['rounding_digit'],
-            maxOpenInvoice: $customerGroupArr['max_open_invoice'],
-            maxInvoiceAge: $customerGroupArr['max_invoice_age'],
-            maxOutstandingInvoice: $customerGroupArr['max_outstanding_invoice'],
-            remarks: $customerGroupArr['remarks']
-        ));
+        $dto = new \App\DTOs\CustomerGroupUpdateDTO(
+            code: $payload['code'],
+            name: $payload['name'],
+            paymentTermType: $payload['payment_term_type'],
+            paymentTerm: $payload['payment_term'],
+            sellAtCost: $payload['sell_at_cost'],
+            sellingPoint: $payload['selling_point'],
+            sellingPointMultiple: $payload['selling_point_multiple'],
+            priceMarkupPercent: $payload['price_markup_percent'],
+            priceMarkupNominal: $payload['price_markup_nominal'],
+            priceMarkdownPercent: $payload['price_markdown_percent'],
+            priceMarkdownNominal: $payload['price_markdown_nominal'],
+            roundingType: $payload['rounding_type'],
+            roundingDigit: $payload['rounding_digit'],
+            maxOpenInvoice: $payload['max_open_invoice'],
+            maxInvoiceAge: $payload['max_invoice_age'],
+            maxOutstandingInvoice: $payload['max_outstanding_invoice'],
+            remarks: $payload['remarks']
+        );
 
+        $result = $this->customerGroupActions->update($customerGroup, $dto);
         $this->assertInstanceOf(CustomerGroup::class, $result);
         $this->assertDatabaseHas('customer_groups', [
             'id' => $customerGroup->id,
             'company_id' => $customerGroup->company_id,
-            'code' => $customerGroupArr['code'],
-            'name' => $customerGroupArr['name'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
         ]);
     }
 
@@ -73,8 +74,10 @@ class CustomerGroupActionsEditTest extends ActionsTestCase
         $customerGroup = $user->companies()->inRandomOrder()->first()
             ->customerGroups()->inRandomOrder()->first();
 
-        $customerGroupArr = [];
+        $payload = [];
 
-        $this->customerGroupActions->update($customerGroup, new \App\DTOs\CustomerGroupUpdateDTO());
+        $dto = new \App\DTOs\CustomerGroupUpdateDTO();
+
+        $this->customerGroupActions->update($customerGroup, $dto);
     }
 }

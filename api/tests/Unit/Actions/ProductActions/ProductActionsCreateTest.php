@@ -35,7 +35,7 @@ class ProductActionsCreateTest extends ActionsTestCase
         $productCategory = $company->productCategories()->inRandomOrder()->first();
         $brand = $company->brands()->inRandomOrder()->first();
 
-        $productArr = Product::factory()
+        $payload = Product::factory()
             ->for($company)
             ->for($productCategory, 'category')
             ->for($brand)
@@ -46,23 +46,23 @@ class ProductActionsCreateTest extends ActionsTestCase
             'unit_id' => \App\Models\Unit::factory()->create(['company_id' => $company->id])->id,
             'point' => 50,
         ])->toArray();
-        $productArr['product_units'] = [$productUnit];
+        $payload['product_units'] = [$productUnit];
 
-        $result = $this->productActions->create($productArr);
+        $result = $this->productActions->create($payload);
 
         $this->assertDatabaseHas('products', [
             'id' => $result->id,
-            'company_id' => $productArr['company_id'],
-            'category_id' => $productArr['category_id'],
-            'brand_id' => $productArr['brand_id'],
-            'code' => $productArr['code'],
-            'name' => $productArr['name'],
-            'type' => $productArr['type'],
-            'is_price_include_vat' => $productArr['is_price_include_vat'],
-            'is_use_serial_number' => $productArr['is_use_serial_number'],
-            'is_expirable' => $productArr['is_expirable'],
-            'status' => $productArr['status'],
-            'remarks' => $productArr['remarks'],
+            'company_id' => $payload['company_id'],
+            'category_id' => $payload['category_id'],
+            'brand_id' => $payload['brand_id'],
+            'code' => $payload['code'],
+            'name' => $payload['name'],
+            'type' => $payload['type'],
+            'is_price_include_vat' => $payload['is_price_include_vat'],
+            'is_use_serial_number' => $payload['is_use_serial_number'],
+            'is_expirable' => $payload['is_expirable'],
+            'status' => $payload['status'],
+            'remarks' => $payload['remarks'],
         ]);
 
         $this->assertDatabaseHas('product_units', [
