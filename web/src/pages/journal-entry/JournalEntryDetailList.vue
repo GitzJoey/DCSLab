@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import DataList from '@/components/DataList';
 import type { DataListEmittedData } from '@/components/DataList/DataList.vue';
-import { FormInputDateTime, FormLabel } from '@/components/Base/Form';
+import { FormInputDateTime, FormLabel, FormSwitch } from '@/components/Base/Form';
 import JournalEntryItemService from '@/services/JournalEntryItemService';
 import type { JournalEntryItem } from '@/types/models/JournalEntry';
 import type { Collection } from '@/types/resources/Collection';
@@ -42,10 +42,12 @@ const emits = defineEmits([
 
 const filters = ref<{
   search: string;
+  include_system_journals: boolean;
   start_date: string | null;
   end_date: string | null;
 }>({
   search: '',
+  include_system_journals: false,
   start_date: null,
   end_date: null,
 });
@@ -117,6 +119,7 @@ const getEntryDetails = async (refresh: boolean, page: number, perPage: number) 
     search: filters.value.search || undefined,
     start_date: filters.value.start_date || undefined,
     end_date: filters.value.end_date || undefined,
+    include_system_journals: filters.value.include_system_journals,
     refresh,
     page,
     per_page: perPage,
@@ -138,6 +141,10 @@ const handleDataListChange = async (data: DataListEmittedData) => {
 };
 
 const handleDateFilterChange = async () => {
+  await getEntryDetails(true, 1, journalEntryItemLists.value?.meta.per_page ?? 10);
+};
+
+const handleSystemJournalFilterChange = async () => {
   await getEntryDetails(true, 1, journalEntryItemLists.value?.meta.per_page ?? 10);
 };
 
@@ -170,7 +177,7 @@ const showAlertPlaceholder = (
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
       <div class="mb-3 grid grid-cols-12 gap-4 gap-y-3">
-        <div class="col-span-12 lg:col-span-6 md:col-span-6">
+        <div class="col-span-12 md:col-span-4">
           <FormLabel>
             {{ t('views.journal_entry.fields.start_date') }}
           </FormLabel>
@@ -180,7 +187,7 @@ const showAlertPlaceholder = (
             @change="handleDateFilterChange"
           />
         </div>
-        <div class="col-span-12 lg:col-span-6 md:col-span-6">
+        <div class="col-span-12 md:col-span-4">
           <FormLabel>
             {{ t('views.journal_entry.fields.end_date') }}
           </FormLabel>
@@ -189,6 +196,18 @@ const showAlertPlaceholder = (
             :placeholder="t('views.journal_entry.fields.end_date')"
             @change="handleDateFilterChange"
           />
+        </div>
+        <div class="col-span-12 md:col-span-4 flex items-center">
+          <FormSwitch>
+            <FormSwitch.Input
+              v-model="filters.include_system_journals"
+              type="checkbox"
+              @change="handleSystemJournalFilterChange"
+            />
+            <FormSwitch.Label>
+              {{ t('views.journal_entry.fields.include_system_journals') }}
+            </FormSwitch.Label>
+          </FormSwitch>
         </div>
       </div>
 

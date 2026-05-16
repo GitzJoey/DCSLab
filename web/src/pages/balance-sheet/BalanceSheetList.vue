@@ -170,6 +170,7 @@ const getBalanceSheet = async (refresh: boolean) => {
       company_id: selectedUserLocation.value.company.id,
       branch_id: selectedUserLocation.value.branch.id,
       end_date: filters.value.end_date || undefined,
+      include_system_journals: true,
       refresh,
       limit: 1000,
     });

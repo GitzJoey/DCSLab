@@ -46,6 +46,7 @@ export default class JournalEntryItemService {
       if (args.end_date) queryParams.end_date = args.end_date;
       if (args.journal_entry_id) queryParams.journal_entry_id = args.journal_entry_id;
       if (args.chart_of_account_id) queryParams.chart_of_account_id = args.chart_of_account_id;
+      if (args.include_system_journals != null) queryParams.include_system_journals = args.include_system_journals ? 1 : 0;
       if (args.include_id) queryParams.include_id = args.include_id;
 
       const url = route('api.get.journal_entry_item.read_any', { _query: queryParams }, false, this.ziggyRoute);
@@ -90,6 +91,7 @@ export default class JournalEntryItemService {
       if (args.end_date) queryParams.end_date = args.end_date;
       if (args.journal_entry_id) queryParams.journal_entry_id = args.journal_entry_id;
       if (args.chart_of_account_id) queryParams.chart_of_account_id = args.chart_of_account_id;
+      if (args.include_system_journals != null) queryParams.include_system_journals = args.include_system_journals ? 1 : 0;
       if (args.include_id) queryParams.include_id = args.include_id;
 
       const url = route('api.get.journal_entry_item.read_any', { _query: queryParams }, false, this.ziggyRoute);

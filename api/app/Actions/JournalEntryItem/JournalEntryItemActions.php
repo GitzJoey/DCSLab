@@ -4,6 +4,7 @@ namespace App\Actions\JournalEntryItem;
 
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryItemDTO;
+use App\Enums\JournalEntryTypeEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\ChartOfAccount;
 use App\Models\JournalEntry;
@@ -37,6 +38,7 @@ class JournalEntryItemActions
         ?string $endDate,
         ?int $journalEntryId,
         ?int $chartOfAccountId,
+        bool $includeSystemJournals,
         ?int $includeId,
 
         ?ExecuteDTO $execute
@@ -54,6 +56,7 @@ class JournalEntryItemActions
             $endDate,
             $journalEntryId,
             $chartOfAccountId,
+            $includeSystemJournals,
             $includeId,
         ) {
             $query->where(function ($query) use (
@@ -63,6 +66,7 @@ class JournalEntryItemActions
                 $endDate,
                 $journalEntryId,
                 $chartOfAccountId,
+                $includeSystemJournals,
             ) {
                 if ($branchId) {
                     $query->where('journal_entries.branch_id', $branchId);
@@ -95,6 +99,18 @@ class JournalEntryItemActions
                 if ($chartOfAccountId) {
                     $query->where('journal_entry_items.chart_of_account_id', $chartOfAccountId);
                 }
+
+                if (! $includeSystemJournals) {
+                    $query->where(function ($query) {
+                        $query->whereNull('journal_entries.journal_type')
+                            ->orWhereNotIn('journal_entries.journal_type', [
+                                JournalEntryTypeEnum::CURRENT_MONTH_EARNINGS->value,
+                                JournalEntryTypeEnum::MONTH_END_CLOSING->value,
+                                JournalEntryTypeEnum::MONTH_TO_YEAR_CLOSING->value,
+                                JournalEntryTypeEnum::YEAR_TO_RETAINED_EARNINGS_CLOSING->value,
+                            ]);
+                    });
+                }
             });
 
             if ($includeId) {
@@ -122,6 +138,7 @@ class JournalEntryItemActions
                     $endDate ?? '[null]',
                     $journalEntryId ?? '[null]',
                     $chartOfAccountId ?? '[null]',
+                    $includeSystemJournals ? 'true' : 'false',
                     $includeId ?? '[null]',
                     $execute->pagination ? 'true' : 'false',
                     $execute->pagination?->page ?? '[null]',

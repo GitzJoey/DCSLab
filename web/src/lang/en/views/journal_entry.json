@@ -23,6 +23,7 @@
     "date": "Date",
     "start_date": "Start Date",
     "end_date": "End Date",
+    "include_system_journals": "Show System Journals",
     "source_type": "Source Type",
     "source_id": "Source ID",
     "reference_no": "Reference No",

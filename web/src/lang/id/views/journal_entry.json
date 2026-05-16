@@ -23,6 +23,7 @@
     "date": "Tanggal",
     "start_date": "Tanggal Awal",
     "end_date": "Tanggal Akhir",
+    "include_system_journals": "Tampilkan Jurnal Sistem",
     "source_type": "Tipe Sumber",
     "source_id": "ID Sumber",
     "reference_no": "Nomor Referensi",

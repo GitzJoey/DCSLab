@@ -42,11 +42,14 @@ class JournalEntryItemController extends BaseController
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['nullable', 'integer', 'bail', new ExistsForCompany('branches', $request->company_id), new IsValidBranch($request->company_id, false)],
             'search' => ['nullable', 'string'],
+
             'start_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'end_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'journal_entry_id' => ['nullable', 'integer', new ExistsForCompany('journal_entries', $request->company_id)],
             'chart_of_account_id' => ['nullable', 'integer', new ExistsForCompany('chart_of_accounts', $request->company_id)],
+            'include_system_journals' => ['nullable', 'boolean'],
             'include_id' => ['nullable', 'integer', new ExistsForCompany('journal_entry_items', $request->company_id)],
+
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
             'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
@@ -67,6 +70,7 @@ class JournalEntryItemController extends BaseController
                 endDate: $validated['end_date'] ?? null,
                 journalEntryId: $validated['journal_entry_id'] ?? null,
                 chartOfAccountId: $validated['chart_of_account_id'] ?? null,
+                includeSystemJournals: (bool) ($validated['include_system_journals'] ?? false),
                 includeId: $validated['include_id'] ?? null,
                 execute: new ExecuteDTO(
                     useCache: ! $validated['refresh'],
