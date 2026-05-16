@@ -13,7 +13,8 @@
   "field_groups": {
     "company_info": "Informasi Perusahaan",
     "journal_entry_data": "Data Jurnal",
-    "items": "Item Jurnal"
+    "items": "Item Jurnal",
+    "summary": "Ringkasan"
   },
   "fields": {
     "company": "Perusahaan",

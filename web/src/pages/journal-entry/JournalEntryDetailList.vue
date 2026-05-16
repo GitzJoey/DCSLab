@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router';
 import { DataListFlex } from '@/components/DataList';
 import type { DataListEmittedData } from '@/components/DataList/DataList.vue';
 import { FormInputDateTime, FormLabel } from '@/components/Base/Form';
-import JournalEntryService from '@/services/JournalEntryService';
-import type { JournalEntry } from '@/types/models/JournalEntry';
+import JournalEntryItemService from '@/services/JournalEntryItemService';
+import type { JournalEntryItem } from '@/types/models/JournalEntry';
 import type { Resource } from '@/types/resources/Resource';
 import type { ServiceResponse } from '@/types/services/ServiceResponse';
 import { ViewMode } from '@/types/enums/ViewMode';
@@ -21,7 +21,6 @@ interface JournalEntryDetailRow {
   journal_code: string;
   date: string;
   reference_no: string | null;
-  branch_name: string | null;
   account_code: string | null;
   account_name: string | null;
   debit: number;
@@ -32,7 +31,7 @@ interface JournalEntryDetailRow {
 
 const { t } = useI18n();
 const router = useRouter();
-const journalEntryService = new JournalEntryService();
+const journalEntryItemService = new JournalEntryItemService();
 const selectedUserLocationStore = useSelectedUserLocationStore();
 
 const emits = defineEmits([
@@ -51,7 +50,7 @@ const filters = ref<{
   end_date: null,
 });
 
-const journalEntryLists = ref<Resource<Array<JournalEntry>> | null>({
+const journalEntryItemLists = ref<Resource<Array<JournalEntryItem>> | null>({
   data: [],
 });
 
@@ -59,22 +58,19 @@ const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLo
 const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
 const entryDetails = computed<JournalEntryDetailRow[]>(() =>
-  (journalEntryLists.value?.data ?? []).flatMap((journalEntry) =>
-    journalEntry.items.map((item) => ({
-      id: item.id,
-      sequence: item.sequence,
-      journal_code: journalEntry.code,
-      date: journalEntry.date,
-      reference_no: journalEntry.reference_no,
-      branch_name: journalEntry.branch?.name ?? null,
-      account_code: item.chart_of_account?.code ?? null,
-      account_name: item.chart_of_account?.name ?? null,
-      debit: item.debit,
-      credit: item.credit,
-      remarks: item.remarks,
-      journal_remarks: journalEntry.remarks,
-    })),
-  ),
+  (journalEntryItemLists.value?.data ?? []).map((item) => ({
+    id: item.id,
+    sequence: item.sequence,
+    journal_code: item.journal_entry?.code ?? '-',
+    date: item.journal_entry?.date ?? '',
+    reference_no: item.journal_entry?.reference_no ?? null,
+    account_code: item.chart_of_account?.code ?? null,
+    account_name: item.chart_of_account?.name ?? null,
+    debit: item.debit,
+    credit: item.credit,
+    remarks: item.remarks,
+    journal_remarks: item.journal_entry?.remarks ?? null,
+  })),
 );
 
 onMounted(async () => {
@@ -100,8 +96,7 @@ onMounted(async () => {
 const getEntryDetails = async (refresh: boolean) => {
   emits('loading-state', true);
 
-  const result: ServiceResponse<Resource<Array<JournalEntry>> | null> = await journalEntryService.readAnyGet({
-    with_trashed: false,
+  const result: ServiceResponse<Resource<Array<JournalEntryItem>> | null> = await journalEntryItemService.readAnyGet({
     company_id: selectedUserLocation.value.company.id,
     branch_id: selectedUserLocation.value.branch.id,
     search: filters.value.search || undefined,
@@ -112,7 +107,7 @@ const getEntryDetails = async (refresh: boolean) => {
   });
 
   if (result.success && result.data) {
-    journalEntryLists.value = result.data;
+    journalEntryItemLists.value = result.data;
     showAlertPlaceholder('hidden', '', null);
   } else {
     showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
@@ -128,6 +123,16 @@ const handleDataListChange = async (data: DataListEmittedData) => {
 
 const handleDateFilterChange = async () => {
   await getEntryDetails(true);
+};
+
+const formatAmountCell = (value: number) => {
+  return Number(value) === 0 ? '-' : formatCurrency(value);
+};
+
+const amountCellClass = (value: number) => {
+  return Number(value) === 0
+    ? 'text-slate-300 dark:text-slate-500'
+    : 'text-slate-700 dark:text-slate-100';
 };
 
 const showAlertPlaceholder = (
@@ -181,7 +186,7 @@ const showAlertPlaceholder = (
         @dataListChanged="handleDataListChange"
       >
         <template #row="{ item }">
-          <div class="col-span-12 md:col-span-4 self-start">
+          <div class="col-span-12 md:col-span-3 self-start">
             <div class="space-y-2">
               <div class="text-primary text-xs font-semibold uppercase tracking-wide">
                 {{ t('views.journal_entry.page_title') }}
@@ -202,10 +207,6 @@ const showAlertPlaceholder = (
                 <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.reference_no') }}</div>
                 <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
                   {{ (item as JournalEntryDetailRow).reference_no || '-' }}
-                </div>
-                <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.branch') }}</div>
-                <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
-                  {{ (item as JournalEntryDetailRow).branch_name || '-' }}
                 </div>
               </div>
             </div>
@@ -233,19 +234,37 @@ const showAlertPlaceholder = (
             </div>
           </div>
 
-          <div class="col-span-12 md:col-span-3 self-start">
+          <div class="col-span-12 md:col-span-2 self-start">
             <div class="space-y-2">
               <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                {{ t('views.journal_entry.field_groups.summary') }}
+                {{ t('views.journal_entry.fields.debit') }}
               </div>
-              <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                <div class="col-span-6 text-slate-500">{{ t('views.journal_entry.fields.debit') }}</div>
-                <div class="col-span-6 text-right text-slate-700 dark:text-slate-200">
-                  {{ formatCurrency((item as JournalEntryDetailRow).debit) }}
+              <div
+                :class="[
+                  'flex min-h-[84px] items-center justify-end rounded-lg border border-slate-200/60 bg-white px-4 py-3 shadow-sm dark:border-darkmode-400 dark:bg-darkmode-500/20',
+                  amountCellClass((item as JournalEntryDetailRow).debit),
+                ]"
+              >
+                <div class="text-right text-lg font-semibold tabular-nums">
+                  {{ formatAmountCell((item as JournalEntryDetailRow).debit) }}
                 </div>
-                <div class="col-span-6 text-slate-500">{{ t('views.journal_entry.fields.credit') }}</div>
-                <div class="col-span-6 text-right text-slate-700 dark:text-slate-200">
-                  {{ formatCurrency((item as JournalEntryDetailRow).credit) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-12 md:col-span-2 self-start">
+            <div class="space-y-2">
+              <div class="text-primary text-xs font-semibold uppercase tracking-wide">
+                {{ t('views.journal_entry.fields.credit') }}
+              </div>
+              <div
+                :class="[
+                  'flex min-h-[84px] items-center justify-end rounded-lg border border-slate-200/60 bg-white px-4 py-3 shadow-sm dark:border-darkmode-400 dark:bg-darkmode-500/20',
+                  amountCellClass((item as JournalEntryDetailRow).credit),
+                ]"
+              >
+                <div class="text-right text-lg font-semibold tabular-nums">
+                  {{ formatAmountCell((item as JournalEntryDetailRow).credit) }}
                 </div>
               </div>
             </div>

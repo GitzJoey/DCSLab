@@ -290,8 +290,8 @@ class IncomeActions
 
                     if ((float) $income->amount_paid_immediately > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $income->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $income->amount_paid_immediately,
                             credit: 0,
                             remarks: $income->remarks,
@@ -300,8 +300,8 @@ class IncomeActions
 
                     if ((float) $income->amount_receivable > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $income->company->assetCurrentAccountReceivableChartOfAccount,
+                            sequence: count($items) + 1,
                             debit: (float) $income->amount_receivable,
                             credit: 0,
                             remarks: $income->remarks,
@@ -309,8 +309,8 @@ class IncomeActions
                     }
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $income->category?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $income->amount_total,
                         remarks: $income->remarks,
@@ -426,8 +426,8 @@ class IncomeActions
 
                         if ((float) $income->amount_paid_immediately > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $income->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $income->amount_paid_immediately,
                                 credit: 0,
                                 remarks: $income->remarks,
@@ -436,8 +436,8 @@ class IncomeActions
 
                         if ((float) $income->amount_receivable > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $income->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $income->amount_receivable,
                                 credit: 0,
                                 remarks: $income->remarks,
@@ -445,8 +445,8 @@ class IncomeActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $income->category?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $income->amount_total,
                             remarks: $income->remarks,
@@ -468,8 +468,8 @@ class IncomeActions
 
                         if ((float) $income->amount_paid_immediately > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $income->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $income->amount_paid_immediately,
                                 credit: 0,
                                 remarks: $income->remarks,
@@ -478,8 +478,8 @@ class IncomeActions
 
                         if ((float) $income->amount_receivable > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $income->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $income->amount_receivable,
                                 credit: 0,
                                 remarks: $income->remarks,
@@ -487,8 +487,8 @@ class IncomeActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $income->category?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $income->amount_total,
                             remarks: $income->remarks,

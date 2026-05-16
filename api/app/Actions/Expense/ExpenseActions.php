@@ -294,8 +294,8 @@ class ExpenseActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $expense->amount_total,
                         credit: 0,
                         remarks: $expense->remarks,
@@ -303,8 +303,8 @@ class ExpenseActions
 
                     if ((float) $expense->amount_paid_immediately > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_paid_immediately,
                             remarks: $expense->remarks,
@@ -313,8 +313,8 @@ class ExpenseActions
 
                     if ((float) $expense->amount_payable > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->liabilityAccountPayableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_payable,
                             remarks: $expense->remarks,
@@ -340,16 +340,16 @@ class ExpenseActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $expense->amount_total,
                         credit: 0,
                         remarks: $expense->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $expense->amount_total,
                         remarks: $expense->remarks,
@@ -380,16 +380,16 @@ class ExpenseActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $expense->amount_total,
                         credit: 0,
                         remarks: $expense->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $expense->amount_total,
                         remarks: $expense->remarks,
@@ -420,16 +420,16 @@ class ExpenseActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $expense->amount_total,
                         credit: 0,
                         remarks: $expense->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $expense->amount_total,
                         remarks: $expense->remarks,
@@ -460,16 +460,16 @@ class ExpenseActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->company->equityRetainedEarningsChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $expense->amount_total,
                         credit: 0,
                         remarks: $expense->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $expense->amount_total,
                         remarks: $expense->remarks,
@@ -585,8 +585,8 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
@@ -594,8 +594,8 @@ class ExpenseActions
 
                         if ((float) $expense->amount_paid_immediately > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $expense->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $expense->amount_paid_immediately,
                                 remarks: $expense->remarks,
@@ -604,8 +604,8 @@ class ExpenseActions
 
                         if ((float) $expense->amount_payable > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $expense->company->liabilityAccountPayableChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $expense->amount_payable,
                                 remarks: $expense->remarks,
@@ -628,8 +628,8 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
@@ -637,8 +637,8 @@ class ExpenseActions
 
                         if ((float) $expense->amount_paid_immediately > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $expense->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $expense->amount_paid_immediately,
                                 remarks: $expense->remarks,
@@ -647,8 +647,8 @@ class ExpenseActions
 
                         if ((float) $expense->amount_payable > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $expense->company->liabilityAccountPayableChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $expense->amount_payable,
                                 remarks: $expense->remarks,
@@ -677,16 +677,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,
@@ -708,16 +708,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,
@@ -751,16 +751,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,
@@ -788,16 +788,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->systemSuspenseChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->category?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,
@@ -831,16 +831,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,
@@ -868,16 +868,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentMonthEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,
@@ -911,16 +911,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityRetainedEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,
@@ -948,16 +948,16 @@ class ExpenseActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityRetainedEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expense->amount_total,
                             credit: 0,
                             remarks: $expense->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expense->company->equityCurrentYearEarningsChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expense->amount_total,
                             remarks: $expense->remarks,

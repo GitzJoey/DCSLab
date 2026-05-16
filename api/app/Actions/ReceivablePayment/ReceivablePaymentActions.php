@@ -231,16 +231,16 @@ class ReceivablePaymentActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $receivablePayment->cashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $receivablePayment->amount,
                         credit: 0,
                         remarks: $receivablePayment->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $receivablePayment->receivable->customer?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $receivablePayment->amount,
                         remarks: $receivablePayment->remarks,
@@ -307,16 +307,16 @@ class ReceivablePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivablePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $receivablePayment->amount,
                             credit: 0,
                             remarks: $receivablePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivablePayment->receivable->customer?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $receivablePayment->amount,
                             remarks: $receivablePayment->remarks,
@@ -337,16 +337,16 @@ class ReceivablePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivablePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $receivablePayment->amount,
                             credit: 0,
                             remarks: $receivablePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivablePayment->receivable->customer?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $receivablePayment->amount,
                             remarks: $receivablePayment->remarks,

@@ -4,6 +4,7 @@ namespace App\Actions\JournalEntryItem;
 
 use App\DTOs\ExecuteDTO;
 use App\DTOs\JournalEntryItemDTO;
+use App\Helpers\TimezoneHelper;
 use App\Models\ChartOfAccount;
 use App\Models\JournalEntry;
 use App\Models\JournalEntryItem;
@@ -18,7 +19,7 @@ class JournalEntryItemActions
     use CacheHelper;
     use LoggerHelper;
 
-    private const EAGER_LOADS = [
+    private const LIST_EAGER_LOADS = [
         'journalEntry',
         'chartOfAccount',
     ];
@@ -29,27 +30,57 @@ class JournalEntryItemActions
 
     public function readAny(
         int $companyId,
+        ?int $branchId,
         ?string $search,
+
+        ?string $startDate,
+        ?string $endDate,
         ?int $journalEntryId,
         ?int $chartOfAccountId,
         ?int $includeId,
-        ?ExecuteDTO $execute,
+
+        ?ExecuteDTO $execute
     ) {
-        $query = JournalEntryItem::with(self::EAGER_LOADS)
-            ->select('journal_entry_items.*')
-            ->whereCompanyId('journal_entry_items', $companyId);
+        $query = JournalEntryItem::with(self::LIST_EAGER_LOADS)
+            ->select('journal_entry_items.*');
+
+        $query->whereCompanyId('journal_entry_items', $companyId);
 
         $query->where(function ($query) use (
+            $branchId,
             $search,
+            $startDate,
+            $endDate,
             $journalEntryId,
             $chartOfAccountId,
             $includeId,
         ) {
             $query->where(function ($query) use (
+                $branchId,
                 $search,
+                $startDate,
+                $endDate,
                 $journalEntryId,
                 $chartOfAccountId,
             ) {
+                if ($branchId) {
+                    $query->whereHas('journalEntry', function ($query) use ($branchId) {
+                        $query->where('journal_entries.branch_id', $branchId);
+                    });
+                }
+
+                if ($startDate) {
+                    $query->whereHas('journalEntry', function ($query) use ($startDate) {
+                        $query->where('journal_entries.date', '>=', TimezoneHelper::convertToUTC($startDate));
+                    });
+                }
+
+                if ($endDate) {
+                    $query->whereHas('journalEntry', function ($query) use ($endDate) {
+                        $query->where('journal_entries.date', '<=', TimezoneHelper::convertToUTC($endDate));
+                    });
+                }
+
                 if ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('journal_entry_items.remarks', 'like', '%'.$search.'%')
@@ -91,7 +122,10 @@ class JournalEntryItemActions
             try {
                 $cacheParams = [
                     $companyId,
+                    $branchId ?? '[null]',
                     empty($search) ? '[empty]' : $search,
+                    $startDate ?? '[null]',
+                    $endDate ?? '[null]',
                     $journalEntryId ?? '[null]',
                     $chartOfAccountId ?? '[null]',
                     $includeId ?? '[null]',
@@ -101,12 +135,12 @@ class JournalEntryItemActions
                     $execute->get?->limit ?? '[null]',
                 ];
 
-                $cacheKey = 'readAny_journal_entry_item_'.implode('-', $cacheParams);
+                $cacheKey = 'read_any_journal_entry_item_'.implode('_', $cacheParams);
 
                 if ($execute->useCache) {
-                    $cacheData = $this->readFromCache($cacheKey);
-                    if ($cacheData !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
-                        return $cacheData;
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
                     }
                 }
 
@@ -146,7 +180,7 @@ class JournalEntryItemActions
 
     public function read(JournalEntryItem $journalEntryItem): JournalEntryItem
     {
-        return $journalEntryItem->load(self::EAGER_LOADS);
+        return $journalEntryItem->load(self::LIST_EAGER_LOADS);
     }
 
     public function create(JournalEntry $journalEntry, JournalEntryItemDTO $data): JournalEntryItem
@@ -228,7 +262,7 @@ class JournalEntryItemActions
 
             $this->flushCache();
 
-            return $journalEntryItem->refresh()->load(self::EAGER_LOADS);
+            return $journalEntryItem->refresh()->load(self::LIST_EAGER_LOADS);
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;

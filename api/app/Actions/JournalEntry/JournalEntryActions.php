@@ -20,10 +20,14 @@ class JournalEntryActions
     use CacheHelper;
     use LoggerHelper;
 
-    private const EAGER_LOADS = [
+    private const LIST_EAGER_LOADS = [
         'company',
         'branch',
-        'items',
+    ];
+
+    private const DETAIL_EAGER_LOADS = [
+        'company',
+        'branch',
         'items.chartOfAccount',
     ];
 
@@ -44,7 +48,7 @@ class JournalEntryActions
         ?int $sourceId,
         ?ExecuteDTO $execute,
     ) {
-        $query = JournalEntry::with(self::EAGER_LOADS)
+        $query = JournalEntry::with(self::LIST_EAGER_LOADS)
             ->select('journal_entries.*')
             ->whereCompanyId('journal_entries', $companyId);
 
@@ -153,7 +157,7 @@ class JournalEntryActions
 
     public function read(JournalEntry $journalEntry): JournalEntry
     {
-        return $journalEntry->load(self::EAGER_LOADS);
+        return $journalEntry->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function create(JournalEntryCreateDTO $data): JournalEntry
@@ -185,7 +189,7 @@ class JournalEntryActions
             }
             $this->flushCache();
 
-            return $journalEntry->refresh()->load(self::EAGER_LOADS);
+            return $journalEntry->refresh()->load(self::DETAIL_EAGER_LOADS);
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
@@ -224,7 +228,7 @@ class JournalEntryActions
             }
             $this->flushCache();
 
-            return $journalEntry->refresh()->load(self::EAGER_LOADS);
+            return $journalEntry->refresh()->load(self::DETAIL_EAGER_LOADS);
         } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;

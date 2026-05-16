@@ -8,9 +8,9 @@ import { FormInputDateTime, FormLabel } from '@/components/Base/Form';
 import Table from '@/components/Base/Table';
 import TreeList from '@/components/TreeList/TreeList.vue';
 import ChartOfAccountService from '@/services/ChartOfAccountService';
-import JournalEntryService from '@/services/JournalEntryService';
+import JournalEntryItemService from '@/services/JournalEntryItemService';
 import { ChartOfAccount } from '@/types/models/ChartOfAccount';
-import { JournalEntry } from '@/types/models/JournalEntry';
+import { JournalEntryItem } from '@/types/models/JournalEntry';
 import { Resource } from '@/types/resources/Resource';
 import { ServiceResponse } from '@/types/services/ServiceResponse';
 import { ViewMode } from '@/types/enums/ViewMode';
@@ -37,7 +37,7 @@ type SummaryAccountType = 'asset' | 'liability' | 'equity';
 const { t } = useI18n();
 const router = useRouter();
 const chartOfAccountService = new ChartOfAccountService();
-const journalEntryService = new JournalEntryService();
+const journalEntryItemService = new JournalEntryItemService();
 const selectedUserLocationStore = useSelectedUserLocationStore();
 
 const emits = defineEmits([
@@ -57,7 +57,7 @@ const chartOfAccountLists = ref<Resource<Array<ChartOfAccount>> | null>({
   data: [],
 });
 
-const journalEntryLists = ref<Resource<Array<JournalEntry>> | null>({
+const journalEntryItemLists = ref<Resource<Array<JournalEntryItem>> | null>({
   data: [],
 });
 
@@ -67,13 +67,14 @@ const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUs
 const accountBalances = computed(() => {
   const result = new Map<string, { debit: number; credit: number }>();
 
-  for (const journalEntry of journalEntryLists.value?.data ?? []) {
-    for (const item of journalEntry.items) {
-      const current = result.get(item.chart_of_account_id) ?? { debit: 0, credit: 0 };
-      current.debit += Number(item.debit ?? 0);
-      current.credit += Number(item.credit ?? 0);
-      result.set(item.chart_of_account_id, current);
-    }
+  for (const item of journalEntryItemLists.value?.data ?? []) {
+    const chartOfAccountId = item.chart_of_account?.id;
+    if (!chartOfAccountId) continue;
+
+    const current = result.get(chartOfAccountId) ?? { debit: 0, credit: 0 };
+    current.debit += Number(item.debit ?? 0);
+    current.credit += Number(item.credit ?? 0);
+    result.set(chartOfAccountId, current);
   }
 
   return result;
@@ -164,9 +165,8 @@ const getBalanceSheet = async (refresh: boolean) => {
       limit: 1000,
     });
 
-  const journalEntryResult: ServiceResponse<Resource<Array<JournalEntry>> | null> =
-    await journalEntryService.readAnyGet({
-      with_trashed: false,
+  const journalEntryItemResult: ServiceResponse<Resource<Array<JournalEntryItem>> | null> =
+    await journalEntryItemService.readAnyGet({
       company_id: selectedUserLocation.value.company.id,
       branch_id: selectedUserLocation.value.branch.id,
       end_date: filters.value.end_date || undefined,
@@ -174,15 +174,15 @@ const getBalanceSheet = async (refresh: boolean) => {
       limit: 1000,
     });
 
-  if (chartOfAccountResult.success && chartOfAccountResult.data && journalEntryResult.success && journalEntryResult.data) {
+  if (chartOfAccountResult.success && chartOfAccountResult.data && journalEntryItemResult.success && journalEntryItemResult.data) {
     chartOfAccountLists.value = chartOfAccountResult.data;
-    journalEntryLists.value = journalEntryResult.data;
+    journalEntryItemLists.value = journalEntryItemResult.data;
     showAlertPlaceholder('hidden', '', null);
   } else {
     showAlertPlaceholder(
       'danger',
       '',
-      ((chartOfAccountResult.errors ?? journalEntryResult.errors) as Record<string, Array<string>> | undefined) ?? null,
+      ((chartOfAccountResult.errors ?? journalEntryItemResult.errors) as Record<string, Array<string>> | undefined) ?? null,
     );
   }
 

@@ -4,13 +4,12 @@ import type { Company } from './Company';
 
 export interface JournalEntryItem {
   id: string;
-  journal_entry_id: string;
-  chart_of_account_id: string;
+  journal_entry?: JournalEntry;
+  chart_of_account?: Pick<ChartOfAccount, 'id' | 'ulid' | 'code' | 'name' | 'account_type' | 'normal_balance'>;
   sequence: number;
   debit: number;
   credit: number;
   remarks: string | null;
-  chart_of_account?: Pick<ChartOfAccount, 'id' | 'ulid' | 'code' | 'name' | 'account_type' | 'normal_balance'>;
 }
 
 export interface JournalEntry {

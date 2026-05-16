@@ -184,6 +184,7 @@ class CapitalOpeningActions
                 branchId: $capitalOpening->branch_id,
                 code: config('dcslab.KEYWORDS.AUTO'),
                 date: $capitalOpening->date,
+                journalType: null,
                 sourceType: CapitalOpening::class,
                 sourceId: $capitalOpening->id,
                 referenceNo: $capitalOpening->code,
@@ -192,16 +193,16 @@ class CapitalOpeningActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $capitalOpening->cashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $capitalOpening->amount,
                         credit: 0,
                         remarks: $capitalOpening->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $capitalOpening->investor?->openingCapitalChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $capitalOpening->amount,
                         remarks: $capitalOpening->remarks,
@@ -256,6 +257,7 @@ class CapitalOpeningActions
                     branchId: $capitalOpening->branch_id,
                     code: config('dcslab.KEYWORDS.AUTO'),
                     date: $capitalOpening->date,
+                    journalType: null,
                     sourceType: CapitalOpening::class,
                     sourceId: $capitalOpening->id,
                     referenceNo: $capitalOpening->code,
@@ -264,16 +266,16 @@ class CapitalOpeningActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalOpening->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $capitalOpening->amount,
                             credit: 0,
                             remarks: $capitalOpening->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalOpening->investor?->openingCapitalChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $capitalOpening->amount,
                             remarks: $capitalOpening->remarks,
@@ -288,22 +290,23 @@ class CapitalOpeningActions
                     branchId: $capitalOpening->branch_id,
                     code: $journalEntry->code,
                     date: $capitalOpening->date,
+                    journalType: null,
                     referenceNo: $capitalOpening->code,
                     remarks: $capitalOpening->remarks,
                     items: (function () use ($capitalOpening) {
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalOpening->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $capitalOpening->amount,
                             credit: 0,
                             remarks: $capitalOpening->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalOpening->investor?->openingCapitalChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $capitalOpening->amount,
                             remarks: $capitalOpening->remarks,

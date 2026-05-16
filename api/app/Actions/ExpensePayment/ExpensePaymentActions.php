@@ -230,16 +230,16 @@ class ExpensePaymentActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expensePayment->company->liabilityAccountPayableChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $expensePayment->amount,
                         credit: 0,
                         remarks: $expensePayment->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $expensePayment->cashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $expensePayment->amount,
                         remarks: $expensePayment->remarks,
@@ -306,16 +306,16 @@ class ExpensePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expensePayment->company->liabilityAccountPayableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expensePayment->amount,
                             credit: 0,
                             remarks: $expensePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expensePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expensePayment->amount,
                             remarks: $expensePayment->remarks,
@@ -336,16 +336,16 @@ class ExpensePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expensePayment->company->liabilityAccountPayableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $expensePayment->amount,
                             credit: 0,
                             remarks: $expensePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $expensePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $expensePayment->amount,
                             remarks: $expensePayment->remarks,

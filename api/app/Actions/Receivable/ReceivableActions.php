@@ -293,8 +293,8 @@ class ReceivableActions
 
                     if ((float) $receivable->direct_amount_received > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivable->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $receivable->direct_amount_received,
                             credit: 0,
                             remarks: $receivable->remarks,
@@ -303,8 +303,8 @@ class ReceivableActions
 
                     if ((float) $receivable->opening_amount_due > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivable->customer?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $receivable->opening_amount_due,
                             credit: 0,
                             remarks: $receivable->remarks,
@@ -312,8 +312,8 @@ class ReceivableActions
                     }
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $receivable->company->equityCapitalOpeningCapitalChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $receivable->amount_total,
                         remarks: $receivable->remarks,
@@ -417,8 +417,8 @@ class ReceivableActions
 
                         if ((float) $receivable->direct_amount_received > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $receivable->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $receivable->direct_amount_received,
                                 credit: 0,
                                 remarks: $receivable->remarks,
@@ -427,8 +427,8 @@ class ReceivableActions
 
                         if ((float) $receivable->opening_amount_due > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $receivable->customer?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $receivable->opening_amount_due,
                                 credit: 0,
                                 remarks: $receivable->remarks,
@@ -436,8 +436,8 @@ class ReceivableActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivable->company->equityCapitalOpeningCapitalChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $receivable->amount_total,
                             remarks: $receivable->remarks,
@@ -459,8 +459,8 @@ class ReceivableActions
 
                         if ((float) $receivable->direct_amount_received > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $receivable->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $receivable->direct_amount_received,
                                 credit: 0,
                                 remarks: $receivable->remarks,
@@ -469,8 +469,8 @@ class ReceivableActions
 
                         if ((float) $receivable->opening_amount_due > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $receivable->customer?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $receivable->opening_amount_due,
                                 credit: 0,
                                 remarks: $receivable->remarks,
@@ -478,8 +478,8 @@ class ReceivableActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $receivable->company->equityCapitalOpeningCapitalChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $receivable->amount_total,
                             remarks: $receivable->remarks,

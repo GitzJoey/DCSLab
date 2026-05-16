@@ -129,7 +129,7 @@ const loadData = async () => {
       reference_no: result.data.reference_no ?? '',
       remarks: result.data.remarks ?? '',
       items: result.data.items.map((item) => ({
-        chart_of_account_id: item.chart_of_account_id,
+        chart_of_account_id: item.chart_of_account?.id ?? '',
         debit: Number(item.debit ?? 0),
         credit: Number(item.credit ?? 0),
         remarks: item.remarks ?? '',

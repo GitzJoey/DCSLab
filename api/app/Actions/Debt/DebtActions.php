@@ -300,6 +300,7 @@ class DebtActions
                 branchId: $debt->branch_id,
                 code: config('dcslab.KEYWORDS.AUTO'),
                 date: $debt->date,
+                journalType: null,
                 sourceType: Debt::class,
                 sourceId: $debt->id,
                 referenceNo: $debt->code,
@@ -309,8 +310,8 @@ class DebtActions
 
                     if ((float) $debt->direct_amount_received > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $debt->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $debt->direct_amount_received,
                             credit: 0,
                             remarks: $debt->remarks,
@@ -319,8 +320,8 @@ class DebtActions
 
                     if ((float) $debt->opening_amount_due > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $debt->company->equityCapitalOpeningCapitalChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $debt->opening_amount_due,
                             credit: 0,
                             remarks: $debt->remarks,
@@ -328,7 +329,6 @@ class DebtActions
                     }
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: (function () use ($debt) {
                             if ($debt->supplier_id) {
                                 return $debt->supplier?->chartOfAccount?->id;
@@ -340,6 +340,7 @@ class DebtActions
 
                             return $debt->company->liabilityAccountPayableChartOfAccount?->id;
                         })(),
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $debt->amount_total,
                         remarks: $debt->remarks,
@@ -435,6 +436,7 @@ class DebtActions
                     branchId: $debt->branch_id,
                     code: config('dcslab.KEYWORDS.AUTO'),
                     date: $debt->date,
+                    journalType: null,
                     sourceType: Debt::class,
                     sourceId: $debt->id,
                     referenceNo: $debt->code,
@@ -444,8 +446,8 @@ class DebtActions
 
                         if ((float) $debt->direct_amount_received > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $debt->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $debt->direct_amount_received,
                                 credit: 0,
                                 remarks: $debt->remarks,
@@ -454,8 +456,8 @@ class DebtActions
 
                         if ((float) $debt->opening_amount_due > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $debt->company->equityCapitalOpeningCapitalChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $debt->opening_amount_due,
                                 credit: 0,
                                 remarks: $debt->remarks,
@@ -463,7 +465,6 @@ class DebtActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: (function () use ($debt) {
                                 if ($debt->supplier_id) {
                                     return $debt->supplier?->chartOfAccount?->id;
@@ -475,6 +476,7 @@ class DebtActions
 
                                 return $debt->company->liabilityAccountPayableChartOfAccount?->id;
                             })(),
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $debt->amount_total,
                             remarks: $debt->remarks,
@@ -489,6 +491,7 @@ class DebtActions
                     branchId: $debt->branch_id,
                     code: $journalEntry->code,
                     date: $debt->date,
+                    journalType: null,
                     referenceNo: $debt->code,
                     remarks: $debt->remarks,
                     items: (function () use ($debt) {
@@ -496,8 +499,8 @@ class DebtActions
 
                         if ((float) $debt->direct_amount_received > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $debt->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $debt->direct_amount_received,
                                 credit: 0,
                                 remarks: $debt->remarks,
@@ -506,8 +509,8 @@ class DebtActions
 
                         if ((float) $debt->opening_amount_due > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $debt->company->equityCapitalOpeningCapitalChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $debt->opening_amount_due,
                                 credit: 0,
                                 remarks: $debt->remarks,
@@ -515,7 +518,6 @@ class DebtActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: (function () use ($debt) {
                                 if ($debt->supplier_id) {
                                     return $debt->supplier?->chartOfAccount?->id;
@@ -527,6 +529,7 @@ class DebtActions
 
                                 return $debt->company->liabilityAccountPayableChartOfAccount?->id;
                             })(),
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $debt->amount_total,
                             remarks: $debt->remarks,

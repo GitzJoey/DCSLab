@@ -142,15 +142,23 @@ class JournalEntryController extends BaseController
                 sourceId: $validatedRequest['source_id'],
                 referenceNo: $validatedRequest['reference_no'],
                 remarks: $validatedRequest['remarks'],
-                items: collect($validatedRequest['items'])
-                    ->map(fn (array $item, int $index) => new JournalEntryItemDTO(
-                        sequence: $index + 1,
-                        chartOfAccountId: (int) $item['chart_of_account_id'],
-                        debit: max((float) ($item['debit'] ?? 0), 0),
-                        credit: max((float) ($item['credit'] ?? 0), 0),
-                        remarks: $item['remarks'] ?? null,
-                    ))
-                    ->all(),
+                items: (function (array $items): array {
+                    $result = [];
+
+                    foreach ($items as $index => $item) {
+                        $dto = new JournalEntryItemDTO(
+                            chartOfAccountId: (int) $item['chart_of_account_id'],
+                            sequence: $index + 1,
+                            debit: max((float) ($item['debit'] ?? 0), 0),
+                            credit: max((float) ($item['credit'] ?? 0), 0),
+                            remarks: $item['remarks'] ?? null,
+                        );
+
+                        $result[] = $dto;
+                    }
+
+                    return $result;
+                })($validatedRequest['items']),
             );
             $result = $this->journalEntryActions->create($dto);
             DB::commit();
@@ -181,23 +189,32 @@ class JournalEntryController extends BaseController
 
             DB::beginTransaction();
 
-            $result = $this->journalEntryActions->update($journalEntry, new JournalEntryUpdateDTO(
+            $dto = new JournalEntryUpdateDTO(
                 branchId: $validatedRequest['branch_id'],
                 code: $validatedRequest['code'],
                 date: $validatedRequest['date'],
                 journalType: $validatedRequest['journal_type'],
                 referenceNo: $validatedRequest['reference_no'],
                 remarks: $validatedRequest['remarks'],
-                items: collect($validatedRequest['items'])
-                    ->map(fn (array $item, int $index) => new JournalEntryItemDTO(
-                        sequence: $index + 1,
-                        chartOfAccountId: (int) $item['chart_of_account_id'],
-                        debit: max((float) ($item['debit'] ?? 0), 0),
-                        credit: max((float) ($item['credit'] ?? 0), 0),
-                        remarks: $item['remarks'] ?? null,
-                    ))
-                    ->all(),
-            ));
+                items: (function (array $items): array {
+                    $result = [];
+
+                    foreach ($items as $index => $item) {
+                        $dto = new JournalEntryItemDTO(
+                            chartOfAccountId: (int) $item['chart_of_account_id'],
+                            sequence: $index + 1,
+                            debit: max((float) ($item['debit'] ?? 0), 0),
+                            credit: max((float) ($item['credit'] ?? 0), 0),
+                            remarks: $item['remarks'] ?? null,
+                        );
+
+                        $result[] = $dto;
+                    }
+
+                    return $result;
+                })($validatedRequest['items']),
+            );
+            $result = $this->journalEntryActions->update($journalEntry, $dto);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();

@@ -291,8 +291,8 @@ class PrepaidIncomeActions
 
                     if ((float) $prepaidIncome->amount_paid_immediately > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncome->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $prepaidIncome->amount_paid_immediately,
                             credit: 0,
                             remarks: $prepaidIncome->remarks,
@@ -301,8 +301,8 @@ class PrepaidIncomeActions
 
                     if ((float) $prepaidIncome->amount_receivable > 0) {
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncome->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $prepaidIncome->amount_receivable,
                             credit: 0,
                             remarks: $prepaidIncome->remarks,
@@ -310,8 +310,8 @@ class PrepaidIncomeActions
                     }
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $prepaidIncome->company->liabilityDeferredIncomeChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $prepaidIncome->amount_total,
                         remarks: $prepaidIncome->remarks,
@@ -428,8 +428,8 @@ class PrepaidIncomeActions
 
                         if ((float) $prepaidIncome->amount_paid_immediately > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $prepaidIncome->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $prepaidIncome->amount_paid_immediately,
                                 credit: 0,
                                 remarks: $prepaidIncome->remarks,
@@ -438,8 +438,8 @@ class PrepaidIncomeActions
 
                         if ((float) $prepaidIncome->amount_receivable > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $prepaidIncome->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $prepaidIncome->amount_receivable,
                                 credit: 0,
                                 remarks: $prepaidIncome->remarks,
@@ -447,8 +447,8 @@ class PrepaidIncomeActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncome->company->liabilityDeferredIncomeChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $prepaidIncome->amount_total,
                             remarks: $prepaidIncome->remarks,
@@ -470,8 +470,8 @@ class PrepaidIncomeActions
 
                         if ((float) $prepaidIncome->amount_paid_immediately > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $prepaidIncome->paidImmediatelyCashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $prepaidIncome->amount_paid_immediately,
                                 credit: 0,
                                 remarks: $prepaidIncome->remarks,
@@ -480,8 +480,8 @@ class PrepaidIncomeActions
 
                         if ((float) $prepaidIncome->amount_receivable > 0) {
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $prepaidIncome->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $prepaidIncome->amount_receivable,
                                 credit: 0,
                                 remarks: $prepaidIncome->remarks,
@@ -489,8 +489,8 @@ class PrepaidIncomeActions
                         }
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncome->company->liabilityDeferredIncomeChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $prepaidIncome->amount_total,
                             remarks: $prepaidIncome->remarks,

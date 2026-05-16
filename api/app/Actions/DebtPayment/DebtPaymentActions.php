@@ -224,6 +224,7 @@ class DebtPaymentActions
                 branchId: $debtPayment->branch_id,
                 code: config('dcslab.KEYWORDS.AUTO'),
                 date: $debtPayment->date,
+                journalType: null,
                 sourceType: DebtPayment::class,
                 sourceId: $debtPayment->id,
                 referenceNo: $debtPayment->code,
@@ -232,7 +233,6 @@ class DebtPaymentActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: (function () use ($debtPayment) {
                             if ($debtPayment->debt->supplier_id) {
                                 return $debtPayment->debt->supplier?->chartOfAccount?->id;
@@ -244,14 +244,15 @@ class DebtPaymentActions
 
                             return $debtPayment->debt->company->liabilityAccountPayableChartOfAccount?->id;
                         })(),
+                        sequence: count($items) + 1,
                         debit: (float) $debtPayment->amount,
                         credit: 0,
                         remarks: $debtPayment->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $debtPayment->cashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $debtPayment->amount,
                         remarks: $debtPayment->remarks,
@@ -310,6 +311,7 @@ class DebtPaymentActions
                     branchId: $debtPayment->branch_id,
                     code: config('dcslab.KEYWORDS.AUTO'),
                     date: $debtPayment->date,
+                    journalType: null,
                     sourceType: DebtPayment::class,
                     sourceId: $debtPayment->id,
                     referenceNo: $debtPayment->code,
@@ -318,7 +320,6 @@ class DebtPaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: (function () use ($debtPayment) {
                                 if ($debtPayment->debt->supplier_id) {
                                     return $debtPayment->debt->supplier?->chartOfAccount?->id;
@@ -330,14 +331,15 @@ class DebtPaymentActions
 
                                 return $debtPayment->debt->company->liabilityAccountPayableChartOfAccount?->id;
                             })(),
+                            sequence: count($items) + 1,
                             debit: (float) $debtPayment->amount,
                             credit: 0,
                             remarks: $debtPayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $debtPayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $debtPayment->amount,
                             remarks: $debtPayment->remarks,
@@ -352,13 +354,13 @@ class DebtPaymentActions
                     branchId: $debtPayment->branch_id,
                     code: $journalEntry->code,
                     date: $debtPayment->date,
+                    journalType: null,
                     referenceNo: $debtPayment->code,
                     remarks: $debtPayment->remarks,
                     items: (function () use ($debtPayment) {
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: (function () use ($debtPayment) {
                                 if ($debtPayment->debt->supplier_id) {
                                     return $debtPayment->debt->supplier?->chartOfAccount?->id;
@@ -370,14 +372,15 @@ class DebtPaymentActions
 
                                 return $debtPayment->debt->company->liabilityAccountPayableChartOfAccount?->id;
                             })(),
+                            sequence: count($items) + 1,
                             debit: (float) $debtPayment->amount,
                             credit: 0,
                             remarks: $debtPayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $debtPayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $debtPayment->amount,
                             remarks: $debtPayment->remarks,

@@ -230,16 +230,16 @@ class PrepaidIncomePaymentActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $prepaidIncomePayment->cashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $prepaidIncomePayment->amount,
                         credit: 0,
                         remarks: $prepaidIncomePayment->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $prepaidIncomePayment->amount,
                         remarks: $prepaidIncomePayment->remarks,
@@ -306,16 +306,16 @@ class PrepaidIncomePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncomePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $prepaidIncomePayment->amount,
                             credit: 0,
                             remarks: $prepaidIncomePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $prepaidIncomePayment->amount,
                             remarks: $prepaidIncomePayment->remarks,
@@ -336,16 +336,16 @@ class PrepaidIncomePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncomePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $prepaidIncomePayment->amount,
                             credit: 0,
                             remarks: $prepaidIncomePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $prepaidIncomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $prepaidIncomePayment->amount,
                             remarks: $prepaidIncomePayment->remarks,

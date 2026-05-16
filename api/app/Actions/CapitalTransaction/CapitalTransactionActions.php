@@ -202,16 +202,16 @@ class CapitalTransactionActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalTransaction->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $capitalTransaction->amount,
                             credit: 0,
                             remarks: $capitalTransaction->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalTransaction->investor?->additionalCapitalChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $capitalTransaction->amount,
                             remarks: $capitalTransaction->remarks,
@@ -234,16 +234,16 @@ class CapitalTransactionActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalTransaction->investor?->drawingChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $capitalTransaction->amount,
                             credit: 0,
                             remarks: $capitalTransaction->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $capitalTransaction->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $capitalTransaction->amount,
                             remarks: $capitalTransaction->remarks,
@@ -313,16 +313,16 @@ class CapitalTransactionActions
                             $items = [];
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $capitalTransaction->amount,
                                 credit: 0,
                                 remarks: $capitalTransaction->remarks,
                             );
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->investor?->additionalCapitalChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $capitalTransaction->amount,
                                 remarks: $capitalTransaction->remarks,
@@ -343,16 +343,16 @@ class CapitalTransactionActions
                             $items = [];
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $capitalTransaction->amount,
                                 credit: 0,
                                 remarks: $capitalTransaction->remarks,
                             );
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->investor?->additionalCapitalChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $capitalTransaction->amount,
                                 remarks: $capitalTransaction->remarks,
@@ -378,16 +378,16 @@ class CapitalTransactionActions
                             $items = [];
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->investor?->drawingChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $capitalTransaction->amount,
                                 credit: 0,
                                 remarks: $capitalTransaction->remarks,
                             );
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $capitalTransaction->amount,
                                 remarks: $capitalTransaction->remarks,
@@ -408,16 +408,16 @@ class CapitalTransactionActions
                             $items = [];
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->investor?->drawingChartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: (float) $capitalTransaction->amount,
                                 credit: 0,
                                 remarks: $capitalTransaction->remarks,
                             );
 
                             $items[] = new JournalEntryItemDTO(
-                                sequence: count($items) + 1,
                                 chartOfAccountId: $capitalTransaction->cashAccount?->chartOfAccount?->id,
+                                sequence: count($items) + 1,
                                 debit: 0,
                                 credit: (float) $capitalTransaction->amount,
                                 remarks: $capitalTransaction->remarks,

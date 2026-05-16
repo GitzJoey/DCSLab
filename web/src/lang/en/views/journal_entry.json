@@ -13,7 +13,8 @@
   "field_groups": {
     "company_info": "Company Information",
     "journal_entry_data": "Journal Entry Data",
-    "items": "Journal Items"
+    "items": "Journal Items",
+    "summary": "Summary"
   },
   "fields": {
     "company": "Company",

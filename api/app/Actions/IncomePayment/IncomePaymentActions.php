@@ -230,16 +230,16 @@ class IncomePaymentActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $incomePayment->cashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $incomePayment->amount,
                         credit: 0,
                         remarks: $incomePayment->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $incomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $incomePayment->amount,
                         remarks: $incomePayment->remarks,
@@ -306,16 +306,16 @@ class IncomePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $incomePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $incomePayment->amount,
                             credit: 0,
                             remarks: $incomePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $incomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $incomePayment->amount,
                             remarks: $incomePayment->remarks,
@@ -336,16 +336,16 @@ class IncomePaymentActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $incomePayment->cashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $incomePayment->amount,
                             credit: 0,
                             remarks: $incomePayment->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $incomePayment->company->assetCurrentAccountReceivableChartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $incomePayment->amount,
                             remarks: $incomePayment->remarks,

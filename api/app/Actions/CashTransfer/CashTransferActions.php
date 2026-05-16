@@ -168,16 +168,16 @@ class CashTransferActions
                     $items = [];
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $cashTransfer->destinationCashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: (float) $cashTransfer->amount,
                         credit: 0,
                         remarks: $cashTransfer->remarks,
                     );
 
                     $items[] = new JournalEntryItemDTO(
-                        sequence: count($items) + 1,
                         chartOfAccountId: $cashTransfer->sourceCashAccount?->chartOfAccount?->id,
+                        sequence: count($items) + 1,
                         debit: 0,
                         credit: (float) $cashTransfer->amount,
                         remarks: $cashTransfer->remarks,
@@ -247,16 +247,16 @@ class CashTransferActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $cashTransfer->destinationCashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $cashTransfer->amount,
                             credit: 0,
                             remarks: $cashTransfer->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $cashTransfer->sourceCashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $cashTransfer->amount,
                             remarks: $cashTransfer->remarks,
@@ -277,16 +277,16 @@ class CashTransferActions
                         $items = [];
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $cashTransfer->destinationCashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: (float) $cashTransfer->amount,
                             credit: 0,
                             remarks: $cashTransfer->remarks,
                         );
 
                         $items[] = new JournalEntryItemDTO(
-                            sequence: count($items) + 1,
                             chartOfAccountId: $cashTransfer->sourceCashAccount?->chartOfAccount?->id,
+                            sequence: count($items) + 1,
                             debit: 0,
                             credit: (float) $cashTransfer->amount,
                             remarks: $cashTransfer->remarks,

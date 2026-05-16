@@ -12,15 +12,16 @@ class JournalEntryItemResource extends JsonResource
     {
         return [
             'id' => Hashids::encode($this->id),
-            'journal_entry_id' => Hashids::encode($this->journal_entry_id),
-            'chart_of_account_id' => Hashids::encode($this->chart_of_account_id),
+            $this->mergeWhen($this->relationLoaded('journalEntry') && $this->journalEntry, [
+                'journal_entry' => new JournalEntryResource($this->whenLoaded('journalEntry')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('chartOfAccount') && $this->chartOfAccount, [
+                'chart_of_account' => new ChartOfAccountResource($this->whenLoaded('chartOfAccount')),
+            ]),
             'sequence' => $this->sequence,
             'debit' => dec_trim($this->debit),
             'credit' => dec_trim($this->credit),
             'remarks' => $this->remarks,
-            $this->mergeWhen($this->relationLoaded('chartOfAccount') && $this->chartOfAccount, [
-                'chart_of_account' => new ChartOfAccountResource($this->whenLoaded('chartOfAccount')),
-            ]),
         ];
     }
 }
