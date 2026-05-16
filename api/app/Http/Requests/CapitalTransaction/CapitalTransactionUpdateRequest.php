@@ -7,6 +7,7 @@ use App\Helpers\HashidsHelper;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidCompany;
+use App\Rules\IsValidDate;
 use App\Rules\IsValidInvestor;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +34,7 @@ class CapitalTransactionUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany],
             'branch_id' => ['required', 'integer', 'bail', new IsValidBranch($this->company_id, true)],
             'code' => ['required', 'string', 'max:255'],
-            'date' => ['required', 'date'],
+            'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'investor_id' => ['required', 'integer', 'bail', new IsValidInvestor($this->company_id)],
             'cash_account_id' => ['required', 'integer', 'bail', new IsValidCashAccount($this->branch_id)],
             'type' => ['required', new Enum(CapitalTransactionTypeEnum::class)],

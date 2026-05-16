@@ -6,6 +6,7 @@ use App\Helpers\HashidsHelper;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCashAccount;
 use App\Rules\IsValidCompany;
+use App\Rules\IsValidDate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,7 +31,7 @@ class CashTransferUpdateRequest extends FormRequest
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany],
             'branch_id' => ['required', 'integer', 'bail', new IsValidBranch($this->company_id, true)],
             'code' => ['required', 'string', 'max:255'],
-            'date' => ['required', 'date'],
+            'date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
             'source_cash_account_id' => ['required', 'integer', 'bail', new IsValidCashAccount($this->branch_id), 'different:destination_cash_account_id'],
             'destination_cash_account_id' => ['required', 'integer', 'bail', new IsValidCashAccount($this->branch_id), 'different:source_cash_account_id'],
             'amount' => ['required', 'numeric', 'min:0'],
