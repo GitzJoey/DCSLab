@@ -42,7 +42,8 @@ class JournalEntryItemActions
         ?ExecuteDTO $execute
     ) {
         $query = JournalEntryItem::with(self::LIST_EAGER_LOADS)
-            ->select('journal_entry_items.*');
+            ->select('journal_entry_items.*')
+            ->join('journal_entries', 'journal_entries.id', '=', 'journal_entry_items.journal_entry_id');
 
         $query->whereCompanyId('journal_entry_items', $companyId);
 
@@ -64,30 +65,22 @@ class JournalEntryItemActions
                 $chartOfAccountId,
             ) {
                 if ($branchId) {
-                    $query->whereHas('journalEntry', function ($query) use ($branchId) {
-                        $query->where('journal_entries.branch_id', $branchId);
-                    });
+                    $query->where('journal_entries.branch_id', $branchId);
                 }
 
                 if ($startDate) {
-                    $query->whereHas('journalEntry', function ($query) use ($startDate) {
-                        $query->where('journal_entries.date', '>=', TimezoneHelper::convertToUTC($startDate));
-                    });
+                    $query->where('journal_entries.date', '>=', TimezoneHelper::convertToUTC($startDate));
                 }
 
                 if ($endDate) {
-                    $query->whereHas('journalEntry', function ($query) use ($endDate) {
-                        $query->where('journal_entries.date', '<=', TimezoneHelper::convertToUTC($endDate));
-                    });
+                    $query->where('journal_entries.date', '<=', TimezoneHelper::convertToUTC($endDate));
                 }
 
                 if ($search) {
                     $query->where(function ($query) use ($search) {
                         $query->where('journal_entry_items.remarks', 'like', '%'.$search.'%')
-                            ->orWhereHas('journalEntry', function ($journalEntryQuery) use ($search) {
-                                $journalEntryQuery->where('journal_entries.code', 'like', '%'.$search.'%')
-                                    ->orWhere('journal_entries.reference_no', 'like', '%'.$search.'%');
-                            })
+                            ->orWhere('journal_entries.code', 'like', '%'.$search.'%')
+                            ->orWhere('journal_entries.reference_no', 'like', '%'.$search.'%')
                             ->orWhereHas('chartOfAccount', function ($chartOfAccountQuery) use ($search) {
                                 $chartOfAccountQuery->where('chart_of_accounts.code', 'like', '%'.$search.'%')
                                     ->orWhere('chart_of_accounts.name', 'like', '%'.$search.'%');
@@ -112,8 +105,9 @@ class JournalEntryItemActions
         if ($includeId) {
             $query->orderByRaw('FIELD(journal_entry_items.id, '.$includeId.') desc');
         }
-        $query->orderBy('journal_entry_items.sequence', 'asc')
-            ->orderBy('journal_entry_items.id', 'asc');
+        $query->orderBy('journal_entries.date', 'desc')
+            ->orderBy('journal_entries.id', 'asc')
+            ->orderBy('journal_entry_items.sequence', 'asc');
 
         if ($execute) {
             $timerStart = microtime(true);
