@@ -20,7 +20,7 @@ class RoleFactory extends Factory
         $text = str_replace(' ', '-', fake()->jobTitle());
 
         return [
-            'name' => str_replace(' ', '', strtolower($text)),
+            'name' => str_replace(' ', '', strtolower($text)).fake()->numerify('#####'),
             'display_name' => $text,
             'description' => fake()->catchPhrase(),
         ];
