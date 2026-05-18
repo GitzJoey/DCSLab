@@ -4,7 +4,7 @@ namespace App\Actions\User;
 
 use App\Actions\Role\RoleActions;
 use App\Enums\RecordStatus;
-use App\Enums\UserRoles;
+use App\Enums\UserRole;
 use App\Models\Profile;
 use App\Models\Setting;
 use App\Models\User;
@@ -51,11 +51,11 @@ class UserActions
         ];
 
         $roleActions = app(RoleActions::class);
-        $roles = [$roleActions->readBy('name', UserRoles::USER->value)->id];
+        $role = [$roleActions->readBy('name', UserRole::USER->value)->id];
 
         $usr = $this->create(
             $input,
-            $roles,
+            $role,
             $profile
         );
 

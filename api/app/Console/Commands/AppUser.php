@@ -11,13 +11,11 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
-use Laravel\Prompts\Prompt\{
-    text,
-    input,
-    select,
-    secret,
-    confirm,
-};
+
+use function Laravel\Prompts\password;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
+use function Laravel\Prompts\table;
 
 #[Signature('app:user {args=default}')]
 #[Description('User Management')]
@@ -68,18 +66,21 @@ class AppUser extends Command
 
         do {
             $userType = select(
-                'Account Type',
-                [
-                    UserRole::ADMIN->value => 'Admin',
-                    UserRole::USER->value => 'User',
-                ],
+                'Select Role',
+                UserRole::values(),
                 default: UserRole::USER->value
             );
-            $userName = text('Name', $userName);
-            $userEmail = text('Email', $userEmail);
-            $userPassword = secret('Password', $userPassword);
+            $userName = text('Name', $userName, $userName, true, null, 'Name is required.', null);
+            $userEmail = text('Email', $userEmail, $userEmail, true, null, 'Email is required.', null);
+            $userPassword = password('Password', $userPassword, true, null, 'Password is required.', null);
 
-            $rolesId = [$roleActions->readBy('NAME', $userType)->id];
+            $roleId = [$roleActions->readBy('NAME', $userType)->id];
+
+            if (empty($roleId)) {
+                $this->components->error('Role not found.');
+
+                return Command::FAILURE;
+            }
 
             $profile = [
                 'first_name' => $userName,
@@ -103,17 +104,17 @@ class AppUser extends Command
 
                     $invalid = false;
                 } else {
-                    $userActions->create(
+                    $user = $userActions->create(
                         $user,
-                        $rolesId,
+                        $roleId,
                         $profile
                     );
 
-                    $this->info('Creating Account...');
-                    $this->info('Name: '.$userName);
-                    $this->info('Email: '.$userEmail);
-                    $this->info('Password: '.'***********');
-                    $this->info('Account Type: '.$userType);
+                    $this->components->info('Account Created.');
+                    table(
+                        headers: ['Name', 'Email', 'Role'],
+                        rows: [[$user->name, $user->email, $userType]]
+                    );
 
                     $invalid = false;
                 }

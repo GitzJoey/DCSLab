@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Profle extends Model
+class Profile extends Model
 {
     //
 }
