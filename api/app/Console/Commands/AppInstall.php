@@ -16,14 +16,14 @@ class AppInstall extends Command
 {
     public function handle()
     {
-        $this->info('Starting DCSLab App Installation...');
+        $this->components->info('Starting DCSLab App Installation...');
 
         sleep(3);
 
         $preInstallationCheck = $this->preInstallationCheck();
 
         if (! $preInstallationCheck) {
-            $this->error('Aborted');
+            $this->components->error('Aborted');
 
             return Command::FAILURE;
         }
@@ -34,18 +34,18 @@ class AppInstall extends Command
                 break;
         }
 
-        $this->info('Done!');
+        $this->components->info('Done!');
 
         return Command::SUCCESS;
     }
 
     private function defaultInstallation()
     {
-        $this->info('Running default installation...');
+        $this->components->info('Running default installation...');
 
-        $this->components->task('Generating Application Key', fn() => $this->generateAppKey());
-        $this->components->task('Migrating & Seeding', fn() => $this->migrateAndSeed());
-        $this->components->task('Linking Storage', fn() => $this->storageLinking());
+        $this->components->task('Generating Application Key', fn () => $this->generateAppKey());
+        $this->components->task('Migrating & Seeding', fn () => $this->migrateAndSeed());
+        $this->components->task('Linking Storage', fn () => $this->storageLinking());
     }
 
     private function generateAppKey(): bool
@@ -76,9 +76,7 @@ class AppInstall extends Command
 
     private function storageLinking(): bool
     {
-        if (is_link(public_path().'/storage')) {
-            $this->info('Found Storage Link, Skipping ...');
-        } else {
+        if (! is_link(public_path().'/storage')) {
             Artisan::call('storage:link');
         }
 

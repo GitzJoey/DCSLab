@@ -42,4 +42,40 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    public function setCreatedAt(?Carbon $date = null)
+    {
+        return $this->state(function (array $attributes) use ($date) {
+            return [
+                'created_at' => is_null($date) ? Carbon::now() : $date,
+            ];
+        });
+    }
+
+    public function setUpdatedAt(?Carbon $date = null)
+    {
+        return $this->state(function (array $attributes) use ($date) {
+            return [
+                'updated_at' => is_null($date) ? Carbon::now() : $date,
+            ];
+        });
+    }
+
+    public function setNotRequiredResetPassword()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'password_changed_at' => Carbon::now(),
+            ];
+        });
+    }
+
+    public function setName($name)
+    {
+        return $this->state(function (array $attributes) use ($name) {
+            return [
+                'name' => strtolower(str_replace(' ', '', $name)),
+            ];
+        });
+    }
 }
