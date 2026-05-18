@@ -3,13 +3,14 @@
 namespace App\Traits;
 
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 trait CacheHelper
 {
-    public function readFromCache($key): mixed
+    public function readFromCache(string $key): mixed
     {
         $hit = false;
         $tagsArr = [];
@@ -18,24 +19,24 @@ trait CacheHelper
                 return Config::get('dcslab.ERROR_RETURN_VALUE');
             }
 
-            if (! Cache::tags([auth()->user()->id, class_basename(__CLASS__)])->has($key)) {
+            if (! Cache::tags([Auth::id(), class_basename(__CLASS__)])->has($key)) {
                 return Config::get('dcslab.ERROR_RETURN_VALUE');
             }
 
             $hit = true;
-            $tagsArr = [auth()->user()->id, class_basename(__CLASS__)];
+            $tagsArr = [Auth::id(), class_basename(__CLASS__)];
 
             return Cache::tags($tagsArr)->get($key);
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(Auth::user()) ? '' : Auth::id()).'] '.__METHOD__.$e);
 
             return Config::get('dcslab.ERROR_RETURN_VALUE');
         } finally {
-            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.($hit ? ' Hit' : ' Miss').' Key: '.$key.', Tags: ['.implode(',', $tagsArr).']');
+            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(Auth::user()) ? '' : Auth::id()).'] '.__CLASS__.' '.__FUNCTION__.($hit ? ' Hit' : ' Miss').' Key: '.$key.', Tags: ['.implode(',', $tagsArr).']');
         }
     }
 
-    public function saveToCache($key, $val): void
+    public function saveToCache(string $key, mixed $val): void
     {
         $tagsArr = [];
         try {
@@ -43,12 +44,12 @@ trait CacheHelper
                 return;
             }
 
-            $tagsArr = [auth()->user()->id, class_basename(__CLASS__)];
+            $tagsArr = [Auth::id(), class_basename(__CLASS__)];
             Cache::tags($tagsArr)->put($key, $val, Config::get('dcslab.DATA_CACHE.CACHE_TIME'));
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(Auth::id()) ? '' : Auth::id()).'] '.__METHOD__.$e);
         } finally {
-            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.', Tags: ['.implode(',', $tagsArr).']');
+            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(Auth::user()) ? '' : Auth::id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.', Tags: ['.implode(',', $tagsArr).']');
         }
     }
 
@@ -56,7 +57,7 @@ trait CacheHelper
     {
         $tagsArr = [];
         try {
-            $tagsArr = [auth()->user()->id, class_basename(__CLASS__)];
+            $tagsArr = [Auth::id(), class_basename(__CLASS__)];
 
             if (! empty($tags)) {
                 $tagsArr = str_contains($tags, ',') ? explode(',', $tags) : [$tags];
@@ -64,9 +65,9 @@ trait CacheHelper
 
             Cache::tags($tagsArr)->flush();
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(Auth::id()) ? '' : Auth::id()).'] '.__METHOD__.$e);
         } finally {
-            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Tags: ['.implode(',', $tagsArr).']');
+            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(Auth::user()) ? '' : Auth::id()).'] '.__CLASS__.' '.__FUNCTION__.' Tags: ['.implode(',', $tagsArr).']');
         }
     }
 
@@ -79,9 +80,9 @@ trait CacheHelper
 
             $result = Cache::forget($key);
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(Auth::id()) ? '' : Auth::id()).'] '.__METHOD__.$e);
         } finally {
-            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' Removed' : ' Fail To Remove'));
+            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(Auth::user()) ? '' : Auth::id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' Removed' : ' Fail To Remove'));
         }
     }
 
@@ -97,11 +98,11 @@ trait CacheHelper
 
             return $result;
         } catch (Exception $e) {
-            Log::debug('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__METHOD__.$e);
+            Log::debug('['.session()->getId().'-'.(is_null(Auth::id()) ? '' : Auth::id()).'] '.__METHOD__.$e);
 
             return false;
         } finally {
-            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(auth()->user()) ? '' : auth()->id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' T' : ' F'));
+            Log::channel(Config::get('dcslab.DATA_CACHE.LOGS_CHANNEL_NAME'))->info('['.session()->getId().'-'.(is_null(Auth::id()) ? '' : Auth::id()).'] '.__CLASS__.' '.__FUNCTION__.' Key: '.$key.($result ? ' T' : ' F'));
         }
     }
 }

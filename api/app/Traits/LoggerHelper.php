@@ -2,22 +2,23 @@
 
 namespace App\Traits;
 
-use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 trait LoggerHelper
 {
-    public static function loggerDebug(string $method, Exception $e): void
+    public static function loggerDebug(string $method, Throwable $e): void
     {
-        $sessionId = session()->getId();
-        $userId = is_null(auth()->id()) ? 'NULL' : auth()->id();
+        $sessionId = request()->hasSession() ? request()->session()->getId() : 'N/A';
+        $userId = is_null(Auth::id()) ? 'NULL' : Auth::id();
         Log::debug('['.$sessionId.'-'.$userId.'] '.$method.$e);
     }
 
     public static function loggerPerformance(string $method, int|float $execution_time, int $recCount = 0): void
     {
-        $sessionId = session()->getId();
-        $userId = is_null(auth()->id()) ? 'NULL' : auth()->id();
+        $sessionId = request()->hasSession() ? request()->session()->getId() : 'N/A';
+        $userId = is_null(Auth::id()) ? 'NULL' : Auth::id();
         Log::channel('perfs')->info('['.$sessionId.'-'.$userId.'] '.$method.' ('.number_format($execution_time, 1).'s)'.' ('.$recCount.')');
     }
 }

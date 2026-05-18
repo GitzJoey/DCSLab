@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+/**
+ * @method static array cases()
+ */
 trait EnumHelper
 {
     /**

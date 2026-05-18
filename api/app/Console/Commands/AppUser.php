@@ -11,7 +11,13 @@ use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
-use Laravel\Prompts\select;
+use Laravel\Prompts\Prompt\{
+    text,
+    input,
+    select,
+    secret,
+    confirm,
+};
 
 #[Signature('app:user {args=default}')]
 #[Description('User Management')]
@@ -61,14 +67,17 @@ class AppUser extends Command
         $roleActions = new RoleActions;
 
         do {
-            $userType = $this->components->choice('Select Role: ', [
-                ucfirst(UserRole::DEVELOPER->value),
-                ucfirst(UserRole::ADMINISTRATOR->value),
-                ucfirst(UserRole::USER->value),
-            ]);
-            $userName = $this->components->ask('Name', $userName);
-            $userEmail = $this->components->ask('Email', $userEmail);
-            $userPassword = $this->components->secret('Password', $userPassword);
+            $userType = select(
+                'Account Type',
+                [
+                    UserRole::ADMIN->value => 'Admin',
+                    UserRole::USER->value => 'User',
+                ],
+                default: UserRole::USER->value
+            );
+            $userName = text('Name', $userName);
+            $userEmail = text('Email', $userEmail);
+            $userPassword = secret('Password', $userPassword);
 
             $rolesId = [$roleActions->readBy('NAME', $userType)->id];
 
