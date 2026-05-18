@@ -108,7 +108,7 @@ class AppUser extends Command
                 } else {
                     $user = $userActions->create(
                         $user,
-                        $roleId,
+                        [$roleId],
                         $profile
                     );
 

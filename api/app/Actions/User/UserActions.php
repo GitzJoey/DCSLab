@@ -278,6 +278,8 @@ class UserActions
         ! $useTransactions ?: DB::beginTransaction();
         $timer_start = microtime(true);
 
+        $retval = false;
+
         try {
             if ($profileArr != null) {
                 $pa = $user->profile()->first();

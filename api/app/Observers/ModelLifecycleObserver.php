@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class ModelLifecycleObserver
@@ -13,7 +14,9 @@ class ModelLifecycleObserver
      */
     public function creating(Model $model): void
     {
-        if (empty($model->ulid)) {
+        $table = $model->getTable();
+        
+        if (Schema::hasColumn($table, 'ulid') && empty($model->ulid)) {
             $model->ulid = (string) Str::ulid();
         }
 
