@@ -15,7 +15,7 @@ class ModelLifecycleObserver
     public function creating(Model $model): void
     {
         $table = $model->getTable();
-        
+
         if (Schema::hasColumn($table, 'ulid') && empty($model->ulid)) {
             $model->ulid = (string) Str::ulid();
         }
@@ -43,8 +43,8 @@ class ModelLifecycleObserver
     {
         if (Auth::check()) {
             $model->deleted_by = Auth::id();
-            
-            // Using saveQuietly prevents the updating() event from 
+
+            // Using saveQuietly prevents the updating() event from
             // firing again and causing an infinite database loop.
             $model->saveQuietly();
         }

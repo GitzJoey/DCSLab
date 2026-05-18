@@ -32,7 +32,7 @@ class SettingFactory extends Factory
         ];
     }
 
-        public function createDefaultSetting_PREF_THEME()
+    public function createDefaultSetting_PREF_THEME()
     {
         return $this->state(function (array $attributes) {
             return [

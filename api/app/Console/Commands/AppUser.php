@@ -14,8 +14,11 @@ use Illuminate\Support\Facades\Schema;
 
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
-use function Laravel\Prompts\text;
 use function Laravel\Prompts\table;
+use function Laravel\Prompts\text;
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\error;
 
 #[Signature('app:user {args=default}')]
 #[Description('User Management')]
@@ -28,7 +31,7 @@ class AppUser extends Command
             return $check;
         }
 
-        match (strtolower($this->argument('args'))) {
+        return match (strtolower($this->argument('args'))) {
             'create' => $this->createUser(),
 
             'changerole',
@@ -121,10 +124,83 @@ class AppUser extends Command
                     $invalid = false;
                 }
             } catch (Exception $e) {
-                $this->error($e->getMessage());
-                $this->info('');
-                $this->error('Retrying...');
+                $this->components->error($e->getMessage());
+                $this->components->info('Retrying...');
             }
         } while ($invalid);
+
+        return Command::SUCCESS;
+    }
+
+    private function changeUserRoles()
+    {
+        $userActions = new UserActions();
+        $roleActions = new RoleActions();
+
+        $email = text(
+            label: 'Enter Email',
+            placeholder: 'gitzjoey@yahoo.com',
+            required: true,
+            validate: function (string $value) use ($userActions) {
+                if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    return 'Please enter a valid email address.';
+                }
+                if (!$userActions->readby('EMAIL', $value)) {
+                    return 'No user found with this email address.';
+                }
+                return null;
+            }
+        );
+
+        $usr = $userActions->readby('EMAIL', $email);
+
+        $currentRoles = $usr->roles()->get(['id', 'display_name']);
+        
+        info("Target User Found: {$usr->name}");
+        table(
+            headers: ['ID', 'Current Assigned Roles'],
+            rows: $currentRoles->isEmpty() 
+                ? [[ '-', '[No Roles Assigned]' ]] 
+                : $currentRoles->map(fn($r) => [$r->id, $r->display_name])->toArray()
+        );
+
+        $allRoles = $roleActions->readAny();
+        
+        $roleOptions = $allRoles->pluck('display_name', 'id')->toArray();
+        
+        $currentlyAssignedIds = $currentRoles->pluck('id')->toArray();
+
+        $selectedRoleIds = multiselect(
+            label: 'Select Roles',
+            options: $roleOptions,
+            default: $currentlyAssignedIds,
+            required: false,
+        );
+
+        $confirmed = confirm(
+            label: "Are You Sure You Want To Update Roles For {$usr->name}?",
+            default: true
+        );
+
+        if (!$confirmed) {
+            error('Operation Aborted By User.');
+            
+            return Command::SUCCESS;
+        }
+
+        $usr->roles()->sync($selectedRoleIds); 
+
+        $this->components->info('User Roles Successfully Updated!');
+
+        $freshRoles = $usr->fresh()->roles()->get(['id', 'display_name']);
+
+        table(
+            headers: ['ID', 'Updated Assigned Roles'],
+            rows: $freshRoles->isEmpty() 
+                ? [[ '-', '[No Roles Assigned]' ]] 
+                : $freshRoles->map(fn($r) => [$r->id, $r->display_name])->toArray()
+        );
+
+        return Command::SUCCESS;
     }
 }

@@ -411,16 +411,19 @@ class UserActions
     public function createDefaultSettings(): array
     {
         $settingPrefsTheme = new Setting;
+        $settingPrefsTheme->ulid = Str::ulid();
         $settingPrefsTheme->type = 'KEY_VALUE';
         $settingPrefsTheme->key = 'PREFS.THEME';
         $settingPrefsTheme->value = 'side-menu-light-full';
 
         $settingPrefsDate = new Setting;
+        $settingPrefsDate->ulid = Str::ulid();
         $settingPrefsDate->type = 'KEY_VALUE';
         $settingPrefsDate->key = 'PREFS.DATE_FORMAT';
         $settingPrefsDate->value = 'yyyy_MM_dd';
 
         $settingPrefsTime = new Setting;
+        $settingPrefsTime->ulid = Str::ulid();
         $settingPrefsTime->type = 'KEY_VALUE';
         $settingPrefsTime->key = 'PREFS.TIME_FORMAT';
         $settingPrefsTime->value = 'hh_mm_ss';

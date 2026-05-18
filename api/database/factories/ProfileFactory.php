@@ -21,18 +21,18 @@ class ProfileFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id'     => Profile::factory()->belongsTo(User::class),
-            'first_name'  => fake()->firstName(),
-            'last_name'   => fake()->lastName(),
-            'address'     => fake()->address(),
-            'city'        => fake()->city(),
+            'user_id' => Profile::factory()->belongsTo(User::class),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'address' => fake()->address(),
+            'city' => fake()->city(),
             'postal_code' => fake()->postcode(),
-            'country'     => fake()->randomElement(['Singapore', 'Indonesia']),
-            'tax_id'      => (string) fake()->numericToken(12),
-            'ic_num'      => (string) fake()->numericToken(12),
-            'img_path'    => null,
-            'status'      => RecordStatus::INACTIVE,
-            'remarks'     => fake()->catchPhrase(),
+            'country' => fake()->randomElement(['Singapore', 'Indonesia']),
+            'tax_id' => (string) fake()->numericToken(12),
+            'ic_num' => (string) fake()->numericToken(12),
+            'img_path' => null,
+            'status' => RecordStatus::INACTIVE,
+            'remarks' => fake()->catchPhrase(),
         ];
     }
 
