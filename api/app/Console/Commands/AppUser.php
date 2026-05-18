@@ -74,13 +74,15 @@ class AppUser extends Command
             $userEmail = text('Email', $userEmail, $userEmail, true, null, 'Email is required.', null);
             $userPassword = password('Password', $userPassword, true, null, 'Password is required.', null);
 
-            $roleId = [$roleActions->readBy('NAME', $userType)->id];
+            $role = $roleActions->readBy('NAME', $userType);
 
-            if (empty($roleId)) {
+            if (is_null($role)) {
                 $this->components->error('Role not found.');
 
                 return Command::FAILURE;
             }
+
+            $roleId = $role->id;
 
             $profile = [
                 'first_name' => $userName,

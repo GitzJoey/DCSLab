@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -70,7 +71,7 @@ class UserFactory extends Factory
         });
     }
 
-    public function setName($name)
+    public function setName(string $name)
     {
         return $this->state(function (array $attributes) use ($name) {
             return [
