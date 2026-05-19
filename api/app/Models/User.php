@@ -43,7 +43,7 @@ class User extends Authenticatable
     /**
      * @return HasOne<Profile, $this>
      */
-    public function profile()
+    public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
     }
@@ -51,7 +51,7 @@ class User extends Authenticatable
     /**
      * @return HasMany<Setting, $this>
      */
-    public function settings()
+    public function settings(): HasMany
     {
         return $this->hasMany(Setting::class);
     }

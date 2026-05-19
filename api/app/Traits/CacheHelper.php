@@ -73,6 +73,7 @@ trait CacheHelper
 
     public function removeCacheByKey(string $key): void
     {
+        $result = false;
         try {
             if (empty($key)) {
                 return;
