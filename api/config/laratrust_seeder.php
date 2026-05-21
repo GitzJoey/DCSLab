@@ -13,26 +13,22 @@ return [
 
     'roles_structure' => [
         'developer' => [
-            'profile' => 'r,u',
-            'messaging' => 'c,r,u,d',
-            'setting' => 'r,u',
+            //Bypass all permissions
         ],
         'administrator' => [
+            'user' => 'c,r,ra,u,ac,au',
             'profile' => 'r,u',
-            'messaging' => 'c,r,u,d',
-            'setting' => 'r,u',
-
-            'user' => 'c,r,ra,u',
+            'company' => 'c,r,ra,u,d,ac,au,ad,ars',
+            'branch' => 'c,r,ra,u,d,ac,au,ad,ars',
         ],
         'user' => [
             'profile' => 'r,u',
-            'messaging' => 'c,r,u,d',
-            'setting' => 'r,u',
         ],
+
         /* #region Extensions */
         'POS-owner' => [
-            'company' => 'c,r,ra,u,d',
-            'branch' => 'c,r,ra,u,d',
+            'company' => 'c,r,ra,u,d,ac,au,ad,ars',
+            'branch' => 'c,r,ra,u,d,ac,au,ad,ars',
         ],
         /* #endregion */
     ],
