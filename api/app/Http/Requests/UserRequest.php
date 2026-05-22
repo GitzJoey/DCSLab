@@ -59,8 +59,8 @@ class UserRequest extends FormRequest
     public function prepareForValidation(): void
     {
         match ($this->route()?->getActionMethod()) {
-            'readAny'           => $this->prepareReadAnyData(),
-            'store', 'update'   => $this->prepareWriteData(),
+            'viewAny'           => $this->prepareViewAnyData(),
+            'create', 'update'   => $this->prepareWriteData(),
             default             => null,
         };
     }
@@ -167,7 +167,7 @@ class UserRequest extends FormRequest
         ];
     }
 
-    private function prepareReadAnyData(): void
+    private function prepareViewAnyData(): void
     {
         $this->merge([
             'search'   => $this->input('search', ''), 

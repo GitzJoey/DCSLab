@@ -63,6 +63,21 @@ class BranchRequest extends FormRequest
         };
     }
 
+    public function attributes()
+    {
+        return [
+            'company_id' => trans('request.attributes.branch.company'),
+            'code' => trans('request.attributes.branch.code'),
+            'name' => trans('request.attributes.branch.name'),
+            'address' => trans('request.attributes.branch.address'),
+            'city' => trans('request.attributes.branch.city'),
+            'contact' => trans('request.attributes.branch.contact'),
+            'is_main' => trans('request.attributes.branch.is_main'),
+            'remarks' => trans('request.attributes.branch.remarks'),
+            'status' => trans('request.attributes.branch.status'),
+        ];
+    }
+
     private function viewAnyRules(): array
     {
         return [

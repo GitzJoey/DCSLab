@@ -62,6 +62,18 @@ class CompanyRequest extends FormRequest
         };
     }
 
+    public function attributes()
+    {
+        return [
+            'company_id' => trans('request.attributes.company.company'),
+            'code' => trans('request.attributes.company.code'),
+            'name' => trans('request.attributes.company.name'),
+            'address' => trans('request.attributes.company.address'),
+            'default' => trans('request.attributes.company.default'),
+            'status' => trans('request.attributes.company.status'),
+        ];
+    }
+
     private function viewAnyRules(): array
     {
         return [
@@ -124,7 +136,7 @@ class CompanyRequest extends FormRequest
         ];
     }
 
-    private function prepareReadAnyData(): void
+    private function prepareViewAnyData(): void
     {
         $this->merge([
             'search'   => $this->input('search', ''), 
