@@ -19,9 +19,7 @@ class CompanyActions
     use CacheHelper;
     use LoggerHelper;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function create(array $companyArr): Company
     {
@@ -46,7 +44,7 @@ class CompanyActions
                 $status = RecordStatus::ACTIVE->value;
             }
 
-            $company = new Company();
+            $company = new Company;
             $company->code = $code;
             $company->name = $name;
             $company->address = $address;

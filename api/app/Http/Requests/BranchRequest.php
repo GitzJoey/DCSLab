@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -16,7 +17,7 @@ class BranchRequest extends FormRequest
             return false;
         }
 
-        /** @var \App\User */
+        /** @var User */
         $user = Auth::user();
         $branch = $this->route('branch');
 
@@ -46,20 +47,20 @@ class BranchRequest extends FormRequest
     {
         return match ($this->route()?->getActionMethod()) {
             'viewAny' => $this->viewAnyRules(),
-            'view'    => $this->viewRules(),
-            'create'  => array_merge($this->createRules(), $this->nullableFields()),
-            'update'  => array_merge($this->updateRules(), $this->nullableFields()),
-            'delete'  => array_merge($this->deleteRules()),
-            default   => $this->defaultRules(),
+            'view' => $this->viewRules(),
+            'create' => array_merge($this->createRules(), $this->nullableFields()),
+            'update' => array_merge($this->updateRules(), $this->nullableFields()),
+            'delete' => array_merge($this->deleteRules()),
+            default => $this->defaultRules(),
         };
     }
 
     public function prepareForValidation()
     {
         match ($this->route()?->getActionMethod()) {
-            'viewAny'           => $this->prepareViewAnyData(),
-            'create', 'update'   => $this->prepareWriteData(),
-            default             => null,
+            'viewAny' => $this->prepareViewAnyData(),
+            'create', 'update' => $this->prepareWriteData(),
+            default => null,
         };
     }
 
@@ -81,7 +82,7 @@ class BranchRequest extends FormRequest
     private function viewAnyRules(): array
     {
         return [
-            'company_id' => ['required', new IsValidCompany(), 'bail'],
+            'company_id' => ['required', new IsValidCompany, 'bail'],
             'search' => ['present', 'string'],
             'paginate' => ['required', 'boolean'],
             'page' => ['required_if:paginate,true', 'numeric'],
@@ -100,7 +101,7 @@ class BranchRequest extends FormRequest
     private function createRules(): array
     {
         return [
-            'company_id' => ['required', new IsValidCompany(), 'bail'],
+            'company_id' => ['required', new IsValidCompany, 'bail'],
             'code' => ['required', 'max:255'],
             'name' => ['required', 'max:255'],
             'is_main' => ['boolean'],
@@ -113,7 +114,7 @@ class BranchRequest extends FormRequest
         $branch = $this->route('branch');
 
         return [
-            'company_id' => ['required', new IsValidCompany(), 'bail'],
+            'company_id' => ['required', new IsValidCompany, 'bail'],
             'code' => ['required', 'max:255'],
             'name' => ['required', 'max:255'],
             'is_main' => ['boolean', new SetBranchToNonMain($branch)],
@@ -144,13 +145,10 @@ class BranchRequest extends FormRequest
     private function prepareReadAnyData(): void
     {
         $this->merge([
-            'search'   => $this->input('search', ''), 
+            'search' => $this->input('search', ''),
             'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
         ]);
     }
 
-    private function prepareWriteData(): void
-    {
-
-    }
+    private function prepareWriteData(): void {}
 }

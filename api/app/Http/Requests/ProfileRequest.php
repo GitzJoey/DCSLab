@@ -41,13 +41,13 @@ class ProfileRequest extends FormRequest
     public function rules(): array
     {
         return match ($this->route()?->getActionMethod()) {
-            'updateUserProfile'             => $this->updateUserProfileRules(),
-            'updatePersonalInformation'     => $this->updatePersonalInformationRules(),
-            'updateAccountSettings'         => $this->updateAccountSettingsRules(),
-            'updateUserRoles'               => $this->updateUserRolesRules(),
-            'updatePassword'                => $this->updatePasswordRules(),
-            'updateTokens'                  => $this->updateTokensRules(),
-            default                         => $this->defaultRules(),
+            'updateUserProfile' => $this->updateUserProfileRules(),
+            'updatePersonalInformation' => $this->updatePersonalInformationRules(),
+            'updateAccountSettings' => $this->updateAccountSettingsRules(),
+            'updateUserRoles' => $this->updateUserRolesRules(),
+            'updatePassword' => $this->updatePasswordRules(),
+            'updateTokens' => $this->updateTokensRules(),
+            default => $this->defaultRules(),
         };
     }
 

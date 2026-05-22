@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\RecordStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\RecordStatus;
 
 class UserRequest extends FormRequest
 {
@@ -13,8 +13,8 @@ class UserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //Authorization Error
-        //return false;
+        // Authorization Error
+        // return false;
 
         if (! Auth::check()) {
             return false;
@@ -49,19 +49,19 @@ class UserRequest extends FormRequest
     {
         return match ($this->route()?->getActionMethod()) {
             'viewAny' => $this->viewAnyRules(),
-            'view'    => $this->viewRules(),
-            'create'  => array_merge($this->createRules(), $this->nullableFields()),
-            'update'  => array_merge($this->updateRules(), $this->nullableFields()),
-            default   => $this->defaultRules(),
+            'view' => $this->viewRules(),
+            'create' => array_merge($this->createRules(), $this->nullableFields()),
+            'update' => array_merge($this->updateRules(), $this->nullableFields()),
+            default => $this->defaultRules(),
         };
     }
 
     public function prepareForValidation(): void
     {
         match ($this->route()?->getActionMethod()) {
-            'viewAny'           => $this->prepareViewAnyData(),
-            'create', 'update'   => $this->prepareWriteData(),
-            default             => null,
+            'viewAny' => $this->prepareViewAnyData(),
+            'create', 'update' => $this->prepareWriteData(),
+            default => null,
         };
     }
 
@@ -80,7 +80,7 @@ class UserRequest extends FormRequest
 
     private function viewAnyRules(): array
     {
-        //Validation Error
+        // Validation Error
         /*
         $rules_read_any = [
             'search' => ['required'],
@@ -89,7 +89,7 @@ class UserRequest extends FormRequest
             'per_page' => ['required_if:paginate,true', 'numeric'],
             'refresh' => ['nullable', 'boolean'],
         ];
-        
+
         return $rules_read_any;
         */
 
@@ -170,7 +170,7 @@ class UserRequest extends FormRequest
     private function prepareViewAnyData(): void
     {
         $this->merge([
-            'search'   => $this->input('search', ''), 
+            'search' => $this->input('search', ''),
             'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
         ]);
     }
@@ -179,7 +179,7 @@ class UserRequest extends FormRequest
     {
         if ($this->has('roles')) {
             $this->merge([
-                'roles' => collect($this->input('roles'))->pluck('id')->all()
+                'roles' => collect($this->input('roles'))->pluck('id')->all(),
             ]);
         }
 

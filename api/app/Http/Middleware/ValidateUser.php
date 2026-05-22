@@ -52,6 +52,7 @@ class ValidateUser
                 'message' => __('middleware.validate_user.inactive_user'),
             ], 403);
         }
+
         return $next($request);
     }
 }

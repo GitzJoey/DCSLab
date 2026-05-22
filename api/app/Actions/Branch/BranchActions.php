@@ -18,9 +18,7 @@ class BranchActions
     use CacheHelper;
     use LoggerHelper;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function create(
         array $branchArr
@@ -45,7 +43,7 @@ class BranchActions
                 $status = 1;
             }
 
-            $branch = new Branch();
+            $branch = new Branch;
             $branch->company_id = $company_id;
             $branch->code = $code;
             $branch->name = $name;

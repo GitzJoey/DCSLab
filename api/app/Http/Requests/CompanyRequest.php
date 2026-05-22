@@ -45,20 +45,20 @@ class CompanyRequest extends FormRequest
     {
         return match ($this->route()?->getActionMethod()) {
             'viewAny' => $this->viewAnyRules(),
-            'view'    => $this->viewRules(),
-            'create'  => array_merge($this->createRules(), $this->nullableFields()),
-            'update'  => array_merge($this->updateRules(), $this->nullableFields()),
-            'delete'  => array_merge($this->deleteRules()),
-            default   => $this->defaultRules(),
+            'view' => $this->viewRules(),
+            'create' => array_merge($this->createRules(), $this->nullableFields()),
+            'update' => array_merge($this->updateRules(), $this->nullableFields()),
+            'delete' => array_merge($this->deleteRules()),
+            default => $this->defaultRules(),
         };
     }
 
     public function prepareForValidation()
     {
         match ($this->route()?->getActionMethod()) {
-            'viewAny'               => $this->prepareViewAnyData(),
-            'create', 'update'      => $this->prepareWriteData(),
-            default                 => null,
+            'viewAny' => $this->prepareViewAnyData(),
+            'create', 'update' => $this->prepareWriteData(),
+            default => null,
         };
     }
 
@@ -96,8 +96,8 @@ class CompanyRequest extends FormRequest
     {
         return [
             /* Test Validation Error For Code */
-            //'code' => ['required', 'max:1', 'alpha'],
-            //'name' => ['required', 'max:1'],
+            // 'code' => ['required', 'max:1', 'alpha'],
+            // 'name' => ['required', 'max:1'],
             /* Test Validation Error For Code */
             'code' => ['required', 'max:255'],
             'name' => ['required', 'max:255'],
@@ -139,13 +139,10 @@ class CompanyRequest extends FormRequest
     private function prepareViewAnyData(): void
     {
         $this->merge([
-            'search'   => $this->input('search', ''), 
+            'search' => $this->input('search', ''),
             'paginate' => $this->has('paginate') ? filter_var($this->paginate, FILTER_VALIDATE_BOOLEAN) : true,
         ]);
     }
 
-    private function prepareWriteData(): void
-    {
-
-    }
+    private function prepareWriteData(): void {}
 }

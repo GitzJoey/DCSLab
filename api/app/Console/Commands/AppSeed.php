@@ -2,19 +2,19 @@
 
 namespace App\Console\Commands;
 
+use Database\Seeders\BranchTableSeeder;
+use Database\Seeders\CompanyTableSeeder;
+use Database\Seeders\RoleTableSeeder;
+use Database\Seeders\UserTableSeeder;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
-use Database\Seeders\UserTableSeeder;
-use Database\Seeders\RoleTableSeeder;
-use Database\Seeders\CompanyTableSeeder;
-use Database\Seeders\BranchTableSeeder;
 use Illuminate\Console\ConfirmableTrait;
 
-use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\text;
+use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\spin;
+use function Laravel\Prompts\text;
 
 #[Signature('app:seed')]
 #[Description('Interactive Data Seeding')]
@@ -24,14 +24,14 @@ class AppSeed extends Command
 
     private array $availableSeeders = [
         'Default' => 'Default Data Seeder (Users, Roles, Companies, Branches)',
-        'User'    => 'User Table Seeder',
-        'Role'    => 'Role Table Seeder',
+        'User' => 'User Table Seeder',
+        'Role' => 'Role Table Seeder',
         'Company' => 'Company Table Seeder',
-        'Branch'  => 'Branch Table Seeder',
+        'Branch' => 'Branch Table Seeder',
 
-        'Product' => 'Product Table Seeder',  
+        'Product' => 'Product Table Seeder',
 
-        'Cancel'  => 'Cancel Seeding Process',
+        'Cancel' => 'Cancel Seeding Process',
     ];
 
     /**
@@ -53,6 +53,7 @@ class AppSeed extends Command
 
         if (in_array('Cancel', $selectedSeeders)) {
             $this->components->info('Seeding Process Cancelled.');
+
             return Command::SUCCESS;
         }
 
@@ -66,40 +67,41 @@ class AppSeed extends Command
             match ($seederKey) {
                 'Default' => $this->runDefaultDataSeederNonInteractive(),
 
-                'User'    => $this->runUserTableSeederInteractive(),
-                'Role'    => $this->runRoleTableSeederInteractive(),
+                'User' => $this->runUserTableSeederInteractive(),
+                'Role' => $this->runRoleTableSeederInteractive(),
                 'Company' => $this->runCompanyTableSeederInteractive(),
-                'Branch'  => $this->runBranchTableSeederInteractive(),
+                'Branch' => $this->runBranchTableSeederInteractive(),
             };
         }
 
         $this->output->newLine();
         $this->components->info('All Selected Seeding Completed!');
+
         return Command::SUCCESS;
     }
 
     private function runDefaultDataSeederNonInteractive(): void
     {
         spin(
-            callback: fn() => (new UserTableSeeder())->callWith(UserTableSeeder::class, [true, 3]),
+            callback: fn () => (new UserTableSeeder)->callWith(UserTableSeeder::class, [true, 3]),
             message: 'Seeding 3 Users...'
         );
         $this->components->info('✓ UserTableSeeder Finished.');
 
         spin(
-            callback: fn() => (new RoleTableSeeder())->callWith(RoleTableSeeder::class, [true, 2]),
+            callback: fn () => (new RoleTableSeeder)->callWith(RoleTableSeeder::class, [true, 2]),
             message: 'Seeding 2 Roles...'
         );
         $this->components->info('✓ RoleTableSeeder Finished.');
 
         spin(
-            callback: fn() => (new CompanyTableSeeder())->callWith(CompanyTableSeeder::class, [3, 0]),
+            callback: fn () => (new CompanyTableSeeder)->callWith(CompanyTableSeeder::class, [3, 0]),
             message: 'Seeding 3 Companies per User...'
         );
         $this->components->info('✓ CompanyTableSeeder Finished.');
 
         spin(
-            callback: fn() => (new BranchTableSeeder())->callWith(BranchTableSeeder::class, [3, 0]),
+            callback: fn () => (new BranchTableSeeder)->callWith(BranchTableSeeder::class, [3, 0]),
             message: 'Seeding 3 Branches per Company...'
         );
         $this->components->info('✓ BranchTableSeeder Finished.');
@@ -111,8 +113,8 @@ class AppSeed extends Command
         $count = text(label: 'How many users to seed?', placeholder: '5', default: '5', required: true);
 
         spin(
-            callback: fn() => (new UserTableSeeder())->callWith(UserTableSeeder::class, [(bool)$truncate, (int)$count]),
-            message: 'Seeding  ' . $count . ' Users...'
+            callback: fn () => (new UserTableSeeder)->callWith(UserTableSeeder::class, [(bool) $truncate, (int) $count]),
+            message: 'Seeding  '.$count.' Users...'
         );
         $this->components->info('✓ UserTableSeeder Finished.');
     }
@@ -122,8 +124,8 @@ class AppSeed extends Command
         $count = text(label: 'How many roles to seed?', placeholder: '5', default: '5', required: true);
 
         spin(
-            callback: fn() => (new RoleTableSeeder())->callWith(RoleTableSeeder::class, [true, (int)$count]),
-            message: 'Seeding  ' . $count . ' Roles...'
+            callback: fn () => (new RoleTableSeeder)->callWith(RoleTableSeeder::class, [true, (int) $count]),
+            message: 'Seeding  '.$count.' Roles...'
         );
         $this->components->info('✓ RoleTableSeeder Finished.');
     }
@@ -134,8 +136,8 @@ class AppSeed extends Command
         $userId = text(label: 'Only to this userId (0 for all):', placeholder: '0', default: '0', required: true);
 
         spin(
-            callback: fn() => (new CompanyTableSeeder())->callWith(CompanyTableSeeder::class, [(int)$companiesPerUsers, (int)$userId]),
-            message: 'Seeding  ' . $companiesPerUsers . ' Companies per User...'
+            callback: fn () => (new CompanyTableSeeder)->callWith(CompanyTableSeeder::class, [(int) $companiesPerUsers, (int) $userId]),
+            message: 'Seeding  '.$companiesPerUsers.' Companies per User...'
         );
         $this->components->info('✓ CompanyTableSeeder Finished.');
     }
@@ -146,8 +148,8 @@ class AppSeed extends Command
         $onlyThisCompanyId = text(label: 'Only for this companyId (0 for all):', placeholder: '0', default: '0', required: true);
 
         spin(
-            callback: fn() => (new BranchTableSeeder())->callWith(BranchTableSeeder::class, [(int)$branchPerCompanies, (int)$onlyThisCompanyId]),
-            message: 'Seeding  ' . $branchPerCompanies . ' Branches per Company...'
+            callback: fn () => (new BranchTableSeeder)->callWith(BranchTableSeeder::class, [(int) $branchPerCompanies, (int) $onlyThisCompanyId]),
+            message: 'Seeding  '.$branchPerCompanies.' Branches per Company...'
         );
         $this->components->info('✓ BranchTableSeeder Finished.');
     }

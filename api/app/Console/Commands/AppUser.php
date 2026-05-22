@@ -12,13 +12,13 @@ use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 
+use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\table;
 use function Laravel\Prompts\text;
-use function Laravel\Prompts\multiselect;
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\error;
 
 #[Signature('app:user {args=default}')]
 #[Description('User Management')]
@@ -134,20 +134,21 @@ class AppUser extends Command
 
     private function changeUserRoles()
     {
-        $userActions = new UserActions();
-        $roleActions = new RoleActions();
+        $userActions = new UserActions;
+        $roleActions = new RoleActions;
 
         $email = text(
             label: 'Enter Email',
             placeholder: 'gitzjoey@yahoo.com',
             required: true,
             validate: function (string $value) use ($userActions) {
-                if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
                     return 'Please enter a valid email address.';
                 }
-                if (!$userActions->readby('EMAIL', $value)) {
+                if (! $userActions->readby('EMAIL', $value)) {
                     return 'No user found with this email address.';
                 }
+
                 return null;
             }
         );
@@ -155,19 +156,19 @@ class AppUser extends Command
         $usr = $userActions->readby('EMAIL', $email);
 
         $currentRoles = $usr->roles()->get(['id', 'display_name']);
-        
+
         info("Target User Found: {$usr->name}");
         table(
             headers: ['ID', 'Current Assigned Roles'],
-            rows: $currentRoles->isEmpty() 
-                ? [[ '-', '[No Roles Assigned]' ]] 
-                : $currentRoles->map(fn($r) => [$r->id, $r->display_name])->toArray()
+            rows: $currentRoles->isEmpty()
+                ? [['-', '[No Roles Assigned]']]
+                : $currentRoles->map(fn ($r) => [$r->id, $r->display_name])->toArray()
         );
 
         $allRoles = $roleActions->readAny();
-        
+
         $roleOptions = $allRoles->pluck('display_name', 'id')->toArray();
-        
+
         $currentlyAssignedIds = $currentRoles->pluck('id')->toArray();
 
         $selectedRoleIds = multiselect(
@@ -182,13 +183,13 @@ class AppUser extends Command
             default: true
         );
 
-        if (!$confirmed) {
+        if (! $confirmed) {
             error('Operation Aborted By User.');
-            
+
             return Command::SUCCESS;
         }
 
-        $usr->roles()->sync($selectedRoleIds); 
+        $usr->roles()->sync($selectedRoleIds);
 
         $this->components->info('User Roles Successfully Updated!');
 
@@ -196,9 +197,9 @@ class AppUser extends Command
 
         table(
             headers: ['ID', 'Updated Assigned Roles'],
-            rows: $freshRoles->isEmpty() 
-                ? [[ '-', '[No Roles Assigned]' ]] 
-                : $freshRoles->map(fn($r) => [$r->id, $r->display_name])->toArray()
+            rows: $freshRoles->isEmpty()
+                ? [['-', '[No Roles Assigned]']]
+                : $freshRoles->map(fn ($r) => [$r->id, $r->display_name])->toArray()
         );
 
         return Command::SUCCESS;

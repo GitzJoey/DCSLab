@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Table('companies')]
-#[Fillable(['code','name','address','default','status'])]
+#[Fillable(['code', 'name', 'address', 'default', 'status'])]
 class Company extends Model
 {
     use SoftDeletes;

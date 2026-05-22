@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Enums\UserRole;
+use App\Models\User;
 
 class UserPolicy
 {
@@ -12,7 +12,7 @@ class UserPolicy
         //
     }
 
-    public function before (User $user): ?bool
+    public function before(User $user): ?bool
     {
         if (! app()->isProduction() && $user->hasRole(UserRole::DEVELOPER->value)) {
             return true;
@@ -21,32 +21,32 @@ class UserPolicy
         return null;
     }
 
-    public function create (User $user): bool
+    public function create(User $user): bool
     {
         return $user->hasPermission('user-create');
     }
 
-    public function view (User $user): bool
+    public function view(User $user): bool
     {
         return $user->hasPermission('user-read');
     }
 
-    public function viewAny (User $user): bool
+    public function viewAny(User $user): bool
     {
         return $user->hasPermission('user-readAny');
     }
 
-    public function update (User $user): bool
+    public function update(User $user): bool
     {
         return $user->hasPermission('user-update');
     }
 
-    public function authorizeCreate (User $user): bool
+    public function authorizeCreate(User $user): bool
     {
         return $user->hasPermission('user-authorizeCreate');
     }
 
-    public function authorizeUpdate (User $user): bool
+    public function authorizeUpdate(User $user): bool
     {
         return $user->hasPermission('user-authorizeUpdate');
     }

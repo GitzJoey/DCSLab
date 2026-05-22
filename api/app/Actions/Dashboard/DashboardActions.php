@@ -10,9 +10,7 @@ class DashboardActions
 {
     use CacheHelper;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function createUserMenu(bool $useCache = true): array
     {

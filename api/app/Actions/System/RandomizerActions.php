@@ -8,9 +8,7 @@ class RandomizerActions
 
     private array $numeric_characters = [3, 4, 7, 9];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function generateRandomTimer(): string
     {
