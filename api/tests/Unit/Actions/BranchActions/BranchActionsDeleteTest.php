@@ -16,7 +16,7 @@ class BranchActionsDeleteTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->branchActions = new BranchActions();
+        $this->branchActions = new BranchActions;
     }
 
     public function test_branch_actions_call_delete_expect_bool()

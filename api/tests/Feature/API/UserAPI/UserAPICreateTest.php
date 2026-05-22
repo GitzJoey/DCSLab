@@ -27,7 +27,7 @@ class UserAPICreateTest extends APITestCase
 
         $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
-            'id' => HashIds::encode($role->id),
+            'id' => Hashids::encode($role->id),
             'display_name' => $role->display_name,
         ];
 
@@ -48,7 +48,7 @@ class UserAPICreateTest extends APITestCase
 
         $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
-            'id' => HashIds::encode($role->id),
+            'id' => Hashids::encode($role->id),
             'display_name' => $role->display_name,
         ];
 
@@ -80,7 +80,7 @@ class UserAPICreateTest extends APITestCase
 
         $role = Role::where('name', '=', UserRoles::DEVELOPER->value)->first();
         $userArr['roles'][0] = [
-            'id' => HashIds::encode($role->id),
+            'id' => Hashids::encode($role->id),
             'display_name' => $role->display_name,
         ];
 

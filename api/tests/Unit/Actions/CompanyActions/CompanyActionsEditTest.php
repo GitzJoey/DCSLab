@@ -16,7 +16,7 @@ class CompanyActionsEditTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->companyActions = new CompanyActions();
+        $this->companyActions = new CompanyActions;
     }
 
     public function test_company_service_call_update_expect_db_updated()

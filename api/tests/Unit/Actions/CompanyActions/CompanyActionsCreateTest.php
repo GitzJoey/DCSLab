@@ -16,7 +16,7 @@ class CompanyActionsCreateTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->companyActions = new CompanyActions();
+        $this->companyActions = new CompanyActions;
     }
 
     public function test_company_action_call_create_expect_db_has_record()

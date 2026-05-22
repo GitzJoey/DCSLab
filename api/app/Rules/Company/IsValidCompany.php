@@ -15,6 +15,8 @@ class IsValidCompany implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
+        if (! auth()->user()->companies->pluck('id')->contains($value)) {
+            $fail('rules.company.valid_company')->translate();
+        }
     }
 }

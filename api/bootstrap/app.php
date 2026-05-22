@@ -15,9 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
 
         $middleware->alias([
-            'guest'        => RedirectIfAuthenticatedJson::class,
+            'guest' => RedirectIfAuthenticatedJson::class,
             'precognitive' => HandlePrecognitiveRequests::class,
-            'validate.user'=> ValidateUser::class,
+            'validate.user' => ValidateUser::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

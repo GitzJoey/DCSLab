@@ -35,5 +35,5 @@ class CompanyResource extends JsonResource
         } else {
             return $status->name;
         }
-    }    
+    }
 }

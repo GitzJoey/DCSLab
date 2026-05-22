@@ -19,7 +19,7 @@ class UserActionsReadTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->userActions = new UserActions();
+        $this->userActions = new UserActions;
     }
 
     public function test_user_actions_call_read_any_with_paginate_true_expect_paginator_object()

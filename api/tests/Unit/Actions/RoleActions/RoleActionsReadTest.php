@@ -14,7 +14,7 @@ class RoleActionsReadTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->roleActions = new RoleActions();
+        $this->roleActions = new RoleActions;
     }
 
     public function test_role_actions_call_read_any_with_default_parameter_expect_collection_object()

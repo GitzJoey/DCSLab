@@ -17,7 +17,7 @@ class BranchActionsEditTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->branchActions = new BranchActions();
+        $this->branchActions = new BranchActions;
     }
 
     public function test_branch_actions_call_update_expect_db_updated()

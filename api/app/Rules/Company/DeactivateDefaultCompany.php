@@ -8,6 +8,13 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 
 class DeactivateDefaultCompany implements ValidationRule
 {
+    private bool $isDefault;
+
+    public function __construct(bool $isDefault)
+    {
+        $this->isDefault = $isDefault;
+    }
+
     /**
      * Run the validation rule.
      *
@@ -15,6 +22,8 @@ class DeactivateDefaultCompany implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
+        if ($this->isDefault == true && $value == RecordStatus::INACTIVE->value) {
+            $fail('rules.company.deactivate_default_company')->translate();
+        }
     }
 }

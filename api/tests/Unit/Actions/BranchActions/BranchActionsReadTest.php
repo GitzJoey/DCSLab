@@ -21,7 +21,7 @@ class BranchActionsReadTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->branchActions = new BranchActions();
+        $this->branchActions = new BranchActions;
     }
 
     public function test_branch_actions_call_read_any_with_paginate_true_expect_paginator_object()
@@ -62,7 +62,7 @@ class BranchActionsReadTest extends ActionsTestCase
         $this->assertInstanceOf(Collection::class, $result);
     }
 
-    public function test_branch_actions_call_read_any_with_nonexistance_companyId_expect_empty_collection()
+    public function test_branch_actions_call_read_any_with_nonexistance_company_id_expect_empty_collection()
     {
         $maxId = Company::max('id') + 1;
         $result = $this->branchActions->readAny(

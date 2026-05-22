@@ -18,7 +18,7 @@ class UserActionsCreateTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->userActions = new UserActions();
+        $this->userActions = new UserActions;
     }
 
     public function test_user_actions_call_create_expect_db_has_record()
