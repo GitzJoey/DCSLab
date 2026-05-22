@@ -18,8 +18,8 @@ return [
         'administrator' => [
             'user' => 'c,r,ra,u,ac,au',
             'profile' => 'r,u',
-            'company' => 'c,r,ra,u,d,ac,au,ad,ars',
-            'branch' => 'c,r,ra,u,d,ac,au,ad,ars',
+            'company' => 'c,r,ra,u,d,rs,ac,au,ad,ars',
+            'branch' => 'c,r,ra,u,d,rs,ac,au,ad,ars',
         ],
         'user' => [
             'profile' => 'r,u',
@@ -27,8 +27,8 @@ return [
 
         /* #region Extensions */
         'POS-owner' => [
-            'company' => 'c,r,ra,u,d,ac,au,ad,ars',
-            'branch' => 'c,r,ra,u,d,ac,au,ad,ars',
+            'company' => 'c,r,ra,u,d,rs,ac,au,ad,ars',
+            'branch' => 'c,r,ra,u,d,rs,ac,au,ad,ars',
         ],
         /* #endregion */
     ],

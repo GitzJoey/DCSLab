@@ -41,16 +41,6 @@ class UserPolicy
         return $user->hasPermission('user-update');
     }
 
-    public function delete (User $user): bool
-    {
-        return $user->hasPermission('user-delete');
-    }
-
-    public function restore (User $user): bool
-    {
-        return $user->hasPermission('user-restore');
-    }
-
     public function authorizeCreate (User $user): bool
     {
         return $user->hasPermission('user-authorizeCreate');
@@ -59,15 +49,5 @@ class UserPolicy
     public function authorizeUpdate (User $user): bool
     {
         return $user->hasPermission('user-authorizeUpdate');
-    }
-
-    public function authorizeDelete (User $user): bool
-    {
-        return $user->hasPermission('user-authorizeDelete');
-    }
-
-    public function authorizeRestore (User $user): bool
-    {
-        return $user->hasPermission('user-authorizeRestore');
     }
 }
