@@ -58,6 +58,18 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'cachehits' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/cachehits.log'),
+            'level' => 'info',
+        ],
+
+        'perfs' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/performances.log'),
+            'level' => 'info',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
