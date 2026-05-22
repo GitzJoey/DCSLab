@@ -22,8 +22,8 @@ Interested? let discuss it together [here](https://github.com/GitzJoey/DCSLab/di
 ## Installation
 * Create the docker images for web and api 
   ```
-  $ docker build -f Dockerfile-Web -t dcslab/web:latest .
-  $ docker build -f Dockerfile-API -t dcslab/api:latest .
+  $ docker build -f Dockerfile-Web -t gitzjoey/dcslab-web:latest .
+  $ docker build -f Dockerfile-API -t gitzjoey/dcslab-api:latest .
   ```
 * Create the containers
   ```

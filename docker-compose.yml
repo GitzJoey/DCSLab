@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-API
-    image: dcslab/api:latest
+    image: gitzjoey/dcslab-api:latest
     container_name: dcslab-api
     hostname: dcslab-api
     ports:
@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-Web
-    image: dcslab/web:latest
+    image: gitzjoey/dcslab-web:latest
     container_name: dcslab-web
     hostname: dcslab-web
     # Make sure the container keeps running to allow for development and testing
