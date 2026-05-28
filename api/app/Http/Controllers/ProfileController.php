@@ -7,7 +7,6 @@ use App\Actions\User\UserActions;
 use App\Enums\UserRole;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\UserProfileResource;
-use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -156,7 +155,7 @@ class ProfileController extends BaseController
         if (is_null($result)) {
             return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
+
         return $this->apiResponse(new UserProfileResource($result), Response::HTTP_OK);
     }
 
@@ -167,13 +166,12 @@ class ProfileController extends BaseController
 
         $request = $profileRequest->validated();
 
-        try
-        {
+        try {
             $this->userActions->resetTokens($user);
         } catch (Exception $e) {
             $errorMsg = app()->isProduction() ? '' : $e->getMessage();
         }
-        
+
         if (! empty($errorMsg)) {
             return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         }

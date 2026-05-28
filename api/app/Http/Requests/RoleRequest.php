@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class RoleRequest extends FormRequest
             return false;
         }
 
-        /** @var \App\Models\User */
+        /** @var User */
         $authUser = Auth::user();
 
         if ($authUser) {

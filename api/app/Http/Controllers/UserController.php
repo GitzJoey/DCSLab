@@ -25,17 +25,17 @@ class UserController extends BaseController
 
     public function index(UserRequest $userRequest): JsonResponse
     {
-        //Throw Error
-        //throw New \Exception('Test Exception From Controller');
+        // Throw Error
+        // throw New \Exception('Test Exception From Controller');
 
-        //Throw Empty Response Error (HttpStatus 500)
-        //return response()->error();
+        // Throw Empty Response Error (HttpStatus 500)
+        // return response()->error();
 
-        //Custom Validation Error 1 Message (HttpStatus 422)
-        //return response()->error('Custom Validation Error 1 Message', 422);
+        // Custom Validation Error 1 Message (HttpStatus 422)
+        // return response()->error('Custom Validation Error 1 Message', 422);
 
-        //Custom Validation With Multiple Error (HttpStatus 422)
-        //return response()->error(['search' => ['Custom Validation With Multiple Error 1'], 'search' => ['Custom Validation With Multiple Error 2']], 422);
+        // Custom Validation With Multiple Error (HttpStatus 422)
+        // return response()->error(['search' => ['Custom Validation With Multiple Error 1'], 'search' => ['Custom Validation With Multiple Error 2']], 422);
 
         $request = $userRequest->validated();
 
@@ -61,7 +61,7 @@ class UserController extends BaseController
         }
 
         if (is_null($result)) {
-            return  $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         } else {
             $response = UserResource::collection($result);
 
@@ -95,7 +95,7 @@ class UserController extends BaseController
     {
         $request = $userRequest->validated();
 
-        $request['password'] = (new RandomizerActions())->generateAlphaNumeric(10);
+        $request['password'] = (new RandomizerActions)->generateAlphaNumeric(10);
 
         $userArr = [
             'name' => $request['name'],

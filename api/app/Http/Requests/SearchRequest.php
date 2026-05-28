@@ -13,8 +13,8 @@ class SearchRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //Authorization Error
-        //return false;
+        // Authorization Error
+        // return false;
 
         if (! Auth::check()) {
             return false;

@@ -10,9 +10,8 @@ use Illuminate\Pagination\AbstractPaginator;
 trait ApiResponse
 {
     /**
-     *
-     * @param mixed $content Data payload, error message, collection, or resource.
-     * @param int $status HTTP status code.
+     * @param  mixed  $content  Data payload, error message, collection, or resource.
+     * @param  int  $status  HTTP status code.
      */
     protected function apiResponse(mixed $content = null, int $status = 200): JsonResponse
     {
@@ -61,6 +60,7 @@ trait ApiResponse
                 if (array_key_first($message) === 'errors') {
                     return response()->json($message, 422);
                 }
+
                 // Otherwise, wrap the array under 'errors'
                 return response()->json(['errors' => $message], 422);
             }
@@ -78,7 +78,7 @@ trait ApiResponse
 
         // ⚠️ Fallback for other client errors (400, 401, 403, 404)
         return response()->json([
-            'message' => is_array($message) ? ($message['message'] ?? implode(' ', $message)) : $message
+            'message' => is_array($message) ? ($message['message'] ?? implode(' ', $message)) : $message,
         ], $status);
     }
 }

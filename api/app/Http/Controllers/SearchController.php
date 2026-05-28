@@ -13,7 +13,9 @@ use Illuminate\Http\Response;
 class SearchController extends BaseController
 {
     private UserActions $userActions;
+
     private CompanyActions $companyActions;
+
     private BranchActions $branchActions;
 
     public function __construct(
@@ -36,8 +38,7 @@ class SearchController extends BaseController
 
         try {
             $response = '';
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $errorMsg = app()->isProduction() ? '' : $e->getMessage();
         }
 

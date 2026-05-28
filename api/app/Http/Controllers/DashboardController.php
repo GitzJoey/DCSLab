@@ -9,8 +9,8 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Tighten\Ziggy\Ziggy;
 use Illuminate\Support\Str;
+use Tighten\Ziggy\Ziggy;
 
 class DashboardController extends BaseController
 {
@@ -36,7 +36,7 @@ class DashboardController extends BaseController
 
     public function userApi(): JsonResponse
     {
-        return $this->apiResponse(new Ziggy(), Response::HTTP_OK);
+        return $this->apiResponse(new Ziggy, Response::HTTP_OK);
     }
 
     public function userUpload(FileUploadRequest $fileUploadRequest): JsonResponse
@@ -58,8 +58,7 @@ class DashboardController extends BaseController
             $data = [
                 'url' => $url,
             ];
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $erroMsg = app()->isProduction() ? '' : $e->getMessage();
         }
 

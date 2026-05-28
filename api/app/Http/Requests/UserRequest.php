@@ -3,12 +3,12 @@
 namespace App\Http\Requests;
 
 use App\Enums\RecordStatus;
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class UserRequest extends FormRequest
 {
@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
             return false;
         }
 
-        /** @var \App\Models\User */
+        /** @var User */
         $authUser = Auth::user();
         $user = $this->route('user');
 
