@@ -21,7 +21,7 @@ class BranchPolicy
         return null;
     }
 
-    public function create(User $user): bool
+    public function store(User $user): bool
     {
         return $user->hasPermission('branch-create');
     }

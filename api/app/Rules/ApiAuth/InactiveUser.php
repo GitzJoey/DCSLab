@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Rules;
+namespace App\Rules\ApiAuth;
 
 use App\Enums\RecordStatus;
 use App\Models\User;

@@ -5,6 +5,7 @@ namespace App\Rules\Company;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
+use App\Enums\RecordStatus;
 
 class DeactivateDefaultCompany implements ValidationRule
 {

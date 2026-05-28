@@ -5,6 +5,7 @@ namespace App\Rules\Branch;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
+use App\Models\Branch;
 
 class SetBranchToNonMain implements ValidationRule
 {

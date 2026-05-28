@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Rules;
+namespace App\Rules\ApiAuth;
 
 use App\Models\User;
 use Closure;

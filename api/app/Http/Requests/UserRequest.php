@@ -5,6 +5,10 @@ namespace App\Http\Requests;
 use App\Enums\RecordStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Validation\Rules\Enum;
+use Illuminate\Validation\Rule;
 
 class UserRequest extends FormRequest
 {
@@ -20,17 +24,18 @@ class UserRequest extends FormRequest
             return false;
         }
 
+        /** @var \App\Models\User */
         $authUser = Auth::user();
         $user = $this->route('user');
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
-            case 'viewAny':
+            case 'index':
                 return $authUser->can('viewAny', User::class);
             case 'view':
                 return $authUser->can('view', User::class);
-            case 'create':
-                return $authUser->can('create', User::class);
+            case 'store':
+                return $authUser->can('store', User::class);
             case 'update':
                 return $authUser->can('update', User::class);
             case 'delete':
