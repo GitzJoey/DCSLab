@@ -67,14 +67,14 @@ class ProfileFactory extends Factory
         });
     }
 
-    public function active(): static
+    public function setStatusActive(): static
     {
         return $this->state(fn () => [
             'status' => RecordStatus::ACTIVE,
         ]);
     }
 
-    public function inactive(): static
+    public function setStatusInactive(): static
     {
         return $this->state(fn () => [
             'status' => RecordStatus::INACTIVE,

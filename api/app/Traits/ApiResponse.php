@@ -53,7 +53,7 @@ trait ApiResponse
      */
     private function handleErrorResponse(mixed $message, int $status): JsonResponse
     {
-        // 🛑 Handle Validation Errors (422)
+        // Handle Validation Errors (422)
         if ($status === 422) {
             if (is_array($message)) {
                 // If it's already wrapped in an 'errors' key, use it as-is
@@ -69,14 +69,14 @@ trait ApiResponse
             return response()->json(['errors' => ['generic' => [$message]]], 422);
         }
 
-        // 🔥 Handle Server Crashes / Critical issues (500)
+        // Handle Server Crashes / Critical issues (500)
         if ($status === 500) {
             return response()->json([
                 'message' => is_array($message) ? implode(' ', $message) : $message,
             ], 500);
         }
 
-        // ⚠️ Fallback for other client errors (400, 401, 403, 404)
+        // Fallback for other client errors (400, 401, 403, 404)
         return response()->json([
             'message' => is_array($message) ? ($message['message'] ?? implode(' ', $message)) : $message,
         ], $status);

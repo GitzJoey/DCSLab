@@ -10,11 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasModelEvents;
 
 #[Table('companies')]
 #[Fillable(['code', 'name', 'address', 'default', 'status'])]
 class Company extends Model
 {
+    use HasModelEvents;
     use HasFactory;
     use SoftDeletes;
 

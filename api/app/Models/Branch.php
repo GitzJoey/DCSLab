@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable(['company_id', 'code', 'name', 'address', 'city', 'contact', 'is_main', 'remarks', 'status'])]
 class Branch extends Model
 {
+    use HadModelEvents;
     use HasFactory;
     use SoftDeletes;
 

@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Setting;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Setting>
@@ -27,7 +26,6 @@ class SettingFactory extends Factory
         };
 
         return [
-            'ulid' => (string) Str::ulid(),
             'type' => 'KEY_VALUE',
             'key' => $type,
             'value' => $val,

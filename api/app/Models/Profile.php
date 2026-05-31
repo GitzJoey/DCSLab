@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\RecordStatus;
 use App\Observers\ModelLifecycleObserver;
+use App\Traits\HasModelEvents;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Table;
@@ -29,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Profile extends Model
 {
     use HasFactory;
+    use HasModelEvents;
 
     protected function casts(): array
     {
