@@ -39,7 +39,7 @@ class AppUser extends Command
             'changeuserrole',
             'changeuserroles' => $this->changeUserRoles(),
 
-            default => $this->components->error('Invalid action provided.'),
+            default => $this->components->error('Invalid argument provided.'),
         };
     }
 

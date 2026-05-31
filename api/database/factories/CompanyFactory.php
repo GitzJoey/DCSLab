@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\RecordStatus;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Company>
@@ -21,6 +22,7 @@ class CompanyFactory extends Factory
         $locale = 'id_ID';
 
         return [
+            'ulid' => (string) Str::ulid(),
             'code' => strtoupper(fake()->lexify()).fake()->numerify(),
             'name' => fake($locale)->company(),
             'address' => fake($locale)->address(),
