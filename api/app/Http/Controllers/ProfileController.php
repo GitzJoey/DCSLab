@@ -7,6 +7,7 @@ use App\Actions\User\UserActions;
 use App\Enums\UserRole;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Resources\UserProfileResource;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -181,7 +182,7 @@ class ProfileController extends BaseController
 
     public function sendEmailVerification(): JsonResponse
     {
-        /** @var \App\Models\User $usr */
+        /** @var User $usr */
         $usr = Auth::user();
 
         $usr->sendEmailVerificationNotification();

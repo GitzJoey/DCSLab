@@ -60,7 +60,7 @@ Route::prefix('get')
 
                 Route::get('menu', [DashboardController::class, 'userMenu'])->name('menu');
                 Route::get('links', [DashboardController::class, 'userApi'])->name('links');
-                
+
                 Route::get('search', [SearchController::class, 'search'])->name('search');
 
                 Route::prefix('common')->as('common.')->group(function () {
@@ -131,7 +131,7 @@ Route::prefix('post')
                         Route::patch('update/tokens', [ProfileController::class, 'updateTokens'])->name('update.tokens');
 
                         Route::post('send/verification', [ProfileController::class, 'sendEmailVerification'])->name('send.email_verification');
-                });
+                    });
 
             });
     });

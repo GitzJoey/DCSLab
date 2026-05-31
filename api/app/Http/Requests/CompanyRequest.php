@@ -113,14 +113,14 @@ class CompanyRequest extends FormRequest
             'code' => ['required', 'max:255'],
             'name' => ['required', 'max:255'],
             'default' => ['required', 'boolean', new SetCompanyToNonDefault($user)],
-            'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($company))],
+            'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($company)],
         ];
     }
 
     private function destroyRules(Company $company): array
     {
         return [
-            '' => [new DeactivateDefaultCompany($company)]
+            '' => [new DeactivateDefaultCompany($company)],
         ];
     }
 

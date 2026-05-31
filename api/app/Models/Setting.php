@@ -14,9 +14,6 @@ class Setting extends Model
 {
     use HasFactory;
 
-    /**
-     * @return BelongsTo<User, $this>
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

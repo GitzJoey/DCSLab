@@ -71,7 +71,7 @@ class CompanyController extends BaseController
             } while (! $this->companyActions->isUniqueCode($code, $user->id));
         } else {
             if (! $this->companyActions->isUniqueCode($code, $user->id)) {
-                return  $this->apiResponse([
+                return $this->apiResponse([
                     'code' => [trans('controller.global.unique_code')],
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
@@ -160,17 +160,17 @@ class CompanyController extends BaseController
 
     public function destroy(Company $company, CompanyRequest $companyRequest)
     {
-        //Throw Error
-        //throw New \Exception('Test Exception From Controller');
+        // Throw Error
+        // throw New \Exception('Test Exception From Controller');
 
-        //Throw Empty Response Error (HttpStatus 500)
-        //return response()->error();
+        // Throw Empty Response Error (HttpStatus 500)
+        // return response()->error();
 
-        //Custom Validation Error 1 Message (HttpStatus 422)
-        //return response()->error('Custom Validation Error 1 Message', 422);
+        // Custom Validation Error 1 Message (HttpStatus 422)
+        // return response()->error('Custom Validation Error 1 Message', 422);
 
-        //Custom Validation With Multiple Error (HttpStatus 422)
-        //return response()->error(['name' => ['Custom Validation With Multiple Error'], 'address' => ['Custom Validation With Multiple Error']], 422);
+        // Custom Validation With Multiple Error (HttpStatus 422)
+        // return response()->error(['name' => ['Custom Validation With Multiple Error'], 'address' => ['Custom Validation With Multiple Error']], 422);
 
         $result = false;
         $errorMsg = '';
@@ -186,7 +186,7 @@ class CompanyController extends BaseController
         if (is_null($result)) {
             return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
+
         return $this->apiResponse(null, Response::HTTP_NO_CONTENT);
     }
 }

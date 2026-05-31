@@ -86,13 +86,13 @@ class AppInstall extends Command
     private function preInstallationCheck()
     {
         if (! File::exists('.env')) {
-            $this->error('File Not Found: .env');
+            $this->components->error('File Not Found: .env');
 
             return false;
         }
 
         if (env('DB_PASSWORD', '') == '') {
-            $this->error('Database not configured properly');
+            $this->components->error('Database not configured properly');
 
             return false;
         }
@@ -101,32 +101,32 @@ class AppInstall extends Command
 
         if (env('DCSLAB_DATACACHE', true)) {
             if (! $systemActions->checkRedisConnection()) {
-                $this->error('Data cache is enabled but Redis not configured properly');
+                $this->components->error('Data cache is enabled but Redis not configured properly');
 
                 return false;
             }
         }
 
         if ((env('BROADCAST_DRIVER') == 'pusher' && empty(env('PUSHER_APP_KEY')))) {
-            $this->error('Pusher not configured properly');
+            $this->components->error('Pusher not configured properly');
 
             return false;
         }
 
         if ((env('BROADCAST_DRIVER') == 'soketi' && empty(env('SOKETI_APP_KEY')))) {
-            $this->error('Soketi not configured properly');
+            $this->components->error('Soketi not configured properly');
 
             return false;
         }
 
         if (! $systemActions->checkDBConnection()) {
-            $this->error('Database Connection Fail. Message: '.$systemActions->getDBConnectionError());
+            $this->components->error('Database Connection Fail. Message: '.$systemActions->getDBConnectionError());
 
             return false;
         }
 
         if ($systemActions->isExistTable('users')) {
-            $this->error('Table User Found, Please DROP first');
+            $this->components->error('Table User Found, Please DROP first');
 
             return false;
         }

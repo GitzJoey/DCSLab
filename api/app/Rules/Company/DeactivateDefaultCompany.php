@@ -3,14 +3,14 @@
 namespace App\Rules\Company;
 
 use App\Enums\RecordStatus;
+use App\Models\Company;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
-use App\Models\Company;
 
 class DeactivateDefaultCompany implements ValidationRule
 {
-    private Company $company
+    private Company $company;
 
     public function __construct(Company $company)
     {

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\RecordStatus;
 use App\Models\Branch;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Branch>
@@ -22,6 +23,7 @@ class BranchFactory extends Factory
         $branch_city = fake($locale)->city();
 
         return [
+            'ulid' => (string) Str::ulid(),
             'code' => strtoupper(fake()->lexify()).fake()->numerify(),
             'name' => 'Kantor Cabang '.fake()->randomElement(['Utama', 'Pembantu', 'Daerah']).' '.$branch_city,
             'address' => fake($locale)->address(),
