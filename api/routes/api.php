@@ -15,7 +15,9 @@ use App\Http\Middleware\XssSanitizer;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 
-Route::post('auth', [ApiAuthController::class, 'auth', 'middleware' => ['guest', 'throttle:3,1']])->name('api.auth');
+Route::post('auth', [ApiAuthController::class, 'auth'])
+    ->middleware(['guest', 'throttle:3,1'])
+    ->name('api.auth');
 
 Route::prefix('get')
     ->middleware(['auth:sanctum', 'throttle:100,1'])
@@ -26,18 +28,15 @@ Route::prefix('get')
             ->middleware([SetLocale::class, ValidateUser::class, XssSanitizer::class])
             ->as('dashboard.')
             ->group(function () {
-
                 /* #region Extensions */
                 Route::prefix('company')->as('company.')->group(function () {
 
                     Route::prefix('company')->as('company.')->group(function () {
                         Route::get('index', [CompanyController::class, 'index'])->name('index');
-                        Route::get('show/{company:ulid}', [CompanyController::class, 'show'])->name('show');
                     });
 
                     Route::prefix('branch')->as('branch.')->group(function () {
                         Route::get('index', [BranchController::class, 'index'])->name('index');
-                        Route::get('show/{branch:ulid}', [BranchController::class, 'show'])->name('show');
                     });
 
                 });
@@ -57,11 +56,12 @@ Route::prefix('get')
 
                 });
 
-                Route::prefix('core')->as('core.')->group(function () {
-                    Route::get('user/menu', [DashboardController::class, 'userMenu'])->name('user.menu');
-                    Route::get('user/api', [DashboardController::class, 'userApi'])->name('user.api');
-                    Route::get('search', [SearchController::class, 'search'])->name('search');
-                });
+                Route::get('profile', [ProfileController::class, 'show'])->name('show');
+
+                Route::get('menu', [DashboardController::class, 'userMenu'])->name('menu');
+                Route::get('links', [DashboardController::class, 'userApi'])->name('links');
+                
+                Route::get('search', [SearchController::class, 'search'])->name('search');
 
                 Route::prefix('common')->as('common.')->group(function () {
                     Route::prefix('ddl')->as('ddl.')->group(function () {
@@ -69,13 +69,6 @@ Route::prefix('get')
                         Route::get('list/statuses', [CommonController::class, 'getStatus'])->name('list.statuses');
                     });
                 });
-
-                Route::prefix('module')->as('module.')->group(function () {
-                    Route::prefix('profile')->as('profile.')->group(function () {
-                        Route::get('show', [ProfileController::class, 'show'])->name('show');
-                    });
-                });
-
             });
     });
 
@@ -91,14 +84,13 @@ Route::prefix('post')
 
                 /* #region Extensions */
                 Route::prefix('company')->as('company.')->group(function () {
-
                     Route::prefix('company')
                         ->middleware([HandlePrecognitiveRequests::class])
                         ->as('company.')
                         ->group(function () {
                             Route::post('store', [CompanyController::class, 'store'])->name('store');
                             Route::patch('update/{company:ulid}', [CompanyController::class, 'update'])->name('update');
-                            Route::delete('delete/{company:ulid}', [CompanyController::class, 'destroy'])->name('destroy');
+                            Route::delete('destroy/{company:ulid}', [CompanyController::class, 'destroy'])->name('destroy');
                         });
 
                     Route::prefix('branch')
@@ -123,27 +115,22 @@ Route::prefix('post')
                         });
                 });
 
-                Route::prefix('core')
+                Route::post('upload', [DashboardController::class, 'userUpload'])
                     ->middleware([HandlePrecognitiveRequests::class])
-                    ->as('core.')
+                    ->name('upload');
+
+                Route::prefix('profile')
+                    ->middleware([HandlePrecognitiveRequests::class])
+                    ->as('profile.')
                     ->group(function () {
-                        Route::post('user/upload', [DashboardController::class, 'userUpload'])->name('user.upload');
-                    });
+                        Route::patch('update/user_profile', [ProfileController::class, 'updateUserProfile'])->name('update.user_profile');
+                        Route::patch('update/personal_info', [ProfileController::class, 'updatePersonalInformation'])->name('update.personal_info');
+                        Route::patch('update/account_settings', [ProfileController::class, 'updateAccountSettings'])->name('update.account_settings');
+                        Route::patch('update/roles', [ProfileController::class, 'updateUserRoles'])->name('update.roles');
+                        Route::patch('update/password', [ProfileController::class, 'updatePassword'])->name('update.password');
+                        Route::patch('update/tokens', [ProfileController::class, 'updateTokens'])->name('update.tokens');
 
-                Route::prefix('module')->as('module.')->group(function () {
-                    Route::prefix('profile')
-                        ->middleware([HandlePrecognitiveRequests::class])
-                        ->as('profile.')
-                        ->group(function () {
-                            Route::patch('update/user_profile', [ProfileController::class, 'updateUserProfile'])->name('update.user_profile');
-                            Route::patch('update/personal_info', [ProfileController::class, 'updatePersonalInformation'])->name('update.personal_info');
-                            Route::patch('update/account_settings', [ProfileController::class, 'updateAccountSettings'])->name('update.account_settings');
-                            Route::patch('update/roles', [ProfileController::class, 'updateUserRoles'])->name('update.roles');
-                            Route::patch('update/password', [ProfileController::class, 'updatePassword'])->name('update.password');
-                            Route::patch('update/tokens', [ProfileController::class, 'updateTokens'])->name('update.tokens');
-
-                            Route::post('send/verification', [ProfileController::class, 'sendEmailVerification'])->name('send.email_verification');
-                        });
+                        Route::post('send/verification', [ProfileController::class, 'sendEmailVerification'])->name('send.email_verification');
                 });
 
             });

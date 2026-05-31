@@ -19,7 +19,7 @@ class IsValidCompany implements ValidationRule
         $user = Auth::user();
 
         if (! $user->companies->pluck('id')->contains($value)) {
-            $fail('rules.company.valid_company')->translate();
+            $fail('rules.company.is_valid_company')->translate();
         }
     }
 }

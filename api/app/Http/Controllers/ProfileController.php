@@ -26,7 +26,7 @@ class ProfileController extends BaseController
         $this->roleActions = $roleActions;
     }
 
-    public function view(): JsonResponse
+    public function show(): JsonResponse
     {
         $errorMsg = '';
 

@@ -12,5 +12,6 @@ return [
     'company' => [
         'set_company_to_non_default' => 'You cannot set this company to non-default because it is the only company in the system.',
         'deactivate_default_company' => 'You cannot deactivate the default company.',
+        'is_valid_company' => 'The selected company is not valid.',
     ],
 ];

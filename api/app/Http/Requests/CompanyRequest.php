@@ -17,7 +17,6 @@ class CompanyRequest extends FormRequest
         }
 
         $user = Auth::user();
-        $company = $this->route('company');
 
         $currentRouteMethod = $this->route()->getActionMethod();
         switch ($currentRouteMethod) {
@@ -43,12 +42,14 @@ class CompanyRequest extends FormRequest
      */
     public function rules(): array
     {
+        $company = $this->route('company');
+
         return match ($this->route()?->getActionMethod()) {
             'viewAny' => $this->viewAnyRules(),
             'view' => $this->viewRules(),
-            'create' => array_merge($this->createRules(), $this->nullableFields()),
-            'update' => array_merge($this->updateRules(), $this->nullableFields()),
-            'delete' => array_merge($this->deleteRules()),
+            'store' => array_merge($this->storeRules($company), $this->nullableFields()),
+            'update' => array_merge($this->updateRules($company), $this->nullableFields()),
+            'destroy' => array_merge($this->destroyRules($company)),
             default => $this->defaultRules(),
         };
     }
@@ -92,7 +93,7 @@ class CompanyRequest extends FormRequest
         ];
     }
 
-    private function createRules(): array
+    private function storeRules(Company $company): array
     {
         return [
             /* Test Validation Error For Code */
@@ -102,24 +103,24 @@ class CompanyRequest extends FormRequest
             'code' => ['required', 'max:255'],
             'name' => ['required', 'max:255'],
             'default' => ['required', 'boolean'],
-            'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($this->input('default'))],
+            'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($company)],
         ];
     }
 
-    private function updateRules(): array
+    private function updateRules(Company $company): array
     {
         return [
             'code' => ['required', 'max:255'],
             'name' => ['required', 'max:255'],
             'default' => ['required', 'boolean', new SetCompanyToNonDefault($user)],
-            'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($this->input('default'))],
+            'status' => [new Enum(RecordStatus::class), new DeactivateDefaultCompany($company))],
         ];
     }
 
-    private function deleteRules(): array
+    private function destroyRules(Company $company): array
     {
         return [
-
+            '' => [new DeactivateDefaultCompany($company)]
         ];
     }
 

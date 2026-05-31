@@ -12,5 +12,6 @@ return [
     'company' => [
         'set_company_to_non_default' => 'Anda tidak dapat mengatur perusahaan ini ke non-default karena ini adalah satu-satunya perusahaan di sistem.',
         'deactivate_default_company' => 'Anda tidak dapat menonaktifkan perusahaan default.',
+        'is_valid_company' => 'Perusahaan yang dipilih tidak valid.',
     ],
 ];

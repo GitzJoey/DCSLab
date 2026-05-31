@@ -6,14 +6,15 @@ use App\Enums\RecordStatus;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
+use App\Models\Company;
 
 class DeactivateDefaultCompany implements ValidationRule
 {
-    private bool $isDefault;
+    private Company $company
 
-    public function __construct(bool $isDefault)
+    public function __construct(Company $company)
     {
-        $this->isDefault = $isDefault;
+        $this->company = $company;
     }
 
     /**
@@ -23,7 +24,7 @@ class DeactivateDefaultCompany implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if ($this->isDefault == true && $value == RecordStatus::INACTIVE->value) {
+        if ($this->company->isDefault == true && $value == RecordStatus::INACTIVE->value) {
             $fail('rules.company.deactivate_default_company')->translate();
         }
     }
