@@ -15,13 +15,19 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->statefulApi();
 
         $middleware->alias([
-            'guest' => RedirectIfAuthenticatedJson::class,
             'precognitive' => HandlePrecognitiveRequests::class,
             'validate.user' => ValidateUser::class,
         ]);
+
+        $middleware->redirectTo(
+            guests: '/login',
+            users: fn () => null
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->shouldRenderJsonWhen(function ($request, $e) {
+            return $request->expectsJson() || $request->is('api/*');
+        });
     })
     ->prefersJsonResponses()
     ->create();

@@ -23,7 +23,7 @@ class DashboardController extends BaseController
         $this->dashboardActions = $dashboardActions;
     }
 
-    public function userMenu(Request $request): JsonResponse
+    public function menu(Request $request): JsonResponse
     {
         $menu = [];
 
@@ -34,7 +34,7 @@ class DashboardController extends BaseController
         return $this->apiResponse($menu, Response::HTTP_OK);
     }
 
-    public function userApi(): JsonResponse
+    public function routes(): JsonResponse
     {
         return $this->apiResponse(new Ziggy, Response::HTTP_OK);
     }

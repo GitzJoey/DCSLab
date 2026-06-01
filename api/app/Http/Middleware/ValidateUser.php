@@ -24,19 +24,19 @@ class ValidateUser
         if (! $user) {
             return response()->json([
                 'message' => 'Unauthorized',
-            ], 401);
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         if (is_null($user->password_changed_at)) {
             return response()->json([
                 'message' => __('middleware.validate_user.must_reset_password'),
-            ], 403);
+            ], Response::HTTP_FORBIDDEN);
         }
 
         if (Carbon::now()->diffInDays(Carbon::parse($user->password_changed_at)->addDays(Config::get('dcslab.PASSWORD_EXPIRY_DAYS')), false) <= 0) {
             return response()->json([
                 'message' => __('middleware.validate_user.must_reset_password'),
-            ], 403);
+            ], Response::HTTP_FORBIDDEN);
         }
 
         $profile = $user->profile;
@@ -44,13 +44,13 @@ class ValidateUser
         if (! $profile) {
             return response()->json([
                 'message' => 'Unauthorized',
-            ], 401);
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
         if (! $profile->status->value == RecordStatus::ACTIVE->value) {
             return response()->json([
                 'message' => __('middleware.validate_user.inactive_user'),
-            ], 403);
+            ], Response::HTTP_FORBIDDEN);
         }
 
         return $next($request);

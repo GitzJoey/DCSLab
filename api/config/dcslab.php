@@ -11,7 +11,7 @@ return [
         'LOGS_CHANNEL_NAME' => env('DCSLAB_DATACACHE_LOG_CHANNEL', 'cachehits'),
     ],
 
-    'PASSWORD_EXPIRY_DAYS' => 365,
+    'PASSWORD_EXPIRY_DAYS' => 90,
 
     'ERROR_RETURN_VALUE' => null,
 

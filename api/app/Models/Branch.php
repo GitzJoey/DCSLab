@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\RecordStatus;
+use App\Traits\HasModelEvents;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,8 +15,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable(['company_id', 'code', 'name', 'address', 'city', 'contact', 'is_main', 'remarks', 'status'])]
 class Branch extends Model
 {
-    use HadModelEvents;
     use HasFactory;
+    use HasModelEvents;
     use SoftDeletes;
 
     protected function casts(): array

@@ -2,13 +2,15 @@
 
 namespace Tests\Feature\API\ProfileAPI;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRole;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\Setting;
 use App\Models\User;
+use App\Enums\RecordStatus;
 use Illuminate\Support\Facades\Hash;
 use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
 class ProfileAPITest extends APITestCase
 {
@@ -17,71 +19,81 @@ class ProfileAPITest extends APITestCase
         parent::setUp();
     }
 
-    public function test_profile_api_call_read_profile_expect_result()
+    protected function createUserWithRole(): User
     {
-        $this->markTestSkipped('Test under construction');
-    }
-
-    public function test_profile_api_call_update_user_profile_expect_successful()
-    {
-        $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+        return User::factory()
+            ->setNotRequiredResetPassword()
+            ->has(Profile::factory()->setStatusActive())
+            ->hasAttached(Role::where('name', '=', UserRole::DEVELOPER->value)->first())
             ->create();
-
-        $this->actingAs($user);
-
-        $userArr = User::factory()->make()->toArray();
-
-        $api = $this->json('POST', route('api.post.db.module.profile.update.user_profile'), $userArr);
-
-        $api->assertSuccessful();
-
-        $this->assertDatabaseHas('users', [
-            'id' => $user->id,
-            'name' => $user->name,
-        ]);
     }
 
-    public function test_profile_api_call_update_user_profile_other_than_alpha_numeric_expect_unsuccessful()
+    protected function createUserWithRoleSettings(): User
     {
-        $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->create();
-
-        $this->actingAs($user);
-
-        $userArr = User::factory()->make()->toArray();
-
-        $userArr['name'] = 'test!?%';
-        $api = $this->json('POST', route('api.post.db.module.profile.update.user_profile'), $userArr);
-        $api->assertUnprocessable();
-
-        $userArr['name'] = 'with space';
-        $api = $this->json('POST', route('api.post.db.module.profile.update.user_profile'), $userArr);
-        $api->assertUnprocessable();
-
-        $userArr['name'] = 'with[bracket]';
-        $api = $this->json('POST', route('api.post.db.module.profile.update.user_profile'), $userArr);
-        $api->assertUnprocessable();
-    }
-
-    public function test_profile_api_call_update_personal_info_expect_successful()
-    {
-        $user = User::factory()
-            ->has(Profile::factory())
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+        return User::factory()
+            ->setNotRequiredResetPassword()
+            ->has(Profile::factory()->setStatusActive())
+            ->hasAttached(Role::where('name', '=', UserRole::DEVELOPER->value)->first())
             ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
             ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
             ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
             ->create();
+    }
+
+    public function test_profile_api_call_read_profile_expect_result()
+    {
+        $user = $this->createUserWithRole();
+
+        $this->actingAs($user);
+
+        $api = $this->json('GET', route('api.dashboard.profile.profile'));
+
+        $api->assertSuccessful();
+        
+        $api->assertJsonFragment([
+            'id' => Hashids::encode($user->id),
+            'name' => $user->name,
+            'email' => $user->email,
+        ]);
+    }
+
+    public function test_profile_api_call_update_user_profile_expect_successful()
+    {
+        $user = $this->createUserWithRole();
+
+        $this->actingAs($user);
+
+        $userArr = User::factory()->make()->toArray();
+
+        $api = $this->json('PATCH', route('api.dashboard.profile.update.user_profile'), $userArr);
+
+        $api->assertSuccessful();
+
+        $api->assertJsonFragment([
+            'data' => true,
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => $userArr['name'],
+        ]);
+    }
+
+    public function test_profile_api_call_update_personal_info_expect_successful()
+    {
+        $user = $this->createUserWithRoleSettings();
 
         $this->actingAs($user);
 
         $profileArr = Profile::factory()->make()->toArray();
 
-        $api = $this->json('POST', route('api.post.db.module.profile.update.personal_info'), $profileArr);
+        $api = $this->json('PATCH', route('api.dashboard.profile.update.personal_info'), $profileArr);
 
         $api->assertSuccessful();
+
+        $api->assertJsonFragment([
+            'data' => true,
+        ]);
 
         $this->assertDatabaseHas('profiles', [
             'user_id' => $user->id,
@@ -99,9 +111,7 @@ class ProfileAPITest extends APITestCase
 
     public function test_profile_api_call_change_password_expect_successful()
     {
-        $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->create();
+        $user = $this->createUserWithRole();
 
         $this->actingAs($user);
 
@@ -114,42 +124,26 @@ class ProfileAPITest extends APITestCase
             'password_confirmation' => $password,
         ];
 
-        $api = $this->json('POST', route('api.post.db.module.profile.update.password'), $changePasswordArr);
+        $api = $this->json('PATCH', route('api.dashboard.profile.update.password'), $changePasswordArr);
 
         $api->assertSuccessful();
 
-        $this->assertTrue(Hash::check($password, $user->password));
+        $this->assertTrue(Hash::check($password, $user->fresh()->password));
     }
 
     public function test_profile_api_call_update_account_settings_expect_successful()
     {
-        $this->markTestSkipped('Test under construction');
-
-        $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-            ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-            ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-            ->create();
+        $user = $this->createUserWithRoleSettings();
 
         $this->actingAs($user);
 
         $settingsArr = [
-            'theme' => [
-                'key' => 'PREFS.THEME',
-                'value' => 'test_theme',
-            ],
-            'date_format' => [
-                'key' => 'PREFS.DATE_FORMAT',
-                'value' => 'yyyy-MMM-dd',
-            ],
-            'time_format' => [
-                'key' => 'PREFS.TIME_FORMAT',
-                'value' => 'hh:mm:ss',
-            ],
+            'PREFS.THEME' => 'test_theme',
+            'PREFS.DATE_FORMAT' => 'yyyy-MMM-dd',
+            'PREFS.TIME_FORMAT' => 'hh:mm:ss',
         ];
 
-        $api = $this->json('POST', route('api.post.db.module.profile.update.account_setting'), $settingsArr);
+        $api = $this->json('PATCH', route('api.dashboard.profile.update.account_settings'), $settingsArr);
 
         $api->assertSuccessful();
 
@@ -164,15 +158,9 @@ class ProfileAPITest extends APITestCase
 
     public function test_profile_api_call_update_roles_expect_successful()
     {
-        $this->markTestSkipped('Test under construction');
-
-        $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Role::factory()->count(3))
-            ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
-            ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
-            ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
-            ->create();
+        $user = $this->createUserWithRoleSettings();
+        
+        Role::factory()->count(3)->create();
 
         $this->actingAs($user);
 
@@ -180,7 +168,7 @@ class ProfileAPITest extends APITestCase
             Role::inRandomOrder()->first()->id,
         ];
 
-        $api = $this->json('POST', route('api.post.db.module.profile.update.roles'), $rolesArr);
+        $api = $this->json('PATCH', route('api.dashboard.profile.update.roles'), $rolesArr);
 
         $api->assertSuccessful();
 

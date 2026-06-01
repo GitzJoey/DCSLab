@@ -59,7 +59,7 @@ class ProfileController extends BaseController
             return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->apiResponse(new UserProfileResource($result), Response::HTTP_OK);
+        return $this->apiResponse($result, Response::HTTP_OK);
     }
 
     public function updatePersonalInformation(ProfileRequest $profileRequest): JsonResponse
@@ -87,7 +87,7 @@ class ProfileController extends BaseController
             return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->apiResponse(new UserProfileResource($result), Response::HTTP_OK);
+        return $this->apiResponse($result, Response::HTTP_OK);
     }
 
     public function updateAccountSettings(ProfileRequest $profileRequest): JsonResponse
@@ -109,7 +109,7 @@ class ProfileController extends BaseController
             return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->apiResponse(new UserProfileResource($result), Response::HTTP_OK);
+        return $this->apiResponse($result, Response::HTTP_OK);
     }
 
     public function updateUserRoles(ProfileRequest $profileRequest): JsonResponse
@@ -157,7 +157,7 @@ class ProfileController extends BaseController
             return $this->apiResponse($errorMsg, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->apiResponse(new UserProfileResource($result), Response::HTTP_OK);
+        return $this->apiResponse($result, Response::HTTP_OK);
     }
 
     public function updateTokens(ProfileRequest $profileRequest): JsonResponse

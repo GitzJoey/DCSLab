@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileRequest extends FormRequest
 {
@@ -90,6 +91,15 @@ class ProfileRequest extends FormRequest
     }
 
     private function updateTokensRules(): array
+    {
+        return [
+            'theme' => 'required',
+            'date_format' => 'required',
+            'time_format' => 'required',
+        ];
+    }
+
+    private function updateAccountSettingsRules(): array
     {
         return [
             'theme' => 'required',

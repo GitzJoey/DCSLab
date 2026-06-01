@@ -7,4 +7,6 @@ use App\Traits\ApiResponse;
 class BaseController extends Controller
 {
     use ApiResponse;
+
+    public function __construct() {}
 }

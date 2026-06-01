@@ -163,7 +163,7 @@ class CompanyActions
     public function getAllActiveCompany(
         int $userId,
         ?array $with = []
-    ) {
+    ): Collection {
         $timer_start = microtime(true);
 
         try {

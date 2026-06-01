@@ -3,7 +3,7 @@
 namespace Tests\Unit\Actions\CompanyActions;
 
 use App\Actions\Company\CompanyActions;
-use App\Enums\UserRoles;
+use App\Enums\UserRole;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
@@ -92,7 +92,7 @@ class CompanyActionsReadTest extends ActionsTestCase
         $idxDefaultCompany = random_int(0, $companyCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRole::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->count($companyCount)
                 ->state(new Sequence(
                     fn (Sequence $sequence) => [
@@ -120,7 +120,7 @@ class CompanyActionsReadTest extends ActionsTestCase
         $idxDefaultCompany = random_int(0, $companyCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRole::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->count($companyCount)
                 ->state(new Sequence(
                     fn (Sequence $sequence) => [
