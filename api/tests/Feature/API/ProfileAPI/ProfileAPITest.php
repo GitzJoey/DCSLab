@@ -138,20 +138,26 @@ class ProfileAPITest extends APITestCase
         $this->actingAs($user);
 
         $settingsArr = [
-            'PREFS.THEME' => 'test_theme',
-            'PREFS.DATE_FORMAT' => 'yyyy-MMM-dd',
-            'PREFS.TIME_FORMAT' => 'hh:mm:ss',
+            'theme' => 'test_theme',
+            'date_format' => 'yyyy-MMM-dd',
+            'time_format' => 'hh:mm:ss',
         ];
 
         $api = $this->json('PATCH', route('api.dashboard.profile.update.account_settings'), $settingsArr);
 
         $api->assertSuccessful();
 
-        foreach ($settingsArr as $setting) {
+        $dbMapping = [
+            'theme' => 'PREFS.THEME',
+            'date_format' => 'PREFS.DATE_FORMAT',
+            'time_format' => 'PREFS.TIME_FORMAT',
+        ];
+
+        foreach ($settingsArr as $key => $value) {
             $this->assertDatabaseHas('settings', [
                 'user_id' => $user->id,
-                'key' => $setting['key'],
-                'value' => $setting['value'],
+                'key' => $dbMapping[$key],
+                'value' => $value,
             ]);
         }
     }
