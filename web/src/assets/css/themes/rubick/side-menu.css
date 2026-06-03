@@ -1,0 +1,355 @@
+.rubick {
+  .side-menu {
+    @media (min-width: theme(screens.xl)) {
+      &.side-menu--collapsed {
+        &.side-menu--on-hover {
+          .side-menu__group-label {
+            color: currentColor;
+
+            &:before {
+              @apply opacity-0;
+            }
+          }
+
+          .side-menu__link {
+            .side-menu__link__title {
+              color: currentColor;
+            }
+
+            .side-menu__link__badge {
+              opacity: 1;
+            }
+
+            .side-menu__link__chevron {
+              opacity: 1;
+            }
+          }
+
+          ul.scrollable {
+            >li {
+              >.side-menu__link {
+                .side-menu__link__icon {
+                  margin-left: 0;
+                }
+              }
+            }
+          }
+        }
+
+        .side-menu__group-label {
+          position: relative;
+          color: transparent;
+          transition-property: theme(transitionProperty.colors);
+          transition-duration: 100ms;
+
+          &:before {
+            content: '...';
+            position: absolute;
+            text-align: center;
+            left: 0;
+            right: 0;
+            color: var(--color-background);
+            transition-property: opacity;
+            transition-duration: 100ms;
+          }
+        }
+
+        .side-menu__link {
+          .side-menu__link__title {
+            white-space: nowrap;
+            color: transparent;
+            transition-property: color;
+            transition-duration: theme(transitionDuration.300);
+          }
+
+          .side-menu__link__badge {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: theme(transitionDuration.300);
+          }
+
+          .side-menu__link__chevron {
+            opacity: 0;
+            transition-property: opacity;
+            transition-duration: theme(transitionDuration.300);
+          }
+
+          .side-menu__link__icon {
+            transition-property: margin;
+            transition-duration: 100ms;
+          }
+        }
+
+        ul.scrollable {
+          >li {
+            >.side-menu__link {
+              .side-menu__link__icon {
+                margin-left: theme(spacing[2.5]);
+              }
+            }
+          }
+        }
+      }
+
+      ul.scrollable {
+        >li {
+          >.side-menu__link {
+            &.side-menu__link--active {
+              margin-bottom: theme(spacing[3.5]);
+              margin-right: calc(theme(spacing.4) * -1);
+
+              &:before {
+                content: '';
+                inset: 0;
+                position: absolute;
+                background: color-mix(in oklch,
+                    var(--color-background),
+                    var(--color-foreground) 2%);
+                z-index: -1;
+                --radius: 2em;
+                border-block: var(--radius) solid #0000;
+                border-radius: var(--radius) 0 0 var(--radius) / calc(2 * var(--radius));
+                mask:
+                  radial-gradient(var(--radius) at 0 var(--radius), #0000 99%, #000 101%) 100% calc(-1 * var(--radius)) / var(--radius) 100% repeat-y,
+                  conic-gradient(#000 0 0) padding-box;
+                margin: calc(var(--radius) * -1) 0;
+              }
+
+              &:after {
+                content: '';
+                top: -1px;
+                bottom: -1px;
+                left: -1px;
+                right: 1px;
+                position: absolute;
+                background: color-mix(in oklch,
+                    var(--color-background),
+                    var(--color-foreground) 2%);
+                z-index: -2;
+                --radius: 2em;
+                border-block: var(--radius) solid #0000;
+                border-radius: var(--radius) 0 0 var(--radius) / calc(2 * var(--radius));
+                mask:
+                  radial-gradient(var(--radius) at 0 var(--radius), #0000 99%, #000 101%) 100% calc(-1 * var(--radius)) / var(--radius) 100% repeat-y,
+                  conic-gradient(#000 0 0) padding-box;
+                margin: calc(var(--radius) * -1) 0;
+              }
+
+              &>div:before {
+                content: '';
+                top: theme(spacing.2);
+                bottom: calc(theme(spacing.2) * -1);
+                left: theme(spacing.2);
+                right: 1px;
+                opacity: 0.2;
+                position: absolute;
+                background: color-mix(in oklch,
+                    var(--color-background),
+                    var(--color-foreground) 2%);
+                z-index: -2;
+                --radius: 2em;
+                border-block: var(--radius) solid #0000;
+                border-radius: var(--radius) 0 0 var(--radius) / calc(2 * var(--radius));
+                mask:
+                  radial-gradient(var(--radius) at 0 var(--radius), #0000 99%, #000 101%) 100% calc(-1 * var(--radius)) / var(--radius) 100% repeat-y,
+                  conic-gradient(#000 0 0) padding-box;
+                margin: calc(var(--radius) * -1) 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .side-menu__group-label {
+      white-space: nowrap;
+      font-size: theme(fontSize.xs);
+      opacity: theme(opacity.50);
+      margin-left: theme(spacing.2);
+      margin-top: theme(spacing.7);
+      margin-bottom: theme(spacing.3);
+      text-transform: uppercase;
+    }
+
+    .side-menu__link {
+      display: flex;
+      align-items: center;
+      margin-bottom: theme(spacing[1.5]);
+      padding: theme(spacing.4) theme(spacing.5);
+
+      &.side-menu__link--active {
+        font-weight: theme(fontWeight.medium);
+
+        .side-menu__link__icon {}
+
+        .side-menu__link__title {
+          color: var(--color-background);
+        }
+
+        .side-menu__link__chevron {}
+      }
+
+      .side-menu__link__icon {
+        flex: none;
+        width: 1.15rem;
+        height: 1.15rem;
+        --color: color-mix(in oklch, var(--color-background), transparent 30%);
+      }
+
+      .side-menu__link__title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-left: theme(spacing.3);
+        color: color-mix(in oklch, var(--color-background), transparent 20%);
+      }
+
+      .side-menu__link__badge {
+        min-width: 1.15rem;
+        height: 1.2rem;
+        padding: 0 theme(spacing.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: theme(fontSize.xs);
+        margin-left: theme(spacing[3.5]);
+        font-weight: theme(fontWeight.medium);
+        color: color-mix(in oklch, var(--color-background), transparent 20%);
+        background-color: color-mix(in oklch, var(--color-background), transparent 85%);
+        border: 1px solid color-mix(in oklch, var(--color-background), transparent 85%);
+        border-radius: theme(borderRadius.lg);
+      }
+
+      .side-menu__link__chevron {
+        margin-left: auto;
+        stroke-width: 1.2;
+        color: color-mix(in oklch, var(--color-background), transparent 20%);
+      }
+    }
+
+    ul.scrollable {
+      position: relative;
+
+      >li {
+        >.side-menu__link {
+          border-radius: theme(borderRadius.full);
+
+          &.side-menu__link--active {
+            position: relative;
+            color: var(--color-foreground);
+
+            @media (min-width: theme(screens.xl)) {
+              .side-menu__link__icon {
+                --color: var(--color-primary);
+              }
+
+              .side-menu__link__title {
+                color: var(--color-primary);
+              }
+
+              .side-menu__link__chevron {
+                margin-right: theme(spacing.4);
+                color: color-mix(in oklch, var(--color-foreground), transparent 20%);
+              }
+
+              .side-menu__link__badge {
+                color: color-mix(in oklch, var(--color-primary), transparent 20%);
+                background-color: color-mix(in oklch, var(--color-primary), transparent 85%);
+                border-color: color-mix(in oklch, var(--color-primary), transparent 85%);
+              }
+            }
+          }
+
+          &:hover:not(.side-menu__link--active) {
+            background: color-mix(in oklch, var(--color-background), transparent 92%);
+          }
+        }
+
+        ul {
+          padding: theme(spacing.1) 0;
+          background: color-mix(in oklch, var(--color-background), transparent 90%);
+          border-radius: theme(borderRadius.2xl);
+          border: 1px solid color-mix(in oklch, var(--color-background), transparent 87%);
+          margin-left: theme(spacing.2);
+          margin-right: theme(spacing.2);
+          margin-bottom: theme(spacing.2);
+
+          .side-menu__link {
+            margin-bottom: 0;
+          }
+
+          ul {
+            margin: 0px -1px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.dark {
+  .rubick {
+    .side-menu {
+      .side-menu__group-label {
+        opacity: theme(opacity.30);
+      }
+
+      .side-menu__link {
+        &:not(.side-menu__link--active) {
+          --color-background: color-mix(in oklch, var(--color-foreground), transparent 20%);
+        }
+
+        &.side-menu__link--active {
+          .side-menu__link__icon {
+            --color: var(--color-foreground);
+          }
+
+          .side-menu__link__title {
+            color: var(--color-foreground);
+          }
+        }
+      }
+
+      ul.scrollable {
+        >li {
+          >.side-menu__link {
+            &.side-menu__link--active {
+              .side-menu__link__icon {
+                --color: var(--color-foreground);
+              }
+
+              .side-menu__link__title {
+                color: var(--color-foreground);
+              }
+
+              .side-menu__link__badge {
+                --color-primary: var(--color-foreground);
+              }
+
+              &:before {
+                opacity: 0.7;
+              }
+
+              &:after {
+                opacity: 0.2;
+                --color-background: color-mix(in oklch, var(--color-foreground), transparent 70%);
+              }
+
+              &>div:before {
+                background: color-mix(in oklch, var(--color-foreground), transparent 85%);
+              }
+            }
+
+            &:hover:not(.side-menu__link--active) {
+              background: color-mix(in oklch, var(--color-foreground), transparent 95%);
+            }
+          }
+
+          ul {
+            --color-background: color-mix(in oklch, var(--color-foreground), transparent 65%);
+          }
+        }
+      }
+    }
+  }
+}

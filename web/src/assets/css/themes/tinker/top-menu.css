@@ -1,0 +1,208 @@
+.tinker {
+    .top-menu {
+        @media (min-width: theme(screens.xl)) {
+            @apply border-0;
+            display: flex;
+            z-index: 20;
+            height: theme(spacing.14);
+            gap: theme(spacing.6);
+            padding: 0 theme(spacing.14);
+            margin-bottom: -1px;
+
+            &>li {
+                height: 100%;
+                position: relative;
+
+                &>.top-menu__link {
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: theme(spacing.3);
+                    position: relative;
+                    padding: 0 theme(spacing.7);
+                    border-radius: theme(borderRadius.full);
+
+                    &.top-menu__link--active {
+                        background: color-mix(in oklch,
+                                var(--color-background),
+                                transparent 90%);
+                        border: 1px solid color-mix(in oklch,
+                                var(--color-background),
+                                transparent 87%);
+
+                        .top-menu__link__title {
+                            font-weight: theme(fontWeight.medium);
+                        }
+                    }
+
+                    .top-menu__link__icon {
+                        &>svg {
+                            --color: var(--color-nav-foreground);
+                        }
+                    }
+
+                    .top-menu__link__title {
+                        display: flex;
+                        align-items: center;
+                        color: var(--color-nav-foreground);
+                        gap: theme(spacing.3);
+                    }
+
+                    .top-menu__link__chevron {
+                        margin-left: auto;
+                    }
+                }
+
+                &:hover>ul {
+                    display: block;
+                }
+
+                ul {
+                    display: none;
+                    width: theme(spacing.72);
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    margin-top: calc(theme(spacing.20) * -1);
+                    background: var(--color-background);
+                    border: 1px solid --alpha(var(--color-foreground) / 10%);
+                    border-radius: theme(borderRadius.2xl);
+                    padding: theme(spacing.3) theme(spacing.2);
+                    box-shadow: theme(boxShadow.lg);
+                    z-index: 2;
+
+                    .top-menu__link {
+                        height: theme(spacing.12);
+                        display: flex;
+                        align-items: center;
+                        gap: theme(spacing.3);
+                        padding: 0 theme(spacing.5);
+                        position: relative;
+
+                        .top-menu__link__title {
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            gap: theme(spacing.3);
+                        }
+
+                        .top-menu__link__chevron {
+                            margin-left: auto;
+                        }
+                    }
+
+                    li {
+                        position: relative;
+
+                        &:hover>ul {
+                            display: block;
+                        }
+                    }
+
+                    ul {
+                        display: none;
+                        margin-top: 0;
+                        left: 100%;
+                        top: 0;
+                        transform: translateX(0);
+                    }
+                }
+            }
+        }
+
+        @media (max-width: theme(screens.xl)) {
+            padding: theme(spacing.5) theme(spacing.4);
+
+            >li {
+                z-index: 10;
+                position: relative;
+
+                ul {
+                    padding: theme(spacing.1) 0;
+                    background: color-mix(in oklch,
+                            var(--color-background),
+                            transparent 90%);
+                    border-radius: theme(borderRadius.2xl);
+                    border: 1px solid color-mix(in oklch,
+                            var(--color-background),
+                            transparent 87%);
+                    margin-left: theme(spacing.2);
+                    margin-right: theme(spacing.2);
+                    margin-bottom: theme(spacing.2);
+
+                    .top-menu__link {
+                        margin-bottom: 0;
+                    }
+
+                    ul {
+                        margin: 0px -1px;
+                    }
+                }
+
+                .top-menu__link {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: theme(spacing[1.5]);
+                    padding: theme(spacing.4) theme(spacing.5);
+
+                    &.top-menu__link--active {
+                        font-weight: theme(fontWeight.medium);
+
+                        .top-menu__link__title {
+                            color: var(--color-background);
+                        }
+                    }
+
+                    .top-menu__link__icon>svg {
+                        width: 1.15rem;
+                        height: 1.15rem;
+                        --color: var(--color-background);
+                    }
+
+                    .top-menu__link__title {
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        margin-left: theme(spacing.3);
+                        color: --alpha(var(--color-background) / 80%);
+
+                        .top-menu__link__chevron {
+                            margin-left: auto;
+                            stroke-width: 1.2;
+                            color: color-mix(in oklch,
+                                    var(--color-background),
+                                    transparent 20%);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.dark {
+    .tinker {
+        .top-menu {
+            @media (min-width: theme(screens.xl)) {
+                >li {
+                    >.top-menu__link {
+                        &.top-menu__link--active {
+                            background: color-mix(in oklch,
+                                    var(--color-background),
+                                    white 14%);
+                            border: 1px solid color-mix(in oklch,
+                                    var(--color-foreground),
+                                    transparent 90%);
+                        }
+                    }
+                }
+            }
+
+            @media (max-width: theme(screens.xl)) {
+                >li {
+                    --color-background: var(--color-foreground);
+                }
+            }
+        }
+    }
+}
