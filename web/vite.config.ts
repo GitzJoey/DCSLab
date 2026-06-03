@@ -12,7 +12,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@midoneui/core': fileURLToPath(new URL('./src/components/ui', import.meta.url))
     },
   },
   server: {

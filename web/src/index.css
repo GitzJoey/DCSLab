@@ -1,0 +1,157 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@source "../../core";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --radius: 0.625rem;
+
+  --font-display:
+    system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+
+  --background-image-temper: url('assets/images/temper.svg');
+  --background-image-noise: url('assets/images/noise.png');
+
+  --color-primary: var(--color-blue-900);
+  --color-primary-foreground: var(--color-blue-50);
+
+  --color-secondary: var(--color-slate-600);
+  --color-secondary-foreground: var(--color-slate-50);
+
+  --color-success: var(--color-emerald-900);
+  --color-success-foreground: var(--color-emerald-50);
+
+  --color-danger: var(--color-red-900);
+  --color-danger-foreground: var(--color-red-50);
+
+  --color-pending: var(--color-orange-900);
+  --color-pending-foreground: var(--color-orange-50);
+
+  --color-warning: var(--color-yellow-900);
+  --color-warning-foreground: var(--color-yellow-50);
+
+  --color-background: var(--color-slate-50);
+  --color-foreground: var(--color-slate-700);
+
+  --background-image-accent: url('./assets/images/accent.svg');
+  --background-image-noise: url('./assets/images/noise.png');
+
+  --background-image-chevron-dark: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>');
+  --background-image-chevron-light: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>');
+
+  --background-image-empty-directory: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='786' height='786' viewBox='0 0 786 786'%3E%3Cdefs%3E%3ClinearGradient id='linear-gradient' x1='0.5' x2='0.5' y2='1' gradientUnits='objectBoundingBox'%3E%3Cstop offset='0' stop-color='%238a97ac'/%3E%3Cstop offset='1' stop-color='%235d6c83'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg id='Group_2' data-name='Group 2' transform='translate(-567 -93)'%3E%3Crect id='Rectangle_4' data-name='Rectangle 4' width='418' height='681' rx='40' transform='translate(896 109)' fill='%2395a5b9'/%3E%3Crect id='Rectangle_3' data-name='Rectangle 3' width='433' height='681' rx='40' transform='translate(606 93)' fill='%23a0aec0'/%3E%3Crect id='Rectangle_2' data-name='Rectangle 2' width='786' height='721' rx='40' transform='translate(567 158)' fill='url(%23linear-gradient)'/%3E%3C/g%3E%3C/svg%3E");
+  --background-image-directory: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='786' height='786' viewBox='0 0 786 786'%3E%3Cdefs%3E%3ClinearGradient id='linear-gradient' x1='0.5' x2='0.5' y2='1' gradientUnits='objectBoundingBox'%3E%3Cstop offset='0' stop-color='%238a97ac'/%3E%3Cstop offset='1' stop-color='%235d6c83'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg id='Group_3' data-name='Group 3' transform='translate(-567 -93)'%3E%3Crect id='Rectangle_4' data-name='Rectangle 4' width='418' height='681' rx='40' transform='translate(896 109)' fill='%2395a5b9'/%3E%3Crect id='Rectangle_3' data-name='Rectangle 3' width='433' height='681' rx='40' transform='translate(606 93)' fill='%23a0aec0'/%3E%3Crect id='Rectangle_2' data-name='Rectangle 2' width='742' height='734' rx='40' transform='translate(590 145)' fill='%23bec8d9'/%3E%3Crect id='Rectangle_5' data-name='Rectangle 5' width='786' height='692' rx='40' transform='translate(567 187)' fill='url(%23linear-gradient)'/%3E%3C/g%3E%3C/svg%3E%0A");
+  --background-image-file: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='628.027' height='786.012' viewBox='0 0 628.027 786.012'%3E%3Cdefs%3E%3ClinearGradient id='linear-gradient' x1='0.5' x2='0.5' y2='1' gradientUnits='objectBoundingBox'%3E%3Cstop offset='0' stop-color='%238a97ac'/%3E%3Cstop offset='1' stop-color='%235d6c83'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg id='Group_5' data-name='Group 5' transform='translate(-646 -92.988)'%3E%3Cpath id='Union_2' data-name='Union 2' d='M40,786A40,40,0,0,1,0,746V40A40,40,0,0,1,40,0H501V103h29v24h98V746a40,40,0,0,1-40,40Z' transform='translate(646 93)' fill='url(%23linear-gradient)'/%3E%3Cpath id='Intersection_2' data-name='Intersection 2' d='M.409,162.042l.058-109.9c31.605,29.739,125.37,125.377,125.37,125.377l-109.976.049A20.025,20.025,0,0,1,.409,162.042Z' transform='translate(1147 42)' fill='%23bec8d9' stroke='%23bec8d9' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E%0A");
+}
+
+.dark {
+  --color-primary: #4874f6;
+  --color-primary-foreground: var(--color-blue-50);
+
+  --color-secondary: #acb7c9;
+  --color-secondary-foreground: var(--color-slate-50);
+
+  --color-success: var(--color-emerald-400);
+  --color-success-foreground: var(--color-emerald-50);
+
+  --color-danger: var(--color-red-400);
+  --color-danger-foreground: var(--color-red-50);
+
+  --color-pending: var(--color-orange-400);
+  --color-pending-foreground: var(--color-orange-50);
+
+  --color-warning: var(--color-yellow-400);
+  --color-warning-foreground: var(--color-yellow-50);
+
+  --color-background: black;
+  --color-foreground: white;
+}
+
+@layer components {
+  .image-fit {
+    position: relative;
+    & > img {
+      position: absolute;
+      object-fit: cover;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+@utility container {
+  max-width: 92rem;
+}
+
+@utility blur-in {
+  animation: blur-in 0.3s ease-in-out;
+}
+
+@utility lucide {
+  @apply stroke-[1.5];
+}
+
+body {
+  @apply font-display bg-background overflow-x-hidden bg-fixed antialiased text-foreground text-foreground text-sm tracking-wide;
+}
+
+select {
+  @apply bg-chevron-dark bg-size-[1.2rem] bg-[calc(100%-.5rem)_center] bg-no-repeat;
+}
+
+.dark {
+  select {
+    @apply bg-chevron-light;
+  }
+}
+
+@keyframes presence-enter {
+  from {
+    scale: 0.9;
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes presence-exit {
+  to {
+    opacity: 0;
+    scale: 0.9;
+  }
+}
+
+[data-scope='presence'][data-state='open'] {
+  animation: presence-enter 0.15s ease-out;
+}
+
+[data-scope='presence'][data-state='closed'] {
+  animation: presence-exit 0.1s ease-in;
+}
+
+[data-theme='default'] {
+  --color-primary: var(--color-blue-900);
+}
+[data-theme='1'] {
+  --color-primary: var(--color-blue-950);
+}
+[data-theme='2'] {
+  --color-primary: var(--color-sky-800);
+}
+[data-theme='3'] {
+  --color-primary: var(--color-cyan-800);
+}
+[data-theme='4'] {
+  --color-primary: var(--color-indigo-900);
+}
+[data-theme='5'] {
+  --color-primary: var(--color-gray-900);
+  &.dark {
+    --color-primary: var(--color-gray-300);
+  }
+}

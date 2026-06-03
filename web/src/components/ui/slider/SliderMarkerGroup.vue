@@ -1,0 +1,30 @@
+<script lang="ts" setup>
+import { cn } from "@midoneui/core/utils/cn";
+import { sliderMarkerGroup } from "@midoneui/core/styles/slider.styles";
+import { Slot } from "@/components/ui/slot";
+import type { Api } from "@zag-js/slider";
+import { inject } from "vue";
+
+const {
+  class: className,
+  asChild = false,
+  ...props
+} = defineProps<{
+  class?: string;
+  asChild?: boolean;
+}>();
+
+const api = inject<Api>("sliderApi");
+</script>
+
+<template>
+  <Slot
+    :class="cn(sliderMarkerGroup, className)"
+    v-bind="{ ...api?.getMarkerGroupProps(), ...props, ...$attrs }"
+  >
+    <slot v-if="asChild" />
+    <div v-else>
+      <slot />
+    </div>
+  </Slot>
+</template>

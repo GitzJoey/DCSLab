@@ -1,0 +1,13 @@
+export { default as ComboboxRoot } from "./ComboboxRoot.vue";
+export { default as ComboboxLabel } from "./ComboboxLabel.vue";
+export { default as ComboboxControl } from "./ComboboxControl.vue";
+export { default as ComboboxInput } from "./ComboboxInput.vue";
+export { default as ComboboxTrigger } from "./ComboboxTrigger.vue";
+export { default as ComboboxClearTrigger } from "./ComboboxClearTrigger.vue";
+export { default as ComboboxPositioner } from "./ComboboxPositioner.vue";
+export { default as ComboboxContent } from "./ComboboxContent.vue";
+export { default as ComboboxItemGroup } from "./ComboboxItemGroup.vue";
+export { default as ComboboxItemGroupLabel } from "./ComboboxItemGroupLabel.vue";
+export { default as ComboboxItem } from "./ComboboxItem.vue";
+export { default as ComboboxItemText } from "./ComboboxItemText.vue";
+export { default as ComboboxItemIndicator } from "./ComboboxItemIndicator.vue";

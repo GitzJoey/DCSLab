@@ -1,0 +1,10 @@
+export { default as SliderRoot } from "./SliderRoot.vue";
+export { default as SliderLabel } from "./SliderLabel.vue";
+export { default as SliderValueText } from "./SliderValueText.vue";
+export { default as SliderControl } from "./SliderControl.vue";
+export { default as SliderTrack } from "./SliderTrack.vue";
+export { default as SliderRange } from "./SliderRange.vue";
+export { default as SliderThumb } from "./SliderThumb.vue";
+export { default as SliderHiddenInput } from "./SliderHiddenInput.vue";
+export { default as SliderMarkerGroup } from "./SliderMarkerGroup.vue";
+export { default as SliderMarker } from "./SliderMarker.vue";
