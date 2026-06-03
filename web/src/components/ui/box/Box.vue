@@ -20,10 +20,7 @@ const {
 </script>
 
 <template>
-  <Slot
-    :class="cn(boxVariants({ raised, className }), className)"
-    v-bind="{ ...props, ...$attrs }"
-  >
+  <Slot :class="cn(boxVariants({ raised, className }), className)" v-bind="{ ...props, ...$attrs }">
     <slot v-if="asChild" />
     <div v-else>
       <slot />
