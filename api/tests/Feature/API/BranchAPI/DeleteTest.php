@@ -11,7 +11,7 @@ use Exception;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 
-class BranchAPIDeleteTest extends APITestCase
+class DeleteTest extends APITestCase
 {
     protected function setUp(): void
     {

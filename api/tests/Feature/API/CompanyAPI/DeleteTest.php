@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 
-class CompanyAPIDeleteTest extends APITestCase
+class DeleteTest extends APITestCase
 {
     protected function setUp(): void
     {

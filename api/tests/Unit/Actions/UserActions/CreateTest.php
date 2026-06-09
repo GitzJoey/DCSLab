@@ -10,7 +10,7 @@ use App\Models\User;
 use Exception;
 use Tests\ActionsTestCase;
 
-class UserActionsCreateTest extends ActionsTestCase
+class CreateTest extends ActionsTestCase
 {
     private UserActions $userActions;
 

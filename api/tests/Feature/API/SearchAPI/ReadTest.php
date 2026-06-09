@@ -4,7 +4,7 @@ namespace Tests\Feature\API\SearchAPI;
 
 use Tests\APITestCase;
 
-class SearchAPIReadTest extends APITestCase
+class ReadTest extends APITestCase
 {
     protected function setUp(): void
     {

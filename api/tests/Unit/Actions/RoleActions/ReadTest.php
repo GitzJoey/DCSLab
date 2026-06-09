@@ -6,7 +6,7 @@ use App\Actions\Role\RoleActions;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\ActionsTestCase;
 
-class RoleActionsReadTest extends ActionsTestCase
+class ReadTest extends ActionsTestCase
 {
     private RoleActions $roleActions;
 

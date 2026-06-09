@@ -8,7 +8,7 @@ use App\Models\Company;
 use App\Models\User;
 use Tests\ActionsTestCase;
 
-class BranchActionsDeleteTest extends ActionsTestCase
+class DeleteTest extends ActionsTestCase
 {
     private BranchActions $branchActions;
 

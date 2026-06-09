@@ -7,7 +7,7 @@ use App\Models\Company;
 use App\Models\User;
 use Tests\ActionsTestCase;
 
-class CompanyActionsDeleteTest extends ActionsTestCase
+class DeleteTest extends ActionsTestCase
 {
     private CompanyActions $companyActions;
 

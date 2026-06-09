@@ -11,7 +11,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 use Tests\ActionsTestCase;
 
-class UserActionsReadTest extends ActionsTestCase
+class ReadTest extends ActionsTestCase
 {
     private UserActions $userActions;
 

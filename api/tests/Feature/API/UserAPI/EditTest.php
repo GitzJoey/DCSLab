@@ -10,7 +10,7 @@ use App\Models\User;
 use Tests\APITestCase;
 use Vinkla\Hashids\Facades\Hashids;
 
-class UserAPIEditTest extends APITestCase
+class EditTest extends APITestCase
 {
     protected function setUp(): void
     {

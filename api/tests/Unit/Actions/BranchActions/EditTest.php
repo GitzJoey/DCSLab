@@ -9,7 +9,7 @@ use App\Models\User;
 use Exception;
 use Tests\ActionsTestCase;
 
-class BranchActionsEditTest extends ActionsTestCase
+class EditTest extends ActionsTestCase
 {
     private BranchActions $branchActions;
 

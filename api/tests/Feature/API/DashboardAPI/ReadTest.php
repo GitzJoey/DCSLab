@@ -7,7 +7,7 @@ use App\Models\Profile;
 use App\Models\User;
 use Tests\APITestCase;
 
-class DashboardAPITest extends APITestCase
+class ReadTest extends APITestCase
 {
     protected function setUp(): void
     {

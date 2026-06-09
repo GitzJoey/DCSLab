@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\ActionsTestCase;
 
-class BranchActionsReadTest extends ActionsTestCase
+class ReadTest extends ActionsTestCase
 {
     private BranchActions $branchActions;
 

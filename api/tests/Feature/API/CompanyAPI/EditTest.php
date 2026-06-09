@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Tests\APITestCase;
 
-class CompanyAPIEditTest extends APITestCase
+class EditTest extends APITestCase
 {
     protected function setUp(): void
     {

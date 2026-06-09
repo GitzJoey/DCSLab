@@ -7,7 +7,7 @@ use App\Models\Role;
 use App\Models\User;
 use Tests\APITestCase;
 
-class RoleAPIReadTest extends APITestCase
+class ReadTest extends APITestCase
 {
     protected function setUp(): void
     {

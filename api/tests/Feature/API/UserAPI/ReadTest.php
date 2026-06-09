@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
 
-class UserAPIReadTest extends APITestCase
+class ReadTest extends APITestCase
 {
     protected function setUp(): void
     {

@@ -8,7 +8,7 @@ use App\Models\User;
 use Exception;
 use Tests\ActionsTestCase;
 
-class CompanyActionsCreateTest extends ActionsTestCase
+class CreateTest extends ActionsTestCase
 {
     private CompanyActions $companyActions;
 

@@ -34,11 +34,16 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'https://dcslab.gitzjoey.online',
+     ],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => [
+        'X-Localization',
+        '*'
+    ],
 
     'exposed_headers' => ['precognition', 'precognition-success'],
 

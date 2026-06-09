@@ -1,8 +1,9 @@
 <?php
 
-namespace Tests\Feature\API\CompanyAPI;
+namespace Tests\Feature\API\BranchAPI;
 
 use App\Enums\UserRoles;
+use App\Models\Branch;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
@@ -10,23 +11,36 @@ use Exception;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
 use Tests\APITestCase;
+use Vinkla\Hashids\Facades\Hashids;
 
-class CompanyAPIReadTest extends APITestCase
+class ReadTest extends APITestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
     }
 
-    public function test_company_api_call_read_any_without_authorization_expect_unauthorized_message()
+    public function test_branch_api_call_read_any_without_authorization_expect_unauthorized_message()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -37,16 +51,28 @@ class CompanyAPIReadTest extends APITestCase
         $api->assertUnauthorized();
     }
 
-    public function test_company_api_call_read_any_without_access_right_expect_unauthorized_message()
+    public function test_branch_api_call_read_any_without_access_right_expect_forbidden_message()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -57,43 +83,52 @@ class CompanyAPIReadTest extends APITestCase
         $api->assertForbidden();
     }
 
-    public function test_company_api_call_read_without_authorization_expect_unauthorized_message()
+    public function test_branch_api_call_read_without_authorization_expect_unauthorized_message()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
-        $company = $user->companies()->inRandomOrder()->first();
+        $company = $user->companies->first();
 
-        $api = $this->getJson(route('api.get.db.company.company.read', $company->ulid));
+        $ulid = $company->branches()->inRandomOrder()->first()->ulid;
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
 
         $api->assertUnauthorized();
     }
 
-    public function test_company_api_call_read_without_access_right_expect_unauthorized_message()
+    public function test_branch_api_call_read_with_sql_injection_expect_injection_ignored()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
         $company = $user->companies()->inRandomOrder()->first();
-
-        $api = $this->getJson(route('api.get.db.company.company.read', $company->ulid));
-
-        $api->assertForbidden();
-    }
-
-    public function test_company_api_call_read_with_sql_injection_expect_injection_ignored()
-    {
-        $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
-            ->create();
-
-        $this->actingAs($user);
 
         $injections = [
             "' OR '1'='1",
@@ -189,8 +224,8 @@ class CompanyAPIReadTest extends APITestCase
 
         $testIdx = random_int(0, count($injections));
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => $injections[$testIdx],
             'paginate' => true,
             'page' => 1,
@@ -216,8 +251,8 @@ class CompanyAPIReadTest extends APITestCase
 
         $testIdx = random_int(0, count($injections));
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => $injections[$testIdx],
             'paginate' => false,
             'page' => 1,
@@ -232,17 +267,56 @@ class CompanyAPIReadTest extends APITestCase
         ]);
     }
 
-    public function test_company_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
+    public function test_branch_api_call_read_without_access_right_expect_forbidden_message()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $company = $user->companies->first();
+
+        $ulid = $company->branches()->inRandomOrder()->first()->ulid;
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
+
+        $api->assertForbidden();
+    }
+
+    public function test_branch_api_call_read_any_with_or_without_pagination_expect_paginator_or_collection()
+    {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
+        $user = User::factory()
+            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
+            ->create();
+
+        $this->actingAs($user);
+
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -261,8 +335,8 @@ class CompanyAPIReadTest extends APITestCase
             ],
         ]);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => '',
             'paginate' => false,
             'page' => 1,
@@ -273,16 +347,29 @@ class CompanyAPIReadTest extends APITestCase
         $api->assertSuccessful();
     }
 
-    public function test_company_api_call_read_any_with_pagination_expect_several_per_page()
+    public function test_branch_api_call_read_any_with_pagination_expect_several_per_page()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => '',
             'paginate' => true,
             'page' => 1,
@@ -307,30 +394,34 @@ class CompanyAPIReadTest extends APITestCase
         ]);
     }
 
-    public function test_company_api_call_read_any_with_search_expect_filtered_results()
+    public function test_branch_api_call_read_any_with_search_expect_filtered_results()
     {
-        $companyCount = random_int(1, 4);
-        $idxDefaultCompany = random_int(0, $companyCount - 1);
-        $idxTest = random_int(0, $companyCount - 1);
-        $defaultName = Company::factory()->make()->name;
-        $testName = Company::factory()->insertStringInName('testing')->make()->name;
+        $branchCount = 4;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+        $idxTest = random_int(0, $branchCount - 1);
+        $defaultName = Branch::factory()->make()->name;
+        $testName = Branch::factory()->insertStringInName('testing')->make()->name;
 
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->count($companyCount)
-                ->state(new Sequence(
-                    fn (Sequence $sequence) => [
-                        'default' => $sequence->index == $idxDefaultCompany ? true : false,
-                        'name' => $sequence->index == $idxTest ? $testName : $defaultName,
-                    ]
-                ))
+            ->has(Company::factory()->setStatusActive()->setIsDefault()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                            'name' => $sequence->index == $idxTest ? $testName : $defaultName,
+                        ]
+                    ))
+                )
             )
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => 'testing',
             'paginate' => true,
             'page' => 1,
@@ -354,32 +445,58 @@ class CompanyAPIReadTest extends APITestCase
         ]);
     }
 
-    public function test_company_api_call_read_any_without_search_querystring_expect_failed()
+    public function test_branch_api_call_read_any_without_search_querystring_expect_failed()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', []));
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
+        ]));
 
         $api->assertUnprocessable();
     }
 
-    public function test_company_api_call_read_any_with_special_char_in_search_expect_results()
+    public function test_branch_api_call_read_any_with_special_char_in_search_expect_results()
     {
+        $branchCount = 5;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
-            'search' => "!#$%&'()*+,-./:;<=>?@[\]^_`{|}~",
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
+            'search' => " !#$%&'()*+,-./:;<=>?@[\]^_`{|}~",
             'paginate' => true,
             'page' => 1,
             'per_page' => 10,
@@ -398,17 +515,29 @@ class CompanyAPIReadTest extends APITestCase
         ]);
     }
 
-    public function test_company_api_call_read_any_with_negative_value_in_parameters_expect_results()
+    public function test_branch_api_call_read_any_with_negative_value_in_parameters_expect_results()
     {
+        $branchCount = 2;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.company.company.read_any', [
-            'userId' => $user->id,
+        $company = $user->companies()->inRandomOrder()->first();
+
+        $api = $this->getJson(route('api.get.db.company.branch.read_any', [
+            'company_id' => Hashids::encode($company->id),
             'search' => '',
             'paginate' => true,
             'page' => -1,
@@ -428,46 +557,80 @@ class CompanyAPIReadTest extends APITestCase
         ]);
     }
 
-    public function test_company_api_call_read_expect_successful()
+    public function test_branch_api_call_read_expect_successful()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $company = $user->companies()->inRandomOrder()->first();
+        $company = $user->companies->first();
 
-        $api = $this->getJson(route('api.get.db.company.company.read', $company->ulid));
+        $ulid = $company->branches()->inRandomOrder()->first()->ulid;
+
+        $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
 
         $api->assertSuccessful();
     }
 
-    public function test_company_api_call_read_without_ulid_expect_exception()
+    public function test_branch_api_call_read_without_ulid_expect_exception()
     {
         $this->expectException(Exception::class);
+
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
-        $this->getJson(route('api.get.db.company.company.read', null));
+        $this->getJson(route('api.get.db.company.branch.read', null));
     }
 
-    public function test_company_api_call_read_with_nonexistance_ulid_expect_not_found()
+    public function test_branch_api_call_read_with_nonexistance_ulid_expect_not_found()
     {
+        $branchCount = 3;
+        $idxMainBranch = random_int(0, $branchCount - 1);
+
         $user = User::factory()
             ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
-            ->has(Company::factory()->setStatusActive()->setIsDefault())
+            ->has(Company::factory()->setStatusActive()
+                ->has(Branch::factory()->setStatusActive()->count($branchCount)
+                    ->state(new Sequence(
+                        fn (Sequence $sequence) => [
+                            'is_main' => $sequence->index == $idxMainBranch ? true : false,
+                        ]
+                    ))
+                ))
             ->create();
 
         $this->actingAs($user);
 
         $ulid = Str::ulid()->generate();
 
-        $api = $this->getJson(route('api.get.db.company.company.read', $ulid));
+        $api = $this->getJson(route('api.get.db.company.branch.read', $ulid));
 
         $api->assertStatus(404);
     }

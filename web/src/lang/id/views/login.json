@@ -1,0 +1,16 @@
+{
+    "title": "Login",
+    "fields": {
+        "email": "Email",
+        "password": "Password",
+        "remember_me": "Ingat Aku",
+        "forgot_pass": "Lupa Password",
+        "2fa": {
+            "label": "Tantangan Dua Faktor",
+            "label_description": "",
+            "code": "Kode",
+            "recovery_code": "Kode Pemulihan",
+            "use_recovery_codes": "Menggunakan Recovery Codes"
+        }
+    }
+}
