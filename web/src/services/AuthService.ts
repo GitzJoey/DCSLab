@@ -1,4 +1,5 @@
-import { authAxiosInstance } from '@/axios'
+import { client, useForm } from 'laravel-precognition-vue'
+import dcslabHttpClient from '@/axios'
 
 export default class AuthService {
     public async ensureCSRF(): Promise<void> {
@@ -26,6 +27,18 @@ export default class AuthService {
     }
 
     public async generateCSRF(): Promise<void> {
-        await authAxiosInstance.get('/sanctum/csrf-cookie')
+        await dcslabHttpClient.get('/sanctum/csrf-cookie')
+    }
+
+    public useLoginForm() {
+        client.useHttpClient(dcslabHttpClient);
+
+        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/login', {
+            email: '',
+            password: '',
+            remember: false,
+        });
+
+        return form;
     }
 }

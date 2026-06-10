@@ -4,7 +4,7 @@ export function validateUser(to: RouteLocationNormalized, from: RouteLocationNor
     const isAuthenticated = false
     
     const isProtectedRoute = to.name && to.matched.some(r => r.meta.public !== true);
-    console.log(isProtectedRoute);
+
     if (isProtectedRoute && !isAuthenticated) {
         return {
             name: 'login',
@@ -14,7 +14,7 @@ export function validateUser(to: RouteLocationNormalized, from: RouteLocationNor
 
     if (to.name === 'login' && isAuthenticated) {
         return {
-            name: 'main-maindashboard',
+            name: 'dashboard-maindashboard',
         }
     }
 

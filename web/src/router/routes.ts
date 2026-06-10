@@ -1,10 +1,11 @@
 import Layout from "@/themes"
 
-import LoginPage from "@/views/auth/Login.vue"
-import RegisterPage from "@/views/auth/Register.vue"
-import ForgotPasswordPage from "@/views/auth/ForgotPassword.vue"
-import ResetPasswordPage from "@/views/auth/ResetPassword.vue"
+import Login from "@/views/auth/Login.vue"
+import Register from "@/views/auth/Register.vue"
+import ForgotPassword from "@/views/auth/ForgotPassword.vue"
+import ResetPassword from "@/views/auth/ResetPassword.vue"
 import MainDashboard from "@/views/dashboard/MainDashboard.vue"
+import Error from "@/views/error/ErrorPage.vue"
 
 export default [
     {
@@ -12,32 +13,68 @@ export default [
         redirect: "/dashboard/main",
     },
     {
-        path: "/register",
-        name: "register",
-        component: RegisterPage,
-        meta: { 
+        path: "/auth",
+        redirect: { name: "login" },
+        meta: {
             public: true,
-            persistLastRoute: false,
-         },
-    },
-    {
-        path: "/login",
-        name: "login",
-        component: LoginPage,
-        meta: { 
-            public: true,
-            persistLastRoute: false,
-         },
+        },
+        children: [
+            {
+                path: "register",
+                name: "register",
+                component: Register,
+                meta: { 
+                    public: true,
+                },
+            },
+            {
+                path: "login",
+                name: "login",
+                component: Login,
+                meta: { 
+                    public: true,
+                },
+            },
+            {
+                path: "forgot-password",
+                name: 'forgot-password',
+                component: ForgotPassword,
+                meta: { 
+                    public: true,
+                },
+            },
+            {
+                path: "reset-password",
+                name: 'reset-password',
+                component: ResetPassword,
+                meta: { 
+                    public: true,
+                },
+            },
+        ]
     },
     {
         path: "/dashboard",
         component: Layout,
+        redirect: "/dashboard/main",
         children: [
             {
-                path: "/dashboard/main",
+                path: "main",
                 name: "dashboard-maindashboard",
                 component: MainDashboard,
             }
         ],
+    },
+    {
+        path: "/error-page",
+        name: "error-page",
+        component: Error,
+        meta: { 
+            public: true,
+        },
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        redirect: "/error-page",
     }
 ];

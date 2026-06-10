@@ -23,21 +23,6 @@ defaultAxiosInstance.interceptors.response.use(response => {
     return Promise.reject(error)
 });
 
-const authAxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_BACKEND_URL,
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Accept': 'application/json'
-    }
-})
-
-authAxiosInstance.defaults.withCredentials = true
-
-authAxiosInstance.interceptors.request.use(function (config) {
-    config.headers['X-Localization'] = localStorage.getItem('DCSLAB_LANG') == null ? document.documentElement.lang : localStorage.getItem('DCSLAB_LANG')
-    return config
-})
-
 const axiosInstance = axios.create()
 
-export { defaultAxiosInstance as default, authAxiosInstance, axiosInstance }
+export { defaultAxiosInstance as default, axiosInstance }

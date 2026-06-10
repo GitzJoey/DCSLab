@@ -10,6 +10,8 @@ import { useRouter } from 'vue-router'
 import AuthService from '@/services/AuthService'
 import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
 import { onMounted, ref } from "vue";
+import type { LoginResponse } from '@/types/models/Auth'
+import { R } from 'vue-router/dist/useApi-D6ckOsFy.js'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -18,12 +20,32 @@ const authService = new AuthService()
 const appName = import.meta.env.VITE_APP_NAME;
 
 const loading = ref<boolean>(false);
-const status = ref<'onLoad' | 'success' | 'error'>('onLoad');
+const status = ref<'onLoad' | 'success' | 'error'>('onLoad')
+
+const loginForm = authService.useLoginForm()
 
 onMounted(async () => {
-    authService.ensureCSRF();
+    authService.ensureCSRF()
 });
 
+const onSubmit = async () => {
+    loading.value = true
+
+    loginForm.submit().then((response: unknown) => {
+        let loginResp = response as LoginResponse;
+
+        if (loginResp.data.two_factor) {
+            //requireTwoFactor.value = true
+        } else {
+            router.push({ name: 'dashboard-maindashboard' })
+        }
+    }).catch(error => {
+        status.value = 'error'
+        //alertMessage.value = error.response.data.message
+    }).finally(() => {
+        loading.value = false
+    });
+};
 
 </script>
 
@@ -64,29 +86,39 @@ onMounted(async () => {
                                 <div class="mt-2 text-center opacity-70 xl:hidden">
                                     &nbsp;
                                 </div>
-                                <div class="mt-8 flex flex-col gap-5">
-                                    <Input class="box block min-w-full px-5 py-6 xl:min-w-md" type="text"
-                                        :placeholder="t('views.login.fields.email')" />
-                                    <Input class="box block min-w-full px-5 py-6 xl:min-w-md" type="password"
-                                        :placeholder="t('views.login.fields.password')" />
-                                    <div class="flex text-xs sm:text-sm">
-                                        <div class="mr-auto flex-row items-center">
-                                            <CheckboxRoot>
-                                                <CheckboxControl />
-                                                <CheckboxLabel>{{ t("views.login.fields.remember_me") }}</CheckboxLabel>
-                                            </CheckboxRoot>
+                                <form id="LoginForm" @submit.prevent="onSubmit">
+                                    <div class="mt-8 flex flex-col gap-5">
+                                        <Input class="box block min-w-full px-5 py-6 xl:min-w-md" type="text"
+                                            :placeholder="t('views.login.fields.email')" v-model="loginForm.email"
+                                            @focus="loginForm.forgetError('password')" />
+                                        <Input class="box block min-w-full px-5 py-6 xl:min-w-md" type="password"
+                                            :placeholder="t('views.login.fields.password')" v-model="loginForm.password"
+                                            @focus="loginForm.forgetError('password')" />
+                                        <div class="flex text-xs sm:text-sm">
+                                            <div class="mr-auto flex-row items-center">
+                                                <CheckboxRoot>
+                                                    <CheckboxControl />
+                                                    <CheckboxLabel>{{ t("views.login.fields.remember_me") }}
+                                                    </CheckboxLabel>
+                                                </CheckboxRoot>
+                                            </div>
+                                            <!--<a class="opacity-70" href="">{{ t("views.login.fields.forgot_pass") }}</a>-->
+                                            <RouterLink class="opacity-70" :to="{ name: 'forgot-password' }">
+                                                {{ t("views.login.fields.forgot_pass") }}
+                                            </RouterLink>
                                         </div>
-                                        <a class="opacity-70" href="">{{ t("views.login.fields.forgot_pass") }}</a>
                                     </div>
-                                </div>
-                                <div class="mt-5 text-center xl:mt-10 xl:text-left">
-                                    <Button class="login-button box w-full px-4 py-5" variant="primary">{{
-                                        t("components.buttons.login") }}</Button>
-                                    <Button class="box mt-4 w-full px-4 py-5" look="outline"> {{
-                                        t("components.buttons.register") }} </Button>
-                                </div>
-                                <div class="mt-10 text-center opacity-70 xl:mt-24 xl:text-left">
-                                </div>
+                                    <div class="mt-5 text-center xl:mt-10 xl:text-left">
+                                        <Button type="submit" class="login-button box w-full px-4 py-5"
+                                            variant="primary">{{
+                                                t("components.buttons.login") }}</Button>
+                                        <Button class="box mt-4 w-full px-4 py-5" look="outline"
+                                            @click="router.push({ name: 'register' })"> {{
+                                                t("components.buttons.register") }} </Button>
+                                    </div>
+                                    <div class="mt-10 text-center opacity-70 xl:mt-24 xl:text-left">
+                                    </div>
+                                </form>
                             </Box>
                         </div>
                     </div>
