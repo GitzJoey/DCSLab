@@ -36,6 +36,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
+# 🛠️ PERMANENT FIX: Target the <Directory /var/www/> block in the main apache2.conf 
+# and swap AllowOverride None out for AllowOverride All
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+
 # 4. Identity Swap: Align www-data with your host user (UID 1000)
 # We remove the default 'ubuntu' user to free up ID 1000, 
 # then assign it to www-data and give it a login shell (bash).
