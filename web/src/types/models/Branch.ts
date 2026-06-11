@@ -1,4 +1,4 @@
-import { Company } from "./Company"
+import type { Company } from "./Company"
 
 export interface Branch {
     id: string,
