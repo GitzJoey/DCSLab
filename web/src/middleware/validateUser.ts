@@ -1,8 +1,11 @@
 import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router"
 
 export function validateUser(to: RouteLocationNormalized, from: RouteLocationNormalized): boolean | RouteLocationRaw {
+    //Temporary Override 
+    //return true
+
     const isAuthenticated = false
-    
+
     const isProtectedRoute = to.name && to.matched.some(r => r.meta.public !== true);
 
     if (isProtectedRoute && !isAuthenticated) {

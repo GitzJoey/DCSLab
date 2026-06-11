@@ -33,7 +33,7 @@ const onSubmit = async () => {
     loginForm.submit().then((response: unknown) => {
         let loginResp = response as LoginResponse;
 
-        if (loginResp.data.two_factor) {
+        if (loginResp.two_factor) {
             //requireTwoFactor.value = true
         } else {
             router.push({ name: 'dashboard-maindashboard' })

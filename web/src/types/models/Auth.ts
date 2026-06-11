@@ -1,5 +1,3 @@
 export interface LoginResponse {
-    data: {
-        two_factor: boolean
-    }
+    two_factor: boolean
 }
