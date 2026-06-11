@@ -11,7 +11,6 @@ import AuthService from '@/services/AuthService'
 import LoadingOverlay from '@/components/loading-overlay/LoadingOverlay.vue'
 import { onMounted, ref } from "vue";
 import type { LoginResponse } from '@/types/models/Auth'
-import { R } from 'vue-router/dist/useApi-D6ckOsFy.js'
 
 const { t } = useI18n()
 const router = useRouter()

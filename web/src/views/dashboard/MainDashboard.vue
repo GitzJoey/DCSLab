@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { computed } from "vue";
-import { useUserContextStore } from '../../stores/user-context';
-import _ from "lodash";
+import { computed } from "vue"
+import { useUserContextStore } from '@/stores/user-context'
+import _ from "lodash"
 
-const userContextStore = useUserContextStore();
-const userContext = computed(() => userContextStore.userContext);
+const userContextStore = useUserContextStore()
+const userContext = computed(() => userContextStore.userContext)
 
-const welcomeName = computed(() => userContext.value.profile.first_name);
+const welcomeName = computed(() => userContext.value?.profile.first_name)
 </script>
 
 <template>

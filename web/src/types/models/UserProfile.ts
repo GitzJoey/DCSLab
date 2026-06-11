@@ -1,7 +1,7 @@
-import { Company } from "./Company";
-import { Profile } from "./Profile";
-import { Role } from "./Role";
-import { Setting } from "./Setting";
+import type { Company } from "./Company";
+import type { Profile } from "./Profile";
+import type { Role } from "./Role";
+import type { Setting } from "./Setting";
 
 export interface UserProfile {
     id: string,
