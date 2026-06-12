@@ -1,0 +1,6 @@
+{
+    "default_error_code": "500",
+    "default_error_message": "Internal Error",
+    "default_additional_message": "An unexpected error occurred.",
+    "back_to": "Back to Dashboard"
+}

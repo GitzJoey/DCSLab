@@ -1,4 +1,5 @@
 import axios from "axios"
+import { setupInterceptors } from './interceptors'
 
 const defaultAxiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -17,11 +18,7 @@ defaultAxiosInstance.interceptors.request.use(function (config) {
     return config
 })
 
-defaultAxiosInstance.interceptors.response.use(response => {
-    return response
-}, error => {
-    return Promise.reject(error)
-});
+setupInterceptors(defaultAxiosInstance)
 
 const axiosInstance = axios.create()
 

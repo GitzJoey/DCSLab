@@ -2,9 +2,15 @@
 import { computed } from 'vue'
 import errorIllustrationUrl from '@/assets/images/error-illustration.svg'
 import { Button } from '@/components/ui/button'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from "vue-router"
 
-const errorCode = computed(() => history.state?.code || 500);
-const errorMessage = computed(() => history.state?.message || "An unexpected error occurred.");
+const { t } = useI18n()
+const router = useRouter()
+
+const errorCode = computed(() => history.state?.code || t('views.error.default_error_code'))
+const errorCodeMessage = computed(() => history.state?.message || t('views.error.default_error_message'))
+const additionalMessage = computed(() => history.state?.additionalMessage || t('views.error.default_additional_message'))
 </script>
 
 <template>
@@ -20,12 +26,13 @@ const errorMessage = computed(() => history.state?.message || "An unexpected err
                 </div>
                 <div class="mt-10 text-white lg:mt-0">
                     <div class="text-9xl [text-shadow:7px_7px_--alpha(var(--color-white)/20%)]">{{ errorCode }}</div>
-                    <div class="mt-8 text-xl font-medium lg:text-2xl">Oops. Something went wrong.</div>
+                    <div class="mt-8 text-xl font-medium lg:text-2xl">{{ errorCode }} - {{ errorCodeMessage }}</div>
                     <div class="mt-3 text-base opacity-70">
-                        {{ errorMessage }}
+                        {{ additionalMessage }}
                     </div>
-                    <Button class="box mt-10 border border-white bg-transparent px-7 py-6 text-white" variant="ghost">
-                        Back to Home
+                    <Button class="box mt-10 border border-white bg-transparent px-7 py-6 text-white" variant="ghost"
+                        @click="router.push({ name: 'dashboard-maindashboard' })">
+                        {{ t('views.error.back_to') }}
                     </Button>
                 </div>
             </div>
