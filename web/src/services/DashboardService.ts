@@ -1,15 +1,16 @@
-import axios from '@/axios'
+import dcslabHttpClient from '@/axios'
 import { useZiggyRouteStore } from '@/stores/ziggy-route'
 import { route } from 'ziggy-js'
 import type { Config } from 'ziggy-js'
 import type { ServiceResponse } from '@/types/services/ServiceResponse'
+import type { AxiosResponse } from 'axios'
 
 export default class DashboardService {
   private ziggyRoute: Config
   private ziggyRouteStore = useZiggyRouteStore()
 
   constructor() {
-    this.ziggyRoute = this.ziggyRouteStore.getZiggy
+    this.ziggyRoute = this.ziggyRouteStore.getZiggy()
   }
 
   public async readRoutes(): Promise<ServiceResponse<Config | null>> {
@@ -18,22 +19,16 @@ export default class DashboardService {
     }
 
     try {
-      const url = route('api.get.db.core.user.api', undefined, false, this.ziggyRoute)
+      const url = route('api.dashboard.routes', undefined, false, this.ziggyRoute)
 
-      const response: AxiosResponse<Config> = await axios.get(url)
+      const response: AxiosResponse<ServiceResponse<Config>> = await dcslabHttpClient.get(url)
 
-      result.success = true
-      result.data = response.data
+      result.success = response.data.success
+      result.data = response.data.data
 
       return result
     } catch (e: unknown) {
-      if (e instanceof Error && e.message.includes('Ziggy error')) {
-        return this.errorHandlerService.generateZiggyUrlErrorServiceResponse(e.message)
-      } else if (isAxiosError(e)) {
-        return this.errorHandlerService.generateAxiosErrorServiceResponse(e as AxiosError)
-      } else {
-        return result
-      }
+      return result
     }
   }
 }

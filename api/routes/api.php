@@ -67,7 +67,7 @@ Route::middleware(['auth:sanctum'])
         });
 
         Route::prefix('profile')->as('profile.')->group(function () {
-            Route::get('/', [ProfileController::class, 'show'])->name('profile');
+            Route::get('/', [ProfileController::class, 'show'])->name('show');
 
             Route::middleware([HandlePrecognitiveRequests::class])->group(function () {
                 Route::patch('update/user_profile', [ProfileController::class, 'updateUserProfile'])->name('update.user_profile');

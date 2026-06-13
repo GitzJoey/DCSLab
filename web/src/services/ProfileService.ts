@@ -6,14 +6,14 @@ import type { ServiceResponse } from '@/types/services/ServiceResponse'
 import type { UserProfile } from '@/types/models/UserProfile'
 import type { AxiosResponse } from 'axios'
 import type { Resource } from '@/types/resources/Resource'
-import axios from '@/axios'
+import dcslabHttpClient from '@/axios'
 
 export default class ProfileService {
   private ziggyRoute: Config
   private ziggyRouteStore = useZiggyRouteStore()
 
   constructor() {
-    this.ziggyRoute = this.ziggyRouteStore.getZiggy
+    this.ziggyRoute = this.ziggyRouteStore.getZiggy()
   }
 
   public async readProfile(): Promise<ServiceResponse<UserProfile | null>> {
@@ -22,9 +22,9 @@ export default class ProfileService {
     }
 
     try {
-      const url = route('api.get.db.module.profile.read', undefined, false, this.ziggyRoute)
+      const url = route('api.dashboard.profile.show', undefined, false, this.ziggyRoute)
 
-      const response: AxiosResponse<Resource<UserProfile>> = await axios.get(url)
+      const response: AxiosResponse<Resource<UserProfile>> = await dcslabHttpClient.get(url)
 
       result.success = true
       result.data = response.data.data
