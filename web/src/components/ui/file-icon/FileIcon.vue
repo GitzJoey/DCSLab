@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { cn } from "@midoneui/core/utils/cn";
+import { cn } from '@midoneui/core/utils/cn'
 
 const {
   class: className,
@@ -8,11 +8,11 @@ const {
   src,
   ...props
 } = defineProps<{
-  class?: string;
-  variant?: "empty-directory" | "directory" | "file" | "image";
-  type?: string;
-  src?: string;
-}>();
+  class?: string
+  variant?: 'empty-directory' | 'directory' | 'file' | 'image'
+  type?: string
+  src?: string
+}>()
 </script>
 
 <template>

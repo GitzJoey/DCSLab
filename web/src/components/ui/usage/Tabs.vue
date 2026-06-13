@@ -1,15 +1,10 @@
 <script lang="ts" setup>
-import {
-  TabsRoot,
-  TabsList,
-  TabsTrigger,
-  TabsContent,
-} from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Box } from "@/components/ui/box";
-import { SquareX, Save, ExternalLink } from "lucide-vue-next";
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Box } from '@/components/ui/box'
+import { SquareX, Save, ExternalLink } from '@lucide/vue'
 </script>
 
 <template>
@@ -43,11 +38,7 @@ import { SquareX, Save, ExternalLink } from "lucide-vue-next";
       </TabsContent>
       <TabsContent value="share-profile">
         <div class="grid gap-4 mt-2">
-          <Input
-            id="name-1"
-            name="name"
-            defaultValue="https://midone-ui.com/docs/installation"
-          />
+          <Input id="name-1" name="name" defaultValue="https://midone-ui.com/docs/installation" />
         </div>
         <div class="flex gap-2 mt-5">
           <Button look="outline" variant="secondary">

@@ -1,19 +1,13 @@
 <script lang="ts" setup>
-import { cn } from "@midoneui/core/utils/cn";
-import { ChevronRight, Ellipsis } from "lucide-vue-next";
-import {
-  MenuRoot,
-  MenuTrigger,
-  MenuPositioner,
-  MenuContent,
-  MenuItem,
-} from "@/components/ui/menu";
-import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from ".";
+import { cn } from '@midoneui/core/utils/cn'
+import { ChevronRight, Ellipsis } from '@lucide/vue'
+import { MenuRoot, MenuTrigger, MenuPositioner, MenuContent, MenuItem } from '@/components/ui/menu'
+import { BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from '.'
 
 const { class: className, ...props } = defineProps<{
-  class?: string;
-  items: string[];
-}>();
+  class?: string
+  items: string[]
+}>()
 </script>
 
 <template>

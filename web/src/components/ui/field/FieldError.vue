@@ -1,25 +1,23 @@
 <script lang="ts" setup>
-import { cn } from "@midoneui/core/utils/cn";
-import { fieldError } from "@midoneui/core/styles/field.styles";
-import { computed } from "vue";
+import { cn } from '@midoneui/core/utils/cn'
+import { fieldError } from '@midoneui/core/styles/field.styles'
+import { computed } from 'vue'
 
 const {
   class: className,
   errors,
   ...props
 } = defineProps<{
-  class?: string;
-  errors?: Array<{ message?: string } | undefined>;
-}>();
+  class?: string
+  errors?: Array<{ message?: string } | undefined>
+}>()
 
 const uniqueErrors = computed(() => {
-  const err = [
-    ...new Map(errors?.map((error) => [error?.message, error])).values(),
-  ];
+  const err = [...new Map(errors?.map((error) => [error?.message, error])).values()]
   if (err?.length == 1) {
-    return err[0]?.message;
+    return err[0]?.message
   }
-});
+})
 </script>
 
 <template>

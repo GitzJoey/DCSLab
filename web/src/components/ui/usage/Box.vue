@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { CircleGauge } from "lucide-vue-next";
-import { Box } from "@/components/ui/box";
+import { CircleGauge } from '@lucide/vue'
+import { Box } from '@/components/ui/box'
 </script>
 
 <template>

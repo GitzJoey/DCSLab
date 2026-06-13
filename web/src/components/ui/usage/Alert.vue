@@ -1,12 +1,7 @@
 <script lang="ts" setup>
-import {
-  AlertRoot,
-  AlertTitle,
-  AlertDescription,
-  AlertCloseTrigger,
-} from "@/components/ui/alert";
-import { Compass } from "lucide-vue-next";
-import { Box } from "@/components/ui/box";
+import { AlertRoot, AlertTitle, AlertDescription, AlertCloseTrigger } from '@/components/ui/alert'
+import { Compass } from '@lucide/vue'
+import { Box } from '@/components/ui/box'
 </script>
 
 <template>
@@ -18,49 +13,37 @@ import { Box } from "@/components/ui/box";
         <AlertRoot variant="primary">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot variant="secondary">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot variant="success">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot variant="danger">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot variant="pending">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot variant="warning">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
       </div>
@@ -70,49 +53,37 @@ import { Box } from "@/components/ui/box";
         <AlertRoot look="filled" variant="primary">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot look="filled" variant="secondary">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot look="filled" variant="success">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot look="filled" variant="danger">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot look="filled" variant="pending">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
         <AlertRoot look="filled" variant="warning">
           <Compass />
           <AlertTitle>Success! Your changes have been saved</AlertTitle>
-          <AlertDescription>
-            This is an alert with icon, title and description.
-          </AlertDescription>
+          <AlertDescription> This is an alert with icon, title and description. </AlertDescription>
           <AlertCloseTrigger />
         </AlertRoot>
       </div>

@@ -11,15 +11,15 @@ import {
   MenuRadioItemGroup,
   MenuItemGroupLabel,
   MenuRadioItem,
-} from "@/components/ui/menu";
-import { ref } from "vue";
-import { Activity, Layout, Zap, MapPin } from "lucide-vue-next";
+} from '@/components/ui/menu'
+import { ref } from 'vue'
+import { Activity, Layout, Zap, MapPin } from '@lucide/vue'
 
-const react = ref(false);
-const solid = ref(false);
-const vue = ref(false);
-const svelte = ref(false);
-const value = ref("React");
+const react = ref(false)
+const solid = ref(false)
+const vue = ref(false)
+const svelte = ref(false)
+const value = ref('React')
 </script>
 
 <template>
@@ -32,18 +32,10 @@ const value = ref("React");
           <MenuTrigger>Open menu</MenuTrigger>
           <MenuPositioner>
             <MenuContent>
-              <MenuItem value="react"
-                ><Activity class="size-4 stroke-1.5" /> React</MenuItem
-              >
-              <MenuItem value="solid"
-                ><Layout class="size-4 stroke-1.5" /> Solid</MenuItem
-              >
-              <MenuItem value="vue"
-                ><Zap class="size-4 stroke-1.5" /> Vue</MenuItem
-              >
-              <MenuItem value="svelte"
-                ><MapPin class="size-4 stroke-1.5" /> Svelte</MenuItem
-              >
+              <MenuItem value="react"><Activity class="size-4 stroke-1.5" /> React</MenuItem>
+              <MenuItem value="solid"><Layout class="size-4 stroke-1.5" /> Solid</MenuItem>
+              <MenuItem value="vue"><Zap class="size-4 stroke-1.5" /> Vue</MenuItem>
+              <MenuItem value="svelte"><MapPin class="size-4 stroke-1.5" /> Svelte</MenuItem>
             </MenuContent>
           </MenuPositioner>
         </MenuRoot>
@@ -177,9 +169,7 @@ const value = ref("React");
                   :key="framework"
                   :value="framework"
                   :checked="framework == value"
-                  :onCheckedChange="
-                    (checked) => (checked ? (value = framework) : '')
-                  "
+                  :onCheckedChange="(checked) => (checked ? (value = framework) : '')"
                 >
                   {{ framework }}
                 </MenuRadioItem>

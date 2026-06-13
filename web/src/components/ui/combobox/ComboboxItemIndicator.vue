@@ -1,22 +1,22 @@
 <script lang="ts" setup>
-import { Slot } from "@/components/ui/slot";
-import { cn } from "@midoneui/core/utils/cn";
-import { comboboxItemIndicator } from "@midoneui/core/styles/combobox.styles";
-import { Check } from "lucide-vue-next";
-import type { Api, ItemProps } from "@zag-js/combobox";
-import { inject } from "vue";
+import { Slot } from '@/components/ui/slot'
+import { cn } from '@midoneui/core/utils/cn'
+import { comboboxItemIndicator } from '@midoneui/core/styles/combobox.styles'
+import { Check } from '@lucide/vue'
+import type { Api, ItemProps } from '@zag-js/combobox'
+import { inject } from 'vue'
 
 const {
   class: className,
   asChild = false,
   ...props
 } = defineProps<{
-  class?: string;
-  asChild?: boolean;
-}>();
+  class?: string
+  asChild?: boolean
+}>()
 
-const api = inject<Api>("comboboxApi");
-const item = inject<ItemProps>("comboboxItem");
+const api = inject<Api>('comboboxApi')
+const item = inject<ItemProps>('comboboxItem')
 </script>
 
 <template>

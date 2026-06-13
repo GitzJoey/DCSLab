@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import * as lucideIcons from 'lucide-vue-next'
+import * as lucideIcons from '@lucide/vue'
 import { cn } from '@midoneui/core/utils/cn'
 import { computed, type HTMLAttributes } from 'vue'
 
@@ -17,10 +17,7 @@ const iconComponent = computed(() => lucideIcons[props.icon] as any)
   <component
     :is="iconComponent"
     :class="
-      cn(
-        'size-4 stroke-[1.5] [--color:currentColor] stroke-(--color) fill-(--color)/25',
-        props.class,
-      )
+      cn('size-4 lucide [--color:currentColor] stroke-(--color) fill-(--color)/25', props.class)
     "
   />
 </template>

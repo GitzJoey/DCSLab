@@ -6,11 +6,11 @@ import {
   SheetTitle,
   SheetDescription,
   SheetCloseTrigger,
-} from "@/components/ui/sheet";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { SquareX, Save, ExternalLink } from "lucide-vue-next";
+} from '@/components/ui/sheet'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { SquareX, Save, ExternalLink } from '@lucide/vue'
 </script>
 
 <template>
@@ -34,11 +34,7 @@ import { SquareX, Save, ExternalLink } from "lucide-vue-next";
                 </div>
                 <div class="grid gap-2.5">
                   <Label htmlFor="username-1">Username</Label>
-                  <Input
-                    id="username-1"
-                    name="username"
-                    defaultValue="@peduarte"
-                  />
+                  <Input id="username-1" name="username" defaultValue="@peduarte" />
                 </div>
               </div>
               <div class="flex gap-2 justify-end mt-7">

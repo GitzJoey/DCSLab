@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-import { cn } from "@midoneui/core/utils/cn";
-import { selectIndicator } from "@midoneui/core/styles/select.styles";
-import { ChevronDownIcon } from "lucide-vue-next";
-import { Slot } from "@/components/ui/slot";
-import type { Api } from "@zag-js/select";
-import { inject } from "vue";
+import { cn } from '@midoneui/core/utils/cn'
+import { selectIndicator } from '@midoneui/core/styles/select.styles'
+import { ChevronDownIcon } from '@lucide/vue'
+import { Slot } from '@/components/ui/slot'
+import type { Api } from '@zag-js/select'
+import { inject } from 'vue'
 
 const {
   class: className,
   asChild = false,
   ...props
 } = defineProps<{
-  class?: string;
-  asChild?: boolean;
-}>();
+  class?: string
+  asChild?: boolean
+}>()
 
-const api = inject<Api>("selectApi");
+const api = inject<Api>('selectApi')
 </script>
 
 <template>
