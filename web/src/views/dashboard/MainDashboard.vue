@@ -1,12 +1,19 @@
 <script lang="ts" setup>
-import { computed } from "vue"
+import { onMounted, computed } from "vue"
 import { useUserContextStore } from '@/stores/user-context'
 import _ from "lodash"
+import AuthService from "@/services/AuthService"
 
 const userContextStore = useUserContextStore()
+const authService = new AuthService()
+
 const userContext = computed(() => userContextStore.userContext)
 
 const welcomeName = computed(() => userContext.value?.profile.first_name)
+
+onMounted(async () => {
+
+});
 </script>
 
 <template>
