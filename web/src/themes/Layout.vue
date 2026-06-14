@@ -32,7 +32,7 @@ const ziggyRouteStore = useZiggyRouteStore()
 const userContextStore = useUserContextStore()
 const menuStore = useMenuStore()
 
-onMounted(() => {
+onMounted(async () => {
   dashboardStore.setScreenMaskValue(true)
 
   const theme = route.query.theme as Themes['name']
@@ -42,25 +42,22 @@ onMounted(() => {
 
   dashboardStore.setScreenMaskValue(false)
 
-  profileService.readProfile().then((profile: ServiceResponse<UserProfile | null>) => {
-    if (profile.success) {
-      userContextStore.setUserContext(profile.data as UserProfile)
-      console.log('Profile loaded')
-    }
-  })
+  let profile: ServiceResponse<UserProfile | null> = await profileService.readProfile()
+  if (profile.success) {
+    userContextStore.setUserContext(profile.data as UserProfile)
+    console.log('Profile loaded')
+  }
 
-  dashboardService.readRoutes().then((zRoute: ServiceResponse<Config | null>) => {
-    if (zRoute.success) {
-      ziggyRouteStore.setZiggy(zRoute.data as Config)
-      console.log('Ziggy loaded')
-    }
-  })
+  let zRoute: ServiceResponse<Config | null> = await dashboardService.readRoutes()
+  if (zRoute.success) {
+    ziggyRouteStore.setZiggy(zRoute.data as Config)
+    console.log('Ziggy loaded')
+  }
 
-  dashboardService.readMenu().then((sMenu: ServiceResponse<Array<sMenu> | null>) => {
-    //if (sMenu.success) {
-    //menuStore.setMenu(sMenu.data as Array<sMenu>)
-    //}
-  })
+  let sMenu: ServiceResponse<Array<sMenu> | null> = await dashboardService.readMenu()
+  if (sMenu.success) {
+    menuStore.setMenu(sMenu.data as Array<sMenu>)
+  }
 })
 </script>
 
