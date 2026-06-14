@@ -11,6 +11,8 @@ import DashboardService from '@/services/DashboardService'
 import { useUserContextStore } from '@/stores/user-context'
 import type { Config } from 'ziggy-js'
 import type { ServiceResponse } from '@/types/services/ServiceResponse'
+import type { UserProfile } from '@/types/models/UserProfile'
+import type { Menu as sMenu } from '@/stores/menu'
 
 const profileService = new ProfileService()
 const dashboardService = new DashboardService()
@@ -27,6 +29,7 @@ const dashboardStore = useDashboardStore()
 const loading = computed(() => dashboardStore.getScreenMaskValue)
 
 const ziggyRouteStore = useZiggyRouteStore()
+const userContextStore = useUserContextStore()
 
 onMounted(() => {
   dashboardStore.setScreenMaskValue(true)
@@ -38,8 +41,19 @@ onMounted(() => {
 
   dashboardStore.setScreenMaskValue(false)
 
-  dashboardService.readRoutes().then((zRoute: ServiceResponse<Config | null>) => {})
-  profileService.readProfile()
+  profileService.readProfile().then((profile: ServiceResponse<UserProfile | null>) => {
+    if (profile.success && profile.data) {
+      userContextStore.setUserContext(profile.data)
+    }
+  })
+
+  dashboardService.readRoutes().then((zRoute: ServiceResponse<Config | null>) => {
+    if (zRoute.success) {
+      ziggyRouteStore.setZiggy(zRoute.data as Config)
+    }
+  })
+
+  dashboardService.readMenu().then((sMenu: ServiceResponse<Array<sMenu> | null>) => {})
 })
 </script>
 

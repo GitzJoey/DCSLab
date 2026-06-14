@@ -69,6 +69,7 @@ export const useZiggyRouteStore = defineStore('ziggyRoute', () => {
     if (ziggy !== undefined && ziggy !== null) {
       const stringifiedZiggy = JSON.stringify(ziggy)
       sessionStorage.setItem(STORAGE_KEY, isDebug ? stringifiedZiggy : btoa(stringifiedZiggy))
+
       ziggyRoute.value = ziggy
     }
   }

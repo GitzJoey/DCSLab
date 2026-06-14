@@ -1,44 +1,44 @@
 import { client, useForm } from 'laravel-precognition-vue'
-import dcslabHttpClient from '@/axios'
+import httpClient from '@/axios'
 
 export default class AuthService {
-    public async ensureCSRF(): Promise<void> {
-        let resultXSRF = await this.checkCookieExists('XSRF-TOKEN')
+  public async ensureCSRF(): Promise<void> {
+    let resultXSRF = await this.checkCookieExists('XSRF-TOKEN')
 
-        if (resultXSRF) return
+    if (resultXSRF) return
 
-        await this.generateCSRF()
-    }
-    
-    private checkCookieExists = (cookieName: string): Promise<boolean> => {
-        return new Promise<boolean>((resolve) => {
-            const cookies = document.cookie.split('; ')
+    await this.generateCSRF()
+  }
 
-            for (const cookie of cookies) {
-                const [name] = cookie.split('=')
-                if (name === cookieName) {
-                    resolve(true);
-                    return;
-                }
-            }
+  private checkCookieExists = (cookieName: string): Promise<boolean> => {
+    return new Promise<boolean>((resolve) => {
+      const cookies = document.cookie.split('; ')
 
-            resolve(false)
-        })
-    }
+      for (const cookie of cookies) {
+        const [name] = cookie.split('=')
+        if (name === cookieName) {
+          resolve(true)
+          return
+        }
+      }
 
-    public async generateCSRF(): Promise<void> {
-        await dcslabHttpClient.get('/sanctum/csrf-cookie')
-    }
+      resolve(false)
+    })
+  }
 
-    public useLoginForm() {
-        client.useHttpClient(dcslabHttpClient);
+  public async generateCSRF(): Promise<void> {
+    await httpClient.get('/sanctum/csrf-cookie')
+  }
 
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/login', {
-            email: '',
-            password: '',
-            remember: false,
-        });
+  public useLoginForm() {
+    client.useHttpClient(httpClient)
 
-        return form;
-    }
+    const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/login', {
+      email: '',
+      password: '',
+      remember: false,
+    })
+
+    return form
+  }
 }
