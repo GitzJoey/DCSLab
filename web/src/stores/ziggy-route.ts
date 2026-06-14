@@ -29,7 +29,7 @@ export const useZiggyRouteStore = defineStore('ziggyRoute', () => {
     defaults: {},
     routes: {
       'api.dashboard.profile.show': {
-        uri: 'api/dashboard/profile/show',
+        uri: 'api/dashboard/profile',
         methods: ['GET', 'HEAD'],
       },
       'api.dashboard.menu': {

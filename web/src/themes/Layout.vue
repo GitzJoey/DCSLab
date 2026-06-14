@@ -12,7 +12,7 @@ import { useUserContextStore } from '@/stores/user-context'
 import type { Config } from 'ziggy-js'
 import type { ServiceResponse } from '@/types/services/ServiceResponse'
 import type { UserProfile } from '@/types/models/UserProfile'
-import type { Menu as sMenu } from '@/stores/menu'
+import { useMenuStore, type Menu as sMenu } from '@/stores/menu'
 
 const profileService = new ProfileService()
 const dashboardService = new DashboardService()
@@ -30,6 +30,7 @@ const loading = computed(() => dashboardStore.getScreenMaskValue)
 
 const ziggyRouteStore = useZiggyRouteStore()
 const userContextStore = useUserContextStore()
+const menuStore = useMenuStore()
 
 onMounted(() => {
   dashboardStore.setScreenMaskValue(true)
@@ -42,18 +43,24 @@ onMounted(() => {
   dashboardStore.setScreenMaskValue(false)
 
   profileService.readProfile().then((profile: ServiceResponse<UserProfile | null>) => {
-    if (profile.success && profile.data) {
-      userContextStore.setUserContext(profile.data)
+    if (profile.success) {
+      userContextStore.setUserContext(profile.data as UserProfile)
+      console.log('Profile loaded')
     }
   })
 
   dashboardService.readRoutes().then((zRoute: ServiceResponse<Config | null>) => {
     if (zRoute.success) {
       ziggyRouteStore.setZiggy(zRoute.data as Config)
+      console.log('Ziggy loaded')
     }
   })
 
-  dashboardService.readMenu().then((sMenu: ServiceResponse<Array<sMenu> | null>) => {})
+  dashboardService.readMenu().then((sMenu: ServiceResponse<Array<sMenu> | null>) => {
+    //if (sMenu.success) {
+    //menuStore.setMenu(sMenu.data as Array<sMenu>)
+    //}
+  })
 })
 </script>
 
