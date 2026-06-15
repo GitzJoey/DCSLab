@@ -126,18 +126,9 @@ const linkTo = (menu: Menu, event: MouseEvent) => {
               }
             }
           "
-          :class="
-            cn(
-              'side-menu__link',
-              isMenuActive(menu) ? 'side-menu__link--active' : '',
-            )
-          "
+          :class="cn('side-menu__link', isMenuActive(menu) ? 'side-menu__link--active' : '')"
         >
-          <Lucide
-            v-if="menu.icon"
-            class="side-menu__link__icon"
-            :icon="menu.icon"
-          />
+          <Lucide v-if="menu.icon" class="side-menu__link__icon" :icon="menu.icon" />
           <div class="side-menu__link__title">{{ menu.title }}</div>
           <div v-if="menu.badge" class="side-menu__link__badge">
             {{ menu.badge }}
@@ -154,10 +145,7 @@ const linkTo = (menu: Menu, event: MouseEvent) => {
           />
         </a>
         <!-- BEGIN: Second Child -->
-        <ul
-          v-if="menu.sub_menu"
-          :class="cn('hidden', { block: openMenus[`menu-${menuKey}`] })"
-        >
+        <ul v-if="menu.sub_menu" :class="cn('hidden', { block: openMenus[`menu-${menuKey}`] })">
           <li v-for="(subMenu, subMenuKey) in menu.sub_menu" :key="subMenuKey">
             <a
               href=""
@@ -170,18 +158,9 @@ const linkTo = (menu: Menu, event: MouseEvent) => {
                   }
                 }
               "
-              :class="
-                cn(
-                  'side-menu__link',
-                  isMenuActive(subMenu) ? 'side-menu__link--active' : '',
-                )
-              "
+              :class="cn('side-menu__link', isMenuActive(subMenu) ? 'side-menu__link--active' : '')"
             >
-              <Lucide
-                v-if="subMenu.icon"
-                class="side-menu__link__icon"
-                :icon="subMenu.icon"
-              />
+              <Lucide v-if="subMenu.icon" class="side-menu__link__icon" :icon="subMenu.icon" />
               <div class="side-menu__link__title">
                 {{ subMenu.title }}
               </div>
@@ -202,14 +181,9 @@ const linkTo = (menu: Menu, event: MouseEvent) => {
             <!-- BEGIN: Third Child -->
             <ul
               v-if="subMenu.sub_menu"
-              :class="
-                cn('hidden', { block: openMenus[`menu-${menuKey}-${subMenuKey}`] })
-              "
+              :class="cn('hidden', { block: openMenus[`menu-${menuKey}-${subMenuKey}`] })"
             >
-              <li
-                v-for="(lastSubMenu, lastSubMenuKey) in subMenu.sub_menu"
-                :key="lastSubMenuKey"
-              >
+              <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.sub_menu" :key="lastSubMenuKey">
                 <a
                   href=""
                   @click.prevent="linkTo(lastSubMenu, $event)"
@@ -241,5 +215,3 @@ const linkTo = (menu: Menu, event: MouseEvent) => {
     </template>
   </ul>
 </template>
-
-

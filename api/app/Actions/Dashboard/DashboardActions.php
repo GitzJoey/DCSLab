@@ -56,27 +56,27 @@ class DashboardActions
     {
         $maindashboard = [
             'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-dashboard-maindashboard',
+            'route_name' => 'dashboard-maindashboard',
             'title' => 'components.menu.main-dashboard',
         ];
 
         $demo = [
             'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-dashboard-demo',
-            'title' => 'components.menu.main-demo',
+            'route_name' => 'dashboard-demo',
+            'title' => 'components.menu.demo',
         ];
 
         $root_array = [
             'icon' => 'Home',
-            'pageName' => 'side-menu-dashboard',
+            'route_name' => 'dashboard-dashboard',
             'title' => 'components.menu.dashboard',
-            'subMenu' => [],
+            'sub_menu' => [],
         ];
 
         if ($showDemo) {
-            array_push($root_array['subMenu'], $maindashboard, $demo);
+            array_push($root_array['sub_menu'], $maindashboard, $demo);
         } else {
-            array_push($root_array['subMenu'], $maindashboard);
+            array_push($root_array['sub_menu'], $maindashboard);
         }
 
         array_push($menu, $root_array);
@@ -92,27 +92,27 @@ class DashboardActions
 
         $company = [
             'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-company-company',
+            'route_name' => 'dashboard-company-company',
             'title' => 'components.menu.company-company',
         ];
 
         $branches = [
             'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-company-branch',
+            'route_name' => 'company-branch',
             'title' => 'components.menu.company-branch',
         ];
 
         $root_array = [
             'icon' => 'Umbrella',
-            'pageName' => 'side-menu-company',
+            'route_name' => 'company',
             'title' => 'components.menu.company',
-            'subMenu' => [],
+            'sub_menu' => [],
         ];
 
         if ($hasCompany || $hasDevRole) {
-            array_push($root_array['subMenu'], $company, $branches);
+            array_push($root_array['sub_menu'], $company, $branches);
         } else {
-            array_push($root_array['subMenu'], $company);
+            array_push($root_array['sub_menu'], $company);
         }
 
         array_push($menu, $root_array);
@@ -124,18 +124,18 @@ class DashboardActions
     {
         $user = [
             'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-administrator-user',
+            'route_name' => 'administrator-user',
             'title' => 'components.menu.administrator-user',
         ];
 
         $root_array = [
             'icon' => 'Cpu',
-            'pageName' => 'side-menu-administrator',
+            'route_name' => 'administrator',
             'title' => 'components.menu.administrator',
-            'subMenu' => [],
+            'sub_menu' => [],
         ];
 
-        array_push($root_array['subMenu'], $user);
+        array_push($root_array['sub_menu'], $user);
 
         if ($hasAdminRole || $hasDevRole) {
             array_push($menu, $root_array);
@@ -148,41 +148,41 @@ class DashboardActions
     {
         $devtool = [
             'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-devtool-devtool',
+            'route_name' => 'devtool-devtool',
             'title' => 'components.menu.devtool-devtool',
         ];
 
         $playground = [
             'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-devtool-playground',
+            'route_name' => 'devtool-playground',
             'title' => 'components.menu.devtool-playground',
-            'subMenu' => [],
+            'sub_menu' => [],
         ];
 
         $playground_ex1 = [
             'icon' => 'ChevronsRight',
-            'pageName' => 'side-menu-devtool-playground-p1',
+            'route_name' => 'devtool-playground-p1',
             'title' => 'components.menu.devtool-playground-p1',
         ];
 
         $playground_ex2 = [
             'icon' => 'ChevronsRight',
-            'pageName' => 'side-menu-devtool-playground-p2',
+            'route_name' => 'devtool-playground-p2',
             'title' => 'components.menu.devtool-playground-p2',
         ];
 
-        array_push($playground['subMenu'], $playground_ex1);
-        array_push($playground['subMenu'], $playground_ex2);
+        array_push($playground['sub_menu'], $playground_ex1);
+        array_push($playground['sub_menu'], $playground_ex2);
 
         $root_array = [
             'icon' => 'Github',
-            'pageName' => 'side-menu-devtool',
+            'route_name' => 'devtool',
             'title' => 'components.menu.devtool',
-            'subMenu' => [],
+            'sub_menu' => [],
         ];
 
-        array_push($root_array['subMenu'], $devtool);
-        array_push($root_array['subMenu'], $playground);
+        array_push($root_array['sub_menu'], $devtool);
+        array_push($root_array['sub_menu'], $playground);
 
         if ($hasDevRole) {
             array_push($menu, $root_array);
