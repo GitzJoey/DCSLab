@@ -12,54 +12,54 @@ export interface Menu {
 const mainMenu: Array<Menu> = [
   {
     icon: 'Home',
-    title: 'Dashboard',
+    title: 'components.menu.dashboard',
     sub_menu: [
       {
         icon: 'Home',
         route_name: 'dashboard-maindashboard',
-        title: 'Main Dashboard',
+        title: 'components.menu.dashboard-maindashboard',
       },
     ],
   },
   {
     icon: 'Network',
-    title: 'Organization',
+    title: 'components.menu.organization',
     sub_menu: [
       {
         icon: 'ChevronRight',
         route_name: 'dashboard-organization-company',
-        title: 'Company',
+        title: 'components.menu.organization-company',
       },
       {
         icon: 'ChevronRight',
         route_name: 'dashboard-organization-branch',
-        title: 'Branch',
+        title: 'components.menu.organization-branch',
       },
     ],
   },
   {
     icon: 'Cpu',
-    title: 'Administrator',
+    title: 'components.menu.administrator',
     sub_menu: [
       {
         icon: 'ChevronRight',
         route_name: 'dashboard-administrator-user',
-        title: 'User',
+        title: 'components.menu.administrator-user',
       },
       {
         icon: 'ChevronRight',
-        route_name: 'dashboard-administrator-devtools',
+        route_name: 'components.menu.administrator-devtools',
         title: 'Dev Tools',
         sub_menu: [
           {
             icon: 'ChevronsRight',
             route_name: 'dashboard-administrator-devtools-playground-1',
-            title: 'Playground 1',
+            title: 'components.menu.administrator-devtools-playground-1',
           },
           {
             icon: 'ChevronsRight',
             route_name: 'dashboard-administrator-devtools-playground-2',
-            title: 'Playground 2',
+            title: 'components.menu.administrator-devtools-playground-1',
           },
         ],
       },

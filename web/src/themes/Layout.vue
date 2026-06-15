@@ -45,13 +45,11 @@ onMounted(async () => {
   let profile: ServiceResponse<UserProfile | null> = await profileService.readProfile()
   if (profile.success) {
     userContextStore.setUserContext(profile.data as UserProfile)
-    console.log('Profile loaded')
   }
 
   let zRoute: ServiceResponse<Config | null> = await dashboardService.readRoutes()
   if (zRoute.success) {
     ziggyRouteStore.setZiggy(zRoute.data as Config)
-    console.log('Ziggy loaded')
   }
 
   let sMenu: ServiceResponse<Array<sMenu> | null> = await dashboardService.readMenu()
