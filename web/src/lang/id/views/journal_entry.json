@@ -28,6 +28,7 @@
     "source_id": "ID Sumber",
     "reference_no": "Nomor Referensi",
     "remarks": "Catatan",
+    "journal_remarks": "Catatan Jurnal",
     "items": "Item Jurnal",
     "item": "Item",
     "chart_of_account": "Akun",

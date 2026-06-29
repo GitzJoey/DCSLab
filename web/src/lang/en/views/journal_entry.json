@@ -28,6 +28,7 @@
     "source_id": "Source ID",
     "reference_no": "Reference No",
     "remarks": "Remarks",
+    "journal_remarks": "Journal Remarks",
     "items": "Journal Items",
     "item": "Item",
     "chart_of_account": "Account",

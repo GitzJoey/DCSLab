@@ -19,6 +19,7 @@ export interface JournalEntry {
   branch?: Branch | null;
   code: string;
   date: string;
+  journal_type?: string | null;
   source_type: string | null;
   source_id: number | null;
   reference_no: string | null;

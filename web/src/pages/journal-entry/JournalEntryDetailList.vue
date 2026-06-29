@@ -20,9 +20,14 @@ interface JournalEntryDetailRow {
   sequence: number;
   journal_code: string;
   date: string;
+  journal_type: string | null;
+  source_type: string | null;
+  source_id: number | null;
   reference_no: string | null;
   account_code: string | null;
   account_name: string | null;
+  account_type: string | null;
+  normal_balance: string | null;
   debit: number;
   credit: number;
   remarks: string | null;
@@ -80,9 +85,14 @@ const entryDetails = computed<JournalEntryDetailRow[]>(() =>
     sequence: item.sequence,
     journal_code: item.journal_entry?.code ?? '-',
     date: item.journal_entry?.date ?? '',
+    journal_type: item.journal_entry?.journal_type ?? null,
+    source_type: item.journal_entry?.source_type ?? null,
+    source_id: item.journal_entry?.source_id ?? null,
     reference_no: item.journal_entry?.reference_no ?? null,
     account_code: item.chart_of_account?.code ?? null,
     account_name: item.chart_of_account?.name ?? null,
+    account_type: item.chart_of_account?.account_type ?? null,
+    normal_balance: item.chart_of_account?.normal_balance ?? null,
     debit: item.debit,
     credit: item.credit,
     remarks: item.remarks,
@@ -158,6 +168,21 @@ const amountCellClass = (value: number) => {
     : 'text-slate-700 dark:text-slate-100';
 };
 
+const formatMetaText = (value: string | null | undefined) => {
+  if (!value) return '-';
+
+  return value
+    .split('\\')
+    .pop()
+    ?.replace(/_/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/\b\w/g, (char) => char.toUpperCase()) ?? '-';
+};
+
+const compactText = (value: string | null | undefined) => {
+  return value && value.trim().length > 0 ? value : '-';
+};
+
 const showAlertPlaceholder = (
   pAlertType: 'hidden' | 'danger' | 'success' | 'warning' | 'pending' | 'dark',
   pTitle: string,
@@ -177,7 +202,7 @@ const showAlertPlaceholder = (
   <div class="grid grid-cols-12 gap-6 mt-5">
     <div class="col-span-12 intro-y lg:col-span-12">
       <div class="mb-3 grid grid-cols-12 gap-4 gap-y-3">
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-3">
           <FormLabel>
             {{ t('views.journal_entry.fields.start_date') }}
           </FormLabel>
@@ -187,7 +212,7 @@ const showAlertPlaceholder = (
             @change="handleDateFilterChange"
           />
         </div>
-        <div class="col-span-12 md:col-span-4">
+        <div class="col-span-12 md:col-span-3">
           <FormLabel>
             {{ t('views.journal_entry.fields.end_date') }}
           </FormLabel>
@@ -197,17 +222,19 @@ const showAlertPlaceholder = (
             @change="handleDateFilterChange"
           />
         </div>
-        <div class="col-span-12 md:col-span-4 flex items-center">
-          <FormSwitch>
-            <FormSwitch.Input
-              v-model="filters.include_system_journals"
-              type="checkbox"
-              @change="handleSystemJournalFilterChange"
-            />
-            <FormSwitch.Label>
-              {{ t('views.journal_entry.fields.include_system_journals') }}
-            </FormSwitch.Label>
-          </FormSwitch>
+        <div class="col-span-12 md:col-span-3">
+          <FormLabel>
+            {{ t('views.journal_entry.fields.include_system_journals') }}
+          </FormLabel>
+          <div class="mt-2">
+            <FormSwitch>
+              <FormSwitch.Input
+                v-model="filters.include_system_journals"
+                type="checkbox"
+                @change="handleSystemJournalFilterChange"
+              />
+            </FormSwitch>
+          </div>
         </div>
       </div>
 
@@ -230,49 +257,61 @@ const showAlertPlaceholder = (
               :key="item.id"
               class="grid grid-cols-12 gap-4 rounded-xl border border-slate-200 bg-slate-50/80 p-4 shadow-sm dark:border-darkmode-400 dark:bg-darkmode-600/30"
             >
-              <div class="col-span-12 md:col-span-3 self-start">
+              <div class="col-span-12 md:col-span-4 self-start">
                 <div class="space-y-2">
-                  <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                    {{ t('views.journal_entry.page_title') }}
-                  </div>
-                  <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                    <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.code') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <div class="text-primary text-sm font-semibold tracking-wide">
                       {{ item.journal_code }}
                     </div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.item') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200">
+                    <div class="rounded-md bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
                       #{{ item.sequence }}
                     </div>
+                    <div
+                      v-if="item.journal_type"
+                      class="rounded-md bg-slate-200/80 px-2 py-0.5 text-[11px] font-medium text-slate-700 dark:bg-darkmode-400 dark:text-slate-200"
+                    >
+                      {{ formatMetaText(item.journal_type) }}
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
                     <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.date') }}</div>
                     <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
                       {{ item.date ? formatDate(item.date, 'DD-MMM-YYYY HH:mm:ss') : '-' }}
                     </div>
                     <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.reference_no') }}</div>
                     <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
-                      {{ item.reference_no || '-' }}
+                      {{ compactText(item.reference_no) }}
+                    </div>
+                    <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.source_type') }}</div>
+                    <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
+                      {{ formatMetaText(item.source_type) }}
+                      <span v-if="item.source_id" class="text-slate-500">#{{ item.source_id }}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="col-span-12 md:col-span-5 self-start md:px-3">
+              <div class="col-span-12 md:col-span-4 self-start">
                 <div class="space-y-2">
-                  <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                    {{ t('views.journal_entry.field_groups.items') }}
+                  <div class="text-sm font-semibold text-slate-800 dark:text-slate-100 break-words">
+                    {{ compactText(item.account_code) }} - {{ compactText(item.account_name) }}
+                  </div>
+                  <div class="flex flex-wrap gap-2 text-[11px]">
+                    <div class="rounded-md bg-slate-200/80 px-2 py-0.5 text-slate-700 dark:bg-darkmode-400 dark:text-slate-200">
+                      {{ formatMetaText(item.account_type) }}
+                    </div>
+                    <div class="rounded-md bg-slate-200/80 px-2 py-0.5 text-slate-700 dark:bg-darkmode-400 dark:text-slate-200">
+                      {{ `Normal: ${formatMetaText(item.normal_balance)}` }}
+                    </div>
                   </div>
                   <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
-                    <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.chart_of_account') }}</div>
+                    <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.journal_remarks') }}</div>
                     <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
-                      {{ item.account_code || '-' }} - {{ item.account_name || '-' }}
+                      {{ compactText(item.journal_remarks) }}
                     </div>
                     <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.item_remarks') }}</div>
                     <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
-                      {{ item.remarks || '-' }}
-                    </div>
-                    <div class="col-span-4 text-slate-500">{{ t('views.journal_entry.fields.remarks') }}</div>
-                    <div class="col-span-8 text-slate-700 dark:text-slate-200 break-words">
-                      {{ item.journal_remarks || '-' }}
+                      {{ compactText(item.remarks) }}
                     </div>
                   </div>
                 </div>
@@ -285,7 +324,7 @@ const showAlertPlaceholder = (
                   </div>
                   <div
                     :class="[
-                      'flex min-h-[84px] items-center justify-end rounded-lg border border-slate-200/60 bg-white px-4 py-3 shadow-sm dark:border-darkmode-400 dark:bg-darkmode-500/20',
+                      'flex min-h-[72px] items-center justify-end rounded-lg border border-slate-200/60 bg-white px-4 py-3 shadow-sm dark:border-darkmode-400 dark:bg-darkmode-500/20',
                       amountCellClass(item.debit),
                     ]"
                   >
@@ -303,7 +342,7 @@ const showAlertPlaceholder = (
                   </div>
                   <div
                     :class="[
-                      'flex min-h-[84px] items-center justify-end rounded-lg border border-slate-200/60 bg-white px-4 py-3 shadow-sm dark:border-darkmode-400 dark:bg-darkmode-500/20',
+                      'flex min-h-[72px] items-center justify-end rounded-lg border border-slate-200/60 bg-white px-4 py-3 shadow-sm dark:border-darkmode-400 dark:bg-darkmode-500/20',
                       amountCellClass(item.credit),
                     ]"
                   >
