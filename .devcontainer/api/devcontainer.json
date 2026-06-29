@@ -6,5 +6,16 @@
     "service": "api",
     "remoteUser": "www-data",
     "workspaceFolder": "/var/www/html",
-    "shutdownAction": "none"
+    "shutdownAction": "none",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "bmewburn.vscode-intelephense-client",
+                "sirtori.indenticator",
+                "xdebug.php-debug"
+            ]
+        }
+    }
 }
