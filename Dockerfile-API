@@ -2,7 +2,7 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 1. Install System Dependencies & PHP 8.3
+# Install System Dependencies & PHP 8.3
 RUN apt-get update && apt-get install -y \
     curl \
     git \
@@ -28,39 +28,34 @@ RUN apt-get update && apt-get install -y \
     libapache2-mod-php8.3 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# 2. Install Composer
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 3. Configure Apache
-# Set document root to the Laravel public folder
+# Install COPILOT CLI
+RUN curl -fsSL https://gh.io/copilot-install | bash -s -- --prefix=/usr/local
+
+# Configure Apache
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
-
-# 🛠️ PERMANENT FIX: Target the <Directory /var/www/> block in the main apache2.conf 
-# and swap AllowOverride None out for AllowOverride All
 RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
-# 4. Identity Swap: Align www-data with your host user (UID 1000)
-# We remove the default 'ubuntu' user to free up ID 1000, 
-# then assign it to www-data and give it a login shell (bash).
+# Identity Swap: Align www-data with your host user (UID 1000)
 RUN touch /var/mail/ubuntu && chown root:mail /var/mail/ubuntu && \
     userdel -f ubuntu && \
     if getent group ubuntu; then groupdel ubuntu; fi && \
     usermod -u 1000 -s /bin/bash www-data && \
     groupmod -g 1000 www-data
 
-# 5. Set up the working directory and permissions
-# We chown /var/www so VS Code can install its server components
+# Set up the working directory and permissions
 RUN mkdir -p /var/www/html && \
     chown -R www-data:www-data /var/www
 
-# 6. Bake the Xdebug dphp alias permanently into the www-data user profile, for debugging Artisan command
+# Bake the Xdebug dphp alias permanently into the www-data user profile
 RUN echo "alias dphp='XDEBUG_CONFIG=\"client_host=127.0.0.1\" php -dxdebug.mode=debug -dxdebug.start_with_request=yes'" >> /var/www/.bashrc
 
 WORKDIR /var/www/html
 
-# 6. Final Environment Settings
+# Final Environment Settings
 EXPOSE 80
 
-# Start Apache in the foreground
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
