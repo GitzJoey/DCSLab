@@ -10,8 +10,6 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "GitHub.copilot",
-                "GitHub.copilot-chat",
                 "bradlc.vscode-tailwindcss",
                 "esbenp.prettier-vscode",
                 "sirtori.indenticator",

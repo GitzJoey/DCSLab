@@ -10,8 +10,6 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "GitHub.copilot",
-                "GitHub.copilot-chat",
                 "bmewburn.vscode-intelephense-client",
                 "sirtori.indenticator",
                 "xdebug.php-debug"
