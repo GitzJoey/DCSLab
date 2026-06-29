@@ -7,7 +7,7 @@
     "remoteUser": "node",
     "workspaceFolder": "/app",
     "shutdownAction": "none",
-        "customizations": {
+    "customizations": {
         "vscode": {
             "extensions": [
                 "GitHub.copilot",
