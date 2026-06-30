@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\UserActions;
+use App\Actions\User\UserActions;
 use App\Http\Resources\UserResource;
 use App\Rules\ApiAuth\InactiveUser;
 use App\Rules\ApiAuth\MaxTokens;
 use App\Rules\ApiAuth\MustResetPassword;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 
 class ApiAuthController extends Controller
 {
@@ -39,6 +43,6 @@ class ApiAuthController extends Controller
             ]]);
         }
 
-        return response()->error();
+        return $this->apiResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

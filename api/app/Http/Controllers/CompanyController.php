@@ -120,9 +120,9 @@ class CompanyController extends BaseController
             } while (! $this->companyActions->isUniqueCode($code, $user->id, $company->id));
         } else {
             if (! $this->companyActions->isUniqueCode($code, $user->id, $company->id)) {
-                return response()->error([
+                return $this->apiResponse([
                     'code' => [trans('controller.global.unique_code')],
-                ], 422);
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
 
@@ -164,13 +164,13 @@ class CompanyController extends BaseController
         // throw New \Exception('Test Exception From Controller');
 
         // Throw Empty Response Error (HttpStatus 500)
-        // return response()->error();
+        // return $this->apiResponse(null, Response::HTTP_INTERNAL_SERVER_ERROR);
 
         // Custom Validation Error 1 Message (HttpStatus 422)
-        // return response()->error('Custom Validation Error 1 Message', 422);
+        // return $this->apiResponse('Custom Validation Error 1 Message', Response::HTTP_UNPROCESSABLE_ENTITY);
 
         // Custom Validation With Multiple Error (HttpStatus 422)
-        // return response()->error(['name' => ['Custom Validation With Multiple Error'], 'address' => ['Custom Validation With Multiple Error']], 422);
+        // return $this->apiResponse(['name' => ['Custom Validation With Multiple Error'], 'address' => ['Custom Validation With Multiple Error']], Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $result = false;
         $errorMsg = '';

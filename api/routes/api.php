@@ -26,10 +26,10 @@ Route::middleware(['auth:sanctum'])
     ->group(function () {
 
         Route::prefix('company')->as('company.')->group(function () {
-            
+
             Route::prefix('company')->as('company.')->group(function () {
                 Route::get('index', [CompanyController::class, 'index'])->name('index');
-                
+
                 Route::middleware([HandlePrecognitiveRequests::class])->group(function () {
                     Route::post('store', [CompanyController::class, 'store'])->name('store');
                     Route::patch('update/{company:ulid}', [CompanyController::class, 'update'])->name('update');
@@ -39,7 +39,7 @@ Route::middleware(['auth:sanctum'])
 
             Route::prefix('branch')->as('branch.')->group(function () {
                 Route::get('index', [BranchController::class, 'index'])->name('index');
-                
+
                 Route::middleware([HandlePrecognitiveRequests::class])->group(function () {
                     Route::post('store', [BranchController::class, 'store'])->name('store');
                     Route::patch('update/{branch:ulid}', [BranchController::class, 'update'])->name('update');

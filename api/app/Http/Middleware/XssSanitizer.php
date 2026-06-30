@@ -26,8 +26,8 @@ class XssSanitizer
         array_walk_recursive($input, function (&$value) use ($sanitizerStyle) {
             if (is_string($value) && ! empty($value)) {
                 if ($this->isContainScriptTag($value)) {
-                    $value = $sanitizerStyle === 'encode' 
-                        ? htmlspecialchars($value, ENT_QUOTES | ENT_HTML5) 
+                    $value = $sanitizerStyle === 'encode'
+                        ? htmlspecialchars($value, ENT_QUOTES | ENT_HTML5)
                         : strip_tags($value);
                 }
             }

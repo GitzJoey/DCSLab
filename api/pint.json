@@ -1,5 +1,8 @@
 {
     "preset": "laravel",
+    "exclude": [
+        "tests"
+    ],
     "notPath": [
         "config/laratrust.php",
         "config/laratrust_seeder.php",
