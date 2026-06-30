@@ -31,9 +31,6 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install COPILOT CLI
-RUN curl -fsSL https://gh.io/copilot-install | bash -s -- --prefix=/usr/local
-
 # Configure Apache
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
