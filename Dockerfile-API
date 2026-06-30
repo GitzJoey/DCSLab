@@ -50,6 +50,9 @@ RUN touch /var/mail/ubuntu && chown root:mail /var/mail/ubuntu && \
 RUN mkdir -p /var/www/html && \
     chown -R www-data:www-data /var/www
 
+RUN mkdir -p /var/www/.copilot && \
+    chown -R www-data:www-data /var/www/.copilot
+
 # Bake the Xdebug dphp alias permanently into the www-data user profile
 RUN echo "alias dphp='XDEBUG_CONFIG=\"client_host=127.0.0.1\" php -dxdebug.mode=debug -dxdebug.start_with_request=yes'" >> /var/www/.bashrc
 

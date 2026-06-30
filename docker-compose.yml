@@ -13,6 +13,7 @@ services:
       - XDEBUG_CONFIG=discover_client_host=1 client_port=9003 start_with_request=yes
     volumes:
       - ./api:/var/www/html
+      - api-copilot-session:/var/www/.copilot
     networks:
       - dcslab-net
 
@@ -29,6 +30,7 @@ services:
       - "5173:5173"
     volumes:
       - ./web:/app
+      - web-copilot-session:/home/node/.copilot
     networks:
       - dcslab-net
 
@@ -56,3 +58,7 @@ services:
 networks:
   dcslab-net:
     driver: bridge
+
+volumes:
+  api-copilot-session:
+  web-copilot-session:
