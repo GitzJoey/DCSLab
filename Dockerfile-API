@@ -31,6 +31,9 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Install COPILOT CLI
+RUN curl -fsSL https://gh.io/copilot-install | bash -s -- --prefix=/usr/local
+
 # Configure Apache
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
@@ -50,9 +53,9 @@ RUN mkdir -p /var/www/html && \
 # Bake the Xdebug dphp alias permanently into the www-data user profile
 RUN echo "alias dphp='XDEBUG_CONFIG=\"client_host=127.0.0.1\" php -dxdebug.mode=debug -dxdebug.start_with_request=yes'" >> /var/www/.bashrc
 
+# Final Environment Settings
 WORKDIR /var/www/html
 
-# Final Environment Settings
 EXPOSE 80
 
 CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
