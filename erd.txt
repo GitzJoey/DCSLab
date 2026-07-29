@@ -1,0 +1,16 @@
+- purchase_orders
+- purchase_order_items
+- purchase_order_payments
+- purchase_order_receipts
+- purchase_order_receipt_items
+- purchase_order_receipt_item_serials
+- purchase_order_receipt_costs
+
+- purchase_invoices
+- purchase_invoice_items
+- purchase_invoice_payments
+
+- purchase_returns
+- purchase_return_items
+- purchase_return_item_serials
+- purchase_return_refunds
