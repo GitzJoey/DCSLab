@@ -132,11 +132,11 @@ class SalesOrderDeliveryStoreRequest extends FormRequest
                 if (! is_null($salesOrder)) {
                     if (is_null($salesOrder->customer_id)) {
                         $validator->errors()->add('sales_order_id', trans('rules.sales_order_delivery.sales_order_must_have_customer'));
-                    } elseif ((int) $this->input('customer_id') !== (int) $salesOrder->customer_id) {
+                    } elseif ($this->filled('customer_id') && (int) $this->input('customer_id') !== (int) $salesOrder->customer_id) {
                         $validator->errors()->add('customer_id', trans('rules.sales_order_delivery.customer_must_match_sales_order'));
                     }
 
-                    if ((int) $this->input('branch_id') !== (int) $salesOrder->branch_id) {
+                    if ($this->filled('branch_id') && (int) $this->input('branch_id') !== (int) $salesOrder->branch_id) {
                         $validator->errors()->add('branch_id', trans('rules.sales_order_delivery.branch_must_match_sales_order'));
                     }
                 }

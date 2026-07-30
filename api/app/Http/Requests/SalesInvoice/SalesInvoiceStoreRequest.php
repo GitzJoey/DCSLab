@@ -240,11 +240,11 @@ class SalesInvoiceStoreRequest extends FormRequest
             return;
         }
 
-        if ((int) $this->input('customer_id') !== (int) $salesOrder->customer_id) {
+        if ($this->filled('customer_id') && (int) $this->input('customer_id') !== (int) $salesOrder->customer_id) {
             $validator->errors()->add('sales_order_id', trans('rules.sales_invoice.sales_order_customer_must_match'));
         }
 
-        if ((int) $this->input('branch_id') !== (int) $salesOrder->branch_id) {
+        if ($this->filled('branch_id') && (int) $this->input('branch_id') !== (int) $salesOrder->branch_id) {
             $validator->errors()->add('sales_order_id', trans('rules.sales_invoice.sales_order_branch_must_match'));
         }
 

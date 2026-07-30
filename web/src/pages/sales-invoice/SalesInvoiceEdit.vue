@@ -749,20 +749,27 @@ const loadSalesOrderDetail = async (salesOrderUlid: string) => {
 };
 
 const handleSalesOrderChanged = async (salesOrderId: string | number | null) => {
-  salesInvoiceForm.validate('sales_order_id');
-
   if (!salesOrderId) {
     await clearSalesOrder();
     return;
   }
 
   const option = salesOrderDDL.value.find((item) => item.code === salesOrderId);
-  if (!option) return;
+  if (!option) {
+    salesInvoiceForm.validate('sales_order_id');
+    return;
+  }
 
   const salesOrder = await loadSalesOrderDetail(option.ulid);
-  if (!salesOrder) return;
+  if (!salesOrder) {
+    salesInvoiceForm.validate('sales_order_id');
+    return;
+  }
 
   syncItemsFromSalesOrder(salesOrder);
+  salesInvoiceForm.forgetError('customer_id');
+  salesInvoiceForm.forgetError('branch_id');
+  salesInvoiceForm.validate('sales_order_id');
   await loadSalesReturnDDL();
 };
 

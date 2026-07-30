@@ -648,10 +648,9 @@ const clearSupplier = async () => {
 };
 
 const handlePurchaseInvoiceChanged = async (purchaseInvoiceId: string | number | null) => {
-  validateField('purchase_invoice_id');
-
   if (!purchaseInvoiceId) {
     applyVatFreeToAllItems();
+    validateField('purchase_invoice_id');
     return;
   }
 
@@ -660,7 +659,10 @@ const handlePurchaseInvoiceChanged = async (purchaseInvoiceId: string | number |
     purchaseReturnForm.setData({ supplier_id: option.supplier_id } as any);
     appendDropDownOption(supplierDDL, { code: option.supplier_id, name: option.supplier_name ?? option.supplier_id });
     purchaseReturnForm.forgetError('supplier_id');
+    purchaseReturnForm.forgetError('branch_id');
   }
+
+  validateField('purchase_invoice_id');
 };
 
 const clearPurchaseInvoice = async () => {

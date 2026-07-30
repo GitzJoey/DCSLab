@@ -552,17 +552,21 @@ const clearPurchaseOrder = async () => {
 };
 
 const handlePurchaseOrderChanged = async (purchaseOrderId: string | number | null) => {
-  purchaseInvoiceForm.validate('purchase_order_id');
-
   if (!purchaseOrderId) {
     await clearPurchaseOrder();
     return;
   }
 
   const purchaseOrder = await loadPurchaseOrderDetailById(String(purchaseOrderId));
-  if (!purchaseOrder) return;
+  if (!purchaseOrder) {
+    purchaseInvoiceForm.validate('purchase_order_id');
+    return;
+  }
 
   syncFromPurchaseOrder(purchaseOrder);
+  purchaseInvoiceForm.forgetError('supplier_id');
+  purchaseInvoiceForm.forgetError('branch_id');
+  purchaseInvoiceForm.validate('purchase_order_id');
   await loadPurchaseReturnDDL();
 };
 

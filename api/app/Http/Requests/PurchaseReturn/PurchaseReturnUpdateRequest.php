@@ -282,11 +282,11 @@ class PurchaseReturnUpdateRequest extends FormRequest
                 $purchaseInvoice = PurchaseInvoice::query()->find($purchaseInvoiceId);
 
                 if ($purchaseInvoice) {
-                    if ((int) $purchaseInvoice->supplier_id !== (int) $this->input('supplier_id')) {
+                    if ($this->filled('supplier_id') && (int) $purchaseInvoice->supplier_id !== (int) $this->input('supplier_id')) {
                         $validator->errors()->add('supplier_id', trans('rules.purchase_return.purchase_invoice_supplier_must_match'));
                     }
 
-                    if ((int) $purchaseInvoice->branch_id !== (int) $this->input('branch_id')) {
+                    if ($this->filled('branch_id') && (int) $purchaseInvoice->branch_id !== (int) $this->input('branch_id')) {
                         $validator->errors()->add('branch_id', trans('rules.purchase_return.purchase_invoice_branch_must_match'));
                     }
                 }

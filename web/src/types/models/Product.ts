@@ -21,6 +21,9 @@ export interface Product {
   type: number;
   status: string;
   remaining_stock_base_unit?: number;
+  // The API only sends these when the relation is eager-loaded, which varies
+  // per endpoint — always guard before use.
+  base_product_unit?: ProductUnit | null;
   product_units: ProductUnit[];
   product_images?: ProductImage[];
   main_product_image?: ProductImage | null;

@@ -151,11 +151,11 @@ class PurchaseOrderReceiptUpdateRequest extends FormRequest
 
         if (is_null($purchaseOrder->supplier_id)) {
             $validator->errors()->add('purchase_order_id', trans('rules.purchase_order_receipt.purchase_order_must_have_supplier'));
-        } elseif ((int) $this->input('supplier_id') !== (int) $purchaseOrder->supplier_id) {
+        } elseif ($this->filled('supplier_id') && (int) $this->input('supplier_id') !== (int) $purchaseOrder->supplier_id) {
             $validator->errors()->add('supplier_id', trans('rules.purchase_order_receipt.supplier_must_match_purchase_order'));
         }
 
-        if ((int) $this->input('branch_id') !== (int) $purchaseOrder->branch_id) {
+        if ($this->filled('branch_id') && (int) $this->input('branch_id') !== (int) $purchaseOrder->branch_id) {
             $validator->errors()->add('purchase_order_id', trans('rules.purchase_order_receipt.branch_must_match_purchase_order'));
         }
 

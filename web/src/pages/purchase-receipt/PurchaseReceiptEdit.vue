@@ -312,7 +312,12 @@ const buildBaseUnitName = (product: Product | null | undefined, conversionValue:
     return '';
   }
 
-  return product.product_units.find((unit) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
+  // product_units is only present when the API eager-loads it; the parent
+  // document detail sends base_product_unit instead.
+  const baseUnitName = product.base_product_unit?.unit?.name;
+  if (baseUnitName) return baseUnitName;
+
+  return (product.product_units ?? []).find((unit) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
 };
 
 const formatPurchaseOrderItemLabel = (purchaseOrderItem: PurchaseOrderItem | null | undefined) => {
@@ -592,8 +597,6 @@ const clearCostCashAccount = (index: number) => {
 };
 
 const handlePurchaseOrderChanged = async (purchaseOrderId: string | number | null) => {
-  purchaseOrderReceiptForm.validate('purchase_order_id');
-
   if (!purchaseOrderId) {
     await clearPurchaseOrder();
     return;
@@ -601,11 +604,13 @@ const handlePurchaseOrderChanged = async (purchaseOrderId: string | number | nul
 
   const option = purchaseOrderDDL.value.find((item) => item.code === purchaseOrderId);
   if (!option) {
+    purchaseOrderReceiptForm.validate('purchase_order_id');
     return;
   }
 
   const purchaseOrder = await loadPurchaseOrderDetail(option.ulid);
   if (!purchaseOrder) {
+    purchaseOrderReceiptForm.validate('purchase_order_id');
     return;
   }
 
@@ -615,6 +620,10 @@ const handlePurchaseOrderChanged = async (purchaseOrderId: string | number | nul
   } else {
     purchaseOrderReceiptForm.setData({ supplier_id: purchaseOrder.supplier?.id ?? null });
   }
+
+  purchaseOrderReceiptForm.forgetError('supplier_id');
+  purchaseOrderReceiptForm.forgetError('branch_id');
+  purchaseOrderReceiptForm.validate('purchase_order_id');
 };
 
 const reloadItemsFromPurchaseOrder = async () => {

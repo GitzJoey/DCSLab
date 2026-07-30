@@ -600,16 +600,17 @@ const clearWarehouse = () => {
 };
 
 const handleSalesInvoiceChanged = () => {
-  salesReturnForm.validate('sales_invoice_id');
-
   const option = salesInvoiceDDL.value.find((item) => item.code === salesReturnForm.sales_invoice_id);
   if (option?.customer_id) {
     salesReturnForm.setData({ customer_id: option.customer_id });
     appendDropDownOption(customerDDL, { code: option.customer_id, name: option.name });
+    salesReturnForm.forgetError('customer_id');
+    salesReturnForm.forgetError('branch_id');
   }
 
   enforceVatRules();
   clearItemErrors();
+  salesReturnForm.validate('sales_invoice_id');
 };
 
 const clearSalesInvoice = () => {

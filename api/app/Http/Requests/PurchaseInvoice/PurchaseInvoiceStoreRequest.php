@@ -225,11 +225,11 @@ class PurchaseInvoiceStoreRequest extends FormRequest
             return;
         }
 
-        if ((int) $this->input('supplier_id') !== (int) $purchaseOrder->supplier_id) {
+        if ($this->filled('supplier_id') && (int) $this->input('supplier_id') !== (int) $purchaseOrder->supplier_id) {
             $validator->errors()->add('purchase_order_id', trans('rules.purchase_invoice.purchase_order_supplier_must_match'));
         }
 
-        if ((int) $this->input('branch_id') !== (int) $purchaseOrder->branch_id) {
+        if ($this->filled('branch_id') && (int) $this->input('branch_id') !== (int) $purchaseOrder->branch_id) {
             $validator->errors()->add('purchase_order_id', trans('rules.purchase_invoice.purchase_order_branch_must_match'));
         }
 

@@ -153,7 +153,7 @@ class SalesOrderDeliveryUpdateRequest extends FormRequest
                 if (! is_null($salesOrder)) {
                     if (is_null($salesOrder->customer_id)) {
                         $validator->errors()->add('sales_order_id', trans('rules.sales_order_delivery.sales_order_must_have_customer'));
-                    } elseif ((int) $this->input('customer_id') !== (int) $salesOrder->customer_id) {
+                    } elseif ($this->filled('customer_id') && (int) $this->input('customer_id') !== (int) $salesOrder->customer_id) {
                         $validator->errors()->add('customer_id', trans('rules.sales_order_delivery.customer_must_match_sales_order'));
                     }
 

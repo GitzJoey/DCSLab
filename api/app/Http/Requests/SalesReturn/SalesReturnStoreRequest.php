@@ -163,11 +163,11 @@ class SalesReturnStoreRequest extends FormRequest
                 $salesInvoice = SalesInvoice::query()->find($salesInvoiceId);
 
                 if ($salesInvoice) {
-                    if ((int) $salesInvoice->customer_id !== (int) $customerId) {
+                    if (filled($customerId) && (int) $salesInvoice->customer_id !== (int) $customerId) {
                         $validator->errors()->add('customer_id', trans('rules.sales_return.sales_invoice_customer_must_match'));
                     }
 
-                    if ((int) $salesInvoice->branch_id !== (int) $branchId) {
+                    if (filled($branchId) && (int) $salesInvoice->branch_id !== (int) $branchId) {
                         $validator->errors()->add('branch_id', trans('rules.sales_return.sales_invoice_branch_must_match'));
                     }
                 }

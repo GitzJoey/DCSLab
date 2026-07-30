@@ -304,7 +304,12 @@ const buildBaseUnitName = (product: Product | null | undefined, conversionValue:
     return '';
   }
 
-  return product.product_units.find((unit) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
+  // product_units is only present when the API eager-loads it; the parent
+  // document detail sends base_product_unit instead.
+  const baseUnitName = product.base_product_unit?.unit?.name;
+  if (baseUnitName) return baseUnitName;
+
+  return (product.product_units ?? []).find((unit) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
 };
 
 const formatSalesOrderItemLabel = (salesOrderItem: SalesOrderItem | null | undefined) => {
@@ -559,8 +564,6 @@ const handleCustomerChanged = async () => {
 };
 
 const handleSalesOrderChanged = async (salesOrderId: string | number | null) => {
-  salesOrderDeliveryForm.validate('sales_order_id');
-
   if (!salesOrderId) {
     await clearSalesOrder();
     return;
@@ -568,15 +571,20 @@ const handleSalesOrderChanged = async (salesOrderId: string | number | null) => 
 
   const option = salesOrderDDL.value.find((item) => item.code === salesOrderId);
   if (!option) {
+    salesOrderDeliveryForm.validate('sales_order_id');
     return;
   }
 
   const salesOrder = await loadSalesOrderDetail(option.ulid);
   if (!salesOrder) {
+    salesOrderDeliveryForm.validate('sales_order_id');
     return;
   }
 
   syncItemsFromSalesOrder(salesOrder);
+  salesOrderDeliveryForm.forgetError('customer_id');
+  salesOrderDeliveryForm.forgetError('branch_id');
+  salesOrderDeliveryForm.validate('sales_order_id');
 };
 
 const reloadItemsFromSalesOrder = async () => {
