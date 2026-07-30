@@ -1120,9 +1120,13 @@ const onSubmit = async () => {
                     / {{ item.product_unit_base_unit_name }}
                   </span>
                 </div>
-                <div v-if="item.purchase_order_item_label" class="mt-1 text-xs text-primary">
-                  {{ item.purchase_order_item_label }}
+                <div v-if="item.purchase_order_item_id" class="mt-1">
+                  <span class="rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
+                    {{ t('views.purchase_receipt.fields.purchase_order_item_id') }}
+                  </span>
                 </div>
+                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_id`)" />
+                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.purchase_order_item_id`)" />
               </div>
               <div class="flex items-center gap-2">
                 <Button type="button" size="sm" variant="outline-primary" @click="openChangeProductUnit(index)">
@@ -1135,19 +1139,7 @@ const onSubmit = async () => {
             </div>
 
             <div class="mt-4 grid grid-cols-12 gap-4 gap-y-3">
-              <div class="col-span-12 lg:col-span-4">
-                <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.product_unit_id`) }">
-                  {{ t('views.purchase_receipt.fields.product_unit_id') }}
-                </FormLabel>
-                <FormInput
-                  :model-value="item.product_unit_product_code ? `[${item.product_unit_product_code}] ${item.product_unit_product_name}` : item.product_unit_product_name"
-                  readonly
-                />
-                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_id`)" />
-                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.purchase_order_item_id`)" />
-              </div>
-
-              <div class="col-span-12 md:col-span-6 lg:col-span-2">
+              <div class="col-span-12 md:col-span-6 lg:col-span-3">
                 <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.qty`) }">
                   {{ t('views.purchase_receipt.fields.qty') }}
                 </FormLabel>
@@ -1163,7 +1155,7 @@ const onSubmit = async () => {
                 <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.qty`)" />
               </div>
 
-              <div class="col-span-12 md:col-span-6 lg:col-span-2">
+              <div class="col-span-12 md:col-span-6 lg:col-span-3">
                 <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }">
                   {{ t('views.purchase_receipt.fields.product_unit_conversion_value') }}
                 </FormLabel>
@@ -1175,7 +1167,7 @@ const onSubmit = async () => {
                 <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_conversion_value`)" />
               </div>
 
-              <div class="col-span-12 lg:col-span-4">
+              <div class="col-span-12 lg:col-span-6">
                 <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.remarks`) }">
                   {{ t('views.purchase_receipt.fields.remarks') }}
                 </FormLabel>
