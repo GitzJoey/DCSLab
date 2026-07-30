@@ -963,325 +963,62 @@ const onSubmit = async () => {
           <div v-else>
             <div v-for="(item, index) in purchaseOrderItemsForm" :key="`${item.product_unit_id}-${index}`"
               class="mt-3 border-t border-slate-200/60 pt-5 first:mt-0 first:border-t-0 first:pt-0 dark:border-darkmode-400">
-              <!-- item content: stacked mobile layout -->
-              <div v-if="currentItemLayout === 'sm'" class="grid grid-cols-12 gap-4 gap-y-3">
-                <!-- item image -->
-                <div class="col-span-12">
-                  <div class="form-control border rounded-md px-3">
-                    <div class="flex justify-center">
-                      <ProductImagePreview :image-url="item.product_unit_product_image_url"
-                        wrapper-class="w-16 h-16 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
-                        icon-class="w-5 h-5 text-slate-400"
-                        :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
-                    </div>
-                  </div>
-                </div>
-                <!-- item product -->
-                <div class="col-span-12">
-                  <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_id`) }">
-                    <span>{{ t('views.purchase_order.fields.product_unit_id') }}</span>
-                    <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
-                      #{{ index + 1 }}
+              <!-- item summary: single compact row -->
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <ProductImagePreview :image-url="item.product_unit_product_image_url"
+                  wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
+                  icon-class="w-4 h-4 text-slate-400"
+                  :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
+                <div class="min-w-[200px] flex-1">
+                  <div class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+                    <span v-if="item.product_unit_product_code" class="font-normal text-slate-500">
+                      [{{ item.product_unit_product_code }}]
                     </span>
-                    <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
-                      {{ item.product_unit_product_code || '-' }}
+                    {{ item.product_unit_product_name || '-' }}
+                  </div>
+                  <div class="truncate text-xs text-slate-500 dark:text-slate-400">
+                    #{{ index + 1 }}
+                    <span v-if="item.product_unit_unit_name">&middot; {{ item.product_unit_unit_name }}</span>
+                    <span v-if="Number(item.product_unit_conversion_value || 1) > 1">
+                      &middot; &times; {{ formatCompactNumberValue(item.product_unit_conversion_value) }}
+                      {{ item.product_unit_base_unit_name || '' }}
                     </span>
-                  </FormLabel>
-                  <div class="flex items-center gap-2">
-                    <div class="flex-1 min-w-0">
-                      <div
-                        class="form-control border rounded-md px-3 py-2 bg-slate-50 dark:bg-darkmode-800 text-slate-700 dark:text-slate-300">
-                        {{ item.product_unit_product_name || '-' }}
-                      </div>
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary" tabindex="-1"
-                        class="flex items-center justify-center border-slate-500 text-slate-500 hover:text-primary hover:border-primary h-[38px] w-[38px]"
-                        @click="openChangeProductUnit(index)">
-                        <Lucide icon="Search" class="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_id`)" />
-                </div>
-                <!-- item qty and unit -->
-                <div class="col-span-12">
-                  <div class="grid grid-cols-2 gap-4">
-                    <!-- item qty -->
-                    <div>
-                      <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.qty`) }">
-                        {{ t('views.purchase_order.fields.qty') }}
-                      </FormLabel>
-                      <FormInputCurrency :id="`purchase-order-item-qty-${index}`" v-model="item.qty"
-                        :allow-negative="false"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.qty`)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.qty`)" />
-                    </div>
-                    <!-- item unit -->
-                    <div>
-                      <FormLabel>
-                        {{ t('views.product.table.cols.unit') }}
-                      </FormLabel>
-                      <FormInput :model-value="item.product_unit_unit_name || '-'" readonly />
-                    </div>
-                  </div>
-                  <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
-                    <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')}
-                      ${formatCompactNumberValue(item.product_unit_conversion_value)}
-                      ${item.product_unit_base_unit_name || ''}`.trim() }}
-                    </div>
                   </div>
                 </div>
-                <!-- item price -->
-                <div class="col-span-12">
-                  <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }">
-                    {{ t('views.purchase_order.fields.product_unit_price') }}
-                  </FormLabel>
+                <div class="w-24 shrink-0" :title="t('views.purchase_order.fields.qty')">
+                  <FormInputCurrency :id="`purchase-order-item-qty-${index}`" v-model="item.qty"
+                    :allow-negative="false"
+                    :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
+                    @change="validatePurchaseOrderField(`items.${index}.qty`)" />
+                </div>
+                <div class="w-32 shrink-0" :title="t('views.purchase_order.fields.product_unit_price')">
                   <FormInputCurrency v-model="item.product_unit_price" :allow-negative="false"
                     :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }"
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
-                  <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
-                <!-- item subtotal after discount -->
-                <div class="col-span-12">
-                  <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
-                  <div class="flex items-start gap-2">
-                    <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary"
-                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="togglePurchaseOrderItemDetails(index)">
-                        {{ purchaseOrderItemDetailsExpanded[index] ? '▲' : '▼' }}
-                      </Button>
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary"
-                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="removeProductUnit(index)">
-                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                      </Button>
-                    </div>
-                  </div>
+                <div class="hidden w-32 shrink-0 sm:block"
+                  :title="t('views.purchase_order.fields.subtotal_after_discount')">
+                  <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
+                </div>
+                <div class="flex shrink-0 items-center gap-1">
+                  <Button type="button" size="sm" variant="outline-secondary"
+                    @click="togglePurchaseOrderItemDetails(index)">
+                    <Lucide :icon="purchaseOrderItemDetailsExpanded[index] ? 'ChevronUp' : 'ChevronDown'"
+                      class="w-4 h-4" />
+                  </Button>
+                  <Button type="button" size="sm" variant="outline-secondary" tabindex="-1"
+                    class="border-slate-500 text-slate-500 hover:border-primary hover:text-primary"
+                    @click="openChangeProductUnit(index)">
+                    <Lucide icon="Search" class="w-4 h-4" />
+                  </Button>
+                  <Button type="button" size="sm" variant="outline-secondary" @click="removeProductUnit(index)">
+                    <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                  </Button>
                 </div>
               </div>
-              <!-- item content: tablet layout -->
-              <div v-else-if="currentItemLayout === 'md'" class="grid grid-cols-12 gap-4 gap-y-3">
-                <!-- item image -->
-                <div class="col-span-12 md:col-span-3">
-                  <div class="form-control border rounded-md px-3">
-                    <div class="flex justify-center">
-                      <ProductImagePreview :image-url="item.product_unit_product_image_url"
-                        wrapper-class="w-16 h-16 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
-                        icon-class="w-5 h-5 text-slate-400"
-                        :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
-                    </div>
-                  </div>
-                </div>
-                <!-- item product -->
-                <div class="col-span-12 md:col-span-9">
-                  <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_id`) }">
-                    <span>{{ t('views.purchase_order.fields.product_unit_id') }}</span>
-                    <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
-                      #{{ index + 1 }}
-                    </span>
-                    <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
-                      {{ item.product_unit_product_code || '-' }}
-                    </span>
-                  </FormLabel>
-                  <div class="flex items-center gap-2">
-                    <div class="flex-1 min-w-0">
-                      <div
-                        class="form-control border rounded-md px-3 py-2 bg-slate-50 dark:bg-darkmode-800 text-slate-700 dark:text-slate-300">
-                        {{ item.product_unit_product_name || '-' }}
-                      </div>
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary" tabindex="-1"
-                        class="flex items-center justify-center border-slate-500 text-slate-500 hover:text-primary hover:border-primary h-[38px] w-[38px]"
-                        @click="openChangeProductUnit(index)">
-                        <Lucide icon="Search" class="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_id`)" />
-                </div>
-                <!-- item qty and unit -->
-                <div class="col-span-12 md:col-span-4">
-                  <div class="grid grid-cols-2 gap-4">
-                    <!-- item qty -->
-                    <div>
-                      <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.qty`) }">
-                        {{ t('views.purchase_order.fields.qty') }}
-                      </FormLabel>
-                      <FormInputCurrency :id="`purchase-order-item-qty-${index}`" v-model="item.qty"
-                        :allow-negative="false"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.qty`)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.qty`)" />
-                    </div>
-                    <!-- item unit -->
-                    <div>
-                      <FormLabel>
-                        {{ t('views.product.table.cols.unit') }}
-                      </FormLabel>
-                      <FormInput :model-value="item.product_unit_unit_name || '-'" readonly />
-                    </div>
-                  </div>
-                  <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
-                    <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')}
-                      ${formatCompactNumberValue(item.product_unit_conversion_value)}
-                      ${item.product_unit_base_unit_name || ''}`.trim() }}
-                    </div>
-                  </div>
-                </div>
-                <!-- item price -->
-                <div class="col-span-12 md:col-span-4">
-                  <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }">
-                    {{ t('views.purchase_order.fields.product_unit_price') }}
-                  </FormLabel>
-                  <FormInputCurrency v-model="item.product_unit_price" :allow-negative="false"
-                    :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }"
-                    @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
-                  <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
-                </div>
-                <!-- item subtotal after discount -->
-                <div class="col-span-12 md:col-span-4">
-                  <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
-                  <div class="flex items-start gap-2">
-                    <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary"
-                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="togglePurchaseOrderItemDetails(index)">
-                        {{ purchaseOrderItemDetailsExpanded[index] ? '▲' : '▼' }}
-                      </Button>
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary"
-                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="removeProductUnit(index)">
-                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <!-- item content: desktop summary row -->
-              <div v-else class="grid grid-cols-12 gap-4 gap-y-3">
-                <!-- item image -->
-                <div class="col-span-12 lg:col-span-1">
-                  <div class="form-control border rounded-md px-3">
-                    <div class="flex justify-center">
-                      <ProductImagePreview :image-url="item.product_unit_product_image_url"
-                        wrapper-class="w-16 h-16 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
-                        icon-class="w-5 h-5 text-slate-400"
-                        :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
-                    </div>
-                  </div>
-                </div>
-                <!-- item product -->
-                <div class="col-span-12 lg:col-span-4">
-                  <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_id`) }">
-                    <span>{{ t('views.purchase_order.fields.product_unit_id') }}</span>
-                    <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
-                      #{{ index + 1 }}
-                    </span>
-                    <span class="ml-2 text-xs font-normal text-slate-500 dark:text-slate-400">
-                      {{ item.product_unit_product_code || '-' }}
-                    </span>
-                  </FormLabel>
-                  <div class="flex items-start gap-2">
-                    <div class="flex-1">
-                      <div
-                        class="form-control border rounded-md px-3 py-2 bg-slate-50 dark:bg-darkmode-800 text-slate-700 dark:text-slate-300">
-                        {{ item.product_unit_product_name || '-' }}
-                      </div>
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary" tabindex="-1"
-                        class="flex items-center justify-center border-slate-500 text-slate-500 hover:text-primary hover:border-primary h-[38px] w-[38px]"
-                        @click="openChangeProductUnit(index)">
-                        <Lucide icon="Search" class="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_id`)" />
-                </div>
-                <!-- item qty and unit -->
-                <div class="col-span-12 lg:col-span-2">
-                  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                    <!-- item qty -->
-                    <div>
-                      <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.qty`) }">
-                        {{ t('views.purchase_order.fields.qty') }}
-                      </FormLabel>
-                      <FormInputCurrency :id="`purchase-order-item-qty-${index}`" v-model="item.qty"
-                        :allow-negative="false"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.qty`)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.qty`)" />
-                    </div>
-                    <!-- item unit -->
-                    <div>
-                      <FormLabel>
-                        {{ t('views.product.table.cols.unit') }}
-                      </FormLabel>
-                      <FormInput :model-value="item.product_unit_unit_name || '-'" readonly />
-                    </div>
-                  </div>
-                  <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="mt-1 text-right">
-                    <div class="text-sm text-slate-500 dark:text-slate-400">
-                      {{ `${t('views.product.fields.conversion_value')}
-                      ${formatCompactNumberValue(item.product_unit_conversion_value)}
-                      ${item.product_unit_base_unit_name || ''}`.trim() }}
-                    </div>
-                  </div>
-                </div>
-                <!-- item price -->
-                <div class="col-span-12 lg:col-span-2">
-                  <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }">
-                    {{ t('views.purchase_order.fields.product_unit_price') }}
-                  </FormLabel>
-                  <div class="flex items-start gap-2">
-                    <div class="flex-1 min-w-0">
-                      <FormInputCurrency v-model="item.product_unit_price" :allow-negative="false"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
-                    </div>
-                  </div>
-                  <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
-                </div>
-                <!-- item subtotal after discount -->
-                <div class="col-span-12 lg:col-span-3">
-                  <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
-                  <div class="flex items-start gap-2">
-                    <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly />
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary"
-                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="togglePurchaseOrderItemDetails(index)">
-                        {{ purchaseOrderItemDetailsExpanded[index] ? '▲' : '▼' }}
-                      </Button>
-                    </div>
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary"
-                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="removeProductUnit(index)">
-                        <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_id`)" />
+              <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.qty`)" />
+              <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
 
               <!-- item details: stacked breakdown panels for mobile and tablet -->
               <div v-if="currentItemLayout !== 'lg' && purchaseOrderItemDetailsExpanded[index]" class="mt-4 space-y-4">

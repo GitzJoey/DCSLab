@@ -25,6 +25,7 @@ import {
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import ProductUnitPickerDialog from '@/components/Product/ProductUnitPickerDialog.vue';
+import ProductImagePreview from '@/components/Product/ProductImagePreview.vue';
 import CacheService from '@/services/CacheService';
 import CashAccountService from '@/services/CashAccountService';
 import ProductService from '@/services/ProductService';
@@ -62,6 +63,7 @@ type PurchaseOrderReceiptItemFormItem = PurchaseOrderReceiptItemNestedStoreReque
   product_unit_base_unit_name?: string | null;
   product_unit_product_image_url?: string | null;
   purchase_order_item_label?: string | null;
+  ui_expanded?: boolean;
   is_use_serial_number?: boolean;
 };
 
@@ -235,6 +237,13 @@ const invalidField = (field: string) => purchaseOrderReceiptForm.invalid(field);
 
 const invalidItemField = (field: string) => purchaseOrderReceiptForm.invalid(field as any);
 
+const itemDetailsInvalid = (index: number, item: PurchaseOrderReceiptItemFormItem) =>
+  invalidItemField(`items.${index}.remarks`)
+  || invalidItemField(`items.${index}.serials`)
+  || (item.serials ?? []).some((_: unknown, serialIndex: number) =>
+    invalidItemField(`items.${index}.serials.${serialIndex}.serial`),
+  );
+
 const scrollToError = (id: string): void => {
   const el = document.getElementById(id);
   if (!el) return;
@@ -343,6 +352,7 @@ const buildItemFromProductUnitOption = (option: ProductUnitOption): PurchaseOrde
   product_unit_unit_name: option.unit_name,
   product_unit_base_unit_name: option.base_unit_name,
   product_unit_product_image_url: option.product_image_url ?? null,
+  ui_expanded: option.is_use_serial_number,
   purchase_order_item_label: null,
   is_use_serial_number: option.is_use_serial_number,
 });
@@ -370,6 +380,7 @@ const buildReceiptItemFromPurchaseOrderItem = (
     product_unit_unit_name: productUnit?.unit?.name ?? '',
     product_unit_base_unit_name: buildBaseUnitName(product, Number(productUnit?.conversion_value ?? conversionValue)),
     product_unit_product_image_url: product?.main_product_image?.url ?? null,
+    ui_expanded: Boolean(product?.is_use_serial_number),
     purchase_order_item_label: formatPurchaseOrderItemLabel(purchaseOrderItem),
     is_use_serial_number: Boolean(product?.is_use_serial_number),
   };
@@ -973,33 +984,64 @@ const onSubmit = async () => {
           </div>
 
           <div
+            v-else
+            class="divide-y divide-slate-200/70 rounded-md border border-slate-200/70 dark:divide-darkmode-400 dark:border-darkmode-400"
+          >
+          <div
             v-for="(item, index) in getItems()"
             :key="`${item.purchase_order_item_id ? 'po' : 'extra'}-${item.product_unit_id ?? 'item'}-${index}`"
-            class="rounded-md border border-slate-200/70 p-4 dark:border-darkmode-400"
           >
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div>
-                <div class="text-sm font-medium text-slate-900 dark:text-slate-100">
+            <div class="flex items-center gap-3 px-3 py-2">
+              <ProductImagePreview
+                :image-url="item.product_unit_product_image_url"
+                wrapper-class="flex h-10 w-10 shrink-0 cursor-zoom-in items-center justify-center overflow-hidden rounded-md bg-slate-100 dark:bg-darkmode-600"
+                icon-class="h-4 w-4 text-slate-400"
+                :preview-title="item.product_unit_product_name || '-'"
+              />
+              <div class="min-w-0 flex-1">
+                <div class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
+                  <span v-if="item.product_unit_product_code" class="font-normal text-slate-500">
+                    [{{ item.product_unit_product_code }}]
+                  </span>
                   {{ item.product_unit_product_name || '-' }}
                 </div>
-                <div class="text-xs text-slate-500">
-                  <span v-if="item.product_unit_product_code">[{{ item.product_unit_product_code }}]</span>
-                  <span v-if="item.product_unit_unit_name">
-                    {{ item.product_unit_product_code ? ' - ' : '' }}{{ item.product_unit_unit_name }}
-                  </span>
-                  <span v-if="item.product_unit_base_unit_name">
-                    / {{ item.product_unit_base_unit_name }}
-                  </span>
-                </div>
-                <div v-if="item.purchase_order_item_id" class="mt-1">
-                  <span class="rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
+                <div class="flex flex-wrap items-center gap-x-1 truncate text-xs text-slate-500">
+                  <span v-if="item.product_unit_unit_name">{{ item.product_unit_unit_name }}</span>
+                  <span v-if="item.product_unit_base_unit_name">/ {{ item.product_unit_base_unit_name }}</span>
+                  <span v-if="item.purchase_order_item_id" class="rounded bg-primary/10 px-1.5 py-0.5 text-primary">
                     {{ t('views.purchase_receipt.fields.purchase_order_item_id') }}
                   </span>
                 </div>
-                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_id`)" />
-                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.purchase_order_item_id`)" />
               </div>
-              <div class="flex items-center gap-2">
+              <div class="w-24 shrink-0">
+                <FormInput
+                  :id="`items.${index}.qty`"
+                  v-model="item.qty"
+                  type="number"
+                  min="0"
+                  step="any"
+                  class="text-right"
+                  :title="t('views.purchase_receipt.fields.qty')"
+                  :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
+                  @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
+                />
+              </div>
+              <div
+                class="w-14 shrink-0 text-right text-xs text-slate-500"
+                :title="t('views.purchase_receipt.fields.product_unit_conversion_value')"
+              >
+                &times; {{ item.product_unit_conversion_value }}
+              </div>
+              <div class="flex shrink-0 items-center gap-1">
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline-secondary"
+                  :class="{ 'border-danger text-danger': !item.ui_expanded && itemDetailsInvalid(index, item) }"
+                  @click="item.ui_expanded = !item.ui_expanded"
+                >
+                  <Lucide :icon="item.ui_expanded ? 'ChevronUp' : 'ChevronDown'" class="h-4 w-4" />
+                </Button>
                 <Button type="button" size="sm" variant="outline-primary" @click="openChangeProductUnit(index)">
                   <Lucide icon="Pencil" class="h-4 w-4" />
                 </Button>
@@ -1009,36 +1051,15 @@ const onSubmit = async () => {
               </div>
             </div>
 
-            <div class="mt-4 grid grid-cols-12 gap-4 gap-y-3">
-              <div class="col-span-12 md:col-span-6 lg:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.qty`) }">
-                  {{ t('views.purchase_receipt.fields.qty') }}
-                </FormLabel>
-                <FormInput
-                  :id="`items.${index}.qty`"
-                  v-model="item.qty"
-                  type="number"
-                  min="0"
-                  step="any"
-                  :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
-                  @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
-                />
-                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.qty`)" />
-              </div>
+            <div class="px-3">
+              <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_id`)" />
+              <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.purchase_order_item_id`)" />
+              <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.qty`)" />
+              <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_conversion_value`)" />
+            </div>
 
-              <div class="col-span-12 md:col-span-6 lg:col-span-3">
-                <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }">
-                  {{ t('views.purchase_receipt.fields.product_unit_conversion_value') }}
-                </FormLabel>
-                <FormInput
-                  v-model="item.product_unit_conversion_value"
-                  readonly
-                  :class="{ 'border-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }"
-                />
-                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_conversion_value`)" />
-              </div>
-
-              <div class="col-span-12 lg:col-span-6">
+            <div v-if="item.ui_expanded" class="space-y-3 bg-slate-50/70 px-3 py-3 dark:bg-darkmode-600/30">
+              <div>
                 <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.remarks`) }">
                   {{ t('views.purchase_receipt.fields.remarks') }}
                 </FormLabel>
@@ -1051,7 +1072,7 @@ const onSubmit = async () => {
                 <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.remarks`)" />
               </div>
 
-              <div v-if="item.is_use_serial_number" class="col-span-12">
+              <div v-if="item.is_use_serial_number">
                 <div class="mb-2 flex items-center justify-between">
                   <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.serials`) }">
                     {{ t('views.product.fields.serial_number') }}
@@ -1091,6 +1112,7 @@ const onSubmit = async () => {
                 />
               </div>
             </div>
+          </div>
           </div>
         </div>
       </template>
