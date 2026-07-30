@@ -51,14 +51,8 @@ class VatProfile extends Model
         return $this->hasMany(PurchaseOrderItem::class);
     }
 
-    // public function purchaseItems()
-    // {
-    //     return $this->hasMany(PurchaseItem::class);
-    // }
-
-    // public function purchaseReturnItems()
-    // {
-    //     return $this->hasMany(PurchaseReturnItem::class);
-    // }
-
+    public function salesOrderItems()
+    {
+        return $this->hasMany(SalesOrderItem::class);
+    }
 }

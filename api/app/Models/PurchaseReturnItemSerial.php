@@ -44,4 +44,9 @@ class PurchaseReturnItemSerial extends Model
     {
         return $this->belongsTo(PurchaseReturnItem::class)->withTrashed();
     }
+
+    public function stockSerialTransaction()
+    {
+        return $this->morphOne(StockSerialTransaction::class, 'referable');
+    }
 }

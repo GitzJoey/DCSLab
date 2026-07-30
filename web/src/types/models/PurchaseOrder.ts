@@ -1,19 +1,9 @@
 import { Branch } from './Branch';
 import { Company } from './Company';
-import type { PurchaseOrderDownPayment } from './PurchaseOrderDownPayment';
-import type { PurchaseOrderDownPaymentRefund } from './PurchaseOrderDownPaymentRefund';
 import type { PurchaseOrderItem } from './PurchaseOrderItem';
+import type { PurchaseOrderPayment } from './PurchaseOrderPayment';
+import type { PurchaseOrderPaymentRefund } from './PurchaseOrderPaymentRefund';
 import { Supplier } from './Supplier';
-
-export interface PurchaseOrderGlobalDiscount {
-  id: string;
-  ulid: string;
-  company?: Company;
-  branch?: Branch;
-  sequence: number;
-  discount_type: string;
-  discount_value: number;
-}
 
 export interface PurchaseOrder {
   id: string;
@@ -43,8 +33,7 @@ export interface PurchaseOrder {
   item_less_count: number;
   item_more_count: number;
   item_unlinked_count: number;
-  global_discounts: PurchaseOrderGlobalDiscount[];
   items: PurchaseOrderItem[];
-  down_payments: PurchaseOrderDownPayment[];
-  refunded_down_payments: PurchaseOrderDownPaymentRefund[];
+  payments: PurchaseOrderPayment[];
+  refunded_payments: PurchaseOrderPaymentRefund[];
 }

@@ -166,18 +166,6 @@ import StockAdjustmentCategoryIndex from '@/pages/stock-adjustment-category/Stoc
 import StockAdjustmentCategoryList from '@/pages/stock-adjustment-category/StockAdjustmentCategoryList.vue';
 import StockAdjustmentCategoryCreate from '@/pages/stock-adjustment-category/StockAdjustmentCategoryCreate.vue';
 import StockAdjustmentCategoryEdit from '@/pages/stock-adjustment-category/StockAdjustmentCategoryEdit.vue';
-import PurchaseAdditionalCostCategoryIndex from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryIndex.vue';
-import PurchaseAdditionalCostCategoryList from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryList.vue';
-import PurchaseAdditionalCostCategoryCreate from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryCreate.vue';
-import PurchaseAdditionalCostCategoryEdit from '@/pages/purchase-additional-cost-category/PurchaseAdditionalCostCategoryEdit.vue';
-import PurchaseAdditionalCostIndex from '@/pages/purchase-additional-cost/PurchaseAdditionalCostIndex.vue';
-import PurchaseAdditionalCostList from '@/pages/purchase-additional-cost/PurchaseAdditionalCostList.vue';
-import PurchaseAdditionalCostCreate from '@/pages/purchase-additional-cost/PurchaseAdditionalCostCreate.vue';
-import PurchaseAdditionalCostEdit from '@/pages/purchase-additional-cost/PurchaseAdditionalCostEdit.vue';
-import PurchaseAdditionalCostPaymentIndex from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentIndex.vue';
-import PurchaseAdditionalCostPaymentList from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentList.vue';
-import PurchaseAdditionalCostPaymentCreate from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentCreate.vue';
-import PurchaseAdditionalCostPaymentEdit from '@/pages/purchase-additional-cost-payment/PurchaseAdditionalCostPaymentEdit.vue';
 import StockAdjustmentIndex from '@/pages/stock-adjustment/StockAdjustmentIndex.vue';
 import StockAdjustmentList from '@/pages/stock-adjustment/StockAdjustmentList.vue';
 import StockAdjustmentCreate from '@/pages/stock-adjustment/StockAdjustmentCreate.vue';
@@ -206,23 +194,50 @@ import PurchaseOrderIndex from '@/pages/purchase-order/PurchaseOrderIndex.vue';
 import PurchaseOrderList from '@/pages/purchase-order/PurchaseOrderList.vue';
 import PurchaseOrderCreate from '@/pages/purchase-order/PurchaseOrderCreate.vue';
 import PurchaseOrderEdit from '@/pages/purchase-order/PurchaseOrderEdit.vue';
-import PurchaseIndex from '@/pages/purchase/PurchaseIndex.vue';
-import PurchaseList from '@/pages/purchase/PurchaseList.vue';
-import PurchaseCreateDirect from '@/pages/purchase/PurchaseCreateDirect.vue';
-import PurchaseCreateManual from '@/pages/purchase/PurchaseCreateManual.vue';
-import PurchaseEditDirect from '@/pages/purchase/PurchaseEditDirect.vue';
-import PurchaseEditManual from '@/pages/purchase/PurchaseEditManual.vue';
 import PurchaseReceiptIndex from '@/pages/purchase-receipt/PurchaseReceiptIndex.vue';
 import PurchaseReceiptList from '@/pages/purchase-receipt/PurchaseReceiptList.vue';
 import PurchaseReceiptCreate from '@/pages/purchase-receipt/PurchaseReceiptCreate.vue';
 import PurchaseReceiptEdit from '@/pages/purchase-receipt/PurchaseReceiptEdit.vue';
+import PurchaseInvoiceIndex from '@/pages/purchase-invoice/PurchaseInvoiceIndex.vue';
+import PurchaseInvoiceList from '@/pages/purchase-invoice/PurchaseInvoiceList.vue';
+import PurchaseInvoiceCreate from '@/pages/purchase-invoice/PurchaseInvoiceCreate.vue';
+import PurchaseInvoiceEdit from '@/pages/purchase-invoice/PurchaseInvoiceEdit.vue';
+import PurchaseInvoicePaymentIndex from '@/pages/purchase-invoice/PurchaseInvoicePaymentIndex.vue';
+import PurchaseInvoicePaymentList from '@/pages/purchase-invoice/PurchaseInvoicePaymentList.vue';
+import PurchaseReturnIndex from '@/pages/purchase-return/PurchaseReturnIndex.vue';
+import PurchaseReturnList from '@/pages/purchase-return/PurchaseReturnList.vue';
+import PurchaseReturnCreate from '@/pages/purchase-return/PurchaseReturnCreate.vue';
+import PurchaseReturnEdit from '@/pages/purchase-return/PurchaseReturnEdit.vue';
 import PurchaseOrderItemIndex from '@/pages/purchase-order/PurchaseOrderItemIndex.vue';
 import PurchaseOrderItemList from '@/pages/purchase-order/PurchaseOrderItemList.vue';
-import PurchaseOrderDownPaymentIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentIndex.vue';
-import PurchaseOrderDownPaymentList from '@/pages/purchase-order/PurchaseOrderDownPaymentList.vue';
-import PurchaseOrderDownPaymentNotFullyAllocatedIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentNotFullyAllocatedIndex.vue';
-import PurchaseOrderDownPaymentRefundIndex from '@/pages/purchase-order/PurchaseOrderDownPaymentRefundIndex.vue';
-import PurchaseOrderDownPaymentRefundList from '@/pages/purchase-order/PurchaseOrderDownPaymentRefundList.vue';
+import PurchaseOrderPaymentIndex from '@/pages/purchase-order/PurchaseOrderPaymentIndex.vue';
+import PurchaseOrderPaymentList from '@/pages/purchase-order/PurchaseOrderPaymentList.vue';
+import PurchaseOrderPaymentNotFullyAllocatedIndex from '@/pages/purchase-order/PurchaseOrderPaymentNotFullyAllocatedIndex.vue';
+import PurchaseOrderPaymentRefundIndex from '@/pages/purchase-order/PurchaseOrderPaymentRefundIndex.vue';
+import PurchaseOrderPaymentRefundList from '@/pages/purchase-order/PurchaseOrderPaymentRefundList.vue';
+import SalesOrderIndex from '@/pages/sales-order/SalesOrderIndex.vue';
+import SalesOrderList from '@/pages/sales-order/SalesOrderList.vue';
+import SalesOrderCreate from '@/pages/sales-order/SalesOrderCreate.vue';
+import SalesOrderEdit from '@/pages/sales-order/SalesOrderEdit.vue';
+import SalesOrderDeliveryIndex from '@/pages/sales-delivery/SalesOrderDeliveryIndex.vue';
+import SalesOrderDeliveryList from '@/pages/sales-delivery/SalesOrderDeliveryList.vue';
+import SalesOrderDeliveryCreate from '@/pages/sales-delivery/SalesOrderDeliveryCreate.vue';
+import SalesOrderDeliveryEdit from '@/pages/sales-delivery/SalesOrderDeliveryEdit.vue';
+import SalesInvoiceIndex from '@/pages/sales-invoice/SalesInvoiceIndex.vue';
+import SalesInvoiceList from '@/pages/sales-invoice/SalesInvoiceList.vue';
+import SalesInvoiceCreate from '@/pages/sales-invoice/SalesInvoiceCreate.vue';
+import SalesInvoiceEdit from '@/pages/sales-invoice/SalesInvoiceEdit.vue';
+import SalesReturnIndex from '@/pages/sales-return/SalesReturnIndex.vue';
+import SalesReturnList from '@/pages/sales-return/SalesReturnList.vue';
+import SalesReturnCreate from '@/pages/sales-return/SalesReturnCreate.vue';
+import SalesReturnEdit from '@/pages/sales-return/SalesReturnEdit.vue';
+import SalesOrderItemIndex from '@/pages/sales-order/SalesOrderItemIndex.vue';
+import SalesOrderItemList from '@/pages/sales-order/SalesOrderItemList.vue';
+import SalesOrderPaymentIndex from '@/pages/sales-order/SalesOrderPaymentIndex.vue';
+import SalesOrderPaymentList from '@/pages/sales-order/SalesOrderPaymentList.vue';
+import SalesOrderPaymentNotFullyAllocatedIndex from '@/pages/sales-order/SalesOrderPaymentNotFullyAllocatedIndex.vue';
+import SalesOrderPaymentRefundIndex from '@/pages/sales-order/SalesOrderPaymentRefundIndex.vue';
+import SalesOrderPaymentRefundList from '@/pages/sales-order/SalesOrderPaymentRefundList.vue';
 import StockTransferIndex from '@/pages/stock-transfer/StockTransferIndex.vue';
 import StockTransferList from '@/pages/stock-transfer/StockTransferList.vue';
 import StockTransferCreate from '@/pages/stock-transfer/StockTransferCreate.vue';
@@ -893,7 +908,7 @@ export default [
           },
         ],
       },
-      // Purchase Additional Cost Category
+      // Expense Category
       {
         path: '/expense-category',
         children: [
@@ -1190,108 +1205,6 @@ export default [
           },
         ],
       },
-      // Purchase Additional Cost Category
-      {
-        path: '/purchase-additional-cost-category',
-        children: [
-          {
-            path: '/purchase-additional-cost-category',
-            name: 'side-menu-purchase-additional-cost-category',
-            redirect: '/purchase-additional-cost-category/list',
-            component: PurchaseAdditionalCostCategoryIndex,
-            children: [
-              {
-                path: '/purchase-additional-cost-category/list',
-                name: 'side-menu-purchase-additional-cost-category-list',
-                component: PurchaseAdditionalCostCategoryList,
-                meta: {
-                  remember: true,
-                },
-              },
-              {
-                path: '/purchase-additional-cost-category/create',
-                name: 'side-menu-purchase-additional-cost-category-create',
-                component: PurchaseAdditionalCostCategoryCreate,
-                meta: {
-                  remember: true,
-                },
-              },
-              {
-                path: '/purchase-additional-cost-category/edit/:ulid',
-                name: 'side-menu-purchase-additional-cost-category-edit',
-                component: PurchaseAdditionalCostCategoryEdit,
-                meta: {
-                  remember: true,
-                },
-              },
-            ],
-          },
-        ],
-      },
-      // Purchase Additional Cost
-      {
-        path: '/purchase-additional-cost',
-        children: [
-          {
-            path: '/purchase-additional-cost',
-            name: 'side-menu-purchase-additional-cost',
-            redirect: '/purchase-additional-cost/list',
-            component: PurchaseAdditionalCostIndex,
-            children: [
-              {
-                path: '/purchase-additional-cost/list',
-                name: 'side-menu-purchase-additional-cost-list',
-                component: PurchaseAdditionalCostList,
-                meta: { remember: true },
-              },
-              {
-                path: '/purchase-additional-cost/create',
-                name: 'side-menu-purchase-additional-cost-create',
-                component: PurchaseAdditionalCostCreate,
-                meta: { remember: true },
-              },
-              {
-                path: '/purchase-additional-cost/edit/:ulid',
-                name: 'side-menu-purchase-additional-cost-edit',
-                component: PurchaseAdditionalCostEdit,
-                meta: { remember: true },
-              },
-            ],
-          },
-        ],
-      },
-      // Purchase Additional Cost Payment
-      {
-        path: '/purchase-additional-cost-payment',
-        children: [
-          {
-            path: '/purchase-additional-cost-payment',
-            name: 'side-menu-purchase-additional-cost-payment',
-            redirect: '/purchase-additional-cost-payment/list',
-            component: PurchaseAdditionalCostPaymentIndex,
-            children: [
-              {
-                path: '/purchase-additional-cost-payment/list',
-                name: 'side-menu-purchase-additional-cost-payment-list',
-                component: PurchaseAdditionalCostPaymentList,
-                meta: { remember: true },
-              },
-              {
-                path: '/purchase-additional-cost-payment/create',
-                name: 'side-menu-purchase-additional-cost-payment-create',
-                component: PurchaseAdditionalCostPaymentCreate,
-                meta: { remember: true },
-              },
-              {
-                path: '/purchase-additional-cost-payment/edit/:ulid',
-                name: 'side-menu-purchase-additional-cost-payment-edit',
-                component: PurchaseAdditionalCostPaymentEdit,
-                meta: { remember: true },
-              },
-            ],
-          },
-        ],
-      },
       // Transaction
       {
         path: '/transaction',
@@ -1461,62 +1374,6 @@ export default [
             ],
           },
           {
-            path: '/purchase',
-            name: 'side-menu-purchase',
-            redirect: '/purchase/list',
-            component: PurchaseIndex,
-            children: [
-              {
-                path: '/purchase/list',
-                name: 'side-menu-purchase-list',
-                component: PurchaseList,
-                meta: {
-                  remember: true,
-                },
-              },
-              {
-                path: '/purchase/create',
-                name: 'side-menu-purchase-create',
-                redirect: '/purchase/create/manual',
-                meta: {
-                  remember: true,
-                },
-              },
-              {
-                path: '/purchase/create/direct',
-                name: 'side-menu-purchase-create-direct',
-                component: PurchaseCreateDirect,
-                meta: {
-                  remember: true,
-                },
-              },
-              {
-                path: '/purchase/create/manual',
-                name: 'side-menu-purchase-create-manual',
-                component: PurchaseCreateManual,
-                meta: {
-                  remember: true,
-                },
-              },
-              {
-                path: '/purchase/edit/direct/:ulid',
-                name: 'side-menu-purchase-edit-direct',
-                component: PurchaseEditDirect,
-                meta: {
-                  remember: true,
-                },
-              },
-              {
-                path: '/purchase/edit/manual/:ulid',
-                name: 'side-menu-purchase-edit-manual',
-                component: PurchaseEditManual,
-                meta: {
-                  remember: true,
-                },
-              },
-            ],
-          },
-          {
             path: '/purchase-receipt',
             name: 'side-menu-purchase-receipt',
             redirect: '/purchase-receipt/list',
@@ -1548,6 +1405,204 @@ export default [
               },
             ],
           },
+          // Purchase Invoice
+          {
+            path: '/purchase-invoice',
+            name: 'side-menu-purchase-invoice',
+            redirect: '/purchase-invoice/list',
+            component: PurchaseInvoiceIndex,
+            children: [
+              {
+                path: '/purchase-invoice/list',
+                name: 'side-menu-purchase-invoice-list',
+                component: PurchaseInvoiceList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/purchase-invoice/create',
+                name: 'side-menu-purchase-invoice-create',
+                component: PurchaseInvoiceCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/purchase-invoice/edit/:ulid',
+                name: 'side-menu-purchase-invoice-edit',
+                component: PurchaseInvoiceEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Purchase Return
+          {
+            path: '/purchase-return',
+            name: 'side-menu-purchase-return',
+            redirect: '/purchase-return/list',
+            component: PurchaseReturnIndex,
+            children: [
+              {
+                path: '/purchase-return/list',
+                name: 'side-menu-purchase-return-list',
+                component: PurchaseReturnList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/purchase-return/create',
+                name: 'side-menu-purchase-return-create',
+                component: PurchaseReturnCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/purchase-return/edit/:ulid',
+                name: 'side-menu-purchase-return-edit',
+                component: PurchaseReturnEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Sales Order
+          {
+            path: '/sales-order',
+            name: 'side-menu-sales-order',
+            redirect: '/sales-order/list',
+            component: SalesOrderIndex,
+            children: [
+              {
+                path: '/sales-order/list',
+                name: 'side-menu-sales-order-list',
+                component: SalesOrderList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-order/create',
+                name: 'side-menu-sales-order-create',
+                component: SalesOrderCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-order/edit/:ulid',
+                name: 'side-menu-sales-order-edit',
+                component: SalesOrderEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Sales Delivery
+          {
+            path: '/sales-delivery',
+            name: 'side-menu-sales-delivery',
+            redirect: '/sales-delivery/list',
+            component: SalesOrderDeliveryIndex,
+            children: [
+              {
+                path: '/sales-delivery/list',
+                name: 'side-menu-sales-delivery-list',
+                component: SalesOrderDeliveryList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-delivery/create',
+                name: 'side-menu-sales-delivery-create',
+                component: SalesOrderDeliveryCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-delivery/edit/:ulid',
+                name: 'side-menu-sales-delivery-edit',
+                component: SalesOrderDeliveryEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Sales Invoice
+          {
+            path: '/sales-invoice',
+            name: 'side-menu-sales-invoice',
+            redirect: '/sales-invoice/list',
+            component: SalesInvoiceIndex,
+            children: [
+              {
+                path: '/sales-invoice/list',
+                name: 'side-menu-sales-invoice-list',
+                component: SalesInvoiceList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-invoice/create',
+                name: 'side-menu-sales-invoice-create',
+                component: SalesInvoiceCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-invoice/edit/:ulid',
+                name: 'side-menu-sales-invoice-edit',
+                component: SalesInvoiceEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          // Sales Return
+          {
+            path: '/sales-return',
+            name: 'side-menu-sales-return',
+            redirect: '/sales-return/list',
+            component: SalesReturnIndex,
+            children: [
+              {
+                path: '/sales-return/list',
+                name: 'side-menu-sales-return-list',
+                component: SalesReturnList,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-return/create',
+                name: 'side-menu-sales-return-create',
+                component: SalesReturnCreate,
+                meta: {
+                  remember: true,
+                },
+              },
+              {
+                path: '/sales-return/edit/:ulid',
+                name: 'side-menu-sales-return-edit',
+                component: SalesReturnEdit,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
           {
             path: '/purchase-order-item',
             name: 'side-menu-purchase-order-item',
@@ -1565,15 +1620,15 @@ export default [
             ],
           },
           {
-            path: '/purchase-order-down-payment',
-            name: 'side-menu-purchase-order-down-payment',
-            redirect: '/purchase-order-down-payment/list',
-            component: PurchaseOrderDownPaymentIndex,
+            path: '/purchase-order-payment',
+            name: 'side-menu-purchase-order-payment',
+            redirect: '/purchase-order-payment/list',
+            component: PurchaseOrderPaymentIndex,
             children: [
               {
-                path: '/purchase-order-down-payment/list',
-                name: 'side-menu-purchase-order-down-payment-list',
-                component: PurchaseOrderDownPaymentList,
+                path: '/purchase-order-payment/list',
+                name: 'side-menu-purchase-order-payment-list',
+                component: PurchaseOrderPaymentList,
                 meta: {
                   remember: true,
                 },
@@ -1581,23 +1636,95 @@ export default [
             ],
           },
           {
-            path: '/purchase-order-down-payment-not-fully-allocated',
-            name: 'side-menu-purchase-order-down-payment-not-fully-allocated',
-            component: PurchaseOrderDownPaymentNotFullyAllocatedIndex,
+            path: '/purchase-order-payment-not-fully-allocated',
+            name: 'side-menu-purchase-order-payment-not-fully-allocated',
+            component: PurchaseOrderPaymentNotFullyAllocatedIndex,
             meta: {
               remember: true,
             },
           },
           {
-            path: '/purchase-order-down-payment-refund',
-            name: 'side-menu-purchase-order-down-payment-refund',
-            redirect: '/purchase-order-down-payment-refund/list',
-            component: PurchaseOrderDownPaymentRefundIndex,
+            path: '/purchase-order-payment-refund',
+            name: 'side-menu-purchase-order-payment-refund',
+            redirect: '/purchase-order-payment-refund/list',
+            component: PurchaseOrderPaymentRefundIndex,
             children: [
               {
-                path: '/purchase-order-down-payment-refund/list',
-                name: 'side-menu-purchase-order-down-payment-refund-list',
-                component: PurchaseOrderDownPaymentRefundList,
+                path: '/purchase-order-payment-refund/list',
+                name: 'side-menu-purchase-order-payment-refund-list',
+                component: PurchaseOrderPaymentRefundList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/purchase-invoice-payment',
+            name: 'side-menu-purchase-invoice-payment',
+            redirect: '/purchase-invoice-payment/list',
+            component: PurchaseInvoicePaymentIndex,
+            children: [
+              {
+                path: '/purchase-invoice-payment/list',
+                name: 'side-menu-purchase-invoice-payment-list',
+                component: PurchaseInvoicePaymentList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/sales-order-item',
+            name: 'side-menu-sales-order-item',
+            redirect: '/sales-order-item/list',
+            component: SalesOrderItemIndex,
+            children: [
+              {
+                path: '/sales-order-item/list',
+                name: 'side-menu-sales-order-item-list',
+                component: SalesOrderItemList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/sales-order-payment',
+            name: 'side-menu-sales-order-payment',
+            redirect: '/sales-order-payment/list',
+            component: SalesOrderPaymentIndex,
+            children: [
+              {
+                path: '/sales-order-payment/list',
+                name: 'side-menu-sales-order-payment-list',
+                component: SalesOrderPaymentList,
+                meta: {
+                  remember: true,
+                },
+              },
+            ],
+          },
+          {
+            path: '/sales-order-payment-not-fully-allocated',
+            name: 'side-menu-sales-order-payment-not-fully-allocated',
+            component: SalesOrderPaymentNotFullyAllocatedIndex,
+            meta: {
+              remember: true,
+            },
+          },
+          {
+            path: '/sales-order-payment-refund',
+            name: 'side-menu-sales-order-payment-refund',
+            redirect: '/sales-order-payment-refund/list',
+            component: SalesOrderPaymentRefundIndex,
+            children: [
+              {
+                path: '/sales-order-payment-refund/list',
+                name: 'side-menu-sales-order-payment-refund-list',
+                component: SalesOrderPaymentRefundList,
                 meta: {
                   remember: true,
                 },

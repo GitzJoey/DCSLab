@@ -95,7 +95,7 @@
       with_trashed: false,
       company_id: company_id,
       search: search,
-      status: null,
+      status: undefined,
       include_id: undefined,
       refresh: refresh,
       page: page,

@@ -1,0 +1,34 @@
+{
+  "page_title": "Purchase Invoice Payment",
+  "table": {
+    "title": "Daftar Purchase Invoice Payment"
+  },
+  "actions": {
+    "show": "Tampilkan Purchase Invoice Payment"
+  },
+  "field_groups": {
+    "payment": "Pembayaran",
+    "reference": "Referensi",
+    "remarks": "Catatan"
+  },
+  "filters": {
+    "payment_type": "Tipe Pembayaran",
+    "payment_type_cash": "Kas",
+    "payment_type_down_payment": "Uang Muka",
+    "payment_type_return": "Purchase Return"
+  },
+  "fields": {
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "purchase_invoice_id": "Purchase Invoice",
+    "payment_type": "Tipe Pembayaran",
+    "cash_account_id": "Akun Kas",
+    "purchase_order_payment_id": "Pembayaran Purchase Order",
+    "purchase_return_id": "Purchase Return",
+    "amount": "Jumlah",
+    "remarks": "Catatan",
+    "supplier": "Pemasok"
+  }
+}

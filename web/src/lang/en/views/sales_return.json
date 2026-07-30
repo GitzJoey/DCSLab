@@ -1,0 +1,109 @@
+{
+  "page_title": "Sales Return",
+  "table": {
+    "title": "Sales Return List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "customer": "Customer",
+      "sales_invoice": "Sales Invoice",
+      "warehouse": "Warehouse",
+      "amount_payable": "Return Amount",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Create Sales Return",
+    "edit": "Edit Sales Return",
+    "show": "Show Sales Return",
+    "delete": "Delete Sales Return"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "sales_return_data": "Sales Return Data",
+    "items": "Items",
+    "item_additional_details": "Item Additional Details",
+    "summary": "Summary",
+    "refunds": "Refunds"
+  },
+  "filters": {
+    "is_settled": "Settlement Status",
+    "is_settled_yes": "Settled",
+    "is_settled_no": "Not Settled"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "customer_id": "Customer",
+    "sales_invoice_id": "Sales Invoice",
+    "warehouse_id": "Warehouse",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "customer_required_hint": "Select a customer first to pick delivered items.",
+    "no_invoice_vat_hint": "Without a linked sales invoice, return items must be VAT free.",
+    "sales_order_delivery_item_id": "Delivery Item",
+    "sales_order_delivery_item_label": "Linked Delivery",
+    "delivered_qty_base": "Delivered Base Qty",
+    "product_unit_id": "Product",
+    "product_unit_code": "Product Unit Code",
+    "unit_name": "Unit",
+    "qty": "Qty",
+    "product_unit_qty_base": "Base Qty",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_price": "Unit Price",
+    "price_discount": "Price Discount",
+    "price_after_discount": "Unit Price After Discount",
+    "subtotal": "Subtotal After Unit Price Discount",
+    "subtotal_discount": "Subtotal Discount",
+    "subtotal_after_discount": "Subtotal After Discount",
+    "subtotal_after_vat": "Subtotal After VAT",
+    "item_price_breakdown": "Item Price Breakdown",
+    "item_additional_details": "Item Additional Details",
+    "item_count": "Item Count",
+    "items_empty": "No return items yet",
+    "items_subtotal_after_discount": "Total Subtotal After Discount",
+    "global_discount": "Global Discount",
+    "item_total_before_global_discount": "Total Before Global Discount",
+    "item_total_after_global_discount": "Total After Global Discount",
+    "item_total_after_vat": "Item Total After VAT",
+    "vat_base": "VAT Base",
+    "vat": "VAT",
+    "rounding": "Rounding",
+    "amount_payable": "Return Amount",
+    "product_unit_is_price_include_vat": "VAT Included",
+    "vat_profile_id": "VAT Profile",
+    "vat_rate": "VAT Rate",
+    "vat_base_numerator": "VAT Base Numerator",
+    "vat_base_denominator": "VAT Base Denominator",
+    "base_unit_cogs": "Base Unit Cost",
+    "total_cogs": "Total Cost",
+    "cost_snapshot_hint": "The cost snapshot is resolved by the server.",
+    "refunds": "Refunds",
+    "refunds_empty": "No refund data yet",
+    "cash_account_id": "Cash Account",
+    "amount": "Amount",
+    "amount_allocated_to_invoice": "Allocated To Invoice",
+    "amount_received_total": "Total Refunded",
+    "amount_settled_total": "Total Settled",
+    "amount_available": "Available Amount",
+    "is_settled": "Settled"
+  },
+  "alert": {
+    "create": {
+      "title": "Create Sales Return",
+      "message": "Sales Return has been created"
+    },
+    "update": {
+      "title": "Edit Sales Return",
+      "message": "Sales Return has been updated"
+    },
+    "delete": {
+      "title": "Delete Sales Return",
+      "message": "Sales Return has been deleted"
+    }
+  }
+}

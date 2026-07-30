@@ -1,0 +1,112 @@
+{
+  "page_title": "Purchase Invoice",
+  "table": {
+    "title": "Daftar Purchase Invoice"
+  },
+  "actions": {
+    "create": "Tambah Purchase Invoice",
+    "edit": "Ubah Purchase Invoice",
+    "show": "Tampilkan Purchase Invoice",
+    "delete": "Hapus Purchase Invoice"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "purchase_invoice_data": "Data Purchase Invoice",
+    "tax_invoice": "Faktur Pajak",
+    "items": "Item-item",
+    "summary": "Ringkasan",
+    "payments": "Pembayaran",
+    "status": "Status",
+    "remarks": "Catatan"
+  },
+  "filters": {
+    "is_posted": "Posted",
+    "is_paid_off": "Lunas",
+    "payment_type": "Tipe Pembayaran",
+    "payment_type_cash": "Kas",
+    "payment_type_down_payment": "Uang Muka",
+    "payment_type_return": "Purchase Return"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "due_days": "Jatuh Tempo (Hari)",
+    "supplier_id": "Pemasok",
+    "purchase_order_id": "Purchase Order",
+    "tax_invoice_number": "Nomor Faktur Pajak",
+    "tax_invoice_vat_base": "DPP Faktur Pajak",
+    "tax_invoice_vat": "PPN Faktur Pajak",
+    "remarks": "Catatan",
+    "is_posted": "Posted",
+    "is_paid_off": "Lunas",
+    "item_count": "Jumlah Item",
+    "items_empty": "Belum ada item invoice",
+    "product_unit_id": "Produk",
+    "product_unit_code": "Kode Unit Produk",
+    "unit_name": "Satuan",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_qty_base": "Qty Dasar",
+    "product_unit_price": "Harga Satuan",
+    "product_unit_is_price_include_vat": "Harga Termasuk PPN",
+    "price_discount": "Diskon Harga",
+    "price_after_discount": "Harga Satuan Setelah Diskon",
+    "subtotal": "Subtotal Setelah Diskon Harga",
+    "subtotal_discount": "Diskon Subtotal",
+    "subtotal_after_discount": "Subtotal Setelah Diskon",
+    "subtotal_after_vat": "Subtotal Setelah PPN",
+    "vat_profile_id": "Profil PPN",
+    "vat_rate": "Tarif PPN",
+    "vat_base_numerator": "Pembilang DPP",
+    "vat_base_denominator": "Penyebut DPP",
+    "vat_base": "DPP",
+    "vat": "PPN",
+    "purchase_order_item_id": "Item Purchase Order",
+    "item_amount_payable": "Total Item",
+    "items_subtotal_after_discount": "Total Subtotal Setelah Diskon",
+    "global_discount": "Diskon Global",
+    "global_discount_total": "Total Diskon Global",
+    "item_total_before_global_discount": "Total Sebelum Diskon Global",
+    "item_total_after_global_discount": "Total Setelah Diskon Global",
+    "item_total_after_vat": "Total Item Setelah PPN",
+    "rounding": "Pembulatan",
+    "amount_payable": "Total Tagihan",
+    "amount_payable_preview": "Total Tagihan",
+    "amount_paid_down_payment": "Dibayar Uang Muka",
+    "amount_paid_return": "Dibayar Purchase Return",
+    "amount_paid_total": "Total Dibayar",
+    "amount_due": "Sisa Tagihan",
+    "payments": "Pembayaran",
+    "payments_empty": "Belum ada baris pembayaran",
+    "payments_total": "Total Pembayaran",
+    "payment_type": "Tipe Pembayaran",
+    "cash_account_id": "Akun Kas",
+    "purchase_order_payment_id": "Pembayaran Purchase Order",
+    "purchase_return_id": "Purchase Return",
+    "amount": "Jumlah",
+    "available_amount": "Jumlah Tersedia",
+    "purchase_order_required_hint": "Pilih purchase order terlebih dahulu. Pemasok mengikuti purchase order.",
+    "purchase_order_link_hint": "Item diisi otomatis dari purchase order dengan qty yang belum difakturkan.",
+    "reload_items_from_purchase_order": "Muat ulang item dari purchase order",
+    "qty_to_invoice_hint": "Belum difakturkan (qty dasar)",
+    "payment_type_hint": "Hanya field sesuai tipe pembayaran yang dikirim."
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Purchase Invoice",
+      "message": "Purchase Invoice berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Purchase Invoice",
+      "message": "Purchase Invoice berhasil diubah"
+    },
+    "delete": {
+      "title": "Hapus Purchase Invoice",
+      "message": "Purchase Invoice berhasil dihapus"
+    }
+  }
+}

@@ -106,24 +106,19 @@ class Company extends Model
         return $this->hasMany(PurchaseOrder::class);
     }
 
-    public function purchases()
+    public function purchaseInvoices()
     {
-        return $this->hasMany(Purchase::class);
+        return $this->hasMany(PurchaseInvoice::class);
     }
 
-    public function purchaseAdditionalCostCategories()
+    public function salesOrders()
     {
-        return $this->hasMany(PurchaseAdditionalCostCategory::class);
+        return $this->hasMany(SalesOrder::class);
     }
 
-    public function purchaseAdditionalCosts()
+    public function salesInvoices()
     {
-        return $this->hasMany(PurchaseAdditionalCost::class);
-    }
-
-    public function purchaseAdditionalCostPayments()
-    {
-        return $this->hasMany(PurchaseAdditionalCostPayment::class);
+        return $this->hasMany(SalesInvoice::class);
     }
 
     public function customers()
@@ -185,6 +180,66 @@ class Company extends Model
     {
         return $this->hasOne(ChartOfAccount::class)
             ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_PREPAID_EXPENSE);
+    }
+
+    public function assetCurrentInventoryChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_INVENTORY);
+    }
+
+    public function assetCurrentVatInChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_VAT_IN);
+    }
+
+    public function assetCurrentSupplierDownPaymentChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::ASSET_CURRENT_SUPPLIER_DOWN_PAYMENT);
+    }
+
+    public function liabilityTaxPayableChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::LIABILITY_TAX_PAYABLE);
+    }
+
+    public function liabilityCustomerDownPaymentChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::LIABILITY_CUSTOMER_DOWN_PAYMENT);
+    }
+
+    public function liabilityGoodsReceivedNotInvoicedChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::LIABILITY_GOODS_RECEIVED_NOT_INVOICED);
+    }
+
+    public function incomeSalesChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::INCOME_SALES);
+    }
+
+    public function incomeSalesReturnChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::INCOME_SALES_RETURN);
+    }
+
+    public function cogsGoodsSoldChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::COGS_GOODS_SOLD);
+    }
+
+    public function expenseFreightOutChartOfAccount()
+    {
+        return $this->hasOne(ChartOfAccount::class)
+            ->where('system_key', ChartOfAccountSystemKeyEnum::EXPENSE_FREIGHT_OUT);
     }
 
     public function equityCapitalOpeningCapitalChartOfAccount()

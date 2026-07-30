@@ -2,7 +2,10 @@
 
 namespace App\DTOs;
 
-use App\Models\PurchaseReceiptItemSerial;
+use App\Models\PurchaseOrderReceiptItemSerial;
+use App\Models\PurchaseReturnItemSerial;
+use App\Models\SalesOrderDeliveryItemSerial;
+use App\Models\SalesReturnItemSerial;
 use App\Models\StockAdjustmentInItemSerial;
 use App\Models\StockAdjustmentOutItemSerial;
 use App\Models\StockTransferItemSerial;
@@ -46,14 +49,53 @@ final class StockSerialTransactionCreateDTO
         );
     }
 
-    public static function fromPurchaseReceiptItemSerial(PurchaseReceiptItemSerial $purchaseReceiptItemSerial, string $serial): self
+    public static function fromPurchaseOrderReceiptItemSerial(PurchaseOrderReceiptItemSerial $purchaseOrderReceiptItemSerial, string $serial): self
     {
         return new self(
-            referableType: PurchaseReceiptItemSerial::class,
-            referableId: $purchaseReceiptItemSerial->id,
-            date: $purchaseReceiptItemSerial->purchaseReceipt->date,
-            warehouseId: $purchaseReceiptItemSerial->purchaseReceipt->warehouse_id,
-            productId: $purchaseReceiptItemSerial->purchaseReceiptItem->productUnit->product_id,
+            referableType: PurchaseOrderReceiptItemSerial::class,
+            referableId: $purchaseOrderReceiptItemSerial->id,
+            date: $purchaseOrderReceiptItemSerial->purchaseOrderReceipt->date,
+            warehouseId: $purchaseOrderReceiptItemSerial->purchaseOrderReceipt->warehouse_id,
+            productId: $purchaseOrderReceiptItemSerial->purchaseOrderReceiptItem->productUnit->product_id,
+            direction: 1,
+            serial: $serial,
+        );
+    }
+
+    public static function fromPurchaseReturnItemSerial(PurchaseReturnItemSerial $purchaseReturnItemSerial, string $serial): self
+    {
+        return new self(
+            referableType: PurchaseReturnItemSerial::class,
+            referableId: $purchaseReturnItemSerial->id,
+            date: $purchaseReturnItemSerial->purchaseReturn->date,
+            warehouseId: $purchaseReturnItemSerial->purchaseReturn->warehouse_id,
+            productId: $purchaseReturnItemSerial->purchaseReturnItem->productUnit->product_id,
+            direction: -1,
+            serial: $serial,
+        );
+    }
+
+    public static function fromSalesOrderDeliveryItemSerial(SalesOrderDeliveryItemSerial $salesOrderDeliveryItemSerial, string $serial): self
+    {
+        return new self(
+            referableType: SalesOrderDeliveryItemSerial::class,
+            referableId: $salesOrderDeliveryItemSerial->id,
+            date: $salesOrderDeliveryItemSerial->salesOrderDelivery->date,
+            warehouseId: $salesOrderDeliveryItemSerial->salesOrderDelivery->warehouse_id,
+            productId: $salesOrderDeliveryItemSerial->salesOrderDeliveryItem->productUnit->product_id,
+            direction: -1,
+            serial: $serial,
+        );
+    }
+
+    public static function fromSalesReturnItemSerial(SalesReturnItemSerial $salesReturnItemSerial, string $serial): self
+    {
+        return new self(
+            referableType: SalesReturnItemSerial::class,
+            referableId: $salesReturnItemSerial->id,
+            date: $salesReturnItemSerial->salesReturn->date,
+            warehouseId: $salesReturnItemSerial->salesReturn->warehouse_id,
+            productId: $salesReturnItemSerial->salesReturnItem->productUnit->product_id,
             direction: 1,
             serial: $serial,
         );

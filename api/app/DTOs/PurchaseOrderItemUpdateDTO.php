@@ -10,14 +10,8 @@ final class PurchaseOrderItemUpdateDTO
         public readonly float $productUnitConversionValue,
         public readonly float $productUnitPrice,
         public readonly bool $productUnitIsPriceIncludeVat,
-        /** @var int[] */
-        public readonly array $deleteProductUnitPriceDiscountIds,
-        /** @var array<int, array<string, mixed>> */
-        public readonly array $productUnitPriceDiscounts,
-        /** @var int[] */
-        public readonly array $deleteSubtotalDiscountIds,
-        /** @var array<int, array<string, mixed>> */
-        public readonly array $subtotalDiscounts,
+        public readonly float $priceDiscount,
+        public readonly float $subtotalDiscount,
         public readonly ?int $vatProfileId,
         public readonly float $vatRate,
         public readonly int $vatBaseNumerator,

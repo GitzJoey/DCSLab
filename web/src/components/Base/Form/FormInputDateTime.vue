@@ -69,7 +69,9 @@ const handleChange = (event: Event) => {
   }
   const [datePart, timePartRaw] = value.split('T');
   let timePart = timePartRaw ?? '';
-  if (timePart && timePart.split(':').length === 2) {
+  if (!timePart) {
+    timePart = '00:00:00';
+  } else if (timePart.split(':').length === 2) {
     timePart = `${timePart}:00`;
   }
   const normalized = `${datePart} ${timePart}`;

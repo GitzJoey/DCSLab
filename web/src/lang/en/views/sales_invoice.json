@@ -1,0 +1,120 @@
+{
+  "page_title": "Sales Invoice",
+  "table": {
+    "title": "Sales Invoice List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "customer": "Customer",
+      "sales_order": "Sales Order",
+      "due_days": "Due Days",
+      "amount_payable": "Amount Payable",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Create Sales Invoice",
+    "edit": "Edit Sales Invoice",
+    "show": "Show Sales Invoice",
+    "delete": "Delete Sales Invoice"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "sales_invoice_data": "Sales Invoice Data",
+    "items": "Items",
+    "item_additional_details": "Item Additional Details",
+    "summary": "Summary",
+    "payments": "Payments"
+  },
+  "filters": {
+    "is_posted": "Posted",
+    "is_posted_yes": "Posted",
+    "is_posted_no": "Not Posted",
+    "is_paid_off": "Payment Status",
+    "is_paid_off_yes": "Paid Off",
+    "is_paid_off_no": "Not Paid Off",
+    "payment_type": "Payment Type",
+    "payment_type_cash": "Cash",
+    "payment_type_down_payment": "Down Payment",
+    "payment_type_return": "Sales Return"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "due_days": "Due Days",
+    "customer_id": "Customer",
+    "sales_order_id": "Sales Order",
+    "sales_order_item_id": "Sales Order Item",
+    "tax_invoice_number": "Tax Invoice Number",
+    "tax_invoice_vat_base": "Tax Invoice VAT Base",
+    "tax_invoice_vat": "Tax Invoice VAT",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "sales_order_hint": "Select a sales order that already has a customer. The customer is inherited from the sales order.",
+    "sales_order_required_hint": "Select a sales order first to load its items.",
+    "product_unit_id": "Product",
+    "product_unit_code": "Product Unit Code",
+    "unit_name": "Unit",
+    "qty": "Qty",
+    "product_unit_qty_base": "Base Qty",
+    "qty_invoiced_base": "Invoiced Base Qty",
+    "qty_remaining_to_invoice_base": "Remaining Base Qty To Invoice",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_price": "Unit Price",
+    "price_discount": "Price Discount",
+    "price_after_discount": "Unit Price After Discount",
+    "subtotal": "Subtotal After Unit Price Discount",
+    "subtotal_discount": "Subtotal Discount",
+    "subtotal_after_discount": "Subtotal After Discount",
+    "subtotal_after_vat": "Subtotal After VAT",
+    "item_price_breakdown": "Item Price Breakdown",
+    "item_additional_details": "Item Additional Details",
+    "item_count": "Item Count",
+    "items_empty": "No invoice items yet",
+    "items_subtotal_after_discount": "Total Subtotal After Discount",
+    "global_discount": "Global Discount",
+    "item_total_before_global_discount": "Total Before Global Discount",
+    "item_total_after_global_discount": "Total After Global Discount",
+    "item_total_after_vat": "Item Total After VAT",
+    "vat_base": "VAT Base",
+    "vat": "VAT",
+    "rounding": "Rounding",
+    "amount_payable": "Amount Payable",
+    "product_unit_is_price_include_vat": "VAT Included",
+    "vat_profile_id": "VAT Profile",
+    "vat_rate": "VAT Rate",
+    "vat_base_numerator": "VAT Base Numerator",
+    "vat_base_denominator": "VAT Base Denominator",
+    "payments": "Payments",
+    "payments_empty": "No payment data yet",
+    "payment_type": "Payment Type",
+    "cash_account_id": "Cash Account",
+    "sales_order_payment_id": "Sales Order Down Payment",
+    "sales_return_id": "Sales Return",
+    "amount": "Amount",
+    "amount_paid_down_payment": "Paid By Down Payment",
+    "amount_paid_return": "Paid By Sales Return",
+    "amount_paid_total": "Total Paid",
+    "amount_due": "Amount Due",
+    "is_paid_off": "Paid Off",
+    "available_amount": "Available Amount"
+  },
+  "alert": {
+    "create": {
+      "title": "Create Sales Invoice",
+      "message": "Sales Invoice has been created"
+    },
+    "update": {
+      "title": "Edit Sales Invoice",
+      "message": "Sales Invoice has been updated"
+    },
+    "delete": {
+      "title": "Delete Sales Invoice",
+      "message": "Sales Invoice has been deleted"
+    }
+  }
+}

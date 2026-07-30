@@ -30,7 +30,7 @@ class StockTransferItemSerialStoreRequest extends FormRequest
         return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
-            'stock_transfer_id' => ['required', 'integer', new IsValidStockTransfer()],
+            'stock_transfer_id' => ['required', 'integer', new IsValidStockTransfer($this->company_id)],
             'stock_transfer_item_id' => ['required', 'integer', new IsValidStockTransferItem($this->company_id, $this->stock_transfer_id)],
             'serial' => ['required', 'string', 'max:255'],
         ];

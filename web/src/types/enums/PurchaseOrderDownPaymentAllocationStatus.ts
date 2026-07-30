@@ -1,4 +1,0 @@
-export enum PurchaseOrderDownPaymentAllocationStatus {
-  NOT_FULLY_ALLOCATED = 'not_fully_allocated',
-  FULLY_ALLOCATED = 'fully_allocated',
-}

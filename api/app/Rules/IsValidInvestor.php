@@ -25,7 +25,7 @@ class IsValidInvestor implements ValidationRule
 
             $company = Company::find($this->companyId);
 
-            if (! $company->investors?->pluck('id')->contains($value)) {
+            if (! $company || ! $company->investors?->pluck('id')->contains($value)) {
                 $fail('rules.valid_investor')->translate();
             }
         }

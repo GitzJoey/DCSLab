@@ -1,0 +1,40 @@
+import type { Branch } from './Branch';
+import type { Company } from './Company';
+import type { Customer } from './Customer';
+import type { SalesInvoiceItem } from './SalesInvoiceItem';
+import type { SalesInvoicePayment } from './SalesInvoicePayment';
+import type { SalesOrder } from './SalesOrder';
+import type { SalesReturn } from './SalesReturn';
+
+export interface SalesInvoice {
+  id: string;
+  ulid: string;
+  company?: Company;
+  branch?: Branch;
+  code: string;
+  date: string;
+  due_days: number;
+  customer?: Customer | null;
+  sales_order?: SalesOrder | null;
+  tax_invoice_number: string | null;
+  tax_invoice_vat_base: number;
+  tax_invoice_vat: number;
+  remarks: string | null;
+  is_posted: boolean;
+  item_total_before_global_discount: number;
+  global_discount: number;
+  item_total_after_global_discount: number;
+  vat_base: number;
+  vat: number;
+  item_total_after_vat: number;
+  rounding: number;
+  amount_payable: number;
+  amount_paid_down_payment: number;
+  amount_paid_return: number;
+  amount_paid_total: number;
+  amount_due: number;
+  is_paid_off: boolean;
+  items?: SalesInvoiceItem[];
+  payments?: SalesInvoicePayment[];
+  sales_returns?: SalesReturn[];
+}

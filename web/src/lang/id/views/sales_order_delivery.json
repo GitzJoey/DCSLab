@@ -1,0 +1,63 @@
+{
+  "page_title": "Pengiriman Penjualan",
+  "table": {
+    "title": "Daftar Pengiriman Penjualan"
+  },
+  "actions": {
+    "create": "Tambah Pengiriman Penjualan",
+    "edit": "Ubah Pengiriman Penjualan",
+    "show": "Tampilkan Pengiriman Penjualan",
+    "delete": "Hapus Pengiriman Penjualan"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "sales_order_delivery_data": "Data Pengiriman Penjualan",
+    "status": "Status",
+    "remarks": "Catatan",
+    "items": "Item-item",
+    "costs": "Biaya Pengiriman",
+    "summary": "Ringkasan"
+  },
+  "fields": {
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "customer_id": "Pelanggan",
+    "sales_order_id": "Sales Order",
+    "warehouse_id": "Gudang",
+    "remarks": "Catatan",
+    "is_posted": "Posted",
+    "item_count": "Jumlah Item",
+    "cost_count": "Jumlah Biaya",
+    "product_unit_id": "Produk",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_qty_base": "Qty Base",
+    "base_unit_cogs": "HPP per Satuan Base",
+    "total_cogs": "Total HPP",
+    "total_cost": "Total Biaya Pengiriman",
+    "serial_count": "Jumlah Serial",
+    "items_empty": "Belum ada item pengiriman",
+    "costs_empty": "Belum ada biaya pengiriman",
+    "name": "Nama Biaya",
+    "cash_account_id": "Akun Kas",
+    "amount": "Jumlah",
+    "sales_order_link_hint": "Pengiriman ini tertaut ke sales order. Pelanggan mengikuti sales order, dan item dapat dimuat ulang dari sales order yang dipilih.",
+    "cogs_readonly_hint": "Nilai HPP dihitung oleh server dan hanya dapat dilihat."
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Pengiriman Penjualan",
+      "message": "Pengiriman Penjualan berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Pengiriman Penjualan",
+      "message": "Pengiriman Penjualan berhasil diperbarui"
+    },
+    "delete": {
+      "title": "Hapus Pengiriman Penjualan",
+      "message": "Pengiriman Penjualan berhasil dihapus"
+    }
+  }
+}

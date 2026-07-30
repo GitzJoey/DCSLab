@@ -12,10 +12,14 @@ return new class extends Migration
             $table->id();
             $table->ulid();
 
-            $table->foreignId('company_id')->references('id')->on('companies');
-            $table->foreignId('branch_id')->references('id')->on('branches');
-            $table->foreignId('purchase_return_id')->references('id')->on('purchase_returns');
-            $table->foreignId('purchase_return_item_id')->references('id')->on('purchase_return_items');
+            $table->foreignId('company_id');
+            $table->foreign('company_id', 'fk_prtis_company_id')->references('id')->on('companies');
+            $table->foreignId('branch_id');
+            $table->foreign('branch_id', 'fk_prtis_branch_id')->references('id')->on('branches');
+            $table->foreignId('purchase_return_id');
+            $table->foreign('purchase_return_id', 'fk_prtis_purchase_return_id')->references('id')->on('purchase_returns');
+            $table->foreignId('purchase_return_item_id');
+            $table->foreign('purchase_return_item_id', 'fk_prtis_purchase_return_item_id')->references('id')->on('purchase_return_items');
             $table->string('serial');
 
             $table->unsignedBigInteger('created_by')->default(0);

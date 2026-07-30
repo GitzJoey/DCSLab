@@ -1,0 +1,63 @@
+{
+  "page_title": "Sales Delivery",
+  "table": {
+    "title": "Sales Delivery List"
+  },
+  "actions": {
+    "create": "Create Sales Delivery",
+    "edit": "Edit Sales Delivery",
+    "show": "Show Sales Delivery",
+    "delete": "Delete Sales Delivery"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "sales_order_delivery_data": "Sales Delivery Data",
+    "status": "Status",
+    "remarks": "Remarks",
+    "items": "Items",
+    "costs": "Delivery Costs",
+    "summary": "Summary"
+  },
+  "fields": {
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "customer_id": "Customer",
+    "sales_order_id": "Sales Order",
+    "warehouse_id": "Warehouse",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "item_count": "Item Count",
+    "cost_count": "Cost Count",
+    "product_unit_id": "Product",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_qty_base": "Base Qty",
+    "base_unit_cogs": "Base Unit COGS",
+    "total_cogs": "Total COGS",
+    "total_cost": "Total Delivery Cost",
+    "serial_count": "Serial Count",
+    "items_empty": "No delivery items yet",
+    "costs_empty": "No delivery cost yet",
+    "name": "Cost Name",
+    "cash_account_id": "Cash Account",
+    "amount": "Amount",
+    "sales_order_link_hint": "This delivery is linked to a sales order. Customer follows the sales order, and items can be reloaded from the selected sales order.",
+    "cogs_readonly_hint": "Cost figures are resolved by the server and shown as read-only."
+  },
+  "alert": {
+    "create": {
+      "title": "Create Sales Delivery",
+      "message": "Sales Delivery created successfully"
+    },
+    "update": {
+      "title": "Update Sales Delivery",
+      "message": "Sales Delivery updated successfully"
+    },
+    "delete": {
+      "title": "Delete Sales Delivery",
+      "message": "Sales Delivery has been deleted"
+    }
+  }
+}

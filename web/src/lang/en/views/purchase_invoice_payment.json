@@ -1,0 +1,34 @@
+{
+  "page_title": "Purchase Invoice Payment",
+  "table": {
+    "title": "Purchase Invoice Payment List"
+  },
+  "actions": {
+    "show": "Show Purchase Invoice Payment"
+  },
+  "field_groups": {
+    "payment": "Payment",
+    "reference": "Reference",
+    "remarks": "Remarks"
+  },
+  "filters": {
+    "payment_type": "Payment Type",
+    "payment_type_cash": "Cash",
+    "payment_type_down_payment": "Down Payment",
+    "payment_type_return": "Purchase Return"
+  },
+  "fields": {
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "purchase_invoice_id": "Purchase Invoice",
+    "payment_type": "Payment Type",
+    "cash_account_id": "Cash Account",
+    "purchase_order_payment_id": "Purchase Order Payment",
+    "purchase_return_id": "Purchase Return",
+    "amount": "Amount",
+    "remarks": "Remarks",
+    "supplier": "Supplier"
+  }
+}

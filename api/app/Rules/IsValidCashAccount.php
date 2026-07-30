@@ -20,7 +20,7 @@ class IsValidCashAccount implements ValidationRule
         if ($this->branchId && $value) {
             $branch = Branch::find($this->branchId);
 
-            if (! $branch->cashAccounts?->pluck('id')->contains($value)) {
+            if (! $branch || ! $branch->cashAccounts?->pluck('id')->contains($value)) {
                 $fail('rules.valid_cash_account')->translate();
             }
         }

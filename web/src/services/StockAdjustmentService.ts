@@ -96,8 +96,12 @@ export default class StockAdjustmentService {
       queryParams['company_id'] = args.company_id;
       queryParams['branch_id'] = args.branch_id;
       queryParams['search'] = args.search;
-      queryParams['start_date'] = args.start_date;
-      queryParams['end_date'] = args.end_date;
+      if (args.start_date) {
+        queryParams['start_date'] = args.start_date;
+      }
+      if (args.end_date) {
+        queryParams['end_date'] = args.end_date;
+      }
       queryParams['category_id'] = args.category_id;
       queryParams['in_warehouse_id'] = args.in_warehouse_id;
       queryParams['out_warehouse_id'] = args.out_warehouse_id;
@@ -149,8 +153,12 @@ export default class StockAdjustmentService {
       queryParams['company_id'] = args.company_id;
       queryParams['branch_id'] = args.branch_id;
       queryParams['search'] = args.search;
-      queryParams['start_date'] = args.start_date;
-      queryParams['end_date'] = args.end_date;
+      if (args.start_date) {
+        queryParams['start_date'] = args.start_date;
+      }
+      if (args.end_date) {
+        queryParams['end_date'] = args.end_date;
+      }
       queryParams['category_id'] = args.category_id;
       queryParams['in_warehouse_id'] = args.in_warehouse_id;
       queryParams['out_warehouse_id'] = args.out_warehouse_id;

@@ -12,6 +12,7 @@ use App\Models\PurchaseOrderItem;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCompany;
+use App\Rules\IsValidDate;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 class PurchaseOrderItemController extends BaseController
 {
     public function __construct(
-        private PurchaseOrderItemActions $purchaseOrderItemActions,
+        private readonly PurchaseOrderItemActions $purchaseOrderItemActions,
     ) {
         parent::__construct();
     }
@@ -44,8 +45,8 @@ class PurchaseOrderItemController extends BaseController
             'search' => ['nullable', 'string'],
 
             'purchase_order_code' => ['nullable', 'string'],
-            'purchase_order_start_date' => ['nullable', 'date'],
-            'purchase_order_end_date' => ['nullable', 'date', 'after_or_equal:purchase_order_start_date'],
+            'purchase_order_start_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'purchase_order_end_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s'), 'after_or_equal:purchase_order_start_date'],
             'purchase_order_supplier_id' => ['nullable', 'integer', new ExistsForCompany('suppliers', $request->company_id)],
             'product_unit_code' => ['nullable', 'string'],
             'product_unit_product_name' => ['nullable', 'string'],

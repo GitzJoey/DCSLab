@@ -16,6 +16,8 @@ enum ChartOfAccountSystemKeyEnum: string
     case ASSET_CURRENT_ACCOUNT_RECEIVABLE = 'asset_current_account_receivable';
     case ASSET_CURRENT_INVENTORY = 'asset_current_inventory';
     case ASSET_CURRENT_PREPAID_EXPENSE = 'asset_current_prepaid_expense';
+    case ASSET_CURRENT_VAT_IN = 'asset_current_vat_in';
+    case ASSET_CURRENT_SUPPLIER_DOWN_PAYMENT = 'asset_current_supplier_down_payment';
     case ASSET_NON_CURRENT = 'asset_non_current';
     case ASSET_NON_CURRENT_FIXED_ASSET = 'asset_non_current_fixed_asset';
     case ASSET_NON_CURRENT_ACCUMULATED_DEPRECIATION = 'asset_non_current_accumulated_depreciation';
@@ -25,6 +27,8 @@ enum ChartOfAccountSystemKeyEnum: string
     case LIABILITY_ACCOUNT_PAYABLE = 'liability_account_payable';
     case LIABILITY_TAX_PAYABLE = 'liability_tax_payable';
     case LIABILITY_DEFERRED_INCOME = 'liability_deferred_income';
+    case LIABILITY_CUSTOMER_DOWN_PAYMENT = 'liability_customer_down_payment';
+    case LIABILITY_GOODS_RECEIVED_NOT_INVOICED = 'liability_goods_received_not_invoiced';
 
     case EQUITY_ROOT = 'equity_root';
     case EQUITY_CAPITAL = 'equity_capital';
@@ -38,12 +42,15 @@ enum ChartOfAccountSystemKeyEnum: string
     case INCOME_ROOT = 'income_root';
     case INCOME_SALES = 'income_sales';
     case INCOME_SERVICE = 'income_service';
+    case INCOME_SALES_RETURN = 'income_sales_return';
 
     case COGS_ROOT = 'cogs_root';
     case COGS_MATERIAL_COST = 'cogs_material_cost';
     case COGS_DIRECT_LABOR_COST = 'cogs_direct_labor_cost';
+    case COGS_GOODS_SOLD = 'cogs_goods_sold';
 
     case EXPENSE_ROOT = 'expense_root';
+    case EXPENSE_FREIGHT_OUT = 'expense_freight_out';
     case EXPENSE_SALARY = 'expense_salary';
     case EXPENSE_ELECTRICITY = 'expense_electricity';
     case EXPENSE_RENT = 'expense_rent';

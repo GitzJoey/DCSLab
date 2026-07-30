@@ -39,9 +39,6 @@ import receivable from './en/views/receivable.json';
 import income from './en/views/income.json';
 import prepaid_income from './en/views/prepaid_income.json';
 import income_payment from './en/views/income_payment.json';
-import purchase_additional_cost from './en/views/purchase_additional_cost.json';
-import purchase_additional_cost_payment from './en/views/purchase_additional_cost_payment.json';
-import purchase from './en/views/purchase.json';
 import purchase_receipt from './en/views/purchase_receipt.json';
 import expense_category from './en/views/expense_category.json';
 import debt_category from './en/views/debt_category.json';
@@ -72,8 +69,18 @@ import stock_adjustment_out_item from './en/views/stock_adjustment_out_item.json
 import stock_adjustment_out_item_serial from './en/views/stock_adjustment_out_item_serial.json';
 import purchase_order from './en/views/purchase_order.json';
 import purchase_order_item from './en/views/purchase_order_item.json';
-import purchase_order_down_payment from './en/views/purchase_order_down_payment.json';
-import purchase_order_down_payment_refund from './en/views/purchase_order_down_payment_refund.json';
+import purchase_order_payment from './en/views/purchase_order_payment.json';
+import purchase_order_payment_refund from './en/views/purchase_order_payment_refund.json';
+import purchase_invoice from './en/views/purchase_invoice.json';
+import purchase_invoice_payment from './en/views/purchase_invoice_payment.json';
+import purchase_return from './en/views/purchase_return.json';
+import sales_order from './en/views/sales_order.json';
+import sales_order_delivery from './en/views/sales_order_delivery.json';
+import sales_invoice from './en/views/sales_invoice.json';
+import sales_return from './en/views/sales_return.json';
+import sales_order_item from './en/views/sales_order_item.json';
+import sales_order_payment from './en/views/sales_order_payment.json';
+import sales_order_payment_refund from './en/views/sales_order_payment_refund.json';
 import stock_transfer from './en/views/stock_transfer.json';
 import stock_transfer_item from './en/views/stock_transfer_item.json';
 import stock_transfer_item_serial from './en/views/stock_transfer_item_serial.json';
@@ -126,9 +133,6 @@ export default {
     income: income,
     prepaid_income: prepaid_income,
     income_payment: income_payment,
-    purchase_additional_cost: purchase_additional_cost,
-    purchase_additional_cost_payment: purchase_additional_cost_payment,
-    purchase: purchase,
     purchase_receipt: purchase_receipt,
     expense_category: expense_category,
     debt_category: debt_category,
@@ -156,8 +160,18 @@ export default {
     stock_adjustment_out_item_serial: stock_adjustment_out_item_serial,
     purchase_order: purchase_order,
     purchase_order_item: purchase_order_item,
-    purchase_order_down_payment: purchase_order_down_payment,
-    purchase_order_down_payment_refund: purchase_order_down_payment_refund,
+    purchase_order_payment: purchase_order_payment,
+    purchase_order_payment_refund: purchase_order_payment_refund,
+    purchase_invoice: purchase_invoice,
+    purchase_invoice_payment: purchase_invoice_payment,
+    purchase_return: purchase_return,
+    sales_order: sales_order,
+    sales_order_delivery: sales_order_delivery,
+    sales_invoice: sales_invoice,
+    sales_return: sales_return,
+    sales_order_item: sales_order_item,
+    sales_order_payment: sales_order_payment,
+    sales_order_payment_refund: sales_order_payment_refund,
     stock_transfer: stock_transfer,
     stock_transfer_item: stock_transfer_item,
     stock_transfer_item_serial: stock_transfer_item_serial,

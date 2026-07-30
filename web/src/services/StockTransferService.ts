@@ -91,9 +91,12 @@ export default class StockTransferService {
       queryParams['company_id'] = args.company_id;
       queryParams['branch_id'] = args.branch_id;
       queryParams['search'] = args.search;
-      
-      queryParams['start_date'] = args.start_date;
-      queryParams['end_date'] = args.end_date;
+      if (args.start_date) {
+        queryParams['start_date'] = args.start_date;
+      }
+      if (args.end_date) {
+        queryParams['end_date'] = args.end_date;
+      }
       queryParams['source_warehouse_id'] = args.source_warehouse_id;
       queryParams['destination_warehouse_id'] = args.destination_warehouse_id;
 
@@ -144,8 +147,12 @@ export default class StockTransferService {
       queryParams['company_id'] = args.company_id;
       queryParams['branch_id'] = args.branch_id;
       queryParams['search'] = args.search;
-      queryParams['start_date'] = args.start_date;
-      queryParams['end_date'] = args.end_date;
+      if (args.start_date) {
+        queryParams['start_date'] = args.start_date;
+      }
+      if (args.end_date) {
+        queryParams['end_date'] = args.end_date;
+      }
       queryParams['source_warehouse_id'] = args.source_warehouse_id;
       queryParams['destination_warehouse_id'] = args.destination_warehouse_id;
 

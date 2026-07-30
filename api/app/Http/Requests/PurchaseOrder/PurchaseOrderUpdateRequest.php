@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\PurchaseOrder;
 
-use App\Enums\DiscountTypeEnum;
 use App\Helpers\HashidsHelper;
 use App\Models\ProductUnit;
 use App\Models\PurchaseOrder;
-use App\Models\PurchaseOrderDownPayment;
-use App\Models\PurchaseOrderDownPaymentRefund;
+use App\Models\PurchaseOrderPayment;
+use App\Models\PurchaseOrderPaymentRefund;
 use App\Rules\ExistsForCompany;
 use App\Rules\IsValidBranch;
 use App\Rules\IsValidCashAccount;
@@ -16,7 +15,6 @@ use App\Rules\IsValidDate;
 use App\Rules\IsValidSupplier;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class PurchaseOrderUpdateRequest extends FormRequest
 {
@@ -43,15 +41,8 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'due_days' => ['required', 'integer', 'min:0'],
             'supplier_id' => ['present', 'nullable', 'integer', new IsValidSupplier($this->company_id)],
             'remarks' => ['present', 'nullable', 'string'],
+            'global_discount' => ['required', 'numeric', 'min:0'],
             'rounding' => ['required', 'numeric'],
-
-            'global_discounts' => ['present', 'array'],
-            'global_discounts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_global_discounts', $this->company_id)],
-            'global_discounts.*.sequence' => ['required', 'integer', 'min:1'],
-            'global_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
-            'global_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
-            'delete_global_discount_ids' => ['present', 'array'],
-            'delete_global_discount_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_global_discounts', $this->company_id)],
 
             'delete_item_ids' => ['present', 'array'],
             'delete_item_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_items', $this->company_id)],
@@ -62,81 +53,102 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'items.*.product_unit_conversion_value' => ['required', 'numeric', 'min:1'],
             'items.*.product_unit_price' => ['required', 'numeric', 'min:0'],
             'items.*.product_unit_is_price_include_vat' => ['required', 'boolean'],
-
-            'items.*.delete_product_unit_price_discount_ids' => ['present', 'array'],
-            'items.*.delete_product_unit_price_discount_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_item_product_unit_price_discounts', $this->company_id)],
-            'items.*.product_unit_price_discounts' => ['present', 'array'],
-            'items.*.product_unit_price_discounts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_item_product_unit_price_discounts', $this->company_id)],
-            'items.*.product_unit_price_discounts.*.sequence' => ['required', 'integer', 'min:1'],
-            'items.*.product_unit_price_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
-            'items.*.product_unit_price_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
-
-            'items.*.delete_subtotal_discount_ids' => ['present', 'array'],
-            'items.*.delete_subtotal_discount_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_item_subtotal_discounts', $this->company_id)],
-            'items.*.subtotal_discounts' => ['present', 'array'],
-            'items.*.subtotal_discounts.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_item_subtotal_discounts', $this->company_id)],
-            'items.*.subtotal_discounts.*.sequence' => ['required', 'integer', 'min:1'],
-            'items.*.subtotal_discounts.*.discount_type' => ['required', Rule::enum(DiscountTypeEnum::class)],
-            'items.*.subtotal_discounts.*.discount_value' => ['required', 'numeric', 'min:0'],
+            'items.*.price_discount' => ['required', 'numeric', 'min:0'],
+            'items.*.subtotal_discount' => ['required', 'numeric', 'min:0'],
             'items.*.vat_profile_id' => ['present', 'nullable', 'integer', new ExistsForCompany('vat_profiles', $this->company_id)],
             'items.*.vat_rate' => ['required', 'numeric', 'min:0', 'max:100'],
             'items.*.vat_base_numerator' => ['required', 'integer', 'min:1'],
             'items.*.vat_base_denominator' => ['required', 'integer', 'min:1'],
             'items.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'delete_down_payment_ids' => ['present', 'array'],
-            'delete_down_payment_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_down_payments', $this->company_id)],
-            'down_payments' => ['present', 'array'],
-            'down_payments.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_down_payments', $this->company_id)],
-            'down_payments.*.code' => ['required', 'string', 'max:255'],
-            'down_payments.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
-            'down_payments.*.cash_account_id' => ['required', 'integer', 'bail', new ExistsForCompany('cash_accounts', $this->company_id), new IsValidCashAccount($this->branch_id)],
-            'down_payments.*.amount' => ['required', 'numeric', 'min:0'],
-            'down_payments.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'delete_payment_ids' => ['present', 'array'],
+            'delete_payment_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_payments', $this->company_id)],
+            'payments' => ['present', 'array'],
+            'payments.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_payments', $this->company_id)],
+            'payments.*.code' => ['required', 'string', 'max:255'],
+            'payments.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'payments.*.cash_account_id' => ['required', 'integer', 'bail', new ExistsForCompany('cash_accounts', $this->company_id), new IsValidCashAccount($this->branch_id)],
+            'payments.*.amount' => ['required', 'numeric', 'gt:0'],
+            'payments.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
 
-            'delete_refunded_down_payment_ids' => ['present', 'array'],
-            'delete_refunded_down_payment_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_down_payment_refunds', $this->company_id)],
-            'refunded_down_payments' => [
+            'delete_refunded_payment_ids' => ['present', 'array'],
+            'delete_refunded_payment_ids.*' => ['required', 'integer', new ExistsForCompany('purchase_order_payment_refunds', $this->company_id)],
+            'refunded_payments' => [
                 'present',
                 'array',
                 function (string $attribute, mixed $value, \Closure $fail) {
-                    $downPaymentsTotal = (float) collect($this->input('down_payments', []))->sum(function ($row) {
-                        return max((float) ($row['amount'] ?? 0), 0);
-                    });
-                    $refundedDownPaymentsTotal = (float) collect(is_array($value) ? $value : [])->sum(function ($row) {
-                        return max((float) ($row['amount'] ?? 0), 0);
-                    });
                     $purchaseOrder = $this->route('purchase_order');
-                    $remainingAllocatedDownPaymentTotal = 0;
+
+                    $paymentsTotal = (float) collect($this->input('payments', []))->sum(function ($row) {
+                        return max((float) ($row['amount'] ?? 0), 0);
+                    });
+                    $refundedPaymentsTotal = (float) collect(is_array($value) ? $value : [])->sum(function ($row) {
+                        return max((float) ($row['amount'] ?? 0), 0);
+                    });
+                    $remainingAllocatedPaymentTotal = 0;
 
                     if ($purchaseOrder) {
-                        $deleteDownPaymentIds = collect($this->input('delete_down_payment_ids', []))
+                        $deletePaymentIds = collect($this->input('delete_payment_ids', []))
                             ->filter(fn ($id) => ! is_null($id))
                             ->map(fn ($id) => (int) $id)
                             ->values();
 
-                        $remainingAllocatedDownPaymentTotal = (float) $purchaseOrder->downPayments()
+                        $remainingAllocatedPaymentTotal = (float) $purchaseOrder->payments()
                             ->when(
-                                $deleteDownPaymentIds->isNotEmpty(),
-                                fn ($query) => $query->whereNotIn('id', $deleteDownPaymentIds->all())
+                                $deletePaymentIds->isNotEmpty(),
+                                fn ($query) => $query->whereNotIn('id', $deletePaymentIds->all())
                             )
                             ->get()
                             ->sum('amount_allocated');
+
+                        // Rows the payload neither submits nor deletes survive the
+                        // update untouched, so they must be counted on both sides.
+                        $handledPaymentIds = collect($this->input('payments', []))
+                            ->pluck('id')
+                            ->filter()
+                            ->map(fn ($id) => (int) $id)
+                            ->merge($deletePaymentIds)
+                            ->unique()
+                            ->values();
+                        $paymentsTotal += (float) $purchaseOrder->payments()
+                            ->when(
+                                $handledPaymentIds->isNotEmpty(),
+                                fn ($query) => $query->whereNotIn('id', $handledPaymentIds->all())
+                            )
+                            ->sum('amount');
+
+                        $handledRefundIds = collect(is_array($value) ? $value : [])
+                            ->pluck('id')
+                            ->filter()
+                            ->map(fn ($id) => (int) $id)
+                            ->merge(
+                                collect($this->input('delete_refunded_payment_ids', []))
+                                    ->filter(fn ($id) => ! is_null($id))
+                                    ->map(fn ($id) => (int) $id)
+                            )
+                            ->unique()
+                            ->values();
+                        $refundedPaymentsTotal += (float) $purchaseOrder->refundedPayments()
+                            ->when(
+                                $handledRefundIds->isNotEmpty(),
+                                fn ($query) => $query->whereNotIn('id', $handledRefundIds->all())
+                            )
+                            ->sum('amount');
                     }
 
-                    $maxRefundableAmount = max($downPaymentsTotal - $remainingAllocatedDownPaymentTotal, 0);
+                    $maxRefundableAmount = max($paymentsTotal - $remainingAllocatedPaymentTotal, 0);
 
-                    if ($refundedDownPaymentsTotal > $maxRefundableAmount) {
+                    if ($refundedPaymentsTotal > $maxRefundableAmount) {
                         $fail(trans('rules.purchase_order.exceed_available_down_payment'));
                     }
                 },
             ],
-            'refunded_down_payments.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_down_payment_refunds', $this->company_id)],
-            'refunded_down_payments.*.code' => ['required', 'string', 'max:255'],
-            'refunded_down_payments.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
-            'refunded_down_payments.*.cash_account_id' => ['required', 'integer', 'bail', new ExistsForCompany('cash_accounts', $this->company_id), new IsValidCashAccount($this->branch_id)],
-            'refunded_down_payments.*.amount' => ['required', 'numeric', 'min:0'],
-            'refunded_down_payments.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
+            'refunded_payments.*.id' => ['present', 'nullable', 'integer', new ExistsForCompany('purchase_order_payment_refunds', $this->company_id)],
+            'refunded_payments.*.code' => ['required', 'string', 'max:255'],
+            'refunded_payments.*.date' => ['required', 'string', new IsValidDate('Y-m-d H:i:s')],
+            'refunded_payments.*.cash_account_id' => ['required', 'integer', 'bail', new ExistsForCompany('cash_accounts', $this->company_id), new IsValidCashAccount($this->branch_id)],
+            'refunded_payments.*.amount' => ['required', 'numeric', 'gt:0'],
+            'refunded_payments.*.remarks' => ['present', 'nullable', 'string', 'max:255'],
         ];
     }
 
@@ -150,34 +162,36 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'due_days' => trans('validation_attributes.purchase_order.due_days'),
             'supplier_id' => trans('validation_attributes.purchase_order.supplier_id'),
             'remarks' => trans('validation_attributes.purchase_order.remarks'),
+            'global_discount' => trans('validation_attributes.purchase_order.global_discount'),
             'rounding' => trans('validation_attributes.purchase_order.rounding'),
 
-            'global_discounts.*.sequence' => trans('validation_attributes.purchase_order_global_discount.sequence'),
-            'global_discounts.*.discount_type' => trans('validation_attributes.purchase_order_global_discount.discount_type'),
-            'global_discounts.*.discount_value' => trans('validation_attributes.purchase_order_global_discount.discount_value'),
-
+            'items.*.id' => trans('validation_attributes.purchase_order_item.id'),
             'items.*.qty' => trans('validation_attributes.purchase_order_item.qty'),
             'items.*.product_unit_id' => trans('validation_attributes.purchase_order_item.product_unit_id'),
             'items.*.product_unit_conversion_value' => trans('validation_attributes.purchase_order_item.product_unit_conversion_value'),
             'items.*.product_unit_price' => trans('validation_attributes.purchase_order_item.product_unit_price'),
             'items.*.product_unit_is_price_include_vat' => trans('validation_attributes.purchase_order_item.product_unit_is_price_include_vat'),
+            'items.*.price_discount' => trans('validation_attributes.purchase_order_item.price_discount'),
+            'items.*.subtotal_discount' => trans('validation_attributes.purchase_order_item.subtotal_discount'),
             'items.*.vat_profile_id' => trans('validation_attributes.purchase_order_item.vat_profile_id'),
             'items.*.vat_rate' => trans('validation_attributes.purchase_order_item.vat_rate'),
             'items.*.vat_base_numerator' => trans('validation_attributes.purchase_order_item.vat_base_numerator'),
             'items.*.vat_base_denominator' => trans('validation_attributes.purchase_order_item.vat_base_denominator'),
             'items.*.remarks' => trans('validation_attributes.purchase_order_item.remarks'),
 
-            'down_payments.*.code' => trans('validation_attributes.purchase_order_down_payment.code'),
-            'down_payments.*.date' => trans('validation_attributes.purchase_order_down_payment.date'),
-            'down_payments.*.cash_account_id' => trans('validation_attributes.purchase_order_down_payment.cash_account_id'),
-            'down_payments.*.amount' => trans('validation_attributes.purchase_order_down_payment.amount'),
-            'down_payments.*.remarks' => trans('validation_attributes.purchase_order_down_payment.remarks'),
+            'payments.*.id' => trans('validation_attributes.purchase_order_payment.id'),
+            'payments.*.code' => trans('validation_attributes.purchase_order_payment.code'),
+            'payments.*.date' => trans('validation_attributes.purchase_order_payment.date'),
+            'payments.*.cash_account_id' => trans('validation_attributes.purchase_order_payment.cash_account_id'),
+            'payments.*.amount' => trans('validation_attributes.purchase_order_payment.amount'),
+            'payments.*.remarks' => trans('validation_attributes.purchase_order_payment.remarks'),
 
-            'refunded_down_payments.*.code' => trans('validation_attributes.purchase_order_down_payment_refund.code'),
-            'refunded_down_payments.*.date' => trans('validation_attributes.purchase_order_down_payment_refund.date'),
-            'refunded_down_payments.*.cash_account_id' => trans('validation_attributes.purchase_order_down_payment_refund.cash_account_id'),
-            'refunded_down_payments.*.amount' => trans('validation_attributes.purchase_order_down_payment_refund.amount'),
-            'refunded_down_payments.*.remarks' => trans('validation_attributes.purchase_order_down_payment_refund.remarks'),
+            'refunded_payments.*.id' => trans('validation_attributes.purchase_order_payment_refund.id'),
+            'refunded_payments.*.code' => trans('validation_attributes.purchase_order_payment_refund.code'),
+            'refunded_payments.*.date' => trans('validation_attributes.purchase_order_payment_refund.date'),
+            'refunded_payments.*.cash_account_id' => trans('validation_attributes.purchase_order_payment_refund.cash_account_id'),
+            'refunded_payments.*.amount' => trans('validation_attributes.purchase_order_payment_refund.amount'),
+            'refunded_payments.*.remarks' => trans('validation_attributes.purchase_order_payment_refund.remarks'),
         ];
     }
 
@@ -235,37 +249,10 @@ class PurchaseOrderUpdateRequest extends FormRequest
                 $validator->errors()->add('code', trans('rules.unique_code'));
             }
 
-            $purchaseOrderItems = $purchaseOrder?->items()
-                ->with([
-                    'productUnitPriceDiscounts:id,purchase_order_item_id',
-                    'subtotalDiscounts:id,purchase_order_item_id',
-                ])
-                ->get()
-                ->keyBy('id') ?? collect();
-            $purchaseOrderItemIds = $purchaseOrderItems->keys()->all();
-            $purchaseOrderGlobalDiscountIds = $purchaseOrder?->globalDiscounts()->pluck('id')->all() ?? [];
-            $purchaseOrderDownPaymentIds = $purchaseOrder?->downPayments()->pluck('id')->all() ?? [];
-            $purchaseOrderRefundedDownPaymentIds = $purchaseOrder?->refundedDownPayments()->pluck('id')->all() ?? [];
-
-            foreach ($this->input('delete_global_discount_ids', []) as $index => $discountId) {
-                if (! in_array($discountId, $purchaseOrderGlobalDiscountIds, true)) {
-                    $validator->errors()->add(
-                        "delete_global_discount_ids.$index",
-                        trans('rules.purchase_order.invalid_global_discount_reference')
-                    );
-                }
-            }
-
-            foreach ($this->input('global_discounts', []) as $index => $discount) {
-                $discountId = $discount['id'] ?? null;
-
-                if (! is_null($discountId) && ! in_array($discountId, $purchaseOrderGlobalDiscountIds, true)) {
-                    $validator->errors()->add(
-                        "global_discounts.$index.id",
-                        trans('rules.purchase_order.invalid_global_discount_reference')
-                    );
-                }
-            }
+            $purchaseOrderItemIds = $purchaseOrder?->items()->pluck('id')->all() ?? [];
+            $purchaseOrderPayments = $purchaseOrder?->payments()->get()->keyBy('id') ?? collect();
+            $purchaseOrderPaymentIds = $purchaseOrderPayments->keys()->all();
+            $purchaseOrderRefundedPaymentIds = $purchaseOrder?->refundedPayments()->pluck('id')->all() ?? [];
 
             foreach ($this->input('delete_item_ids', []) as $index => $deleteItemId) {
                 if (! in_array($deleteItemId, $purchaseOrderItemIds, true)) {
@@ -278,153 +265,136 @@ class PurchaseOrderUpdateRequest extends FormRequest
 
             foreach ($this->input('items', []) as $index => $item) {
                 $itemId = $item['id'] ?? null;
-                $purchaseOrderItem = ! is_null($itemId) ? $purchaseOrderItems->get($itemId) : null;
 
-                if (! is_null($itemId) && is_null($purchaseOrderItem)) {
+                if (! is_null($itemId) && ! in_array($itemId, $purchaseOrderItemIds, true)) {
                     $validator->errors()->add(
                         "items.$index.id",
                         trans('rules.purchase_order.invalid_item_reference')
                     );
                 }
-
-                $productUnitPriceDiscountIds = $purchaseOrderItem?->productUnitPriceDiscounts->pluck('id')->all() ?? [];
-                foreach ($item['delete_product_unit_price_discount_ids'] ?? [] as $discountIndex => $discountId) {
-                    if (! in_array($discountId, $productUnitPriceDiscountIds, true)) {
-                        $validator->errors()->add(
-                            "items.$index.delete_product_unit_price_discount_ids.$discountIndex",
-                            trans('rules.purchase_order.invalid_product_unit_price_discount_reference')
-                        );
-                    }
-                }
-
-                foreach ($item['product_unit_price_discounts'] ?? [] as $discountIndex => $discount) {
-                    $discountId = $discount['id'] ?? null;
-
-                    if (! is_null($discountId) && ! in_array($discountId, $productUnitPriceDiscountIds, true)) {
-                        $validator->errors()->add(
-                            "items.$index.product_unit_price_discounts.$discountIndex.id",
-                            trans('rules.purchase_order.invalid_product_unit_price_discount_reference')
-                        );
-                    }
-                }
-
-                $subtotalDiscountIds = $purchaseOrderItem?->subtotalDiscounts->pluck('id')->all() ?? [];
-                foreach ($item['delete_subtotal_discount_ids'] ?? [] as $discountIndex => $discountId) {
-                    if (! in_array($discountId, $subtotalDiscountIds, true)) {
-                        $validator->errors()->add(
-                            "items.$index.delete_subtotal_discount_ids.$discountIndex",
-                            trans('rules.purchase_order.invalid_subtotal_discount_reference')
-                        );
-                    }
-                }
-
-                foreach ($item['subtotal_discounts'] ?? [] as $discountIndex => $discount) {
-                    $discountId = $discount['id'] ?? null;
-
-                    if (! is_null($discountId) && ! in_array($discountId, $subtotalDiscountIds, true)) {
-                        $validator->errors()->add(
-                            "items.$index.subtotal_discounts.$discountIndex.id",
-                            trans('rules.purchase_order.invalid_subtotal_discount_reference')
-                        );
-                    }
-                }
             }
 
-            foreach ($this->input('delete_down_payment_ids', []) as $index => $downPaymentId) {
-                if (! in_array($downPaymentId, $purchaseOrderDownPaymentIds, true)) {
+            foreach ($this->input('delete_payment_ids', []) as $index => $paymentId) {
+                if (! in_array($paymentId, $purchaseOrderPaymentIds, true)) {
                     $validator->errors()->add(
-                        "delete_down_payment_ids.$index",
-                        trans('rules.purchase_order.invalid_down_payment_reference')
+                        "delete_payment_ids.$index",
+                        trans('rules.purchase_order.invalid_payment_reference')
                     );
-                }
-            }
-
-            foreach ($this->input('down_payments', []) as $index => $downPayment) {
-                $downPaymentId = $downPayment['id'] ?? null;
-
-                if (! is_null($downPaymentId) && ! in_array($downPaymentId, $purchaseOrderDownPaymentIds, true)) {
-                    $validator->errors()->add(
-                        "down_payments.$index.id",
-                        trans('rules.purchase_order.invalid_down_payment_reference')
-                    );
-                }
-            }
-
-            foreach ($this->input('delete_refunded_down_payment_ids', []) as $index => $refundedDownPaymentId) {
-                if (! in_array($refundedDownPaymentId, $purchaseOrderRefundedDownPaymentIds, true)) {
-                    $validator->errors()->add(
-                        "delete_refunded_down_payment_ids.$index",
-                        trans('rules.purchase_order.invalid_refunded_down_payment_reference')
-                    );
-                }
-            }
-
-            foreach ($this->input('refunded_down_payments', []) as $index => $refundedDownPayment) {
-                $refundedDownPaymentId = $refundedDownPayment['id'] ?? null;
-
-                if (! is_null($refundedDownPaymentId) && ! in_array($refundedDownPaymentId, $purchaseOrderRefundedDownPaymentIds, true)) {
-                    $validator->errors()->add(
-                        "refunded_down_payments.$index.id",
-                        trans('rules.purchase_order.invalid_refunded_down_payment_reference')
-                    );
-                }
-            }
-
-            $downPaymentCodesInRequest = [];
-            foreach ($this->input('down_payments', []) as $index => $downPayment) {
-                $downPaymentCode = $downPayment['code'] ?? null;
-                $downPaymentId = $downPayment['id'] ?? null;
-
-                if (empty($downPaymentCode) || $downPaymentCode === config('dcslab.KEYWORDS.AUTO')) {
-                    continue;
-                }
-
-                if (in_array($downPaymentCode, $downPaymentCodesInRequest, true)) {
-                    $validator->errors()->add("down_payments.$index.code", trans('rules.unique_code'));
 
                     continue;
                 }
 
-                $downPaymentCodesInRequest[] = $downPaymentCode;
+                $payment = $purchaseOrderPayments->get($paymentId);
 
-                $downPaymentQuery = PurchaseOrderDownPayment::where('company_id', $this->company_id)
-                    ->where('code', $downPaymentCode);
-
-                if (! empty($downPaymentId)) {
-                    $downPaymentQuery->where('id', '<>', $downPaymentId);
-                }
-
-                if ($downPaymentQuery->exists()) {
-                    $validator->errors()->add("down_payments.$index.code", trans('rules.unique_code'));
+                if ($payment && ((float) $payment->amount_allocated > 0 || $payment->invoicePayments()->exists())) {
+                    $validator->errors()->add(
+                        "delete_payment_ids.$index",
+                        trans('rules.purchase_order.payment_already_allocated')
+                    );
                 }
             }
 
-            $refundedDownPaymentCodesInRequest = [];
-            foreach ($this->input('refunded_down_payments', []) as $index => $refundedDownPayment) {
-                $refundedDownPaymentCode = $refundedDownPayment['code'] ?? null;
-                $refundedDownPaymentId = $refundedDownPayment['id'] ?? null;
+            foreach ($this->input('payments', []) as $index => $payment) {
+                $paymentId = $payment['id'] ?? null;
 
-                if (empty($refundedDownPaymentCode) || $refundedDownPaymentCode === config('dcslab.KEYWORDS.AUTO')) {
+                if (is_null($paymentId)) {
                     continue;
                 }
 
-                if (in_array($refundedDownPaymentCode, $refundedDownPaymentCodesInRequest, true)) {
-                    $validator->errors()->add("refunded_down_payments.$index.code", trans('rules.unique_code'));
+                if (! in_array($paymentId, $purchaseOrderPaymentIds, true)) {
+                    $validator->errors()->add(
+                        "payments.$index.id",
+                        trans('rules.purchase_order.invalid_payment_reference')
+                    );
 
                     continue;
                 }
 
-                $refundedDownPaymentCodesInRequest[] = $refundedDownPaymentCode;
+                $existingPayment = $purchaseOrderPayments->get($paymentId);
 
-                $refundedDownPaymentQuery = PurchaseOrderDownPaymentRefund::where('company_id', $this->company_id)
-                    ->where('code', $refundedDownPaymentCode);
+                if ($existingPayment && (float) ($payment['amount'] ?? 0) < (float) $existingPayment->amount_allocated) {
+                    $validator->errors()->add(
+                        "payments.$index.amount",
+                        trans('rules.purchase_order.payment_already_allocated')
+                    );
+                }
+            }
 
-                if (! empty($refundedDownPaymentId)) {
-                    $refundedDownPaymentQuery->where('id', '<>', $refundedDownPaymentId);
+            foreach ($this->input('delete_refunded_payment_ids', []) as $index => $refundedPaymentId) {
+                if (! in_array($refundedPaymentId, $purchaseOrderRefundedPaymentIds, true)) {
+                    $validator->errors()->add(
+                        "delete_refunded_payment_ids.$index",
+                        trans('rules.purchase_order.invalid_refunded_payment_reference')
+                    );
+                }
+            }
+
+            foreach ($this->input('refunded_payments', []) as $index => $refundedPayment) {
+                $refundedPaymentId = $refundedPayment['id'] ?? null;
+
+                if (! is_null($refundedPaymentId) && ! in_array($refundedPaymentId, $purchaseOrderRefundedPaymentIds, true)) {
+                    $validator->errors()->add(
+                        "refunded_payments.$index.id",
+                        trans('rules.purchase_order.invalid_refunded_payment_reference')
+                    );
+                }
+            }
+
+            $paymentCodesInRequest = [];
+            foreach ($this->input('payments', []) as $index => $payment) {
+                $paymentCode = $payment['code'] ?? null;
+                $paymentId = $payment['id'] ?? null;
+
+                if (empty($paymentCode) || $paymentCode === config('dcslab.KEYWORDS.AUTO')) {
+                    continue;
                 }
 
-                if ($refundedDownPaymentQuery->exists()) {
-                    $validator->errors()->add("refunded_down_payments.$index.code", trans('rules.unique_code'));
+                if (in_array($paymentCode, $paymentCodesInRequest, true)) {
+                    $validator->errors()->add("payments.$index.code", trans('rules.unique_code'));
+
+                    continue;
+                }
+
+                $paymentCodesInRequest[] = $paymentCode;
+
+                $paymentQuery = PurchaseOrderPayment::where('company_id', $this->company_id)
+                    ->where('code', $paymentCode);
+
+                if (! empty($paymentId)) {
+                    $paymentQuery->where('id', '<>', $paymentId);
+                }
+
+                if ($paymentQuery->exists()) {
+                    $validator->errors()->add("payments.$index.code", trans('rules.unique_code'));
+                }
+            }
+
+            $refundedPaymentCodesInRequest = [];
+            foreach ($this->input('refunded_payments', []) as $index => $refundedPayment) {
+                $refundedPaymentCode = $refundedPayment['code'] ?? null;
+                $refundedPaymentId = $refundedPayment['id'] ?? null;
+
+                if (empty($refundedPaymentCode) || $refundedPaymentCode === config('dcslab.KEYWORDS.AUTO')) {
+                    continue;
+                }
+
+                if (in_array($refundedPaymentCode, $refundedPaymentCodesInRequest, true)) {
+                    $validator->errors()->add("refunded_payments.$index.code", trans('rules.unique_code'));
+
+                    continue;
+                }
+
+                $refundedPaymentCodesInRequest[] = $refundedPaymentCode;
+
+                $refundedPaymentQuery = PurchaseOrderPaymentRefund::where('company_id', $this->company_id)
+                    ->where('code', $refundedPaymentCode);
+
+                if (! empty($refundedPaymentId)) {
+                    $refundedPaymentQuery->where('id', '<>', $refundedPaymentId);
+                }
+
+                if ($refundedPaymentQuery->exists()) {
+                    $validator->errors()->add("refunded_payments.$index.code", trans('rules.unique_code'));
                 }
             }
         });
@@ -438,25 +408,6 @@ class PurchaseOrderUpdateRequest extends FormRequest
             'supplier_id' => $this->filled('supplier_id') ? HashidsHelper::decodeId($this->supplier_id) : null,
         ]);
 
-        if (is_array($this->input('global_discounts'))) {
-            $globalDiscounts = [];
-            foreach ($this->input('global_discounts') as $globalDiscount) {
-                if (array_key_exists('id', $globalDiscount) && ! is_null($globalDiscount['id'])) {
-                    $globalDiscount['id'] = HashidsHelper::decodeId($globalDiscount['id']);
-                }
-                $globalDiscounts[] = $globalDiscount;
-            }
-            $this->merge(['global_discounts' => $globalDiscounts]);
-        }
-
-        if (is_array($this->input('delete_global_discount_ids'))) {
-            $deleteGlobalDiscountIds = [];
-            foreach ($this->input('delete_global_discount_ids') as $id) {
-                $deleteGlobalDiscountIds[] = HashidsHelper::decodeId($id);
-            }
-            $this->merge(['delete_global_discount_ids' => $deleteGlobalDiscountIds]);
-        }
-
         if (is_array($this->input('items'))) {
             $items = [];
             foreach ($this->input('items') as $item) {
@@ -468,40 +419,6 @@ class PurchaseOrderUpdateRequest extends FormRequest
                 }
                 if (array_key_exists('vat_profile_id', $item) && ! is_null($item['vat_profile_id'])) {
                     $item['vat_profile_id'] = HashidsHelper::decodeId($item['vat_profile_id']);
-                }
-                if (isset($item['product_unit_price_discounts']) && is_array($item['product_unit_price_discounts'])) {
-                    $priceDiscounts = [];
-                    foreach ($item['product_unit_price_discounts'] as $discount) {
-                        if (array_key_exists('id', $discount) && ! is_null($discount['id'])) {
-                            $discount['id'] = HashidsHelper::decodeId($discount['id']);
-                        }
-                        $priceDiscounts[] = $discount;
-                    }
-                    $item['product_unit_price_discounts'] = $priceDiscounts;
-                }
-                if (isset($item['subtotal_discounts']) && is_array($item['subtotal_discounts'])) {
-                    $subtotalDiscounts = [];
-                    foreach ($item['subtotal_discounts'] as $discount) {
-                        if (array_key_exists('id', $discount) && ! is_null($discount['id'])) {
-                            $discount['id'] = HashidsHelper::decodeId($discount['id']);
-                        }
-                        $subtotalDiscounts[] = $discount;
-                    }
-                    $item['subtotal_discounts'] = $subtotalDiscounts;
-                }
-                if (isset($item['delete_product_unit_price_discount_ids']) && is_array($item['delete_product_unit_price_discount_ids'])) {
-                    $deletePriceDiscountIds = [];
-                    foreach ($item['delete_product_unit_price_discount_ids'] as $id) {
-                        $deletePriceDiscountIds[] = HashidsHelper::decodeId($id);
-                    }
-                    $item['delete_product_unit_price_discount_ids'] = $deletePriceDiscountIds;
-                }
-                if (isset($item['delete_subtotal_discount_ids']) && is_array($item['delete_subtotal_discount_ids'])) {
-                    $deleteSubtotalDiscountIds = [];
-                    foreach ($item['delete_subtotal_discount_ids'] as $id) {
-                        $deleteSubtotalDiscountIds[] = HashidsHelper::decodeId($id);
-                    }
-                    $item['delete_subtotal_discount_ids'] = $deleteSubtotalDiscountIds;
                 }
                 $items[] = $item;
             }
@@ -516,48 +433,48 @@ class PurchaseOrderUpdateRequest extends FormRequest
             $this->merge(['delete_item_ids' => $deleteItemIds]);
         }
 
-        if (is_array($this->input('down_payments'))) {
-            $downPayments = [];
-            foreach ($this->input('down_payments') as $downPayment) {
-                if (array_key_exists('id', $downPayment) && ! is_null($downPayment['id'])) {
-                    $downPayment['id'] = HashidsHelper::decodeId($downPayment['id']);
+        if (is_array($this->input('payments'))) {
+            $payments = [];
+            foreach ($this->input('payments') as $payment) {
+                if (array_key_exists('id', $payment) && ! is_null($payment['id'])) {
+                    $payment['id'] = HashidsHelper::decodeId($payment['id']);
                 }
-                if (array_key_exists('cash_account_id', $downPayment) && ! is_null($downPayment['cash_account_id'])) {
-                    $downPayment['cash_account_id'] = HashidsHelper::decodeId($downPayment['cash_account_id']);
+                if (array_key_exists('cash_account_id', $payment) && ! is_null($payment['cash_account_id'])) {
+                    $payment['cash_account_id'] = HashidsHelper::decodeId($payment['cash_account_id']);
                 }
-                $downPayments[] = $downPayment;
+                $payments[] = $payment;
             }
-            $this->merge(['down_payments' => $downPayments]);
+            $this->merge(['payments' => $payments]);
         }
 
-        if (is_array($this->input('delete_down_payment_ids'))) {
-            $deleteDownPaymentIds = [];
-            foreach ($this->input('delete_down_payment_ids') as $id) {
-                $deleteDownPaymentIds[] = HashidsHelper::decodeId($id);
+        if (is_array($this->input('delete_payment_ids'))) {
+            $deletePaymentIds = [];
+            foreach ($this->input('delete_payment_ids') as $id) {
+                $deletePaymentIds[] = HashidsHelper::decodeId($id);
             }
-            $this->merge(['delete_down_payment_ids' => $deleteDownPaymentIds]);
+            $this->merge(['delete_payment_ids' => $deletePaymentIds]);
         }
 
-        if (is_array($this->input('refunded_down_payments'))) {
-            $refundedDownPayments = [];
-            foreach ($this->input('refunded_down_payments') as $refundedDownPayment) {
-                if (array_key_exists('id', $refundedDownPayment) && ! is_null($refundedDownPayment['id'])) {
-                    $refundedDownPayment['id'] = HashidsHelper::decodeId($refundedDownPayment['id']);
+        if (is_array($this->input('refunded_payments'))) {
+            $refundedPayments = [];
+            foreach ($this->input('refunded_payments') as $refundedPayment) {
+                if (array_key_exists('id', $refundedPayment) && ! is_null($refundedPayment['id'])) {
+                    $refundedPayment['id'] = HashidsHelper::decodeId($refundedPayment['id']);
                 }
-                if (array_key_exists('cash_account_id', $refundedDownPayment) && ! is_null($refundedDownPayment['cash_account_id'])) {
-                    $refundedDownPayment['cash_account_id'] = HashidsHelper::decodeId($refundedDownPayment['cash_account_id']);
+                if (array_key_exists('cash_account_id', $refundedPayment) && ! is_null($refundedPayment['cash_account_id'])) {
+                    $refundedPayment['cash_account_id'] = HashidsHelper::decodeId($refundedPayment['cash_account_id']);
                 }
-                $refundedDownPayments[] = $refundedDownPayment;
+                $refundedPayments[] = $refundedPayment;
             }
-            $this->merge(['refunded_down_payments' => $refundedDownPayments]);
+            $this->merge(['refunded_payments' => $refundedPayments]);
         }
 
-        if (is_array($this->input('delete_refunded_down_payment_ids'))) {
-            $deleteRefundedDownPaymentIds = [];
-            foreach ($this->input('delete_refunded_down_payment_ids') as $id) {
-                $deleteRefundedDownPaymentIds[] = HashidsHelper::decodeId($id);
+        if (is_array($this->input('delete_refunded_payment_ids'))) {
+            $deleteRefundedPaymentIds = [];
+            foreach ($this->input('delete_refunded_payment_ids') as $id) {
+                $deleteRefundedPaymentIds[] = HashidsHelper::decodeId($id);
             }
-            $this->merge(['delete_refunded_down_payment_ids' => $deleteRefundedDownPaymentIds]);
+            $this->merge(['delete_refunded_payment_ids' => $deleteRefundedPaymentIds]);
         }
     }
 }

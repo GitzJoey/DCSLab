@@ -21,9 +21,10 @@ class PurchaseReturnItem extends Model
         'company_id',
         'branch_id',
         'purchase_return_id',
-        'purchase_item_id',
+        'purchase_order_receipt_item_id',
         'qty',
         'product_unit_id',
+        'product_id',
         'product_unit_conversion_value',
         'product_unit_qty_base',
         'product_unit_price',
@@ -42,7 +43,6 @@ class PurchaseReturnItem extends Model
         'vat_base',
         'vat',
         'subtotal_after_vat',
-        'additional_cost',
         'rounding',
         'amount_payable',
         'cogs',
@@ -70,7 +70,6 @@ class PurchaseReturnItem extends Model
         'vat_base' => 'decimal:8',
         'vat' => 'decimal:8',
         'subtotal_after_vat' => 'decimal:8',
-        'additional_cost' => 'decimal:8',
         'rounding' => 'decimal:8',
         'amount_payable' => 'decimal:8',
         'cogs' => 'decimal:8',
@@ -93,14 +92,22 @@ class PurchaseReturnItem extends Model
         return $this->belongsTo(PurchaseReturn::class)->withTrashed();
     }
 
-    public function purchaseItem()
+    /**
+     * Only filled when this return item comes from a purchase order receipt line.
+     */
+    public function purchaseOrderReceiptItem()
     {
-        return $this->belongsTo(PurchaseItem::class)->withTrashed();
+        return $this->belongsTo(PurchaseOrderReceiptItem::class)->withTrashed();
     }
 
     public function productUnit()
     {
         return $this->belongsTo(ProductUnit::class)->withTrashed();
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 
     public function vatProfile()
@@ -113,8 +120,8 @@ class PurchaseReturnItem extends Model
         return $this->hasMany(PurchaseReturnItemSerial::class);
     }
 
-    public function shipmentItems()
+    public function stockTransaction()
     {
-        return $this->hasMany(PurchaseReturnShipmentItem::class);
+        return $this->morphOne(StockTransaction::class, 'referable');
     }
 }

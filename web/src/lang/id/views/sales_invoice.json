@@ -1,0 +1,120 @@
+{
+  "page_title": "Faktur Penjualan",
+  "table": {
+    "title": "Daftar Faktur Penjualan",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "customer": "Pelanggan",
+      "sales_order": "Sales Order",
+      "due_days": "Jatuh Tempo (Hari)",
+      "amount_payable": "Jumlah Tagihan",
+      "remarks": "Catatan"
+    }
+  },
+  "actions": {
+    "create": "Tambah Faktur Penjualan",
+    "edit": "Ubah Faktur Penjualan",
+    "show": "Tampilkan Faktur Penjualan",
+    "delete": "Hapus Faktur Penjualan"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "sales_invoice_data": "Data Faktur Penjualan",
+    "items": "Item-item",
+    "item_additional_details": "Detail Item Tambahan",
+    "summary": "Ringkasan",
+    "payments": "Pembayaran"
+  },
+  "filters": {
+    "is_posted": "Diposting",
+    "is_posted_yes": "Sudah Diposting",
+    "is_posted_no": "Belum Diposting",
+    "is_paid_off": "Status Pembayaran",
+    "is_paid_off_yes": "Lunas",
+    "is_paid_off_no": "Belum Lunas",
+    "payment_type": "Tipe Pembayaran",
+    "payment_type_cash": "Kas",
+    "payment_type_down_payment": "Uang Muka",
+    "payment_type_return": "Retur Penjualan"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "due_days": "Jatuh Tempo (Hari)",
+    "customer_id": "Pelanggan",
+    "sales_order_id": "Sales Order",
+    "sales_order_item_id": "Item Sales Order",
+    "tax_invoice_number": "Nomor Faktur Pajak",
+    "tax_invoice_vat_base": "Dasar PPN Faktur Pajak",
+    "tax_invoice_vat": "PPN Faktur Pajak",
+    "remarks": "Catatan",
+    "is_posted": "Diposting",
+    "sales_order_hint": "Pilih sales order yang sudah memiliki pelanggan. Pelanggan mengikuti sales order.",
+    "sales_order_required_hint": "Pilih sales order terlebih dahulu untuk memuat item-itemnya.",
+    "product_unit_id": "Produk",
+    "product_unit_code": "Kode Produk Satuan",
+    "unit_name": "Satuan",
+    "qty": "Qty",
+    "product_unit_qty_base": "Qty Base",
+    "qty_invoiced_base": "Qty Terfaktur Base",
+    "qty_remaining_to_invoice_base": "Sisa Qty Base Belum Difaktur",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_price": "Harga Satuan",
+    "price_discount": "Diskon Harga",
+    "price_after_discount": "Harga Satuan Setelah Diskon",
+    "subtotal": "Subtotal Setelah Diskon Harga Satuan",
+    "subtotal_discount": "Diskon Subtotal",
+    "subtotal_after_discount": "Subtotal Setelah Diskon",
+    "subtotal_after_vat": "Subtotal Setelah PPN",
+    "item_price_breakdown": "Rincian Harga Item",
+    "item_additional_details": "Detail Tambahan Item",
+    "item_count": "Jumlah Item",
+    "items_empty": "Belum ada item faktur",
+    "items_subtotal_after_discount": "Total Subtotal Setelah Diskon",
+    "global_discount": "Diskon Global",
+    "item_total_before_global_discount": "Total Sebelum Diskon Global",
+    "item_total_after_global_discount": "Total Setelah Diskon Global",
+    "item_total_after_vat": "Total Item Setelah PPN",
+    "vat_base": "Dasar PPN",
+    "vat": "PPN",
+    "rounding": "Pembulatan",
+    "amount_payable": "Jumlah Tagihan",
+    "product_unit_is_price_include_vat": "Harga Termasuk PPN",
+    "vat_profile_id": "Profil PPN",
+    "vat_rate": "Tarif PPN",
+    "vat_base_numerator": "Pembilang Dasar PPN",
+    "vat_base_denominator": "Penyebut Dasar PPN",
+    "payments": "Pembayaran",
+    "payments_empty": "Belum ada data pembayaran",
+    "payment_type": "Tipe Pembayaran",
+    "cash_account_id": "Akun Kas",
+    "sales_order_payment_id": "Uang Muka Sales Order",
+    "sales_return_id": "Retur Penjualan",
+    "amount": "Jumlah",
+    "amount_paid_down_payment": "Dibayar Dengan Uang Muka",
+    "amount_paid_return": "Dibayar Dengan Retur Penjualan",
+    "amount_paid_total": "Total Dibayar",
+    "amount_due": "Sisa Tagihan",
+    "is_paid_off": "Lunas",
+    "available_amount": "Jumlah Tersedia"
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Faktur Penjualan",
+      "message": "Faktur Penjualan berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Faktur Penjualan",
+      "message": "Faktur Penjualan berhasil diperbarui"
+    },
+    "delete": {
+      "title": "Hapus Faktur Penjualan",
+      "message": "Faktur Penjualan berhasil dihapus"
+    }
+  }
+}

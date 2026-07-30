@@ -21,8 +21,9 @@ class IsValidWarehouse implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($value || $this->required) {
-            $company = Company::find($this->companyId);
-            if (! $company->warehouses->pluck('id')->contains($value)) {
+            $company = is_null($this->companyId) ? null : Company::find($this->companyId);
+
+            if (! $company || ! $company->warehouses->pluck('id')->contains($value)) {
                 $fail('rules.valid_warehouse')->translate();
             }
         }

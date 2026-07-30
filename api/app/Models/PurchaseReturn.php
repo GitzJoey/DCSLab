@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JournalEntryTypeEnum;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,8 +21,9 @@ class PurchaseReturn extends Model
     protected $fillable = [
         'company_id',
         'branch_id',
-        'purchase_id',
+        'purchase_invoice_id',
         'supplier_id',
+        'warehouse_id',
         'code',
         'date',
         'remarks',
@@ -32,10 +34,9 @@ class PurchaseReturn extends Model
         'vat_base',
         'vat',
         'item_total_after_vat',
-        'additional_cost',
         'rounding',
         'amount_payable',
-        'amount_allocated_to_purchase',
+        'amount_allocated_to_invoice',
         'amount_received_total',
         'amount_settled_total',
         'amount_available',
@@ -51,10 +52,9 @@ class PurchaseReturn extends Model
         'vat_base' => 'decimal:8',
         'vat' => 'decimal:8',
         'item_total_after_vat' => 'decimal:8',
-        'additional_cost' => 'decimal:8',
         'rounding' => 'decimal:8',
         'amount_payable' => 'decimal:8',
-        'amount_allocated_to_purchase' => 'decimal:8',
+        'amount_allocated_to_invoice' => 'decimal:8',
         'amount_received_total' => 'decimal:8',
         'amount_settled_total' => 'decimal:8',
         'amount_available' => 'decimal:8',
@@ -87,15 +87,21 @@ class PurchaseReturn extends Model
             );
 
             $validateCompanyRelation(
-                relationId: $purchaseReturn->purchase_id,
-                modelClass: Purchase::class,
-                errorMessage: 'Purchase return purchase must exist in the same company.',
+                relationId: $purchaseReturn->purchase_invoice_id,
+                modelClass: PurchaseInvoice::class,
+                errorMessage: 'Purchase return purchase invoice must exist in the same company.',
             );
 
             $validateCompanyRelation(
                 relationId: $purchaseReturn->supplier_id,
                 modelClass: Supplier::class,
                 errorMessage: 'Purchase return supplier must exist in the same company.',
+            );
+
+            $validateCompanyRelation(
+                relationId: $purchaseReturn->warehouse_id,
+                modelClass: Warehouse::class,
+                errorMessage: 'Purchase return warehouse must exist in the same company.',
             );
         };
 
@@ -138,9 +144,9 @@ class PurchaseReturn extends Model
         return $this->belongsTo(Branch::class)->withTrashed();
     }
 
-    public function purchase()
+    public function purchaseInvoice()
     {
-        return $this->belongsTo(Purchase::class)->withTrashed();
+        return $this->belongsTo(PurchaseInvoice::class)->withTrashed();
     }
 
     public function supplier()
@@ -148,28 +154,34 @@ class PurchaseReturn extends Model
         return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class)->withTrashed();
+    }
+
     public function items()
     {
         return $this->hasMany(PurchaseReturnItem::class);
     }
 
-    public function shipments()
+    public function itemSerials()
     {
-        return $this->hasMany(PurchaseReturnShipment::class);
+        return $this->hasMany(PurchaseReturnItemSerial::class);
     }
 
-    public function allocations()
+    public function refunds()
     {
-        return $this->hasMany(PurchaseReturnAllocation::class);
+        return $this->hasMany(PurchaseReturnRefund::class);
     }
 
-    public function payments()
+    public function invoicePayments()
     {
-        return $this->hasMany(PurchaseReturnPayment::class);
+        return $this->hasMany(PurchaseInvoicePayment::class);
     }
 
-    public function globalDiscounts()
+    public function journalEntry()
     {
-        return $this->hasMany(PurchaseReturnGlobalDiscount::class);
+        return $this->morphOne(JournalEntry::class, 'source')
+            ->where('journal_type', JournalEntryTypeEnum::TRANSACTION->value);
     }
 }

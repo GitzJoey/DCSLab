@@ -1,0 +1,44 @@
+import type { Branch } from './Branch';
+import type { Company } from './Company';
+import type { Product } from './Product';
+import type { ProductUnit } from './ProductUnit';
+import type { SalesOrderDeliveryItem } from './SalesOrderDeliveryItem';
+import type { SalesReturn } from './SalesReturn';
+import type { SalesReturnItemSerial } from './SalesReturnItemSerial';
+import type { VatProfile } from './VatProfile';
+
+export interface SalesReturnItem {
+  id: string;
+  ulid: string;
+  company?: Company;
+  branch?: Branch;
+  sales_return?: SalesReturn;
+  sales_order_delivery_item?: SalesOrderDeliveryItem | null;
+  qty: number;
+  product_unit?: ProductUnit;
+  product?: Product;
+  product_unit_conversion_value: number;
+  product_unit_qty_base: number;
+  product_unit_price: number;
+  product_unit_is_price_include_vat: boolean;
+  price_discount: number;
+  price_after_discount: number;
+  subtotal: number;
+  subtotal_discount: number;
+  subtotal_after_discount: number;
+  global_discount: number;
+  subtotal_after_global_discount: number;
+  vat_profile?: VatProfile | null;
+  vat_rate: number;
+  vat_base_numerator: number;
+  vat_base_denominator: number;
+  vat_base: number;
+  vat: number;
+  subtotal_after_vat: number;
+  rounding: number;
+  amount_payable: number;
+  base_unit_cogs: number;
+  total_cogs: number;
+  remarks: string | null;
+  serials?: SalesReturnItemSerial[];
+}

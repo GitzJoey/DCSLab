@@ -1,0 +1,41 @@
+import type { Branch } from './Branch';
+import type { Company } from './Company';
+import type { ProductUnit } from './ProductUnit';
+import type { PurchaseInvoice } from './PurchaseInvoice';
+import type { PurchaseOrderItem } from './PurchaseOrderItem';
+import type { VatProfile } from './VatProfile';
+
+export interface PurchaseInvoiceItem {
+  id: string;
+  ulid: string;
+  company?: Company;
+  branch?: Branch;
+  purchase_invoice?: PurchaseInvoice;
+  purchase_order_item?: PurchaseOrderItem | null;
+  qty: number;
+  product_unit?: ProductUnit | null;
+  product_unit_conversion_value: number;
+  product_unit_qty_base: number;
+  product_unit_price: number;
+  product_unit_is_price_include_vat: boolean;
+  price_discount: number;
+  price_after_discount: number;
+  subtotal: number;
+  subtotal_discount: number;
+  subtotal_after_discount: number;
+  global_discount: number;
+  subtotal_after_global_discount: number;
+  vat_profile?: VatProfile | null;
+  vat_rate: number;
+  vat_base_numerator: number;
+  vat_base_denominator: number;
+  vat_base: number;
+  vat: number;
+  subtotal_after_vat: number;
+  rounding: number;
+  amount_payable: number;
+  cogs: number;
+  total_cogs: number;
+  base_unit_cogs: number;
+  remarks: string | null;
+}

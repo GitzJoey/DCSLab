@@ -31,7 +31,7 @@ class StockTransferItemStoreRequest extends FormRequest
         return [
             'company_id' => ['required', 'integer', 'bail', new IsValidCompany()],
             'branch_id' => ['required', 'integer', new IsValidBranch($this->company_id, true)],
-            'stock_transfer_id' => ['required', 'integer', 'bail', new IsValidStockTransfer()],
+            'stock_transfer_id' => ['required', 'integer', 'bail', new IsValidStockTransfer($this->company_id)],
             'qty' => ['required', 'numeric', 'min:1'],
             'product_unit_id' => ['required', 'integer', 'bail', new IsValidProductUnit($this->company_id)],
             'product_unit_conversion_value' => ['required', 'numeric', 'min:1'],

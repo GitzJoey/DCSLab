@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\BootableModel;
+use App\Traits\ScopeableByBranch;
+use App\Traits\ScopeableByCompany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class SalesOrderItem extends Model
+{
+    use BootableModel;
+    use HasFactory;
+    use ScopeableByBranch;
+    use ScopeableByCompany;
+    use SoftDeletes;
+
+    protected $fillable = [
+        'company_id', // user_input
+        'branch_id', // user_input
+        'sales_order_id', // user_input
+        'qty', // user_input
+        'product_unit_id', // user_input
+        'product_id', // derived_from_product_unit
+        'product_unit_conversion_value', // user_input
+        'product_unit_qty_base', // calculated_when_saving_item_row
+        'qty_delivered_base', // calculated_after_sales_order_summary
+        'qty_invoiced_base', // calculated_after_sales_order_summary
+        'qty_outstanding_base', // calculated_after_sales_order_summary
+        'qty_excess_base', // calculated_after_sales_order_summary
+        'product_unit_price', // user_input
+        'product_unit_is_price_include_vat', // user_input
+        'price_discount', // user_input
+        'price_after_discount', // calculated_after_save_item_row
+        'subtotal', // calculated_after_save_item_row
+        'subtotal_discount', // user_input
+        'subtotal_after_discount', // calculated_after_save_item_row
+
+        'global_discount', // calculated_after_sales_order_summary
+        'subtotal_after_global_discount', // calculated_after_sales_order_summary
+        'vat_profile_id', // user_input
+        'vat_rate', // user_input
+        'vat_base_numerator', // user_input
+        'vat_base_denominator', // user_input
+        'vat_base', // calculated_after_sales_order_summary
+        'vat', // calculated_after_sales_order_summary
+        'subtotal_after_vat', // calculated_after_sales_order_summary
+        'rounding', // calculated_after_sales_order_summary
+        'amount_payable', // calculated_after_sales_order_summary
+        'remarks', // user_input
+    ];
+
+    protected $casts = [
+        'qty' => 'decimal:8',
+        'product_unit_conversion_value' => 'decimal:8',
+        'product_unit_qty_base' => 'decimal:8',
+        'qty_delivered_base' => 'decimal:8',
+        'qty_invoiced_base' => 'decimal:8',
+        'qty_outstanding_base' => 'decimal:8',
+        'qty_excess_base' => 'decimal:8',
+        'product_unit_price' => 'decimal:8',
+        'product_unit_is_price_include_vat' => 'boolean',
+        'price_discount' => 'decimal:8',
+        'price_after_discount' => 'decimal:8',
+        'subtotal' => 'decimal:8',
+        'subtotal_discount' => 'decimal:8',
+        'subtotal_after_discount' => 'decimal:8',
+        'global_discount' => 'decimal:8',
+        'subtotal_after_global_discount' => 'decimal:8',
+        'vat_rate' => 'decimal:8',
+        'vat_base_numerator' => 'integer',
+        'vat_base_denominator' => 'integer',
+        'vat_base' => 'decimal:8',
+        'vat' => 'decimal:8',
+        'subtotal_after_vat' => 'decimal:8',
+        'rounding' => 'decimal:8',
+        'amount_payable' => 'decimal:8',
+    ];
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class)->withTrashed();
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class)->withTrashed();
+    }
+
+    public function salesOrder()
+    {
+        return $this->belongsTo(SalesOrder::class)->withTrashed();
+    }
+
+    public function productUnit()
+    {
+        return $this->belongsTo(ProductUnit::class)->withTrashed();
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class)->withTrashed();
+    }
+
+    public function vatProfile()
+    {
+        return $this->belongsTo(VatProfile::class)->withTrashed();
+    }
+}

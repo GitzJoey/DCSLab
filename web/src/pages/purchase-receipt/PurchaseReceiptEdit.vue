@@ -14,6 +14,7 @@ import {
   FormErrorMessages,
   FormInput,
   FormInputCode,
+  FormInputCurrency,
   FormInputDateTimeAuto,
   FormLabel,
   FormSelectSearch,
@@ -23,43 +24,48 @@ import {
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import ProductUnitPickerDialog from '@/components/Product/ProductUnitPickerDialog.vue';
+import CashAccountService from '@/services/CashAccountService';
 import ProductService from '@/services/ProductService';
-import PurchaseReceiptService from '@/services/PurchaseReceiptService';
-import PurchaseService from '@/services/PurchaseService';
-import SupplierService from '@/services/SupplierService';
+import PurchaseOrderReceiptService from '@/services/PurchaseOrderReceiptService';
+import PurchaseOrderService from '@/services/PurchaseOrderService';
 import WarehouseService from '@/services/WarehouseService';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
 import type { DropDownOption } from '@/types/models/DropDownOption';
 import type { NotificationData } from '@/types/models/NotificationData';
 import type { Product } from '@/types/models/Product';
 import type { ProductUnit } from '@/types/models/ProductUnit';
-import type { Purchase } from '@/types/models/Purchase';
-import type { PurchaseItem } from '@/types/models/PurchaseItem';
-import type { PurchaseReceipt } from '@/types/models/PurchaseReceipt';
-import type { PurchaseReceiptItemNestedStoreRequest } from '@/types/services/purchase-receipt/PurchaseReceiptRequest';
+import type { PurchaseOrder } from '@/types/models/PurchaseOrder';
+import type { PurchaseOrderItem } from '@/types/models/PurchaseOrderItem';
+import type { PurchaseOrderReceipt } from '@/types/models/PurchaseOrderReceipt';
+import type {
+  PurchaseOrderReceiptCostNestedUpdateRequest,
+  PurchaseOrderReceiptItemNestedUpdateRequest,
+} from '@/types/services/purchase-order-receipt/PurchaseOrderReceiptRequest';
 // #endregion
 
 // #region Declarations
-type PurchaseOption = DropDownOption & {
+type PurchaseOrderOption = DropDownOption & {
   ulid: string;
   supplier_id: string | null;
   supplier_name: string | null;
 };
 
-type PurchaseReceiptSerialFormItem = {
+type PurchaseOrderReceiptSerialFormItem = {
+  id: string | null;
   serial: string;
 };
 
-type PurchaseReceiptItemFormItem = PurchaseReceiptItemNestedStoreRequest & {
-  has_purchase_item_product: boolean;
+type PurchaseOrderReceiptItemFormItem = PurchaseOrderReceiptItemNestedUpdateRequest & {
   product_unit_product_code?: string | null;
   product_unit_product_name?: string | null;
   product_unit_unit_name?: string | null;
   product_unit_base_unit_name?: string | null;
   product_unit_product_image_url?: string | null;
-  purchase_item_label?: string | null;
+  purchase_order_item_label?: string | null;
   is_use_serial_number?: boolean;
 };
+
+type PurchaseOrderReceiptCostFormItem = PurchaseOrderReceiptCostNestedUpdateRequest;
 
 type ProductUnitOption = {
   product_unit_id: string;
@@ -70,6 +76,7 @@ type ProductUnitOption = {
   base_unit_name: string;
   conversion_value: number;
   is_use_serial_number: boolean;
+  purchase_order_item_id?: string | null;
 };
 
 const emits = defineEmits([
@@ -85,31 +92,33 @@ const route = useRoute();
 const router = useRouter();
 
 const selectedUserLocationStore = useSelectedUserLocationStore();
-const purchaseReceiptService = new PurchaseReceiptService();
-const purchaseService = new PurchaseService();
-const supplierService = new SupplierService();
+const purchaseOrderReceiptService = new PurchaseOrderReceiptService();
+const purchaseOrderService = new PurchaseOrderService();
 const warehouseService = new WarehouseService();
+const cashAccountService = new CashAccountService();
 const productService = new ProductService();
 
 const isUserLocationSelected = computed(() => selectedUserLocationStore.isUserLocationSelected);
 const selectedUserLocation = computed(() => selectedUserLocationStore.selectedUserLocation);
 
-const purchaseReceiptForm: any = purchaseReceiptService.usePurchaseReceiptEditForm(route.params.ulid as string);
+const purchaseOrderReceiptForm: any = purchaseOrderReceiptService.usePurchaseOrderReceiptEditForm(
+  route.params.ulid as string,
+);
 
-const purchaseReceiptData = ref<PurchaseReceipt | null>(null);
-const selectedPurchaseData = ref<Purchase | null>(null);
+const purchaseOrderReceiptData = ref<PurchaseOrderReceipt | null>(null);
+const selectedPurchaseOrderData = ref<PurchaseOrder | null>(null);
 const initializing = ref<boolean>(true);
 const isSearchingProductUnit = ref<boolean>(false);
 const showProductUnitModal = ref<boolean>(false);
 const editingItemIndex = ref<number | null>(null);
 const productSearchText = ref<string>('');
-const supplierSearch = ref<string>('');
-const purchaseSearch = ref<string>('');
+const purchaseOrderSearch = ref<string>('');
 const warehouseSearch = ref<string>('');
+const cashAccountSearch = ref<string>('');
 
-const supplierDDL = ref<Array<DropDownOption>>([]);
-const purchaseDDL = ref<Array<PurchaseOption>>([]);
+const purchaseOrderDDL = ref<Array<PurchaseOrderOption>>([]);
 const warehouseDDL = ref<Array<DropDownOption>>([]);
+const cashAccountDDL = ref<Array<DropDownOption>>([]);
 const productUnitOptions = ref<Array<ProductUnitOption>>([]);
 
 const cards = ref<Array<TwoColumnsLayoutCards>>([
@@ -125,18 +134,15 @@ const cards = ref<Array<TwoColumnsLayoutCards>>([
     title: 'views.purchase_receipt.field_groups.items',
     state: CardState.Expanded,
   },
+  {
+    title: 'views.purchase_receipt.field_groups.costs',
+    state: CardState.Expanded,
+  },
   { title: '', state: CardState.Hidden, id: 'button' },
 ]);
 
-const supplierOptions = computed(() =>
-  supplierDDL.value.map((item) => ({
-    value: item.code,
-    label: item.name,
-  })),
-);
-
-const purchaseOptions = computed(() =>
-  purchaseDDL.value.map((item) => ({
+const purchaseOrderOptions = computed(() =>
+  purchaseOrderDDL.value.map((item) => ({
     value: item.code,
     label: item.name,
   })),
@@ -147,6 +153,21 @@ const warehouseOptions = computed(() =>
     value: item.code,
     label: item.name,
   })),
+);
+
+const cashAccountOptions = computed(() =>
+  cashAccountDDL.value.map((item) => ({
+    value: item.code,
+    label: item.name,
+  })),
+);
+
+const selectedSupplierName = computed(
+  () =>
+    selectedPurchaseOrderData.value?.supplier?.name
+    ?? purchaseOrderReceiptData.value?.supplier?.name
+    ?? purchaseOrderDDL.value.find((item) => item.code === purchaseOrderReceiptForm.purchase_order_id)?.supplier_name
+    ?? '',
 );
 
 const productUnitDialogColumns = computed(() => [
@@ -187,24 +208,31 @@ onMounted(async () => {
     return;
   }
 
-  const loaded = await loadData();
-  if (!loaded) {
-    return;
-  }
+  emits('loading-state', true);
+  try {
+    const loaded = await loadData();
+    if (!loaded) {
+      return;
+    }
 
-  await Promise.all([loadSupplierDDL(), loadPurchaseDDL(), loadWarehouseDDL()]);
-  initializing.value = false;
+    await Promise.all([loadPurchaseOrderDDL(), loadWarehouseDDL(), loadCashAccountDDL()]);
+    initializing.value = false;
+  } finally {
+    emits('loading-state', false);
+  }
 });
 // #endregion
 
 // #region Methods - Helpers
-const getItems = () => purchaseReceiptForm.items as PurchaseReceiptItemFormItem[];
+const getItems = () => purchaseOrderReceiptForm.items as PurchaseOrderReceiptItemFormItem[];
 
-const getItemFieldErrors = (field: string) => (purchaseReceiptForm.errors as any)[field];
+const getCosts = () => purchaseOrderReceiptForm.costs as PurchaseOrderReceiptCostFormItem[];
 
-const invalidField = (field: string) => purchaseReceiptForm.invalid(field);
+const getItemFieldErrors = (field: string) => (purchaseOrderReceiptForm.errors as any)[field];
 
-const invalidItemField = (field: string) => purchaseReceiptForm.invalid(field as any);
+const invalidField = (field: string) => purchaseOrderReceiptForm.invalid(field);
+
+const invalidItemField = (field: string) => purchaseOrderReceiptForm.invalid(field as any);
 
 const scrollToError = (id: string): void => {
   const el = document.getElementById(id);
@@ -236,9 +264,17 @@ const showNotification = (title: string, content: string) => {
 };
 
 const clearItemErrors = () => {
-  Object.keys(purchaseReceiptForm.errors).forEach((key) => {
+  Object.keys(purchaseOrderReceiptForm.errors).forEach((key) => {
     if (key.startsWith('items.')) {
-      purchaseReceiptForm.forgetError(key as any);
+      purchaseOrderReceiptForm.forgetError(key as any);
+    }
+  });
+};
+
+const clearCostErrors = () => {
+  Object.keys(purchaseOrderReceiptForm.errors).forEach((key) => {
+    if (key.startsWith('costs.')) {
+      purchaseOrderReceiptForm.forgetError(key as any);
     }
   });
 };
@@ -254,18 +290,18 @@ const appendDropDownOption = (
   }
 };
 
-const appendPurchaseOption = (purchase: Purchase | null | undefined) => {
-  if (!purchase?.id || !purchase.ulid) return;
+const appendPurchaseOrderOption = (purchaseOrder: PurchaseOrder | null | undefined) => {
+  if (!purchaseOrder?.id || !purchaseOrder.ulid) return;
 
-  if (!purchaseDDL.value.some((item) => item.code === purchase.id)) {
-    purchaseDDL.value = [
-      ...purchaseDDL.value,
+  if (!purchaseOrderDDL.value.some((item) => item.code === purchaseOrder.id)) {
+    purchaseOrderDDL.value = [
+      ...purchaseOrderDDL.value,
       {
-        code: purchase.id,
-        name: `${purchase.code} - ${purchase.supplier?.name ?? '-'}`,
-        ulid: purchase.ulid,
-        supplier_id: purchase.supplier?.id ?? null,
-        supplier_name: purchase.supplier?.name ?? null,
+        code: purchaseOrder.id,
+        name: `${purchaseOrder.code} - ${purchaseOrder.supplier?.name ?? '-'}`,
+        ulid: purchaseOrder.ulid,
+        supplier_id: purchaseOrder.supplier?.id ?? null,
+        supplier_name: purchaseOrder.supplier?.name ?? null,
       },
     ];
   }
@@ -279,165 +315,154 @@ const buildBaseUnitName = (product: Product | null | undefined, conversionValue:
   return product.product_units.find((unit) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
 };
 
-const formatPurchaseItemLabel = (purchaseItem: PurchaseItem | null | undefined) => {
-  if (!purchaseItem) return null;
+const formatPurchaseOrderItemLabel = (purchaseOrderItem: PurchaseOrderItem | null | undefined) => {
+  if (!purchaseOrderItem) return null;
 
-  const productUnit = purchaseItem.product_unit;
+  const productUnit = purchaseOrderItem.product_unit;
   const productCode = productUnit?.code ?? '';
   const productName = productUnit?.product?.name ?? '-';
 
   return productCode ? `[${productCode}] ${productName}` : productName;
 };
 
-const formatPurchaseItemLabelFromProductUnit = (productUnit: ProductUnit | null | undefined) => {
+const formatProductUnitLabel = (productUnit: ProductUnit | null | undefined) => {
   const productCode = productUnit?.code ?? '';
   const productName = productUnit?.product?.name ?? '-';
 
   return productCode ? `[${productCode}] ${productName}` : productName;
 };
 
-const buildManualItemFromProductUnit = (option: ProductUnitOption): PurchaseReceiptItemFormItem => ({
-  has_purchase_item_product: false,
+const buildItemFromProductUnitOption = (option: ProductUnitOption): PurchaseOrderReceiptItemFormItem => ({
+  id: null,
+  purchase_order_item_id: option.purchase_order_item_id ?? null,
   qty: 1,
   product_unit_id: option.product_unit_id,
   product_unit_conversion_value: option.conversion_value,
   remarks: '',
+  delete_serial_ids: [],
   serials: [],
   product_unit_product_code: option.product_unit_code,
   product_unit_product_name: option.product_name,
   product_unit_unit_name: option.unit_name,
   product_unit_base_unit_name: option.base_unit_name,
   product_unit_product_image_url: option.product_image_url ?? null,
-  purchase_item_label: null,
+  purchase_order_item_label: null,
   is_use_serial_number: option.is_use_serial_number,
 });
 
-const buildReceiptItemFromPurchaseItem = (purchaseItem: PurchaseItem): PurchaseReceiptItemFormItem => {
-  const productUnit = purchaseItem.product_unit;
+const buildReceiptItemFromPurchaseOrderItem = (
+  purchaseOrderItem: PurchaseOrderItem,
+): PurchaseOrderReceiptItemFormItem => {
+  const productUnit = purchaseOrderItem.product_unit;
   const product = productUnit?.product;
-  const conversionValue = Number(purchaseItem.product_unit_conversion_value ?? productUnit?.conversion_value ?? 1);
-  const outstandingBase = Number(purchaseItem.qty_outstanding_base ?? 0);
+  const conversionValue = Number(purchaseOrderItem.product_unit_conversion_value ?? productUnit?.conversion_value ?? 1);
+  const outstandingBase = Number(purchaseOrderItem.qty_outstanding_base ?? 0);
   const defaultQty = outstandingBase > 0
     ? outstandingBase / Math.max(conversionValue, 1)
-    : Number(purchaseItem.qty ?? 0);
+    : Number(purchaseOrderItem.qty ?? 0);
 
   return {
-    has_purchase_item_product: true,
+    id: null,
+    purchase_order_item_id: purchaseOrderItem.id ?? null,
     qty: defaultQty > 0 ? defaultQty : 1,
     product_unit_id: productUnit?.id ?? '',
     product_unit_conversion_value: conversionValue,
-    remarks: purchaseItem.remarks ?? '',
+    remarks: purchaseOrderItem.remarks ?? '',
+    delete_serial_ids: [],
     serials: [],
     product_unit_product_code: productUnit?.code ?? '',
     product_unit_product_name: product?.name ?? '-',
     product_unit_unit_name: productUnit?.unit?.name ?? '',
     product_unit_base_unit_name: buildBaseUnitName(product, Number(productUnit?.conversion_value ?? conversionValue)),
     product_unit_product_image_url: product?.main_product_image?.url ?? null,
-    purchase_item_label: formatPurchaseItemLabel(purchaseItem),
+    purchase_order_item_label: formatPurchaseOrderItemLabel(purchaseOrderItem),
     is_use_serial_number: Boolean(product?.is_use_serial_number),
   };
 };
 
-const buildFormItemFromReceiptItem = (receipt: PurchaseReceipt, item: any): PurchaseReceiptItemFormItem => {
+const buildFormItemFromReceiptItem = (item: any): PurchaseOrderReceiptItemFormItem => {
   const productUnit: ProductUnit | null | undefined = item.product_unit;
   const product = productUnit?.product;
   const conversionValue = Number(item.product_unit_conversion_value ?? productUnit?.conversion_value ?? 1);
 
   return {
-    has_purchase_item_product: item.has_purchase_item_product,
+    id: item.id ?? null,
+    purchase_order_item_id: item.purchase_order_item?.id ?? null,
     qty: Number(item.qty ?? 0),
     product_unit_id: productUnit?.id ?? '',
     product_unit_conversion_value: conversionValue,
     remarks: item.remarks ?? '',
+    delete_serial_ids: [],
     serials: (item.serials ?? []).map((serial: any) => ({
+      id: serial.id ?? null,
       serial: serial.serial,
-    })) as PurchaseReceiptSerialFormItem[],
+    })) as PurchaseOrderReceiptSerialFormItem[],
     product_unit_product_code: productUnit?.code ?? '',
     product_unit_product_name: product?.name ?? '-',
     product_unit_unit_name: productUnit?.unit?.name ?? '',
     product_unit_base_unit_name: buildBaseUnitName(product, Number(productUnit?.conversion_value ?? conversionValue)),
     product_unit_product_image_url: product?.main_product_image?.url ?? null,
-    purchase_item_label:
-      receipt.purchase && item.has_purchase_item_product
-        ? formatPurchaseItemLabelFromProductUnit(productUnit)
-        : null,
+    purchase_order_item_label: item.purchase_order_item
+      ? formatProductUnitLabel(item.purchase_order_item.product_unit)
+      : null,
     is_use_serial_number: Boolean(product?.is_use_serial_number),
   };
 };
+
+const buildFormCostFromReceiptCost = (cost: any): PurchaseOrderReceiptCostFormItem => ({
+  id: cost.id ?? null,
+  code: cost.code,
+  date: formatDate(cost.date, 'YYYY-MM-DD HH:mm:ss'),
+  name: cost.name ?? '',
+  cash_account_id: cost.cash_account?.id ?? '',
+  amount: Number(cost.amount ?? 0),
+  remarks: cost.remarks ?? '',
+});
 // #endregion
 
-// #region Methods - Purchase Receipt
-const loadSupplierDDL = async (search = '') => {
+// #region Methods - Purchase Order Receipt
+const loadPurchaseOrderDDL = async (search = '') => {
   if (!selectedUserLocation.value) return;
 
-  const includeId =
-    purchaseReceiptData.value?.supplier?.id ??
-    (purchaseReceiptForm.supplier_id as string | null | undefined) ??
-    undefined;
-
-  const result = await supplierService.readAnyGet({
-    with_trashed: false,
-    company_id: selectedUserLocation.value.company.id,
-    search,
-    status: undefined,
-    include_id: includeId,
-    refresh: false,
-    limit: 100,
-  });
-
-  if (result.success && result.data) {
-    supplierDDL.value = result.data.data.map((item: any) => ({
-      code: item.id,
-      name: item.name,
-    }));
-  }
-
-  appendDropDownOption(supplierDDL, purchaseReceiptData.value?.supplier
-    ? {
-      code: purchaseReceiptData.value.supplier.id,
-      name: purchaseReceiptData.value.supplier.name,
-    }
-    : null);
-};
-
-const loadPurchaseDDL = async (search = '') => {
-  if (!selectedUserLocation.value) return;
-
-  const result = await purchaseService.readAnyGet({
+  const result = await purchaseOrderService.readAnyGet({
     with_trashed: false,
     company_id: selectedUserLocation.value.company.id,
     branch_id: selectedUserLocation.value.branch.id,
     search,
     start_date: null,
-    end_date: undefined,
-    supplier_id: (purchaseReceiptForm.supplier_id as string | null) ?? undefined,
+    end_date: null,
+    supplier_id: null,
+    progress_status: null,
     refresh: false,
     limit: 100,
   });
 
   if (result.success && result.data) {
-    purchaseDDL.value = result.data.data.map((item) => ({
-      code: item.id,
-      name: `${item.code} - ${item.supplier?.name ?? '-'}`,
-      ulid: item.ulid,
-      supplier_id: item.supplier?.id ?? null,
-      supplier_name: item.supplier?.name ?? null,
-    }));
+    purchaseOrderDDL.value = result.data.data
+      // a receipt may only be created for a purchase order that already has a supplier
+      .filter((item) => Boolean(item.supplier?.id))
+      .map((item) => ({
+        code: item.id,
+        name: `${item.code} - ${item.supplier?.name ?? '-'}`,
+        ulid: item.ulid,
+        supplier_id: item.supplier?.id ?? null,
+        supplier_name: item.supplier?.name ?? null,
+      }));
   } else {
-    purchaseDDL.value = [];
+    purchaseOrderDDL.value = [];
   }
 
-  appendPurchaseOption(purchaseReceiptData.value?.purchase);
-  appendPurchaseOption(selectedPurchaseData.value);
+  appendPurchaseOrderOption(purchaseOrderReceiptData.value?.purchase_order);
+  appendPurchaseOrderOption(selectedPurchaseOrderData.value);
 };
 
 const loadWarehouseDDL = async (search = '') => {
   if (!selectedUserLocation.value) return;
 
   const includeId =
-    purchaseReceiptData.value?.warehouse?.id ??
-    (purchaseReceiptForm.warehouse_id as string | null | undefined) ??
-    undefined;
+    purchaseOrderReceiptData.value?.warehouse?.id
+    ?? (purchaseOrderReceiptForm.warehouse_id as string | null | undefined)
+    ?? undefined;
 
   const result = await warehouseService.readAnyGet({
     with_trashed: false,
@@ -457,38 +482,71 @@ const loadWarehouseDDL = async (search = '') => {
     }));
   }
 
-  appendDropDownOption(warehouseDDL, purchaseReceiptData.value?.warehouse
-    ? {
-      code: purchaseReceiptData.value.warehouse.id,
-      name: purchaseReceiptData.value.warehouse.name,
-    }
-    : null);
+  appendDropDownOption(
+    warehouseDDL,
+    purchaseOrderReceiptData.value?.warehouse
+      ? {
+        code: purchaseOrderReceiptData.value.warehouse.id,
+        name: purchaseOrderReceiptData.value.warehouse.name,
+      }
+      : null,
+  );
+};
+
+const loadCashAccountDDL = async (search = '') => {
+  if (!selectedUserLocation.value) return;
+
+  const result = await cashAccountService.readAnyGet({
+    with_trashed: false,
+    company_id: selectedUserLocation.value.company.id,
+    branch_id: selectedUserLocation.value.branch.id,
+    search,
+    is_bank: undefined,
+    include_id: undefined,
+    with_remaining_balance: undefined,
+    refresh: false,
+    limit: 100,
+  });
+
+  if (result.success && result.data) {
+    cashAccountDDL.value = result.data.data.map((item: any) => ({
+      code: item.id,
+      name: item.name,
+    }));
+  }
+
+  (purchaseOrderReceiptData.value?.costs ?? []).forEach((cost) => {
+    appendDropDownOption(
+      cashAccountDDL,
+      cost.cash_account ? { code: cost.cash_account.id, name: cost.cash_account.name } : null,
+    );
+  });
 };
 
 const setCode = () => {
-  purchaseReceiptForm.forgetError('code');
+  purchaseOrderReceiptForm.forgetError('code');
 
-  if (purchaseReceiptForm.code === '_AUTO_') {
-    purchaseReceiptForm.setData({ code: '' });
+  if (purchaseOrderReceiptForm.code === '_AUTO_') {
+    purchaseOrderReceiptForm.setData({ code: '' });
     return;
   }
 
-  purchaseReceiptForm.setData({ code: '_AUTO_' });
+  purchaseOrderReceiptForm.setData({ code: '_AUTO_' });
 };
 
-const loadPurchaseDetail = async (purchaseUlid: string) => {
-  const result = await purchaseService.read(purchaseUlid);
+const setCostCode = (index: number) => {
+  purchaseOrderReceiptForm.forgetError(`costs.${index}.code` as any);
+  const cost = getCosts()[index];
+  if (!cost) return;
+  cost.code = cost.code === '_AUTO_' ? '' : '_AUTO_';
+};
+
+const loadPurchaseOrderDetail = async (purchaseOrderUlid: string) => {
+  const result = await purchaseOrderService.read(purchaseOrderUlid);
 
   if (result.success && result.data) {
-    selectedPurchaseData.value = result.data;
-    appendPurchaseOption(result.data);
-
-    if (result.data.supplier) {
-      appendDropDownOption(supplierDDL, {
-        code: result.data.supplier.id,
-        name: result.data.supplier.name,
-      });
-    }
+    selectedPurchaseOrderData.value = result.data;
+    appendPurchaseOrderOption(result.data);
 
     return result.data;
   }
@@ -497,95 +555,88 @@ const loadPurchaseDetail = async (purchaseUlid: string) => {
   return null;
 };
 
-const syncItemsFromPurchase = (purchase: Purchase) => {
-  purchaseReceiptForm.setData({
-    supplier_id: purchase.supplier?.id ?? null,
-    items: (purchase.items ?? []).map((item) => buildReceiptItemFromPurchaseItem(item)) as any,
+const syncItemsFromPurchaseOrder = (purchaseOrder: PurchaseOrder) => {
+  getItems().forEach((item) => {
+    if (item.id) {
+      purchaseOrderReceiptForm.delete_item_ids.push(item.id);
+    }
+  });
+
+  purchaseOrderReceiptForm.setData({
+    supplier_id: purchaseOrder.supplier?.id ?? null,
+    items: (purchaseOrder.items ?? []).map((item) => buildReceiptItemFromPurchaseOrderItem(item)) as any,
   });
 
   clearItemErrors();
 };
 
-const clearPurchase = async () => {
-  selectedPurchaseData.value = null;
-  purchaseReceiptForm.setData({
-    purchase_id: null,
-    items: [] as any,
+const clearPurchaseOrder = async () => {
+  selectedPurchaseOrderData.value = null;
+  purchaseOrderReceiptForm.setData({
+    purchase_order_id: null,
   });
-  purchaseReceiptForm.forgetError('purchase_id');
-  clearItemErrors();
-  await loadPurchaseDDL();
-};
-
-const clearSupplier = async () => {
-  purchaseReceiptForm.setData({
-    supplier_id: null,
-    purchase_id: null,
-    items: [] as any,
-  });
-  selectedPurchaseData.value = null;
-  purchaseReceiptForm.forgetError('supplier_id');
-  purchaseReceiptForm.forgetError('purchase_id');
-  clearItemErrors();
-  await loadPurchaseDDL();
+  purchaseOrderReceiptForm.forgetError('purchase_order_id');
+  await loadPurchaseOrderDDL();
 };
 
 const clearWarehouse = () => {
-  purchaseReceiptForm.setData({ warehouse_id: null });
-  purchaseReceiptForm.forgetError('warehouse_id');
+  purchaseOrderReceiptForm.setData({ warehouse_id: null });
+  purchaseOrderReceiptForm.forgetError('warehouse_id');
 };
 
-const handleSupplierChanged = async () => {
-  purchaseReceiptForm.validate('supplier_id');
+const clearCostCashAccount = (index: number) => {
+  const cost = getCosts()[index];
+  if (!cost) return;
+  cost.cash_account_id = '';
+  purchaseOrderReceiptForm.validate(`costs.${index}.cash_account_id` as any);
+};
 
-  if (purchaseReceiptForm.purchase_id) {
+const handlePurchaseOrderChanged = async (purchaseOrderId: string | number | null) => {
+  purchaseOrderReceiptForm.validate('purchase_order_id');
+
+  if (!purchaseOrderId) {
+    await clearPurchaseOrder();
     return;
   }
 
-  await loadPurchaseDDL();
-};
-
-const handlePurchaseChanged = async (purchaseId: string | number | null) => {
-  purchaseReceiptForm.validate('purchase_id');
-
-  if (!purchaseId) {
-    await clearPurchase();
-    return;
-  }
-
-  const option = purchaseDDL.value.find((item) => item.code === purchaseId);
+  const option = purchaseOrderDDL.value.find((item) => item.code === purchaseOrderId);
   if (!option) {
     return;
   }
 
-  const purchase = await loadPurchaseDetail(option.ulid);
-  if (!purchase) {
+  const purchaseOrder = await loadPurchaseOrderDetail(option.ulid);
+  if (!purchaseOrder) {
     return;
   }
 
-  syncItemsFromPurchase(purchase);
+  // switching to another purchase order replaces the item lines
+  if (purchaseOrderReceiptData.value?.purchase_order?.id !== purchaseOrderId) {
+    syncItemsFromPurchaseOrder(purchaseOrder);
+  } else {
+    purchaseOrderReceiptForm.setData({ supplier_id: purchaseOrder.supplier?.id ?? null });
+  }
 };
 
-const reloadItemsFromPurchase = async () => {
-  if (!purchaseReceiptForm.purchase_id) {
+const reloadItemsFromPurchaseOrder = async () => {
+  if (!purchaseOrderReceiptForm.purchase_order_id) {
     return;
   }
 
-  const option = purchaseDDL.value.find((item) => item.code === purchaseReceiptForm.purchase_id);
+  const option = purchaseOrderDDL.value.find((item) => item.code === purchaseOrderReceiptForm.purchase_order_id);
   if (!option) {
     return;
   }
 
-  const purchase = await loadPurchaseDetail(option.ulid);
-  if (!purchase) {
+  const purchaseOrder = await loadPurchaseOrderDetail(option.ulid);
+  if (!purchaseOrder) {
     return;
   }
 
-  syncItemsFromPurchase(purchase);
+  syncItemsFromPurchaseOrder(purchaseOrder);
 };
 
 const loadData = async () => {
-  const result = await purchaseReceiptService.read(route.params.ulid as string);
+  const result = await purchaseOrderReceiptService.read(route.params.ulid as string);
 
   if (!result.success || !result.data) {
     showAlertPlaceholder('danger', '', result.errors as Record<string, Array<string>>);
@@ -593,33 +644,28 @@ const loadData = async () => {
   }
 
   const data = result.data;
-  purchaseReceiptData.value = data;
+  purchaseOrderReceiptData.value = data;
 
-  if (data.is_from_direct_purchase) {
-    showAlertPlaceholder(
-      'warning',
-      t('views.purchase_receipt.alert.edit_blocked_direct.title'),
-      { general: [t('views.purchase_receipt.alert.edit_blocked_direct.message')] },
-    );
-    router.push({ name: 'side-menu-purchase-receipt-list' });
-    return false;
-  }
-
-  purchaseReceiptForm.setData({
-    supplier_id: data.supplier?.id ?? null,
-    purchase_id: data.purchase?.id ?? null,
+  purchaseOrderReceiptForm.setData({
+    company_id: data.company?.id ?? selectedUserLocation.value.company.id,
+    branch_id: data.branch?.id ?? selectedUserLocation.value.branch.id,
     code: data.code,
     date: formatDate(data.date, 'YYYY-MM-DD HH:mm:ss'),
+    supplier_id: data.supplier?.id ?? null,
+    purchase_order_id: data.purchase_order?.id ?? null,
     warehouse_id: data.warehouse?.id ?? null,
     remarks: data.remarks ?? '',
     is_posted: data.is_posted,
-    items: (data.items ?? []).map((item: any) => buildFormItemFromReceiptItem(data, item)) as any,
+    delete_item_ids: [],
+    items: (data.items ?? []).map((item: any) => buildFormItemFromReceiptItem(item)) as any,
+    delete_cost_ids: [],
+    costs: (data.costs ?? []).map((cost: any) => buildFormCostFromReceiptCost(cost)) as any,
   });
 
-  appendPurchaseOption(data.purchase);
+  appendPurchaseOrderOption(data.purchase_order);
 
-  if (data.purchase?.ulid) {
-    await loadPurchaseDetail(data.purchase.ulid);
+  if (data.purchase_order?.ulid) {
+    await loadPurchaseOrderDetail(data.purchase_order.ulid);
   }
 
   return true;
@@ -627,8 +673,35 @@ const loadData = async () => {
 // #endregion
 
 // #region Methods - Items
+const buildPurchaseOrderProductUnitOptions = (): Array<ProductUnitOption> =>
+  (selectedPurchaseOrderData.value?.items ?? []).map((purchaseOrderItem) => {
+    const productUnit = purchaseOrderItem.product_unit;
+    const product = productUnit?.product;
+    const conversionValue = Number(
+      purchaseOrderItem.product_unit_conversion_value ?? productUnit?.conversion_value ?? 1,
+    );
+
+    return {
+      product_unit_id: productUnit?.id ?? '',
+      product_unit_code: productUnit?.code ?? '',
+      product_name: product?.name ?? '-',
+      product_image_url: product?.main_product_image?.url ?? null,
+      unit_name: productUnit?.unit?.name ?? '',
+      base_unit_name: buildBaseUnitName(product, Number(productUnit?.conversion_value ?? conversionValue)),
+      conversion_value: conversionValue,
+      is_use_serial_number: Boolean(product?.is_use_serial_number),
+      purchase_order_item_id: purchaseOrderItem.id ?? null,
+    };
+  });
+
 const searchProductUnits = async () => {
   if (!selectedUserLocation.value) return;
+
+  // with no search term the picker offers the selected purchase order's products first
+  if (!productSearchText.value && selectedPurchaseOrderData.value) {
+    productUnitOptions.value = buildPurchaseOrderProductUnitOptions();
+    return;
+  }
 
   isSearchingProductUnit.value = true;
 
@@ -654,6 +727,12 @@ const searchProductUnits = async () => {
 
   if (result.success && result.data) {
     const products = result.data.data as Product[];
+    const purchaseOrderItemIdByProductUnitId = new Map<string, string>();
+    (selectedPurchaseOrderData.value?.items ?? []).forEach((purchaseOrderItem) => {
+      if (purchaseOrderItem.product_unit?.id && purchaseOrderItem.id) {
+        purchaseOrderItemIdByProductUnitId.set(purchaseOrderItem.product_unit.id, purchaseOrderItem.id);
+      }
+    });
 
     productUnitOptions.value = products.flatMap((product: Product) => {
       const units = product.product_units ?? [];
@@ -669,6 +748,7 @@ const searchProductUnits = async () => {
         base_unit_name: baseUnitName,
         conversion_value: Number(unit.conversion_value ?? 1),
         is_use_serial_number: Boolean(product.is_use_serial_number),
+        purchase_order_item_id: purchaseOrderItemIdByProductUnitId.get(unit.id) ?? null,
       }));
     });
   } else {
@@ -676,18 +756,20 @@ const searchProductUnits = async () => {
   }
 };
 
-const openAddProductUnit = () => {
+const openAddProductUnit = async () => {
   productSearchText.value = '';
   productUnitOptions.value = [];
   editingItemIndex.value = null;
   showProductUnitModal.value = true;
+  await searchProductUnits();
 };
 
-const openChangeProductUnit = (index: number) => {
+const openChangeProductUnit = async (index: number) => {
   productSearchText.value = '';
   productUnitOptions.value = [];
   editingItemIndex.value = index;
   showProductUnitModal.value = true;
+  await searchProductUnits();
 };
 
 const selectProductUnit = (option: ProductUnitOption) => {
@@ -698,19 +780,21 @@ const selectProductUnit = (option: ProductUnitOption) => {
       ? [...(items[editingItemIndex.value]?.serials ?? [])]
       : [];
 
-  const baseData = buildManualItemFromProductUnit(option);
+  const baseData = buildItemFromProductUnitOption(option);
   baseData.serials = serials;
 
   if (editingItemIndex.value === null) {
-    purchaseReceiptForm.items.push(baseData as any);
+    purchaseOrderReceiptForm.items.push(baseData as any);
   } else {
     const currentItem = items[editingItemIndex.value];
 
-    purchaseReceiptForm.items[editingItemIndex.value] = {
+    purchaseOrderReceiptForm.items[editingItemIndex.value] = {
       ...currentItem,
       ...baseData,
+      id: currentItem?.id ?? null,
       qty: currentItem?.qty ?? 1,
       remarks: currentItem?.remarks ?? '',
+      delete_serial_ids: currentItem?.delete_serial_ids ?? [],
       serials: baseData.is_use_serial_number ? serials : [],
     };
   }
@@ -722,6 +806,10 @@ const selectProductUnit = (option: ProductUnitOption) => {
 
 const removeItem = (index: number) => {
   const items = getItems();
+  const item = items[index];
+  if (item?.id) {
+    purchaseOrderReceiptForm.delete_item_ids.push(item.id);
+  }
   items.splice(index, 1);
   clearItemErrors();
 };
@@ -730,23 +818,54 @@ const addSerial = (index: number) => {
   const item = getItems()[index];
   if (!item) return;
 
-  item.serials.push({ serial: '' });
-  purchaseReceiptForm.validate(`items.${index}.serials` as any);
+  item.serials.push({ id: null, serial: '' } as PurchaseOrderReceiptSerialFormItem);
+  purchaseOrderReceiptForm.validate(`items.${index}.serials` as any);
 };
 
 const removeSerial = (index: number, serialIndex: number) => {
   const item = getItems()[index];
   if (!item) return;
 
+  const serial = item.serials[serialIndex];
+  if (serial?.id) {
+    item.delete_serial_ids.push(serial.id);
+  }
   item.serials.splice(serialIndex, 1);
-  purchaseReceiptForm.validate(`items.${index}.serials` as any);
+  purchaseOrderReceiptForm.validate(`items.${index}.serials` as any);
 };
+// #endregion
+
+// #region Methods - Costs
+const addCost = () => {
+  getCosts().push({
+    id: null,
+    code: '_AUTO_',
+    date: '_AUTO_',
+    name: '',
+    cash_account_id: '',
+    amount: 0,
+    remarks: '',
+  });
+};
+
+const removeCost = (index: number) => {
+  const costs = getCosts();
+  const cost = costs[index];
+  if (cost?.id) {
+    purchaseOrderReceiptForm.delete_cost_ids.push(cost.id);
+  }
+  costs.splice(index, 1);
+  clearCostErrors();
+};
+
+const getCostsTotalPreview = () =>
+  getCosts().reduce((total, cost) => total + Math.max(Number(cost.amount || 0), 0), 0);
 // #endregion
 
 // #region Actions
 const onSubmit = async () => {
-  if (purchaseReceiptForm.hasErrors) {
-    const firstErrorKey = Object.keys(purchaseReceiptForm.errors)[0];
+  if (purchaseOrderReceiptForm.hasErrors) {
+    const firstErrorKey = Object.keys(purchaseOrderReceiptForm.errors)[0];
     if (firstErrorKey) {
       scrollToError(firstErrorKey);
     }
@@ -754,22 +873,38 @@ const onSubmit = async () => {
   }
 
   const originalItems = getItems();
-  const cleanedItems = originalItems.map((item) => ({
+  const originalCosts = getCosts();
+  const cleanedItems: PurchaseOrderReceiptItemNestedUpdateRequest[] = originalItems.map((item) => ({
+    id: item.id ?? null,
+    purchase_order_item_id: item.purchase_order_item_id ?? null,
     qty: Number(item.qty ?? 0),
     product_unit_id: item.product_unit_id,
     product_unit_conversion_value: Number(item.product_unit_conversion_value ?? 0),
     remarks: item.remarks ?? '',
+    delete_serial_ids: item.delete_serial_ids ?? [],
     serials: item.serials.map((serial) => ({
+      id: serial.id ?? null,
       serial: serial.serial,
     })),
   }));
+  const cleanedCosts: PurchaseOrderReceiptCostNestedUpdateRequest[] = originalCosts.map((cost) => ({
+    id: cost.id ?? null,
+    code: cost.code,
+    date: cost.date,
+    name: cost.name,
+    cash_account_id: cost.cash_account_id,
+    amount: Number(cost.amount ?? 0),
+    remarks: cost.remarks ?? '',
+  }));
   const backupItems = [...originalItems];
+  const backupCosts = [...originalCosts];
 
-  purchaseReceiptForm.items = cleanedItems as any;
+  purchaseOrderReceiptForm.items = cleanedItems as any;
+  purchaseOrderReceiptForm.costs = cleanedCosts as any;
   emits('loading-state', true);
 
   try {
-    await purchaseReceiptForm.submit();
+    await purchaseOrderReceiptForm.submit();
     showAlertPlaceholder('hidden', '', null);
     emits('update-profile');
     showNotification(
@@ -778,7 +913,8 @@ const onSubmit = async () => {
     );
     router.push({ name: 'side-menu-purchase-receipt-list' });
   } catch (error) {
-    purchaseReceiptForm.items = backupItems as any;
+    purchaseOrderReceiptForm.items = backupItems as any;
+    purchaseOrderReceiptForm.costs = backupCosts as any;
     showAlertPlaceholder('danger', '', convertErrorTypeToAlertListType(error));
   } finally {
     emits('loading-state', false);
@@ -799,6 +935,7 @@ const onSubmit = async () => {
                 <br />
                 {{ selectedUserLocation.company.name }}
               </FormLabel>
+              <FormInput v-model="purchaseOrderReceiptForm.company_id" type="hidden" />
             </div>
 
             <div class="col-span-12 lg:col-span-4 md:col-span-6">
@@ -807,6 +944,7 @@ const onSubmit = async () => {
                 <br />
                 {{ selectedUserLocation.branch.name }}
               </FormLabel>
+              <FormInput v-model="purchaseOrderReceiptForm.branch_id" type="hidden" />
             </div>
           </div>
         </div>
@@ -820,13 +958,13 @@ const onSubmit = async () => {
                 {{ t('views.purchase_receipt.fields.code') }}
               </FormLabel>
               <FormInputCode
-                v-model="purchaseReceiptForm.code"
+                v-model="purchaseOrderReceiptForm.code"
                 :class="{ 'border-danger': invalidField('code') }"
                 :placeholder="t('views.purchase_receipt.fields.code')"
                 @set-auto="setCode"
-                @change="purchaseReceiptForm.validate('code')"
+                @change="purchaseOrderReceiptForm.validate('code')"
               />
-              <FormErrorMessages :messages="purchaseReceiptForm.errors.code" />
+              <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.code" />
             </div>
 
             <div class="col-span-12 md:col-span-6 lg:col-span-4">
@@ -834,47 +972,37 @@ const onSubmit = async () => {
                 {{ t('views.purchase_receipt.fields.date') }}
               </FormLabel>
               <FormInputDateTimeAuto
-                v-model="purchaseReceiptForm.date"
+                v-model="purchaseOrderReceiptForm.date"
                 :class="{ 'border-danger': invalidField('date') }"
                 :placeholder="t('views.purchase_receipt.fields.date')"
-                @change="purchaseReceiptForm.validate('date')"
+                @change="purchaseOrderReceiptForm.validate('date')"
               />
-              <FormErrorMessages :messages="purchaseReceiptForm.errors.date" />
+              <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.date" />
+            </div>
+
+            <div class="col-span-12 md:col-span-6 lg:col-span-4">
+              <FormLabel :class="{ 'text-danger': invalidField('purchase_order_id') }">
+                {{ t('views.purchase_receipt.fields.purchase_order_id') }}
+              </FormLabel>
+              <FormSelectSearch
+                v-model="purchaseOrderReceiptForm.purchase_order_id"
+                v-model:search="purchaseOrderSearch"
+                :options="purchaseOrderOptions"
+                :placeholder="t('components.dropdown.placeholder')"
+                :class="{ 'border-danger': invalidField('purchase_order_id') }"
+                @change="(value) => handlePurchaseOrderChanged(value as string | number | null)"
+                @search="loadPurchaseOrderDDL"
+                @clear="clearPurchaseOrder"
+              />
+              <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.purchase_order_id" />
             </div>
 
             <div class="col-span-12 md:col-span-6 lg:col-span-4">
               <FormLabel :class="{ 'text-danger': invalidField('supplier_id') }">
                 {{ t('views.purchase_receipt.fields.supplier_id') }}
               </FormLabel>
-              <FormSelectSearch
-                v-model="purchaseReceiptForm.supplier_id"
-                v-model:search="supplierSearch"
-                :options="supplierOptions"
-                :placeholder="t('components.dropdown.placeholder')"
-                :disabled="Boolean(purchaseReceiptForm.purchase_id)"
-                :class="{ 'border-danger': invalidField('supplier_id') }"
-                @change="handleSupplierChanged"
-                @search="loadSupplierDDL"
-                @clear="clearSupplier"
-              />
-              <FormErrorMessages :messages="purchaseReceiptForm.errors.supplier_id" />
-            </div>
-
-            <div class="col-span-12 md:col-span-6 lg:col-span-4">
-              <FormLabel :class="{ 'text-danger': invalidField('purchase_id') }">
-                {{ t('views.purchase_receipt.fields.purchase_id') }}
-              </FormLabel>
-              <FormSelectSearch
-                v-model="purchaseReceiptForm.purchase_id"
-                v-model:search="purchaseSearch"
-                :options="purchaseOptions"
-                :placeholder="t('components.dropdown.placeholder')"
-                :class="{ 'border-danger': invalidField('purchase_id') }"
-                @change="(value) => handlePurchaseChanged(value as string | number | null)"
-                @search="loadPurchaseDDL"
-                @clear="clearPurchase"
-              />
-              <FormErrorMessages :messages="purchaseReceiptForm.errors.purchase_id" />
+              <FormInput :model-value="selectedSupplierName || '-'" readonly />
+              <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.supplier_id" />
             </div>
 
             <div class="col-span-12 md:col-span-6 lg:col-span-4">
@@ -882,16 +1010,16 @@ const onSubmit = async () => {
                 {{ t('views.purchase_receipt.fields.warehouse_id') }}
               </FormLabel>
               <FormSelectSearch
-                v-model="purchaseReceiptForm.warehouse_id"
+                v-model="purchaseOrderReceiptForm.warehouse_id"
                 v-model:search="warehouseSearch"
                 :options="warehouseOptions"
                 :placeholder="t('components.dropdown.placeholder')"
                 :class="{ 'border-danger': invalidField('warehouse_id') }"
-                @change="purchaseReceiptForm.validate('warehouse_id')"
+                @change="purchaseOrderReceiptForm.validate('warehouse_id')"
                 @search="loadWarehouseDDL"
                 @clear="clearWarehouse"
               />
-              <FormErrorMessages :messages="purchaseReceiptForm.errors.warehouse_id" />
+              <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.warehouse_id" />
             </div>
 
             <div class="col-span-12 md:col-span-6 lg:col-span-4 flex flex-col justify-center">
@@ -899,14 +1027,17 @@ const onSubmit = async () => {
                 {{ t('views.purchase_receipt.fields.is_posted') }}
               </FormLabel>
               <FormSwitch>
-                <FormSwitch.Input v-model="purchaseReceiptForm.is_posted" type="checkbox" />
+                <FormSwitch.Input v-model="purchaseOrderReceiptForm.is_posted" type="checkbox" />
               </FormSwitch>
-              <FormErrorMessages :messages="purchaseReceiptForm.errors.is_posted" />
+              <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.is_posted" />
             </div>
           </div>
 
-          <div v-if="purchaseReceiptForm.purchase_id" class="mt-4 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700 dark:text-slate-200">
-            {{ t('views.purchase_receipt.fields.purchase_link_hint') }}
+          <div
+            v-if="purchaseOrderReceiptForm.purchase_order_id"
+            class="mt-4 rounded-md border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-slate-700 dark:text-slate-200"
+          >
+            {{ t('views.purchase_receipt.fields.purchase_order_link_hint') }}
           </div>
 
           <div class="mt-4">
@@ -914,12 +1045,12 @@ const onSubmit = async () => {
               {{ t('views.purchase_receipt.fields.remarks') }}
             </FormLabel>
             <FormTextarea
-              v-model="purchaseReceiptForm.remarks"
+              v-model="purchaseOrderReceiptForm.remarks"
               :class="{ 'border-danger': invalidField('remarks') }"
               :placeholder="t('views.purchase_receipt.fields.remarks')"
-              @change="purchaseReceiptForm.validate('remarks')"
+              @change="purchaseOrderReceiptForm.validate('remarks')"
             />
-            <FormErrorMessages :messages="purchaseReceiptForm.errors.remarks" />
+            <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.remarks" />
           </div>
         </div>
       </template>
@@ -932,18 +1063,18 @@ const onSubmit = async () => {
             </div>
             <div class="flex flex-wrap items-center gap-2">
               <Button
-                v-if="purchaseReceiptForm.purchase_id"
+                v-if="purchaseOrderReceiptForm.purchase_order_id"
                 type="button"
-                variant="outline-primary"
-                @click="reloadItemsFromPurchase"
+                variant="outline-secondary"
+                @click="reloadItemsFromPurchaseOrder"
               >
                 <Lucide icon="RefreshCw" class="mr-2 h-4 w-4" />
                 {{ t('components.buttons.reload') }}
               </Button>
               <Button
-                v-else
                 type="button"
                 variant="outline-primary"
+                :disabled="!purchaseOrderReceiptForm.purchase_order_id"
                 @click="openAddProductUnit"
               >
                 <Lucide icon="Plus" class="mr-2 h-4 w-4" />
@@ -952,15 +1083,18 @@ const onSubmit = async () => {
             </div>
           </div>
 
-          <FormErrorMessages :messages="purchaseReceiptForm.errors.items" />
+          <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.items" />
 
-          <div v-if="getItems().length === 0" class="rounded-md border border-dashed border-slate-300 px-4 py-6 text-center text-sm text-slate-500 dark:border-darkmode-400">
+          <div
+            v-if="getItems().length === 0"
+            class="rounded-md border border-dashed border-slate-300 px-4 py-6 text-center text-sm text-slate-500 dark:border-darkmode-400"
+          >
             {{ t('views.purchase_receipt.fields.items_empty') }}
           </div>
 
           <div
             v-for="(item, index) in getItems()"
-            :key="`${item.has_purchase_item_product ? 'purchase' : 'manual'}-${item.product_unit_id ?? 'item'}-${index}`"
+            :key="`${item.id ?? 'new'}-${item.product_unit_id ?? 'item'}-${index}`"
             class="rounded-md border border-slate-200/70 p-4 dark:border-darkmode-400"
           >
             <div class="flex flex-wrap items-start justify-between gap-3">
@@ -977,26 +1111,15 @@ const onSubmit = async () => {
                     / {{ item.product_unit_base_unit_name }}
                   </span>
                 </div>
-                <div v-if="item.purchase_item_label" class="mt-1 text-xs text-primary">
-                  {{ item.purchase_item_label }}
+                <div v-if="item.purchase_order_item_label" class="mt-1 text-xs text-primary">
+                  {{ item.purchase_order_item_label }}
                 </div>
               </div>
               <div class="flex items-center gap-2">
-                <Button
-                  v-if="!purchaseReceiptForm.purchase_id"
-                  type="button"
-                  size="sm"
-                  variant="outline-primary"
-                  @click="openChangeProductUnit(index)"
-                >
+                <Button type="button" size="sm" variant="outline-primary" @click="openChangeProductUnit(index)">
                   <Lucide icon="Pencil" class="h-4 w-4" />
                 </Button>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline-secondary"
-                  @click="removeItem(index)"
-                >
+                <Button type="button" size="sm" variant="outline-secondary" @click="removeItem(index)">
                   <Lucide icon="Trash2" class="h-4 w-4 text-danger" />
                 </Button>
               </div>
@@ -1012,6 +1135,7 @@ const onSubmit = async () => {
                   readonly
                 />
                 <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_id`)" />
+                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.purchase_order_item_id`)" />
               </div>
 
               <div class="col-span-12 md:col-span-6 lg:col-span-2">
@@ -1025,7 +1149,7 @@ const onSubmit = async () => {
                   min="0"
                   step="any"
                   :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
-                  @change="purchaseReceiptForm.validate(`items.${index}.qty` as any)"
+                  @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
                 />
                 <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.qty`)" />
               </div>
@@ -1050,7 +1174,7 @@ const onSubmit = async () => {
                   v-model="item.remarks"
                   :class="{ 'border-danger': invalidItemField(`items.${index}.remarks`) }"
                   :placeholder="t('views.purchase_receipt.fields.remarks')"
-                  @change="purchaseReceiptForm.validate(`items.${index}.remarks` as any)"
+                  @change="purchaseOrderReceiptForm.validate(`items.${index}.remarks` as any)"
                 />
                 <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.remarks`)" />
               </div>
@@ -1077,8 +1201,8 @@ const onSubmit = async () => {
                       :placeholder="t('views.product.fields.serial_number')"
                       :class="{ 'border-danger': invalidItemField(`items.${index}.serials.${serialIndex}.serial`) }"
                       @change="
-                        purchaseReceiptForm.validate(`items.${index}.serials.${serialIndex}.serial` as any);
-                        purchaseReceiptForm.validate(`items.${index}.serials` as any);
+                        purchaseOrderReceiptForm.validate(`items.${index}.serials.${serialIndex}.serial` as any);
+                        purchaseOrderReceiptForm.validate(`items.${index}.serials` as any);
                       "
                     />
                     <Button type="button" variant="outline-secondary" @click="removeSerial(index, serialIndex)">
@@ -1099,15 +1223,151 @@ const onSubmit = async () => {
         </div>
       </template>
 
+      <template #card-items-3>
+        <div class="p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="text-sm text-slate-500">
+              {{ t('views.purchase_receipt.fields.cost_count') }}: {{ getCosts().length }}
+            </div>
+            <Button type="button" variant="outline-primary" @click="addCost">
+              <Lucide icon="Plus" class="mr-2 h-4 w-4" />
+              {{ t('components.buttons.add') }}
+            </Button>
+          </div>
+
+          <FormErrorMessages :messages="purchaseOrderReceiptForm.errors.costs" />
+
+          <div
+            v-if="getCosts().length === 0"
+            class="rounded-md border border-dashed border-slate-300 px-4 py-6 text-center text-sm text-slate-500 dark:border-darkmode-400"
+          >
+            {{ t('views.purchase_receipt.fields.costs_empty') }}
+          </div>
+
+          <div
+            v-for="(cost, index) in getCosts()"
+            :key="`cost-${cost.id ?? 'new'}-${index}`"
+            class="rounded-md border border-slate-200/70 p-4 dark:border-darkmode-400"
+          >
+            <div class="grid grid-cols-12 gap-4 gap-y-3">
+              <div class="col-span-12 md:col-span-6 lg:col-span-2">
+                <FormLabel :class="{ 'text-danger': invalidItemField(`costs.${index}.code`) }">
+                  {{ t('views.purchase_receipt.fields.code') }}
+                </FormLabel>
+                <FormInputCode
+                  v-model="cost.code"
+                  :class="{ 'border-danger': invalidItemField(`costs.${index}.code`) }"
+                  :placeholder="t('views.purchase_receipt.fields.code')"
+                  @set-auto="setCostCode(index)"
+                  @change="purchaseOrderReceiptForm.validate(`costs.${index}.code` as any)"
+                />
+                <FormErrorMessages :messages="getItemFieldErrors(`costs.${index}.code`)" />
+              </div>
+
+              <div class="col-span-12 md:col-span-6 lg:col-span-3">
+                <FormLabel :class="{ 'text-danger': invalidItemField(`costs.${index}.date`) }">
+                  {{ t('views.purchase_receipt.fields.date') }}
+                </FormLabel>
+                <FormInputDateTimeAuto
+                  v-model="cost.date"
+                  :class="{ 'border-danger': invalidItemField(`costs.${index}.date`) }"
+                  :placeholder="t('views.purchase_receipt.fields.date')"
+                  @change="purchaseOrderReceiptForm.validate(`costs.${index}.date` as any)"
+                />
+                <FormErrorMessages :messages="getItemFieldErrors(`costs.${index}.date`)" />
+              </div>
+
+              <div class="col-span-12 md:col-span-6 lg:col-span-3">
+                <FormLabel :class="{ 'text-danger': invalidItemField(`costs.${index}.name`) }">
+                  {{ t('views.purchase_receipt.fields.cost_name') }}
+                </FormLabel>
+                <FormInput
+                  v-model="cost.name"
+                  :class="{ 'border-danger': invalidItemField(`costs.${index}.name`) }"
+                  :placeholder="t('views.purchase_receipt.fields.cost_name')"
+                  @change="purchaseOrderReceiptForm.validate(`costs.${index}.name` as any)"
+                />
+                <FormErrorMessages :messages="getItemFieldErrors(`costs.${index}.name`)" />
+              </div>
+
+              <div class="col-span-12 md:col-span-6 lg:col-span-2">
+                <FormLabel :class="{ 'text-danger': invalidItemField(`costs.${index}.cash_account_id`) }">
+                  {{ t('views.purchase_receipt.fields.cash_account_id') }}
+                </FormLabel>
+                <FormSelectSearch
+                  v-model="cost.cash_account_id"
+                  v-model:search="cashAccountSearch"
+                  :options="cashAccountOptions"
+                  :placeholder="t('components.dropdown.placeholder')"
+                  :class="{ 'border-danger': invalidItemField(`costs.${index}.cash_account_id`) }"
+                  @change="purchaseOrderReceiptForm.validate(`costs.${index}.cash_account_id` as any)"
+                  @search="loadCashAccountDDL"
+                  @clear="clearCostCashAccount(index)"
+                />
+                <FormErrorMessages :messages="getItemFieldErrors(`costs.${index}.cash_account_id`)" />
+              </div>
+
+              <div class="col-span-12 md:col-span-6 lg:col-span-2">
+                <FormLabel :class="{ 'text-danger': invalidItemField(`costs.${index}.amount`) }">
+                  {{ t('views.purchase_receipt.fields.amount') }}
+                </FormLabel>
+                <div class="flex items-start gap-2">
+                  <div class="min-w-0 flex-1">
+                    <FormInputCurrency
+                      v-model="cost.amount"
+                      :allow-negative="false"
+                      :class="{ 'border-danger': invalidItemField(`costs.${index}.amount`) }"
+                      @change="purchaseOrderReceiptForm.validate(`costs.${index}.amount` as any)"
+                    />
+                  </div>
+                  <div class="shrink-0">
+                    <Button
+                      type="button"
+                      variant="outline-secondary"
+                      class="flex h-[38px] w-[38px] min-w-0 items-center justify-center"
+                      @click="removeCost(index)"
+                    >
+                      <Lucide icon="Trash2" class="h-4 w-4 text-danger" />
+                    </Button>
+                  </div>
+                </div>
+                <FormErrorMessages :messages="getItemFieldErrors(`costs.${index}.amount`)" />
+              </div>
+
+              <div class="col-span-12">
+                <FormLabel :class="{ 'text-danger': invalidItemField(`costs.${index}.remarks`) }">
+                  {{ t('views.purchase_receipt.fields.remarks') }}
+                </FormLabel>
+                <FormTextarea
+                  v-model="cost.remarks"
+                  :class="{ 'border-danger': invalidItemField(`costs.${index}.remarks`) }"
+                  :placeholder="t('views.purchase_receipt.fields.remarks')"
+                  @change="purchaseOrderReceiptForm.validate(`costs.${index}.remarks` as any)"
+                />
+                <FormErrorMessages :messages="getItemFieldErrors(`costs.${index}.remarks`)" />
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-12 items-end gap-4 gap-y-3">
+            <div class="col-span-12 lg:col-span-9"></div>
+            <div class="col-span-12 lg:col-span-3">
+              <FormLabel>{{ t('views.purchase_receipt.fields.total_cost') }}</FormLabel>
+              <FormInputCurrency :model-value="getCostsTotalPreview()" readonly />
+            </div>
+          </div>
+        </div>
+      </template>
+
       <template #card-items-button>
         <div class="flex justify-end gap-2 p-5">
           <Button
             type="submit"
             variant="primary"
             class="w-32 shadow-md"
-            :disabled="purchaseReceiptForm.validating || purchaseReceiptForm.hasErrors"
+            :disabled="purchaseOrderReceiptForm.validating || purchaseOrderReceiptForm.hasErrors"
           >
-            <Lucide v-if="purchaseReceiptForm.validating" icon="Loader" class="mr-2 h-4 w-4 animate-spin" />
+            <Lucide v-if="purchaseOrderReceiptForm.validating" icon="Loader" class="mr-2 h-4 w-4 animate-spin" />
             <Lucide v-else icon="Save" class="mr-2 h-4 w-4" />
             {{ t('components.buttons.save') }}
           </Button>

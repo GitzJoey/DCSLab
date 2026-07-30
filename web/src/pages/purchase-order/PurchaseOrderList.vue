@@ -398,7 +398,7 @@ const confirmDelete = async () => {
 
               <div class="space-y-2">
                 <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                  {{ t('views.purchase_order.fields.down_payment') }}
+                  {{ t('views.purchase_order.fields.payment') }}
                 </div>
                 <div class="grid grid-cols-12 items-center gap-x-3 gap-y-2 text-xs">
                   <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.amount_paid_down_payment') }}
@@ -483,10 +483,14 @@ const confirmDelete = async () => {
                       </span>
                     </div>
                     <div class="mt-2 grid grid-cols-12 gap-x-3 gap-y-1 text-xs">
-                      <div class="col-span-6 text-slate-500">{{ t('views.purchase_order.fields.qty_purchased_base') }}
+                      <div class="col-span-6 text-slate-500">{{ t('views.purchase_order.fields.qty_received_base') }}
                       </div>
                       <div class="col-span-6 text-right text-slate-700 dark:text-slate-200">{{
-                        formatQuantityValue(poItem.qty_purchased_base ?? 0) }}</div>
+                        formatQuantityValue(poItem.qty_received_base ?? 0) }}</div>
+                      <div class="col-span-6 text-slate-500">{{ t('views.purchase_order.fields.qty_invoiced_base') }}
+                      </div>
+                      <div class="col-span-6 text-right text-slate-700 dark:text-slate-200">{{
+                        formatQuantityValue(poItem.qty_invoiced_base ?? 0) }}</div>
                       <div class="col-span-6 text-slate-500">{{ t('views.purchase_order.fields.qty_outstanding_base') }}
                       </div>
                       <div class="col-span-6 text-right text-warning">{{ formatQuantityValue(
@@ -505,55 +509,37 @@ const confirmDelete = async () => {
               <div class="col-span-12 lg:col-span-6 space-y-4">
                 <div class="space-y-3">
                   <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                    {{ t('views.purchase_order.fields.global_discounts') }}
+                    {{ t('views.purchase_order.fields.payments') }}
                   </div>
-                  <div v-if="!(item as PurchaseOrder).global_discounts?.length" class="text-xs text-slate-500">
+                  <div v-if="!(item as PurchaseOrder).payments?.length" class="text-xs text-slate-500">
                     {{ t('components.data-list.data_not_found') }}
                   </div>
                   <div v-else class="space-y-2">
-                    <div v-for="discount in (item as PurchaseOrder).global_discounts" :key="discount.id"
+                    <div v-for="payment in (item as PurchaseOrder).payments" :key="payment.id"
                       class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs">
-                      <div class="col-span-3 text-slate-500">#{{ discount.sequence }}</div>
-                      <div class="col-span-5 text-slate-700 dark:text-slate-200">{{ discount.discount_type }}</div>
+                      <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ payment.code }}</div>
+                      <div class="col-span-4 text-slate-500">{{ payment.cash_account?.name ?? '-' }}</div>
                       <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{
-                        formatCurrency(discount.discount_value ?? 0) }}</div>
+                        formatCurrency(payment.amount ?? 0) }}</div>
                     </div>
                   </div>
                 </div>
 
                 <div class="space-y-3">
                   <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                    {{ t('views.purchase_order.fields.down_payments') }}
+                    {{ t('views.purchase_order.fields.refunded_payments') }}
                   </div>
-                  <div v-if="!(item as PurchaseOrder).down_payments?.length" class="text-xs text-slate-500">
+                  <div v-if="!(item as PurchaseOrder).refunded_payments?.length" class="text-xs text-slate-500">
                     {{ t('components.data-list.data_not_found') }}
                   </div>
                   <div v-else class="space-y-2">
-                    <div v-for="downPayment in (item as PurchaseOrder).down_payments" :key="downPayment.id"
+                    <div v-for="refundedPayment in (item as PurchaseOrder).refunded_payments"
+                      :key="refundedPayment.id"
                       class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs">
-                      <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ downPayment.code }}</div>
-                      <div class="col-span-4 text-slate-500">{{ downPayment.cash_account?.name ?? '-' }}</div>
+                      <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ refundedPayment.code }}</div>
+                      <div class="col-span-4 text-slate-500">{{ refundedPayment.cash_account?.name ?? '-' }}</div>
                       <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{
-                        formatCurrency(downPayment.amount ?? 0) }}</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="space-y-3">
-                  <div class="text-primary text-xs font-semibold uppercase tracking-wide">
-                    {{ t('views.purchase_order.fields.refunded_down_payments') }}
-                  </div>
-                  <div v-if="!(item as PurchaseOrder).refunded_down_payments?.length" class="text-xs text-slate-500">
-                    {{ t('components.data-list.data_not_found') }}
-                  </div>
-                  <div v-else class="space-y-2">
-                    <div v-for="refundedDownPayment in (item as PurchaseOrder).refunded_down_payments"
-                      :key="refundedDownPayment.id"
-                      class="rounded-md border border-slate-200/60 dark:border-darkmode-400 px-3 py-2 grid grid-cols-12 gap-3 text-xs">
-                      <div class="col-span-4 text-slate-700 dark:text-slate-200">{{ refundedDownPayment.code }}</div>
-                      <div class="col-span-4 text-slate-500">{{ refundedDownPayment.cash_account?.name ?? '-' }}</div>
-                      <div class="col-span-4 text-right text-slate-700 dark:text-slate-200">{{
-                        formatCurrency(refundedDownPayment.amount ?? 0) }}</div>
+                        formatCurrency(refundedPayment.amount ?? 0) }}</div>
                     </div>
                   </div>
                 </div>

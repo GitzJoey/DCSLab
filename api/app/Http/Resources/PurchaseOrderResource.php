@@ -45,10 +45,15 @@ class PurchaseOrderResource extends JsonResource
             'item_less_count' => $this->item_less_count,
             'item_more_count' => $this->item_more_count,
             'item_unlinked_count' => $this->item_unlinked_count,
-            'global_discounts' => PurchaseOrderGlobalDiscountResource::collection($this->whenLoaded('globalDiscounts')),
-            'items' => PurchaseOrderItemResource::collection($this->whenLoaded('items')),
-            'down_payments' => PurchaseOrderDownPaymentResource::collection($this->whenLoaded('downPayments')),
-            'refunded_down_payments' => PurchaseOrderDownPaymentRefundResource::collection($this->whenLoaded('refundedDownPayments')),
+            $this->mergeWhen($this->relationLoaded('items'), [
+                'items' => PurchaseOrderItemResource::collection($this->whenLoaded('items')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('payments'), [
+                'payments' => PurchaseOrderPaymentResource::collection($this->whenLoaded('payments')),
+            ]),
+            $this->mergeWhen($this->relationLoaded('refundedPayments'), [
+                'refunded_payments' => PurchaseOrderPaymentRefundResource::collection($this->whenLoaded('refundedPayments')),
+            ]),
         ];
     }
 }

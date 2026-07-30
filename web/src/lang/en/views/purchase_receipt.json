@@ -14,7 +14,9 @@
     "purchase_receipt_data": "Purchase Receipt Data",
     "status": "Status",
     "remarks": "Remarks",
-    "items": "Items"
+    "items": "Items",
+    "costs": "Costs",
+    "summary": "Summary"
   },
   "fields": {
     "code": "Code",
@@ -22,19 +24,27 @@
     "start_date": "Start Date",
     "end_date": "End Date",
     "supplier_id": "Supplier",
-    "purchase_id": "Purchase",
+    "purchase_order_id": "Purchase Order",
     "warehouse_id": "Warehouse",
     "remarks": "Remarks",
-    "is_from_direct_purchase": "From Direct Purchase",
-    "is_linked_to_purchase": "Linked To Purchase",
     "is_posted": "Posted",
+    "total_value": "Total Value",
+    "total_cost": "Total Cost",
     "item_count": "Item Count",
+    "cost_count": "Cost Count",
+    "purchase_order_item_id": "Purchase Order Item",
     "product_unit_id": "Product",
     "qty": "Qty",
     "product_unit_conversion_value": "Conversion Value",
+    "product_unit_qty_base": "Base Qty",
+    "base_unit_value": "Base Unit Value",
     "serial_count": "Serial Count",
     "items_empty": "No receipt items yet",
-    "purchase_link_hint": "This receipt is linked to a purchase. Supplier follows the purchase, and items can be reloaded from the selected purchase."
+    "costs_empty": "No receipt cost yet",
+    "cost_name": "Cost Name",
+    "cash_account_id": "Cash Account",
+    "amount": "Amount",
+    "purchase_order_link_hint": "This receipt is linked to a purchase order. Supplier follows the purchase order, and items can be reloaded from the selected purchase order."
   },
   "alert": {
     "create": {
@@ -48,14 +58,6 @@
     "delete": {
       "title": "Delete Purchase Receipt",
       "message": "Purchase Receipt has been deleted"
-    },
-    "edit_blocked_direct": {
-      "title": "Edit Purchase Receipt",
-      "message": "Direct purchase receipts are managed from the purchase document and cannot be edited here."
     }
-  },
-  "form_placeholder": {
-    "title": "Purchase receipt form is not finished yet",
-    "description": "Create and edit routes are connected, but the detailed purchase receipt form still needs to be completed."
   }
 }

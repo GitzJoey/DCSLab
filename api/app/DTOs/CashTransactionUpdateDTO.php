@@ -16,12 +16,18 @@ use App\Models\PrepaidExpense;
 use App\Models\PrepaidExpensePayment;
 use App\Models\PrepaidIncome;
 use App\Models\PrepaidIncomePayment;
-use App\Models\PurchaseAdditionalCost;
-use App\Models\PurchaseAdditionalCostPayment;
-use App\Models\PurchaseOrderDownPayment;
-use App\Models\PurchaseOrderDownPaymentRefund;
+use App\Models\PurchaseInvoicePayment;
+use App\Models\PurchaseOrderPayment;
+use App\Models\PurchaseOrderPaymentRefund;
+use App\Models\PurchaseOrderReceiptCost;
+use App\Models\PurchaseReturnRefund;
 use App\Models\Receivable;
 use App\Models\ReceivablePayment;
+use App\Models\SalesInvoicePayment;
+use App\Models\SalesOrderDeliveryCost;
+use App\Models\SalesOrderPayment;
+use App\Models\SalesOrderPaymentRefund;
+use App\Models\SalesReturnRefund;
 
 final class CashTransactionUpdateDTO
 {
@@ -213,47 +219,113 @@ final class CashTransactionUpdateDTO
         );
     }
 
-    public static function fromPurchaseOrderDownPayment(PurchaseOrderDownPayment $purchaseOrderDownPayment): self
+    public static function fromPurchaseOrderPayment(PurchaseOrderPayment $purchaseOrderPayment): self
     {
         return new self(
-            referableType: PurchaseOrderDownPayment::class,
-            referableId: $purchaseOrderDownPayment->id,
-            date: $purchaseOrderDownPayment->date,
-            cashAccountId: $purchaseOrderDownPayment->cash_account_id,
-            amount: (float) $purchaseOrderDownPayment->amount,
+            referableType: PurchaseOrderPayment::class,
+            referableId: $purchaseOrderPayment->id,
+            date: $purchaseOrderPayment->date,
+            cashAccountId: $purchaseOrderPayment->cash_account_id,
+            amount: ((float) $purchaseOrderPayment->amount * -1),
         );
     }
 
-    public static function fromPurchaseOrderDownPaymentRefund(PurchaseOrderDownPaymentRefund $purchaseOrderDownPaymentRefund): self
+    public static function fromPurchaseOrderPaymentRefund(PurchaseOrderPaymentRefund $purchaseOrderPaymentRefund): self
     {
         return new self(
-            referableType: PurchaseOrderDownPaymentRefund::class,
-            referableId: $purchaseOrderDownPaymentRefund->id,
-            date: $purchaseOrderDownPaymentRefund->date,
-            cashAccountId: $purchaseOrderDownPaymentRefund->cash_account_id,
-            amount: (float) $purchaseOrderDownPaymentRefund->amount,
+            referableType: PurchaseOrderPaymentRefund::class,
+            referableId: $purchaseOrderPaymentRefund->id,
+            date: $purchaseOrderPaymentRefund->date,
+            cashAccountId: $purchaseOrderPaymentRefund->cash_account_id,
+            amount: (float) $purchaseOrderPaymentRefund->amount,
         );
     }
 
-    public static function fromPurchaseAdditionalCost(PurchaseAdditionalCost $purchaseAdditionalCost): self
+    public static function fromPurchaseInvoicePayment(PurchaseInvoicePayment $purchaseInvoicePayment): self
     {
         return new self(
-            referableType: PurchaseAdditionalCost::class,
-            referableId: $purchaseAdditionalCost->id,
-            date: $purchaseAdditionalCost->date,
-            cashAccountId: $purchaseAdditionalCost->paid_immediately_cash_account_id,
-            amount: (float) $purchaseAdditionalCost->amount_paid_immediately,
+            referableType: PurchaseInvoicePayment::class,
+            referableId: $purchaseInvoicePayment->id,
+            date: $purchaseInvoicePayment->date,
+            cashAccountId: $purchaseInvoicePayment->cash_account_id,
+            amount: ((float) $purchaseInvoicePayment->amount * -1),
         );
     }
 
-    public static function fromPurchaseAdditionalCostPayment(PurchaseAdditionalCostPayment $purchaseAdditionalCostPayment): self
+    public static function fromPurchaseOrderReceiptCost(PurchaseOrderReceiptCost $purchaseOrderReceiptCost): self
     {
         return new self(
-            referableType: PurchaseAdditionalCostPayment::class,
-            referableId: $purchaseAdditionalCostPayment->id,
-            date: $purchaseAdditionalCostPayment->date,
-            cashAccountId: $purchaseAdditionalCostPayment->cash_account_id,
-            amount: (float) $purchaseAdditionalCostPayment->amount,
+            referableType: PurchaseOrderReceiptCost::class,
+            referableId: $purchaseOrderReceiptCost->id,
+            date: $purchaseOrderReceiptCost->date,
+            cashAccountId: $purchaseOrderReceiptCost->cash_account_id,
+            amount: ((float) $purchaseOrderReceiptCost->amount * -1),
+        );
+    }
+
+    public static function fromPurchaseReturnRefund(PurchaseReturnRefund $purchaseReturnRefund): self
+    {
+        return new self(
+            referableType: PurchaseReturnRefund::class,
+            referableId: $purchaseReturnRefund->id,
+            date: $purchaseReturnRefund->date,
+            cashAccountId: $purchaseReturnRefund->cash_account_id,
+            amount: (float) $purchaseReturnRefund->amount,
+        );
+    }
+
+    public static function fromSalesOrderPayment(SalesOrderPayment $salesOrderPayment): self
+    {
+        return new self(
+            referableType: SalesOrderPayment::class,
+            referableId: $salesOrderPayment->id,
+            date: $salesOrderPayment->date,
+            cashAccountId: $salesOrderPayment->cash_account_id,
+            amount: (float) $salesOrderPayment->amount,
+        );
+    }
+
+    public static function fromSalesOrderPaymentRefund(SalesOrderPaymentRefund $salesOrderPaymentRefund): self
+    {
+        return new self(
+            referableType: SalesOrderPaymentRefund::class,
+            referableId: $salesOrderPaymentRefund->id,
+            date: $salesOrderPaymentRefund->date,
+            cashAccountId: $salesOrderPaymentRefund->cash_account_id,
+            amount: ((float) $salesOrderPaymentRefund->amount * -1),
+        );
+    }
+
+    public static function fromSalesInvoicePayment(SalesInvoicePayment $salesInvoicePayment): self
+    {
+        return new self(
+            referableType: SalesInvoicePayment::class,
+            referableId: $salesInvoicePayment->id,
+            date: $salesInvoicePayment->date,
+            cashAccountId: $salesInvoicePayment->cash_account_id,
+            amount: (float) $salesInvoicePayment->amount,
+        );
+    }
+
+    public static function fromSalesOrderDeliveryCost(SalesOrderDeliveryCost $salesOrderDeliveryCost): self
+    {
+        return new self(
+            referableType: SalesOrderDeliveryCost::class,
+            referableId: $salesOrderDeliveryCost->id,
+            date: $salesOrderDeliveryCost->date,
+            cashAccountId: $salesOrderDeliveryCost->cash_account_id,
+            amount: ((float) $salesOrderDeliveryCost->amount * -1),
+        );
+    }
+
+    public static function fromSalesReturnRefund(SalesReturnRefund $salesReturnRefund): self
+    {
+        return new self(
+            referableType: SalesReturnRefund::class,
+            referableId: $salesReturnRefund->id,
+            date: $salesReturnRefund->date,
+            cashAccountId: $salesReturnRefund->cash_account_id,
+            amount: ((float) $salesReturnRefund->amount * -1),
         );
     }
 }

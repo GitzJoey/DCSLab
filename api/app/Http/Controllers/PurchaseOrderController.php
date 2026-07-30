@@ -8,7 +8,7 @@ use App\DTOs\ExecuteGetDTO;
 use App\DTOs\ExecutePaginationDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
-use App\Enums\PurchaseProgressStatusEnum;
+use App\Enums\ProgressStatusEnum;
 use App\Helpers\HashidsHelper;
 use App\Http\Requests\PurchaseOrder\PurchaseOrderStoreRequest;
 use App\Http\Requests\PurchaseOrder\PurchaseOrderUpdateRequest;
@@ -26,13 +26,10 @@ use Illuminate\Validation\Rule;
 
 class PurchaseOrderController extends BaseController
 {
-    private PurchaseOrderActions $purchaseOrderActions;
-
-    public function __construct(PurchaseOrderActions $purchaseOrderActions)
-    {
+    public function __construct(
+        private readonly PurchaseOrderActions $purchaseOrderActions,
+    ) {
         parent::__construct();
-
-        $this->purchaseOrderActions = $purchaseOrderActions;
     }
 
     public function readAny(Request $request)
@@ -56,7 +53,7 @@ class PurchaseOrderController extends BaseController
             'start_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'end_date' => ['nullable', 'string', new IsValidDate('Y-m-d H:i:s')],
             'supplier_id' => ['nullable', 'integer', new IsValidSupplier($request->company_id)],
-            'progress_status' => ['nullable', 'string', Rule::in(PurchaseProgressStatusEnum::toArrayValue())],
+            'progress_status' => ['nullable', 'string', Rule::in(ProgressStatusEnum::toArrayValue())],
 
             'refresh' => ['required', 'boolean'],
             'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
@@ -84,25 +81,23 @@ class PurchaseOrderController extends BaseController
                 execute: new ExecuteDTO(
                     useCache: ! $validatedRequest['refresh'],
                     pagination: (function () use ($validatedRequest) {
-                        $pagination = null;
-                        if (isset($validatedRequest['paginate'])) {
-                            $pagination = new ExecutePaginationDTO(
-                                page: $validatedRequest['paginate']['page'],
-                                perPage: $validatedRequest['paginate']['per_page'],
-                            );
+                        if (! isset($validatedRequest['paginate'])) {
+                            return null;
                         }
 
-                        return $pagination;
+                        return new ExecutePaginationDTO(
+                            page: $validatedRequest['paginate']['page'],
+                            perPage: $validatedRequest['paginate']['per_page'],
+                        );
                     })(),
                     get: (function () use ($validatedRequest) {
-                        $get = null;
-                        if (isset($validatedRequest['get'])) {
-                            $get = new ExecuteGetDTO(
-                                limit: $validatedRequest['get']['limit'],
-                            );
+                        if (! isset($validatedRequest['get'])) {
+                            return null;
                         }
 
-                        return $get;
+                        return new ExecuteGetDTO(
+                            limit: $validatedRequest['get']['limit'],
+                        );
                     })(),
                 ),
             );
@@ -173,11 +168,11 @@ class PurchaseOrderController extends BaseController
                 dueDays: $validatedRequest['due_days'],
                 supplierId: $validatedRequest['supplier_id'],
                 remarks: $validatedRequest['remarks'],
+                globalDiscount: (float) $validatedRequest['global_discount'],
                 rounding: (float) $validatedRequest['rounding'],
-                globalDiscounts: $validatedRequest['global_discounts'],
                 items: $validatedRequest['items'],
-                downPayments: $validatedRequest['down_payments'],
-                refundedDownPayments: $validatedRequest['refunded_down_payments'],
+                payments: $validatedRequest['payments'],
+                refundedPayments: $validatedRequest['refunded_payments'],
             );
             $result = $this->purchaseOrderActions->create(
                 data: $dto
@@ -219,15 +214,14 @@ class PurchaseOrderController extends BaseController
                     dueDays: $validatedRequest['due_days'],
                     supplierId: $validatedRequest['supplier_id'],
                     remarks: $validatedRequest['remarks'],
+                    globalDiscount: (float) $validatedRequest['global_discount'],
                     rounding: (float) $validatedRequest['rounding'],
-                    deleteGlobalDiscountIds: $validatedRequest['delete_global_discount_ids'],
-                    globalDiscounts: $validatedRequest['global_discounts'],
                     deleteItemIds: $validatedRequest['delete_item_ids'],
                     items: $validatedRequest['items'],
-                    deleteDownPaymentIds: $validatedRequest['delete_down_payment_ids'],
-                    downPayments: $validatedRequest['down_payments'],
-                    deleteRefundedDownPaymentIds: $validatedRequest['delete_refunded_down_payment_ids'],
-                    refundedDownPayments: $validatedRequest['refunded_down_payments'],
+                    deletePaymentIds: $validatedRequest['delete_payment_ids'],
+                    payments: $validatedRequest['payments'],
+                    deleteRefundedPaymentIds: $validatedRequest['delete_refunded_payment_ids'],
+                    refundedPayments: $validatedRequest['refunded_payments'],
                 ),
             );
 

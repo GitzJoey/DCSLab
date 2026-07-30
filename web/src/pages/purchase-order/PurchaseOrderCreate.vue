@@ -12,11 +12,9 @@ import {
   FormInput,
   FormInputCode,
   FormInputCurrency,
-  FormInputDateTime,
   FormInputDateTimeAuto,
   FormLabel,
   FormErrorMessages,
-  FormSelect,
   FormSelectSearch,
   FormSwitch,
   FormTextarea,
@@ -35,11 +33,9 @@ import { ErrorCode } from '@/types/enums/ErrorCode';
 import { DropDownOption } from '@/types/models/DropDownOption';
 import { NotificationData } from '@/types/models/NotificationData';
 import {
-  PurchaseOrderDownPaymentNestedStoreRequest,
-  PurchaseOrderDownPaymentRefundNestedStoreRequest,
-  PurchaseOrderGlobalDiscountNestedStoreRequest,
-  PurchaseOrderItemDiscountNestedStoreRequest,
   PurchaseOrderItemNestedStoreRequest,
+  PurchaseOrderPaymentNestedStoreRequest,
+  PurchaseOrderPaymentRefundNestedStoreRequest,
 } from '@/types/services/purchase-order/PurchaseOrderRequest';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
 import { convertErrorTypeToAlertListType, formatCurrency } from '@/utils/helper';
@@ -143,7 +139,7 @@ const isSearchingProductUnit = ref<boolean>(false);
 const productUnitOptions = ref<Array<ProductUnitOption>>([]);
 const editingProductUnitIndex = ref<number | null>(null);
 const productUnitQtyToFocus = ref<number | null>(null);
-const purchaseOrderItemDiscountsExpanded = ref<boolean[]>([]);
+const purchaseOrderItemDetailsExpanded = ref<boolean[]>([]);
 const viewportWidth = ref<number>(window.innerWidth);
 
 const productUnitDialogColumns = [
@@ -171,28 +167,19 @@ const currentItemLayout = computed<'sm' | 'md' | 'lg'>(() => {
   return 'sm';
 });
 
-const discountTypeOptions = [
-  { value: 'PERCENTAGE', label: 'Percentage' },
-  { value: 'NOMINAL', label: 'Nominal' },
-];
-
 const purchaseOrderItemsForm = computed<PurchaseOrderItemFormItem[]>(
   () => purchaseOrderForm.items as PurchaseOrderItemFormItem[],
 );
-const purchaseOrderGlobalDiscountsForm = computed<PurchaseOrderGlobalDiscountNestedStoreRequest[]>(
-  () => purchaseOrderForm.global_discounts as PurchaseOrderGlobalDiscountNestedStoreRequest[],
-);
 
-const isGlobalDiscountEditorExpanded = ref(false);
 const isTotalsBreakdownExpanded = ref(false);
-const purchaseOrderDownPaymentsForm = computed<PurchaseOrderDownPaymentNestedStoreRequest[]>(
-  () => purchaseOrderForm.down_payments as PurchaseOrderDownPaymentNestedStoreRequest[],
+const purchaseOrderPaymentsForm = computed<PurchaseOrderPaymentNestedStoreRequest[]>(
+  () => purchaseOrderForm.payments as PurchaseOrderPaymentNestedStoreRequest[],
 );
-const isDownPaymentEditorExpanded = ref(false);
-const purchaseOrderRefundedDownPaymentsForm = computed<PurchaseOrderDownPaymentRefundNestedStoreRequest[]>(
-  () => purchaseOrderForm.refunded_down_payments as PurchaseOrderDownPaymentRefundNestedStoreRequest[],
+const isPaymentEditorExpanded = ref(false);
+const purchaseOrderRefundedPaymentsForm = computed<PurchaseOrderPaymentRefundNestedStoreRequest[]>(
+  () => purchaseOrderForm.refunded_payments as PurchaseOrderPaymentRefundNestedStoreRequest[],
 );
-const isRefundedDownPaymentEditorExpanded = ref(false);
+const isRefundedPaymentEditorExpanded = ref(false);
 
 const invalidPurchaseOrderField = (field: string) => purchaseOrderForm.invalid(field as any);
 const validatePurchaseOrderField = (field: string) => purchaseOrderForm.validate(field as any);
@@ -250,16 +237,16 @@ const setCode = () => {
   });
 };
 
-const setDownPaymentCode = (index: number) => {
-  purchaseOrderForm.forgetError(`down_payments.${index}.code` as any);
-  purchaseOrderDownPaymentsForm.value[index].code =
-    purchaseOrderDownPaymentsForm.value[index].code === '_AUTO_' ? '' : '_AUTO_';
+const setPaymentCode = (index: number) => {
+  purchaseOrderForm.forgetError(`payments.${index}.code` as any);
+  purchaseOrderPaymentsForm.value[index].code =
+    purchaseOrderPaymentsForm.value[index].code === '_AUTO_' ? '' : '_AUTO_';
 };
 
-const setRefundedDownPaymentCode = (index: number) => {
-  purchaseOrderForm.forgetError(`refunded_down_payments.${index}.code` as any);
-  purchaseOrderRefundedDownPaymentsForm.value[index].code =
-    purchaseOrderRefundedDownPaymentsForm.value[index].code === '_AUTO_' ? '' : '_AUTO_';
+const setRefundedPaymentCode = (index: number) => {
+  purchaseOrderForm.forgetError(`refunded_payments.${index}.code` as any);
+  purchaseOrderRefundedPaymentsForm.value[index].code =
+    purchaseOrderRefundedPaymentsForm.value[index].code === '_AUTO_' ? '' : '_AUTO_';
 };
 
 const loadSupplierDDL = async (search = '') => {
@@ -408,26 +395,24 @@ const syncVatProfile = (index: number) => {
 };
 
 const clearCashAccount = (index: number) => {
-  const downPayment = purchaseOrderDownPaymentsForm.value[index];
-  if (!downPayment) return;
-  downPayment.cash_account_id = '';
-  purchaseOrderForm.validate(`down_payments.${index}.cash_account_id` as any);
+  const payment = purchaseOrderPaymentsForm.value[index];
+  if (!payment) return;
+  payment.cash_account_id = '';
+  purchaseOrderForm.validate(`payments.${index}.cash_account_id` as any);
 };
 
 const clearRefundedCashAccount = (index: number) => {
-  const refundedDownPayment = purchaseOrderRefundedDownPaymentsForm.value[index];
-  if (!refundedDownPayment) return;
-  refundedDownPayment.cash_account_id = '';
-  purchaseOrderForm.validate(`refunded_down_payments.${index}.cash_account_id` as any);
+  const refundedPayment = purchaseOrderRefundedPaymentsForm.value[index];
+  if (!refundedPayment) return;
+  refundedPayment.cash_account_id = '';
+  purchaseOrderForm.validate(`refunded_payments.${index}.cash_account_id` as any);
 };
 
 const loadFromCache = () => {
   const data = cacheService.getLastEntity('PURCHASE_ORDER_CREATE') as Record<string, unknown>;
   if (!data) return;
   purchaseOrderForm.setData(data);
-  purchaseOrderItemDiscountsExpanded.value = purchaseOrderItemsForm.value.map(
-    (item) => item.product_unit_price_discounts.length > 0,
-  );
+  purchaseOrderItemDetailsExpanded.value = purchaseOrderItemsForm.value.map(() => false);
 };
 
 const searchProductUnits = async () => {
@@ -527,11 +512,11 @@ const selectProductUnit = (option: ProductUnitOption) => {
     product_unit_product_name: option.product_name,
     product_unit_product_image_url: option.product_image_url,
     product_unit_unit_name: option.unit_name,
-    product_unit_base_unit_name: option.base_unit_name,
+    product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
     product_unit_conversion_value: option.conversion_value,
     product_unit_price: option.price,
-    product_unit_price_discounts: [],
-    subtotal_discounts: [],
+    price_discount: 0,
+    subtotal_discount: 0,
     product_unit_is_price_include_vat: option.product_unit_is_price_include_vat,
     vat_profile_id: vatProfileId,
     vat_profile_name: vatProfileName,
@@ -546,19 +531,18 @@ const selectProductUnit = (option: ProductUnitOption) => {
   if (editingProductUnitIndex.value === null) {
     purchaseOrderForm.items.push(itemData as any);
     targetIndex = purchaseOrderForm.items.length - 1;
-    purchaseOrderItemDiscountsExpanded.value[targetIndex] = false;
+    purchaseOrderItemDetailsExpanded.value[targetIndex] = false;
   } else {
     const currentItem = purchaseOrderItemsForm.value[editingProductUnitIndex.value];
     purchaseOrderItemsForm.value[editingProductUnitIndex.value] = {
       ...currentItem,
       ...itemData,
-      product_unit_price_discounts: currentItem.product_unit_price_discounts,
-      subtotal_discounts: currentItem.subtotal_discounts,
+      qty: currentItem?.qty ?? 1,
+      price_discount: currentItem?.price_discount ?? 0,
+      subtotal_discount: currentItem?.subtotal_discount ?? 0,
+      remarks: currentItem?.remarks ?? '',
     };
     targetIndex = editingProductUnitIndex.value;
-    purchaseOrderItemDiscountsExpanded.value[targetIndex] =
-      purchaseOrderItemDiscountsExpanded.value[targetIndex] ??
-      (currentItem.product_unit_price_discounts.length > 0);
   }
 
   showProductUnitModal.value = false;
@@ -586,60 +570,9 @@ const handleProductUnitModalAfterLeave = () => {
   });
 };
 
-const resequence = (items: Array<{ sequence: number }>) => {
-  items.forEach((item, index) => {
-    item.sequence = index + 1;
-  });
-};
-
-const addGlobalDiscount = () => {
-  purchaseOrderGlobalDiscountsForm.value.push({
-    sequence: purchaseOrderGlobalDiscountsForm.value.length + 1,
-    discount_type: 'PERCENTAGE',
-    discount_value: 0,
-  });
-};
-
-const removeGlobalDiscount = (index: number) => {
-  purchaseOrderGlobalDiscountsForm.value.splice(index, 1);
-  resequence(purchaseOrderGlobalDiscountsForm.value);
-  Object.keys(purchaseOrderForm.errors).forEach((key) => {
-    if (key.startsWith('global_discounts.')) {
-      purchaseOrderForm.forgetError(key as any);
-    }
-  });
-};
-
-const addItemPriceDiscount = (index: number) => {
-  purchaseOrderItemDiscountsExpanded.value[index] = true;
-  purchaseOrderItemsForm.value[index].product_unit_price_discounts.push({
-    sequence: purchaseOrderItemsForm.value[index].product_unit_price_discounts.length + 1,
-    discount_type: 'PERCENTAGE',
-    discount_value: 0,
-  });
-};
-
-const removeItemPriceDiscount = (index: number, discountIndex: number) => {
-  purchaseOrderItemsForm.value[index].product_unit_price_discounts.splice(discountIndex, 1);
-  resequence(purchaseOrderItemsForm.value[index].product_unit_price_discounts);
-};
-
-const addItemSubtotalDiscount = (index: number) => {
-  purchaseOrderItemsForm.value[index].subtotal_discounts.push({
-    sequence: purchaseOrderItemsForm.value[index].subtotal_discounts.length + 1,
-    discount_type: 'PERCENTAGE',
-    discount_value: 0,
-  });
-};
-
-const removeItemSubtotalDiscount = (index: number, discountIndex: number) => {
-  purchaseOrderItemsForm.value[index].subtotal_discounts.splice(discountIndex, 1);
-  resequence(purchaseOrderItemsForm.value[index].subtotal_discounts);
-};
-
 const removeProductUnit = (index: number) => {
   purchaseOrderItemsForm.value.splice(index, 1);
-  purchaseOrderItemDiscountsExpanded.value.splice(index, 1);
+  purchaseOrderItemDetailsExpanded.value.splice(index, 1);
   Object.keys(purchaseOrderForm.errors).forEach((key) => {
     if (key.startsWith('items.')) {
       purchaseOrderForm.forgetError(key as any);
@@ -647,32 +580,12 @@ const removeProductUnit = (index: number) => {
   });
 };
 
-const togglePurchaseOrderItemDiscounts = (index: number) => {
-  purchaseOrderItemDiscountsExpanded.value[index] = !purchaseOrderItemDiscountsExpanded.value[index];
+const togglePurchaseOrderItemDetails = (index: number) => {
+  purchaseOrderItemDetailsExpanded.value[index] = !purchaseOrderItemDetailsExpanded.value[index];
 };
 
-const addDownPayment = () => {
-  purchaseOrderDownPaymentsForm.value.push({
-    code: '_AUTO_',
-    date: '_AUTO_',
-    cash_account_id: '',
-    amount: 0,
-    amount_allocated: 0,
-    remarks: '',
-  });
-};
-
-const removeDownPayment = (index: number) => {
-  purchaseOrderDownPaymentsForm.value.splice(index, 1);
-  Object.keys(purchaseOrderForm.errors).forEach((key) => {
-    if (key.startsWith('down_payments.')) {
-      purchaseOrderForm.forgetError(key as any);
-    }
-  });
-};
-
-const addRefundedDownPayment = () => {
-  purchaseOrderRefundedDownPaymentsForm.value.push({
+const addPayment = () => {
+  purchaseOrderPaymentsForm.value.push({
     code: '_AUTO_',
     date: '_AUTO_',
     cash_account_id: '',
@@ -681,58 +594,60 @@ const addRefundedDownPayment = () => {
   });
 };
 
-const removeRefundedDownPayment = (index: number) => {
-  purchaseOrderRefundedDownPaymentsForm.value.splice(index, 1);
+const removePayment = (index: number) => {
+  purchaseOrderPaymentsForm.value.splice(index, 1);
   Object.keys(purchaseOrderForm.errors).forEach((key) => {
-    if (key.startsWith('refunded_down_payments.')) {
+    if (key.startsWith('payments.')) {
       purchaseOrderForm.forgetError(key as any);
     }
   });
 };
 
-const getItemUnitPriceAfterDiscountPreview = (item: PurchaseOrderItemFormItem) => {
-  return item.product_unit_price_discounts.reduce((currentPrice, discount) => {
-    const discountValue = Math.max(Number(discount.discount_value || 0), 0);
-    const nextPrice = discount.discount_type === 'PERCENTAGE'
-      ? currentPrice - ((currentPrice * discountValue) / 100)
-      : currentPrice - discountValue;
-
-    return Math.max(nextPrice, 0);
-  }, Number(item.product_unit_price || 0));
+const addRefundedPayment = () => {
+  purchaseOrderRefundedPaymentsForm.value.push({
+    code: '_AUTO_',
+    date: '_AUTO_',
+    cash_account_id: '',
+    amount: 0,
+    remarks: '',
+  });
 };
+
+const removeRefundedPayment = (index: number) => {
+  purchaseOrderRefundedPaymentsForm.value.splice(index, 1);
+  Object.keys(purchaseOrderForm.errors).forEach((key) => {
+    if (key.startsWith('refunded_payments.')) {
+      purchaseOrderForm.forgetError(key as any);
+    }
+  });
+};
+
+const getItemPriceDiscountPreview = (item: PurchaseOrderItemFormItem) =>
+  Math.min(Math.max(Number(item.price_discount || 0), 0), Number(item.product_unit_price || 0));
+
+const getItemUnitPriceAfterDiscountPreview = (item: PurchaseOrderItemFormItem) =>
+  Number(item.product_unit_price || 0) - getItemPriceDiscountPreview(item);
 
 const getItemUnitPriceSubtotalAfterDiscountPreview = (item: PurchaseOrderItemFormItem) =>
   Number(item.qty || 0) * getItemUnitPriceAfterDiscountPreview(item);
 
-const getItemSubtotalAfterDiscountPreview = (item: PurchaseOrderItemFormItem) => {
-  return item.subtotal_discounts.reduce((currentSubtotal, discount) => {
-    const discountValue = Math.max(Number(discount.discount_value || 0), 0);
-    const nextSubtotal = discount.discount_type === 'PERCENTAGE'
-      ? currentSubtotal - ((currentSubtotal * discountValue) / 100)
-      : currentSubtotal - discountValue;
+const getItemSubtotalDiscountPreview = (item: PurchaseOrderItemFormItem) =>
+  Math.min(
+    Math.max(Number(item.subtotal_discount || 0), 0),
+    getItemUnitPriceSubtotalAfterDiscountPreview(item),
+  );
 
-    return Math.max(nextSubtotal, 0);
-  }, getItemUnitPriceSubtotalAfterDiscountPreview(item));
-};
+const getItemSubtotalAfterDiscountPreview = (item: PurchaseOrderItemFormItem) =>
+  getItemUnitPriceSubtotalAfterDiscountPreview(item) - getItemSubtotalDiscountPreview(item);
 
 const getItemsSubtotalAfterDiscountPreview = () =>
   purchaseOrderItemsForm.value.reduce((total, item) => total + getItemSubtotalAfterDiscountPreview(item), 0);
 
-const getPurchaseOrderGlobalDiscountPreview = () => {
-  let totalDiscount = 0;
-
-  purchaseOrderGlobalDiscountsForm.value.forEach((discount) => {
-    const discountValue = Math.max(Number(discount.discount_value || 0), 0);
-    const currentTotal = Math.max(getItemsSubtotalAfterDiscountPreview() - totalDiscount, 0);
-    const appliedDiscount = discount.discount_type === 'PERCENTAGE'
-      ? (currentTotal * discountValue) / 100
-      : discountValue;
-
-    totalDiscount += Math.min(Math.max(appliedDiscount, 0), currentTotal);
-  });
-
-  return totalDiscount;
-};
+const getPurchaseOrderGlobalDiscountPreview = () =>
+  Math.min(
+    Math.max(Number(purchaseOrderForm.global_discount || 0), 0),
+    getItemsSubtotalAfterDiscountPreview(),
+  );
 
 const getItemGlobalDiscountPreview = (item: PurchaseOrderItemFormItem, itemIndex: number) => {
   const totalBeforeGlobalDiscount = getItemsSubtotalAfterDiscountPreview();
@@ -808,16 +723,6 @@ const getItemTotalBeforeRoundingPreview = (item: PurchaseOrderItemFormItem, item
   return subtotalAfterGlobalDiscount + getItemVatPreview(item, itemIndex);
 };
 
-const getItemAmountPayablePreview = (item: PurchaseOrderItemFormItem) => {
-  const itemIndex = purchaseOrderItemsForm.value.indexOf(item);
-
-  if (itemIndex < 0) {
-    return 0;
-  }
-
-  return getItemTotalBeforeRoundingPreview(item, itemIndex);
-};
-
 const getPurchaseOrderItemTotalAfterGlobalDiscountPreview = () =>
   purchaseOrderItemsForm.value.reduce(
     (total, item, itemIndex) => total + getItemSubtotalAfterGlobalDiscountPreview(item, itemIndex),
@@ -849,28 +754,20 @@ const getTotalAmountPayableBeforeRoundingPreview = () =>
 const getPurchaseOrderAmountPayablePreview = () =>
   getTotalAmountPayableBeforeRoundingPreview() + Number(purchaseOrderForm.rounding || 0);
 
-const getDownPaymentsTotalPreview = () =>
-  purchaseOrderDownPaymentsForm.value.reduce(
-    (total, downPayment) => total + Math.max(Number(downPayment.amount || 0), 0),
+const getPaymentsTotalPreview = () =>
+  purchaseOrderPaymentsForm.value.reduce(
+    (total, payment) => total + Math.max(Number(payment.amount || 0), 0),
     0,
   );
 
-const getRefundedDownPaymentsTotalPreview = () =>
-  purchaseOrderRefundedDownPaymentsForm.value.reduce(
-    (total, refundedDownPayment) => total + Math.max(Number(refundedDownPayment.amount || 0), 0),
+const getRefundedPaymentsTotalPreview = () =>
+  purchaseOrderRefundedPaymentsForm.value.reduce(
+    (total, refundedPayment) => total + Math.max(Number(refundedPayment.amount || 0), 0),
     0,
   );
 
-const getAllocatedDownPaymentsTotalPreview = () =>
-  purchaseOrderDownPaymentsForm.value.reduce(
-    (total, downPayment) => total + Math.max(Number(downPayment.amount_allocated ?? 0), 0),
-    0,
-  );
-
-const getAvailableDownPaymentsTotalPreview = () =>
-  getDownPaymentsTotalPreview()
-  - getAllocatedDownPaymentsTotalPreview()
-  - getRefundedDownPaymentsTotalPreview();
+const getAvailablePaymentsTotalPreview = () =>
+  getPaymentsTotalPreview() - getRefundedPaymentsTotalPreview();
 
 const scrollToError = (id: string) => {
   const el = document.getElementById(id);
@@ -909,26 +806,17 @@ const onSubmit = async () => {
   }
 
   const backupItems = [...purchaseOrderItemsForm.value];
-  const backupGlobalDiscounts = [...purchaseOrderGlobalDiscountsForm.value];
-  const backupDownPayments = [...purchaseOrderDownPaymentsForm.value];
-  const backupRefundedDownPayments = [...purchaseOrderRefundedDownPaymentsForm.value];
+  const backupPayments = [...purchaseOrderPaymentsForm.value];
+  const backupRefundedPayments = [...purchaseOrderRefundedPaymentsForm.value];
 
   const cleanedItems: PurchaseOrderItemNestedStoreRequest[] = purchaseOrderItemsForm.value.map((item) => ({
     qty: item.qty,
     product_unit_id: item.product_unit_id,
     product_unit_conversion_value: item.product_unit_conversion_value,
     product_unit_price: item.product_unit_price,
-    product_unit_price_discounts: item.product_unit_price_discounts.map((discount) => ({
-      sequence: discount.sequence,
-      discount_type: discount.discount_type,
-      discount_value: discount.discount_value,
-    })),
-    subtotal_discounts: item.subtotal_discounts.map((discount) => ({
-      sequence: discount.sequence,
-      discount_type: discount.discount_type,
-      discount_value: discount.discount_value,
-    })),
     product_unit_is_price_include_vat: item.product_unit_is_price_include_vat,
+    price_discount: item.price_discount,
+    subtotal_discount: item.subtotal_discount,
     vat_profile_id: item.vat_profile_id,
     vat_rate: item.vat_rate,
     vat_base_numerator: item.vat_base_numerator,
@@ -937,39 +825,34 @@ const onSubmit = async () => {
   }));
 
   purchaseOrderForm.items = cleanedItems as any;
-  purchaseOrderForm.global_discounts = purchaseOrderGlobalDiscountsForm.value.map((discount) => ({
-    sequence: discount.sequence,
-    discount_type: discount.discount_type,
-    discount_value: discount.discount_value,
+  purchaseOrderForm.payments = purchaseOrderPaymentsForm.value.map((payment) => ({
+    code: payment.code,
+    date: payment.date,
+    cash_account_id: payment.cash_account_id,
+    amount: payment.amount,
+    remarks: payment.remarks,
   })) as any;
-  purchaseOrderForm.down_payments = purchaseOrderDownPaymentsForm.value.map((downPayment) => ({
-    code: downPayment.code,
-    date: downPayment.date,
-    cash_account_id: downPayment.cash_account_id,
-    amount: downPayment.amount,
-    remarks: downPayment.remarks,
-  })) as any;
-  purchaseOrderForm.refunded_down_payments = purchaseOrderRefundedDownPaymentsForm.value.map((refundedDownPayment) => ({
-    code: refundedDownPayment.code,
-    date: refundedDownPayment.date,
-    cash_account_id: refundedDownPayment.cash_account_id,
-    amount: refundedDownPayment.amount,
-    remarks: refundedDownPayment.remarks,
+  purchaseOrderForm.refunded_payments = purchaseOrderRefundedPaymentsForm.value.map((refundedPayment) => ({
+    code: refundedPayment.code,
+    date: refundedPayment.date,
+    cash_account_id: refundedPayment.cash_account_id,
+    amount: refundedPayment.amount,
+    remarks: refundedPayment.remarks,
   })) as any;
 
   emits('loading-state', true);
 
   try {
     await purchaseOrderForm.submit();
+    cacheService.removeLastEntity('PURCHASE_ORDER_CREATE');
     showAlertPlaceholder('hidden', '', null);
     emits('update-profile');
     showNotification(t('views.purchase_order.alert.create.title'), t('views.purchase_order.alert.create.message'));
     router.push({ name: 'side-menu-purchase-order-list' });
   } catch (error) {
     purchaseOrderForm.items = backupItems as any;
-    purchaseOrderForm.global_discounts = backupGlobalDiscounts as any;
-    purchaseOrderForm.down_payments = backupDownPayments as any;
-    purchaseOrderForm.refunded_down_payments = backupRefundedDownPayments as any;
+    purchaseOrderForm.payments = backupPayments as any;
+    purchaseOrderForm.refunded_payments = backupRefundedPayments as any;
     showAlertPlaceholder('danger', '', convertErrorTypeToAlertListType(error));
   } finally {
     emits('loading-state', false);
@@ -1161,7 +1044,7 @@ const onSubmit = async () => {
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
-                <!-- item amount payable -->
+                <!-- item subtotal after discount -->
                 <div class="col-span-12">
                   <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
@@ -1171,8 +1054,8 @@ const onSubmit = async () => {
                     <div class="shrink-0">
                       <Button type="button" variant="outline-secondary"
                         class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="togglePurchaseOrderItemDiscounts(index)">
-                        {{ purchaseOrderItemDiscountsExpanded[index] ? '▲' : '▼' }}
+                        @click="togglePurchaseOrderItemDetails(index)">
+                        {{ purchaseOrderItemDetailsExpanded[index] ? '▲' : '▼' }}
                       </Button>
                     </div>
                     <div class="shrink-0">
@@ -1266,7 +1149,7 @@ const onSubmit = async () => {
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
-                <!-- item amount payable -->
+                <!-- item subtotal after discount -->
                 <div class="col-span-12 md:col-span-4">
                   <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
@@ -1276,8 +1159,8 @@ const onSubmit = async () => {
                     <div class="shrink-0">
                       <Button type="button" variant="outline-secondary"
                         class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="togglePurchaseOrderItemDiscounts(index)">
-                        {{ purchaseOrderItemDiscountsExpanded[index] ? '▲' : '▼' }}
+                        @click="togglePurchaseOrderItemDetails(index)">
+                        {{ purchaseOrderItemDetailsExpanded[index] ? '▲' : '▼' }}
                       </Button>
                     </div>
                     <div class="shrink-0">
@@ -1375,7 +1258,7 @@ const onSubmit = async () => {
                   </div>
                   <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
                 </div>
-                <!-- item amount payable -->
+                <!-- item subtotal after discount -->
                 <div class="col-span-12 lg:col-span-3">
                   <FormLabel>{{ t('views.purchase_order.fields.subtotal_after_discount') }}</FormLabel>
                   <div class="flex items-start gap-2">
@@ -1385,8 +1268,8 @@ const onSubmit = async () => {
                     <div class="shrink-0">
                       <Button type="button" variant="outline-secondary"
                         class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="togglePurchaseOrderItemDiscounts(index)">
-                        {{ purchaseOrderItemDiscountsExpanded[index] ? '▲' : '▼' }}
+                        @click="togglePurchaseOrderItemDetails(index)">
+                        {{ purchaseOrderItemDetailsExpanded[index] ? '▲' : '▼' }}
                       </Button>
                     </div>
                     <div class="shrink-0">
@@ -1401,56 +1284,22 @@ const onSubmit = async () => {
               </div>
 
               <!-- item details: stacked breakdown panels for mobile and tablet -->
-              <div v-if="currentItemLayout !== 'lg' && purchaseOrderItemDiscountsExpanded[index]"
-                class="mt-4 space-y-4">
+              <div v-if="currentItemLayout !== 'lg' && purchaseOrderItemDetailsExpanded[index]" class="mt-4 space-y-4">
                 <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-5">
                   <!-- stacked panel: price and discount breakdown -->
                   <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_price_breakdown') }}</div>
 
-                  <!-- unit price discounts and derived totals -->
                   <div class="space-y-3">
-                    <div v-if="item.product_unit_price_discounts.length === 0"
-                      class="text-right text-slate-500 text-sm">
-                      {{ t('views.purchase_order.fields.product_unit_price_discounts_empty') }}
-                    </div>
-
-                    <div v-else class="space-y-3">
-                      <div v-for="(discount, discountIndex) in item.product_unit_price_discounts"
-                        :key="`${index}-price-mobile-${discountIndex}`" class="grid grid-cols-12 gap-4 gap-y-3">
-                        <div class="col-span-12 md:col-span-2">
-                          <FormLabel>{{ t('views.purchase_order.fields.sequence') }}</FormLabel>
-                          <FormInput :model-value="discountIndex + 1" readonly />
-                        </div>
-                        <div class="col-span-12 md:col-span-4">
-                          <FormLabel>{{ t('views.purchase_order.fields.discount_type') }}</FormLabel>
-                          <FormSelect v-model="discount.discount_type">
-                            <option v-for="option in discountTypeOptions" :key="option.value" :value="option.value">
-                              {{ option.label }}
-                            </option>
-                          </FormSelect>
-                        </div>
-                        <div class="col-span-12 md:col-span-6">
-                          <FormLabel>{{ t('views.purchase_order.fields.discount_value') }}</FormLabel>
-                          <div class="flex items-start gap-2">
-                            <div class="flex-1 min-w-0">
-                              <FormInputCurrency v-model="discount.discount_value" :allow-negative="false" />
-                            </div>
-                            <div class="shrink-0">
-                              <Button type="button" variant="outline-secondary"
-                                class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                                @click="removeItemPriceDiscount(index, discountIndex)">
-                                <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                        {{ t('views.purchase_order.fields.price_discount') }}
                       </div>
-                    </div>
-                    <div class="flex justify-end">
-                      <Button type="button" variant="outline-primary" @click="addItemPriceDiscount(index)">
-                        <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                        {{ t('components.buttons.create_new') }}
-                      </Button>
+                      <div class="col-span-12 md:col-span-8">
+                        <FormInputCurrency v-model="item.price_discount" :allow-negative="false"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.price_discount`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.price_discount`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.price_discount`)" />
+                      </div>
                     </div>
 
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
@@ -1470,51 +1319,17 @@ const onSubmit = async () => {
                         <FormInputCurrency :model-value="getItemUnitPriceSubtotalAfterDiscountPreview(item)" readonly />
                       </div>
                     </div>
-                  </div>
 
-                  <!-- subtotal discounts and final item subtotal -->
-                  <div class="space-y-3">
-                    <div v-if="item.subtotal_discounts.length === 0" class="text-right text-slate-500 text-sm">
-                      {{ t('views.purchase_order.fields.subtotal_discounts_empty') }}
-                    </div>
-
-                    <div v-else class="space-y-3">
-                      <div v-for="(discount, discountIndex) in item.subtotal_discounts"
-                        :key="`${index}-subtotal-mobile-${discountIndex}`" class="grid grid-cols-12 gap-4 gap-y-3">
-                        <div class="col-span-12 md:col-span-2">
-                          <FormLabel>{{ t('views.purchase_order.fields.sequence') }}</FormLabel>
-                          <FormInput :model-value="discountIndex + 1" readonly />
-                        </div>
-                        <div class="col-span-12 md:col-span-4">
-                          <FormLabel>{{ t('views.purchase_order.fields.discount_type') }}</FormLabel>
-                          <FormSelect v-model="discount.discount_type">
-                            <option v-for="option in discountTypeOptions" :key="option.value" :value="option.value">
-                              {{ option.label }}
-                            </option>
-                          </FormSelect>
-                        </div>
-                        <div class="col-span-12 md:col-span-6">
-                          <FormLabel>{{ t('views.purchase_order.fields.discount_value') }}</FormLabel>
-                          <div class="flex items-start gap-2">
-                            <div class="flex-1 min-w-0">
-                              <FormInputCurrency v-model="discount.discount_value" :allow-negative="false" />
-                            </div>
-                            <div class="shrink-0">
-                              <Button type="button" variant="outline-secondary"
-                                class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                                @click="removeItemSubtotalDiscount(index, discountIndex)">
-                                <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                        {{ t('views.purchase_order.fields.subtotal_discount') }}
                       </div>
-                    </div>
-                    <div class="flex justify-end">
-                      <Button type="button" variant="outline-primary" @click="addItemSubtotalDiscount(index)">
-                        <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                        {{ t('components.buttons.create_new') }}
-                      </Button>
+                      <div class="col-span-12 md:col-span-8">
+                        <FormInputCurrency v-model="item.subtotal_discount" :allow-negative="false"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.subtotal_discount`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.subtotal_discount`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.subtotal_discount`)" />
+                      </div>
                     </div>
 
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
@@ -1592,9 +1407,9 @@ const onSubmit = async () => {
                 </div>
               </div>
               <!-- item details: desktop breakdown panels -->
-              <div v-else-if="purchaseOrderItemDiscountsExpanded[index]" class="mt-4 grid grid-cols-12 gap-4">
+              <div v-else-if="purchaseOrderItemDetailsExpanded[index]" class="mt-4 grid grid-cols-12 gap-4">
                 <div class="col-span-12 lg:col-span-6">
-                  <!-- right panel: tax and additional item metadata -->
+                  <!-- left panel: tax and additional item metadata -->
                   <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-4">
                     <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_additional_details') }}
                     </div>
@@ -1663,53 +1478,20 @@ const onSubmit = async () => {
                 </div>
                 <div class="col-span-12 lg:col-span-6">
                   <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-5">
-                    <!-- left panel: price and discount breakdown -->
+                    <!-- right panel: price and discount breakdown -->
                     <div class="font-medium text-sm">{{ t('views.purchase_order.fields.item_price_breakdown') }}</div>
 
-                    <!-- unit price discounts and derived totals -->
                     <div class="space-y-3">
-                      <div v-if="item.product_unit_price_discounts.length === 0"
-                        class="text-right text-slate-500 text-sm">
-                        {{ t('views.purchase_order.fields.product_unit_price_discounts_empty') }}
-                      </div>
-
-                      <div v-else class="space-y-3">
-                        <div v-for="(discount, discountIndex) in item.product_unit_price_discounts"
-                          :key="`${index}-price-${discountIndex}`" class="grid grid-cols-12 gap-4 gap-y-3">
-                          <div class="col-span-12 md:col-span-2">
-                            <FormLabel>{{ t('views.purchase_order.fields.sequence') }}</FormLabel>
-                            <FormInput :model-value="discountIndex + 1" readonly />
-                          </div>
-                          <div class="col-span-12 md:col-span-4">
-                            <FormLabel>{{ t('views.purchase_order.fields.discount_type') }}</FormLabel>
-                            <FormSelect v-model="discount.discount_type">
-                              <option v-for="option in discountTypeOptions" :key="option.value" :value="option.value">
-                                {{ option.label }}
-                              </option>
-                            </FormSelect>
-                          </div>
-                          <div class="col-span-12 md:col-span-6">
-                            <FormLabel>{{ t('views.purchase_order.fields.discount_value') }}</FormLabel>
-                            <div class="flex items-start gap-2">
-                              <div class="flex-1">
-                                <FormInputCurrency v-model="discount.discount_value" :allow-negative="false" />
-                              </div>
-                              <div class="shrink-0">
-                                <Button type="button" variant="outline-secondary"
-                                  class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                                  @click="removeItemPriceDiscount(index, discountIndex)">
-                                  <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
+                      <div class="grid grid-cols-12 gap-4 gap-y-3">
+                        <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                          {{ t('views.purchase_order.fields.price_discount') }}
                         </div>
-                      </div>
-                      <div class="flex justify-end">
-                        <Button type="button" variant="outline-primary" @click="addItemPriceDiscount(index)">
-                          <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                          {{ t('components.buttons.create_new') }}
-                        </Button>
+                        <div class="col-span-12 md:col-span-8">
+                          <FormInputCurrency v-model="item.price_discount" :allow-negative="false"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.price_discount`) }"
+                            @change="validatePurchaseOrderField(`items.${index}.price_discount`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.price_discount`)" />
+                        </div>
                       </div>
 
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
@@ -1730,51 +1512,18 @@ const onSubmit = async () => {
                             readonly />
                         </div>
                       </div>
-                    </div>
 
-                    <!-- subtotal discounts and final item subtotal -->
-                    <div class="space-y-3">
-                      <div v-if="item.subtotal_discounts.length === 0" class="text-right text-slate-500 text-sm">
-                        {{ t('views.purchase_order.fields.subtotal_discounts_empty') }}
-                      </div>
-
-                      <div v-else class="space-y-3">
-                        <div v-for="(discount, discountIndex) in item.subtotal_discounts"
-                          :key="`${index}-subtotal-${discountIndex}`" class="grid grid-cols-12 gap-4 gap-y-3">
-                          <div class="col-span-12 md:col-span-2">
-                            <FormLabel>{{ t('views.purchase_order.fields.sequence') }}</FormLabel>
-                            <FormInput :model-value="discountIndex + 1" readonly />
-                          </div>
-                          <div class="col-span-12 md:col-span-4">
-                            <FormLabel>{{ t('views.purchase_order.fields.discount_type') }}</FormLabel>
-                            <FormSelect v-model="discount.discount_type">
-                              <option v-for="option in discountTypeOptions" :key="option.value" :value="option.value">
-                                {{ option.label }}
-                              </option>
-                            </FormSelect>
-                          </div>
-                          <div class="col-span-12 md:col-span-6">
-                            <FormLabel>{{ t('views.purchase_order.fields.discount_value') }}</FormLabel>
-                            <div class="flex items-start gap-2">
-                              <div class="flex-1">
-                                <FormInputCurrency v-model="discount.discount_value" :allow-negative="false" />
-                              </div>
-                              <div class="shrink-0">
-                                <Button type="button" variant="outline-secondary"
-                                  class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                                  @click="removeItemSubtotalDiscount(index, discountIndex)">
-                                  <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
+                      <div class="grid grid-cols-12 gap-4 gap-y-3">
+                        <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                          {{ t('views.purchase_order.fields.subtotal_discount') }}
                         </div>
-                      </div>
-                      <div class="flex justify-end">
-                        <Button type="button" variant="outline-primary" @click="addItemSubtotalDiscount(index)">
-                          <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                          {{ t('components.buttons.create_new') }}
-                        </Button>
+                        <div class="col-span-12 md:col-span-8">
+                          <FormInputCurrency v-model="item.subtotal_discount" :allow-negative="false"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.subtotal_discount`) }"
+                            @change="validatePurchaseOrderField(`items.${index}.subtotal_discount`)" />
+                          <FormErrorMessages
+                            :messages="getPurchaseOrderFieldErrors(`items.${index}.subtotal_discount`)" />
+                        </div>
                       </div>
 
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
@@ -1803,9 +1552,9 @@ const onSubmit = async () => {
       <!-- card: financial summary -->
       <template #card-items-3>
         <div class="p-5 space-y-4">
-          <!-- summary card: item totals, global discounts, and down payments -->
+          <!-- summary card: item totals, global discount, and payments -->
           <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400 p-4 space-y-4">
-            <!-- summary: total amount payable of all items after item-level discounts -->
+            <!-- summary: total of all items after item-level discounts -->
             <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
               <!-- summary spacer: keeps totals aligned to the right on desktop -->
               <div class="col-span-12 lg:col-span-9"></div>
@@ -1817,79 +1566,18 @@ const onSubmit = async () => {
 
             <!-- summary: adjustments, totals, and payment flow -->
             <div class="space-y-4">
-              <!-- global discounts: editor -->
-              <div v-if="isGlobalDiscountEditorExpanded" class="space-y-4">
-                <FormErrorMessages :messages="purchaseOrderForm.errors.global_discounts" />
-
-                <!-- global discounts: empty state -->
-                <div v-if="purchaseOrderGlobalDiscountsForm.length === 0" class="text-right text-slate-500 text-sm">
-                  {{ t('components.data-list.data_not_found') }}
-                </div>
-
-                <!-- global discounts: list -->
-                <div v-else class="space-y-3">
-                  <div v-for="(discount, index) in purchaseOrderGlobalDiscountsForm" :key="`global-discount-${index}`"
-                    class="grid grid-cols-12 gap-4 gap-y-3">
-                    <div class="col-span-12 md:col-span-4 lg:col-span-6">
-
-                    </div>
-                    <div class="col-span-12 md:col-span-2 lg:col-span-1">
-                      <FormLabel>{{ t('views.purchase_order.fields.sequence') }}</FormLabel>
-                      <FormInput :model-value="index + 1" readonly />
-                    </div>
-                    <div class="col-span-12 md:col-span-3 lg:col-span-3">
-                      <FormLabel>{{ t('views.purchase_order.fields.discount_type') }}</FormLabel>
-                      <FormSelect v-model="discount.discount_type">
-                        <option v-for="option in discountTypeOptions" :key="option.value" :value="option.value">
-                          {{ option.label }}
-                        </option>
-                      </FormSelect>
-                    </div>
-                    <div class="col-span-12 md:col-span-3 lg:col-span-2">
-                      <FormLabel>{{ t('views.purchase_order.fields.discount_value') }}</FormLabel>
-                      <div class="flex items-start gap-2">
-                        <div class="flex-1 min-w-0">
-                          <FormInputCurrency v-model="discount.discount_value" :allow-negative="false" />
-                        </div>
-                        <div class="shrink-0">
-                          <Button type="button" variant="outline-secondary"
-                            class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                            @click="removeGlobalDiscount(index)">
-                            <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- global discounts: add action -->
-                <div class="flex justify-end">
-                  <Button type="button" variant="outline-primary" @click="addGlobalDiscount">
-                    <Lucide icon="Plus" class="w-4 h-4 mr-1" />
-                    {{ t('components.buttons.create_new') }}
-                  </Button>
-                </div>
-              </div>
-
-              <!-- global discounts: collapsed summary row and expand trigger -->
+              <!-- global discount: single nominal input -->
               <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
                 <!-- summary spacer: keeps the numeric field aligned with other totals -->
                 <div class="col-span-12 lg:col-span-9"></div>
                 <div class="col-span-12 lg:col-span-3">
-                  <FormLabel>{{ t('views.purchase_order.fields.global_discount_total') }}</FormLabel>
-                  <div class="flex items-start gap-2">
-                    <div class="shrink-0">
-                      <Button type="button" variant="outline-secondary"
-                        class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                        @click="isGlobalDiscountEditorExpanded = !isGlobalDiscountEditorExpanded">
-                        {{ isGlobalDiscountEditorExpanded ? '▲' : '▼' }}
-                      </Button>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <FormInputCurrency :model-value="getPurchaseOrderGlobalDiscountPreview()" readonly />
-                    </div>
-                  </div>
+                  <FormLabel :class="{ 'text-danger': purchaseOrderForm.invalid('global_discount') }">
+                    {{ t('views.purchase_order.fields.global_discount') }}
+                  </FormLabel>
+                  <FormInputCurrency v-model="purchaseOrderForm.global_discount" :allow-negative="false"
+                    :class="{ 'border-danger': purchaseOrderForm.invalid('global_discount') }"
+                    @change="purchaseOrderForm.validate('global_discount')" />
+                  <FormErrorMessages :messages="purchaseOrderForm.errors.global_discount" />
                 </div>
               </div>
 
@@ -1938,7 +1626,7 @@ const onSubmit = async () => {
                 </div>
               </template>
 
-              <!-- summary: amount payable after applying global discounts and rounding -->
+              <!-- summary: amount payable after applying global discount and rounding -->
               <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
                 <!-- summary spacer: keeps the numeric field aligned with other totals -->
                 <div class="col-span-12 lg:col-span-9"></div>
@@ -1959,113 +1647,104 @@ const onSubmit = async () => {
                 </div>
               </div>
 
-              <!-- summary: down payment editor and aggregates -->
+              <!-- summary: payment editor and aggregates -->
               <div class="space-y-4">
-                <!-- down payments: editor -->
-                <div v-if="isDownPaymentEditorExpanded" class="space-y-4">
-                  <FormErrorMessages :messages="purchaseOrderForm.errors.down_payments" />
+                <!-- payments: editor -->
+                <div v-if="isPaymentEditorExpanded" class="space-y-4">
+                  <FormErrorMessages :messages="purchaseOrderForm.errors.payments" />
 
-                  <!-- down payments: empty state -->
-                  <div v-if="purchaseOrderDownPaymentsForm.length === 0" class="text-right text-slate-500 text-sm">
+                  <!-- payments: empty state -->
+                  <div v-if="purchaseOrderPaymentsForm.length === 0" class="text-right text-slate-500 text-sm">
                     {{ t('components.data-list.data_not_found') }}
                   </div>
 
-                  <!-- down payments: list -->
+                  <!-- payments: list -->
                   <div v-else class="space-y-4">
-                    <div v-for="(downPayment, index) in purchaseOrderDownPaymentsForm" :key="`down-payment-${index}`"
+                    <div v-for="(payment, index) in purchaseOrderPaymentsForm" :key="`payment-${index}`"
                       class="space-y-3">
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
-                        <!-- down payment spacer: keeps editor fields aligned to the right side -->
+                        <!-- payment spacer: keeps editor fields aligned to the right side -->
                         <div class="col-span-12 md:col-span-6 lg:col-span-2"></div>
                         <div class="col-span-12 md:col-span-6 lg:col-span-2">
-                          <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`down_payments.${index}.code`) }">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`payments.${index}.code`) }">
                             {{ t('views.purchase_order.fields.code') }}
                           </FormLabel>
-                          <FormInputCode v-model="downPayment.code"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`down_payments.${index}.code`) }"
-                            :placeholder="t('views.purchase_order.fields.code')" @set-auto="setDownPaymentCode(index)"
-                            @change="validatePurchaseOrderField(`down_payments.${index}.code`)" />
-                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.code`)" />
+                          <FormInputCode v-model="payment.code"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`payments.${index}.code`) }"
+                            :placeholder="t('views.purchase_order.fields.code')" @set-auto="setPaymentCode(index)"
+                            @change="validatePurchaseOrderField(`payments.${index}.code`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`payments.${index}.code`)" />
                         </div>
                         <div class="col-span-12 md:col-span-6 lg:col-span-4">
-                          <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`down_payments.${index}.date`) }">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`payments.${index}.date`) }">
                             {{ t('views.purchase_order.fields.date') }}
                           </FormLabel>
-                          <FormInputDateTimeAuto v-model="downPayment.date"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`down_payments.${index}.date`) }"
+                          <FormInputDateTimeAuto v-model="payment.date"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`payments.${index}.date`) }"
                             :placeholder="t('views.purchase_order.fields.date')"
-                            @change="validatePurchaseOrderField(`down_payments.${index}.date`)" />
-                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.date`)" />
+                            @change="validatePurchaseOrderField(`payments.${index}.date`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`payments.${index}.date`)" />
                         </div>
                         <div class="col-span-12 md:col-span-8 lg:col-span-2">
                           <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`down_payments.${index}.cash_account_id`) }">
+                            :class="{ 'text-danger': invalidPurchaseOrderField(`payments.${index}.cash_account_id`) }">
                             {{ t('views.purchase_order.fields.cash_account_id') }}
                           </FormLabel>
-                          <FormSelectSearch v-model="downPayment.cash_account_id" v-model:search="cashAccountSearch"
+                          <FormSelectSearch v-model="payment.cash_account_id" v-model:search="cashAccountSearch"
                             :options="cashAccountOptions" :placeholder="t('components.dropdown.placeholder')"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`down_payments.${index}.cash_account_id`) }"
-                            @change="validatePurchaseOrderField(`down_payments.${index}.cash_account_id`)"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`payments.${index}.cash_account_id`) }"
+                            @change="validatePurchaseOrderField(`payments.${index}.cash_account_id`)"
                             @search="loadCashAccountDDL" @clear="clearCashAccount(index)" />
                           <FormErrorMessages
-                            :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.cash_account_id`)" />
+                            :messages="getPurchaseOrderFieldErrors(`payments.${index}.cash_account_id`)" />
                         </div>
                         <div class="col-span-12 md:col-span-4 lg:col-span-2">
-                          <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`down_payments.${index}.amount`) }">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`payments.${index}.amount`) }">
                             {{ t('views.purchase_order.fields.amount') }}
                           </FormLabel>
                           <div class="flex items-start gap-2">
                             <div class="flex-1 min-w-0">
-                              <FormInputCurrency v-model="downPayment.amount" :allow-negative="false"
-                                :class="{ 'border-danger': invalidPurchaseOrderField(`down_payments.${index}.amount`) }"
-                                @change="validatePurchaseOrderField(`down_payments.${index}.amount`)" />
+                              <FormInputCurrency v-model="payment.amount" :allow-negative="false"
+                                :class="{ 'border-danger': invalidPurchaseOrderField(`payments.${index}.amount`) }"
+                                @change="validatePurchaseOrderField(`payments.${index}.amount`)" />
                             </div>
                             <div class="shrink-0">
                               <Button type="button" variant="outline-secondary"
                                 class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                                @click="removeDownPayment(index)">
+                                @click="removePayment(index)">
                                 <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                               </Button>
                             </div>
                           </div>
-                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.amount`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`payments.${index}.amount`)" />
                         </div>
                       </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
-                        <!-- down payment spacer: keeps remarks width consistent with fields above -->
+                        <!-- payment spacer: keeps remarks width consistent with fields above -->
                         <div class="col-span-12 lg:col-span-2"></div>
-                        <div class="col-span-12 lg:col-span-7">
-                          <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`down_payments.${index}.remarks`) }">
+                        <div class="col-span-12 lg:col-span-10">
+                          <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`payments.${index}.remarks`) }">
                             {{ t('views.purchase_order.fields.remarks') }}
                           </FormLabel>
-                          <FormTextarea v-model="downPayment.remarks"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`down_payments.${index}.remarks`) }"
-                            @change="validatePurchaseOrderField(`down_payments.${index}.remarks`)" />
-                          <FormErrorMessages
-                            :messages="getPurchaseOrderFieldErrors(`down_payments.${index}.remarks`)" />
-                        </div>
-                        <div class="col-span-12 lg:col-span-3">
-                          <FormLabel>{{ t('views.purchase_order.fields.amount_allocated') }}</FormLabel>
-                          <FormInputCurrency :model-value="Number(downPayment.amount_allocated ?? 0)" readonly />
+                          <FormTextarea v-model="payment.remarks"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`payments.${index}.remarks`) }"
+                            @change="validatePurchaseOrderField(`payments.${index}.remarks`)" />
+                          <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`payments.${index}.remarks`)" />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <!-- down payments: add action -->
+                  <!-- payments: add action -->
                   <div class="flex justify-end">
-                    <Button type="button" variant="outline-primary" @click="addDownPayment">
+                    <Button type="button" variant="outline-primary" @click="addPayment">
                       <Lucide icon="Plus" class="w-4 h-4 mr-1" />
                       {{ t('components.buttons.create_new') }}
                     </Button>
                   </div>
                 </div>
 
-                <!-- down payments: collapsed summary row and expand trigger -->
+                <!-- payments: collapsed summary row and expand trigger -->
                 <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
                   <!-- summary spacer: keeps the numeric field aligned with other totals -->
                   <div class="col-span-12 lg:col-span-9"></div>
@@ -2075,111 +1754,111 @@ const onSubmit = async () => {
                       <div class="shrink-0">
                         <Button type="button" variant="outline-secondary"
                           class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                          @click="isDownPaymentEditorExpanded = !isDownPaymentEditorExpanded">
-                          {{ isDownPaymentEditorExpanded ? '▲' : '▼' }}
+                          @click="isPaymentEditorExpanded = !isPaymentEditorExpanded">
+                          {{ isPaymentEditorExpanded ? '▲' : '▼' }}
                         </Button>
                       </div>
                       <div class="flex-1 min-w-0">
-                        <FormInputCurrency :model-value="getDownPaymentsTotalPreview()" readonly />
+                        <FormInputCurrency :model-value="getPaymentsTotalPreview()" readonly />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div v-if="isRefundedDownPaymentEditorExpanded" class="space-y-4">
-                  <FormErrorMessages :messages="purchaseOrderForm.errors.refunded_down_payments" />
+                <!-- refunded payments: editor -->
+                <div v-if="isRefundedPaymentEditorExpanded" class="space-y-4">
+                  <FormErrorMessages :messages="purchaseOrderForm.errors.refunded_payments" />
 
-                  <div v-if="purchaseOrderRefundedDownPaymentsForm.length === 0"
-                    class="text-right text-slate-500 text-sm">
+                  <div v-if="purchaseOrderRefundedPaymentsForm.length === 0" class="text-right text-slate-500 text-sm">
                     {{ t('components.data-list.data_not_found') }}
                   </div>
 
                   <div v-else class="space-y-4">
-                    <div v-for="(refundedDownPayment, index) in purchaseOrderRefundedDownPaymentsForm"
-                      :key="`refunded-down-payment-${index}`" class="space-y-3">
+                    <div v-for="(refundedPayment, index) in purchaseOrderRefundedPaymentsForm"
+                      :key="`refunded-payment-${index}`" class="space-y-3">
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 md:col-span-6 lg:col-span-2"></div>
                         <div class="col-span-12 md:col-span-6 lg:col-span-2">
                           <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.code`) }">
+                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_payments.${index}.code`) }">
                             {{ t('views.purchase_order.fields.code') }}
                           </FormLabel>
-                          <FormInputCode v-model="refundedDownPayment.code"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.code`) }"
+                          <FormInputCode v-model="refundedPayment.code"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_payments.${index}.code`) }"
                             :placeholder="t('views.purchase_order.fields.code')"
-                            @set-auto="setRefundedDownPaymentCode(index)"
-                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.code`)" />
+                            @set-auto="setRefundedPaymentCode(index)"
+                            @change="validatePurchaseOrderField(`refunded_payments.${index}.code`)" />
                           <FormErrorMessages
-                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.code`)" />
+                            :messages="getPurchaseOrderFieldErrors(`refunded_payments.${index}.code`)" />
                         </div>
                         <div class="col-span-12 md:col-span-6 lg:col-span-4">
                           <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.date`) }">
+                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_payments.${index}.date`) }">
                             {{ t('views.purchase_order.fields.date') }}
                           </FormLabel>
-                          <FormInputDateTimeAuto v-model="refundedDownPayment.date"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.date`) }"
+                          <FormInputDateTimeAuto v-model="refundedPayment.date"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_payments.${index}.date`) }"
                             :placeholder="t('views.purchase_order.fields.date')"
-                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.date`)" />
+                            @change="validatePurchaseOrderField(`refunded_payments.${index}.date`)" />
                           <FormErrorMessages
-                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.date`)" />
+                            :messages="getPurchaseOrderFieldErrors(`refunded_payments.${index}.date`)" />
                         </div>
                         <div class="col-span-12 md:col-span-8 lg:col-span-2">
                           <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`) }">
+                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_payments.${index}.cash_account_id`) }">
                             {{ t('views.purchase_order.fields.cash_account_id') }}
                           </FormLabel>
-                          <FormSelectSearch v-model="refundedDownPayment.cash_account_id"
+                          <FormSelectSearch v-model="refundedPayment.cash_account_id"
                             v-model:search="cashAccountSearch" :options="cashAccountOptions"
                             :placeholder="t('components.dropdown.placeholder')"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`) }"
-                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.cash_account_id`)"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_payments.${index}.cash_account_id`) }"
+                            @change="validatePurchaseOrderField(`refunded_payments.${index}.cash_account_id`)"
                             @search="loadCashAccountDDL" @clear="clearRefundedCashAccount(index)" />
                           <FormErrorMessages
-                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.cash_account_id`)" />
+                            :messages="getPurchaseOrderFieldErrors(`refunded_payments.${index}.cash_account_id`)" />
                         </div>
                         <div class="col-span-12 md:col-span-4 lg:col-span-2">
                           <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.amount`) }">
+                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_payments.${index}.amount`) }">
                             {{ t('views.purchase_order.fields.amount') }}
                           </FormLabel>
                           <div class="flex items-start gap-2">
                             <div class="flex-1 min-w-0">
-                              <FormInputCurrency v-model="refundedDownPayment.amount" :allow-negative="false"
-                                :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.amount`) }"
-                                @change="validatePurchaseOrderField(`refunded_down_payments.${index}.amount`)" />
+                              <FormInputCurrency v-model="refundedPayment.amount" :allow-negative="false"
+                                :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_payments.${index}.amount`) }"
+                                @change="validatePurchaseOrderField(`refunded_payments.${index}.amount`)" />
                             </div>
                             <div class="shrink-0">
                               <Button type="button" variant="outline-secondary"
                                 class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                                @click="removeRefundedDownPayment(index)">
+                                @click="removeRefundedPayment(index)">
                                 <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                               </Button>
                             </div>
                           </div>
                           <FormErrorMessages
-                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.amount`)" />
+                            :messages="getPurchaseOrderFieldErrors(`refunded_payments.${index}.amount`)" />
                         </div>
                       </div>
                       <div class="grid grid-cols-12 gap-4 gap-y-3">
                         <div class="col-span-12 lg:col-span-2"></div>
                         <div class="col-span-12 lg:col-span-10">
                           <FormLabel
-                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.remarks`) }">
+                            :class="{ 'text-danger': invalidPurchaseOrderField(`refunded_payments.${index}.remarks`) }">
                             {{ t('views.purchase_order.fields.remarks') }}
                           </FormLabel>
-                          <FormTextarea v-model="refundedDownPayment.remarks"
-                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_down_payments.${index}.remarks`) }"
-                            @change="validatePurchaseOrderField(`refunded_down_payments.${index}.remarks`)" />
+                          <FormTextarea v-model="refundedPayment.remarks"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`refunded_payments.${index}.remarks`) }"
+                            @change="validatePurchaseOrderField(`refunded_payments.${index}.remarks`)" />
                           <FormErrorMessages
-                            :messages="getPurchaseOrderFieldErrors(`refunded_down_payments.${index}.remarks`)" />
+                            :messages="getPurchaseOrderFieldErrors(`refunded_payments.${index}.remarks`)" />
                         </div>
                       </div>
                     </div>
                   </div>
 
                   <div class="flex justify-end">
-                    <Button type="button" variant="outline-primary" @click="addRefundedDownPayment">
+                    <Button type="button" variant="outline-primary" @click="addRefundedPayment">
                       <Lucide icon="Plus" class="w-4 h-4 mr-1" />
                       {{ t('components.buttons.create_new') }}
                     </Button>
@@ -2194,12 +1873,12 @@ const onSubmit = async () => {
                       <div class="shrink-0">
                         <Button type="button" variant="outline-secondary"
                           class="h-[38px] w-[38px] min-w-0 flex items-center justify-center"
-                          @click="isRefundedDownPaymentEditorExpanded = !isRefundedDownPaymentEditorExpanded">
-                          {{ isRefundedDownPaymentEditorExpanded ? '▲' : '▼' }}
+                          @click="isRefundedPaymentEditorExpanded = !isRefundedPaymentEditorExpanded">
+                          {{ isRefundedPaymentEditorExpanded ? '▲' : '▼' }}
                         </Button>
                       </div>
                       <div class="flex-1 min-w-0">
-                        <FormInputCurrency :model-value="getRefundedDownPaymentsTotalPreview()" readonly />
+                        <FormInputCurrency :model-value="getRefundedPaymentsTotalPreview()" readonly />
                       </div>
                     </div>
                   </div>
@@ -2208,19 +1887,10 @@ const onSubmit = async () => {
                 <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
                   <div class="col-span-12 lg:col-span-9"></div>
                   <div class="col-span-12 lg:col-span-3">
-                    <FormLabel>{{ t('views.purchase_order.fields.amount_allocated_down_payment') }}</FormLabel>
-                    <FormInputCurrency :model-value="getAllocatedDownPaymentsTotalPreview()" readonly />
-                  </div>
-                </div>
-
-                <div class="grid grid-cols-12 gap-4 gap-y-3 items-end">
-                  <div class="col-span-12 lg:col-span-9"></div>
-                  <div class="col-span-12 lg:col-span-3">
                     <FormLabel>{{ t('views.purchase_order.fields.amount_available_down_payment') }}</FormLabel>
-                    <FormInputCurrency :model-value="getAvailableDownPaymentsTotalPreview()" readonly />
+                    <FormInputCurrency :model-value="getAvailablePaymentsTotalPreview()" readonly />
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

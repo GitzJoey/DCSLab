@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('code');
             $table->dateTime('date');
             $table->foreignId('supplier_id')->references('id')->on('suppliers');
-            $table->foreignId('purchase_id')->nullable()->references('id')->on('purchases');
+            $table->foreignId('purchase_invoice_id')->nullable()->references('id')->on('purchase_invoices');
+            $table->foreignId('warehouse_id')->references('id')->on('warehouses');
 
             // Header advanced
             $table->string('remarks')->nullable();
@@ -31,11 +32,10 @@ return new class extends Migration
             $table->decimal('vat_base', 30, 8)->default(0);
             $table->decimal('vat', 30, 8)->default(0);
             $table->decimal('item_total_after_vat', 30, 8)->default(0);
-            $table->decimal('additional_cost', 30, 8)->default(0);
             $table->decimal('rounding', 30, 8)->default(0);
             $table->decimal('amount_payable', 30, 8)->default(0);
-            // nilai retur yang dipakai memotong purchase lain
-            $table->decimal('amount_allocated_to_purchase', 30, 8)->default(0);
+            // nilai retur yang dipakai memotong purchase invoice
+            $table->decimal('amount_allocated_to_invoice', 30, 8)->default(0);
             // uang yang benar-benar sudah diterima dari supplier
             $table->decimal('amount_received_total', 30, 8)->default(0);
             // total penyelesaian retur

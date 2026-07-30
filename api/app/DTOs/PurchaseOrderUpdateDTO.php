@@ -10,12 +10,8 @@ final class PurchaseOrderUpdateDTO
         public readonly int $dueDays,
         public readonly ?int $supplierId,
         public readonly ?string $remarks,
+        public readonly float $globalDiscount,
         public readonly float $rounding,
-
-        /** @var int[] */
-        public readonly array $deleteGlobalDiscountIds,
-        /** @var array<int, array<string, mixed>> */
-        public readonly array $globalDiscounts,
 
         /** @var int[] */
         public readonly array $deleteItemIds,
@@ -23,14 +19,14 @@ final class PurchaseOrderUpdateDTO
         public readonly array $items,
 
         /** @var int[] */
-        public readonly array $deleteDownPaymentIds,
+        public readonly array $deletePaymentIds,
         /** @var array<int, array<string, mixed>> */
-        public readonly array $downPayments,
+        public readonly array $payments,
 
         /** @var int[] */
-        public readonly array $deleteRefundedDownPaymentIds,
+        public readonly array $deleteRefundedPaymentIds,
         /** @var array<int, array<string, mixed>> */
-        public readonly array $refundedDownPayments,
+        public readonly array $refundedPayments,
     ) {
     }
 }

@@ -2,23 +2,19 @@
 
 namespace App\Actions\PurchaseOrder;
 
-use App\Actions\PurchaseOrderDownPayment\PurchaseOrderDownPaymentActions;
-use App\Actions\PurchaseOrderDownPaymentRefund\PurchaseOrderDownPaymentRefundActions;
-use App\Actions\PurchaseOrderGlobalDiscount\PurchaseOrderGlobalDiscountActions;
 use App\Actions\PurchaseOrderItem\PurchaseOrderItemActions;
+use App\Actions\PurchaseOrderPayment\PurchaseOrderPaymentActions;
+use App\Actions\PurchaseOrderPaymentRefund\PurchaseOrderPaymentRefundActions;
 use App\DTOs\ExecuteDTO;
 use App\DTOs\PurchaseOrderCreateDTO;
-use App\DTOs\PurchaseOrderDownPaymentCreateDTO;
-use App\DTOs\PurchaseOrderDownPaymentRefundCreateDTO;
-use App\DTOs\PurchaseOrderDownPaymentRefundUpdateDTO;
-use App\DTOs\PurchaseOrderDownPaymentUpdateDTO;
-use App\DTOs\PurchaseOrderGlobalDiscountCreateDTO;
-use App\DTOs\PurchaseOrderGlobalDiscountUpdateDTO;
 use App\DTOs\PurchaseOrderItemCreateDTO;
 use App\DTOs\PurchaseOrderItemUpdateDTO;
+use App\DTOs\PurchaseOrderPaymentCreateDTO;
+use App\DTOs\PurchaseOrderPaymentRefundCreateDTO;
+use App\DTOs\PurchaseOrderPaymentRefundUpdateDTO;
+use App\DTOs\PurchaseOrderPaymentUpdateDTO;
 use App\DTOs\PurchaseOrderUpdateDTO;
-use App\Enums\DiscountTypeEnum;
-use App\Enums\PurchaseProgressStatusEnum;
+use App\Enums\ProgressStatusEnum;
 use App\Helpers\TimezoneHelper;
 use App\Models\Company;
 use App\Models\PurchaseOrder;
@@ -42,7 +38,6 @@ class PurchaseOrderActions
         'company',
         'branch',
         'supplier',
-        'globalDiscounts',
         'items.productUnit.unit',
         'items.productUnit.product.category',
         'items.productUnit.product.brand',
@@ -50,30 +45,15 @@ class PurchaseOrderActions
         'items.productUnit.product.images',
         'items.productUnit.product.mainImage',
         'items.vatProfile',
-        'items.productUnitPriceDiscounts',
-        'items.subtotalDiscounts',
-        'downPayments.cashAccount',
-        'refundedDownPayments.cashAccount',
+        'payments.cashAccount',
+        'refundedPayments.cashAccount',
     ];
 
-    private $purchaseOrderItemActions;
-
-    private $purchaseOrderGlobalDiscountActions;
-
-    private $purchaseOrderDownPaymentActions;
-
-    private $purchaseOrderDownPaymentRefundActions;
-
     public function __construct(
-        PurchaseOrderItemActions $purchaseOrderItemActions,
-        PurchaseOrderGlobalDiscountActions $purchaseOrderGlobalDiscountActions,
-        PurchaseOrderDownPaymentActions $purchaseOrderDownPaymentActions,
-        PurchaseOrderDownPaymentRefundActions $purchaseOrderDownPaymentRefundActions,
+        private PurchaseOrderItemActions $purchaseOrderItemActions,
+        private PurchaseOrderPaymentActions $purchaseOrderPaymentActions,
+        private PurchaseOrderPaymentRefundActions $purchaseOrderPaymentRefundActions,
     ) {
-        $this->purchaseOrderItemActions = $purchaseOrderItemActions;
-        $this->purchaseOrderGlobalDiscountActions = $purchaseOrderGlobalDiscountActions;
-        $this->purchaseOrderDownPaymentActions = $purchaseOrderDownPaymentActions;
-        $this->purchaseOrderDownPaymentRefundActions = $purchaseOrderDownPaymentRefundActions;
     }
 
     public function readAny(
@@ -115,8 +95,8 @@ class PurchaseOrderActions
 
             if ($search) {
                 $query->where(function ($query) use ($search) {
-                    $query->where('code', 'like', '%'.$search.'%')
-                        ->orWhere('remarks', 'like', '%'.$search.'%');
+                    $query->where('purchase_orders.code', 'like', '%'.$search.'%')
+                        ->orWhere('purchase_orders.remarks', 'like', '%'.$search.'%');
                 });
             }
 
@@ -204,7 +184,7 @@ class PurchaseOrderActions
 
     public function getProgressStatuses(): array
     {
-        return PurchaseProgressStatusEnum::toDropDownOptions('views.purchase_order.filters.progress_status_');
+        return ProgressStatusEnum::toDropDownOptions('views.purchase_order.filters.progress_status_');
     }
 
     public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
@@ -263,6 +243,7 @@ class PurchaseOrderActions
             $purchaseOrder->due_days = $data->dueDays;
             $purchaseOrder->supplier_id = $data->supplierId;
             $purchaseOrder->remarks = $data->remarks;
+            $purchaseOrder->global_discount = $data->globalDiscount;
             $purchaseOrder->rounding = $data->rounding;
             $purchaseOrder->save();
 
@@ -276,8 +257,8 @@ class PurchaseOrderActions
                     productUnitConversionValue: $item['product_unit_conversion_value'],
                     productUnitPrice: $item['product_unit_price'],
                     productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
-                    productUnitPriceDiscounts: $item['product_unit_price_discounts'],
-                    subtotalDiscounts: $item['subtotal_discounts'],
+                    priceDiscount: (float) $item['price_discount'],
+                    subtotalDiscount: (float) $item['subtotal_discount'],
                     vatProfileId: $item['vat_profile_id'],
                     vatRate: $item['vat_rate'],
                     vatBaseNumerator: $item['vat_base_numerator'],
@@ -288,47 +269,34 @@ class PurchaseOrderActions
                 $this->purchaseOrderItemActions->create($dto, false);
             }
 
-            foreach ($data->globalDiscounts as $globalDiscount) {
-                $dto = new PurchaseOrderGlobalDiscountCreateDTO(
+            foreach ($data->payments as $payment) {
+                $dto = new PurchaseOrderPaymentCreateDTO(
                     companyId: $purchaseOrder->company_id,
                     branchId: $purchaseOrder->branch_id,
                     purchaseOrderId: $purchaseOrder->id,
-                    sequence: $globalDiscount['sequence'],
-                    discountType: $globalDiscount['discount_type'],
-                    discountValue: $globalDiscount['discount_value'],
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: (float) $payment['amount'],
+                    remarks: $payment['remarks'],
                 );
 
-                $this->purchaseOrderGlobalDiscountActions->create($dto);
+                $this->purchaseOrderPaymentActions->create($dto, false);
             }
 
-            foreach ($data->downPayments as $downPayment) {
-                $dto = new PurchaseOrderDownPaymentCreateDTO(
+            foreach ($data->refundedPayments as $refundedPayment) {
+                $dto = new PurchaseOrderPaymentRefundCreateDTO(
                     companyId: $purchaseOrder->company_id,
                     branchId: $purchaseOrder->branch_id,
                     purchaseOrderId: $purchaseOrder->id,
-                    code: $downPayment['code'],
-                    date: $downPayment['date'],
-                    cashAccountId: $downPayment['cash_account_id'],
-                    amount: $downPayment['amount'],
-                    remarks: $downPayment['remarks'],
+                    code: $refundedPayment['code'],
+                    date: $refundedPayment['date'],
+                    cashAccountId: $refundedPayment['cash_account_id'],
+                    amount: (float) $refundedPayment['amount'],
+                    remarks: $refundedPayment['remarks'],
                 );
 
-                $this->purchaseOrderDownPaymentActions->create($dto, false);
-            }
-
-            foreach ($data->refundedDownPayments as $refundedDownPayment) {
-                $dto = new PurchaseOrderDownPaymentRefundCreateDTO(
-                    companyId: $purchaseOrder->company_id,
-                    branchId: $purchaseOrder->branch_id,
-                    purchaseOrderId: $purchaseOrder->id,
-                    code: $refundedDownPayment['code'],
-                    date: $refundedDownPayment['date'],
-                    cashAccountId: $refundedDownPayment['cash_account_id'],
-                    amount: $refundedDownPayment['amount'],
-                    remarks: $refundedDownPayment['remarks'],
-                );
-
-                $this->purchaseOrderDownPaymentRefundActions->create($dto, false);
+                $this->purchaseOrderPaymentRefundActions->create($dto, false);
             }
 
             self::updateSummary($purchaseOrder);
@@ -355,37 +323,9 @@ class PurchaseOrderActions
             $purchaseOrder->due_days = $data->dueDays;
             $purchaseOrder->supplier_id = $data->supplierId;
             $purchaseOrder->remarks = $data->remarks;
+            $purchaseOrder->global_discount = $data->globalDiscount;
             $purchaseOrder->rounding = $data->rounding;
             $purchaseOrder->save();
-
-            foreach ($data->deleteGlobalDiscountIds as $deleteId) {
-                $poGlobalDiscount = $purchaseOrder->globalDiscounts()->findOrFail($deleteId);
-                $this->purchaseOrderGlobalDiscountActions->delete($poGlobalDiscount);
-            }
-
-            foreach ($data->globalDiscounts as $globalDiscount) {
-                if (! empty($globalDiscount['id'])) {
-                    $poGlobalDiscount = $purchaseOrder->globalDiscounts()->findOrFail($globalDiscount['id']);
-                    $dto = new PurchaseOrderGlobalDiscountUpdateDTO(
-                        sequence: $globalDiscount['sequence'],
-                        discountType: $globalDiscount['discount_type'],
-                        discountValue: $globalDiscount['discount_value'],
-                    );
-
-                    $this->purchaseOrderGlobalDiscountActions->update($poGlobalDiscount, $dto);
-                } else {
-                    $dto = new PurchaseOrderGlobalDiscountCreateDTO(
-                        companyId: $purchaseOrder->company_id,
-                        branchId: $purchaseOrder->branch_id,
-                        purchaseOrderId: $purchaseOrder->id,
-                        sequence: $globalDiscount['sequence'],
-                        discountType: $globalDiscount['discount_type'],
-                        discountValue: $globalDiscount['discount_value'],
-                    );
-
-                    $this->purchaseOrderGlobalDiscountActions->create($dto);
-                }
-            }
 
             foreach ($data->deleteItemIds as $deleteId) {
                 $poItem = $purchaseOrder->items()->findOrFail($deleteId);
@@ -401,10 +341,8 @@ class PurchaseOrderActions
                         productUnitConversionValue: $item['product_unit_conversion_value'],
                         productUnitPrice: $item['product_unit_price'],
                         productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
-                        deleteProductUnitPriceDiscountIds: $item['delete_product_unit_price_discount_ids'],
-                        productUnitPriceDiscounts: $item['product_unit_price_discounts'],
-                        deleteSubtotalDiscountIds: $item['delete_subtotal_discount_ids'],
-                        subtotalDiscounts: $item['subtotal_discounts'],
+                        priceDiscount: (float) $item['price_discount'],
+                        subtotalDiscount: (float) $item['subtotal_discount'],
                         vatProfileId: $item['vat_profile_id'],
                         vatRate: $item['vat_rate'],
                         vatBaseNumerator: $item['vat_base_numerator'],
@@ -423,8 +361,8 @@ class PurchaseOrderActions
                         productUnitConversionValue: $item['product_unit_conversion_value'],
                         productUnitPrice: $item['product_unit_price'],
                         productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
-                        productUnitPriceDiscounts: $item['product_unit_price_discounts'],
-                        subtotalDiscounts: $item['subtotal_discounts'],
+                        priceDiscount: (float) $item['price_discount'],
+                        subtotalDiscount: (float) $item['subtotal_discount'],
                         vatProfileId: $item['vat_profile_id'],
                         vatRate: $item['vat_rate'],
                         vatBaseNumerator: $item['vat_base_numerator'],
@@ -436,69 +374,69 @@ class PurchaseOrderActions
                 }
             }
 
-            foreach ($data->deleteDownPaymentIds as $deleteId) {
-                $poDownPayment = $purchaseOrder->downPayments()->findOrFail($deleteId);
-                $this->purchaseOrderDownPaymentActions->delete($poDownPayment);
+            foreach ($data->deletePaymentIds as $deleteId) {
+                $poPayment = $purchaseOrder->payments()->findOrFail($deleteId);
+                $this->purchaseOrderPaymentActions->delete($poPayment);
             }
 
-            foreach ($data->downPayments as $downPayment) {
-                if (! empty($downPayment['id'])) {
-                    $poDownPayment = $purchaseOrder->downPayments()->findOrFail($downPayment['id']);
-                    $dto = new PurchaseOrderDownPaymentUpdateDTO(
-                        code: $downPayment['code'],
-                        date: $downPayment['date'],
-                        cashAccountId: $downPayment['cash_account_id'],
-                        amount: $downPayment['amount'],
-                        remarks: $downPayment['remarks'],
+            foreach ($data->payments as $payment) {
+                if (! empty($payment['id'])) {
+                    $poPayment = $purchaseOrder->payments()->findOrFail($payment['id']);
+                    $dto = new PurchaseOrderPaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: (float) $payment['amount'],
+                        remarks: $payment['remarks'],
                     );
 
-                    $this->purchaseOrderDownPaymentActions->update($poDownPayment, $dto, false);
+                    $this->purchaseOrderPaymentActions->update($poPayment, $dto, false);
                 } else {
-                    $dto = new PurchaseOrderDownPaymentCreateDTO(
+                    $dto = new PurchaseOrderPaymentCreateDTO(
                         companyId: $purchaseOrder->company_id,
                         branchId: $purchaseOrder->branch_id,
                         purchaseOrderId: $purchaseOrder->id,
-                        code: $downPayment['code'],
-                        date: $downPayment['date'],
-                        cashAccountId: $downPayment['cash_account_id'],
-                        amount: $downPayment['amount'],
-                        remarks: $downPayment['remarks'],
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: (float) $payment['amount'],
+                        remarks: $payment['remarks'],
                     );
 
-                    $this->purchaseOrderDownPaymentActions->create($dto, false);
+                    $this->purchaseOrderPaymentActions->create($dto, false);
                 }
             }
 
-            foreach ($data->deleteRefundedDownPaymentIds as $deleteId) {
-                $poRefundedDownPayment = $purchaseOrder->refundedDownPayments()->findOrFail($deleteId);
-                $this->purchaseOrderDownPaymentRefundActions->delete($poRefundedDownPayment);
+            foreach ($data->deleteRefundedPaymentIds as $deleteId) {
+                $poRefundedPayment = $purchaseOrder->refundedPayments()->findOrFail($deleteId);
+                $this->purchaseOrderPaymentRefundActions->delete($poRefundedPayment);
             }
 
-            foreach ($data->refundedDownPayments as $refundedDownPayment) {
-                if (! empty($refundedDownPayment['id'])) {
-                    $poRefundedDownPayment = $purchaseOrder->refundedDownPayments()->findOrFail($refundedDownPayment['id']);
-                    $dto = new PurchaseOrderDownPaymentRefundUpdateDTO(
-                        code: $refundedDownPayment['code'],
-                        date: $refundedDownPayment['date'],
-                        cashAccountId: $refundedDownPayment['cash_account_id'],
-                        amount: $refundedDownPayment['amount'],
-                        remarks: $refundedDownPayment['remarks'],
+            foreach ($data->refundedPayments as $refundedPayment) {
+                if (! empty($refundedPayment['id'])) {
+                    $poRefundedPayment = $purchaseOrder->refundedPayments()->findOrFail($refundedPayment['id']);
+                    $dto = new PurchaseOrderPaymentRefundUpdateDTO(
+                        code: $refundedPayment['code'],
+                        date: $refundedPayment['date'],
+                        cashAccountId: $refundedPayment['cash_account_id'],
+                        amount: (float) $refundedPayment['amount'],
+                        remarks: $refundedPayment['remarks'],
                     );
 
-                    $this->purchaseOrderDownPaymentRefundActions->update($poRefundedDownPayment, $dto, false);
+                    $this->purchaseOrderPaymentRefundActions->update($poRefundedPayment, $dto, false);
                 } else {
-                    $dto = new PurchaseOrderDownPaymentRefundCreateDTO(
+                    $dto = new PurchaseOrderPaymentRefundCreateDTO(
                         companyId: $purchaseOrder->company_id,
                         branchId: $purchaseOrder->branch_id,
                         purchaseOrderId: $purchaseOrder->id,
-                        code: $refundedDownPayment['code'],
-                        date: $refundedDownPayment['date'],
-                        cashAccountId: $refundedDownPayment['cash_account_id'],
-                        amount: $refundedDownPayment['amount'],
-                        remarks: $refundedDownPayment['remarks'],
+                        code: $refundedPayment['code'],
+                        date: $refundedPayment['date'],
+                        cashAccountId: $refundedPayment['cash_account_id'],
+                        amount: (float) $refundedPayment['amount'],
+                        remarks: $refundedPayment['remarks'],
                     );
 
-                    $this->purchaseOrderDownPaymentRefundActions->create($dto, false);
+                    $this->purchaseOrderPaymentRefundActions->create($dto, false);
                 }
             }
 
@@ -516,34 +454,16 @@ class PurchaseOrderActions
         }
     }
 
-    public static function updateSummary(PurchaseOrder $po): void
+    public static function updateSummary(PurchaseOrder $purchaseOrder): void
     {
+        $po = $purchaseOrder;
         $po->refresh();
 
-        $po->item_total_before_global_discount = $po->items->sum('subtotal_after_discount');
-        $po->global_discount = (function () use ($po) {
-            $beforeDiscount = (float) $po->item_total_before_global_discount;
-            $afterDiscount = $beforeDiscount;
-
-            foreach ($po->globalDiscounts()->orderBy('sequence')->orderBy('id')->get() as $globalDiscount) {
-                $discountType = $globalDiscount->discount_type instanceof DiscountTypeEnum
-                    ? $globalDiscount->discount_type
-                    : DiscountTypeEnum::resolveToEnum($globalDiscount->discount_type);
-                $discountValue = (float) $globalDiscount->discount_value;
-
-                if ($discountType === DiscountTypeEnum::PERCENTAGE) {
-                    $afterDiscount -= $afterDiscount * $discountValue / 100;
-                } else {
-                    $afterDiscount -= $discountValue;
-                }
-
-                if ($afterDiscount < 0) {
-                    $afterDiscount = 0;
-                }
-            }
-
-            return $beforeDiscount - $afterDiscount;
-        })();
+        $po->item_total_before_global_discount = (float) $po->items->sum('subtotal_after_discount');
+        $po->global_discount = min(
+            max((float) $po->global_discount, 0),
+            (float) $po->item_total_before_global_discount
+        );
 
         foreach ($po->items as $poItem) {
             $poItem->global_discount = (function () use ($poItem, $po) {
@@ -634,33 +554,8 @@ class PurchaseOrderActions
 
                 return ($poItemSubtotalAfterVat / $itemTotalAfterVat) * $purchaseOrderRounding;
             })();
-            $poItem->amount_payable = (function () use ($poItem) {
-                return (float) $poItem->subtotal_after_vat + (float) $poItem->rounding;
-            })();
-            $poItem->cogs = (function () use ($poItem) {
-                $qty = (float) $poItem->qty;
-                $amountPayable = (float) $poItem->amount_payable;
-
-                if ($qty <= 0 || $amountPayable <= 0) return 0;
-
-                return $amountPayable / $qty;
-            })();
-            $poItem->total_cogs = (function () use ($poItem) {
-                $qty = (float) $poItem->qty;
-                $cogs = (float) $poItem->cogs;
-
-                if ($qty <= 0 || $cogs <= 0) return 0;
-
-                return $qty * $cogs;
-            })();
-            $poItem->base_unit_cogs = (function () use ($poItem) {
-                $productUnitQtyBase = (float) $poItem->product_unit_qty_base;
-                $totalCogs = (float) $poItem->total_cogs;
-
-                if ($productUnitQtyBase <= 0 || $totalCogs <= 0) return 0;
-
-                return $totalCogs / $productUnitQtyBase;
-            })();
+            $poItem->amount_payable = (float) $poItem->subtotal_after_vat + (float) $poItem->rounding;
+            self::applyCogs($poItem);
             $poItem->save();
         }
 
@@ -674,57 +569,36 @@ class PurchaseOrderActions
                 $lastRoundingPoItem->rounding = (float) $lastRoundingPoItem->rounding + $roundingDifference;
                 $lastRoundingPoItem->amount_payable = (float) $lastRoundingPoItem->subtotal_after_vat
                     + (float) $lastRoundingPoItem->rounding;
-                $lastRoundingPoItem->cogs = (function () use ($lastRoundingPoItem) {
-                    $qty = (float) $lastRoundingPoItem->qty;
-                    $amountPayable = (float) $lastRoundingPoItem->amount_payable;
-
-                    if ($qty <= 0 || $amountPayable <= 0) return 0;
-
-                    return $amountPayable / $qty;
-                })();
-                $lastRoundingPoItem->total_cogs = (function () use ($lastRoundingPoItem) {
-                    $qty = (float) $lastRoundingPoItem->qty;
-                    $cogs = (float) $lastRoundingPoItem->cogs;
-
-                    if ($qty <= 0 || $cogs <= 0) return 0;
-
-                    return $qty * $cogs;
-                })();
-                $lastRoundingPoItem->base_unit_cogs = (function () use ($lastRoundingPoItem) {
-                    $productUnitQtyBase = (float) $lastRoundingPoItem->product_unit_qty_base;
-                    $totalCogs = (float) $lastRoundingPoItem->total_cogs;
-
-                    if ($productUnitQtyBase <= 0 || $totalCogs <= 0) return 0;
-
-                    return $totalCogs / $productUnitQtyBase;
-                })();
+                self::applyCogs($lastRoundingPoItem);
                 $lastRoundingPoItem->save();
             }
         }
 
         $po->amount_payable = (float) $po->items->sum('amount_payable');
-        $po->amount_paid_down_payment = $po->downPayments->sum('amount');
-        $po->amount_allocated_down_payment = $po->downPayments->sum('amount_allocated');
-        $po->amount_refunded_down_payment = $po->refundedDownPayments->sum('amount');
+        $po->amount_paid_down_payment = $po->payments->sum('amount');
+        $po->amount_allocated_down_payment = $po->payments->sum('amount_allocated');
+        $po->amount_refunded_down_payment = $po->refundedPayments->sum('amount');
         $po->amount_available_down_payment = $po->amount_paid_down_payment - $po->amount_allocated_down_payment - $po->amount_refunded_down_payment;
+
         foreach ($po->items as $poItem) {
             $qtyTargetBase = (float) $poItem->product_unit_qty_base;
-            $poItem->qty_purchased_base = (float) $po->purchaseItems()
+            $poItem->qty_received_base = (float) $po->receiptItems()
                 ->where('product_id', $poItem->product_id)
                 ->sum('product_unit_qty_base');
-            $poItem->qty_outstanding_base = max($qtyTargetBase - $poItem->qty_purchased_base, 0);
-            $poItem->qty_excess_base = max($poItem->qty_purchased_base - $qtyTargetBase, 0);
+            $poItem->qty_invoiced_base = (float) $po->invoiceItems()
+                ->where('purchase_invoice_items.product_id', $poItem->product_id)
+                ->sum('product_unit_qty_base');
+            $poItem->qty_outstanding_base = max($qtyTargetBase - $poItem->qty_received_base, 0);
+            $poItem->qty_excess_base = max($poItem->qty_received_base - $qtyTargetBase, 0);
             $poItem->save();
         }
 
-        $po->item_total_count = (function () use ($po) {
-            return $po->items()->count();
-        })();
+        $po->item_total_count = $po->items()->count();
         $po->item_matched_count = (function () use ($po) {
             $itemMatchedCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -745,7 +619,7 @@ class PurchaseOrderActions
             $itemLessCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -764,7 +638,7 @@ class PurchaseOrderActions
             $itemMoreCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
                     continue;
                 }
 
@@ -779,7 +653,7 @@ class PurchaseOrderActions
             $itemUnlinkedCount = 0;
 
             foreach ($po->items as $poItem) {
-                if (! $po->purchaseItems()->where('product_id', $poItem->product_id)->exists()) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
                     $itemUnlinkedCount++;
                 }
             }
@@ -788,25 +662,56 @@ class PurchaseOrderActions
         })();
         $po->progress_status = (function () use ($po) {
             if ($po->item_total_count === 0) {
-                return PurchaseProgressStatusEnum::UNLINKED;
+                return ProgressStatusEnum::UNLINKED;
             }
 
             if ($po->item_unlinked_count === $po->item_total_count) {
-                return PurchaseProgressStatusEnum::UNLINKED;
+                return ProgressStatusEnum::UNLINKED;
             }
 
             if ($po->item_matched_count === $po->item_total_count) {
-                return PurchaseProgressStatusEnum::MATCHED;
+                return ProgressStatusEnum::MATCHED;
             }
 
-            return PurchaseProgressStatusEnum::UNMATCHED;
+            return ProgressStatusEnum::UNMATCHED;
         })();
 
         $purchaseOrderProductIds = $po->items()->distinct()->pluck('product_id')->filter()->values()->all();
-        $po->purchaseItems()->whereIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => true]);
-        $po->purchaseItems()->whereNotIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => false]);
+        $po->receiptItems()->whereIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => true]);
+        $po->receiptItems()->whereNotIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => false]);
 
         $po->save();
+    }
+
+    /**
+     * §0.11 — valuation NET of VAT: cogs = (amount_payable − vat) / qty.
+     */
+    private static function applyCogs($poItem): void
+    {
+        $poItem->cogs = (function () use ($poItem) {
+            $qty = (float) $poItem->qty;
+            $netAmountPayable = (float) $poItem->amount_payable - (float) $poItem->vat;
+
+            if ($qty <= 0 || $netAmountPayable <= 0) return 0;
+
+            return $netAmountPayable / $qty;
+        })();
+        $poItem->total_cogs = (function () use ($poItem) {
+            $qty = (float) $poItem->qty;
+            $cogs = (float) $poItem->cogs;
+
+            if ($qty <= 0 || $cogs <= 0) return 0;
+
+            return $qty * $cogs;
+        })();
+        $poItem->base_unit_cogs = (function () use ($poItem) {
+            $productUnitQtyBase = (float) $poItem->product_unit_qty_base;
+            $totalCogs = (float) $poItem->total_cogs;
+
+            if ($productUnitQtyBase <= 0 || $totalCogs <= 0) return 0;
+
+            return $totalCogs / $productUnitQtyBase;
+        })();
     }
 
     public function delete(PurchaseOrder $purchaseOrder): bool
@@ -814,20 +719,22 @@ class PurchaseOrderActions
         $timer_start = microtime(true);
 
         try {
-            foreach ($purchaseOrder->items as $poItem) {
+            if ($purchaseOrder->receipts()->exists()
+                || $purchaseOrder->invoices()->exists()
+                || $purchaseOrder->payments()->where('amount_allocated', '>', 0)->exists()) {
+                throw new Exception('Purchase order cannot be deleted because it already has related transactions.');
+            }
+
+            foreach ($purchaseOrder->items()->get() as $poItem) {
                 $this->purchaseOrderItemActions->delete($poItem);
             }
 
-            foreach ($purchaseOrder->globalDiscounts as $poGlobalDiscount) {
-                $this->purchaseOrderGlobalDiscountActions->delete($poGlobalDiscount);
+            foreach ($purchaseOrder->payments()->get() as $poPayment) {
+                $this->purchaseOrderPaymentActions->delete($poPayment);
             }
 
-            foreach ($purchaseOrder->downPayments as $poDownPayment) {
-                $this->purchaseOrderDownPaymentActions->delete($poDownPayment);
-            }
-
-            foreach ($purchaseOrder->refundedDownPayments as $poRefundedDownPayment) {
-                $this->purchaseOrderDownPaymentRefundActions->delete($poRefundedDownPayment);
+            foreach ($purchaseOrder->refundedPayments()->get() as $poRefundedPayment) {
+                $this->purchaseOrderPaymentRefundActions->delete($poRefundedPayment);
             }
 
             $result = $purchaseOrder->delete();

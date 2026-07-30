@@ -12,12 +12,19 @@ return new class extends Migration
             $table->id();
             $table->ulid();
 
-            $table->foreignId('company_id')->references('id')->on('companies');
-            $table->foreignId('branch_id')->references('id')->on('branches');
-            $table->foreignId('purchase_return_id')->references('id')->on('purchase_returns');
-            $table->foreignId('purchase_item_id')->nullable()->references('id')->on('purchase_items');
+            $table->foreignId('company_id');
+            $table->foreign('company_id', 'fk_prti_company_id')->references('id')->on('companies');
+            $table->foreignId('branch_id');
+            $table->foreign('branch_id', 'fk_prti_branch_id')->references('id')->on('branches');
+            $table->foreignId('purchase_return_id');
+            $table->foreign('purchase_return_id', 'fk_prti_purchase_return_id')->references('id')->on('purchase_returns');
+            $table->foreignId('purchase_order_receipt_item_id')->nullable();
+            $table->foreign('purchase_order_receipt_item_id', 'fk_prti_purchase_order_receipt_item_id')->references('id')->on('purchase_order_receipt_items');
             $table->decimal('qty', 30, 8)->default(0);
-            $table->foreignId('product_unit_id')->references('id')->on('product_units');
+            $table->foreignId('product_unit_id');
+            $table->foreign('product_unit_id', 'fk_prti_product_unit_id')->references('id')->on('product_units');
+            $table->foreignId('product_id');
+            $table->foreign('product_id', 'fk_prti_product_id')->references('id')->on('products');
             $table->decimal('product_unit_conversion_value', 30, 8)->default(0);
             $table->decimal('product_unit_qty_base', 30, 8)->default(0);
             $table->decimal('product_unit_price', 30, 8)->default(0);
@@ -30,14 +37,14 @@ return new class extends Migration
             $table->decimal('global_discount', 30, 8)->default(0);
             $table->decimal('subtotal_after_global_discount', 30, 8)->default(0);
 
-            $table->foreignId('vat_profile_id')->nullable()->references('id')->on('vat_profiles');
+            $table->foreignId('vat_profile_id')->nullable();
+            $table->foreign('vat_profile_id', 'fk_prti_vat_profile_id')->references('id')->on('vat_profiles');
             $table->decimal('vat_rate', 30, 8)->default(0);
             $table->unsignedInteger('vat_base_numerator')->default(1);
             $table->unsignedInteger('vat_base_denominator')->default(1);
             $table->decimal('vat_base', 30, 8)->default(0);
             $table->decimal('vat', 30, 8)->default(0);
             $table->decimal('subtotal_after_vat', 30, 8)->default(0);
-            $table->decimal('additional_cost', 30, 8)->default(0);
             $table->decimal('rounding', 30, 8)->default(0);
             $table->decimal('amount_payable', 30, 8)->default(0);
             $table->decimal('cogs', 30, 8)->default(0);

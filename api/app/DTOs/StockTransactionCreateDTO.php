@@ -2,7 +2,10 @@
 
 namespace App\DTOs;
 
-use App\Models\PurchaseReceiptItem;
+use App\Models\PurchaseOrderReceiptItem;
+use App\Models\PurchaseReturnItem;
+use App\Models\SalesOrderDeliveryItem;
+use App\Models\SalesReturnItem;
 use App\Models\StockAdjustmentInItem;
 use App\Models\StockAdjustmentOutItem;
 use App\Models\StockTransferItem;
@@ -43,15 +46,51 @@ final class StockTransactionCreateDTO
         );
     }
 
-    public static function fromPurchaseReceiptItem(PurchaseReceiptItem $purchaseReceiptItem): self
+    public static function fromPurchaseOrderReceiptItem(PurchaseOrderReceiptItem $purchaseOrderReceiptItem): self
     {
         return new self(
-            referableType: PurchaseReceiptItem::class,
-            referableId: $purchaseReceiptItem->id,
-            date: $purchaseReceiptItem->purchaseReceipt->date,
-            warehouseId: $purchaseReceiptItem->purchaseReceipt->warehouse_id,
-            productId: $purchaseReceiptItem->productUnit->product_id,
-            baseQty: $purchaseReceiptItem->product_unit_qty_base,
+            referableType: PurchaseOrderReceiptItem::class,
+            referableId: $purchaseOrderReceiptItem->id,
+            date: $purchaseOrderReceiptItem->purchaseOrderReceipt->date,
+            warehouseId: $purchaseOrderReceiptItem->purchaseOrderReceipt->warehouse_id,
+            productId: $purchaseOrderReceiptItem->productUnit->product_id,
+            baseQty: $purchaseOrderReceiptItem->product_unit_qty_base,
+        );
+    }
+
+    public static function fromPurchaseReturnItem(PurchaseReturnItem $purchaseReturnItem): self
+    {
+        return new self(
+            referableType: PurchaseReturnItem::class,
+            referableId: $purchaseReturnItem->id,
+            date: $purchaseReturnItem->purchaseReturn->date,
+            warehouseId: $purchaseReturnItem->purchaseReturn->warehouse_id,
+            productId: $purchaseReturnItem->productUnit->product_id,
+            baseQty: $purchaseReturnItem->product_unit_qty_base * -1,
+        );
+    }
+
+    public static function fromSalesOrderDeliveryItem(SalesOrderDeliveryItem $salesOrderDeliveryItem): self
+    {
+        return new self(
+            referableType: SalesOrderDeliveryItem::class,
+            referableId: $salesOrderDeliveryItem->id,
+            date: $salesOrderDeliveryItem->salesOrderDelivery->date,
+            warehouseId: $salesOrderDeliveryItem->salesOrderDelivery->warehouse_id,
+            productId: $salesOrderDeliveryItem->productUnit->product_id,
+            baseQty: $salesOrderDeliveryItem->product_unit_qty_base * -1,
+        );
+    }
+
+    public static function fromSalesReturnItem(SalesReturnItem $salesReturnItem): self
+    {
+        return new self(
+            referableType: SalesReturnItem::class,
+            referableId: $salesReturnItem->id,
+            date: $salesReturnItem->salesReturn->date,
+            warehouseId: $salesReturnItem->salesReturn->warehouse_id,
+            productId: $salesReturnItem->productUnit->product_id,
+            baseQty: $salesReturnItem->product_unit_qty_base,
         );
     }
 

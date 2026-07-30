@@ -72,8 +72,12 @@ export default class PurchaseOrderService {
       queryParams['company_id'] = args.company_id;
       queryParams['branch_id'] = args.branch_id;
       queryParams['search'] = args.search;
-      queryParams['start_date'] = args.start_date;
-      queryParams['end_date'] = args.end_date;
+      if (args.start_date) {
+        queryParams['start_date'] = args.start_date;
+      }
+      if (args.end_date) {
+        queryParams['end_date'] = args.end_date;
+      }
       queryParams['supplier_id'] = args.supplier_id;
       queryParams['progress_status'] = args.progress_status;
       queryParams['refresh'] = args.refresh;
@@ -123,8 +127,12 @@ export default class PurchaseOrderService {
       queryParams['company_id'] = args.company_id;
       queryParams['branch_id'] = args.branch_id;
       queryParams['search'] = args.search;
-      queryParams['start_date'] = args.start_date;
-      queryParams['end_date'] = args.end_date;
+      if (args.start_date) {
+        queryParams['start_date'] = args.start_date;
+      }
+      if (args.end_date) {
+        queryParams['end_date'] = args.end_date;
+      }
       queryParams['supplier_id'] = args.supplier_id;
       queryParams['progress_status'] = args.progress_status;
       queryParams['refresh'] = args.refresh;
@@ -208,11 +216,11 @@ export default class PurchaseOrderService {
       due_days: 0,
       supplier_id: null,
       remarks: '',
+      global_discount: 0,
       rounding: 0,
-      global_discounts: [] as NonNullable<PurchaseOrderStoreRequest['global_discounts']>,
       items: [] as NonNullable<PurchaseOrderStoreRequest['items']>,
-      down_payments: [] as NonNullable<PurchaseOrderStoreRequest['down_payments']>,
-      refunded_down_payments: [] as NonNullable<PurchaseOrderStoreRequest['refunded_down_payments']>,
+      payments: [] as NonNullable<PurchaseOrderStoreRequest['payments']>,
+      refunded_payments: [] as NonNullable<PurchaseOrderStoreRequest['refunded_payments']>,
     });
   }
 
@@ -237,15 +245,14 @@ export default class PurchaseOrderService {
       due_days: 0,
       supplier_id: null,
       remarks: '',
+      global_discount: 0,
       rounding: 0,
-      delete_global_discount_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_global_discount_ids']>,
-      global_discounts: [] as NonNullable<PurchaseOrderUpdateRequest['global_discounts']>,
       delete_item_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_item_ids']>,
       items: [] as NonNullable<PurchaseOrderUpdateRequest['items']>,
-      delete_down_payment_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_down_payment_ids']>,
-      down_payments: [] as NonNullable<PurchaseOrderUpdateRequest['down_payments']>,
-      delete_refunded_down_payment_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_refunded_down_payment_ids']>,
-      refunded_down_payments: [] as NonNullable<PurchaseOrderUpdateRequest['refunded_down_payments']>,
+      delete_payment_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_payment_ids']>,
+      payments: [] as NonNullable<PurchaseOrderUpdateRequest['payments']>,
+      delete_refunded_payment_ids: [] as NonNullable<PurchaseOrderUpdateRequest['delete_refunded_payment_ids']>,
+      refunded_payments: [] as NonNullable<PurchaseOrderUpdateRequest['refunded_payments']>,
     });
   }
 

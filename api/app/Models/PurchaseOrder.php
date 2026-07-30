@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\PurchaseProgressStatusEnum;
+use App\Enums\ProgressStatusEnum;
 use App\Traits\ScopeableByBranch;
 use App\Traits\ScopeableByCompany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -63,7 +63,7 @@ class PurchaseOrder extends Model
         'amount_allocated_down_payment' => 'decimal:8',
         'amount_refunded_down_payment' => 'decimal:8',
         'amount_available_down_payment' => 'decimal:8',
-        'progress_status' => PurchaseProgressStatusEnum::class,
+        'progress_status' => ProgressStatusEnum::class,
         'item_total_count' => 'integer',
         'item_matched_count' => 'integer',
         'item_less_count' => 'integer',
@@ -152,33 +152,45 @@ class PurchaseOrder extends Model
         return $this->hasMany(PurchaseOrderItem::class);
     }
 
-    public function globalDiscounts()
+    public function payments()
     {
-        return $this->hasMany(PurchaseOrderGlobalDiscount::class);
+        return $this->hasMany(PurchaseOrderPayment::class);
     }
 
-    public function downPayments()
+    public function refundedPayments()
     {
-        return $this->hasMany(PurchaseOrderDownPayment::class);
+        return $this->hasMany(PurchaseOrderPaymentRefund::class);
     }
 
-    public function refundedDownPayments()
+    public function receipts()
     {
-        return $this->hasMany(PurchaseOrderDownPaymentRefund::class);
+        return $this->hasMany(PurchaseOrderReceipt::class);
     }
 
-    public function purchases()
+    public function invoices()
     {
-        return $this->hasMany(Purchase::class);
+        return $this->hasMany(PurchaseInvoice::class);
     }
 
-    public function purchaseItems(): HasManyThrough
+    public function receiptItems(): HasManyThrough
     {
         return $this->hasManyThrough(
-            PurchaseItem::class,
-            Purchase::class,
+            PurchaseOrderReceiptItem::class,
+            PurchaseOrderReceipt::class,
             'purchase_order_id',
-            'purchase_id',
+            'purchase_order_receipt_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function invoiceItems(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            PurchaseInvoiceItem::class,
+            PurchaseInvoice::class,
+            'purchase_order_id',
+            'purchase_invoice_id',
             'id',
             'id'
         );

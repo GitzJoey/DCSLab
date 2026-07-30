@@ -258,12 +258,6 @@ class DashboardActions
             'title' => 'components.menu.debt-creditor',
         ];
 
-        $purchaseAdditionalCostCategory = [
-            'icon' => 'Tags',
-            'pageName' => 'side-menu-purchase-additional-cost-category',
-            'title' => 'components.menu.purchase-additional-cost-category',
-        ];
-
         $assetCategory = [
             'icon' => 'Tags',
             'pageName' => 'side-menu-asset-category',
@@ -304,8 +298,7 @@ class DashboardActions
             $productManagement,
             $supplier,
             $customerManagement,
-            $stockAdjustmentCategory,
-            $purchaseAdditionalCostCategory
+            $stockAdjustmentCategory
         );
         array_push($menu, $root_array);
 
@@ -436,23 +429,69 @@ class DashboardActions
             'subMenu' => [],
         ];
 
-        $purchase = [
-            'icon' => 'ShoppingCart',
-            'pageName' => 'side-menu-purchase',
-            'title' => 'components.menu.purchase',
-        ];
-
         $purchaseReceipt = [
             'icon' => 'PackageCheck',
             'pageName' => 'side-menu-purchase-receipt',
             'title' => 'components.menu.purchase-receipt',
         ];
 
+        $purchaseInvoice = [
+            'icon' => 'FileText',
+            'pageName' => 'side-menu-purchase-invoice',
+            'title' => 'components.menu.purchase-invoice',
+        ];
+
+        $purchaseReturn = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-purchase-return',
+            'title' => 'components.menu.purchase-return',
+        ];
+
         array_push(
             $purchasing['subMenu'],
             $purchaseOrder,
-            $purchase,
-            $purchaseReceipt
+            $purchaseReceipt,
+            $purchaseInvoice,
+            $purchaseReturn
+        );
+
+        $sales = [
+            'icon' => 'ShoppingBag',
+            'pageName' => 'side-menu-sales',
+            'title' => 'components.menu.sales-management',
+            'subMenu' => [],
+        ];
+
+        $salesOrder = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-sales-order',
+            'title' => 'components.menu.sales-order',
+        ];
+
+        $salesDelivery = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-sales-delivery',
+            'title' => 'components.menu.sales-delivery',
+        ];
+
+        $salesInvoice = [
+            'icon' => 'FileText',
+            'pageName' => 'side-menu-sales-invoice',
+            'title' => 'components.menu.sales-invoice',
+        ];
+
+        $salesReturn = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-sales-return',
+            'title' => 'components.menu.sales-return',
+        ];
+
+        array_push(
+            $sales['subMenu'],
+            $salesOrder,
+            $salesDelivery,
+            $salesInvoice,
+            $salesReturn
         );
 
         $stockTransfer = [
@@ -497,6 +536,7 @@ class DashboardActions
             $root_array['subMenu'],
             $stockAdjustment,
             $purchasing,
+            $sales,
             $stockTransfer,
             $assetTransactions
         );
@@ -607,22 +647,59 @@ class DashboardActions
             'title' => 'components.menu.purchase-order-item',
         ];
 
-        $purchaseOrderDownPayment = [
+        $purchaseOrderPayment = [
             'icon' => 'WalletCards',
-            'pageName' => 'side-menu-purchase-order-down-payment',
-            'title' => 'components.menu.purchase-order-down-payment',
+            'pageName' => 'side-menu-purchase-order-payment',
+            'title' => 'components.menu.purchase-order-payment',
         ];
 
-        $purchaseOrderDownPaymentNotFullyAllocated = [
+        $purchaseOrderPaymentNotFullyAllocated = [
             'icon' => 'WalletCards',
-            'pageName' => 'side-menu-purchase-order-down-payment-not-fully-allocated',
-            'title' => 'components.menu.purchase-order-down-payment-not-fully-allocated',
+            'pageName' => 'side-menu-purchase-order-payment-not-fully-allocated',
+            'title' => 'components.menu.purchase-order-payment-not-fully-allocated',
         ];
 
-        $purchaseOrderDownPaymentRefund = [
+        $purchaseOrderPaymentRefund = [
             'icon' => 'Undo2',
-            'pageName' => 'side-menu-purchase-order-down-payment-refund',
-            'title' => 'components.menu.purchase-order-down-payment-refund',
+            'pageName' => 'side-menu-purchase-order-payment-refund',
+            'title' => 'components.menu.purchase-order-payment-refund',
+        ];
+
+        $purchaseInvoicePayment = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-purchase-invoice-payment',
+            'title' => 'components.menu.purchase-invoice-payment',
+        ];
+
+        $salesOrderReport = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-report-sales-order',
+            'title' => 'components.menu.sales-order',
+            'subMenu' => [],
+        ];
+
+        $salesOrderItem = [
+            'icon' => 'PackageSearch',
+            'pageName' => 'side-menu-sales-order-item',
+            'title' => 'components.menu.sales-order-item',
+        ];
+
+        $salesOrderPayment = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-sales-order-payment',
+            'title' => 'components.menu.sales-order-payment',
+        ];
+
+        $salesOrderPaymentNotFullyAllocated = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-sales-order-payment-not-fully-allocated',
+            'title' => 'components.menu.sales-order-payment-not-fully-allocated',
+        ];
+
+        $salesOrderPaymentRefund = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-sales-order-payment-refund',
+            'title' => 'components.menu.sales-order-payment-refund',
         ];
 
         $stockTransferItem = [
@@ -668,12 +745,21 @@ class DashboardActions
         array_push(
             $purchaseOrder['subMenu'],
             $purchaseOrderItem,
-            $purchaseOrderDownPayment,
-            $purchaseOrderDownPaymentNotFullyAllocated,
-            $purchaseOrderDownPaymentRefund
+            $purchaseOrderPayment,
+            $purchaseOrderPaymentNotFullyAllocated,
+            $purchaseOrderPaymentRefund,
+            $purchaseInvoicePayment
         );
 
-        array_push($root_array['subMenu'], $financialStatement, $cashAccount, $product, $stockAdjustment, $purchaseOrder, $stockTransfer);
+        array_push(
+            $salesOrderReport['subMenu'],
+            $salesOrderItem,
+            $salesOrderPayment,
+            $salesOrderPaymentNotFullyAllocated,
+            $salesOrderPaymentRefund
+        );
+
+        array_push($root_array['subMenu'], $financialStatement, $cashAccount, $product, $stockAdjustment, $purchaseOrder, $salesOrderReport, $stockTransfer);
 
         array_push($menu, $root_array);
 

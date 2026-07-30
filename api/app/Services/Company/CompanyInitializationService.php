@@ -314,8 +314,10 @@ class CompanyInitializationService
                 'company_id' => $company->id,
                 'code' => config('dcslab.KEYWORDS.AUTO'),
                 'name' => 'Non PPN',
+                // vat_rate 0 already means "no VAT"; the base fraction must stay
+                // 1/1 because every VAT profile request enforces numerator >= 1.
                 'vat_rate' => 0,
-                'vat_base_numerator' => 0,
+                'vat_base_numerator' => 1,
                 'vat_base_denominator' => 1,
                 'remarks' => 'Default profil tanpa PPN saat perusahaan dibuat',
                 'is_active' => true,

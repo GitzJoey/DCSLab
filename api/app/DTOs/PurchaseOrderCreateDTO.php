@@ -12,16 +12,15 @@ final class PurchaseOrderCreateDTO
         public readonly int $dueDays,
         public readonly ?int $supplierId,
         public readonly ?string $remarks,
+        public readonly float $globalDiscount,
         public readonly float $rounding,
-        /** @var array<int, array<string, mixed>> */
-        public readonly array $globalDiscounts,
 
         /** @var array<int, array<string, mixed>> */
         public readonly array $items,
         /** @var array<int, array<string, mixed>> */
-        public readonly array $downPayments,
+        public readonly array $payments,
         /** @var array<int, array<string, mixed>> */
-        public readonly array $refundedDownPayments,
+        public readonly array $refundedPayments,
     ) {
     }
 }

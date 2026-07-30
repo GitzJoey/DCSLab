@@ -526,9 +526,12 @@ const showNotification = (title: string, content: string) => {
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).subtotal_after_discount ?? 0) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.vat') }}</div>
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ formatCurrency((item as PurchaseOrderItem).vat ?? 0) }}</div>
-                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty_purchased_base') }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty_received_base') }}</div>
                 <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ getBaseQtyDisplay((item as
-                  PurchaseOrderItem).qty_purchased_base ?? 0, item as PurchaseOrderItem) }}</div>
+                  PurchaseOrderItem).qty_received_base ?? 0, item as PurchaseOrderItem) }}</div>
+                <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty_invoiced_base') }}</div>
+                <div class="col-span-5 text-right text-slate-700 dark:text-slate-200">{{ getBaseQtyDisplay((item as
+                  PurchaseOrderItem).qty_invoiced_base ?? 0, item as PurchaseOrderItem) }}</div>
                 <div class="col-span-7 text-slate-500">{{ t('views.purchase_order.fields.qty_outstanding_base') }}</div>
                 <div class="col-span-5 text-right text-warning">{{ getBaseQtyDisplay((item as
                   PurchaseOrderItem).qty_outstanding_base ?? 0, item as PurchaseOrderItem) }}</div>

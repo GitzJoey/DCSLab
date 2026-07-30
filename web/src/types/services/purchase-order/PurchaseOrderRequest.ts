@@ -21,20 +21,9 @@ export interface PurchaseOrderReadAnyGetRequest {
   end_date: string | null;
   supplier_id: string | null;
   progress_status?: string | null;
+  include_id?: string;
   refresh: boolean;
   limit: number;
-}
-
-export interface PurchaseOrderGlobalDiscountNestedStoreRequest {
-  sequence: number;
-  discount_type: string;
-  discount_value: number;
-}
-
-export interface PurchaseOrderItemDiscountNestedStoreRequest {
-  sequence: number;
-  discount_type: string;
-  discount_value: number;
 }
 
 export interface PurchaseOrderItemNestedStoreRequest {
@@ -42,9 +31,9 @@ export interface PurchaseOrderItemNestedStoreRequest {
   product_unit_id: string;
   product_unit_conversion_value: number;
   product_unit_price: number;
-  product_unit_price_discounts: PurchaseOrderItemDiscountNestedStoreRequest[];
-  subtotal_discounts: PurchaseOrderItemDiscountNestedStoreRequest[];
   product_unit_is_price_include_vat: boolean;
+  price_discount: number;
+  subtotal_discount: number;
   vat_profile_id: string | null;
   vat_rate: number;
   vat_base_numerator: number;
@@ -52,16 +41,15 @@ export interface PurchaseOrderItemNestedStoreRequest {
   remarks: string | null;
 }
 
-export interface PurchaseOrderDownPaymentNestedStoreRequest {
+export interface PurchaseOrderPaymentNestedStoreRequest {
   code: string;
   date: string;
   cash_account_id: string;
   amount: number;
-  amount_allocated?: number;
   remarks: string | null;
 }
 
-export interface PurchaseOrderDownPaymentRefundNestedStoreRequest {
+export interface PurchaseOrderPaymentRefundNestedStoreRequest {
   code: string;
   date: string;
   cash_account_id: string;
@@ -77,25 +65,11 @@ export interface PurchaseOrderStoreRequest {
   due_days: number;
   supplier_id: string | null;
   remarks: string | null;
+  global_discount: number;
   rounding: number;
-  global_discounts: PurchaseOrderGlobalDiscountNestedStoreRequest[];
   items: PurchaseOrderItemNestedStoreRequest[];
-  down_payments: PurchaseOrderDownPaymentNestedStoreRequest[];
-  refunded_down_payments: PurchaseOrderDownPaymentRefundNestedStoreRequest[];
-}
-
-export interface PurchaseOrderGlobalDiscountNestedUpdateRequest {
-  id: string | null;
-  sequence: number;
-  discount_type: string;
-  discount_value: number;
-}
-
-export interface PurchaseOrderItemDiscountNestedUpdateRequest {
-  id: string | null;
-  sequence: number;
-  discount_type: string;
-  discount_value: number;
+  payments: PurchaseOrderPaymentNestedStoreRequest[];
+  refunded_payments: PurchaseOrderPaymentRefundNestedStoreRequest[];
 }
 
 export interface PurchaseOrderItemNestedUpdateRequest {
@@ -104,11 +78,9 @@ export interface PurchaseOrderItemNestedUpdateRequest {
   product_unit_id: string;
   product_unit_conversion_value: number;
   product_unit_price: number;
-  delete_product_unit_price_discount_ids: string[];
-  product_unit_price_discounts: PurchaseOrderItemDiscountNestedUpdateRequest[];
-  delete_subtotal_discount_ids: string[];
-  subtotal_discounts: PurchaseOrderItemDiscountNestedUpdateRequest[];
   product_unit_is_price_include_vat: boolean;
+  price_discount: number;
+  subtotal_discount: number;
   vat_profile_id: string | null;
   vat_rate: number;
   vat_base_numerator: number;
@@ -116,7 +88,7 @@ export interface PurchaseOrderItemNestedUpdateRequest {
   remarks: string | null;
 }
 
-export interface PurchaseOrderDownPaymentNestedUpdateRequest {
+export interface PurchaseOrderPaymentNestedUpdateRequest {
   id: string | null;
   code: string;
   date: string;
@@ -126,7 +98,7 @@ export interface PurchaseOrderDownPaymentNestedUpdateRequest {
   remarks: string | null;
 }
 
-export interface PurchaseOrderDownPaymentRefundNestedUpdateRequest {
+export interface PurchaseOrderPaymentRefundNestedUpdateRequest {
   id: string | null;
   code: string;
   date: string;
@@ -143,13 +115,12 @@ export interface PurchaseOrderUpdateRequest {
   due_days: number;
   supplier_id: string | null;
   remarks: string | null;
+  global_discount: number;
   rounding: number;
-  delete_global_discount_ids: string[];
-  global_discounts: PurchaseOrderGlobalDiscountNestedUpdateRequest[];
   delete_item_ids: string[];
   items: PurchaseOrderItemNestedUpdateRequest[];
-  delete_down_payment_ids: string[];
-  down_payments: PurchaseOrderDownPaymentNestedUpdateRequest[];
-  delete_refunded_down_payment_ids: string[];
-  refunded_down_payments: PurchaseOrderDownPaymentRefundNestedUpdateRequest[];
+  delete_payment_ids: string[];
+  payments: PurchaseOrderPaymentNestedUpdateRequest[];
+  delete_refunded_payment_ids: string[];
+  refunded_payments: PurchaseOrderPaymentRefundNestedUpdateRequest[];
 }
