@@ -10,6 +10,12 @@ Create shared model concerns under `app/Models/Concerns`
     - `TracksCreatedByAndUpdatedBy` — auto-fills `created_by`/`updated_by` from the authenticated user; used by `Profile`, `Setting`, `Company`, `Branch`
     - `TracksDeletedBy` — auto-fills `deleted_by` from the authenticated user right before a soft delete; used by `Company`, `Branch`, `CompanyUser`
 
+Create shared enums under `app/Enums`
+    - `RecordStatus` — backed int enum for any `status` column; used by `Profile`, `Company`, `Branch`
+        - `INACTIVE = 0`
+        - `ACTIVE = 1`
+        - `SOFTDELETED = 99`
+
 ## Models
 
 1. Update `User` model
