@@ -1,0 +1,19 @@
+{
+    "name": "DCSLab API",
+    "dockerComposeFile": [
+        "../../docker-compose.yml"
+    ],
+    "service": "api",
+    "remoteUser": "www-data",
+    "workspaceFolder": "/var/www/html",
+    "shutdownAction": "none",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bmewburn.vscode-intelephense-client",
+                "sirtori.indenticator",
+                "xdebug.php-debug"
+            ]
+        }
+    }
+}

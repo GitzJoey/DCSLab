@@ -1,0 +1,20 @@
+{
+    "name": "DCSLab Web",
+    "dockerComposeFile": [
+        "../../docker-compose.yml"
+    ],
+    "service": "web",
+    "remoteUser": "node",
+    "workspaceFolder": "/app",
+    "shutdownAction": "none",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bradlc.vscode-tailwindcss",
+                "esbenp.prettier-vscode",
+                "sirtori.indenticator",
+                "vue.volar"
+            ]
+        }
+    }
+}

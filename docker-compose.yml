@@ -1,0 +1,64 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile-API
+    image: gitzjoey/dcslab-api:latest
+    container_name: dcslab-api
+    hostname: dcslab-api
+    ports:
+      - "8173:80"
+    environment:
+      - XDEBUG_MODE=debug
+      - XDEBUG_CONFIG=discover_client_host=1 client_port=9003 start_with_request=yes
+    volumes:
+      - ./api:/var/www/html
+      - api-copilot-session:/var/www/.copilot
+    networks:
+      - dcslab-net
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-Web
+    image: gitzjoey/dcslab-web:latest
+    container_name: dcslab-web
+    hostname: dcslab-web
+    # Make sure the container keeps running to allow for development and testing
+    command: tail -f /dev/null
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./web:/app
+      - web-copilot-session:/home/node/.copilot
+    networks:
+      - dcslab-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: dcslab-mysql
+    hostname: dcslab-mysql
+    environment:
+      MYSQL_DATABASE: dcslab
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: dcslab
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    networks:
+      - dcslab-net
+
+  redis:
+    image: redis:alpine
+    container_name: dcslab-redis
+    hostname: dcslab-redis
+    networks:
+      - dcslab-net
+
+networks:
+  dcslab-net:
+    driver: bridge
+
+volumes:
+  api-copilot-session:
+  web-copilot-session:

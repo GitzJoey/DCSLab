@@ -1,0 +1,22 @@
+FROM node:20-slim
+
+RUN apt-get update && apt-get install -y \
+    git \
+    ca-certificates \
+    sudo \
+    && usermod -aG sudo node \
+    && echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && npm install -g npm@latest \
+    && npm install -g @github/copilot \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /home/node/.copilot && \
+    chown -R node:node /home/node/.copilot
+
+WORKDIR /app
+
+USER node
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]
