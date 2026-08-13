@@ -682,7 +682,7 @@ const handleProductUnitSelected = (index: number, option: ProductUnitOption | nu
     currentItem.purchase_order_item_label = null;
     currentItem.is_use_serial_number = false;
     currentItem.serials = [];
-    purchaseOrderReceiptForm.validate(`items.${index}.product_unit_id` as any);
+    purchaseOrderReceiptForm.forgetError(`items.${index}.product_unit_id` as any);
     return;
   }
 
@@ -977,10 +977,11 @@ const onSubmit = async () => {
             class="divide-y divide-slate-200/70 rounded-md border border-slate-200/70 dark:divide-darkmode-400 dark:border-darkmode-400"
           >
             <div
-              class="grid grid-cols-[minmax(0,1fr)_6rem_4rem_5.5rem] items-center gap-3 bg-slate-50/70 px-3 py-2 text-xs font-medium text-slate-500 dark:bg-darkmode-600/30 dark:text-slate-400"
+              class="grid grid-cols-[minmax(0,1fr)_6rem_4.5rem_4rem_5.5rem] items-center gap-3 bg-slate-50/70 px-3 py-2 text-xs font-medium text-slate-500 dark:bg-darkmode-600/30 dark:text-slate-400"
             >
               <div class="truncate">{{ t('views.purchase_receipt.fields.product_unit_id') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_receipt.fields.qty') }}</div>
+              <div class="truncate">{{ t('views.product.table.cols.unit') }}</div>
               <div class="truncate text-right" :title="t('views.purchase_receipt.fields.product_unit_conversion_value')">
                 {{ t('views.purchase_receipt.fields.product_unit_conversion_value') }}
               </div>
@@ -990,7 +991,7 @@ const onSubmit = async () => {
             v-for="(item, index) in getItems()"
             :key="`${item.purchase_order_item_id ? 'po' : 'extra'}-${item.product_unit_id ?? 'item'}-${index}`"
           >
-            <div class="grid grid-cols-[minmax(0,1fr)_6rem_4rem_5.5rem] items-center gap-3 px-3 py-2">
+            <div class="grid grid-cols-[minmax(0,1fr)_6rem_4.5rem_4rem_5.5rem] items-center gap-3 px-3 py-2">
               <div class="flex min-w-0 items-center gap-3">
               <ProductImagePreview
                 :image-url="item.product_unit_product_image_url"
@@ -1021,6 +1022,9 @@ const onSubmit = async () => {
                   :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
                   @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
                 />
+              </div>
+              <div class="min-w-0 truncate text-xs text-slate-500 dark:text-slate-400">
+                {{ item.product_unit_unit_name || '-' }}
               </div>
               <div
                 class="text-right text-xs text-slate-500"

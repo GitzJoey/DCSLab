@@ -548,7 +548,7 @@ const handleProductUnitSelected = (index: number, option: ProductUnitOption | nu
     item.product_unit_base_unit_name = null;
     item.product_unit_conversion_value = 1;
     item.product_unit_price = 0;
-    validatePurchaseOrderField(`items.${index}.product_unit_id`);
+    purchaseOrderForm.forgetError(`items.${index}.product_unit_id` as any);
     return;
   }
 
@@ -997,9 +997,10 @@ const onSubmit = async () => {
           <!-- items: repeating item blocks -->
           <div v-else>
             <div v-if="purchaseOrderItemsForm.length > 0"
-              class="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_8rem_5.5rem] items-center gap-2 border-b border-slate-200/60 pb-2 text-xs font-medium text-slate-500 dark:border-darkmode-400 dark:text-slate-400">
+              class="grid grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] items-center gap-2 border-b border-slate-200/60 pb-2 text-xs font-medium text-slate-500 dark:border-darkmode-400 dark:text-slate-400">
               <div class="truncate">{{ t('views.purchase_order.fields.product_unit_id') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_order.fields.qty') }}</div>
+              <div class="truncate">{{ t('views.product.table.cols.unit') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_order.fields.product_unit_price') }}</div>
               <div class="truncate text-right" :title="t('views.purchase_order.fields.subtotal_after_discount')">
                 {{ t('views.purchase_order.fields.subtotal_after_discount') }}
@@ -1009,7 +1010,7 @@ const onSubmit = async () => {
             <div v-for="(item, index) in purchaseOrderItemsForm" :key="`${item.product_unit_id}-${index}`"
               class="mt-3 border-t border-slate-200/60 pt-5 first:mt-0 first:border-t-0 first:pt-0 dark:border-darkmode-400">
               <!-- item summary: single compact row -->
-              <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_8rem_5.5rem] items-center gap-2">
+              <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] items-center gap-2">
                 <div class="flex min-w-0 items-center gap-3">
                 <ProductImagePreview :image-url="item.product_unit_product_image_url"
                   wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
@@ -1028,6 +1029,12 @@ const onSubmit = async () => {
                     :allow-negative="false"
                     :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
                     @change="validatePurchaseOrderField(`items.${index}.qty`)" />
+                </div>
+                <div class="min-w-0 text-xs text-slate-500 dark:text-slate-400">
+                  <div class="truncate">{{ item.product_unit_unit_name || '-' }}</div>
+                  <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="truncate">
+                    &times;{{ item.product_unit_conversion_value }} {{ item.product_unit_base_unit_name || '' }}
+                  </div>
                 </div>
                 <div :title="t('views.purchase_order.fields.product_unit_price')">
                   <FormInputCurrency v-model="item.product_unit_price" :allow-negative="false"

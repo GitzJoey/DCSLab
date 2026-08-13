@@ -36,20 +36,17 @@ const options = ref<Array<ProductUnitSelectOption>>(props.initialOption ? [props
 const hasFetched = ref<boolean>(false);
 let requestCounter = 0;
 
-const buildOptionLabel = (option: ProductUnitSelectOption) => {
-  const label = `[${option.product_unit_code}] ${option.product_name} — ${option.unit_name}`;
+const buildOptionLabel = (option: ProductUnitSelectOption) =>
+  `[${option.product_unit_code}] ${option.product_name} — ${option.unit_name}`;
 
-  if (Number(option.conversion_value ?? 1) > 1) {
-    return `${label} (×${option.conversion_value} ${option.base_unit_name})`;
-  }
-
-  return label;
-};
-
+// the selected entry drops the unit suffix: the row's Unit column already shows it
 const selectOptions = computed(() =>
   options.value.map((option) => ({
     value: option.product_unit_id,
-    label: buildOptionLabel(option),
+    label:
+      option.product_unit_id === props.modelValue
+        ? `[${option.product_unit_code}] ${option.product_name}`
+        : buildOptionLabel(option),
   })),
 );
 
