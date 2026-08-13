@@ -91,9 +91,10 @@ const handleSearch = (search: string) => {
 };
 
 const handleFocus = () => {
-  // lazy first load: nothing is fetched on mount, only when the user opens the field
+  // lazy first load: nothing is fetched on mount, only when the user opens the
+  // field — including when a value is already selected, so a click behaves
+  // like a regular dropdown. Cached per instance afterwards.
   if (hasFetched.value) return;
-  if (props.modelValue) return;
   void loadOptions('');
 };
 
