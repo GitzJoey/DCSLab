@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
@@ -21,7 +21,9 @@ import {
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
 import ProductImagePreview from '@/components/Product/ProductImagePreview.vue';
-import ProductUnitPickerDialog from '@/components/Product/ProductUnitPickerDialog.vue';
+import ProductUnitSelectSearch, {
+  type ProductUnitSelectOption,
+} from '@/components/Product/ProductUnitSelectSearch.vue';
 import CashAccountService from '@/services/CashAccountService';
 import ProductService from '@/services/ProductService';
 import PurchaseOrderService from '@/services/PurchaseOrderService';
@@ -37,7 +39,7 @@ import {
   PurchaseOrderPaymentRefundNestedUpdateRequest,
 } from '@/types/services/purchase-order/PurchaseOrderRequest';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-import { convertErrorTypeToAlertListType, formatCurrency, formatDate } from '@/utils/helper';
+import { convertErrorTypeToAlertListType, formatDate } from '@/utils/helper';
 
 type PurchaseOrderItemFormItem = PurchaseOrderItemNestedUpdateRequest & {
   product_unit_product_code?: string | null;
@@ -48,14 +50,7 @@ type PurchaseOrderItemFormItem = PurchaseOrderItemNestedUpdateRequest & {
   vat_profile_name?: string | null;
 };
 
-type ProductUnitOption = {
-  product_unit_id: string;
-  product_unit_code: string;
-  product_name: string;
-  product_image_url: string | null;
-  unit_name: string;
-  base_unit_name: string;
-  conversion_value: number;
+type ProductUnitOption = ProductUnitSelectOption & {
   price: number;
   product_unit_is_price_include_vat: boolean;
   vat_profile_id: string | null;
@@ -134,33 +129,8 @@ const cashAccountOptions = computed(() =>
   })),
 );
 
-const showProductUnitModal = ref<boolean>(false);
-const productSearchText = ref<string>('');
-const isSearchingProductUnit = ref<boolean>(false);
-const productUnitOptions = ref<Array<ProductUnitOption>>([]);
-const editingProductUnitIndex = ref<number | null>(null);
-const productUnitQtyToFocus = ref<number | null>(null);
 const purchaseOrderItemDetailsExpanded = ref<boolean[]>([]);
 const viewportWidth = ref<number>(window.innerWidth);
-
-const productUnitDialogColumns = [
-  {
-    key: 'unit_name',
-    label: t('views.product.table.cols.unit'),
-  },
-  {
-    key: 'conversion_value',
-    label: t('views.purchase_order.fields.product_unit_conversion_value'),
-    align: 'right' as const,
-    formatter: 'number' as const,
-  },
-  {
-    key: 'price',
-    label: t('views.purchase_order.fields.product_unit_price'),
-    align: 'right' as const,
-    formatter: 'number' as const,
-  },
-];
 
 const currentItemLayout = computed<'sm' | 'md' | 'lg'>(() => {
   if (viewportWidth.value >= 1024) return 'lg';
@@ -488,15 +458,13 @@ const loadData = async () => {
   }
 };
 
-const searchProductUnits = async () => {
-  if (!selectedUserLocation.value) return;
-
-  isSearchingProductUnit.value = true;
+const fetchProductUnitOptions = async (search: string): Promise<Array<ProductUnitOption>> => {
+  if (!selectedUserLocation.value) return [];
 
   const result = await productService.readAnyGet({
     with_trashed: false,
     company_id: selectedUserLocation.value.company.id,
-    search: productSearchText.value,
+    search,
     category_id: undefined,
     brand_id: undefined,
     default_vat_profile_id: undefined,
@@ -511,134 +479,116 @@ const searchProductUnits = async () => {
     limit: 50,
   });
 
-  isSearchingProductUnit.value = false;
+  if (!result.success || !result.data) return [];
 
-  if (result.success && result.data) {
-    const products = result.data.data as any[];
-    productUnitOptions.value = products.flatMap((product: any) => {
-      const units: any[] = product.product_units || [];
-      const baseUnitName =
-        units.find((unit: any) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
-      return units.map((unit: any) => ({
-        product_unit_id: unit.id,
-        product_unit_code: unit.code,
-        product_name: product.name,
-        product_image_url: product.main_product_image?.url ?? null,
-        unit_name: unit.unit?.name ?? '',
-        base_unit_name: baseUnitName,
-        conversion_value: Number(unit.conversion_value ?? 1),
-        price: Number(unit.price ?? 0),
-        product_unit_is_price_include_vat: Boolean(product.is_price_include_vat),
-        vat_profile_id: product.default_vat_profile?.id ?? null,
-        vat_profile_name: product.default_vat_profile?.name ?? null,
-        vat_rate: Number(product.default_vat_profile?.vat_rate ?? 0),
-        vat_base_numerator: Number(product.default_vat_profile?.vat_base_numerator ?? 1),
-        vat_base_denominator: Number(product.default_vat_profile?.vat_base_denominator ?? 1),
-      }));
-    });
-  } else {
-    productUnitOptions.value = [];
+  const products = result.data.data as any[];
+  return products.flatMap((product: any) => {
+    const units: any[] = product.product_units || [];
+    const baseUnitName =
+      units.find((unit: any) => Number(unit.conversion_value ?? 1) === 1)?.unit?.name ?? '';
+    return units.map((unit: any) => ({
+      product_unit_id: unit.id,
+      product_unit_code: unit.code,
+      product_name: product.name,
+      product_image_url: product.main_product_image?.url ?? null,
+      unit_name: unit.unit?.name ?? '',
+      base_unit_name: baseUnitName,
+      conversion_value: Number(unit.conversion_value ?? 1),
+      is_use_serial_number: Boolean(product.is_use_serial_number),
+      price: Number(unit.price ?? 0),
+      product_unit_is_price_include_vat: Boolean(product.is_price_include_vat),
+      vat_profile_id: product.default_vat_profile?.id ?? null,
+      vat_profile_name: product.default_vat_profile?.name ?? null,
+      vat_rate: Number(product.default_vat_profile?.vat_rate ?? 0),
+      vat_base_numerator: Number(product.default_vat_profile?.vat_base_numerator ?? 1),
+      vat_base_denominator: Number(product.default_vat_profile?.vat_base_denominator ?? 1),
+    }));
+  });
+};
+
+const buildItemInitialOption = (item: PurchaseOrderItemFormItem): ProductUnitSelectOption | null => {
+  if (!item.product_unit_id) return null;
+
+  return {
+    product_unit_id: item.product_unit_id,
+    product_unit_code: item.product_unit_product_code ?? '',
+    product_name: item.product_unit_product_name ?? '-',
+    product_image_url: item.product_unit_product_image_url ?? null,
+    unit_name: item.product_unit_unit_name ?? '',
+    base_unit_name: item.product_unit_base_unit_name ?? '',
+    conversion_value: Number(item.product_unit_conversion_value ?? 1),
+    is_use_serial_number: false,
+  };
+};
+
+const addItem = () => {
+  purchaseOrderForm.items.push({
+    id: null,
+    qty: 1,
+    product_unit_id: '',
+    product_unit_product_code: null,
+    product_unit_product_name: null,
+    product_unit_product_image_url: null,
+    product_unit_unit_name: null,
+    product_unit_base_unit_name: null,
+    product_unit_conversion_value: 1,
+    product_unit_price: 0,
+    price_discount: 0,
+    subtotal_discount: 0,
+    product_unit_is_price_include_vat: false,
+    vat_profile_id: null,
+    vat_profile_name: null,
+    vat_rate: 0,
+    vat_base_numerator: 1,
+    vat_base_denominator: 1,
+    remarks: '',
+  } as any);
+  purchaseOrderItemDetailsExpanded.value.push(false);
+};
+
+const handleProductUnitSelected = (index: number, option: ProductUnitOption | null) => {
+  const item = purchaseOrderItemsForm.value[index];
+  if (!item) return;
+
+  if (!option) {
+    item.product_unit_id = '';
+    item.product_unit_product_code = null;
+    item.product_unit_product_name = null;
+    item.product_unit_product_image_url = null;
+    item.product_unit_unit_name = null;
+    item.product_unit_base_unit_name = null;
+    item.product_unit_conversion_value = 1;
+    item.product_unit_price = 0;
+    validatePurchaseOrderField(`items.${index}.product_unit_id`);
+    return;
   }
-};
-
-const openAddProductUnit = () => {
-  productSearchText.value = '';
-  productUnitOptions.value = [];
-  editingProductUnitIndex.value = null;
-  showProductUnitModal.value = true;
-};
-
-const openChangeProductUnit = (index: number) => {
-  productSearchText.value = '';
-  productUnitOptions.value = [];
-  editingProductUnitIndex.value = index;
-  showProductUnitModal.value = true;
-};
-
-const selectProductUnit = (option: ProductUnitOption) => {
-  let vatProfileId: string | null = null;
-  let vatProfileName: string | null = null;
-  let vatRate = 0;
-  let vatBaseNumerator = 1;
-  let vatBaseDenominator = 1;
 
   if (option.vat_profile_id) {
-    vatProfileId = option.vat_profile_id;
-    vatProfileName = option.vat_profile_name;
-    vatRate = option.vat_rate;
-    vatBaseNumerator = option.vat_base_numerator;
-    vatBaseDenominator = option.vat_base_denominator;
-
     appendVatProfileOption({
-      id: vatProfileId,
-      name: vatProfileName,
-      vat_rate: vatRate,
-      vat_base_numerator: vatBaseNumerator,
-      vat_base_denominator: vatBaseDenominator,
+      id: option.vat_profile_id,
+      name: option.vat_profile_name,
+      vat_rate: option.vat_rate,
+      vat_base_numerator: option.vat_base_numerator,
+      vat_base_denominator: option.vat_base_denominator,
     });
   }
 
-  const itemData: Partial<PurchaseOrderItemFormItem> = {
-    product_unit_id: option.product_unit_id,
-    product_unit_product_code: option.product_unit_code,
-    product_unit_product_name: option.product_name,
-    product_unit_product_image_url: option.product_image_url,
-    product_unit_unit_name: option.unit_name,
-    product_unit_base_unit_name: option.conversion_value != 1 ? option.base_unit_name : '',
-    product_unit_conversion_value: option.conversion_value,
-    product_unit_price: option.price,
-    product_unit_is_price_include_vat: option.product_unit_is_price_include_vat,
-    vat_profile_id: vatProfileId,
-    vat_profile_name: vatProfileName,
-    vat_rate: vatRate,
-    vat_base_numerator: vatBaseNumerator,
-    vat_base_denominator: vatBaseDenominator,
-  };
+  item.product_unit_id = option.product_unit_id;
+  item.product_unit_product_code = option.product_unit_code;
+  item.product_unit_product_name = option.product_name;
+  item.product_unit_product_image_url = option.product_image_url ?? null;
+  item.product_unit_unit_name = option.unit_name;
+  item.product_unit_base_unit_name = option.conversion_value != 1 ? option.base_unit_name : '';
+  item.product_unit_conversion_value = option.conversion_value;
+  item.product_unit_price = option.price;
+  item.product_unit_is_price_include_vat = option.product_unit_is_price_include_vat;
+  item.vat_profile_id = option.vat_profile_id ?? null;
+  item.vat_profile_name = option.vat_profile_id ? option.vat_profile_name : null;
+  item.vat_rate = option.vat_profile_id ? option.vat_rate : 0;
+  item.vat_base_numerator = option.vat_profile_id ? option.vat_base_numerator : 1;
+  item.vat_base_denominator = option.vat_profile_id ? option.vat_base_denominator : 1;
 
-  let targetIndex: number;
-
-  if (editingProductUnitIndex.value === null) {
-    purchaseOrderForm.items.push({
-      id: null,
-      qty: 1,
-      price_discount: 0,
-      subtotal_discount: 0,
-      remarks: '',
-      ...itemData,
-    } as any);
-    targetIndex = purchaseOrderForm.items.length - 1;
-    purchaseOrderItemDetailsExpanded.value[targetIndex] = false;
-  } else {
-    purchaseOrderItemsForm.value[editingProductUnitIndex.value] = {
-      ...purchaseOrderItemsForm.value[editingProductUnitIndex.value],
-      ...itemData,
-    } as PurchaseOrderItemFormItem;
-    targetIndex = editingProductUnitIndex.value;
-  }
-
-  showProductUnitModal.value = false;
-  editingProductUnitIndex.value = null;
-  productUnitQtyToFocus.value = targetIndex;
-
-  Object.keys(purchaseOrderForm.errors).forEach((key) => {
-    if (key.startsWith('items.')) {
-      purchaseOrderForm.forgetError(key as any);
-    }
-  });
-};
-
-const handleProductUnitModalAfterLeave = () => {
-  const index = productUnitQtyToFocus.value;
-  productUnitQtyToFocus.value = null;
-
-  if (index === null) return;
-
-  nextTick(() => {
-    const el = document.getElementById(`purchase-order-item-qty-${index}`) as HTMLInputElement | null;
-    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    el?.focus();
-    el?.select();
-  });
+  validatePurchaseOrderField(`items.${index}.product_unit_id`);
 };
 
 const removeProductUnit = (index: number) => {
@@ -828,8 +778,6 @@ const getPurchaseOrderVatPreview = () =>
   );
 
 const formatCurrencyPreviewValue = (value: number) => Number(value.toFixed(2));
-const formatCompactNumberValue = (value: number | string, precision = 4) =>
-  formatCurrency(Number(Number(value ?? 0).toFixed(precision)));
 
 const getTotalAmountPayableBeforeRoundingPreview = () =>
   purchaseOrderItemsForm.value.reduce(
@@ -1058,7 +1006,7 @@ const onSubmit = async () => {
           <!-- items: repeating item blocks -->
           <div v-else>
             <div v-if="purchaseOrderItemsForm.length > 0"
-              class="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_8rem_7.5rem] items-center gap-2 border-b border-slate-200/60 pb-2 text-xs font-medium text-slate-500 dark:border-darkmode-400 dark:text-slate-400">
+              class="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_8rem_5.5rem] items-center gap-2 border-b border-slate-200/60 pb-2 text-xs font-medium text-slate-500 dark:border-darkmode-400 dark:text-slate-400">
               <div class="truncate">{{ t('views.purchase_order.fields.product_unit_id') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_order.fields.qty') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_order.fields.product_unit_price') }}</div>
@@ -1070,27 +1018,18 @@ const onSubmit = async () => {
             <div v-for="(item, index) in purchaseOrderItemsForm" :key="`${item.product_unit_id}-${index}`"
               class="mt-3 border-t border-slate-200/60 pt-5 first:mt-0 first:border-t-0 first:pt-0 dark:border-darkmode-400">
               <!-- item summary: single compact row -->
-              <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_8rem_7.5rem] items-center gap-2">
+              <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_8rem_8rem_5.5rem] items-center gap-2">
                 <div class="flex min-w-0 items-center gap-3">
                 <ProductImagePreview :image-url="item.product_unit_product_image_url"
                   wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
                   icon-class="w-4 h-4 text-slate-400"
                   :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
                 <div class="min-w-0 flex-1">
-                  <div class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
-                    <span v-if="item.product_unit_product_code" class="font-normal text-slate-500">
-                      [{{ item.product_unit_product_code }}]
-                    </span>
-                    {{ item.product_unit_product_name || '-' }}
-                  </div>
-                  <div class="truncate text-xs text-slate-500 dark:text-slate-400">
-                    #{{ index + 1 }}
-                    <span v-if="item.product_unit_unit_name">&middot; {{ item.product_unit_unit_name }}</span>
-                    <span v-if="Number(item.product_unit_conversion_value || 1) > 1">
-                      &middot; &times; {{ formatCompactNumberValue(item.product_unit_conversion_value) }}
-                      {{ item.product_unit_base_unit_name || '' }}
-                    </span>
-                  </div>
+                  <ProductUnitSelectSearch :model-value="item.product_unit_id"
+                    :fetch-options="fetchProductUnitOptions" :initial-option="buildItemInitialOption(item)"
+                    :invalid="invalidPurchaseOrderField(`items.${index}.product_unit_id`)"
+                    :placeholder="t('components.dropdown.placeholder')"
+                    @select="handleProductUnitSelected(index, $event as ProductUnitOption | null)" />
                 </div>
                 </div>
                 <div :title="t('views.purchase_order.fields.qty')">
@@ -1113,11 +1052,6 @@ const onSubmit = async () => {
                     @click="togglePurchaseOrderItemDetails(index)">
                     <Lucide :icon="purchaseOrderItemDetailsExpanded[index] ? 'ChevronUp' : 'ChevronDown'"
                       class="w-4 h-4" />
-                  </Button>
-                  <Button type="button" variant="outline-secondary" tabindex="-1"
-                    class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0 border-slate-500 text-slate-500 hover:border-primary hover:text-primary"
-                    @click="openChangeProductUnit(index)">
-                    <Lucide icon="Search" class="w-4 h-4" />
                   </Button>
                   <Button type="button" variant="outline-secondary" class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0" @click="removeProductUnit(index)">
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
@@ -1388,7 +1322,7 @@ const onSubmit = async () => {
             </div>
           </div>
           <div class="flex justify-end">
-            <Button type="button" variant="outline-primary" @click="openAddProductUnit">
+            <Button type="button" variant="outline-primary" @click="addItem">
               <Lucide icon="Plus" class="w-4 h-4 mr-1" />
               {{ t('components.buttons.create_new') }}
             </Button>
@@ -1771,12 +1705,4 @@ const onSubmit = async () => {
       </template>
     </TwoColumnsLayout>
   </form>
-
-  <!-- dialog: product unit picker for add/change item -->
-  <ProductUnitPickerDialog size="xl" panel-class="max-w-5xl" :open="showProductUnitModal"
-    :title="t('views.purchase_order.fields.product_unit_id')" :search-text="productSearchText"
-    :is-searching="isSearchingProductUnit" :options="productUnitOptions" :columns="productUnitDialogColumns"
-    @update:search-text="productSearchText = $event" @search="searchProductUnits"
-    @select="selectProductUnit($event as ProductUnitOption)" @close="showProductUnitModal = false"
-    @after-leave="handleProductUnitModalAfterLeave" />
 </template>
