@@ -22,6 +22,9 @@
     options?: FormSelectSearchOption[];
     formInputSize?: 'sm' | 'lg';
     rounded?: boolean;
+    // when true a selected value no longer locks the input: clicking reopens
+    // the list and typing starts a fresh search (the label is restored on blur)
+    reselectable?: boolean;
   }
 
   export interface FormSelectSearchEmit {
@@ -75,7 +78,7 @@
 
   const displayedOptions = computed<FormSelectSearchOption[]>(() => props.options ?? []);
 
-  const isLocked = computed(() => selectedOption.value !== null);
+  const isLocked = computed(() => !props.reselectable && selectedOption.value !== null);
 
   const hasValue = computed(() => props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '');
 
@@ -131,6 +134,9 @@
     if (isLocked.value) return;
     isFocused.value = true;
     isOpen.value = true;
+    if (props.reselectable && selectedOption.value) {
+      displayValue.value = '';
+    }
     await nextTick();
     updateDropdownPosition();
   };

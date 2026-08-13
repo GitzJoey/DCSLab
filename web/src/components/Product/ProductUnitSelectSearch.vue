@@ -118,6 +118,7 @@ const handleChange = (value: string | number | null | Event) => {
 <template>
   <FormSelectSearch
     :model-value="modelValue"
+    reselectable
     :options="selectOptions"
     :disabled="disabled"
     :placeholder="placeholder"
