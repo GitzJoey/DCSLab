@@ -1056,6 +1056,19 @@ const onSubmit = async () => {
             </div>
 
             <div v-if="item.ui_expanded" class="space-y-3 bg-slate-50/70 px-3 py-3 dark:bg-darkmode-600/30">
+              <div class="max-w-xs">
+                <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }">
+                  {{ t('views.purchase_receipt.fields.product_unit_conversion_value') }}
+                  <span v-if="item.product_unit_base_unit_name"
+                    class="ml-1 text-xs font-normal text-slate-500 dark:text-slate-400">
+                    ({{ item.product_unit_base_unit_name }})
+                  </span>
+                </FormLabel>
+                <FormInput v-model="item.product_unit_conversion_value" type="number" min="0" step="any"
+                  :class="{ 'border-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }"
+                  @change="purchaseOrderReceiptForm.validate(`items.${index}.product_unit_conversion_value` as any)" />
+                <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_conversion_value`)" />
+              </div>
               <div>
                 <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.remarks`) }">
                   {{ t('views.purchase_receipt.fields.remarks') }}

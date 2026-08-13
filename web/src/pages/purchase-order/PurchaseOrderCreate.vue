@@ -1090,6 +1090,21 @@ const onSubmit = async () => {
                       <FormErrorMessages
                         :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_denominator`)" />
                     </div>
+                    <div class="col-span-12 md:col-span-4">
+                      <FormLabel
+                        :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_conversion_value`) }">
+                        {{ t('views.purchase_order.fields.product_unit_conversion_value') }}
+                        <span v-if="item.product_unit_base_unit_name"
+                          class="ml-1 text-xs font-normal text-slate-500 dark:text-slate-400">
+                          ({{ item.product_unit_base_unit_name }})
+                        </span>
+                      </FormLabel>
+                      <FormInputCurrency v-model="item.product_unit_conversion_value" :allow-negative="false"
+                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_conversion_value`) }"
+                        @change="validatePurchaseOrderField(`items.${index}.product_unit_conversion_value`)" />
+                      <FormErrorMessages
+                        :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_conversion_value`)" />
+                    </div>
                     <div class="col-span-12">
                       <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }">
                         {{ t('views.purchase_order.fields.remarks') }}
