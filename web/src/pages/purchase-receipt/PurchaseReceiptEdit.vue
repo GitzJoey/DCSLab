@@ -20,6 +20,7 @@ import {
   FormSelectSearch,
   FormSwitch,
   FormTextarea,
+  InputGroup,
 } from '@/components/Base/Form';
 import Button from '@/components/Base/Button';
 import Lucide from '@/components/Base/Lucide';
@@ -1159,7 +1160,7 @@ const onSubmit = async () => {
               </div>
               <div>
                 <div class="mb-1 text-xs text-slate-500 lg:hidden">{{ t('views.purchase_receipt.fields.qty') }}</div>
-                <div class="flex items-center gap-2">
+                <InputGroup>
                   <FormInput
                     :id="`items.${index}.qty`"
                     v-model="item.qty"
@@ -1171,10 +1172,10 @@ const onSubmit = async () => {
                     :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
                     @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
                   />
-                  <span class="shrink-0 text-xs text-slate-500 lg:hidden">
-                    {{ item.product_unit_unit_name || '' }}
-                  </span>
-                </div>
+                  <InputGroup.Text v-if="item.product_unit_unit_name" class="flex shrink-0 items-center bg-transparent px-2 text-xs dark:bg-transparent lg:hidden">
+                    {{ item.product_unit_unit_name }}
+                  </InputGroup.Text>
+                </InputGroup>
               </div>
               <div class="hidden min-w-0 text-xs text-slate-500 dark:text-slate-400 lg:block">
                 <div class="truncate">{{ item.product_unit_unit_name || '-' }}</div>
