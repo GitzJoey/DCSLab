@@ -120,8 +120,8 @@ class ProductActions
                             ->orWhere('products.remarks', 'like', '%'.$search.'%')
                             ->orWhereHas('productUnits', function ($query) use ($search) {
                                 $query->where(function ($query) use ($search) {
-                                    $query->where('items.code', 'like', '%'.$search.'%')
-                                        ->orWhere('items.remarks', 'like', '%'.$search.'%');
+                                    $query->where('product_units.code', 'like', '%'.$search.'%')
+                                        ->orWhere('product_units.remarks', 'like', '%'.$search.'%');
                                 });
                             });
                     });

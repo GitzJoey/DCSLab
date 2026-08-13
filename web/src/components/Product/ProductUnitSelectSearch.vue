@@ -37,7 +37,7 @@ const hasFetched = ref<boolean>(false);
 let requestCounter = 0;
 
 const buildOptionLabel = (option: ProductUnitSelectOption) =>
-  `[${option.product_unit_code}] ${option.product_name} — ${option.unit_name}`;
+  `${option.product_unit_code} · ${option.product_name} · ${option.unit_name}`;
 
 // the selected entry drops the unit suffix: the row's Unit column already shows it
 const selectOptions = computed(() =>
@@ -45,7 +45,7 @@ const selectOptions = computed(() =>
     value: option.product_unit_id,
     label:
       option.product_unit_id === props.modelValue
-        ? `[${option.product_unit_code}] ${option.product_name}`
+        ? `${option.product_unit_code} · ${option.product_name}`
         : buildOptionLabel(option),
   })),
 );
