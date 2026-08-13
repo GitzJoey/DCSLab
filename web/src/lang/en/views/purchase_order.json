@@ -78,6 +78,7 @@
     "item_grand_total": "Item Amount Payable",
     "price_after_discount": "Unit Price After Discount",
     "subtotal": "Subtotal After Unit Price Discount",
+    "subtotal_column": "Subtotal",
     "subtotal_discount": "Subtotal Discount",
     "subtotal_after_discount": "Subtotal After Discount",
     "subtotal_after_vat": "Subtotal After VAT",

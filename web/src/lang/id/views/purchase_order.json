@@ -78,6 +78,7 @@
     "item_grand_total": "Jumlah Harus Dibayar Item",
     "price_after_discount": "Harga Satuan Setelah Diskon",
     "subtotal": "Subtotal Setelah Diskon Harga Satuan",
+    "subtotal_column": "Subtotal",
     "subtotal_discount": "Diskon Subtotal",
     "subtotal_after_discount": "Subtotal Setelah Diskon",
     "subtotal_after_vat": "Subtotal Setelah PPN",

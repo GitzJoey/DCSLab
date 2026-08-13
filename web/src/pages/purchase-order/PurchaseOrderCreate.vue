@@ -904,7 +904,7 @@ const onSubmit = async () => {
               <div class="truncate">{{ t('views.product.table.cols.unit') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_order.fields.product_unit_price') }}</div>
               <div class="truncate text-right" :title="t('views.purchase_order.fields.subtotal_after_discount')">
-                {{ t('views.purchase_order.fields.subtotal_after_discount') }}
+                {{ t('views.purchase_order.fields.subtotal_column') }}
               </div>
               <div></div>
             </div>
@@ -931,11 +931,15 @@ const onSubmit = async () => {
                     :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
                     @change="validatePurchaseOrderField(`items.${index}.qty`)" />
                 </div>
-                <div class="min-w-0 text-xs text-slate-500 dark:text-slate-400">
-                  <div class="truncate">{{ item.product_unit_unit_name || '-' }}</div>
-                  <div v-if="Number(item.product_unit_conversion_value || 1) > 1" class="truncate">
-                    &times;{{ item.product_unit_conversion_value }} {{ item.product_unit_base_unit_name || '' }}
-                  </div>
+                <div
+                  class="min-w-0 truncate text-xs text-slate-500 dark:text-slate-400"
+                  :title="
+                    Number(item.product_unit_conversion_value || 1) > 1
+                      ? `1 ${item.product_unit_unit_name} = ${item.product_unit_conversion_value} ${item.product_unit_base_unit_name || ''}`
+                      : item.product_unit_unit_name || '-'
+                  "
+                >
+                  {{ item.product_unit_unit_name || '-' }}
                 </div>
                 <div :title="t('views.purchase_order.fields.product_unit_price')">
                   <FormInputCurrency v-model="item.product_unit_price" :allow-negative="false"
