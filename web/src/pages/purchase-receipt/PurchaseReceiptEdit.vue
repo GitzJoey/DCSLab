@@ -1117,11 +1117,22 @@ const onSubmit = async () => {
             v-else
             class="divide-y divide-slate-200/70 rounded-md border border-slate-200/70 dark:divide-darkmode-400 dark:border-darkmode-400"
           >
+            <div
+              class="grid grid-cols-[minmax(0,1fr)_6rem_4rem_7.5rem] items-center gap-3 bg-slate-50/70 px-3 py-2 text-xs font-medium text-slate-500 dark:bg-darkmode-600/30 dark:text-slate-400"
+            >
+              <div class="truncate">{{ t('views.purchase_receipt.fields.product_unit_id') }}</div>
+              <div class="truncate text-right">{{ t('views.purchase_receipt.fields.qty') }}</div>
+              <div class="truncate text-right" :title="t('views.purchase_receipt.fields.product_unit_conversion_value')">
+                {{ t('views.purchase_receipt.fields.product_unit_conversion_value') }}
+              </div>
+              <div></div>
+            </div>
           <div
             v-for="(item, index) in getItems()"
             :key="`${item.id ?? 'new'}-${item.product_unit_id ?? 'item'}-${index}`"
           >
-            <div class="flex items-center gap-3 px-3 py-2">
+            <div class="grid grid-cols-[minmax(0,1fr)_6rem_4rem_7.5rem] items-center gap-3 px-3 py-2">
+              <div class="flex min-w-0 items-center gap-3">
               <ProductImagePreview
                 :image-url="item.product_unit_product_image_url"
                 wrapper-class="flex h-10 w-10 shrink-0 cursor-zoom-in items-center justify-center overflow-hidden rounded-md bg-slate-100 dark:bg-darkmode-600"
@@ -1143,7 +1154,8 @@ const onSubmit = async () => {
                   </span>
                 </div>
               </div>
-              <div class="w-24 shrink-0">
+              </div>
+              <div>
                 <FormInput
                   :id="`items.${index}.qty`"
                   v-model="item.qty"
@@ -1157,25 +1169,25 @@ const onSubmit = async () => {
                 />
               </div>
               <div
-                class="w-14 shrink-0 text-right text-xs text-slate-500"
+                class="text-right text-xs text-slate-500"
                 :title="t('views.purchase_receipt.fields.product_unit_conversion_value')"
               >
                 &times; {{ item.product_unit_conversion_value }}
               </div>
-              <div class="flex shrink-0 items-center gap-1">
+              <div class="flex items-center justify-end gap-1">
                 <Button
                   type="button"
-                  size="sm"
                   variant="outline-secondary"
+                  class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0"
                   :class="{ 'border-danger text-danger': !item.ui_expanded && itemDetailsInvalid(index, item) }"
                   @click="item.ui_expanded = !item.ui_expanded"
                 >
                   <Lucide :icon="item.ui_expanded ? 'ChevronUp' : 'ChevronDown'" class="h-4 w-4" />
                 </Button>
-                <Button type="button" size="sm" variant="outline-primary" @click="openChangeProductUnit(index)">
+                <Button type="button" variant="outline-primary" class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0" @click="openChangeProductUnit(index)">
                   <Lucide icon="Pencil" class="h-4 w-4" />
                 </Button>
-                <Button type="button" size="sm" variant="outline-secondary" @click="removeItem(index)">
+                <Button type="button" variant="outline-secondary" class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0" @click="removeItem(index)">
                   <Lucide icon="Trash2" class="h-4 w-4 text-danger" />
                 </Button>
               </div>
