@@ -39,7 +39,7 @@ import {
   PurchaseOrderPaymentRefundNestedUpdateRequest,
 } from '@/types/services/purchase-order/PurchaseOrderRequest';
 import type { AlertPlaceholderProps } from '@/components/AlertPlaceholder/AlertPlaceholder.vue';
-import { convertErrorTypeToAlertListType, formatDate } from '@/utils/helper';
+import { convertErrorTypeToAlertListType, formatCurrency, formatDate } from '@/utils/helper';
 
 type PurchaseOrderItemFormItem = PurchaseOrderItemNestedUpdateRequest & {
   product_unit_product_code?: string | null;
@@ -997,7 +997,7 @@ const onSubmit = async () => {
           <!-- items: repeating item blocks -->
           <div v-else>
             <div v-if="purchaseOrderItemsForm.length > 0"
-              class="grid grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] items-center gap-2 border-b border-slate-200/60 pb-2 text-xs font-medium text-slate-500 dark:border-darkmode-400 dark:text-slate-400">
+              class="hidden lg:grid grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] items-center gap-2 border-b border-slate-200/60 pb-2 text-xs font-medium text-slate-500 dark:border-darkmode-400 dark:text-slate-400">
               <div class="truncate">{{ t('views.purchase_order.fields.product_unit_id') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_order.fields.qty') }}</div>
               <div class="truncate">{{ t('views.product.table.cols.unit') }}</div>
@@ -1010,10 +1010,11 @@ const onSubmit = async () => {
             <div v-for="(item, index) in purchaseOrderItemsForm" :key="`${item.product_unit_id}-${index}`"
               class="mt-3 border-t border-slate-200/60 pt-5 first:mt-0 first:border-t-0 first:pt-0 dark:border-darkmode-400">
               <!-- item summary: single compact row -->
-              <div class="grid grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] items-center gap-2">
-                <div class="flex min-w-0 items-center gap-3">
+              <div
+                class="grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] lg:items-center lg:gap-2">
+                <div class="col-span-2 flex min-w-0 items-center gap-3 lg:col-span-1">
                 <ProductImagePreview :image-url="item.product_unit_product_image_url"
-                  wrapper-class="w-10 h-10 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
+                  wrapper-class="w-8 h-8 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
                   icon-class="w-4 h-4 text-slate-400"
                   :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
                 <div class="min-w-0 flex-1">
@@ -1023,33 +1024,59 @@ const onSubmit = async () => {
                     :placeholder="t('components.dropdown.placeholder')"
                     @select="handleProductUnitSelected(index, $event as ProductUnitOption | null)" />
                 </div>
+                <div class="flex shrink-0 items-center gap-1 lg:hidden">
+                  <Button type="button" variant="outline-secondary"
+                    class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0"
+                    @click="togglePurchaseOrderItemDetails(index)">
+                    <Lucide :icon="purchaseOrderItemDetailsExpanded[index] ? 'ChevronUp' : 'ChevronDown'"
+                      class="w-4 h-4" />
+                  </Button>
+                  <Button type="button" variant="outline-secondary"
+                    class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0"
+                    @click="removeProductUnit(index)">
+                    <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
+                  </Button>
+                </div>
                 </div>
                 <div :title="t('views.purchase_order.fields.qty')">
-                  <FormInputCurrency :id="`purchase-order-item-qty-${index}`" v-model="item.qty"
-                    :allow-negative="false"
-                    :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
-                    @change="validatePurchaseOrderField(`items.${index}.qty`)" />
+                  <div class="mb-1 text-xs text-slate-500 lg:hidden">{{ t('views.purchase_order.fields.qty') }}</div>
+                  <div class="flex items-center gap-2">
+                    <FormInputCurrency :id="`purchase-order-item-qty-${index}`" v-model="item.qty"
+                      :allow-negative="false" class="min-w-0 flex-1"
+                      :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
+                      @change="validatePurchaseOrderField(`items.${index}.qty`)" />
+                    <span class="shrink-0 text-xs text-slate-500 lg:hidden">
+                      {{ item.product_unit_unit_name || '' }}
+                    </span>
+                  </div>
                 </div>
                 <div
-                  class="min-w-0 truncate text-xs text-slate-500 dark:text-slate-400"
+                  class="hidden min-w-0 text-xs text-slate-500 dark:text-slate-400 lg:block"
                   :title="
                     Number(item.product_unit_conversion_value || 1) > 1
                       ? `1 ${item.product_unit_unit_name} = ${item.product_unit_conversion_value} ${item.product_unit_base_unit_name || ''}`
                       : item.product_unit_unit_name || '-'
                   "
                 >
-                  {{ item.product_unit_unit_name || '-' }}
+                  <div class="truncate">{{ item.product_unit_unit_name || '-' }}</div>
                 </div>
                 <div :title="t('views.purchase_order.fields.product_unit_price')">
+                  <div class="mb-1 text-xs text-slate-500 lg:hidden">{{ t('views.purchase_order.fields.product_unit_price') }}</div>
                   <FormInputCurrency v-model="item.product_unit_price" :allow-negative="false"
                     :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }"
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
                 </div>
-                <div :title="t('views.purchase_order.fields.subtotal_after_discount')">
+                <div class="col-span-2 lg:col-span-1" :title="t('views.purchase_order.fields.subtotal_after_discount')">
+                  <div class="flex items-baseline justify-between gap-2 lg:hidden">
+                    <span class="text-xs text-slate-500">{{ t('views.purchase_order.fields.subtotal_column') }}</span>
+                    <span class="text-sm font-semibold">
+                      {{ formatCurrency(getItemSubtotalAfterDiscountPreview(item)) }}
+                    </span>
+                  </div>
                   <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly
-                    class="bg-slate-50 dark:bg-darkmode-800" />
+                    class="hidden bg-slate-50 dark:bg-darkmode-800 lg:block" />
                 </div>
-                <div class="flex items-center justify-end gap-1">
+                <div class="col-span-2 hidden items-center justify-end gap-1 lg:col-span-1 lg:flex">
                   <Button type="button" variant="outline-secondary" class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0"
                     @click="togglePurchaseOrderItemDetails(index)">
                     <Lucide :icon="purchaseOrderItemDetailsExpanded[index] ? 'ChevronUp' : 'ChevronDown'"
@@ -1079,9 +1106,28 @@ const onSubmit = async () => {
                   <div class="space-y-3">
                     <div class="grid grid-cols-12 gap-4 gap-y-3">
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                        {{ t('views.purchase_order.fields.product_unit_conversion_value') }}
+                      </div>
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
+                        <div class="flex items-center gap-2">
+                          <FormInputCurrency v-model="item.product_unit_conversion_value" :allow-negative="false"
+                            class="w-40"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_conversion_value`) }"
+                            @change="validatePurchaseOrderField(`items.${index}.product_unit_conversion_value`)" />
+                          <span v-if="item.product_unit_base_unit_name"
+                            class="text-sm text-slate-500 dark:text-slate-400">
+                            {{ item.product_unit_base_unit_name }}
+                          </span>
+                        </div>
+                        <FormErrorMessages
+                          :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_conversion_value`)" />
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.price_discount') }}
                       </div>
-                      <div class="col-span-12 md:col-span-8">
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
                         <FormInputCurrency v-model="item.price_discount" :allow-negative="false"
                           :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.price_discount`) }"
                           @change="validatePurchaseOrderField(`items.${index}.price_discount`)" />
@@ -1093,7 +1139,7 @@ const onSubmit = async () => {
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.price_after_discount') }}
                       </div>
-                      <div class="col-span-12 md:col-span-8">
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
                         <FormInputCurrency :model-value="getItemUnitPriceAfterDiscountPreview(item)" readonly />
                       </div>
                     </div>
@@ -1102,7 +1148,7 @@ const onSubmit = async () => {
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.subtotal') }}
                       </div>
-                      <div class="col-span-12 md:col-span-8">
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
                         <FormInputCurrency :model-value="getItemUnitPriceSubtotalAfterDiscountPreview(item)" readonly />
                       </div>
                     </div>
@@ -1111,7 +1157,7 @@ const onSubmit = async () => {
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.subtotal_discount') }}
                       </div>
-                      <div class="col-span-12 md:col-span-8">
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
                         <FormInputCurrency v-model="item.subtotal_discount" :allow-negative="false"
                           :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.subtotal_discount`) }"
                           @change="validatePurchaseOrderField(`items.${index}.subtotal_discount`)" />
@@ -1123,7 +1169,7 @@ const onSubmit = async () => {
                       <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.subtotal_after_discount') }}
                       </div>
-                      <div class="col-span-12 md:col-span-8">
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
                         <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly
                           class="bg-slate-50 dark:bg-darkmode-800" />
                       </div>
@@ -1142,76 +1188,69 @@ const onSubmit = async () => {
                   </button>
                   <div v-if="purchaseOrderItemAdditionalExpanded[index]"
                     class="border-t border-slate-200/60 p-4 dark:border-darkmode-400">
-                  <div class="grid grid-cols-12 gap-4 gap-y-3">
-                    <div class="col-span-12 md:col-span-4">
-                      <FormLabel>{{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}</FormLabel>
-                      <FormSwitch>
-                        <FormSwitch.Input v-model="item.product_unit_is_price_include_vat" type="checkbox" />
-                      </FormSwitch>
-                    </div>
-                    <div class="col-span-12 md:col-span-8">
-                      <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }">
+                  <div class="space-y-3">
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.vat_profile_id') }}
-                      </FormLabel>
-                      <FormSelectSearch v-model="item.vat_profile_id" v-model:search="vatProfileSearch"
-                        :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }"
-                        @change="syncVatProfile(index)" @search="loadVatProfileDDL" @clear="clearVatProfile(index)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_profile_id`)" />
+                      </div>
+                      <div class="col-span-12 md:col-span-8 max-w-sm">
+                        <FormSelectSearch v-model="item.vat_profile_id" v-model:search="vatProfileSearch"
+                          :options="vatProfileOptions" :placeholder="t('components.dropdown.placeholder')"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_profile_id`) }"
+                          @change="syncVatProfile(index)" @search="loadVatProfileDDL" @clear="clearVatProfile(index)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_profile_id`)" />
+                      </div>
                     </div>
-                    <div class="col-span-12 md:col-span-4">
-                      <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }">
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.vat_rate') }}
-                      </FormLabel>
-                      <FormInputCurrency v-model="item.vat_rate" :allow-negative="false"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.vat_rate`)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_rate`)" />
+                      </div>
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
+                        <FormInputCurrency v-model="item.vat_rate" :allow-negative="false"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_rate`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.vat_rate`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_rate`)" />
+                      </div>
                     </div>
-                    <div class="col-span-12 md:col-span-4">
-                      <FormLabel
-                        :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }">
-                        {{ t('views.purchase_order.fields.vat_base_numerator') }}
-                      </FormLabel>
-                      <FormInput v-model="item.vat_base_numerator" type="number" min="1"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.vat_base_numerator`)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_numerator`)" />
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                        {{ t('views.purchase_order.fields.vat_base') }}
+                      </div>
+                      <div class="col-span-12 md:col-span-8">
+                        <div class="flex items-center gap-2">
+                          <FormInput v-model="item.vat_base_numerator" type="number" min="1" class="w-24"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_numerator`) }"
+                            @change="validatePurchaseOrderField(`items.${index}.vat_base_numerator`)" />
+                          <span class="text-slate-500">/</span>
+                          <FormInput v-model="item.vat_base_denominator" type="number" min="1" class="w-24"
+                            :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }"
+                            @change="validatePurchaseOrderField(`items.${index}.vat_base_denominator`)" />
+                        </div>
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_numerator`)" />
+                        <FormErrorMessages
+                          :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_denominator`)" />
+                      </div>
                     </div>
-                    <div class="col-span-12 md:col-span-4">
-                      <FormLabel
-                        :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }">
-                        {{ t('views.purchase_order.fields.vat_base_denominator') }}
-                      </FormLabel>
-                      <FormInput v-model="item.vat_base_denominator" type="number" min="1"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.vat_base_denominator`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.vat_base_denominator`)" />
-                      <FormErrorMessages
-                        :messages="getPurchaseOrderFieldErrors(`items.${index}.vat_base_denominator`)" />
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                        {{ t('views.purchase_order.fields.product_unit_is_price_include_vat') }}
+                      </div>
+                      <div class="col-span-12 md:col-span-8">
+                        <FormSwitch>
+                          <FormSwitch.Input v-model="item.product_unit_is_price_include_vat" type="checkbox" />
+                        </FormSwitch>
+                      </div>
                     </div>
-                    <div class="col-span-12 md:col-span-4">
-                      <FormLabel
-                        :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.product_unit_conversion_value`) }">
-                        {{ t('views.purchase_order.fields.product_unit_conversion_value') }}
-                        <span v-if="item.product_unit_base_unit_name"
-                          class="ml-1 text-xs font-normal text-slate-500 dark:text-slate-400">
-                          ({{ item.product_unit_base_unit_name }})
-                        </span>
-                      </FormLabel>
-                      <FormInputCurrency v-model="item.product_unit_conversion_value" :allow-negative="false"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_conversion_value`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.product_unit_conversion_value`)" />
-                      <FormErrorMessages
-                        :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_conversion_value`)" />
-                    </div>
-                    <div class="col-span-12">
-                      <FormLabel :class="{ 'text-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }">
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
                         {{ t('views.purchase_order.fields.remarks') }}
-                      </FormLabel>
-                      <FormTextarea v-model="item.remarks"
-                        :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }"
-                        @change="validatePurchaseOrderField(`items.${index}.remarks`)" />
-                      <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.remarks`)" />
+                      </div>
+                      <div class="col-span-12 md:col-span-8 max-w-md">
+                        <FormTextarea v-model="item.remarks" rows="2"
+                          :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.remarks`) }"
+                          @change="validatePurchaseOrderField(`items.${index}.remarks`)" />
+                        <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.remarks`)" />
+                      </div>
                     </div>
                   </div>
                   </div>

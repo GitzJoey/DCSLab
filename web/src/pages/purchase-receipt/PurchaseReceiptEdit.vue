@@ -1109,7 +1109,7 @@ const onSubmit = async () => {
             class="divide-y divide-slate-200/70 rounded-md border border-slate-200/70 dark:divide-darkmode-400 dark:border-darkmode-400"
           >
             <div
-              class="grid grid-cols-[minmax(0,1fr)_6rem_4.5rem_4rem_5.5rem] items-center gap-3 bg-slate-50/70 px-3 py-2 text-xs font-medium text-slate-500 dark:bg-darkmode-600/30 dark:text-slate-400"
+              class="hidden lg:grid grid-cols-[minmax(0,1fr)_6rem_4.5rem_4rem_5.5rem] items-center gap-3 bg-slate-50/70 px-3 py-2 text-xs font-medium text-slate-500 dark:bg-darkmode-600/30 dark:text-slate-400"
             >
               <div class="truncate">{{ t('views.purchase_receipt.fields.product_unit_id') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_receipt.fields.qty') }}</div>
@@ -1123,11 +1123,12 @@ const onSubmit = async () => {
             v-for="(item, index) in getItems()"
             :key="`${item.id ?? 'new'}-${item.product_unit_id ?? 'item'}-${index}`"
           >
-            <div class="grid grid-cols-[minmax(0,1fr)_6rem_4.5rem_4rem_5.5rem] items-center gap-3 px-3 py-2">
-              <div class="flex min-w-0 items-center gap-3">
+            <div
+              class="grid grid-cols-2 gap-x-3 gap-y-2 px-3 py-2 lg:grid-cols-[minmax(0,1fr)_6rem_4.5rem_4rem_5.5rem] lg:items-center lg:gap-3">
+              <div class="col-span-2 flex min-w-0 items-center gap-3 lg:col-span-1">
               <ProductImagePreview
                 :image-url="item.product_unit_product_image_url"
-                wrapper-class="flex h-10 w-10 shrink-0 cursor-zoom-in items-center justify-center overflow-hidden rounded-md bg-slate-100 dark:bg-darkmode-600"
+                wrapper-class="flex h-8 w-8 shrink-0 cursor-zoom-in items-center justify-center overflow-hidden rounded-md bg-slate-100 dark:bg-darkmode-600"
                 icon-class="h-4 w-4 text-slate-400"
                 :preview-title="item.product_unit_product_name || '-'"
               />
@@ -1141,30 +1142,51 @@ const onSubmit = async () => {
                   @select="handleProductUnitSelected(index, $event)"
                 />
               </div>
+              <div class="flex shrink-0 items-center gap-1 lg:hidden">
+                <Button
+                  type="button"
+                  variant="outline-secondary"
+                  class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0"
+                  :class="{ 'border-danger text-danger': !item.ui_expanded && itemDetailsInvalid(index, item) }"
+                  @click="item.ui_expanded = !item.ui_expanded"
+                >
+                  <Lucide :icon="item.ui_expanded ? 'ChevronUp' : 'ChevronDown'" class="h-4 w-4" />
+                </Button>
+                <Button type="button" variant="outline-secondary" class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0" @click="removeItem(index)">
+                  <Lucide icon="Trash2" class="h-4 w-4 text-danger" />
+                </Button>
+              </div>
               </div>
               <div>
-                <FormInput
-                  :id="`items.${index}.qty`"
-                  v-model="item.qty"
-                  type="number"
-                  min="0"
-                  step="any"
-                  class="text-right"
-                  :title="t('views.purchase_receipt.fields.qty')"
-                  :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
-                  @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
-                />
+                <div class="mb-1 text-xs text-slate-500 lg:hidden">{{ t('views.purchase_receipt.fields.qty') }}</div>
+                <div class="flex items-center gap-2">
+                  <FormInput
+                    :id="`items.${index}.qty`"
+                    v-model="item.qty"
+                    type="number"
+                    min="0"
+                    step="any"
+                    class="min-w-0 flex-1 text-right"
+                    :title="t('views.purchase_receipt.fields.qty')"
+                    :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
+                    @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
+                  />
+                  <span class="shrink-0 text-xs text-slate-500 lg:hidden">
+                    {{ item.product_unit_unit_name || '' }}
+                  </span>
+                </div>
               </div>
-              <div class="min-w-0 truncate text-xs text-slate-500 dark:text-slate-400">
-                {{ item.product_unit_unit_name || '-' }}
+              <div class="hidden min-w-0 text-xs text-slate-500 dark:text-slate-400 lg:block">
+                <div class="truncate">{{ item.product_unit_unit_name || '-' }}</div>
               </div>
               <div
-                class="text-right text-xs text-slate-500"
+                class="text-xs text-slate-500 lg:text-right"
                 :title="t('views.purchase_receipt.fields.product_unit_conversion_value')"
               >
+                <div class="mb-1 lg:hidden">{{ t('views.purchase_receipt.fields.product_unit_conversion_value') }}</div>
                 &times; {{ item.product_unit_conversion_value }}
               </div>
-              <div class="flex items-center justify-end gap-1">
+              <div class="col-span-2 hidden items-center justify-end gap-1 lg:col-span-1 lg:flex">
                 <Button
                   type="button"
                   variant="outline-secondary"
@@ -1191,14 +1213,17 @@ const onSubmit = async () => {
               <div class="max-w-xs">
                 <FormLabel :class="{ 'text-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }">
                   {{ t('views.purchase_receipt.fields.product_unit_conversion_value') }}
-                  <span v-if="item.product_unit_base_unit_name"
-                    class="ml-1 text-xs font-normal text-slate-500 dark:text-slate-400">
-                    ({{ item.product_unit_base_unit_name }})
-                  </span>
                 </FormLabel>
-                <FormInput v-model="item.product_unit_conversion_value" type="number" min="0" step="any"
-                  :class="{ 'border-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }"
-                  @change="purchaseOrderReceiptForm.validate(`items.${index}.product_unit_conversion_value` as any)" />
+                <div class="flex items-center gap-2">
+                  <FormInput v-model="item.product_unit_conversion_value" type="number" min="0" step="any"
+                    class="min-w-0 flex-1"
+                    :class="{ 'border-danger': invalidItemField(`items.${index}.product_unit_conversion_value`) }"
+                    @change="purchaseOrderReceiptForm.validate(`items.${index}.product_unit_conversion_value` as any)" />
+                  <span v-if="item.product_unit_base_unit_name"
+                    class="shrink-0 text-sm text-slate-500 dark:text-slate-400">
+                    {{ item.product_unit_base_unit_name }}
+                  </span>
+                </div>
                 <FormErrorMessages :messages="getItemFieldErrors(`items.${index}.product_unit_conversion_value`)" />
               </div>
               <div>
