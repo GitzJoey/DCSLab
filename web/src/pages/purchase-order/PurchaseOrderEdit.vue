@@ -1094,10 +1094,6 @@ const onSubmit = async () => {
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
                 </div>
                 <div class="flex items-end justify-end gap-1 md:col-start-5 md:row-start-1 md:items-center lg:hidden">
-                  <ProductImagePreview :image-url="item.product_unit_product_image_url"
-                    wrapper-class="mr-auto w-8 h-8 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex md:hidden items-center justify-center cursor-zoom-in shrink-0 self-end mb-[3px]"
-                    icon-class="w-4 h-4 text-slate-400"
-                    :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
                   <Button type="button" variant="outline-secondary"
                     class="flex h-[38px] w-[38px] min-w-0 items-center justify-center p-0"
                     @click="togglePurchaseOrderItemDetails(index)">
@@ -1134,7 +1130,7 @@ const onSubmit = async () => {
               <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
 
               <!-- item details: collapsible sections -->
-              <div v-if="purchaseOrderItemDetailsExpanded[index]" class="mt-3 space-y-3 md:ml-11">
+              <div v-if="purchaseOrderItemDetailsExpanded[index]" class="mt-3 space-y-3 lg:ml-11">
                 <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400">
                   <button type="button"
                     class="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium"
