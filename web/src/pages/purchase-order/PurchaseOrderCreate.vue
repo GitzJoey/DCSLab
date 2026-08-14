@@ -421,6 +421,13 @@ const fetchProductUnitOptions = async (search: string): Promise<Array<ProductUni
   });
 };
 
+const getItemBaseUnitPricePreview = (item: PurchaseOrderItemFormItem) => {
+  const baseQty = Number(item.qty || 0) * Number(item.product_unit_conversion_value || 1);
+  if (baseQty <= 0) return 0;
+
+  return Number((getItemSubtotalAfterDiscountPreview(item) / baseQty).toFixed(2));
+};
+
 const buildItemInitialOption = (item: PurchaseOrderItemFormItem): ProductUnitOption | null => {
   if (!item.product_unit_id) return null;
 
@@ -1083,6 +1090,21 @@ const onSubmit = async () => {
                       <div class="col-span-12 md:col-span-8 max-w-xs">
                         <FormInputCurrency :model-value="getItemSubtotalAfterDiscountPreview(item)" readonly
                           class="bg-slate-50 dark:bg-darkmode-800" />
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-12 gap-4 gap-y-3">
+                      <div class="col-span-12 md:col-span-4 flex items-center text-sm font-medium">
+                        {{ t('views.purchase_order.fields.base_unit_price') }}
+                      </div>
+                      <div class="col-span-12 md:col-span-8 max-w-xs">
+                        <div class="flex items-center gap-2">
+                          <FormInputCurrency :model-value="getItemBaseUnitPricePreview(item)" readonly
+                            class="w-40 bg-slate-50 dark:bg-darkmode-800" />
+                          <span v-if="item.product_unit_base_unit_name || item.product_unit_unit_name"
+                            class="text-sm text-slate-500 dark:text-slate-400">
+                            / {{ item.product_unit_base_unit_name || item.product_unit_unit_name }}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>

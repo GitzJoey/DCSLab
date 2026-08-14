@@ -104,7 +104,7 @@
         <MobileMenu />
         <TopBar layout="side-menu" />
         <div class="flex overflow-hidden">
-          <nav class="side-nav w-[100px] xl:w-[260px] px-5 pb-16 overflow-x-hidden z-50 pt-32 -mt-4 hidden md:block">
+          <nav class="side-nav w-[260px] px-5 pb-16 overflow-x-hidden z-50 pt-32 -mt-4 hidden min-[1360px]:block">
             <ul>
               <template v-for="(menu, menuKey) in formattedMenu">
                 <li v-if="menu == 'divider'" type="li" class="my-6 side-nav__divider" :key="'divider-' + menuKey"></li>

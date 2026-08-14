@@ -105,7 +105,7 @@
       >
         <MobileMenu />
         <div class="flex mt-[4.7rem] md:mt-0 overflow-hidden">
-          <nav class="side-nav hidden md:block md:w-[100px] xl:w-[250px] px-5 pb-16 overflow-x-hidden z-10">
+          <nav class="side-nav hidden min-[1360px]:block min-[1360px]:w-[250px] px-5 pb-16 overflow-x-hidden z-10">
             <RouterLink
               :to="{ name: 'side-menu-dashboard-maindashboard' }"
               class="flex items-center pt-4 pl-5 mt-3 intro-x"

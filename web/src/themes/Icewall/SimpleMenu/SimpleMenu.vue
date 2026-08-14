@@ -109,7 +109,7 @@
               'before:block before:absolute before:inset-0 before:bg-black/[0.15] before:rounded-[1.3rem] before:z-[-1]',
             ]"
           >
-            <nav class="side-nav side-nav--simple hidden md:block w-[100px] px-5 pt-8 pb-16 overflow-x-hidden">
+            <nav class="side-nav side-nav--simple hidden min-[1360px]:block w-[100px] px-5 pt-8 pb-16 overflow-x-hidden">
               <ul>
                 <template v-for="(menu, menuKey) in formattedMenu">
                   <li

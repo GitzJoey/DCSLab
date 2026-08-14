@@ -47,7 +47,7 @@
 <template>
   <div
     :class="[
-      'mobile-menu group top-0 inset-x-0 fixed bg-theme-1/90 z-[60] border-b border-white/[0.08] dark:bg-darkmode-800/90 md:hidden',
+      'mobile-menu group top-0 inset-x-0 fixed bg-theme-1/90 z-[60] border-b border-white/[0.08] dark:bg-darkmode-800/90 min-[1360px]:hidden',
       'before:content-[\'\'] before:w-full before:h-screen before:z-10 before:fixed before:inset-x-0 before:bg-black/90 before:transition-opacity before:duration-200 before:ease-in-out',
       'before:invisible before:opacity-0',
       '[&.mobile-menu--active]:before:visible [&.mobile-menu--active]:before:opacity-100',

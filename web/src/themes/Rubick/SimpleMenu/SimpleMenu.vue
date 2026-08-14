@@ -98,7 +98,7 @@
       >
         <MobileMenu />
         <div class="flex mt-[4.7rem] md:mt-0">
-          <nav class="side-nav side-nav--simple pr-5 pb-16 overflow-x-hidden hidden md:block w-[80px]">
+          <nav class="side-nav side-nav--simple pr-5 pb-16 overflow-x-hidden hidden min-[1360px]:block w-[80px]">
             <RouterLink :to="{ name: 'side-menu-dashboard-maindashboard' }" class="flex items-center pt-4 pl-5 intro-x">
               <img alt="DCSLab" class="w-6" :src="logoUrl" />
             </RouterLink>
