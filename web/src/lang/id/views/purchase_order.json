@@ -81,7 +81,7 @@
     "subtotal_column": "Subtotal",
     "subtotal_discount": "Diskon Subtotal",
     "subtotal_after_discount": "Subtotal Setelah Diskon",
-    "base_unit_price": "Harga per Satuan Terkecil",
+    "base_unit_price": "Harga per {unit}",
     "subtotal_after_vat": "Subtotal Setelah PPN",
     "item_price_breakdown": "Rincian Harga Item",
     "item_additional_details": "Detail Tambahan Item",

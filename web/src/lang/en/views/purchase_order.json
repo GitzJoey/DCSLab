@@ -81,7 +81,7 @@
     "subtotal_column": "Subtotal",
     "subtotal_discount": "Subtotal Discount",
     "subtotal_after_discount": "Subtotal After Discount",
-    "base_unit_price": "Lowest Unit Price",
+    "base_unit_price": "Price per {unit}",
     "subtotal_after_vat": "Subtotal After VAT",
     "item_price_breakdown": "Item Price Breakdown",
     "item_additional_details": "Item Additional Details",
