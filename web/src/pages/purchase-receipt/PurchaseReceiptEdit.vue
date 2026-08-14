@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // #region Imports
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { convertErrorTypeToAlertListType, formatDate } from '@/utils/helper';
@@ -815,6 +815,20 @@ const handleProductUnitSelected = (index: number, option: ProductUnitOption | nu
 
   clearItemErrors();
   purchaseOrderReceiptForm.validate(`items.${index}.product_unit_id` as any);
+
+  void nextTick(() => {
+    document.getElementById(`items.${index}.qty`)?.focus();
+  });
+};
+
+const handleQtyEnter = async (index: number) => {
+  if (index >= getItems().length - 1) {
+    if (!purchaseOrderReceiptForm.purchase_order_id) return;
+    addItem();
+    await nextTick();
+  }
+
+  document.querySelector<HTMLInputElement>(`[data-item-product="${index + 1}"] input`)?.focus();
 };
 
 const removeItem = (index: number) => {
@@ -1133,7 +1147,7 @@ const onSubmit = async () => {
                 icon-class="h-4 w-4 text-slate-400"
                 :preview-title="item.product_unit_product_name || '-'"
               />
-              <div class="min-w-0 flex-1">
+              <div class="min-w-0 flex-1" :data-item-product="index">
                 <ProductUnitSelectSearch
                   :model-value="item.product_unit_id"
                   :fetch-options="fetchProductUnitOptions"
@@ -1171,6 +1185,7 @@ const onSubmit = async () => {
                     :title="t('views.purchase_receipt.fields.qty')"
                     :class="{ 'border-danger': invalidItemField(`items.${index}.qty`) }"
                     @change="purchaseOrderReceiptForm.validate(`items.${index}.qty` as any)"
+                    @keydown.enter.prevent="handleQtyEnter(index)"
                   />
                   <InputGroup.Text v-if="item.product_unit_unit_name" class="flex shrink-0 items-center bg-transparent px-2 text-xs dark:bg-transparent lg:hidden">
                     {{ item.product_unit_unit_name }}

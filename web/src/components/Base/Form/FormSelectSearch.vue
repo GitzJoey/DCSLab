@@ -33,6 +33,7 @@
     (e: 'update:search', value: string): void;
     (e: 'search', value: string): void;
     (e: 'clear'): void;
+    (e: 'enter', value: string): void;
   }
 
   const props = defineProps<FormSelectSearchProps>();
@@ -44,8 +45,10 @@
 
   const wrapperRef = ref<HTMLDivElement | null>(null);
   const inputRef = ref<HTMLInputElement | null>(null);
+  const listId = `form-select-search-list-${Math.random().toString(36).slice(2)}`;
   const isFocused = ref(false);
   const isOpen = ref(false);
+  const highlightedIndex = ref(-1);
   const displayValue = ref('');
   const dropdownStyle = ref<CSSProperties>({
     top: '0px',
@@ -126,6 +129,7 @@
 
     displayValue.value = value;
     isOpen.value = true;
+    highlightedIndex.value = -1;
     updateDropdownPosition();
     emitSearchDebounced(value);
   };
@@ -144,7 +148,53 @@
   const handleBlur = () => {
     isFocused.value = false;
     isOpen.value = false;
+    highlightedIndex.value = -1;
     displayValue.value = selectedOption.value ? selectedOption.value.label : displayValue.value;
+  };
+
+  const scrollHighlightedIntoView = () => {
+    const list = document.getElementById(listId);
+    const el = list?.children[highlightedIndex.value] as HTMLElement | undefined;
+    el?.scrollIntoView({ block: 'nearest' });
+  };
+
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (isLocked.value) return;
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (!isOpen.value) {
+        isOpen.value = true;
+        updateDropdownPosition();
+        return;
+      }
+      const max = displayedOptions.value.length - 1;
+      if (max < 0) return;
+      highlightedIndex.value =
+        event.key === 'ArrowDown'
+          ? Math.min(highlightedIndex.value + 1, max)
+          : Math.max(highlightedIndex.value - 1, 0);
+      scrollHighlightedIntoView();
+      return;
+    }
+
+    if (event.key === 'Enter') {
+      // never let Enter fall through to a form submit from inside the dropdown
+      event.preventDefault();
+      const highlighted = isOpen.value ? displayedOptions.value[highlightedIndex.value] : undefined;
+      if (highlighted) {
+        handleSelect(highlighted);
+        return;
+      }
+      // barcode-scanner path: let the parent resolve an exact match for the raw text
+      emit('enter', displayValue.value.trim());
+      return;
+    }
+
+    if (event.key === 'Escape') {
+      isOpen.value = false;
+      highlightedIndex.value = -1;
+    }
   };
 
   const handleSelect = (option: FormSelectSearchOption) => {
@@ -181,6 +231,11 @@
     detachDropdownListeners();
     emitSearchDebounced.cancel();
   });
+
+  defineExpose({
+    focus: () => inputRef.value?.focus(),
+    blur: () => inputRef.value?.blur(),
+  });
 </script>
 
 <template>
@@ -195,6 +250,7 @@
       @focus="handleFocus"
       @blur="handleBlur"
       @input="handleInput"
+      @keydown="handleKeydown"
     />
     <button
       v-if="hasValue"
@@ -207,14 +263,17 @@
     <Teleport to="body">
       <ul
         v-if="isOpen && displayedOptions.length > 0"
+        :id="listId"
         :style="dropdownStyle"
         class="fixed z-[9999] max-h-60 overflow-auto rounded-md border border-slate-200 bg-white text-sm shadow-lg dark:border-slate-600 dark:bg-darkmode-800"
       >
         <li
-          v-for="option in displayedOptions"
+          v-for="(option, optionIndex) in displayedOptions"
           :key="option.value"
           class="cursor-pointer px-3 py-2 hover:bg-slate-100 dark:hover:bg-darkmode-700"
+          :class="{ 'bg-slate-100 dark:bg-darkmode-700': optionIndex === highlightedIndex }"
           @mousedown.prevent="handleSelect(option)"
+          @mouseenter="highlightedIndex = optionIndex"
         >
           {{ option.label }}
         </li>

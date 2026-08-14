@@ -113,10 +113,39 @@ const handleChange = (value: string | number | null | Event) => {
 
   emit('select', findOption(String(value)));
 };
+
+const selectRef = ref<{ focus: () => void; blur: () => void } | null>(null);
+
+// barcode-scanner path: scanners type the product unit code and press Enter.
+// Resolve the text immediately (no debounce) and auto-select on an exact code
+// match, or when the search narrows down to a single option.
+const handleEnter = async (search: string) => {
+  if (!search) return;
+
+  const result = await props.fetchOptions(search);
+  const exact =
+    result.find((option) => option.product_unit_code.toLowerCase() === search.toLowerCase())
+    ?? (result.length === 1 ? result[0] : null);
+
+  if (!exact) {
+    options.value = result;
+    return;
+  }
+
+  options.value = result;
+  emit('update:modelValue', exact.product_unit_id);
+  emit('select', exact);
+  selectRef.value?.blur();
+};
+
+defineExpose({
+  focus: () => selectRef.value?.focus(),
+});
 </script>
 
 <template>
   <FormSelectSearch
+    ref="selectRef"
     :model-value="modelValue"
     reselectable
     :options="selectOptions"
@@ -127,5 +156,6 @@ const handleChange = (value: string | number | null | Event) => {
     @change="handleChange"
     @focus="handleFocus"
     @search="handleSearch"
+    @enter="handleEnter"
   />
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { TwoColumnsLayout } from '@/components/Base/Form/FormLayout';
@@ -602,6 +602,19 @@ const handleProductUnitSelected = (index: number, option: ProductUnitOption | nu
   item.vat_base_denominator = option.vat_profile_id ? option.vat_base_denominator : 1;
 
   validatePurchaseOrderField(`items.${index}.product_unit_id`);
+
+  void nextTick(() => {
+    document.getElementById(`purchase-order-item-qty-${index}`)?.focus();
+  });
+};
+
+const handleQtyEnter = async (index: number) => {
+  if (index >= purchaseOrderItemsForm.value.length - 1) {
+    addItem();
+    await nextTick();
+  }
+
+  document.querySelector<HTMLInputElement>(`[data-item-product="${index + 1}"] input`)?.focus();
 };
 
 const removeProductUnit = (index: number) => {
@@ -1041,7 +1054,7 @@ const onSubmit = async () => {
                   wrapper-class="w-8 h-8 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0"
                   icon-class="w-4 h-4 text-slate-400"
                   :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
-                <div class="min-w-0 flex-1">
+                <div class="min-w-0 flex-1" :data-item-product="index">
                   <ProductUnitSelectSearch :model-value="item.product_unit_id"
                     :fetch-options="fetchProductUnitOptions" :initial-option="buildItemInitialOption(item)"
                     :invalid="invalidPurchaseOrderField(`items.${index}.product_unit_id`)"
@@ -1068,7 +1081,8 @@ const onSubmit = async () => {
                     <FormInputCurrency :id="`purchase-order-item-qty-${index}`" v-model="item.qty"
                       :allow-negative="false" class="min-w-0 flex-1"
                       :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.qty`) }"
-                      @change="validatePurchaseOrderField(`items.${index}.qty`)" />
+                      @change="validatePurchaseOrderField(`items.${index}.qty`)"
+                      @keydown.enter.prevent="handleQtyEnter(index)" />
                     <InputGroup.Text v-if="item.product_unit_unit_name" class="flex shrink-0 items-center bg-transparent px-2 text-xs dark:bg-transparent lg:hidden">
                       {{ item.product_unit_unit_name }}
                     </InputGroup.Text>
