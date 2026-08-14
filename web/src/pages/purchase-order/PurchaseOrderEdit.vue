@@ -494,9 +494,11 @@ const fetchProductUnitOptions = async (search: string): Promise<Array<ProductUni
   });
 };
 
-const buildItemInitialOption = (item: PurchaseOrderItemFormItem): ProductUnitSelectOption | null => {
+const buildItemInitialOption = (item: PurchaseOrderItemFormItem): ProductUnitOption | null => {
   if (!item.product_unit_id) return null;
 
+  // carry the row's current price and VAT snapshot so re-picking this very
+  // option from the dropdown never wipes what the user already entered
   return {
     product_unit_id: item.product_unit_id,
     product_unit_code: item.product_unit_product_code ?? '',
@@ -506,6 +508,13 @@ const buildItemInitialOption = (item: PurchaseOrderItemFormItem): ProductUnitSel
     base_unit_name: item.product_unit_base_unit_name ?? '',
     conversion_value: Number(item.product_unit_conversion_value ?? 1),
     is_use_serial_number: false,
+    price: Number(item.product_unit_price ?? 0),
+    product_unit_is_price_include_vat: Boolean(item.product_unit_is_price_include_vat),
+    vat_profile_id: item.vat_profile_id ?? null,
+    vat_profile_name: item.vat_profile_name ?? null,
+    vat_rate: Number(item.vat_rate ?? 0),
+    vat_base_numerator: Number(item.vat_base_numerator ?? 1),
+    vat_base_denominator: Number(item.vat_base_denominator ?? 1),
   };
 };
 
@@ -570,7 +579,7 @@ const handleProductUnitSelected = (index: number, option: ProductUnitOption | nu
   item.product_unit_unit_name = option.unit_name;
   item.product_unit_base_unit_name = option.conversion_value != 1 ? option.base_unit_name : '';
   item.product_unit_conversion_value = option.conversion_value;
-  item.product_unit_price = option.price;
+  item.product_unit_price = option.price ?? item.product_unit_price ?? 0;
   item.product_unit_is_price_include_vat = option.product_unit_is_price_include_vat;
   item.vat_profile_id = option.vat_profile_id ?? null;
   item.vat_profile_name = option.vat_profile_id ? option.vat_profile_name : null;
