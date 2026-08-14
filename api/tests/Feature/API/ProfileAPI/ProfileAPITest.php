@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\API\ProfileAPI;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Profile;
 use App\Models\Role;
 use App\Models\Setting;
@@ -25,7 +25,7 @@ class ProfileAPITest extends APITestCase
     public function test_profile_api_call_update_user_profile_expect_successful()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $this->actingAs($user);
@@ -45,7 +45,7 @@ class ProfileAPITest extends APITestCase
     public function test_profile_api_call_update_user_profile_other_than_alpha_numeric_expect_unsuccessful()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $this->actingAs($user);
@@ -69,7 +69,7 @@ class ProfileAPITest extends APITestCase
     {
         $user = User::factory()
             ->has(Profile::factory())
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
             ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
             ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
@@ -100,7 +100,7 @@ class ProfileAPITest extends APITestCase
     public function test_profile_api_call_change_password_expect_successful()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $this->actingAs($user);
@@ -126,7 +126,7 @@ class ProfileAPITest extends APITestCase
         $this->markTestSkipped('Test under construction');
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
             ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())
             ->has(Setting::factory()->createDefaultSetting_PREF_TIME_FORMAT())
@@ -167,7 +167,7 @@ class ProfileAPITest extends APITestCase
         $this->markTestSkipped('Test under construction');
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Role::factory()->count(3))
             ->has(Setting::factory()->createDefaultSetting_PREF_THEME())
             ->has(Setting::factory()->createDefaultSetting_PREF_DATE_FORMAT())

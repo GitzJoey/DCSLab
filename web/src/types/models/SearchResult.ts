@@ -1,5 +1,5 @@
 export interface SearchResult {
-    category: string,
-    text: string,
-    url: string,
+  category: string;
+  text: string;
+  url: string;
 }

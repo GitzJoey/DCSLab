@@ -1,0 +1,47 @@
+{
+  "page_title": "Pemasok",
+  "table": {
+    "title": "Daftar Pemasok",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama",
+      "address": "Alamat",
+      "city": "Kota",
+      "payment_term_type": "Tipe Termin",
+      "payment_term": "Termin",
+      "taxable_enterprise": "PKP",
+      "tax_id": "NPWP",
+      "status": "Status",
+      "remarks": "Keterangan"
+    }
+  },
+  "actions": {
+    "create": "Buat Pemasok",
+    "edit": "Ubah Pemasok",
+    "show": "Lihat Pemasok",
+    "delete": "Hapus Pemasok"
+  },
+  "field_groups": {
+    "general": "Informasi Umum",
+    "finance": "Informasi Keuangan"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "code": "Kode",
+    "name": "Nama",
+    "address": "Alamat",
+    "city": "Kota",
+    "payment_term_type": "Tipe Termin Pembayaran",
+    "payment_term": "Termin Pembayaran",
+    "taxable_enterprise": "Pengusaha Kena Pajak",
+    "tax_id": "NPWP",
+    "status": "Status",
+    "remarks": "Keterangan"
+  },
+  "alert": {
+    "delete": {
+      "title": "Hapus Pemasok",
+      "message": "Pemasok Berhasil Dihapus"
+    }
+  }
+}

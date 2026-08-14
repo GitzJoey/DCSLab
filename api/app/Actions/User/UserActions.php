@@ -3,8 +3,8 @@
 namespace App\Actions\User;
 
 use App\Actions\Role\RoleActions;
-use App\Enums\RecordStatus;
-use App\Enums\UserRoles;
+use App\Enums\RecordStatusEnum;
+use App\Enums\UserRolesEnum;
 use App\Models\Profile;
 use App\Models\Setting;
 use App\Models\User;
@@ -24,8 +24,109 @@ class UserActions
     use CacheHelper;
     use LoggerHelper;
 
+    private const LIST_EAGER_LOADS = [
+        'roles',
+        'profile',
+        'settings',
+    ];
+
+    private const DETAIL_EAGER_LOADS = [
+        'roles',
+        'profile',
+        'settings',
+        'companies.branches',
+    ];
+
+    private const READ_BY_ID_EAGER_LOADS = [
+        'roles.permissions',
+        'profile',
+        'companies.branches',
+        'settings',
+    ];
+
     public function __construct()
     {
+    }
+
+    public function readAny(
+        string $search = '',
+        bool $paginate = true,
+        int $page = 1,
+        int $perPage = 10,
+        bool $useCache = true,
+    ): Paginator|Collection {
+        $timer_start = microtime(true);
+        $recordsCount = 0;
+
+        try {
+            $cacheKey = 'readAny_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
+            if ($useCache) {
+                $cacheResult = $this->readFromCache($cacheKey);
+
+                if (! is_null($cacheResult)) {
+                    return $cacheResult;
+                }
+            }
+
+            $result = null;
+            if (empty($search)) {
+                $usr = User::with(self::LIST_EAGER_LOADS)->latest();
+            } else {
+                $usr = User::with(self::LIST_EAGER_LOADS)
+                    ->where('email', 'like', '%'.$search.'%')
+                    ->orWhere('name', 'like', '%'.$search.'%')
+                    ->orWhereHas('profile', function ($query) use ($search) {
+                        $query->where('first_name', 'like', '%'.$search.'%')
+                            ->orWhere('last_name', 'like', '%'.$search.'%');
+                    })->latest();
+            }
+
+            if ($paginate) {
+                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
+                $result = $usr->paginate(abs($perPage));
+            } else {
+                $result = $usr->get();
+            }
+
+            $recordsCount = $result->count();
+
+            $this->saveToCache($cacheKey, $result);
+
+            return $result;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+        }
+    }
+
+    public function read(User $user): User
+    {
+        return $user->load(self::DETAIL_EAGER_LOADS);
+    }
+
+    public function readBy(string $key, string $value)
+    {
+        $timer_start = microtime(true);
+
+        try {
+            switch (strtoupper($key)) {
+                case 'ID':
+                    return User::with(self::READ_BY_ID_EAGER_LOADS)->find($value);
+                case 'EMAIL':
+                    return User::where('email', '=', $value)->first();
+                default:
+                    return null;
+            }
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
     }
 
     public function registration(array $input): User
@@ -49,11 +150,11 @@ class UserActions
             'tax_id' => 0,
             'ic_num' => 0,
             'country' => 'Singapore',
-            'status' => RecordStatus::ACTIVE,
+            'status' => RecordStatusEnum::ACTIVE,
         ];
 
         $roleActions = app(RoleActions::class);
-        $roles = [$roleActions->readBy('name', UserRoles::USER->value)->id];
+        $roles = [$roleActions->readBy('name', UserRolesEnum::USER->value)->id];
 
         $usr = $this->create(
             $input,
@@ -120,89 +221,6 @@ class UserActions
             return $usr;
         } catch (Exception $e) {
             DB::rollBack();
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time);
-        }
-    }
-
-    public function readAny(
-        string $search = '',
-        bool $paginate = true,
-        int $page = 1,
-        int $perPage = 10,
-        bool $useCache = true,
-    ): Paginator|Collection {
-        $timer_start = microtime(true);
-        $recordsCount = 0;
-
-        try {
-            $cacheKey = 'readAny_'.(empty($search) ? '[empty]' : $search).'-'.$paginate.'-'.$page.'-'.$perPage;
-            if ($useCache) {
-                $cacheResult = $this->readFromCache($cacheKey);
-
-                if (! is_null($cacheResult)) {
-                    return $cacheResult;
-                }
-            }
-
-            $result = null;
-            $relationship = ['roles', 'profile', 'settings'];
-
-            if (empty($search)) {
-                $usr = User::with($relationship)->latest();
-            } else {
-                $usr = User::with($relationship)
-                    ->where('email', 'like', '%'.$search.'%')
-                    ->orWhere('name', 'like', '%'.$search.'%')
-                    ->orWhereHas('profile', function ($query) use ($search) {
-                        $query->where('first_name', 'like', '%'.$search.'%')
-                            ->orWhere('last_name', 'like', '%'.$search.'%');
-                    })->latest();
-            }
-
-            if ($paginate) {
-                $perPage = is_numeric($perPage) ? $perPage : Config::get('dcslab.PAGINATION_LIMIT');
-                $result = $usr->paginate(abs($perPage));
-            } else {
-                $result = $usr->get();
-            }
-
-            $recordsCount = $result->count();
-
-            $this->saveToCache($cacheKey, $result);
-
-            return $result;
-        } catch (Exception $e) {
-            $this->loggerDebug(__METHOD__, $e);
-            throw $e;
-        } finally {
-            $execution_time = microtime(true) - $timer_start;
-            $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
-        }
-    }
-
-    public function read(User $user): User
-    {
-        return $user->load('profile', 'roles', 'settings', 'companies.branches');
-    }
-
-    public function readBy(string $key, string $value)
-    {
-        $timer_start = microtime(true);
-
-        try {
-            switch (strtoupper($key)) {
-                case 'ID':
-                    return User::with('roles.permissions', 'profile', 'companies.branches', 'settings')->find($value);
-                case 'EMAIL':
-                    return User::where('email', '=', $value)->first();
-                default:
-                    return null;
-            }
-        } catch (Exception $e) {
             $this->loggerDebug(__METHOD__, $e);
             throw $e;
         } finally {

@@ -1,8 +1,8 @@
-import { toRGB } from "./helper";
-import tailwindColors from "tailwindcss/colors";
-import resolveConfig from "tailwindcss/resolveConfig";
-import tailwindConfig from "tailwind-config";
-import { flatten } from "flat";
+import { toRGB } from './helper';
+import tailwindColors from 'tailwindcss/colors';
+import resolveConfig from 'tailwindcss/resolveConfig';
+import tailwindConfig from 'tailwind-config';
+import { flatten } from 'flat';
 
 const twConfig = resolveConfig(tailwindConfig);
 const colors = twConfig.theme?.colors;
@@ -43,15 +43,11 @@ const getColor = (colorKey: DotNestedKeys<Colors>, opacity: number = 1) => {
     }
   >(colors);
 
-  if (flattenColors[colorKey].search("var") === -1) {
+  if (flattenColors[colorKey].search('var') === -1) {
     return `rgb(${toRGB(flattenColors[colorKey])} / ${opacity})`;
   } else {
-    const cssVariableName = `--color-${
-      flattenColors[colorKey].split("--color-")[1].split(")")[0]
-    }`;
-    return `rgb(${getComputedStyle(document.body).getPropertyValue(
-      cssVariableName
-    )} / ${opacity})`;
+    const cssVariableName = `--color-${flattenColors[colorKey].split('--color-')[1].split(')')[0]}`;
+    return `rgb(${getComputedStyle(document.body).getPropertyValue(cssVariableName)} / ${opacity})`;
   }
 };
 

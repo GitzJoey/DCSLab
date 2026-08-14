@@ -1,0 +1,120 @@
+{
+  "page_title": "Purchase Order",
+  "table": {
+    "title": "Daftar Purchase Order",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "supplier": "Pemasok",
+      "due_days": "Jatuh Tempo (Hari)",
+      "grand_total": "Jumlah Harus Dibayar",
+      "remarks": "Catatan"
+    }
+  },
+  "actions": {
+    "create": "Tambah Purchase Order",
+    "edit": "Ubah Purchase Order",
+    "show": "Tampilkan Purchase Order",
+    "delete": "Hapus Purchase Order"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "purchase_order_data": "Data Purchase Order",
+    "items": "Item-item",
+    "item_additional_details": "Detail Item Tambahan",
+    "progress": "Progres",
+    "summary": "Ringkasan",
+    "payments": "Pembayaran",
+    "refunded_payments": "Refund Pembayaran"
+  },
+  "filters": {
+    "payment_allocation_status": "Status Alokasi Pembayaran",
+    "payment_allocation_status_not_fully_allocated": "Belum / Belum Sepenuhnya Dialokasikan",
+    "payment_allocation_status_fully_allocated": "Sudah Dialokasikan Penuh",
+    "progress_status": "Status Progres",
+    "progress_status_unlinked": "Belum Terhubung",
+    "progress_status_unmatched": "Belum Sesuai",
+    "progress_status_matched": "Sesuai"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "due_days": "Jatuh Tempo (Hari)",
+    "supplier_id": "Pemasok",
+    "remarks": "Catatan",
+    "grand_total": "Jumlah Harus Dibayar",
+    "amount_payable": "Jumlah Harus Dibayar",
+    "global_discount": "Diskon Global",
+    "price_discount": "Diskon Harga Satuan",
+    "payment": "Pembayaran",
+    "payments": "Pembayaran",
+    "amount_paid_down_payment": "Jumlah Pembayaran",
+    "amount_allocated": "Jumlah Teralokasi",
+    "amount_allocated_down_payment": "Jumlah Pembayaran Teralokasi",
+    "amount_refunded_down_payment": "Jumlah Refund Pembayaran",
+    "amount_available_down_payment": "Sisa Pembayaran",
+    "refunded_payments": "Refund Pembayaran",
+    "progress_status": "Status Progres",
+    "item_total_count": "Total Item",
+    "item_matched_count": "Item Sesuai",
+    "item_less_count": "Item Kurang",
+    "item_more_count": "Item Lebih",
+    "item_unlinked_count": "Item Belum Terhubung",
+    "product_unit_id": "Produk",
+    "product_unit_code": "Kode Produk Satuan",
+    "unit_name": "Satuan",
+    "qty": "Qty",
+    "product_unit_qty_base": "Qty Base",
+    "qty_received_base": "Qty Diterima Base",
+    "qty_invoiced_base": "Qty Difakturkan Base",
+    "qty_outstanding_base": "Qty Sisa Base",
+    "qty_excess_base": "Qty Lebih Base",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_price": "Harga Satuan",
+    "item_grand_total": "Jumlah Harus Dibayar Item",
+    "price_after_discount": "Harga Satuan Setelah Diskon",
+    "subtotal": "Subtotal Setelah Diskon Harga Satuan",
+    "subtotal_column": "Subtotal",
+    "subtotal_discount": "Diskon Subtotal",
+    "subtotal_after_discount": "Subtotal Setelah Diskon",
+    "base_unit_price": "Harga per {unit}",
+    "subtotal_after_vat": "Subtotal Setelah PPN",
+    "item_price_breakdown": "Rincian Harga Item",
+    "item_additional_details": "Detail Tambahan Item",
+    "items_grand_total_after_discount": "Total Jumlah Harus Dibayar Item",
+    "items_subtotal_after_discount": "Total Subtotal Setelah Diskon",
+    "item_total_before_global_discount": "Total Sebelum Diskon Global",
+    "item_total_after_global_discount": "Total Setelah Diskon Global",
+    "item_total_after_vat": "Total Item Setelah PPN",
+    "vat_base": "Dasar PPN",
+    "vat": "PPN",
+    "amount_payable_preview": "Jumlah Harus Dibayar",
+    "rounding": "Pembulatan",
+    "product_unit_is_price_include_vat": "Harga Termasuk PPN",
+    "vat_profile_id": "Profil PPN",
+    "vat_rate": "Tarif PPN",
+    "vat_base_fraction": "Fraksi Dasar PPN",
+    "vat_base_numerator": "Pembilang Dasar PPN",
+    "vat_base_denominator": "Penyebut Dasar PPN",
+    "cash_account_id": "Akun Kas",
+    "amount": "Jumlah"
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Purchase Order",
+      "message": "Purchase Order berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Purchase Order",
+      "message": "Purchase Order berhasil diperbarui"
+    },
+    "delete": {
+      "title": "Hapus Purchase Order",
+      "message": "Purchase Order berhasil dihapus"
+    }
+  }
+}

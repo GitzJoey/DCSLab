@@ -1,0 +1,83 @@
+{
+  "page_title": "Produk",
+  "page_title_with_remaining_stock": "Produk dengan Sisa Stok",
+  "with_remaining_stock_suffix": "Stok",
+  "table": {
+    "title": "Daftar Produk",
+    "cols": {
+      "code": "Kode",
+      "name": "Nama",
+      "vat_profile": "Profil PPN",
+      "category": "Kategori",
+      "brand": "Merek",
+      "unit": "Satuan",
+      "price": "Harga",
+      "point": "Poin",
+      "status": "Status",
+      "image": "Gambar"
+    }
+  },
+  "actions": {
+    "create": "Buat Produk",
+    "edit": "Ubah Produk",
+    "show": "Lihat Produk",
+    "delete": "Hapus Produk"
+  },
+  "field_groups": {
+    "company_info": "Info Perusahaan",
+    "product_data": "Data Produk",
+    "price_tax_settings": "Pengaturan Harga & Pajak",
+    "unit_settings": "Pengaturan Satuan",
+    "other_settings": "Pengaturan Lainnya"
+  },
+  "detail": {
+    "info_title": "Informasi Produk",
+    "settings_title": "Pengaturan & Pajak",
+    "units_title": "Satuan Produk"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "code": "Kode",
+    "name": "Nama",
+    "category_id": "Kategori",
+    "brand_id": "Merek",
+    "default_vat_profile_id": "Profil PPN",
+    "unit_id": "Satuan",
+    "base_unit": "Satuan Dasar",
+    "base_unit_price": "Harga per Satuan Dasar",
+    "other_unit": "Satuan Lain",
+    "images": "Gambar",
+    "type": "Tipe",
+    "conversion_value": "Isi",
+    "unit_code": "Kode Satuan",
+    "is_primary_unit": "Satuan Utama",
+    "is_manufacturer_sku": "SKU Pabrik",
+    "price": "Harga",
+    "point": "Poin",
+    "is_price_include_vat": "Harga Termasuk PPN",
+    "is_use_serial_number": "Gunakan Nomor Seri",
+    "serial_number": "Nomor Seri",
+    "is_expirable": "Dapat Kedaluwarsa",
+    "status": "Status",
+    "remarks": "Keterangan",
+    "with_remaining_stock_end_date": "s/d Tanggal"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
+  },
+  "alert": {
+    "create": {
+      "title": "Buat Produk",
+      "message": "Produk Berhasil Dibuat"
+    },
+    "update": {
+      "title": "Ubah Produk",
+      "message": "Produk Berhasil Diubah"
+    },
+    "delete": {
+      "title": "Hapus Produk",
+      "message": "Produk Berhasil Dihapus"
+    }
+  }
+}

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class APITestCase extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
 
     protected $seed = true;
 }

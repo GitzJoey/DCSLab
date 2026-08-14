@@ -1,0 +1,59 @@
+{
+  "page_title": "Stock Adjustment",
+  "table": {
+    "title": "Stock Adjustment List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "category": "Category",
+      "in_warehouse": "In Warehouse",
+      "out_warehouse": "Out Warehouse",
+      "is_posted": "Posted",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Create Stock Adjustment",
+    "edit": "Edit Stock Adjustment",
+    "show": "Show Stock Adjustment",
+    "delete": "Delete Stock Adjustment"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "stock_adjustment_data": "Stock Adjustment Data",
+    "in_items": "In Items",
+    "out_items": "Out Items"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "stock_adjustment_code": "Stock Adjustment Code",
+    "product_name": "Product Name",
+    "product_unit_code": "Product Code",
+    "category_id": "Category",
+    "in_warehouse_id": "In Warehouse",
+    "out_warehouse_id": "Out Warehouse",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "in_items": "In Items",
+    "out_items": "Out Items"
+  },
+  "alert": {
+    "create": {
+      "title": "Create Stock Adjustment",
+      "message": "Stock Adjustment Created Successfully"
+    },
+    "update": {
+      "title": "Update Stock Adjustment",
+      "message": "Stock Adjustment Updated Successfully"
+    },
+    "delete": {
+      "title": "Delete Stock Adjustment",
+      "message": "Stock Adjustment Deleted Successfully"
+    }
+  }
+}

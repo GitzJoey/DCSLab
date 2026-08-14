@@ -1,0 +1,48 @@
+{
+  "page_title": "Pembelian Aset",
+  "actions": {
+    "create": "Tambah Pembelian Aset",
+    "edit": "Ubah Pembelian Aset"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "asset_purchase_data": "Data Pembelian Aset",
+    "items": "Item Aset",
+    "summary": "Ringkasan"
+  },
+  "fields": {
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Mulai",
+    "end_date": "Tanggal Akhir",
+    "due_days": "Jatuh Tempo (Hari)",
+    "supplier_id": "Supplier",
+    "remarks": "Catatan",
+    "is_posted": "Terposting",
+    "item_total": "Total Item",
+    "additional_cost": "Biaya Tambahan",
+    "rounding": "Pembulatan",
+    "amount_payable": "Jumlah Hutang"
+  },
+  "table": {
+    "title": "Daftar Pembelian Aset",
+    "cols": {
+      "asset": "Aset",
+      "qty": "Qty",
+      "unit_price": "Harga Satuan",
+      "subtotal": "Subtotal",
+      "serials": "Serial"
+    }
+  },
+  "summary": {
+    "allocated_additional_cost": "Alokasi Biaya Tambahan",
+    "subtotal_after_additional_cost": "Subtotal Setelah Biaya Tambahan",
+    "unit_acquisition_cost": "Harga Perolehan per Unit"
+  },
+  "alert": {
+    "delete": {
+      "title": "Pembelian aset berhasil dihapus",
+      "message": "Data pembelian aset telah berhasil dihapus."
+    }
+  }
+}

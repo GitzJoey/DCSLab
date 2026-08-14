@@ -2,7 +2,7 @@
 
 namespace App\Actions\Dashboard;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Traits\CacheHelper;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,20 +32,24 @@ class DashboardActions
 
         $usrRoles = $usr->roles;
 
-        $hasUserRole = $usrRoles->where('name', UserRoles::USER->value)->isNotEmpty() ? true : false;
-        $hasOnlyUserRole = $usrRoles->where('name', UserRoles::USER->value)->isNotEmpty() && $usrRoles->count() == 1 ? true : false;
+        $hasUserRole = $usrRoles->where('name', UserRolesEnum::USER->value)->isNotEmpty() ? true : false;
+        $hasOnlyUserRole = $usrRoles->where('name', UserRolesEnum::USER->value)->isNotEmpty() && $usrRoles->count() == 1 ? true : false;
 
-        $hasAdminRole = $usrRoles->where('name', UserRoles::ADMINISTRATOR->value)->isNotEmpty() ? true : false;
-        $hasOnlyAdminRole = $usrRoles->where('name', UserRoles::ADMINISTRATOR->value)->isNotEmpty() && $usrRoles->count() == 1 ? true : false;
+        $hasAdminRole = $usrRoles->where('name', UserRolesEnum::ADMINISTRATOR->value)->isNotEmpty() ? true : false;
+        $hasOnlyAdminRole = $usrRoles->where('name', UserRolesEnum::ADMINISTRATOR->value)->isNotEmpty() && $usrRoles->count() == 1 ? true : false;
 
-        $hasDevRole = $usrRoles->where('name', UserRoles::DEVELOPER->value)->isNotEmpty() ? true : false;
+        $hasDevRole = $usrRoles->where('name', UserRolesEnum::DEVELOPER->value)->isNotEmpty() ? true : false;
 
         $hasCompany = $usr->companies->count() != 0 ? true : false;
 
         $showDemoMenu = false;
 
         $menu = $this->createMenu_Dashboard($menu, $showDemoMenu);
-        $menu = $this->createMenu_Company($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_MasterData($menu, $hasOnlyUserRole, $hasOnlyAdminRole, $hasCompany, $hasDevRole);
+        $menu = $this->createMenu_Finance($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
+        $menu = $this->createMenu_Transaction($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
+        $menu = $this->createMenu_Report($menu, $hasOnlyUserRole, $hasOnlyAdminRole);
+
         $menu = $this->createMenu_Administrator($menu, $hasAdminRole, $hasDevRole);
         $menu = $this->createMenu_DevTool($menu, $hasDevRole);
 
@@ -57,65 +61,705 @@ class DashboardActions
     private function createMenu_Dashboard(array $menu, bool $showDemo): array
     {
         $maindashboard = [
-            'icon' => 'ChevronRight',
+            'icon' => 'Home',
             'pageName' => 'side-menu-dashboard-maindashboard',
-            'title' => 'components.menu.main-dashboard',
+            'title' => 'components.menu.dashboard',
         ];
 
-        $demo = [
-            'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-dashboard-demo',
-            'title' => 'components.menu.main-demo',
-        ];
+        array_push($menu, $maindashboard);
+
+        if ($showDemo) {
+            $demo = [
+                'icon' => 'ChevronRight',
+                'pageName' => 'side-menu-dashboard-demo',
+                'title' => 'components.menu.main-demo',
+            ];
+
+            array_push($menu, $demo);
+        }
+
+        return $menu;
+    }
+
+    private function createMenu_MasterData(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole, bool $hasCompany, bool $hasDevRole): array
+    {
+        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
+            return $menu;
+        }
 
         $root_array = [
-            'icon' => 'Home',
-            'pageName' => 'side-menu-dashboard',
-            'title' => 'components.menu.dashboard',
+            'icon' => 'Database',
+            'pageName' => 'side-menu-master-data',
+            'title' => 'components.menu.master-data',
             'subMenu' => [],
         ];
 
-        if ($showDemo) {
-            array_push($root_array['subMenu'], $maindashboard, $demo);
+        $companyManagement = [
+            'icon' => 'Umbrella',
+            'pageName' => 'side-menu-company',
+            'title' => 'components.menu.company-management',
+            'subMenu' => [],
+        ];
+
+        $company = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-company-company',
+            'title' => 'components.menu.company',
+        ];
+
+        $branches = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-company-branch',
+            'title' => 'components.menu.branch',
+        ];
+
+        $warehouse = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-company-warehouse',
+            'title' => 'components.menu.warehouse',
+        ];
+
+        if ($hasCompany || $hasDevRole) {
+            array_push($companyManagement['subMenu'], $company, $branches, $warehouse);
         } else {
-            array_push($root_array['subMenu'], $maindashboard);
+            array_push($companyManagement['subMenu'], $company);
         }
+
+        $financeManagement = [
+            'icon' => 'Wallet',
+            'pageName' => 'side-menu-master-data-finance',
+            'title' => 'components.menu.finance-management',
+            'subMenu' => [],
+        ];
+
+        $chartOfAccount = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-chart-of-account',
+            'title' => 'components.menu.chart-of-account',
+        ];
+
+        $investor = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-company-investor',
+            'title' => 'components.menu.investor',
+        ];
+
+        $cashAccount = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-finance-cash-account',
+            'title' => 'components.menu.cash-account',
+        ];
+
+        $productManagement = [
+            'icon' => 'Package',
+            'pageName' => 'side-menu-product',
+            'title' => 'components.menu.product-management',
+            'subMenu' => [],
+        ];
+
+        $productCategory = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-product-category',
+            'title' => 'components.menu.product-category',
+        ];
+
+        $brand = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-brand',
+            'title' => 'components.menu.brand',
+        ];
+
+        $unit = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-unit',
+            'title' => 'components.menu.unit',
+        ];
+
+        $vatProfile = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-vat-profile',
+            'title' => 'components.menu.vat-profile',
+        ];
+
+        $productService = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-product-service',
+            'title' => 'components.menu.product-service',
+        ];
+
+        $product = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-product-product',
+            'title' => 'components.menu.product',
+        ];
+
+        array_push($productManagement['subMenu'], $productCategory, $brand, $unit, $vatProfile, $product, $productService);
+
+        $supplier = [
+            'icon' => 'Users',
+            'pageName' => 'side-menu-supplier',
+            'title' => 'components.menu.supplier',
+        ];
+
+        $customerManagement = [
+            'icon' => 'Users',
+            'pageName' => 'side-menu-customer',
+            'title' => 'components.menu.customer-management',
+            'subMenu' => [],
+        ];
+
+        $customerGroup = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-customer-group',
+            'title' => 'components.menu.customer-group',
+        ];
+
+        $customer = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-customer',
+            'title' => 'components.menu.customer',
+        ];
+
+        array_push($customerManagement['subMenu'], $customerGroup, $customer);
+
+        $stockAdjustmentCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-stock-adjustment-category',
+            'title' => 'components.menu.stock-adjustment-category',
+        ];
+
+        $expenseCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-expense-category',
+            'title' => 'components.menu.expense-category',
+        ];
+
+        $incomeCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-income-category',
+            'title' => 'components.menu.income-category',
+        ];
+
+        $debtCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-debt-category',
+            'title' => 'components.menu.debt-category',
+        ];
+
+        $receivableCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-receivable-category',
+            'title' => 'components.menu.receivable-category',
+        ];
+
+        $debtCreditor = [
+            'icon' => 'Building2',
+            'pageName' => 'side-menu-debt-creditor',
+            'title' => 'components.menu.debt-creditor',
+        ];
+
+        $assetCategory = [
+            'icon' => 'Tags',
+            'pageName' => 'side-menu-asset-category',
+            'title' => 'components.menu.asset-category',
+        ];
+
+        $assetUnit = [
+            'icon' => 'Ruler',
+            'pageName' => 'side-menu-asset-unit',
+            'title' => 'components.menu.asset-unit',
+        ];
+
+        $asset = [
+            'icon' => 'Laptop',
+            'pageName' => 'side-menu-asset',
+            'title' => 'components.menu.asset',
+        ];
+
+        array_push(
+            $financeManagement['subMenu'],
+            $chartOfAccount,
+            $investor,
+            $cashAccount,
+            $expenseCategory,
+            $incomeCategory,
+            $debtCategory,
+            $receivableCategory,
+            $debtCreditor,
+            $assetCategory,
+            $assetUnit,
+            $asset,
+        );
+
+        array_push(
+            $root_array['subMenu'],
+            $companyManagement,
+            $financeManagement,
+            $productManagement,
+            $supplier,
+            $customerManagement,
+            $stockAdjustmentCategory
+        );
+        array_push($menu, $root_array);
+
+        return $menu;
+    }
+
+    private function createMenu_Finance(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
+    {
+        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
+            return $menu;
+        }
+
+        $root_array = [
+            'icon' => 'Wallet',
+            'pageName' => 'side-menu-finance',
+            'title' => 'components.menu.finance',
+            'subMenu' => [],
+        ];
+
+        $capitalOpening = [
+            'icon' => 'Wallet',
+            'pageName' => 'side-menu-finance-capital-opening',
+            'title' => 'components.menu.capital-opening',
+        ];
+
+        $capitalTransaction = [
+            'icon' => 'ArrowLeftRight',
+            'pageName' => 'side-menu-finance-capital-transaction',
+            'title' => 'components.menu.capital-transaction',
+        ];
+
+        $cashTransfer = [
+            'icon' => 'Repeat',
+            'pageName' => 'side-menu-finance-cash-transfer',
+            'title' => 'components.menu.cash-transfer',
+        ];
+
+        $expense = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-expense',
+            'title' => 'components.menu.expense',
+        ];
+
+        $prepaidExpense = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-prepaid-expense',
+            'title' => 'components.menu.prepaid-expense',
+        ];
+
+        $income = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-income',
+            'title' => 'components.menu.income',
+        ];
+
+        $prepaidIncome = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-prepaid-income',
+            'title' => 'components.menu.prepaid-income',
+        ];
+
+        $debt = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-debt',
+            'title' => 'components.menu.debt',
+        ];
+
+        $receivable = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-receivable',
+            'title' => 'components.menu.receivable',
+        ];
+
+        $journalEntry = [
+            'icon' => 'ChevronRight',
+            'pageName' => 'side-menu-journal-entry',
+            'title' => 'components.menu.journal-entry',
+        ];
+
+        array_push(
+            $root_array['subMenu'],
+            $capitalOpening,
+            $capitalTransaction,
+            $cashTransfer,
+            $expense,
+            $prepaidExpense,
+            $income,
+            $prepaidIncome,
+            $debt,
+            $receivable,
+            $journalEntry
+        );
 
         array_push($menu, $root_array);
 
         return $menu;
     }
 
-    private function createMenu_Company(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole, bool $hasCompany, bool $hasDevRole): array
+    private function createMenu_Transaction(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
     {
         if ($hasOnlyUserRole || $hasOnlyAdminRole) {
             return $menu;
         }
 
-        $company = [
-            'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-company-company',
-            'title' => 'components.menu.company-company',
-        ];
-
-        $branches = [
-            'icon' => 'ChevronRight',
-            'pageName' => 'side-menu-company-branch',
-            'title' => 'components.menu.company-branch',
-        ];
-
         $root_array = [
-            'icon' => 'Umbrella',
-            'pageName' => 'side-menu-company',
-            'title' => 'components.menu.company',
+            'icon' => 'ArrowLeftRight',
+            'pageName' => 'side-menu-transaction',
+            'title' => 'components.menu.transaction',
             'subMenu' => [],
         ];
 
-        if ($hasCompany || $hasDevRole) {
-            array_push($root_array['subMenu'], $company, $branches);
-        } else {
-            array_push($root_array['subMenu'], $company);
+        $stockAdjustment = [
+            'icon' => 'SlidersHorizontal',
+            'pageName' => 'side-menu-stock-adjustment',
+            'title' => 'components.menu.stock-adjustment',
+        ];
+
+        $purchaseOrder = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-purchase-order',
+            'title' => 'components.menu.purchase-order',
+        ];
+
+        $purchasing = [
+            'icon' => 'ShoppingCart',
+            'pageName' => 'side-menu-purchasing',
+            'title' => 'components.menu.purchase-management',
+            'subMenu' => [],
+        ];
+
+        $purchaseReceipt = [
+            'icon' => 'PackageCheck',
+            'pageName' => 'side-menu-purchase-receipt',
+            'title' => 'components.menu.purchase-receipt',
+        ];
+
+        $purchaseInvoice = [
+            'icon' => 'FileText',
+            'pageName' => 'side-menu-purchase-invoice',
+            'title' => 'components.menu.purchase-invoice',
+        ];
+
+        $purchaseReturn = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-purchase-return',
+            'title' => 'components.menu.purchase-return',
+        ];
+
+        array_push(
+            $purchasing['subMenu'],
+            $purchaseOrder,
+            $purchaseReceipt,
+            $purchaseInvoice,
+            $purchaseReturn
+        );
+
+        $sales = [
+            'icon' => 'ShoppingBag',
+            'pageName' => 'side-menu-sales',
+            'title' => 'components.menu.sales-management',
+            'subMenu' => [],
+        ];
+
+        $salesOrder = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-sales-order',
+            'title' => 'components.menu.sales-order',
+        ];
+
+        $salesDelivery = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-sales-delivery',
+            'title' => 'components.menu.sales-delivery',
+        ];
+
+        $salesInvoice = [
+            'icon' => 'FileText',
+            'pageName' => 'side-menu-sales-invoice',
+            'title' => 'components.menu.sales-invoice',
+        ];
+
+        $salesReturn = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-sales-return',
+            'title' => 'components.menu.sales-return',
+        ];
+
+        array_push(
+            $sales['subMenu'],
+            $salesOrder,
+            $salesDelivery,
+            $salesInvoice,
+            $salesReturn
+        );
+
+        $stockTransfer = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-stock-transfer',
+            'title' => 'components.menu.stock-transfer',
+        ];
+
+        $assetTransactions = [
+            'icon' => 'Laptop',
+            'pageName' => 'side-menu-transaction-asset',
+            'title' => 'components.menu.asset',
+            'subMenu' => [],
+        ];
+
+        $assetAdjustment = [
+            'icon' => 'ArrowLeftRight',
+            'pageName' => 'side-menu-asset-adjustment',
+            'title' => 'components.menu.asset-adjustment',
+        ];
+
+        $assetPurchase = [
+            'icon' => 'PackagePlus',
+            'pageName' => 'side-menu-asset-purchase',
+            'title' => 'components.menu.asset-purchase',
+        ];
+
+        $assetSale = [
+            'icon' => 'PackageMinus',
+            'pageName' => 'side-menu-asset-sale',
+            'title' => 'components.menu.asset-sale',
+        ];
+
+        array_push(
+            $assetTransactions['subMenu'],
+            $assetAdjustment,
+            $assetPurchase,
+            $assetSale
+        );
+
+        array_push(
+            $root_array['subMenu'],
+            $stockAdjustment,
+            $purchasing,
+            $sales,
+            $stockTransfer,
+            $assetTransactions
+        );
+
+        array_push($menu, $root_array);
+
+        return $menu;
+    }
+
+    private function createMenu_Report(array $menu, bool $hasOnlyUserRole, bool $hasOnlyAdminRole): array
+    {
+        if ($hasOnlyUserRole || $hasOnlyAdminRole) {
+            return $menu;
         }
+
+        $root_array = [
+            'icon' => 'BarChart3',
+            'pageName' => 'side-menu-report',
+            'title' => 'components.menu.report',
+            'subMenu' => [],
+        ];
+
+        $cashAccount = [
+            'icon' => 'Wallet',
+            'pageName' => 'side-menu-report-cash-account',
+            'title' => 'components.menu.cash-account',
+            'subMenu' => [],
+        ];
+
+        $financialStatement = [
+            'icon' => 'FileBarChart',
+            'pageName' => 'side-menu-report-financial-statement',
+            'title' => 'components.menu.financial-statement',
+            'subMenu' => [],
+        ];
+
+        $cashAccountWithRemainingBalance = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-cash-account-with-remaining-balance',
+            'title' => 'components.menu.cash-account-with-remaining-balance',
+        ];
+
+        array_push($cashAccount['subMenu'], $cashAccountWithRemainingBalance);
+
+        $product = [
+            'icon' => 'Package',
+            'pageName' => 'side-menu-report-product',
+            'title' => 'components.menu.product',
+            'subMenu' => [],
+        ];
+
+        $productWithRemainingStock = [
+            'icon' => 'Boxes',
+            'pageName' => 'side-menu-product-with-remaining-stock',
+            'title' => 'components.menu.product-with-remaining-stock',
+        ];
+
+        array_push($product['subMenu'], $productWithRemainingStock);
+
+        $stockAdjustment = [
+            'icon' => 'SlidersHorizontal',
+            'pageName' => 'side-menu-stock-adjustment',
+            'title' => 'components.menu.stock-adjustment',
+            'subMenu' => [],
+        ];
+
+        $stockAdjustmentInItem = [
+            'icon' => 'PackagePlus',
+            'pageName' => 'side-menu-stock-adjustment-in-item',
+            'title' => 'components.menu.stock-adjustment-in-item',
+        ];
+
+        $stockAdjustmentInItemSerial = [
+            'icon' => 'ScanLine',
+            'pageName' => 'side-menu-stock-adjustment-in-item-serial',
+            'title' => 'components.menu.stock-adjustment-in-item-serial',
+        ];
+
+        $stockAdjustmentOutItem = [
+            'icon' => 'PackageMinus',
+            'pageName' => 'side-menu-stock-adjustment-out-item',
+            'title' => 'components.menu.stock-adjustment-out-item',
+        ];
+
+        $stockAdjustmentOutItemSerial = [
+            'icon' => 'ScanLine',
+            'pageName' => 'side-menu-stock-adjustment-out-item-serial',
+            'title' => 'components.menu.stock-adjustment-out-item-serial',
+        ];
+
+        $stockTransfer = [
+            'icon' => 'Truck',
+            'pageName' => 'side-menu-report-stock-transfer',
+            'title' => 'components.menu.stock-transfer',
+            'subMenu' => [],
+        ];
+
+        $purchaseOrder = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-report-purchase-order',
+            'title' => 'components.menu.purchase-order',
+            'subMenu' => [],
+        ];
+
+        $purchaseOrderItem = [
+            'icon' => 'PackageSearch',
+            'pageName' => 'side-menu-purchase-order-item',
+            'title' => 'components.menu.purchase-order-item',
+        ];
+
+        $purchaseOrderPayment = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-purchase-order-payment',
+            'title' => 'components.menu.purchase-order-payment',
+        ];
+
+        $purchaseOrderPaymentNotFullyAllocated = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-purchase-order-payment-not-fully-allocated',
+            'title' => 'components.menu.purchase-order-payment-not-fully-allocated',
+        ];
+
+        $purchaseOrderPaymentRefund = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-purchase-order-payment-refund',
+            'title' => 'components.menu.purchase-order-payment-refund',
+        ];
+
+        $purchaseInvoicePayment = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-purchase-invoice-payment',
+            'title' => 'components.menu.purchase-invoice-payment',
+        ];
+
+        $salesOrderReport = [
+            'icon' => 'FileSpreadsheet',
+            'pageName' => 'side-menu-report-sales-order',
+            'title' => 'components.menu.sales-order',
+            'subMenu' => [],
+        ];
+
+        $salesOrderItem = [
+            'icon' => 'PackageSearch',
+            'pageName' => 'side-menu-sales-order-item',
+            'title' => 'components.menu.sales-order-item',
+        ];
+
+        $salesOrderPayment = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-sales-order-payment',
+            'title' => 'components.menu.sales-order-payment',
+        ];
+
+        $salesOrderPaymentNotFullyAllocated = [
+            'icon' => 'WalletCards',
+            'pageName' => 'side-menu-sales-order-payment-not-fully-allocated',
+            'title' => 'components.menu.sales-order-payment-not-fully-allocated',
+        ];
+
+        $salesOrderPaymentRefund = [
+            'icon' => 'Undo2',
+            'pageName' => 'side-menu-sales-order-payment-refund',
+            'title' => 'components.menu.sales-order-payment-refund',
+        ];
+
+        $stockTransferItem = [
+            'icon' => 'Boxes',
+            'pageName' => 'side-menu-stock-transfer-item',
+            'title' => 'components.menu.stock-transfer-item',
+        ];
+
+        $stockTransferItemSerial = [
+            'icon' => 'ScanLine',
+            'pageName' => 'side-menu-stock-transfer-item-serial',
+            'title' => 'components.menu.stock-transfer-item-serial',
+        ];
+
+        $journalEntryDetail = [
+            'icon' => 'FileText',
+            'pageName' => 'side-menu-report-journal-entry-detail',
+            'title' => 'components.menu.journal-entry-detail',
+        ];
+
+        $balanceSheet = [
+            'icon' => 'Scale',
+            'pageName' => 'side-menu-report-balance-sheet',
+            'title' => 'components.menu.balance-sheet',
+        ];
+
+        array_push($financialStatement['subMenu'], $journalEntryDetail, $balanceSheet);
+
+        array_push(
+            $stockAdjustment['subMenu'],
+            $stockAdjustmentInItem,
+            $stockAdjustmentInItemSerial,
+            $stockAdjustmentOutItem,
+            $stockAdjustmentOutItemSerial
+        );
+
+        array_push(
+            $stockTransfer['subMenu'],
+            $stockTransferItem,
+            $stockTransferItemSerial
+        );
+
+        array_push(
+            $purchaseOrder['subMenu'],
+            $purchaseOrderItem,
+            $purchaseOrderPayment,
+            $purchaseOrderPaymentNotFullyAllocated,
+            $purchaseOrderPaymentRefund,
+            $purchaseInvoicePayment
+        );
+
+        array_push(
+            $salesOrderReport['subMenu'],
+            $salesOrderItem,
+            $salesOrderPayment,
+            $salesOrderPaymentNotFullyAllocated,
+            $salesOrderPaymentRefund
+        );
+
+        array_push($root_array['subMenu'], $financialStatement, $cashAccount, $product, $stockAdjustment, $purchaseOrder, $salesOrderReport, $stockTransfer);
 
         array_push($menu, $root_array);
 

@@ -1,0 +1,753 @@
+<?php
+
+namespace App\Actions\PurchaseOrder;
+
+use App\Actions\PurchaseOrderItem\PurchaseOrderItemActions;
+use App\Actions\PurchaseOrderPayment\PurchaseOrderPaymentActions;
+use App\Actions\PurchaseOrderPaymentRefund\PurchaseOrderPaymentRefundActions;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\PurchaseOrderCreateDTO;
+use App\DTOs\PurchaseOrderItemCreateDTO;
+use App\DTOs\PurchaseOrderItemUpdateDTO;
+use App\DTOs\PurchaseOrderPaymentCreateDTO;
+use App\DTOs\PurchaseOrderPaymentRefundCreateDTO;
+use App\DTOs\PurchaseOrderPaymentRefundUpdateDTO;
+use App\DTOs\PurchaseOrderPaymentUpdateDTO;
+use App\DTOs\PurchaseOrderUpdateDTO;
+use App\Enums\ProgressStatusEnum;
+use App\Helpers\TimezoneHelper;
+use App\Models\Company;
+use App\Models\PurchaseOrder;
+use App\Traits\CacheHelper;
+use App\Traits\LoggerHelper;
+use Exception;
+use Illuminate\Support\Facades\Config;
+
+class PurchaseOrderActions
+{
+    use CacheHelper;
+    use LoggerHelper;
+
+    private const LIST_EAGER_LOADS = [
+        'company',
+        'branch',
+        'supplier',
+    ];
+
+    private const DETAIL_EAGER_LOADS = [
+        'company',
+        'branch',
+        'supplier',
+        'items.productUnit.unit',
+        'items.productUnit.product.category',
+        'items.productUnit.product.brand',
+        'items.productUnit.product.baseProductUnit.unit',
+        'items.productUnit.product.images',
+        'items.productUnit.product.mainImage',
+        'items.vatProfile',
+        'payments.cashAccount',
+        'refundedPayments.cashAccount',
+    ];
+
+    public function __construct(
+        private PurchaseOrderItemActions $purchaseOrderItemActions,
+        private PurchaseOrderPaymentActions $purchaseOrderPaymentActions,
+        private PurchaseOrderPaymentRefundActions $purchaseOrderPaymentRefundActions,
+    ) {
+    }
+
+    public function readAny(
+        bool $withTrashed,
+        int $companyId,
+        ?int $branchId,
+        ?string $search,
+
+        ?string $startDate,
+        ?string $endDate,
+        ?int $supplierId,
+        ?string $progressStatus,
+
+        ?ExecuteDTO $execute
+    ) {
+        $query = PurchaseOrder::select('purchase_orders.*');
+
+        if ($execute->pagination) {
+            $query->with(self::DETAIL_EAGER_LOADS);
+        } else {
+            $query->with(self::LIST_EAGER_LOADS);
+        }
+
+        $query->join('companies', 'companies.id', '=', 'purchase_orders.company_id')
+            ->whereCompanyId('purchase_orders', $companyId)
+            ->whereBranchId('purchase_orders', $branchId)
+            ->withTrashed();
+
+        $query->where(function ($query) use (
+            $withTrashed,
+            $search,
+            $startDate,
+            $endDate,
+            $supplierId,
+            $progressStatus,
+        ) {
+            $query->withoutTrashed();
+            if ($withTrashed) $query->withTrashed();
+
+            if ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('purchase_orders.code', 'like', '%'.$search.'%')
+                        ->orWhere('purchase_orders.remarks', 'like', '%'.$search.'%');
+                });
+            }
+
+            if ($startDate) {
+                $query->where('purchase_orders.date', '>=', TimezoneHelper::convertToUTC($startDate));
+            }
+
+            if ($endDate) {
+                $query->where('purchase_orders.date', '<=', TimezoneHelper::convertToUTC($endDate));
+            }
+
+            if ($supplierId) {
+                $query->where('purchase_orders.supplier_id', $supplierId);
+            }
+
+            if ($progressStatus) {
+                $query->where('purchase_orders.progress_status', $progressStatus);
+            }
+        });
+
+        $query->orderBy('purchase_orders.date', 'desc')
+            ->orderBy('purchase_orders.id', 'asc');
+
+        if ($execute) {
+            $timer_start = microtime(true);
+            $recordsCount = 0;
+
+            try {
+                $cacheParams = [
+                    $withTrashed ? 'true' : 'false',
+                    $companyId,
+                    $branchId ?? '[null]',
+                    empty($search) ? '[empty]' : $search,
+                    $startDate ?? '[null]',
+                    $endDate ?? '[null]',
+                    $supplierId ?? '[null]',
+                    $progressStatus ?? '[null]',
+                    $execute->pagination ? 'true' : 'false',
+                    $execute->pagination?->page ?? '[null]',
+                    $execute->pagination?->perPage ?? '[null]',
+                    $execute->get?->limit ?? '[null]',
+                ];
+
+                $cacheKey = 'read_any_purchase_order_'.implode('_', $cacheParams);
+
+                if ($execute->useCache) {
+                    $cacheResult = $this->readFromCache($cacheKey);
+                    if ($cacheResult !== Config::get('dcslab.ERROR_RETURN_VALUE')) {
+                        return $cacheResult;
+                    }
+                }
+
+                if ($execute->pagination) {
+                    $result = $query->paginate(
+                        perPage: $execute->pagination->perPage,
+                        columns: ['*'],
+                        pageName: 'page',
+                        page: $execute->pagination->page
+                    );
+                } else {
+                    if ($execute->get?->limit) {
+                        $query->limit($execute->get->limit);
+                    }
+                    $result = $query->get();
+                }
+
+                $recordsCount = $result->count();
+
+                if ($execute->useCache) {
+                    $this->saveToCache($cacheKey, $result);
+                }
+
+                return $result;
+            } catch (Exception $e) {
+                $this->loggerDebug(__METHOD__, $e);
+                throw $e;
+            } finally {
+                $execution_time = microtime(true) - $timer_start;
+                $this->loggerPerformance(__METHOD__, $execution_time, $recordsCount);
+            }
+        }
+
+        return $query;
+    }
+
+    public function getProgressStatuses(): array
+    {
+        return ProgressStatusEnum::toDropDownOptions('views.purchase_order.filters.progress_status_');
+    }
+
+    public function read(PurchaseOrder $purchaseOrder): PurchaseOrder
+    {
+        return $purchaseOrder->load(self::DETAIL_EAGER_LOADS);
+    }
+
+    public function generateUniqueCode(int $companyId, string $code, ?int $exceptId): string
+    {
+        if ($code != Config::get('dcslab.KEYWORDS.AUTO')) return $code;
+
+        $company = Company::find($companyId);
+
+        $tryCount = 0;
+        do {
+            $count = $company->purchaseOrders()->withTrashed()->count() + 1 + $tryCount;
+            $code = 'PO'.str_pad($count, 5, '0', STR_PAD_LEFT);
+            $tryCount++;
+        } while (! $this->isUniqueCode($companyId, $code, $exceptId));
+
+        return $code;
+    }
+
+    public function isUniqueCode(int $companyId, string $code, ?int $exceptId): bool
+    {
+        $result = PurchaseOrder::where('company_id', $companyId)->where('code', '=', $code);
+
+        if ($exceptId) {
+            $result = $result->where('id', '<>', $exceptId);
+        }
+
+        return $result->count() == 0;
+    }
+
+    private function generateDate(string $date): string
+    {
+        if ($date == config('dcslab.KEYWORDS.AUTO')) {
+            $nowLocal = now(TimezoneHelper::getUserTimezone())->toDateTimeString();
+
+            return TimezoneHelper::convertToUTC($nowLocal);
+        }
+
+        return TimezoneHelper::convertToUTC($date);
+    }
+
+    public function create(PurchaseOrderCreateDTO $data): PurchaseOrder
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $purchaseOrder = new PurchaseOrder();
+            $purchaseOrder->company_id = $data->companyId;
+            $purchaseOrder->branch_id = $data->branchId;
+            $purchaseOrder->code = $this->generateUniqueCode($data->companyId, $data->code, null);
+            $purchaseOrder->date = $this->generateDate($data->date);
+            $purchaseOrder->due_days = $data->dueDays;
+            $purchaseOrder->supplier_id = $data->supplierId;
+            $purchaseOrder->remarks = $data->remarks;
+            $purchaseOrder->global_discount = $data->globalDiscount;
+            $purchaseOrder->rounding = $data->rounding;
+            $purchaseOrder->save();
+
+            foreach ($data->items as $item) {
+                $dto = new PurchaseOrderItemCreateDTO(
+                    companyId: $purchaseOrder->company_id,
+                    branchId: $purchaseOrder->branch_id,
+                    purchaseOrderId: $purchaseOrder->id,
+                    qty: $item['qty'],
+                    productUnitId: $item['product_unit_id'],
+                    productUnitConversionValue: $item['product_unit_conversion_value'],
+                    productUnitPrice: $item['product_unit_price'],
+                    productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
+                    priceDiscount: (float) $item['price_discount'],
+                    subtotalDiscount: (float) $item['subtotal_discount'],
+                    vatProfileId: $item['vat_profile_id'],
+                    vatRate: $item['vat_rate'],
+                    vatBaseNumerator: $item['vat_base_numerator'],
+                    vatBaseDenominator: $item['vat_base_denominator'],
+                    remarks: $item['remarks'],
+                );
+
+                $this->purchaseOrderItemActions->create($dto, false);
+            }
+
+            foreach ($data->payments as $payment) {
+                $dto = new PurchaseOrderPaymentCreateDTO(
+                    companyId: $purchaseOrder->company_id,
+                    branchId: $purchaseOrder->branch_id,
+                    purchaseOrderId: $purchaseOrder->id,
+                    code: $payment['code'],
+                    date: $payment['date'],
+                    cashAccountId: $payment['cash_account_id'],
+                    amount: (float) $payment['amount'],
+                    remarks: $payment['remarks'],
+                );
+
+                $this->purchaseOrderPaymentActions->create($dto, false);
+            }
+
+            foreach ($data->refundedPayments as $refundedPayment) {
+                $dto = new PurchaseOrderPaymentRefundCreateDTO(
+                    companyId: $purchaseOrder->company_id,
+                    branchId: $purchaseOrder->branch_id,
+                    purchaseOrderId: $purchaseOrder->id,
+                    code: $refundedPayment['code'],
+                    date: $refundedPayment['date'],
+                    cashAccountId: $refundedPayment['cash_account_id'],
+                    amount: (float) $refundedPayment['amount'],
+                    remarks: $refundedPayment['remarks'],
+                );
+
+                $this->purchaseOrderPaymentRefundActions->create($dto, false);
+            }
+
+            self::updateSummary($purchaseOrder);
+
+            $this->flushCache();
+
+            return $purchaseOrder;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public function update(PurchaseOrder $purchaseOrder, PurchaseOrderUpdateDTO $data): PurchaseOrder
+    {
+        $timer_start = microtime(true);
+
+        try {
+            $purchaseOrder->code = $this->generateUniqueCode($purchaseOrder->company_id, $data->code, $purchaseOrder->id);
+            $purchaseOrder->date = $this->generateDate($data->date);
+            $purchaseOrder->due_days = $data->dueDays;
+            $purchaseOrder->supplier_id = $data->supplierId;
+            $purchaseOrder->remarks = $data->remarks;
+            $purchaseOrder->global_discount = $data->globalDiscount;
+            $purchaseOrder->rounding = $data->rounding;
+            $purchaseOrder->save();
+
+            foreach ($data->deleteItemIds as $deleteId) {
+                $poItem = $purchaseOrder->items()->findOrFail($deleteId);
+                $this->purchaseOrderItemActions->delete($poItem);
+            }
+
+            foreach ($data->items as $item) {
+                if (! empty($item['id'])) {
+                    $poItem = $purchaseOrder->items()->findOrFail($item['id']);
+                    $dto = new PurchaseOrderItemUpdateDTO(
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        productUnitPrice: $item['product_unit_price'],
+                        productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
+                        priceDiscount: (float) $item['price_discount'],
+                        subtotalDiscount: (float) $item['subtotal_discount'],
+                        vatProfileId: $item['vat_profile_id'],
+                        vatRate: $item['vat_rate'],
+                        vatBaseNumerator: $item['vat_base_numerator'],
+                        vatBaseDenominator: $item['vat_base_denominator'],
+                        remarks: $item['remarks'],
+                    );
+
+                    $this->purchaseOrderItemActions->update($poItem, $dto, false);
+                } else {
+                    $dto = new PurchaseOrderItemCreateDTO(
+                        companyId: $purchaseOrder->company_id,
+                        branchId: $purchaseOrder->branch_id,
+                        purchaseOrderId: $purchaseOrder->id,
+                        qty: $item['qty'],
+                        productUnitId: $item['product_unit_id'],
+                        productUnitConversionValue: $item['product_unit_conversion_value'],
+                        productUnitPrice: $item['product_unit_price'],
+                        productUnitIsPriceIncludeVat: $item['product_unit_is_price_include_vat'],
+                        priceDiscount: (float) $item['price_discount'],
+                        subtotalDiscount: (float) $item['subtotal_discount'],
+                        vatProfileId: $item['vat_profile_id'],
+                        vatRate: $item['vat_rate'],
+                        vatBaseNumerator: $item['vat_base_numerator'],
+                        vatBaseDenominator: $item['vat_base_denominator'],
+                        remarks: $item['remarks'],
+                    );
+
+                    $this->purchaseOrderItemActions->create($dto, false);
+                }
+            }
+
+            foreach ($data->deletePaymentIds as $deleteId) {
+                $poPayment = $purchaseOrder->payments()->findOrFail($deleteId);
+                $this->purchaseOrderPaymentActions->delete($poPayment);
+            }
+
+            foreach ($data->payments as $payment) {
+                if (! empty($payment['id'])) {
+                    $poPayment = $purchaseOrder->payments()->findOrFail($payment['id']);
+                    $dto = new PurchaseOrderPaymentUpdateDTO(
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: (float) $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+
+                    $this->purchaseOrderPaymentActions->update($poPayment, $dto, false);
+                } else {
+                    $dto = new PurchaseOrderPaymentCreateDTO(
+                        companyId: $purchaseOrder->company_id,
+                        branchId: $purchaseOrder->branch_id,
+                        purchaseOrderId: $purchaseOrder->id,
+                        code: $payment['code'],
+                        date: $payment['date'],
+                        cashAccountId: $payment['cash_account_id'],
+                        amount: (float) $payment['amount'],
+                        remarks: $payment['remarks'],
+                    );
+
+                    $this->purchaseOrderPaymentActions->create($dto, false);
+                }
+            }
+
+            foreach ($data->deleteRefundedPaymentIds as $deleteId) {
+                $poRefundedPayment = $purchaseOrder->refundedPayments()->findOrFail($deleteId);
+                $this->purchaseOrderPaymentRefundActions->delete($poRefundedPayment);
+            }
+
+            foreach ($data->refundedPayments as $refundedPayment) {
+                if (! empty($refundedPayment['id'])) {
+                    $poRefundedPayment = $purchaseOrder->refundedPayments()->findOrFail($refundedPayment['id']);
+                    $dto = new PurchaseOrderPaymentRefundUpdateDTO(
+                        code: $refundedPayment['code'],
+                        date: $refundedPayment['date'],
+                        cashAccountId: $refundedPayment['cash_account_id'],
+                        amount: (float) $refundedPayment['amount'],
+                        remarks: $refundedPayment['remarks'],
+                    );
+
+                    $this->purchaseOrderPaymentRefundActions->update($poRefundedPayment, $dto, false);
+                } else {
+                    $dto = new PurchaseOrderPaymentRefundCreateDTO(
+                        companyId: $purchaseOrder->company_id,
+                        branchId: $purchaseOrder->branch_id,
+                        purchaseOrderId: $purchaseOrder->id,
+                        code: $refundedPayment['code'],
+                        date: $refundedPayment['date'],
+                        cashAccountId: $refundedPayment['cash_account_id'],
+                        amount: (float) $refundedPayment['amount'],
+                        remarks: $refundedPayment['remarks'],
+                    );
+
+                    $this->purchaseOrderPaymentRefundActions->create($dto, false);
+                }
+            }
+
+            self::updateSummary($purchaseOrder);
+
+            $this->flushCache();
+
+            return $purchaseOrder;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+
+    public static function updateSummary(PurchaseOrder $purchaseOrder): void
+    {
+        $po = $purchaseOrder;
+        $po->refresh();
+
+        $po->item_total_before_global_discount = (float) $po->items->sum('subtotal_after_discount');
+        $po->global_discount = min(
+            max((float) $po->global_discount, 0),
+            (float) $po->item_total_before_global_discount
+        );
+
+        foreach ($po->items as $poItem) {
+            $poItem->global_discount = (function () use ($poItem, $po) {
+                $itemTotalBeforeGlobalDiscount = (float) $po->item_total_before_global_discount;
+                $purchaseOrderGlobalDiscount = (float) $po->global_discount;
+
+                if ($itemTotalBeforeGlobalDiscount <= 0 || $purchaseOrderGlobalDiscount <= 0) return 0;
+
+                $value = ((float) $poItem->subtotal_after_discount / $itemTotalBeforeGlobalDiscount) * $purchaseOrderGlobalDiscount;
+
+                return $value < 0 ? 0 : $value;
+            })();
+            $poItem->subtotal_after_global_discount = $poItem->subtotal_after_discount - $poItem->global_discount;
+            $poItem->save();
+        }
+
+        $globalDiscountDifference = round((float) $po->global_discount - (float) $po->items->sum('global_discount'), 8);
+        if (abs($globalDiscountDifference) > 0.00000001) {
+            $lastGlobalDiscountPoItem = $po->items
+                ->filter(fn ($poItem) => (float) $poItem->subtotal_after_discount > 0)
+                ->last();
+
+            if ($lastGlobalDiscountPoItem) {
+                $lastGlobalDiscountPoItem->global_discount = max(
+                    0,
+                    (float) $lastGlobalDiscountPoItem->global_discount + $globalDiscountDifference
+                );
+                $lastGlobalDiscountPoItem->subtotal_after_global_discount = max(
+                    0,
+                    (float) $lastGlobalDiscountPoItem->subtotal_after_discount - (float) $lastGlobalDiscountPoItem->global_discount
+                );
+                $lastGlobalDiscountPoItem->save();
+            }
+        }
+
+        $po->item_total_after_global_discount = (float) $po->items->sum('subtotal_after_global_discount');
+
+        foreach ($po->items as $poItem) {
+            $poItem->vat_base = (function () use ($poItem) {
+                $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
+                $vatRate = (float) $poItem->vat_rate;
+                $vatBaseFactor = $poItem->vat_base_denominator > 0
+                    ? (float) $poItem->vat_base_numerator / (float) $poItem->vat_base_denominator
+                    : 0;
+
+                if ($subtotalAfterGlobalDiscount <= 0 || $vatRate <= 0 || $vatBaseFactor <= 0) return 0;
+
+                if ($poItem->product_unit_is_price_include_vat) {
+                    $subtotalAfterGlobalDiscount = $subtotalAfterGlobalDiscount / (1 + ($vatRate / 100));
+                }
+
+                return $subtotalAfterGlobalDiscount * $vatBaseFactor;
+            })();
+            $poItem->vat = (function () use ($poItem) {
+                $vatBase = (float) $poItem->vat_base;
+                $vatRate = (float) $poItem->vat_rate;
+
+                if ($vatBase <= 0 || $vatRate <= 0) return 0;
+
+                $value = $vatBase * ($vatRate / 100);
+
+                return $value < 0 ? 0 : $value;
+            })();
+            $poItem->subtotal_after_vat = (function () use ($poItem) {
+                $subtotalAfterGlobalDiscount = (float) $poItem->subtotal_after_global_discount;
+                $vat = (float) $poItem->vat;
+
+                if ($poItem->product_unit_is_price_include_vat) {
+                    return $subtotalAfterGlobalDiscount;
+                }
+
+                return $subtotalAfterGlobalDiscount + $vat;
+            })();
+            $poItem->save();
+        }
+
+        $po->vat_base = (float) $po->items->sum('vat_base');
+        $po->vat = (float) $po->items->sum('vat');
+        $po->item_total_after_vat = (float) $po->items->sum('subtotal_after_vat');
+
+        foreach ($po->items as $poItem) {
+            $poItem->rounding = (function () use ($poItem, $po) {
+                $poItemSubtotalAfterVat = (float) $poItem->subtotal_after_vat;
+                $itemTotalAfterVat = (float) $po->item_total_after_vat;
+                $purchaseOrderRounding = (float) $po->rounding;
+
+                if ($itemTotalAfterVat <= 0 || $purchaseOrderRounding == 0 || $poItemSubtotalAfterVat <= 0) return 0;
+
+                return ($poItemSubtotalAfterVat / $itemTotalAfterVat) * $purchaseOrderRounding;
+            })();
+            $poItem->amount_payable = (float) $poItem->subtotal_after_vat + (float) $poItem->rounding;
+            self::applyCogs($poItem);
+            $poItem->save();
+        }
+
+        $roundingDifference = round((float) $po->rounding - (float) $po->items->sum('rounding'), 8);
+        if (abs($roundingDifference) > 0.00000001) {
+            $lastRoundingPoItem = $po->items
+                ->filter(fn ($poItem) => (float) $poItem->subtotal_after_vat > 0)
+                ->last();
+
+            if ($lastRoundingPoItem) {
+                $lastRoundingPoItem->rounding = (float) $lastRoundingPoItem->rounding + $roundingDifference;
+                $lastRoundingPoItem->amount_payable = (float) $lastRoundingPoItem->subtotal_after_vat
+                    + (float) $lastRoundingPoItem->rounding;
+                self::applyCogs($lastRoundingPoItem);
+                $lastRoundingPoItem->save();
+            }
+        }
+
+        $po->amount_payable = (float) $po->items->sum('amount_payable');
+        $po->amount_paid_down_payment = $po->payments->sum('amount');
+        $po->amount_allocated_down_payment = $po->payments->sum('amount_allocated');
+        $po->amount_refunded_down_payment = $po->refundedPayments->sum('amount');
+        $po->amount_available_down_payment = $po->amount_paid_down_payment - $po->amount_allocated_down_payment - $po->amount_refunded_down_payment;
+
+        foreach ($po->items as $poItem) {
+            $qtyTargetBase = (float) $poItem->product_unit_qty_base;
+            $poItem->qty_received_base = (float) $po->receiptItems()
+                ->where('product_id', $poItem->product_id)
+                ->sum('product_unit_qty_base');
+            $poItem->qty_invoiced_base = (float) $po->invoiceItems()
+                ->where('purchase_invoice_items.product_id', $poItem->product_id)
+                ->sum('product_unit_qty_base');
+            $poItem->qty_outstanding_base = max($qtyTargetBase - $poItem->qty_received_base, 0);
+            $poItem->qty_excess_base = max($poItem->qty_received_base - $qtyTargetBase, 0);
+            $poItem->save();
+        }
+
+        $po->item_total_count = $po->items()->count();
+        $po->item_matched_count = (function () use ($po) {
+            $itemMatchedCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_excess_base > 0) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_outstanding_base > 0) {
+                    continue;
+                }
+
+                $itemMatchedCount++;
+            }
+
+            return $itemMatchedCount;
+        })();
+        $po->item_less_count = (function () use ($po) {
+            $itemLessCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_excess_base > 0) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_outstanding_base > 0) {
+                    $itemLessCount++;
+                }
+            }
+
+            return $itemLessCount;
+        })();
+        $po->item_more_count = (function () use ($po) {
+            $itemMoreCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
+                    continue;
+                }
+
+                if ((float) $poItem->qty_excess_base > 0) {
+                    $itemMoreCount++;
+                }
+            }
+
+            return $itemMoreCount;
+        })();
+        $po->item_unlinked_count = (function () use ($po) {
+            $itemUnlinkedCount = 0;
+
+            foreach ($po->items as $poItem) {
+                if (! $po->receiptItems()->where('product_id', $poItem->product_id)->exists()) {
+                    $itemUnlinkedCount++;
+                }
+            }
+
+            return $itemUnlinkedCount;
+        })();
+        $po->progress_status = (function () use ($po) {
+            if ($po->item_total_count === 0) {
+                return ProgressStatusEnum::UNLINKED;
+            }
+
+            if ($po->item_unlinked_count === $po->item_total_count) {
+                return ProgressStatusEnum::UNLINKED;
+            }
+
+            if ($po->item_matched_count === $po->item_total_count) {
+                return ProgressStatusEnum::MATCHED;
+            }
+
+            return ProgressStatusEnum::UNMATCHED;
+        })();
+
+        $purchaseOrderProductIds = $po->items()->distinct()->pluck('product_id')->filter()->values()->all();
+        $po->receiptItems()->whereIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => true]);
+        $po->receiptItems()->whereNotIn('product_id', $purchaseOrderProductIds)->update(['has_purchase_order_item_product' => false]);
+
+        $po->save();
+    }
+
+    /**
+     * §0.11 — valuation NET of VAT: cogs = (amount_payable − vat) / qty.
+     */
+    private static function applyCogs($poItem): void
+    {
+        $poItem->cogs = (function () use ($poItem) {
+            $qty = (float) $poItem->qty;
+            $netAmountPayable = (float) $poItem->amount_payable - (float) $poItem->vat;
+
+            if ($qty <= 0 || $netAmountPayable <= 0) return 0;
+
+            return $netAmountPayable / $qty;
+        })();
+        $poItem->total_cogs = (function () use ($poItem) {
+            $qty = (float) $poItem->qty;
+            $cogs = (float) $poItem->cogs;
+
+            if ($qty <= 0 || $cogs <= 0) return 0;
+
+            return $qty * $cogs;
+        })();
+        $poItem->base_unit_cogs = (function () use ($poItem) {
+            $productUnitQtyBase = (float) $poItem->product_unit_qty_base;
+            $totalCogs = (float) $poItem->total_cogs;
+
+            if ($productUnitQtyBase <= 0 || $totalCogs <= 0) return 0;
+
+            return $totalCogs / $productUnitQtyBase;
+        })();
+    }
+
+    public function delete(PurchaseOrder $purchaseOrder): bool
+    {
+        $timer_start = microtime(true);
+
+        try {
+            if ($purchaseOrder->receipts()->exists()
+                || $purchaseOrder->invoices()->exists()
+                || $purchaseOrder->payments()->where('amount_allocated', '>', 0)->exists()) {
+                throw new Exception('Purchase order cannot be deleted because it already has related transactions.');
+            }
+
+            foreach ($purchaseOrder->items()->get() as $poItem) {
+                $this->purchaseOrderItemActions->delete($poItem);
+            }
+
+            foreach ($purchaseOrder->payments()->get() as $poPayment) {
+                $this->purchaseOrderPaymentActions->delete($poPayment);
+            }
+
+            foreach ($purchaseOrder->refundedPayments()->get() as $poRefundedPayment) {
+                $this->purchaseOrderPaymentRefundActions->delete($poRefundedPayment);
+            }
+
+            $result = $purchaseOrder->delete();
+
+            $this->flushCache();
+
+            return $result;
+        } catch (Exception $e) {
+            $this->loggerDebug(__METHOD__, $e);
+            throw $e;
+        } finally {
+            $execution_time = microtime(true) - $timer_start;
+            $this->loggerPerformance(__METHOD__, $execution_time);
+        }
+    }
+}

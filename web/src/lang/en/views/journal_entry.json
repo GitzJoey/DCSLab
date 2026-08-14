@@ -1,0 +1,57 @@
+{
+  "page_title": "Journal Entry",
+  "report_entry_detail_title": "Journal Entry per Item",
+  "actions": {
+    "create": "Create Journal Entry",
+    "edit": "Edit Journal Entry",
+    "add_item": "Add Item"
+  },
+  "table": {
+    "title": "Journal Entry List",
+    "entry_detail_title": "Journal Entry per Item List"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "journal_entry_data": "Journal Entry Data",
+    "items": "Journal Items",
+    "summary": "Summary"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "include_system_journals": "Show System Journals",
+    "source_type": "Source Type",
+    "source_id": "Source ID",
+    "reference_no": "Reference No",
+    "remarks": "Remarks",
+    "journal_remarks": "Journal Remarks",
+    "items": "Journal Items",
+    "item": "Item",
+    "chart_of_account": "Account",
+    "debit": "Debit",
+    "credit": "Credit",
+    "item_remarks": "Item Remarks",
+    "total_debit": "Total Debit",
+    "total_credit": "Total Credit",
+    "balance_status": "Balance Status"
+  },
+  "options": {
+    "balance": {
+      "balanced": "Balanced",
+      "unbalanced": "Unbalanced"
+    }
+  },
+  "helper": {
+    "single_side_amount": "Each item may only contain debit or credit amount."
+  },
+  "alert": {
+    "delete_journal_entry": {
+      "title": "Journal Deleted",
+      "content": "Journal entry has been deleted."
+    }
+  }
+}

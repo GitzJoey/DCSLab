@@ -3,7 +3,9 @@
 namespace Tests\Unit\Actions\CompanyActions;
 
 use App\Actions\Company\CompanyActions;
-use App\Enums\UserRoles;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Enums\UserRolesEnum;
 use App\Models\Company;
 use App\Models\Role;
 use App\Models\User;
@@ -20,7 +22,7 @@ class CompanyActionsReadTest extends ActionsTestCase
     {
         parent::setUp();
 
-        $this->companyActions = new CompanyActions();
+        $this->companyActions = app(CompanyActions::class);
     }
 
     public function test_company_actions_call_read_any_with_paginate_true_expect_paginator_object()
@@ -30,11 +32,20 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
-            search: '',
-            paginate: true,
-            page: 1,
-            perPage: 10
+            user: $user,
+            withTrashed: false,
+            search: null,
+            default: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: 10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -47,9 +58,17 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
-            search: '',
-            paginate: false
+            user: $user,
+            withTrashed: false,
+            search: null,
+            default: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: null,
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Collection::class, $result);
@@ -75,11 +94,20 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
+            user: $user,
+            withTrashed: false,
             search: 'testing',
-            paginate: true,
-            page: 1,
-            perPage: 10
+            default: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: 10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -92,7 +120,7 @@ class CompanyActionsReadTest extends ActionsTestCase
         $idxDefaultCompany = random_int(0, $companyCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->count($companyCount)
                 ->state(new Sequence(
                     fn (Sequence $sequence) => [
@@ -103,11 +131,20 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
+            user: $user,
+            withTrashed: false,
             search: '',
-            paginate: true,
-            page: -1,
-            perPage: 10
+            default: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: -1,
+                    perPage: 10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);
@@ -120,7 +157,7 @@ class CompanyActionsReadTest extends ActionsTestCase
         $idxDefaultCompany = random_int(0, $companyCount - 1);
 
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->has(Company::factory()->setStatusActive()->count($companyCount)
                 ->state(new Sequence(
                     fn (Sequence $sequence) => [
@@ -131,11 +168,20 @@ class CompanyActionsReadTest extends ActionsTestCase
             ->create();
 
         $result = $this->companyActions->readAny(
-            userId: $user->id,
+            user: $user,
+            withTrashed: false,
             search: '',
-            paginate: true,
-            page: 1,
-            perPage: -10
+            default: null,
+            status: null,
+            includeId: null,
+            execute: new ExecuteDTO(
+                useCache: true,
+                pagination: new ExecutePaginationDTO(
+                    page: 1,
+                    perPage: -10,
+                ),
+                get: null,
+            ),
         );
 
         $this->assertInstanceOf(Paginator::class, $result);

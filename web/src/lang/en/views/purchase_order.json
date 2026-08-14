@@ -1,0 +1,120 @@
+{
+  "page_title": "Purchase Order",
+  "table": {
+    "title": "Purchase Order List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "supplier": "Supplier",
+      "due_days": "Due Days",
+      "grand_total": "Amount Payable",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Create Purchase Order",
+    "edit": "Edit Purchase Order",
+    "show": "Show Purchase Order",
+    "delete": "Delete Purchase Order"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "purchase_order_data": "Purchase Order Data",
+    "items": "Items",
+    "item_additional_details": "Item Additional Details",
+    "progress": "Progress",
+    "summary": "Summary",
+    "payments": "Payments",
+    "refunded_payments": "Payment Refunds"
+  },
+  "filters": {
+    "payment_allocation_status": "Payment Allocation Status",
+    "payment_allocation_status_not_fully_allocated": "Not / Not Fully Allocated",
+    "payment_allocation_status_fully_allocated": "Fully Allocated",
+    "progress_status": "Progress Status",
+    "progress_status_unlinked": "Unlinked",
+    "progress_status_unmatched": "Unmatched",
+    "progress_status_matched": "Matched"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "due_days": "Due Days",
+    "supplier_id": "Supplier",
+    "remarks": "Remarks",
+    "grand_total": "Amount Payable",
+    "amount_payable": "Amount Payable",
+    "global_discount": "Global Discount",
+    "price_discount": "Unit Price Discount",
+    "payment": "Payment",
+    "payments": "Payments",
+    "amount_paid_down_payment": "Payment Amount",
+    "amount_allocated": "Allocated Amount",
+    "amount_allocated_down_payment": "Allocated Payment Amount",
+    "amount_refunded_down_payment": "Refunded Payment Amount",
+    "amount_available_down_payment": "Available Payment Amount",
+    "refunded_payments": "Payment Refunds",
+    "progress_status": "Progress Status",
+    "item_total_count": "Total Items",
+    "item_matched_count": "Matched Items",
+    "item_less_count": "Short Items",
+    "item_more_count": "Excess Items",
+    "item_unlinked_count": "Unlinked Items",
+    "product_unit_id": "Product",
+    "product_unit_code": "Product Unit Code",
+    "unit_name": "Unit",
+    "qty": "Qty",
+    "product_unit_qty_base": "Base Qty",
+    "qty_received_base": "Received Base Qty",
+    "qty_invoiced_base": "Invoiced Base Qty",
+    "qty_outstanding_base": "Outstanding Base Qty",
+    "qty_excess_base": "Excess Base Qty",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_price": "Unit Price",
+    "item_grand_total": "Item Amount Payable",
+    "price_after_discount": "Unit Price After Discount",
+    "subtotal": "Subtotal After Unit Price Discount",
+    "subtotal_column": "Subtotal",
+    "subtotal_discount": "Subtotal Discount",
+    "subtotal_after_discount": "Subtotal After Discount",
+    "base_unit_price": "Price per {unit}",
+    "subtotal_after_vat": "Subtotal After VAT",
+    "item_price_breakdown": "Item Price Breakdown",
+    "item_additional_details": "Item Additional Details",
+    "items_grand_total_after_discount": "Total Item Amount Payable",
+    "items_subtotal_after_discount": "Total Subtotal After Discount",
+    "item_total_before_global_discount": "Total Before Global Discount",
+    "item_total_after_global_discount": "Total After Global Discount",
+    "item_total_after_vat": "Item Total After VAT",
+    "vat_base": "VAT Base",
+    "vat": "VAT",
+    "amount_payable_preview": "Amount Payable",
+    "rounding": "Rounding",
+    "product_unit_is_price_include_vat": "VAT Included",
+    "vat_profile_id": "VAT Profile",
+    "vat_rate": "VAT Rate",
+    "vat_base_fraction": "VAT Base Fraction",
+    "vat_base_numerator": "VAT Base Numerator",
+    "vat_base_denominator": "VAT Base Denominator",
+    "cash_account_id": "Cash Account",
+    "amount": "Amount"
+  },
+  "alert": {
+    "create": {
+      "title": "Create Purchase Order",
+      "message": "Purchase Order has been created"
+    },
+    "update": {
+      "title": "Edit Purchase Order",
+      "message": "Purchase Order has been updated"
+    },
+    "delete": {
+      "title": "Delete Purchase Order",
+      "message": "Purchase Order has been deleted"
+    }
+  }
+}

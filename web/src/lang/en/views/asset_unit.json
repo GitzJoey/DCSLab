@@ -1,0 +1,29 @@
+{
+  "page_title": "Asset Unit",
+  "actions": {
+    "create": "Create Asset Unit",
+    "edit": "Edit Asset Unit"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "asset_unit_data": "Asset Unit Data"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name",
+    "description": "Description"
+  },
+  "table": {
+    "title": "Asset Unit List",
+    "cols": {
+      "code": "Code",
+      "name": "Name"
+    }
+  },
+  "alert": {
+    "delete_asset_unit": {
+      "title": "Asset unit deleted",
+      "content": "The asset unit has been deleted successfully."
+    }
+  }
+}

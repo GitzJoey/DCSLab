@@ -1,0 +1,103 @@
+{
+  "page_title": "Purchase Return",
+  "table": {
+    "title": "Purchase Return List"
+  },
+  "actions": {
+    "create": "Create Purchase Return",
+    "edit": "Edit Purchase Return",
+    "show": "Show Purchase Return",
+    "delete": "Delete Purchase Return"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "purchase_return_data": "Purchase Return Data",
+    "items": "Items",
+    "summary": "Summary",
+    "refunds": "Refunds",
+    "status": "Status",
+    "remarks": "Remarks"
+  },
+  "filters": {
+    "is_posted": "Posted",
+    "is_settled": "Settled"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "supplier_id": "Supplier",
+    "purchase_invoice_id": "Purchase Invoice",
+    "warehouse_id": "Warehouse",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "is_settled": "Settled",
+    "item_count": "Item Count",
+    "items_empty": "No return items yet",
+    "product_unit_id": "Product",
+    "product_unit_code": "Product Unit Code",
+    "unit_name": "Unit",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_qty_base": "Base Qty",
+    "product_unit_price": "Unit Price",
+    "product_unit_is_price_include_vat": "VAT Included",
+    "price_discount": "Price Discount",
+    "price_after_discount": "Unit Price After Discount",
+    "subtotal": "Subtotal After Price Discount",
+    "subtotal_discount": "Subtotal Discount",
+    "subtotal_after_discount": "Subtotal After Discount",
+    "subtotal_after_vat": "Subtotal After VAT",
+    "vat_profile_id": "VAT Profile",
+    "vat_rate": "VAT Rate",
+    "vat_base_numerator": "VAT Base Numerator",
+    "vat_base_denominator": "VAT Base Denominator",
+    "vat_base": "VAT Base",
+    "vat": "VAT",
+    "purchase_order_receipt_item_id": "Receipt Item",
+    "receipt_code": "Receipt",
+    "received_qty": "Received Base Qty",
+    "item_amount_payable": "Item Amount Payable",
+    "items_subtotal_after_discount": "Total Subtotal After Discount",
+    "global_discount": "Global Discount",
+    "global_discount_total": "Global Discount Total",
+    "item_total_before_global_discount": "Total Before Global Discount",
+    "item_total_after_global_discount": "Total After Global Discount",
+    "item_total_after_vat": "Item Total After VAT",
+    "rounding": "Rounding",
+    "amount_payable": "Amount Payable",
+    "amount_payable_preview": "Amount Payable",
+    "amount_allocated_to_invoice": "Allocated To Invoice",
+    "amount_received_total": "Total Refunded",
+    "amount_settled_total": "Total Settled",
+    "amount_available": "Available Amount",
+    "refunds": "Refunds",
+    "refunds_empty": "No refund rows yet",
+    "refunds_total": "Total Refunds",
+    "cash_account_id": "Cash Account",
+    "amount": "Amount",
+    "supplier_required_hint": "Select a supplier first so receipt items can be looked up.",
+    "vat_free_hint": "Without a purchase invoice link the returned items must be VAT free, so the VAT profile is forced to none.",
+    "purchase_invoice_link_hint": "Supplier follows the linked purchase invoice.",
+    "receipt_item_picker_title": "Select Receipt Item",
+    "receipt_item_unlinked": "Not linked to a receipt item",
+    "refund_cap_hint": "Total refunds may not exceed the available amount of this return."
+  },
+  "alert": {
+    "create": {
+      "title": "Create Purchase Return",
+      "message": "Purchase Return created successfully"
+    },
+    "update": {
+      "title": "Update Purchase Return",
+      "message": "Purchase Return updated successfully"
+    },
+    "delete": {
+      "title": "Delete Purchase Return",
+      "message": "Purchase Return has been deleted"
+    }
+  }
+}

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Role\RoleActions;
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
 use Exception;
@@ -61,7 +61,7 @@ class RoleController extends BaseController
         }
 
         foreach ($usr->roles as $r) {
-            if (strtolower($r->name) == UserRoles::ADMINISTRATOR->value) {
+            if (strtolower($r->name) == UserRolesEnum::ADMINISTRATOR->value) {
                 $result = true;
 
                 return $result;
@@ -84,7 +84,7 @@ class RoleController extends BaseController
         }
 
         foreach ($usr->roles as $r) {
-            if (strtolower($r->name) == UserRoles::DEVELOPER->value) {
+            if (strtolower($r->name) == UserRolesEnum::DEVELOPER->value) {
                 $result = true;
 
                 return $result;

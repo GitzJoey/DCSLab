@@ -1,0 +1,37 @@
+{
+  "page_title": "Kategori Biaya",
+  "actions": {
+    "create": "Tambah Kategori Biaya",
+    "edit": "Ubah Kategori Biaya"
+  },
+  "table": {
+    "title": "Daftar Tree Kategori Biaya"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "expense_category_data": "Data Kategori Biaya"
+  },
+  "fields": {
+    "parent": "Parent",
+    "category_type": "Jenis Kategori",
+    "code": "Kode",
+    "name": "Nama",
+    "sequence": "Urutan",
+    "child_count": "Jumlah Child"
+  },
+  "options": {
+    "category_type": {
+      "expense": "Beban Operasional",
+      "other_expense": "Beban Lain-lain"
+    }
+  },
+  "descriptions": {
+    "category_type": "Dipakai hanya jika kategori ini tidak punya parent."
+  },
+  "alert": {
+    "delete_expense_category": {
+      "title": "Berhasil Menghapus Kategori Biaya",
+      "content": "Kategori biaya telah dihapus."
+    }
+  }
+}

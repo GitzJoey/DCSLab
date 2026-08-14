@@ -1,69 +1,69 @@
 {
-    "title": "Profil",
-    "field_groups": {
-        "user_profile": "Profil Pengguna",
-        "email_verification": "Verifikasi Email",
-        "personal_information": "Informasi Pribadi",
-        "account_settings": "Pengaturan Akun",
-        "roles": "Peran",
-        "change_password": "Ubah Password",
-        "api_token": "API Token",
-        "two_factor_authentication": "Verifikasi Dua Langkah"
+  "title": "Profil",
+  "field_groups": {
+    "user_profile": "Profil Pengguna",
+    "email_verification": "Verifikasi Email",
+    "personal_information": "Informasi Pribadi",
+    "account_settings": "Pengaturan Akun",
+    "roles": "Peran",
+    "change_password": "Ubah Password",
+    "api_token": "API Token",
+    "two_factor_authentication": "Verifikasi Dua Langkah"
+  },
+  "fields": {
+    "name": "Nama",
+    "first_name": "Nama Depan",
+    "last_name": "Nama Keluarga",
+    "address": "Alamat",
+    "city": "Kota",
+    "postal_code": "Kode Pos",
+    "country": "Negara",
+    "tax_id": "NPWP",
+    "remarks": "Keterangan",
+    "email": "Email",
+    "ic_num": "KTP",
+    "settings": {
+      "theme": "Tema",
+      "date_format": "Format Tanggal",
+      "time_format": "Format Waktu"
     },
-    "fields": {
-        "name": "Nama",
-        "first_name": "Nama Depan",
-        "last_name": "Nama Keluarga",
-        "address": "Alamat",
-        "city": "Kota",
-        "postal_code": "Kode Pos",
-        "country": "Negara",
-        "tax_id": "NPWP",
-        "remarks": "Keterangan",
-        "email": "Email",
-        "ic_num": "KTP",
-        "settings": {
-            "theme": "Tema",
-            "date_format": "Format Tanggal",
-            "time_format": "Format Waktu"
-        },
-        "change_password": {
-            "current_password": "Password Sekarang",
-            "password": "Password Baru",
-            "password_confirmation": "Konfirmasi Password Baru"
-        },
-        "api_token": {
-            "total_token_generated": "Jumlah Token Yang Dimiliki",
-            "reset": "Reset Token"
-        },
-        "2fa": {
-            "status": "Status Verifikasi Dua Langkah",
-            "qr-code": "QR Code",
-            "qr-code_description_1": "Silakan Pindai Kode QR Ini Di Aplikasi Google Authenticator Anda",
-            "qr-code_description_2": "Unduh Google Authenticator di Google Play",
-            "qr-code_description_3": "",
-            "qr-code_description_4": "",
-            "recovery-codes": "Recovery Codes",
-            "recovery-codes_description_1": "Catat Dan Simpan Recovery Codes Ini Di Tempat Yang Aman.",
-            "recovery-codes_description_2": "Kode Ini Tidak Akan Dapat Diakses Setelah Anda Menutup Halaman Ini.",
-            "secret-key": "Kunci Rahasia",
-            "secret-key_description_1": "Catat Dan Simpan Secret Key Ini Di Tempat Yang Aman.",
-            "secret-key_description_2": "Secret Key Ini Tidak Akan Dapat Diakses Setelah Anda Menutup Halaman Ini.",
-            "confirm_password": "Konfirmasi Password",
-            "confirm_password_error": "Kata Sandi Yang Diberikan Salah.",
-            "confirm_2fa_auth_description_1": "Otentikasi Dua Faktor Anda Juga Perlu Diaktifkan.",
-            "confirm_2fa_auth_description_2": "Silakan Masukkan Kode Yang Ditampilkan Di Aplikasi Google Authenticator",
-            "confirm_2fa_auth": "Kode Dari Google Authenticator",
-            "confirm_2fa_auth_error": "Kode Yang Diberikan Salah."
-        }
+    "change_password": {
+      "current_password": "Password Sekarang",
+      "password": "Password Baru",
+      "password_confirmation": "Konfirmasi Password Baru"
     },
-    "tooltip": {
-        "email_verified": "Email terverifikasi"
+    "api_token": {
+      "total_token_generated": "Jumlah Token Yang Dimiliki",
+      "reset": "Reset Token"
     },
-    "alert": {
-        "verification_email_sent": {
-            "title": "Email Verifikasi",
-            "content": "Email verifikasi terkirim"
-        }
+    "2fa": {
+      "status": "Status Verifikasi Dua Langkah",
+      "qr-code": "QR Code",
+      "qr-code_description_1": "Silakan Pindai Kode QR Ini Di Aplikasi Google Authenticator Anda",
+      "qr-code_description_2": "Unduh Google Authenticator di Google Play",
+      "qr-code_description_3": "",
+      "qr-code_description_4": "",
+      "recovery-codes": "Recovery Codes",
+      "recovery-codes_description_1": "Catat Dan Simpan Recovery Codes Ini Di Tempat Yang Aman.",
+      "recovery-codes_description_2": "Kode Ini Tidak Akan Dapat Diakses Setelah Anda Menutup Halaman Ini.",
+      "secret-key": "Kunci Rahasia",
+      "secret-key_description_1": "Catat Dan Simpan Secret Key Ini Di Tempat Yang Aman.",
+      "secret-key_description_2": "Secret Key Ini Tidak Akan Dapat Diakses Setelah Anda Menutup Halaman Ini.",
+      "confirm_password": "Konfirmasi Password",
+      "confirm_password_error": "Kata Sandi Yang Diberikan Salah.",
+      "confirm_2fa_auth_description_1": "Otentikasi Dua Faktor Anda Juga Perlu Diaktifkan.",
+      "confirm_2fa_auth_description_2": "Silakan Masukkan Kode Yang Ditampilkan Di Aplikasi Google Authenticator",
+      "confirm_2fa_auth": "Kode Dari Google Authenticator",
+      "confirm_2fa_auth_error": "Kode Yang Diberikan Salah."
     }
+  },
+  "tooltip": {
+    "email_verified": "Email terverifikasi"
+  },
+  "alert": {
+    "verification_email_sent": {
+      "title": "Email Verifikasi",
+      "content": "Email verifikasi terkirim"
+    }
+  }
 }

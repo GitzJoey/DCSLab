@@ -1,15 +1,15 @@
-import { useZiggyRouteStore } from "../stores/ziggy-route";
-import { route, Config } from "ziggy-js";
-import { client, useForm } from "laravel-precognition-vue";
-import { ServiceResponse } from "../types/services/ServiceResponse";
-import { AxiosResponse, isAxiosError, AxiosError } from "axios";
-import axios from "../axios";
-import ErrorHandlerService from "./ErrorHandlerService";
-import { TwoFactorResponse, QRCode, SecretKeyResponse } from "../types/models/TwoFactorAuthentication";
-import { ConfirmPasswordStatusResponse } from "../types/models/ConfirmPassword";
-import { StatusCode } from "../types/enums/StatusCode";
-import { UserProfile } from "../types/models/UserProfile";
-import { Resource } from "../types/resources/Resource";
+import { useZiggyRouteStore } from '../stores/ziggy-route';
+import { route, Config } from 'ziggy-js';
+import { client, useForm } from 'laravel-precognition-vue';
+import { ServiceResponse } from '../types/services/ServiceResponse';
+import { AxiosResponse, isAxiosError, AxiosError } from 'axios';
+import axios from '../axios';
+import ErrorHandlerService from './ErrorHandlerService';
+import { TwoFactorResponse, QRCode, SecretKeyResponse } from '../types/models/TwoFactorAuthentication';
+import { ConfirmPasswordStatusResponse } from '../types/models/ConfirmPassword';
+import { StatusCode } from '../types/enums/StatusCode';
+import { UserProfile } from '../types/models/UserProfile';
+import { Resource } from '../types/resources/Resource';
 
 export default class ProfileService {
   private ziggyRoute: Config;
@@ -162,7 +162,7 @@ export default class ProfileService {
   public async enableTwoFactor(): Promise<ServiceResponse<TwoFactorResponse | null>> {
     const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('two-factor.enable', undefined, false, this.ziggyRoute);
@@ -174,7 +174,7 @@ export default class ProfileService {
         result.data = response.data;
       } else {
         result.success = false;
-        result.data = response.data
+        result.data = response.data;
       }
 
       return result;
@@ -192,7 +192,7 @@ export default class ProfileService {
   public async disableTwoFactor(): Promise<ServiceResponse<TwoFactorResponse | null>> {
     const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('two-factor.disable', undefined, false, this.ziggyRoute);
@@ -222,13 +222,13 @@ export default class ProfileService {
   public async confirmPassword(password: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
     const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('password.confirm', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<TwoFactorResponse> = await axios.post(url, {
-        password: password
+        password: password,
       });
 
       if (response.status == StatusCode.OK || response.status == StatusCode.Created) {
@@ -253,7 +253,7 @@ export default class ProfileService {
   public async confirmPasswordStatus(): Promise<ServiceResponse<ConfirmPasswordStatusResponse | null>> {
     const result: ServiceResponse<ConfirmPasswordStatusResponse | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('password.confirmation', undefined, false, this.ziggyRoute);
@@ -278,13 +278,13 @@ export default class ProfileService {
   public async TwoFactorAuthenticationConfirmed(code: string): Promise<ServiceResponse<TwoFactorResponse | null>> {
     const result: ServiceResponse<TwoFactorResponse | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('two-factor.confirm', undefined, false, this.ziggyRoute);
 
       const response: AxiosResponse<TwoFactorResponse | null> = await axios.post(url, {
-        code: code
+        code: code,
       });
 
       result.success = true;
@@ -305,7 +305,7 @@ export default class ProfileService {
   public async twoFactorQR(): Promise<ServiceResponse<QRCode | null>> {
     const result: ServiceResponse<QRCode | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('two-factor.qr-code', undefined, false, this.ziggyRoute);
@@ -330,7 +330,7 @@ export default class ProfileService {
   public async twoFactorRecoveryCodes(): Promise<ServiceResponse<Array<string> | null>> {
     const result: ServiceResponse<Array<string> | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('two-factor.recovery-codes', undefined, false, this.ziggyRoute);
@@ -355,7 +355,7 @@ export default class ProfileService {
   public async twoFactorSecretKey(): Promise<ServiceResponse<SecretKeyResponse | null>> {
     const result: ServiceResponse<SecretKeyResponse | null> = {
       success: false,
-    }
+    };
 
     try {
       const url = route('two-factor.secret-key', undefined, false, this.ziggyRoute);
@@ -377,4 +377,3 @@ export default class ProfileService {
     }
   }
 }
-

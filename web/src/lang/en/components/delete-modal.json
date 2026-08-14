@@ -1,5 +1,5 @@
 {
-    "title": "Confirmation",
-    "desc_1": "Do you really want to delete these records?",
-    "desc_2": "This process cannot be undone."
+  "title": "Confirmation",
+  "desc_1": "Do you really want to delete these records?",
+  "desc_2": "This process cannot be undone."
 }

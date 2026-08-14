@@ -1,0 +1,58 @@
+{
+  "page_title": "Chart of Account",
+  "actions": {
+    "create": "Tambah Chart of Account",
+    "edit": "Ubah Chart of Account"
+  },
+  "table": {
+    "title": "Daftar Tree Chart of Account"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "chart_of_account_data": "Data Chart of Account"
+  },
+  "fields": {
+    "parent": "Parent",
+    "code": "Kode",
+    "name": "Nama",
+    "scope": "Scope",
+    "system_key": "System Key",
+    "source_type": "Source Type",
+    "source_id": "Source ID",
+    "account_type": "Tipe Akun",
+    "normal_balance": "Saldo Normal",
+    "level": "Level",
+    "is_group": "Group",
+    "is_active": "Aktif",
+    "remarks": "Catatan",
+    "child_count": "Jumlah Child"
+  },
+  "options": {
+    "placeholder": "Pilih...",
+    "boolean": {
+      "yes": "Ya",
+      "no": "Tidak"
+    },
+    "scope": {
+      "system": "System",
+      "user": "User"
+    },
+    "account_type": {
+      "asset": "Aset",
+      "liability": "Liabilitas",
+      "equity": "Ekuitas",
+      "income": "Pendapatan",
+      "expense": "Beban"
+    },
+    "normal_balance": {
+      "debit": "Debit",
+      "credit": "Kredit"
+    }
+  },
+  "alert": {
+    "delete_chart_of_account": {
+      "title": "Berhasil Menghapus Chart of Account",
+      "content": "Chart of account telah dihapus."
+    }
+  }
+}

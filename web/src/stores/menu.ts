@@ -1,6 +1,6 @@
-import { type Icon } from "@/components/Base/Lucide/Lucide.vue";
-import { type Themes } from "@/stores/theme";
-import { defineStore } from "pinia";
+import { type Icon } from '@/components/Base/Lucide/Lucide.vue';
+import { type Themes } from '@/stores/theme';
+import { defineStore } from 'pinia';
 
 export interface Menu {
   icon: Icon;
@@ -11,33 +11,26 @@ export interface Menu {
 }
 
 export interface MenuState {
-  menuValue: Array<Menu | "divider">;
+  menuValue: Array<Menu | 'divider'>;
 }
 
-export const useMenuStore = defineStore("menu", {
+export const useMenuStore = defineStore('menu', {
   state: (): MenuState => ({
     menuValue: [
       {
         icon: 'Home',
-        pageName: 'side-menu-dashboard',
+        pageName: 'side-menu-dashboard-maindashboard',
         title: 'Dashboard',
-        subMenu: [
-          {
-            icon: "ChevronRight",
-            pageName: "side-menu-dashboard-maindashboard",
-            title: "Main Dashboard",
-          }
-        ]
-      }
+      },
     ],
   }),
   getters: {
-    menu: (state) => (layout: Themes["layout"]) => {
-      if (layout == "top-menu") {
+    menu: (state) => (layout: Themes['layout']) => {
+      if (layout == 'top-menu') {
         return state.menuValue;
       }
 
-      if (layout == "simple-menu") {
+      if (layout == 'simple-menu') {
         return state.menuValue;
       }
 
@@ -47,6 +40,6 @@ export const useMenuStore = defineStore("menu", {
   actions: {
     setMenu(menu: Array<Menu>) {
       this.menuValue = menu;
-    }
-  }
+    },
+  },
 });

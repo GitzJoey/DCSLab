@@ -1,0 +1,12 @@
+{
+  "page_title": "Asset Sale Item",
+  "actions": {
+    "create": "Add Asset Item"
+  },
+  "fields": {
+    "qty": "Qty",
+    "unit_price": "Unit Price",
+    "subtotal": "Subtotal",
+    "remarks": "Remarks"
+  }
+}

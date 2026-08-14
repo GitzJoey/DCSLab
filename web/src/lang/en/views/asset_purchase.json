@@ -1,0 +1,48 @@
+{
+  "page_title": "Asset Purchase",
+  "actions": {
+    "create": "Create Asset Purchase",
+    "edit": "Edit Asset Purchase"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "asset_purchase_data": "Asset Purchase Data",
+    "items": "Asset Items",
+    "summary": "Summary"
+  },
+  "fields": {
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "due_days": "Due Days",
+    "supplier_id": "Supplier",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "item_total": "Item Total",
+    "additional_cost": "Additional Cost",
+    "rounding": "Rounding",
+    "amount_payable": "Amount Payable"
+  },
+  "table": {
+    "title": "Asset Purchase List",
+    "cols": {
+      "asset": "Asset",
+      "qty": "Qty",
+      "unit_price": "Unit Price",
+      "subtotal": "Subtotal",
+      "serials": "Serials"
+    }
+  },
+  "summary": {
+    "allocated_additional_cost": "Allocated Additional Cost",
+    "subtotal_after_additional_cost": "Subtotal After Additional Cost",
+    "unit_acquisition_cost": "Unit Acquisition Cost"
+  },
+  "alert": {
+    "delete": {
+      "title": "Asset purchase deleted successfully",
+      "message": "The asset purchase data has been deleted successfully."
+    }
+  }
+}

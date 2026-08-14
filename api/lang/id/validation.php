@@ -175,6 +175,52 @@ return [
         ],
     ],
 
+    'stock_adjustment_in_item' => [
+        'base_qty_must_be_integer' => 'Qty x nilai konversi satuan produk serial harus menghasilkan bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial harus sama dengan qty x nilai konversi satuan produk.',
+    ],
+    'stock_adjustment_out_item' => [
+        'base_qty_must_be_integer' => 'Qty x nilai konversi satuan produk serial harus menghasilkan bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial harus sama dengan qty x nilai konversi satuan produk.',
+    ],
+    'stock_adjustment' => [
+        'same_warehouse_same_product_not_allowed' => 'Produk yang sama tidak boleh muncul di barang masuk dan barang keluar ketika gudangnya sama.',
+    ],
+    'asset_adjustment' => [
+        'at_least_one_item' => 'Minimal harus ada satu item aset masuk atau aset keluar.',
+        'duplicate_serial_in_transaction' => 'Serial yang sama tidak boleh dipakai lebih dari sekali dalam satu penyesuaian aset.',
+    ],
+    'asset_adjustment_in_item' => [
+        'qty_must_be_integer' => 'Qty aset masuk harus berupa bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial aset masuk harus sama dengan qty.',
+        'serial_already_active' => 'Serial aset masuk sudah aktif dan tidak boleh ditambahkan lagi.',
+    ],
+    'asset_adjustment_out_item' => [
+        'qty_must_be_integer' => 'Qty aset keluar harus berupa bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial aset keluar harus sama dengan qty.',
+        'serial_not_found' => 'Serial aset keluar tidak ditemukan atau sudah tidak aktif.',
+        'serial_asset_mismatch' => 'Serial aset keluar tidak sesuai dengan aset yang dipilih.',
+    ],
+    'asset_purchase' => [
+        'at_least_one_item' => 'Minimal harus ada satu item aset yang dibeli.',
+        'duplicate_serial_in_transaction' => 'Serial yang sama tidak boleh dipakai lebih dari sekali dalam satu pembelian aset.',
+    ],
+    'asset_purchase_item' => [
+        'qty_must_be_integer' => 'Qty aset pembelian harus berupa bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial aset pembelian harus sama dengan qty.',
+        'serial_already_active' => 'Serial aset pembelian sudah aktif dan tidak boleh dipakai lagi.',
+    ],
+    'asset_sale' => [
+        'at_least_one_item' => 'Minimal harus ada satu item aset yang dijual.',
+        'duplicate_serial_in_transaction' => 'Serial yang sama tidak boleh dipakai lebih dari sekali dalam satu penjualan aset.',
+    ],
+    'asset_sale_item' => [
+        'qty_must_be_integer' => 'Qty aset penjualan harus berupa bilangan bulat.',
+        'serial_count_not_match_qty' => 'Jumlah serial aset penjualan harus sama dengan qty.',
+        'serial_not_found' => 'Serial aset penjualan tidak ditemukan atau sudah tidak aktif.',
+        'serial_asset_mismatch' => 'Serial aset penjualan tidak sesuai dengan aset yang dipilih.',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

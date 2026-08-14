@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,7 +29,7 @@ class CompanyFactory extends Factory
             'name' => fake($locale)->company(),
             'address' => fake($locale)->address(),
             'default' => false,
-            'status' => RecordStatus::ACTIVE,
+            'status' => RecordStatusEnum::ACTIVE,
         ];
     }
 
@@ -53,7 +53,7 @@ class CompanyFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::ACTIVE,
+                'status' => RecordStatusEnum::ACTIVE,
             ];
         });
     }
@@ -62,7 +62,7 @@ class CompanyFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'status' => RecordStatus::INACTIVE,
+                'status' => RecordStatusEnum::INACTIVE,
             ];
         });
     }

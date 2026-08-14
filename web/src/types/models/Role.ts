@@ -1,7 +1,7 @@
-import { Permission } from "./Permission";
+import { Permission } from './Permission';
 
 export interface Role {
-    id: string,
-    display_name: string,
-    permissions?: Array<Permission>,
+  id: string;
+  display_name: string;
+  permissions?: Array<Permission>;
 }

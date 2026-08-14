@@ -1,0 +1,37 @@
+{
+  "page_title": "Asset Adjustment",
+  "actions": {
+    "create": "Create Asset Adjustment",
+    "edit": "Edit Asset Adjustment"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "asset_adjustment_data": "Asset Adjustment Data",
+    "in_items": "Incoming Assets",
+    "out_items": "Outgoing Assets"
+  },
+  "fields": {
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "remarks": "Remarks",
+    "is_posted": "Is Posted",
+    "total_incoming_asset_qty": "Total Incoming Asset Qty",
+    "total_outgoing_asset_qty": "Total Outgoing Asset Qty"
+  },
+  "table": {
+    "title": "Asset Adjustment List",
+    "cols": {
+      "asset": "Asset",
+      "qty": "Qty",
+      "serials": "Serials"
+    }
+  },
+  "alert": {
+    "delete": {
+      "title": "Asset adjustment deleted",
+      "message": "The asset adjustment has been deleted successfully."
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "page_title": "Transfer Stok",
+  "table": {
+    "title": "Daftar Transfer Stok",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "source_warehouse": "Gudang Sumber",
+      "destination_warehouse": "Gudang Tujuan",
+      "is_posted": "Diposting",
+      "remarks": "Catatan"
+    }
+  },
+  "actions": {
+    "create": "Tambah Transfer Stok",
+    "edit": "Ubah Transfer Stok",
+    "show": "Tampilkan Transfer Stok",
+    "delete": "Hapus Transfer Stok"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "stock_transfer_data": "Data Transfer Stok",
+    "items": "Item-item"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "stock_transfer_code": "Kode Transfer Stok",
+    "product_name": "Nama Produk",
+    "product_unit_code": "Kode Produk",
+    "source_warehouse_id": "Gudang Sumber",
+    "destination_warehouse_id": "Gudang Tujuan",
+    "remarks": "Catatan",
+    "is_posted": "Diposting",
+    "items": "Item-item"
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Transfer Stok",
+      "message": "Transfer Stok berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Transfer Stok",
+      "message": "Transfer Stok berhasil diperbarui"
+    },
+    "delete": {
+      "title": "Hapus Transfer Stok",
+      "message": "Transfer Stok berhasil dihapus"
+    }
+  }
+}

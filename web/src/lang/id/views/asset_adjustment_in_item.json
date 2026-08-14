@@ -1,0 +1,16 @@
+{
+  "page_title": "Aset Masuk",
+  "actions": {
+    "create": "Tambah Aset Masuk"
+  },
+  "fields": {
+    "qty": "Qty",
+    "remarks": "Catatan"
+  },
+  "table": {
+    "title": "Daftar Aset Masuk",
+    "cols": {
+      "asset": "Aset"
+    }
+  }
+}

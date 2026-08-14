@@ -1,0 +1,39 @@
+{
+  "page_title": "VAT Profiles",
+  "table": {
+    "title": "VAT Profile List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "vat_rate": "VAT Rate",
+      "vat_base_fraction": "VAT Base Fraction",
+      "is_active": "Active"
+    }
+  },
+  "actions": {
+    "create": "Create VAT Profile",
+    "edit": "Edit VAT Profile",
+    "show": "View VAT Profile",
+    "delete": "Delete VAT Profile"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "vat_profile_data": "VAT Profile Data"
+  },
+  "fields": {
+    "company_id": "Company",
+    "code": "Code",
+    "name": "Name",
+    "vat_rate": "VAT Rate",
+    "vat_base_numerator": "VAT Base Numerator",
+    "vat_base_denominator": "VAT Base Denominator",
+    "remarks": "Remarks",
+    "is_active": "Active"
+  },
+  "alert": {
+    "delete_vat_profile": {
+      "title": "Delete VAT Profile",
+      "content": "VAT Profile deleted successfully"
+    }
+  }
+}

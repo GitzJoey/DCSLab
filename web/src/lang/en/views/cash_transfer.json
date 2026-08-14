@@ -1,0 +1,40 @@
+{
+  "page_title": "Cash Transfer",
+  "table": {
+    "title": "Cash Transfer List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "source_cash_account": "Source Cash Account",
+      "destination_cash_account": "Destination Cash Account",
+      "amount": "Amount"
+    }
+  },
+  "actions": {
+    "create": "Create Cash Transfer",
+    "edit": "Edit Cash Transfer",
+    "show": "Show Cash Transfer",
+    "delete": "Delete Cash Transfer"
+  },
+  "fields": {
+    "code": "Code",
+    "company": "Company",
+    "branch": "Branch",
+    "date": "Date",
+    "source_cash_account": "Source Cash Account",
+    "destination_cash_account": "Destination Cash Account",
+    "amount": "Amount",
+    "remarks": "Remarks"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "transfer_data": "Cash Transfer Data"
+  },
+  "alert": {
+    "delete_cash_transfer": {
+      "title": "Delete Cash Transfer",
+      "content": "Cash Transfer Deleted Successfully"
+    }
+  }
+}
+

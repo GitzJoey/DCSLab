@@ -1,0 +1,45 @@
+{
+  "page_title": "Capital Transaction",
+  "table": {
+    "title": "Capital Transaction List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "investor": "Investor",
+      "type": "Type",
+      "cash_account": "Cash Account",
+      "amount": "Amount"
+    }
+  },
+  "actions": {
+    "create": "Create Capital Transaction",
+    "edit": "Edit Capital Transaction",
+    "show": "Show Capital Transaction",
+    "delete": "Delete Capital Transaction"
+  },
+  "fields": {
+    "code": "Code",
+    "company": "Company",
+    "branch": "Branch",
+    "date": "Date",
+    "investor": "Investor",
+    "type": "Type",
+    "cash_account": "Cash Account",
+    "amount": "Amount",
+    "remarks": "Remarks"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "capital_transaction_data": "Capital Transaction Data"
+  },
+  "types": {
+    "in": "In",
+    "out": "Out"
+  },
+  "alert": {
+    "delete_capital_transaction": {
+      "title": "Delete Capital Transaction",
+      "content": "Capital Transaction Deleted Successfully"
+    }
+  }
+}

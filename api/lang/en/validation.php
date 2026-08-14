@@ -176,6 +176,52 @@ return [
         ],
     ],
 
+    'stock_adjustment_in_item' => [
+        'base_qty_must_be_integer' => 'Qty x product unit conversion value for serialized product must be an integer.',
+        'serial_count_not_match_qty' => 'The number of serials must match qty x product unit conversion value.',
+    ],
+    'stock_adjustment_out_item' => [
+        'base_qty_must_be_integer' => 'Qty x product unit conversion value for serialized product must be an integer.',
+        'serial_count_not_match_qty' => 'The number of serials must match qty x product unit conversion value.',
+    ],
+    'stock_adjustment' => [
+        'same_warehouse_same_product_not_allowed' => 'The same product cannot appear in both incoming and outgoing items when the warehouse is the same.',
+    ],
+    'asset_adjustment' => [
+        'at_least_one_item' => 'At least one incoming asset item or outgoing asset item is required.',
+        'duplicate_serial_in_transaction' => 'The same serial cannot be used more than once within a single asset adjustment.',
+    ],
+    'asset_adjustment_in_item' => [
+        'qty_must_be_integer' => 'Incoming asset qty must be an integer.',
+        'serial_count_not_match_qty' => 'The number of incoming asset serials must match qty.',
+        'serial_already_active' => 'The incoming asset serial is already active and cannot be added again.',
+    ],
+    'asset_adjustment_out_item' => [
+        'qty_must_be_integer' => 'Outgoing asset qty must be an integer.',
+        'serial_count_not_match_qty' => 'The number of outgoing asset serials must match qty.',
+        'serial_not_found' => 'The outgoing asset serial was not found or is already inactive.',
+        'serial_asset_mismatch' => 'The outgoing asset serial does not match the selected asset.',
+    ],
+    'asset_purchase' => [
+        'at_least_one_item' => 'At least one purchased asset item is required.',
+        'duplicate_serial_in_transaction' => 'The same serial cannot be used more than once within a single asset purchase.',
+    ],
+    'asset_purchase_item' => [
+        'qty_must_be_integer' => 'Purchased asset qty must be an integer.',
+        'serial_count_not_match_qty' => 'The number of purchased asset serials must match qty.',
+        'serial_already_active' => 'The purchased asset serial is already active and cannot be used again.',
+    ],
+    'asset_sale' => [
+        'at_least_one_item' => 'At least one sold asset item is required.',
+        'duplicate_serial_in_transaction' => 'The same serial cannot be used more than once within a single asset sale.',
+    ],
+    'asset_sale_item' => [
+        'qty_must_be_integer' => 'Sold asset qty must be an integer.',
+        'serial_count_not_match_qty' => 'The number of sold asset serials must match qty.',
+        'serial_not_found' => 'The sold asset serial was not found or is already inactive.',
+        'serial_asset_mismatch' => 'The sold asset serial does not match the selected asset.',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

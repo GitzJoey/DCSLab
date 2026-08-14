@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -22,7 +22,7 @@ class BranchPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
@@ -42,7 +42,7 @@ class BranchPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
@@ -62,7 +62,7 @@ class BranchPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
@@ -82,7 +82,7 @@ class BranchPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 
@@ -102,7 +102,7 @@ class BranchPolicy
             return false;
         }
 
-        if (! app()->environment('production') && $user->hasRole(UserRoles::DEVELOPER->value)) {
+        if (! app()->environment('production') && $user->hasRole(UserRolesEnum::DEVELOPER->value)) {
             return true;
         }
 

@@ -1,0 +1,55 @@
+{
+  "page_title": "Customer",
+  "table": {
+    "title": "Customer List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "is_member": "Member",
+      "group": "Group",
+      "zone": "Zone",
+      "max_open_invoice": "Max Open Invoice",
+      "max_outstanding_invoice": "Max Outstanding Invoice",
+      "max_invoice_age": "Max Invoice Age",
+      "payment_term_type": "Payment Term Type",
+      "payment_term": "Payment Term",
+      "taxable_enterprise": "Taxable Enterprise",
+      "tax_id": "Tax ID",
+      "remarks": "Remarks",
+      "status": "Status"
+    }
+  },
+  "actions": {
+    "create": "Create Customer",
+    "edit": "Edit Customer",
+    "show": "Show Customer",
+    "delete": "Delete Customer"
+  },
+  "field_groups": {
+    "general_information": "General Information",
+    "credit_limit": "Credit Limit",
+    "tax_information": "Tax Information"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name",
+    "is_member": "Member",
+    "group": "Group",
+    "zone": "Zone",
+    "max_open_invoice": "Max Open Invoice",
+    "max_outstanding_invoice": "Max Outstanding Invoice",
+    "max_invoice_age": "Max Invoice Age",
+    "payment_term_type": "Payment Term Type",
+    "payment_term": "Payment Term",
+    "taxable_enterprise": "Taxable Enterprise",
+    "tax_id": "Tax ID",
+    "remarks": "Remarks",
+    "status": "Status"
+  },
+  "alert": {
+    "delete": {
+      "title": "Delete Customer",
+      "message": "Customer Deleted Successfully"
+    }
+  }
+}

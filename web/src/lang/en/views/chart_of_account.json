@@ -1,0 +1,58 @@
+{
+  "page_title": "Chart of Account",
+  "actions": {
+    "create": "Create Chart of Account",
+    "edit": "Edit Chart of Account"
+  },
+  "table": {
+    "title": "Chart of Account Tree List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "chart_of_account_data": "Chart of Account Data"
+  },
+  "fields": {
+    "parent": "Parent",
+    "code": "Code",
+    "name": "Name",
+    "scope": "Scope",
+    "system_key": "System Key",
+    "source_type": "Source Type",
+    "source_id": "Source ID",
+    "account_type": "Account Type",
+    "normal_balance": "Normal Balance",
+    "level": "Level",
+    "is_group": "Group",
+    "is_active": "Active",
+    "remarks": "Remarks",
+    "child_count": "Child Count"
+  },
+  "options": {
+    "placeholder": "Select...",
+    "boolean": {
+      "yes": "Yes",
+      "no": "No"
+    },
+    "scope": {
+      "system": "System",
+      "user": "User"
+    },
+    "account_type": {
+      "asset": "Asset",
+      "liability": "Liability",
+      "equity": "Equity",
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "normal_balance": {
+      "debit": "Debit",
+      "credit": "Credit"
+    }
+  },
+  "alert": {
+    "delete_chart_of_account": {
+      "title": "Successfully Deleted Chart of Account",
+      "content": "Chart of account has been deleted."
+    }
+  }
+}

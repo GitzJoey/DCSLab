@@ -18,15 +18,11 @@ class User extends Authenticatable
     use HasRolesAndPermissions;
     use TwoFactorAuthenticatable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'timezone',
     ];
 
     /**
@@ -39,11 +35,6 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -65,6 +56,21 @@ class User extends Authenticatable
     public function companies()
     {
         return $this->belongsToMany(Company::class);
+    }
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class);
+    }
+
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class);
+    }
+
+    public function suppliers()
+    {
+        return $this->belongsToMany(Supplier::class);
     }
 
     public static function boot()

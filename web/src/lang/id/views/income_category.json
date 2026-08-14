@@ -1,0 +1,27 @@
+{
+  "page_title": "Kategori Pendapatan",
+  "actions": {
+    "create": "Tambah Kategori Pendapatan",
+    "edit": "Ubah Kategori Pendapatan"
+  },
+  "table": {
+    "title": "Daftar Tree Kategori Pendapatan"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "income_category_data": "Data Kategori Pendapatan"
+  },
+  "fields": {
+    "parent": "Parent",
+    "code": "Kode",
+    "name": "Nama",
+    "sequence": "Urutan",
+    "child_count": "Jumlah Child"
+  },
+  "alert": {
+    "delete_income_category": {
+      "title": "Berhasil Menghapus Kategori Pendapatan",
+      "content": "Kategori pendapatan telah dihapus."
+    }
+  }
+}

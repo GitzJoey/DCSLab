@@ -1,0 +1,22 @@
+{
+  "page_title": "Stock Adjustment Out Item Serials",
+  "table": {
+    "title": "Stock Adjustment Out Item Serials",
+    "cols": {
+      "stock_adjustment_code": "Code",
+      "product_name": "Product",
+      "serial": "Serial"
+    }
+  },
+  "actions": {
+    "create": "Add Serial",
+    "edit": "Edit Serial",
+    "show": "Show Serial",
+    "delete": "Delete Serial"
+  },
+  "fields": {
+    "stock_adjustment_id": "Stock Adjustment",
+    "stock_adjustment_out_item_id": "Out Item",
+    "serial": "Serial"
+  }
+}

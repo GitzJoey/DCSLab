@@ -1,3 +1,3 @@
-import ThemeSwitcher from "./ThemeSwitcher.vue";
+import ThemeSwitcher from './ThemeSwitcher.vue';
 
 export default ThemeSwitcher;

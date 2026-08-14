@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\API\RoleAPI;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Role;
 use App\Models\User;
 use Tests\APITestCase;
@@ -17,10 +17,12 @@ class RoleAPIReadTest extends APITestCase
     public function test_role_api_call_read_any_without_authorization_expect_unauthorized_message()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
-        $api = $this->getJson(route('api.get.db.admin.role.read_any', []));
+        $api = $this->getJson(route('api.get.db.admin.role.read_any', [
+            'with_trashed' => false,
+        ]));
 
         $api->assertUnauthorized();
     }
@@ -34,7 +36,9 @@ class RoleAPIReadTest extends APITestCase
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.role.read_any', []));
+        $api = $this->getJson(route('api.get.db.admin.role.read_any', [
+            'with_trashed' => false,
+        ]));
 
         $api->assertForbidden();
     }
@@ -42,12 +46,14 @@ class RoleAPIReadTest extends APITestCase
     public function test_role_api_call_read_any_expect_collection()
     {
         $user = User::factory()
-            ->hasAttached(Role::where('name', '=', UserRoles::DEVELOPER->value)->first())
+            ->hasAttached(Role::where('name', '=', UserRolesEnum::DEVELOPER->value)->first())
             ->create();
 
         $this->actingAs($user);
 
-        $api = $this->getJson(route('api.get.db.admin.role.read_any', []));
+        $api = $this->getJson(route('api.get.db.admin.role.read_any', [
+            'with_trashed' => false,
+        ]));
 
         $api->assertSuccessful();
     }

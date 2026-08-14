@@ -1,0 +1,37 @@
+{
+  "page_title": "Product Category",
+  "table": {
+    "title": "Product Category List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "type": "Type"
+    }
+  },
+  "actions": {
+    "create": "Create Product Category",
+    "edit": "Edit Product Category",
+    "show": "Show Product Category",
+    "delete": "Delete Product Category"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "product_category_data": "Product Category Data"
+  },
+  "fields": {
+    "company_id": "Company",
+    "code": "Code",
+    "name": "Name",
+    "type": "Type"
+  },
+  "type": {
+    "product": "Product",
+    "service": "Service"
+  },
+  "alert": {
+    "delete_product_category": {
+      "title": "Delete Product Category",
+      "content": "Product Category Deleted Successfully"
+    }
+  }
+}

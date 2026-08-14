@@ -1,3 +1,3 @@
 export interface Resource<T> {
-    data: T
+  data: T;
 }

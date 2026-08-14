@@ -1,0 +1,103 @@
+{
+  "page_title": "Purchase Return",
+  "table": {
+    "title": "Daftar Purchase Return"
+  },
+  "actions": {
+    "create": "Tambah Purchase Return",
+    "edit": "Ubah Purchase Return",
+    "show": "Tampilkan Purchase Return",
+    "delete": "Hapus Purchase Return"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "purchase_return_data": "Data Purchase Return",
+    "items": "Item-item",
+    "summary": "Ringkasan",
+    "refunds": "Pengembalian Dana",
+    "status": "Status",
+    "remarks": "Catatan"
+  },
+  "filters": {
+    "is_posted": "Posted",
+    "is_settled": "Selesai"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "supplier_id": "Pemasok",
+    "purchase_invoice_id": "Purchase Invoice",
+    "warehouse_id": "Gudang",
+    "remarks": "Catatan",
+    "is_posted": "Posted",
+    "is_settled": "Selesai",
+    "item_count": "Jumlah Item",
+    "items_empty": "Belum ada item retur",
+    "product_unit_id": "Produk",
+    "product_unit_code": "Kode Unit Produk",
+    "unit_name": "Satuan",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_qty_base": "Qty Dasar",
+    "product_unit_price": "Harga Satuan",
+    "product_unit_is_price_include_vat": "Harga Termasuk PPN",
+    "price_discount": "Diskon Harga",
+    "price_after_discount": "Harga Satuan Setelah Diskon",
+    "subtotal": "Subtotal Setelah Diskon Harga",
+    "subtotal_discount": "Diskon Subtotal",
+    "subtotal_after_discount": "Subtotal Setelah Diskon",
+    "subtotal_after_vat": "Subtotal Setelah PPN",
+    "vat_profile_id": "Profil PPN",
+    "vat_rate": "Tarif PPN",
+    "vat_base_numerator": "Pembilang DPP",
+    "vat_base_denominator": "Penyebut DPP",
+    "vat_base": "DPP",
+    "vat": "PPN",
+    "purchase_order_receipt_item_id": "Item Penerimaan",
+    "receipt_code": "Penerimaan",
+    "received_qty": "Qty Dasar Diterima",
+    "item_amount_payable": "Total Item",
+    "items_subtotal_after_discount": "Total Subtotal Setelah Diskon",
+    "global_discount": "Diskon Global",
+    "global_discount_total": "Total Diskon Global",
+    "item_total_before_global_discount": "Total Sebelum Diskon Global",
+    "item_total_after_global_discount": "Total Setelah Diskon Global",
+    "item_total_after_vat": "Total Item Setelah PPN",
+    "rounding": "Pembulatan",
+    "amount_payable": "Total Retur",
+    "amount_payable_preview": "Total Retur",
+    "amount_allocated_to_invoice": "Dialokasikan ke Invoice",
+    "amount_received_total": "Total Dikembalikan",
+    "amount_settled_total": "Total Diselesaikan",
+    "amount_available": "Jumlah Tersedia",
+    "refunds": "Pengembalian Dana",
+    "refunds_empty": "Belum ada baris pengembalian dana",
+    "refunds_total": "Total Pengembalian Dana",
+    "cash_account_id": "Akun Kas",
+    "amount": "Jumlah",
+    "supplier_required_hint": "Pilih pemasok terlebih dahulu agar item penerimaan dapat dicari.",
+    "vat_free_hint": "Tanpa tautan purchase invoice, item retur harus tanpa PPN sehingga profil PPN dipaksa kosong.",
+    "purchase_invoice_link_hint": "Pemasok mengikuti purchase invoice yang ditautkan.",
+    "receipt_item_picker_title": "Pilih Item Penerimaan",
+    "receipt_item_unlinked": "Tidak tertaut ke item penerimaan",
+    "refund_cap_hint": "Total pengembalian dana tidak boleh melebihi jumlah tersedia retur ini."
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Purchase Return",
+      "message": "Purchase Return berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Purchase Return",
+      "message": "Purchase Return berhasil diubah"
+    },
+    "delete": {
+      "title": "Hapus Purchase Return",
+      "message": "Purchase Return berhasil dihapus"
+    }
+  }
+}

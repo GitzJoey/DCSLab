@@ -1,0 +1,26 @@
+{
+  "page_title": "Kategori Aset",
+  "actions": {
+    "create": "Tambah Kategori Aset",
+    "edit": "Ubah Kategori Aset"
+  },
+  "table": {
+    "title": "Daftar Kategori Aset"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "asset_category_data": "Data Kategori Aset"
+  },
+  "fields": {
+    "code": "Kode",
+    "name": "Nama",
+    "estimated_useful_life_months": "Taksiran Masa Manfaat (Bulan)",
+    "remarks": "Catatan"
+  },
+  "alert": {
+    "delete_asset_category": {
+      "title": "Berhasil Menghapus Kategori Aset",
+      "content": "Kategori aset telah dihapus."
+    }
+  }
+}

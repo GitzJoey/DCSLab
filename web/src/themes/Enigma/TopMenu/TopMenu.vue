@@ -1,89 +1,87 @@
 <script setup lang="ts">
-import "@/assets/css/themes/enigma/top-nav.css";
-import { useRoute, useRouter } from "vue-router";
-import Lucide from "@/components/Base/Lucide";
-import MobileMenu from "@/components/MobileMenu";
-import TopBar from "@/components/Themes/Enigma/TopBar";
-import _ from "lodash";
-import { useMenuStore, Menu as sMenu } from "@/stores/menu";
-import {
-  type ProvideForceActiveMenu,
-  forceActiveMenu,
-  type Route,
-  type FormattedMenu,
-  nestedMenu,
-  linkTo,
-} from "./top-menu";
-import { watch, reactive, ref, computed, onMounted, provide } from "vue";
-import ScrollToTop from "@/components/Base/ScrollToTop";
-import LoadingOverlay from "@/components/LoadingOverlay";
-import { EmailVerificationAlert } from "@/components/AlertPlaceholder";
-import { useDashboardStore } from "@/stores/dashboard";
-import DashboardService from "@/services/DashboardService";
-import { useZiggyRouteStore } from "@/stores/ziggy-route";
-import { Config } from "ziggy-js";
-import { useI18n } from "vue-i18n";
+  import '@/assets/css/themes/enigma/top-nav.css';
+  import { useRoute, useRouter } from 'vue-router';
+  import Lucide from '@/components/Base/Lucide';
+  import MobileMenu from '@/components/MobileMenu';
+  import TopBar from '@/components/Themes/Enigma/TopBar';
+  import _ from 'lodash';
+  import { useMenuStore, Menu as sMenu } from '@/stores/menu';
+  import {
+    type ProvideForceActiveMenu,
+    forceActiveMenu,
+    type Route,
+    type FormattedMenu,
+    nestedMenu,
+    linkTo,
+  } from './top-menu';
+  import { watch, reactive, ref, computed, onMounted, provide } from 'vue';
+  import ScrollToTop from '@/components/Base/ScrollToTop';
+  import LoadingOverlay from '@/components/LoadingOverlay';
+  import { EmailVerificationAlert } from '@/components/AlertPlaceholder';
+  import { useDashboardStore } from '@/stores/dashboard';
+  import DashboardService from '@/services/DashboardService';
+  import { useZiggyRouteStore } from '@/stores/ziggy-route';
+  import { Config } from 'ziggy-js';
+  import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const dashboardServices = new DashboardService();
+  const { t } = useI18n();
+  const dashboardServices = new DashboardService();
 
-const route: Route = useRoute();
-const router = useRouter();
-let formattedMenu = reactive<Array<FormattedMenu | "divider">>([]);
-const setFormattedMenu = (
-  computedFormattedMenu: Array<FormattedMenu | "divider">
-) => {
-  Object.assign(formattedMenu, computedFormattedMenu);
-};
-const menuStore = useMenuStore();
-const menu = computed(() => nestedMenu(menuStore.menu("top-menu"), route));
+  const route: Route = useRoute();
+  const router = useRouter();
+  let formattedMenu = reactive<Array<FormattedMenu | 'divider'>>([]);
+  const setFormattedMenu = (computedFormattedMenu: Array<FormattedMenu | 'divider'>) => {
+    Object.assign(formattedMenu, computedFormattedMenu);
+  };
+  const menuStore = useMenuStore();
+  const menu = computed(() => nestedMenu(menuStore.menu('top-menu'), route));
 
-const dashboardStore = useDashboardStore();
-const screenMask = computed(() => dashboardStore.screenMaskValue);
+  const dashboardStore = useDashboardStore();
+  const screenMask = computed(() => dashboardStore.screenMaskValue);
 
-const ziggyRouteStore = useZiggyRouteStore();
+  const ziggyRouteStore = useZiggyRouteStore();
 
-const showBackToTop = ref<boolean>(false);
+  const showBackToTop = ref<boolean>(false);
 
-const handlescroll = () => {
-  if (window.scrollY > 100) {
-    showBackToTop.value = true;
-  } else {
-    showBackToTop.value = false;
-  }
-}
+  const handlescroll = () => {
+    if (window.scrollY > 100) {
+      showBackToTop.value = true;
+    } else {
+      showBackToTop.value = false;
+    }
+  };
 
-window.addEventListener('scroll', handlescroll);
+  window.addEventListener('scroll', handlescroll);
 
-provide<ProvideForceActiveMenu>("forceActiveMenu", (pageName: string) => {
-  forceActiveMenu(route, pageName);
-  setFormattedMenu(menu.value);
-});
+  provide<ProvideForceActiveMenu>('forceActiveMenu', (pageName: string) => {
+    forceActiveMenu(route, pageName);
+    setFormattedMenu(menu.value);
+  });
 
-watch(menu, () => {
-  setFormattedMenu(menu.value);
-});
+  watch(menu, () => {
+    setFormattedMenu(menu.value);
+  });
 
-watch(
-  computed(() => route.path),
-  () => {
-    delete route.forceActiveMenu;
-  }
-);
+  watch(
+    computed(() => route.path),
+    () => {
+      delete route.forceActiveMenu;
+    },
+  );
 
-onMounted(async () => {
-  await updateMenu();
+  onMounted(async () => {
+    await updateMenu();
 
-  setFormattedMenu(menu.value);
-});
+    setFormattedMenu(menu.value);
+  });
 
-const updateMenu = async () => {
-  let menuResult = await dashboardServices.readUserMenu();
-  menuStore.setMenu(menuResult.data as Array<sMenu>);
+  const updateMenu = async () => {
+    let menuResult = await dashboardServices.readUserMenu();
+    menuStore.setMenu(menuResult.data as Array<sMenu>);
 
-  let apiResult = await dashboardServices.readUserApi();
-  ziggyRouteStore.setZiggy(apiResult.data as Config);
-};
+    let apiResult = await dashboardServices.readUserApi();
+    ziggyRouteStore.setZiggy(apiResult.data as Config);
+  };
 </script>
 
 <template>
@@ -108,109 +106,95 @@ const updateMenu = async () => {
               <template v-if="menu != 'divider'">
                 <a
                   :href="
-                  menu.subMenu
-                    ? '#'
-                    : ((pageName: string | undefined) => {
-                        try {
-                          return router.resolve({
-                            name: pageName,
-                          }).fullPath;
-                        } catch (err) {
-                          return '';
-                        }
-                      })(menu.pageName)
-                "
+                    menu.subMenu
+                      ? '#'
+                      : ((pageName: string | undefined) => {
+                          try {
+                            return router.resolve({
+                              name: pageName,
+                            }).fullPath;
+                          } catch (err) {
+                            return '';
+                          }
+                        })(menu.pageName)
+                  "
                   :class="[menu.active ? 'top-menu top-menu--active' : 'top-menu']"
-                  @click="(event: MouseEvent) => {
-                  event.preventDefault();
-                  linkTo(menu, router);
-                }"
+                  @click="
+                    (event: MouseEvent) => {
+                      event.preventDefault();
+                      linkTo(menu, router);
+                    }
+                  "
                 >
                   <div class="top-menu__icon">
                     <Lucide :icon="menu.icon" />
                   </div>
                   <div class="top-menu__title">
-                    {{ t(menu.title) }}
-                    <Lucide
-                      v-if="menu.subMenu"
-                      class="top-menu__sub-icon"
-                      icon="ChevronDown"
-                    />
+                    <span class="top-menu__title-text">{{ t(menu.title) }}</span>
+                    <Lucide v-if="menu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                   </div>
                 </a>
-                <ul
-                  v-if="menu.subMenu"
-                  :class="{ 'side-menu__sub-open': menu.activeDropdown }"
-                >
-                  <li
-                    v-for="(subMenu, subMenuKey) in menu.subMenu"
-                    :key="subMenuKey"
-                  >
+                <ul v-if="menu.subMenu" :class="{ 'side-menu__sub-open': menu.activeDropdown }">
+                  <li v-for="(subMenu, subMenuKey) in menu.subMenu" :key="subMenuKey">
                     <a
                       :href="
-                      subMenu.subMenu
-                        ? '#'
-                        : ((pageName: string | undefined) => {
-                            try {
-                              return router.resolve({
-                                name: pageName,
-                              }).fullPath;
-                            } catch (err) {
-                              return '';
-                            }
-                          })(subMenu.pageName)
-                    "
+                        subMenu.subMenu
+                          ? '#'
+                          : ((pageName: string | undefined) => {
+                              try {
+                                return router.resolve({
+                                  name: pageName,
+                                }).fullPath;
+                              } catch (err) {
+                                return '';
+                              }
+                            })(subMenu.pageName)
+                      "
                       class="top-menu"
-                      @click="(event: MouseEvent) => {
-                      event.preventDefault();
-                      linkTo(subMenu, router);
-                    }"
+                      @click="
+                        (event: MouseEvent) => {
+                          event.preventDefault();
+                          linkTo(subMenu, router);
+                        }
+                      "
                     >
                       <div class="top-menu__icon">
                         <Lucide :icon="subMenu.icon" />
                       </div>
                       <div class="top-menu__title">
-                        {{ t(subMenu.title) }}
-                        <Lucide
-                          v-if="subMenu.subMenu"
-                          class="top-menu__sub-icon"
-                          icon="ChevronDown"
-                        />
+                        <span class="top-menu__title-text">{{ t(subMenu.title) }}</span>
+                        <Lucide v-if="subMenu.subMenu" class="top-menu__sub-icon" icon="ChevronDown" />
                       </div>
                     </a>
-                    <ul
-                      v-if="subMenu.subMenu"
-                      :class="{ 'side-menu__sub-open': subMenu.activeDropdown }"
-                    >
-                      <li
-                        v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu"
-                        :key="lastSubMenuKey"
-                      >
+                    <ul v-if="subMenu.subMenu" :class="{ 'side-menu__sub-open': subMenu.activeDropdown }">
+                      <li v-for="(lastSubMenu, lastSubMenuKey) in subMenu.subMenu" :key="lastSubMenuKey">
                         <a
                           :href="
-                          lastSubMenu.subMenu
-                            ? '#'
-                            : ((pageName: string | undefined) => {
-                                try {
-                                  return router.resolve({
-                                    name: pageName,
-                                  }).fullPath;
-                                } catch (err) {
-                                  return '';
-                                }
-                              })(lastSubMenu.pageName)
-                        "
+                            lastSubMenu.subMenu
+                              ? '#'
+                              : ((pageName: string | undefined) => {
+                                  try {
+                                    return router.resolve({
+                                      name: pageName,
+                                    }).fullPath;
+                                  } catch (err) {
+                                    return '';
+                                  }
+                                })(lastSubMenu.pageName)
+                          "
                           class="top-menu"
-                          @click="(event: MouseEvent) => {
-                          event.preventDefault();
-                          linkTo(lastSubMenu, router);
-                        }"
+                          @click="
+                            (event: MouseEvent) => {
+                              event.preventDefault();
+                              linkTo(lastSubMenu, router);
+                            }
+                          "
                         >
                           <div class="top-menu__icon">
                             <Lucide :icon="lastSubMenu.icon" />
                           </div>
                           <div class="top-menu__title">
-                            {{ t(lastSubMenu.title) }}
+                            <span class="top-menu__title-text">{{ t(lastSubMenu.title) }}</span>
                           </div>
                         </a>
                       </li>

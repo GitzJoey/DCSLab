@@ -7,8 +7,8 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     &:hover {
-      transform: scale(theme("scale.105"));
-      box-shadow: theme("boxShadow.xl");
+      transform: scale(theme('scale.105'));
+      box-shadow: theme('boxShadow.xl');
     }
   }
 }

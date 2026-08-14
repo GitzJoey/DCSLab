@@ -1,0 +1,28 @@
+{
+  "page_title": "Income Payment",
+  "actions": {
+    "create": "Create Income Payment",
+    "edit": "Edit Income Payment"
+  },
+  "table": {
+    "title": "Income Payment List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "income_payment_data": "Income Payment Data"
+  },
+  "fields": {
+    "income": "Income",
+    "code": "Code",
+    "date": "Date",
+    "cash_account": "Cash Account",
+    "amount": "Amount",
+    "remarks": "Remarks"
+  },
+  "alert": {
+    "delete_income_payment": {
+      "title": "Successfully Deleted Income Payment",
+      "content": "Income payment has been deleted."
+    }
+  }
+}

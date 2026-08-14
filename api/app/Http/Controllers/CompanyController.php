@@ -3,12 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Company\CompanyActions;
-use App\Http\Requests\CompanyRequest;
+use App\DTOs\CompanyCreateDTO;
+use App\DTOs\CompanyUpdateDTO;
+use App\DTOs\ExecuteDTO;
+use App\DTOs\ExecuteGetDTO;
+use App\DTOs\ExecutePaginationDTO;
+use App\Enums\RecordStatusEnum;
+use App\Helpers\HashidsHelper;
+use App\Http\Requests\Company\CompanyStoreRequest;
+use App\Http\Requests\Company\CompanyUpdateRequest;
 use App\Http\Resources\CompanyResource;
 use App\Models\Company;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\Enum;
 
 class CompanyController extends BaseController
 {
@@ -21,73 +31,70 @@ class CompanyController extends BaseController
         $this->companyActions = $companyActions;
     }
 
-    public function store(CompanyRequest $companyRequest)
+    public function readAny(Request $request)
     {
-        $request = $companyRequest->validated();
+        if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
+        $this->authorize('viewAny', Company::class);
 
-        $user = Auth::user();
+        if ($request->filled('include_id')) $request->merge(['include_id' => HashidsHelper::decodeId($request->include_id)]);
 
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->companyActions->generateUniqueCode();
-            } while (! $this->companyActions->isUniqueCode($code, $user->id));
-        } else {
-            if (! $this->companyActions->isUniqueCode($code, $user->id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
+        if ($request->filled('status')) {
+            $request->merge(['status' => RecordStatusEnum::isValid($request->status) ? RecordStatusEnum::resolveToEnum($request->status)->value : -1]);
         }
 
-        $companyArr = [
-            'user_id' => $user->id,
-            'code' => $code,
-            'name' => $request['name'],
-            'address' => $request['address'],
-            'default' => $request['default'],
-            'status' => $request['status'],
+        $validatedRequest = $request->validate([
+            'with_trashed' => ['required', 'boolean'],
 
-        ];
+            'search' => ['nullable', 'string'],
+            'default' => ['nullable', 'boolean'],
+            'status' => ['nullable', new Enum(RecordStatusEnum::class)],
+            'include_id' => ['nullable', 'integer', 'exists:companies,id'],
 
-        $result = null;
-        $errorMsg = '';
-
-        try {
-            if ($companyArr['default']) {
-                $this->companyActions->resetDefaultCompany($user);
-            }
-
-            $result = $this->companyActions->create($companyArr);
-        } catch (Exception $e) {
-            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
-        }
-
-        return is_null($result) ? response()->error($errorMsg) : response()->success();
-    }
-
-    public function readAny(CompanyRequest $companyRequest)
-    {
-        $userId = Auth::id();
-        $request = $companyRequest->validated();
-
-        $search = $request['search'];
-        $paginate = $request['paginate'];
-        $page = array_key_exists('page', $request) ? abs($request['page']) : 1;
-        $perPage = array_key_exists('per_page', $request) ? abs($request['per_page']) : 10;
-        $useCache = array_key_exists('refresh', $request) ? boolval($request['refresh']) : true;
+            'refresh' => ['required', 'boolean'],
+            'paginate' => ['nullable', 'array', 'required_without:get', 'prohibits:get'],
+            'paginate.page' => ['required_with:paginate', 'integer', 'min:1'],
+            'paginate.per_page' => ['required_with:paginate', 'integer', 'min:10'],
+            'get' => ['nullable', 'array', 'required_without:paginate', 'prohibits:paginate'],
+            'get.limit' => ['required_with:get', 'integer', 'min:10'],
+        ]);
 
         $result = null;
         $errorMsg = '';
 
         try {
             $result = $this->companyActions->readAny(
-                userId: $userId,
-                search: $search,
-                paginate: $paginate,
-                page: $page,
-                perPage: $perPage,
-                useCache: $useCache
+                user: Auth::user(),
+                withTrashed: $validatedRequest['with_trashed'],
+
+                search: $validatedRequest['search'] ?? null,
+                default: $validatedRequest['default'] ?? null,
+                status: $validatedRequest['status'] ?? null,
+                includeId: $validatedRequest['include_id'] ?? null,
+
+                execute: new ExecuteDTO(
+                    useCache: ! $validatedRequest['refresh'],
+                    pagination: (function () use ($validatedRequest) {
+                        $pagination = null;
+                        if (isset($validatedRequest['paginate'])) {
+                            $pagination = new ExecutePaginationDTO(
+                                page: $validatedRequest['paginate']['page'],
+                                perPage: $validatedRequest['paginate']['per_page'],
+                            );
+                        }
+
+                        return $pagination;
+                    })(),
+                    get: (function () use ($validatedRequest) {
+                        $get = null;
+                        if (isset($validatedRequest['get'])) {
+                            $get = new ExecuteGetDTO(
+                                limit: $validatedRequest['get']['limit'],
+                            );
+                        }
+
+                        return $get;
+                    })()
+                )
             );
         } catch (Exception $e) {
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
@@ -96,15 +103,14 @@ class CompanyController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = CompanyResource::collection($result);
-
-            return $response;
+            return CompanyResource::collection($result);
         }
     }
 
-    public function read(Company $company, CompanyRequest $companyRequest)
+    public function read(Company $company)
     {
-        $request = $companyRequest->validated();
+        if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
+        $this->authorize('view', $company);
 
         $result = null;
         $errorMsg = '';
@@ -118,85 +124,73 @@ class CompanyController extends BaseController
         if (is_null($result)) {
             return response()->error($errorMsg);
         } else {
-            $response = new CompanyResource($result);
-
-            return $response;
+            return new CompanyResource($result);
         }
     }
 
-    public function getAllActiveCompany(Request $request)
+    public function store(CompanyStoreRequest $request)
     {
-        $userId = $request->user()->id;
-
-        $with = $request->has('with') ? explode(',', $request['with']) : [];
-
-        $result = $this->companyActions->getAllActiveCompany($userId, $with);
-
-        if (is_null($result)) {
-            return response()->error();
-        } else {
-            $response = CompanyResource::collection($result);
-
-            return $response;
-        }
-    }
-
-    public function getDefaultCompany()
-    {
-        $user = Auth::user();
-        $defaultCompany = $this->companyActions->getDefaultCompany($user);
-
-        return $defaultCompany->hId;
-    }
-
-    public function update(Company $company, CompanyRequest $companyRequest)
-    {
-        $request = $companyRequest->validated();
-
-        $user = Auth::user();
-
-        $code = $request['code'];
-        if ($code == config('dcslab.KEYWORDS.AUTO')) {
-            do {
-                $code = $this->companyActions->generateUniqueCode();
-            } while (! $this->companyActions->isUniqueCode($code, $user->id, $company->id));
-        } else {
-            if (! $this->companyActions->isUniqueCode($code, $user->id, $company->id)) {
-                return response()->error([
-                    'code' => [trans('rules.unique_code')],
-                ], 422);
-            }
-        }
-
-        $companyArr = [
-            'code' => $code,
-            'name' => $request['name'],
-            'address' => $request['address'],
-            'default' => $request['default'],
-            'status' => $request['status'],
-            'user_id' => $user->id,
-        ];
+        $validatedRequest = $request->validated();
 
         $result = null;
         $errorMsg = '';
 
         try {
-            if ($companyArr['default']) {
-                $this->companyActions->resetDefaultCompany($user);
-            }
+            DB::beginTransaction();
 
-            $result = $this->companyActions->update(
-                $company,
-                $companyArr
+            $dto = new CompanyCreateDTO(
+                code: $validatedRequest['code'],
+                name: $validatedRequest['name'],
+                address: $validatedRequest['address'],
+                default: $validatedRequest['default'],
+                status: $validatedRequest['status'],
             );
+            $result = $this->companyActions->create(
+                user: Auth::user(),
+                data: $dto
+            );
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 
         return is_null($result) ? response()->error($errorMsg) : response()->success();
     }
 
-    public function delete(Company $company, CompanyRequest $companyRequest)
+    public function update(Company $company, CompanyUpdateRequest $request)
+    {
+        $validatedRequest = $request->validated();
+
+        $result = null;
+        $errorMsg = '';
+
+        try {
+            DB::beginTransaction();
+
+            $result = $this->companyActions->update(
+                user: Auth::user(),
+                company: $company,
+                data: new CompanyUpdateDTO(
+                    code: $validatedRequest['code'],
+                    name: $validatedRequest['name'],
+                    address: $validatedRequest['address'],
+                    default: $validatedRequest['default'],
+                    status: $validatedRequest['status'],
+                )
+            );
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMsg = app()->environment('production') ? '' : $e->getMessage();
+        }
+
+        return is_null($result) ? response()->error($errorMsg) : response()->success();
+    }
+
+    public function delete(Company $company)
     {
         //Throw Error
         //throw New \Exception('Test Exception From Controller');
@@ -210,16 +204,24 @@ class CompanyController extends BaseController
         //Custom Validation With Multiple Error (HttpStatus 422)
         //return response()->error(['name' => ['Custom Validation With Multiple Error'], 'address' => ['Custom Validation With Multiple Error']], 422);
 
+        if (! Auth::check())  return response()->error(trans('rules.auth.unauthorized'), 401);
+        $this->authorize('delete', $company);
+
         $result = false;
         $errorMsg = '';
 
         try {
-            if ($this->companyActions->isDefaultCompany($company)) {
+            if ($this->companyActions->isDefault($company)) {
                 return response()->error(trans('rules.company.delete_default_company'), 422);
             }
 
+            DB::beginTransaction();
+
             $result = $this->companyActions->delete($company);
+
+            DB::commit();
         } catch (Exception $e) {
+            DB::rollBack();
             $errorMsg = app()->environment('production') ? '' : $e->getMessage();
         }
 

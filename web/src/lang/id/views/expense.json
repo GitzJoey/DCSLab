@@ -1,0 +1,44 @@
+{
+  "page_title": "Biaya",
+  "actions": {
+    "create": "Tambah Biaya",
+    "edit": "Ubah Biaya"
+  },
+  "table": {
+    "title": "Daftar Biaya"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "expense_data": "Data Biaya",
+    "payable_summary": "Ringkasan Hutang",
+    "payments": "Pembayaran",
+    "images": "Gambar"
+  },
+  "fields": {
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "category": "Kategori",
+    "code": "Kode",
+    "date": "Tanggal",
+    "due_days": "Jatuh Tempo (Hari)",
+    "paid_immediately_cash_account": "Akun Kas Bayar Langsung",
+    "amount_paid_immediately": "Jumlah Bayar Langsung",
+    "amount_payable": "Jumlah Terhutang",
+    "amount_payable_paid": "Terhutang Sudah Dibayar",
+    "amount_payable_due": "Sisa Hutang",
+    "is_amount_payable_paid_off": "Status Lunas",
+    "amount_total": "Jumlah Total",
+    "remarks": "Catatan",
+    "images": "Gambar"
+  },
+  "status": {
+    "paid_off": "Lunas",
+    "not_paid_off": "Belum Lunas"
+  },
+  "alert": {
+    "delete_expense": {
+      "title": "Berhasil Menghapus Biaya",
+      "content": "Biaya telah dihapus."
+    }
+  }
+}

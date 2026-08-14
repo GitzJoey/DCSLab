@@ -1,92 +1,94 @@
-import { client, useForm } from "laravel-precognition-vue";
-import { authAxiosInstance } from "../axios";
+import { client, useForm } from 'laravel-precognition-vue';
+import { authAxiosInstance } from '../axios';
+import { getBackendUrl } from '@/utils/config';
 
 export default class AuthService {
-    public async ensureCSRF(): Promise<void> {
-        let resultXSRF = await this.checkCookieExists('XSRF-TOKEN');
+  public async ensureCSRF(): Promise<void> {
+    let resultXSRF = await this.checkCookieExists('XSRF-TOKEN');
 
-        if (resultXSRF) return;
+    if (resultXSRF) return;
 
-        await this.generateCSRF();
-    }
+    await this.generateCSRF();
+  }
 
-    private checkCookieExists = (cookieName: string): Promise<boolean> => {
-        return new Promise<boolean>((resolve) => {
-            const cookies = document.cookie.split('; ');
+  private checkCookieExists = (cookieName: string): Promise<boolean> => {
+    return new Promise<boolean>((resolve) => {
+      const cookies = document.cookie.split('; ');
 
-            for (const cookie of cookies) {
-                const [name] = cookie.split('=');
-                if (name === cookieName) {
-                    resolve(true);
-                    return;
-                }
-            }
+      for (const cookie of cookies) {
+        const [name] = cookie.split('=');
+        if (name === cookieName) {
+          resolve(true);
+          return;
+        }
+      }
 
-            resolve(false);
-        });
-    };
+      resolve(false);
+    });
+  };
 
-    public async generateCSRF(): Promise<void> {
-        await authAxiosInstance.get('/sanctum/csrf-cookie');
-    }
+  public async generateCSRF(): Promise<void> {
+    await authAxiosInstance.get('/sanctum/csrf-cookie');
+  }
 
-    public useLoginForm() {
-        client.axios().defaults.withCredentials = true;
-        client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/login', {
-            email: '',
-            password: '',
-            remember: false,
-        });
+  public useLoginForm() {
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+    client.axios().defaults.headers.common['X-Timezone'] = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const form = useForm('post', getBackendUrl() + '/login', {
+      email: '',
+      password: '',
+      remember: false,
+    });
 
-        return form;
-    }
+    return form;
+  }
 
-    public useTwoFactorLoginForm() {
-        client.axios().defaults.withCredentials = true;
-        client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/two-factor-challenge', {
-            code: '',
-            recovery_code: '',
-        });
+  public useTwoFactorLoginForm() {
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+    const form = useForm('post', getBackendUrl() + '/two-factor-challenge', {
+      code: '',
+      recovery_code: '',
+    });
 
-        return form;
-    }
+    return form;
+  }
 
-    public useRegisterForm() {
-        client.axios().defaults.withCredentials = true;
-        client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/register', {
-            name: '',
-            email: '',
-            password: '',
-            password_confirmation: '',
-            terms: false,
-        });
+  public useRegisterForm() {
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+    const form = useForm('post', getBackendUrl() + '/register', {
+      name: '',
+      email: '',
+      password: '',
+      password_confirmation: '',
+      terms: false,
+    });
 
-        return form;
-    }
+    return form;
+  }
 
-    public useRequestResetPasswordForm() {
-        client.axios().defaults.withCredentials = true;
-        client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/forgot-password', {
-            email: '',
-        });
+  public useRequestResetPasswordForm() {
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+    const form = useForm('post', getBackendUrl() + '/forgot-password', {
+      email: '',
+    });
 
-        return form;
-    }
+    return form;
+  }
 
-    public useResetPasswordForm() {
-        client.axios().defaults.withCredentials = true;
-        client.axios().defaults.withXSRFToken = true;
-        const form = useForm('post', import.meta.env.VITE_BACKEND_URL + '/reset-password', {
-            email: '',
-            token: '',
-            password: '',
-            password_confirmation: '',
-        });
+  public useResetPasswordForm() {
+    client.axios().defaults.withCredentials = true;
+    client.axios().defaults.withXSRFToken = true;
+    const form = useForm('post', getBackendUrl() + '/reset-password', {
+      email: '',
+      token: '',
+      password: '',
+      password_confirmation: '',
+    });
 
-        return form;
-    }
+    return form;
+  }
 }

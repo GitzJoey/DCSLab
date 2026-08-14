@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use App\Traits\BootableModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +29,7 @@ class Profile extends Model
     protected function casts(): array
     {
         return [
-            'status' => RecordStatus::class,
+            'status' => RecordStatusEnum::class,
         ];
     }
 

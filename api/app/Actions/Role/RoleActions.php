@@ -2,7 +2,7 @@
 
 namespace App\Actions\Role;
 
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Traits\CacheHelper;
@@ -13,6 +13,10 @@ class RoleActions
 {
     use CacheHelper;
     use LoggerHelper;
+
+    private const DETAIL_EAGER_LOADS = [
+        'permissions',
+    ];
 
     public function __construct()
     {
@@ -27,7 +31,7 @@ class RoleActions
         }
 
         if ($excludeDevAdminRole) {
-            $role = $role->whereNotIn('name', [UserRoles::DEVELOPER->value, UserRoles::ADMINISTRATOR->value]);
+            $role = $role->whereNotIn('name', [UserRolesEnum::DEVELOPER->value, UserRolesEnum::ADMINISTRATOR->value]);
         }
 
         return $role->get();
@@ -35,7 +39,7 @@ class RoleActions
 
     public function read(Role $role): Role
     {
-        return $role->with('permissions')->first();
+        return $role->load(self::DETAIL_EAGER_LOADS);
     }
 
     public function readBy(string $key, string $value): ?Role
@@ -65,5 +69,7 @@ class RoleActions
         if ($role) {
             return $role->permissions()->get();
         }
+
+        return collect([]);
     }
 }

@@ -1,0 +1,28 @@
+{
+  "page_title": "Expense Payment",
+  "actions": {
+    "create": "Create Expense Payment",
+    "edit": "Edit Expense Payment"
+  },
+  "table": {
+    "title": "Expense Payment List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "expense_payment_data": "Expense Payment Data"
+  },
+  "fields": {
+    "expense": "Expense",
+    "code": "Code",
+    "date": "Date",
+    "cash_account": "Cash Account",
+    "amount": "Amount",
+    "remarks": "Remarks"
+  },
+  "alert": {
+    "delete_expense_payment": {
+      "title": "Successfully Deleted Expense Payment",
+      "content": "Expense payment has been deleted."
+    }
+  }
+}

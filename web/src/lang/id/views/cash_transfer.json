@@ -1,0 +1,40 @@
+{
+  "page_title": "Perpindahan Antar Kas",
+  "table": {
+    "title": "Daftar Perpindahan Antar Kas",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "source_cash_account": "Akun Kas Sumber",
+      "destination_cash_account": "Akun Kas Tujuan",
+      "amount": "Jumlah"
+    }
+  },
+  "actions": {
+    "create": "Buat Perpindahan Antar Kas",
+    "edit": "Ubah Perpindahan Antar Kas",
+    "show": "Lihat Perpindahan Antar Kas",
+    "delete": "Hapus Perpindahan Antar Kas"
+  },
+  "fields": {
+    "code": "Kode",
+    "company": "Perusahaan",
+    "branch": "Cabang",
+    "date": "Tanggal",
+    "source_cash_account": "Akun Kas Sumber",
+    "destination_cash_account": "Akun Kas Tujuan",
+    "amount": "Jumlah",
+    "remarks": "Keterangan"
+  },
+  "field_groups": {
+    "company_info": "Info Perusahaan",
+    "transfer_data": "Data Perpindahan Kas"
+  },
+  "alert": {
+    "delete_cash_transfer": {
+      "title": "Hapus Perpindahan Antar Kas",
+      "content": "Perpindahan Antar Kas Berhasil Dihapus"
+    }
+  }
+}
+

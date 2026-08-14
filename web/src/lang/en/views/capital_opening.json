@@ -1,0 +1,39 @@
+{
+  "page_title": "Capital Opening",
+  "table": {
+    "title": "Capital Opening List",
+    "cols": {
+      "code": "Code",
+      "date": "Date",
+      "investor": "Investor",
+      "cash_account": "Cash Account",
+      "amount": "Amount"
+    }
+  },
+  "actions": {
+    "create": "Create Capital Opening",
+    "edit": "Edit Capital Opening",
+    "show": "Show Capital Opening",
+    "delete": "Delete Capital Opening"
+  },
+  "fields": {
+    "code": "Code",
+    "company": "Company",
+    "branch": "Branch",
+    "date": "Date",
+    "investor": "Investor",
+    "cash_account": "Cash Account",
+    "amount": "Amount",
+    "remarks": "Remarks"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "capital_opening_data": "Capital Opening Data"
+  },
+  "alert": {
+    "delete_capital_opening": {
+      "title": "Delete Capital Opening",
+      "content": "Capital Opening Deleted Successfully"
+    }
+  }
+}

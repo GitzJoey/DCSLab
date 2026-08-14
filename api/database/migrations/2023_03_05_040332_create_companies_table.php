@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->ulid();
-            $table->string('code');
-            $table->string('name');
+            $table->string('code', 50);
+            $table->string('name', 150);
             $table->string('address')->nullable();
             $table->boolean('default')->default(false);
             $table->integer('status');
@@ -25,10 +25,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index([
-                'code',
-                'name',
-            ]);
+            // $table->index([
+            //     'code',
+            //     'name',
+            // ]);
         });
     }
 

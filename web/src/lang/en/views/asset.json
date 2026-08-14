@@ -1,0 +1,35 @@
+{
+  "page_title": "Asset",
+  "actions": {
+    "create": "Create Asset",
+    "edit": "Edit Asset"
+  },
+  "field_groups": {
+    "company_info": "Company Information",
+    "asset_data": "Asset Data"
+  },
+  "fields": {
+    "asset_category_id": "Asset Category",
+    "asset_unit_id": "Asset Unit",
+    "code": "Code",
+    "name": "Name",
+    "status": "Status",
+    "remarks": "Remarks"
+  },
+  "table": {
+    "title": "Asset List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "asset_category": "Category",
+      "asset_unit": "Unit",
+      "status": "Status"
+    }
+  },
+  "alert": {
+    "delete_asset": {
+      "title": "Asset deleted",
+      "content": "The asset has been deleted successfully."
+    }
+  }
+}

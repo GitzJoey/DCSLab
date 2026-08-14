@@ -2,12 +2,12 @@
 
 namespace App\Traits;
 
-use App\Enums\RecordStatus;
+use App\Enums\RecordStatusEnum;
 use Illuminate\Database\Eloquent\Builder;
 
 trait ScopeableByStatus
 {
-    public function scopeWhereStatus(Builder $query, array|RecordStatus|null $status = null)
+    public function scopeWhereStatus(Builder $query, array|RecordStatusEnum|null $status = null)
     {
         if ($status != null) {
             if (is_array($status)) {
@@ -20,11 +20,11 @@ trait ScopeableByStatus
 
     public function scopeWhereStatusActive(Builder $query)
     {
-        $query->where('status', '=', RecordStatus::ACTIVE);
+        $query->where('status', '=', RecordStatusEnum::ACTIVE);
     }
 
     public function scopeWhereStatusInactive(Builder $query)
     {
-        $query->where('status', '=', RecordStatus::INACTIVE);
+        $query->where('status', '=', RecordStatusEnum::INACTIVE);
     }
 }

@@ -1,11 +1,11 @@
 {
-    "slide_over": {
-        "footer": {
-            "copyright": "Copyright",
-            "copyright_name": "GitzJoey",
-            "contributors": "Contributors",
-            "rights": "All rights reserved.",
-            "powered_by": "Powered By Coffee & Curiosity."
-        }
+  "slide_over": {
+    "footer": {
+      "copyright": "Copyright",
+      "copyright_name": "GitzJoey",
+      "contributors": "Contributors",
+      "rights": "All rights reserved.",
+      "powered_by": "Powered By Coffee & Curiosity."
     }
+  }
 }

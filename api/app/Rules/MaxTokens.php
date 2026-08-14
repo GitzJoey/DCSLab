@@ -9,6 +9,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class MaxTokens implements ValidationRule
 {
     private int $maxTokensPerUser;
+
     private User $user;
 
     public function __construct($user)
@@ -16,6 +17,7 @@ class MaxTokens implements ValidationRule
         $this->user = $user;
         $this->maxTokensPerUser = 2;
     }
+
     /**
      * Run the validation rule.
      *

@@ -1,0 +1,47 @@
+{
+  "page_title": "Supplier",
+  "table": {
+    "title": "Supplier List",
+    "cols": {
+      "code": "Code",
+      "name": "Name",
+      "address": "Address",
+      "city": "City",
+      "payment_term_type": "Term Type",
+      "payment_term": "Term",
+      "taxable_enterprise": "Taxable",
+      "tax_id": "Tax ID",
+      "status": "Status",
+      "remarks": "Remarks"
+    }
+  },
+  "actions": {
+    "create": "Create Supplier",
+    "edit": "Edit Supplier",
+    "show": "Show Supplier",
+    "delete": "Delete Supplier"
+  },
+  "field_groups": {
+    "general": "General Information",
+    "finance": "Finance Information"
+  },
+  "fields": {
+    "company_id": "Company",
+    "code": "Code",
+    "name": "Name",
+    "address": "Address",
+    "city": "City",
+    "payment_term_type": "Payment Term Type",
+    "payment_term": "Payment Term",
+    "taxable_enterprise": "Taxable Enterprise",
+    "tax_id": "Tax ID",
+    "status": "Status",
+    "remarks": "Remarks"
+  },
+  "alert": {
+    "delete": {
+      "title": "Delete Supplier",
+      "message": "Supplier Successfully Deleted"
+    }
+  }
+}

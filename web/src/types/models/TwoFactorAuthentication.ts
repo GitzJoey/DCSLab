@@ -1,13 +1,13 @@
 export interface TwoFactorResponse {
-    message: string,
-    error?: Record<string, Array<string>>
+  message: string;
+  error?: Record<string, Array<string>>;
 }
 
 export interface QRCode {
-    svg: string,
-    url: string,
+  svg: string;
+  url: string;
 }
 
 export interface SecretKeyResponse {
-    secretKey: string
+  secretKey: string;
 }

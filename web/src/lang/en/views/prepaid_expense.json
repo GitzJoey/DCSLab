@@ -1,0 +1,54 @@
+{
+  "page_title": "Prepaid Expense",
+  "actions": {
+    "create": "Create Prepaid Expense",
+    "edit": "Edit Prepaid Expense"
+  },
+  "table": {
+    "title": "Prepaid Expense List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "prepaid_expense_data": "Prepaid Expense Data",
+    "payable_summary": "Payable Summary",
+    "payments": "Payments",
+    "images": "Images"
+  },
+  "fields": {
+    "company": "Company",
+    "branch": "Branch",
+    "category": "Category",
+    "code": "Code",
+    "date": "Date",
+    "estimated_useful_life": "Estimated Useful Life",
+    "due_days": "Due Days",
+    "paid_immediately_cash_account": "Paid Immediately Cash Account",
+    "amount_paid_immediately": "Amount Paid Immediately",
+    "amount_payable": "Amount Payable",
+    "amount_payable_paid": "Amount Payable Paid",
+    "amount_payable_due": "Amount Payable Due",
+    "is_amount_payable_paid_off": "Paid Off Status",
+    "amount_total": "Amount Total",
+    "remarks": "Remarks",
+    "images": "Images"
+  },
+  "hints": {
+    "estimated_useful_life": "Enter the value in months."
+  },
+  "units": {
+    "month": "month",
+    "months": "months",
+    "year": "year",
+    "years": "years"
+  },
+  "status": {
+    "paid_off": "Paid Off",
+    "not_paid_off": "Not Paid Off"
+  },
+  "alert": {
+    "delete_prepaid_expense": {
+      "title": "Successfully Deleted Prepaid Expense",
+      "content": "Prepaid expense has been deleted."
+    }
+  }
+}

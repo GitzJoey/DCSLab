@@ -1,0 +1,112 @@
+{
+  "page_title": "Purchase Invoice",
+  "table": {
+    "title": "Purchase Invoice List"
+  },
+  "actions": {
+    "create": "Create Purchase Invoice",
+    "edit": "Edit Purchase Invoice",
+    "show": "Show Purchase Invoice",
+    "delete": "Delete Purchase Invoice"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "purchase_invoice_data": "Purchase Invoice Data",
+    "tax_invoice": "Tax Invoice",
+    "items": "Items",
+    "summary": "Summary",
+    "payments": "Payments",
+    "status": "Status",
+    "remarks": "Remarks"
+  },
+  "filters": {
+    "is_posted": "Posted",
+    "is_paid_off": "Paid Off",
+    "payment_type": "Payment Type",
+    "payment_type_cash": "Cash",
+    "payment_type_down_payment": "Down Payment",
+    "payment_type_return": "Purchase Return"
+  },
+  "fields": {
+    "company_id": "Company",
+    "branch_id": "Branch",
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "due_days": "Due Days",
+    "supplier_id": "Supplier",
+    "purchase_order_id": "Purchase Order",
+    "tax_invoice_number": "Tax Invoice Number",
+    "tax_invoice_vat_base": "Tax Invoice VAT Base",
+    "tax_invoice_vat": "Tax Invoice VAT",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "is_paid_off": "Paid Off",
+    "item_count": "Item Count",
+    "items_empty": "No invoice items yet",
+    "product_unit_id": "Product",
+    "product_unit_code": "Product Unit Code",
+    "unit_name": "Unit",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_qty_base": "Base Qty",
+    "product_unit_price": "Unit Price",
+    "product_unit_is_price_include_vat": "VAT Included",
+    "price_discount": "Price Discount",
+    "price_after_discount": "Unit Price After Discount",
+    "subtotal": "Subtotal After Price Discount",
+    "subtotal_discount": "Subtotal Discount",
+    "subtotal_after_discount": "Subtotal After Discount",
+    "subtotal_after_vat": "Subtotal After VAT",
+    "vat_profile_id": "VAT Profile",
+    "vat_rate": "VAT Rate",
+    "vat_base_numerator": "VAT Base Numerator",
+    "vat_base_denominator": "VAT Base Denominator",
+    "vat_base": "VAT Base",
+    "vat": "VAT",
+    "purchase_order_item_id": "Purchase Order Item",
+    "item_amount_payable": "Item Amount Payable",
+    "items_subtotal_after_discount": "Total Subtotal After Discount",
+    "global_discount": "Global Discount",
+    "global_discount_total": "Global Discount Total",
+    "item_total_before_global_discount": "Total Before Global Discount",
+    "item_total_after_global_discount": "Total After Global Discount",
+    "item_total_after_vat": "Item Total After VAT",
+    "rounding": "Rounding",
+    "amount_payable": "Amount Payable",
+    "amount_payable_preview": "Amount Payable",
+    "amount_paid_down_payment": "Paid By Down Payment",
+    "amount_paid_return": "Paid By Purchase Return",
+    "amount_paid_total": "Total Paid",
+    "amount_due": "Amount Due",
+    "payments": "Payments",
+    "payments_empty": "No payment rows yet",
+    "payments_total": "Total Payments",
+    "payment_type": "Payment Type",
+    "cash_account_id": "Cash Account",
+    "purchase_order_payment_id": "Purchase Order Payment",
+    "purchase_return_id": "Purchase Return",
+    "amount": "Amount",
+    "available_amount": "Available Amount",
+    "purchase_order_required_hint": "Select a purchase order first. The supplier is inherited from the purchase order.",
+    "purchase_order_link_hint": "Items are prefilled from the purchase order with the quantity that has not been invoiced yet.",
+    "reload_items_from_purchase_order": "Reload items from purchase order",
+    "qty_to_invoice_hint": "Not invoiced yet (base qty)",
+    "payment_type_hint": "Only the field of the selected payment type is submitted."
+  },
+  "alert": {
+    "create": {
+      "title": "Create Purchase Invoice",
+      "message": "Purchase Invoice created successfully"
+    },
+    "update": {
+      "title": "Update Purchase Invoice",
+      "message": "Purchase Invoice updated successfully"
+    },
+    "delete": {
+      "title": "Delete Purchase Invoice",
+      "message": "Purchase Invoice has been deleted"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "page_title": "Outgoing Asset",
+  "actions": {
+    "create": "Add Outgoing Asset"
+  },
+  "fields": {
+    "qty": "Qty",
+    "remarks": "Remarks"
+  },
+  "table": {
+    "title": "Outgoing Asset List",
+    "cols": {
+      "asset": "Asset"
+    }
+  }
+}

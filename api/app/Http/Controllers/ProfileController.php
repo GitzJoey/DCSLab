@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Role\RoleActions;
 use App\Actions\User\UserActions;
-use App\Enums\UserRoles;
+use App\Enums\UserRolesEnum;
 use App\Http\Requests\UserProfileRequest;
 use App\Http\Resources\UserProfileResource;
 use Illuminate\Support\Facades\Auth;
@@ -98,7 +98,7 @@ class ProfileController extends BaseController
 
         $roleId = '';
         if ($addedRole == 'pos') {
-            $roleId = $this->roleActions->readBy('NAME', UserRoles::POS_OWNER->value)->id;
+            $roleId = $this->roleActions->readBy('NAME', UserRolesEnum::POS_OWNER->value)->id;
         }
 
         if (empty($roleId)) {

@@ -1,0 +1,63 @@
+{
+  "page_title": "Purchase Receipt",
+  "table": {
+    "title": "Purchase Receipt List"
+  },
+  "actions": {
+    "create": "Create Purchase Receipt",
+    "edit": "Edit Purchase Receipt",
+    "show": "Show Purchase Receipt",
+    "delete": "Delete Purchase Receipt"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "purchase_receipt_data": "Purchase Receipt Data",
+    "status": "Status",
+    "remarks": "Remarks",
+    "items": "Items",
+    "costs": "Costs",
+    "summary": "Summary"
+  },
+  "fields": {
+    "code": "Code",
+    "date": "Date",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "supplier_id": "Supplier",
+    "purchase_order_id": "Purchase Order",
+    "warehouse_id": "Warehouse",
+    "remarks": "Remarks",
+    "is_posted": "Posted",
+    "total_value": "Total Value",
+    "total_cost": "Total Cost",
+    "item_count": "Item Count",
+    "cost_count": "Cost Count",
+    "purchase_order_item_id": "Purchase Order Item",
+    "product_unit_id": "Product",
+    "qty": "Qty",
+    "product_unit_conversion_value": "Conversion Value",
+    "product_unit_qty_base": "Base Qty",
+    "base_unit_value": "Base Unit Value",
+    "serial_count": "Serial Count",
+    "items_empty": "No receipt items yet",
+    "costs_empty": "No receipt cost yet",
+    "cost_name": "Cost Name",
+    "cash_account_id": "Cash Account",
+    "amount": "Amount",
+    "purchase_order_link_hint": "This receipt is linked to a purchase order. Supplier follows the purchase order, and items can be reloaded from the selected purchase order."
+  },
+  "alert": {
+    "create": {
+      "title": "Create Purchase Receipt",
+      "message": "Purchase Receipt created successfully"
+    },
+    "update": {
+      "title": "Update Purchase Receipt",
+      "message": "Purchase Receipt updated successfully"
+    },
+    "delete": {
+      "title": "Delete Purchase Receipt",
+      "message": "Purchase Receipt has been deleted"
+    }
+  }
+}

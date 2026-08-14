@@ -1,0 +1,26 @@
+{
+  "page_title": "Asset Category",
+  "actions": {
+    "create": "Create Asset Category",
+    "edit": "Edit Asset Category"
+  },
+  "table": {
+    "title": "Asset Category List"
+  },
+  "field_groups": {
+    "company_info": "Company Info",
+    "asset_category_data": "Asset Category Data"
+  },
+  "fields": {
+    "code": "Code",
+    "name": "Name",
+    "estimated_useful_life_months": "Estimated Useful Life (Months)",
+    "remarks": "Remarks"
+  },
+  "alert": {
+    "delete_asset_category": {
+      "title": "Successfully Deleted Asset Category",
+      "content": "Asset category has been deleted."
+    }
+  }
+}

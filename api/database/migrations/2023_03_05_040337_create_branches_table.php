@@ -29,10 +29,10 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index([
-                'code',
-                'name',
-            ]);
+            // $table->index([
+            //     'code',
+            //     'name',
+            // ]);
         });
     }
 

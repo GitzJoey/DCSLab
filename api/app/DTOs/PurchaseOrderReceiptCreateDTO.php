@@ -1,0 +1,23 @@
+<?php
+
+namespace App\DTOs;
+
+final class PurchaseOrderReceiptCreateDTO
+{
+    public function __construct(
+        public readonly int $companyId,
+        public readonly int $branchId,
+        public readonly string $code,
+        public readonly string $date,
+        public readonly int $supplierId,
+        public readonly int $purchaseOrderId,
+        public readonly int $warehouseId,
+        public readonly ?string $remarks,
+        public readonly bool $isPosted,
+        /** @var array<int, array<string, mixed>> each item: purchase_order_item_id, qty, product_unit_id, product_unit_conversion_value, remarks, serials[] */
+        public readonly array $items,
+        /** @var array<int, array<string, mixed>> each cost: code, date, name, cash_account_id, amount, remarks */
+        public readonly array $costs,
+    ) {
+    }
+}

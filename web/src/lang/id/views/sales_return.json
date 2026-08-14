@@ -1,0 +1,109 @@
+{
+  "page_title": "Retur Penjualan",
+  "table": {
+    "title": "Daftar Retur Penjualan",
+    "cols": {
+      "code": "Kode",
+      "date": "Tanggal",
+      "customer": "Pelanggan",
+      "sales_invoice": "Faktur Penjualan",
+      "warehouse": "Gudang",
+      "amount_payable": "Jumlah Retur",
+      "remarks": "Catatan"
+    }
+  },
+  "actions": {
+    "create": "Tambah Retur Penjualan",
+    "edit": "Ubah Retur Penjualan",
+    "show": "Tampilkan Retur Penjualan",
+    "delete": "Hapus Retur Penjualan"
+  },
+  "field_groups": {
+    "company_info": "Informasi Perusahaan",
+    "sales_return_data": "Data Retur Penjualan",
+    "items": "Item-item",
+    "item_additional_details": "Detail Item Tambahan",
+    "summary": "Ringkasan",
+    "refunds": "Pengembalian Dana"
+  },
+  "filters": {
+    "is_settled": "Status Penyelesaian",
+    "is_settled_yes": "Selesai",
+    "is_settled_no": "Belum Selesai"
+  },
+  "fields": {
+    "company_id": "Perusahaan",
+    "branch_id": "Cabang",
+    "code": "Kode",
+    "date": "Tanggal",
+    "start_date": "Tanggal Awal",
+    "end_date": "Tanggal Akhir",
+    "customer_id": "Pelanggan",
+    "sales_invoice_id": "Faktur Penjualan",
+    "warehouse_id": "Gudang",
+    "remarks": "Catatan",
+    "is_posted": "Diposting",
+    "customer_required_hint": "Pilih pelanggan terlebih dahulu untuk memilih item pengiriman.",
+    "no_invoice_vat_hint": "Tanpa faktur penjualan terhubung, item retur harus tanpa PPN.",
+    "sales_order_delivery_item_id": "Item Pengiriman",
+    "sales_order_delivery_item_label": "Pengiriman Terhubung",
+    "delivered_qty_base": "Qty Base Terkirim",
+    "product_unit_id": "Produk",
+    "product_unit_code": "Kode Produk Satuan",
+    "unit_name": "Satuan",
+    "qty": "Qty",
+    "product_unit_qty_base": "Qty Base",
+    "product_unit_conversion_value": "Nilai Konversi",
+    "product_unit_price": "Harga Satuan",
+    "price_discount": "Diskon Harga",
+    "price_after_discount": "Harga Satuan Setelah Diskon",
+    "subtotal": "Subtotal Setelah Diskon Harga Satuan",
+    "subtotal_discount": "Diskon Subtotal",
+    "subtotal_after_discount": "Subtotal Setelah Diskon",
+    "subtotal_after_vat": "Subtotal Setelah PPN",
+    "item_price_breakdown": "Rincian Harga Item",
+    "item_additional_details": "Detail Tambahan Item",
+    "item_count": "Jumlah Item",
+    "items_empty": "Belum ada item retur",
+    "items_subtotal_after_discount": "Total Subtotal Setelah Diskon",
+    "global_discount": "Diskon Global",
+    "item_total_before_global_discount": "Total Sebelum Diskon Global",
+    "item_total_after_global_discount": "Total Setelah Diskon Global",
+    "item_total_after_vat": "Total Item Setelah PPN",
+    "vat_base": "Dasar PPN",
+    "vat": "PPN",
+    "rounding": "Pembulatan",
+    "amount_payable": "Jumlah Retur",
+    "product_unit_is_price_include_vat": "Harga Termasuk PPN",
+    "vat_profile_id": "Profil PPN",
+    "vat_rate": "Tarif PPN",
+    "vat_base_numerator": "Pembilang Dasar PPN",
+    "vat_base_denominator": "Penyebut Dasar PPN",
+    "base_unit_cogs": "Harga Pokok Satuan Base",
+    "total_cogs": "Total Harga Pokok",
+    "cost_snapshot_hint": "Harga pokok ditentukan oleh server.",
+    "refunds": "Pengembalian Dana",
+    "refunds_empty": "Belum ada data pengembalian dana",
+    "cash_account_id": "Akun Kas",
+    "amount": "Jumlah",
+    "amount_allocated_to_invoice": "Teralokasi Ke Faktur",
+    "amount_received_total": "Total Dikembalikan",
+    "amount_settled_total": "Total Terselesaikan",
+    "amount_available": "Jumlah Tersedia",
+    "is_settled": "Selesai"
+  },
+  "alert": {
+    "create": {
+      "title": "Tambah Retur Penjualan",
+      "message": "Retur Penjualan berhasil ditambahkan"
+    },
+    "update": {
+      "title": "Ubah Retur Penjualan",
+      "message": "Retur Penjualan berhasil diperbarui"
+    },
+    "delete": {
+      "title": "Hapus Retur Penjualan",
+      "message": "Retur Penjualan berhasil dihapus"
+    }
+  }
+}
