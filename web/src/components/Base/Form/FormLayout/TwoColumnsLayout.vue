@@ -147,7 +147,7 @@
               <div v-if="card.state !== CardState.Hidden" class="w-1/2 flex justify-end">
                 <div
                   :class="{
-                    'transition ease-in duration-100 ml-auto hidden xl:block cursor-pointer': true,
+                    'transition ease-in duration-100 ml-auto block cursor-pointer': true,
                     'transform rotate-180': card.state === CardState.Expanded,
                   }"
                 >
