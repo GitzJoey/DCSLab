@@ -935,7 +935,8 @@ const onSubmit = async () => {
           <!-- items: repeating item blocks -->
           <div v-else>
             <div v-if="purchaseOrderItemsForm.length > 0"
-              class="hidden lg:grid grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] items-center gap-2 border-b border-slate-200 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:border-darkmode-400 dark:text-slate-500">
+              class="hidden lg:grid grid-cols-[2.5rem_minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] items-center gap-2 border-b border-slate-200 pb-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:border-darkmode-400 dark:text-slate-500">
+              <div></div>
               <div class="truncate">{{ t('views.purchase_order.fields.product_unit_id') }}</div>
               <div class="truncate text-right">{{ t('views.purchase_order.fields.qty') }}</div>
               <div class="truncate">{{ t('views.product.table.cols.unit') }}</div>
@@ -949,12 +950,13 @@ const onSubmit = async () => {
               class="mt-4 border-t border-slate-200/60 pt-4 first:mt-0 first:border-t-0 first:pt-0 dark:border-darkmode-400 lg:mt-2 lg:border-t-0 lg:pt-0">
               <!-- item summary: single compact row -->
               <div
-                class="grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-4 lg:grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] lg:items-center lg:gap-2">
-                <div class="col-span-2 flex min-w-0 items-center gap-3 md:col-span-4 lg:col-span-1">
+                class="grid grid-cols-2 gap-x-3 gap-y-2 md:grid-cols-[6.5rem_repeat(3,minmax(0,1fr))_5.5rem] lg:grid-cols-[2.5rem_minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] lg:items-center lg:gap-2">
                 <ProductImagePreview :image-url="item.product_unit_product_image_url"
-                  wrapper-class="w-8 h-8 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 hidden lg:flex items-center justify-center cursor-zoom-in shrink-0"
-                  icon-class="w-4 h-4 text-slate-400"
+                  wrapper-class="hidden md:flex md:row-span-2 md:h-[6.5rem] md:w-[6.5rem] md:self-center lg:row-span-1 lg:h-8 lg:w-8 lg:self-center rounded-md overflow-hidden border border-slate-200 p-1 shadow-sm dark:border-darkmode-400 bg-white dark:bg-darkmode-800 lg:border-0 lg:p-0 lg:shadow-none lg:bg-slate-100 lg:dark:bg-darkmode-600 items-center justify-center cursor-zoom-in"
+                  icon-class="w-5 h-5 lg:w-4 lg:h-4 text-slate-400"
+                  image-class="h-full w-full rounded-sm object-contain"
                   :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
+                <div class="col-span-2 flex min-w-0 items-center gap-3 md:col-span-3 lg:col-span-1">
                 <div class="min-w-0 flex-1" :data-item-product="index">
                   <ProductUnitSelectSearch :model-value="item.product_unit_id"
                     :fetch-options="fetchProductUnitOptions" :initial-option="buildItemInitialOption(item)"
@@ -992,9 +994,9 @@ const onSubmit = async () => {
                     :class="{ 'border-danger': invalidPurchaseOrderField(`items.${index}.product_unit_price`) }"
                     @change="validatePurchaseOrderField(`items.${index}.product_unit_price`)" />
                 </div>
-                <div class="flex items-end justify-end gap-1 md:order-last lg:hidden">
+                <div class="flex items-end justify-end gap-1 md:col-start-5 md:row-start-1 md:items-center lg:hidden">
                   <ProductImagePreview :image-url="item.product_unit_product_image_url"
-                    wrapper-class="mr-auto w-8 h-8 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex items-center justify-center cursor-zoom-in shrink-0 self-end mb-[3px]"
+                    wrapper-class="mr-auto w-8 h-8 rounded-md overflow-hidden bg-slate-100 dark:bg-darkmode-600 flex md:hidden items-center justify-center cursor-zoom-in shrink-0 self-end mb-[3px]"
                     icon-class="w-4 h-4 text-slate-400"
                     :preview-title="item.product_unit_product_name || t('views.purchase_order.fields.product_unit_id')" />
                   <Button type="button" variant="outline-secondary"
@@ -1009,7 +1011,8 @@ const onSubmit = async () => {
                     <Lucide icon="Trash2" class="w-4 h-4 text-danger" />
                   </Button>
                 </div>
-                <div :title="t('views.purchase_order.fields.subtotal_after_discount')">
+                <div class="md:col-span-2 lg:col-span-1"
+                  :title="t('views.purchase_order.fields.subtotal_after_discount')">
                   <div class="mb-1 text-xs text-slate-500 lg:hidden">
                     {{ t('views.purchase_order.fields.subtotal_column') }}
                   </div>
