@@ -933,7 +933,7 @@ const onSubmit = async () => {
               <div></div>
             </div>
             <div v-for="(item, index) in purchaseOrderItemsForm" :key="`${item.product_unit_id}-${index}`"
-              class="mt-3 border-t border-slate-200/60 pt-5 first:mt-0 first:border-t-0 first:pt-0 dark:border-darkmode-400">
+              class="mt-2 first:mt-0">
               <!-- item summary: single compact row -->
               <div
                 class="grid grid-cols-2 gap-x-3 gap-y-2 lg:grid-cols-[minmax(0,1fr)_5.5rem_4.5rem_8rem_8rem_5.5rem] lg:items-center lg:gap-2">
@@ -1017,7 +1017,7 @@ const onSubmit = async () => {
               <FormErrorMessages :messages="getPurchaseOrderFieldErrors(`items.${index}.product_unit_price`)" />
 
               <!-- item details: collapsible sections -->
-              <div v-if="purchaseOrderItemDetailsExpanded[index]" class="mt-4 space-y-3">
+              <div v-if="purchaseOrderItemDetailsExpanded[index]" class="ml-11 mt-3 space-y-3">
                 <div class="rounded-md border border-slate-200/60 dark:border-darkmode-400">
                   <button type="button"
                     class="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium"
